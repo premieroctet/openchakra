@@ -37,6 +37,7 @@
     "eslint-plugin-import": "^2.17.2",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.13.0",
+    "jest": "^24.8.0",
     "nodemon": "^1.19.0"
   }
 }
