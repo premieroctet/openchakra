@@ -8,12 +8,15 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2",
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.1",
+    "jss": "^9.8.7",
     "mongoose": "^5.5.5",
     "next": "^8.1.0",
     "passport": "^0.4.0",
@@ -21,6 +24,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-jss": "^8.6.1",
     "styled-components": "^4.2.0",
     "validator": "^10.11.0"
   },
