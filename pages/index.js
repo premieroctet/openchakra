@@ -1,16 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
-import NavbarContainer from '../containers/NavbarContainer/NavbarContainer';
-
-const Title = styled.h1`
-  color: green;
-`;
+import React, { Fragment } from 'react';
+import Navbar from '../components/Navbar/Navbar';
+import PopularCategories from '../components/PopularCategories/PopularCategories';
 
 const Home = () => (
-  <div>
-    <NavbarContainer />
-    <Title>My Alfred</Title>
-  </div>
+  <Fragment>
+    <Navbar />
+    <PopularCategories />
+  </Fragment>
 );
 
 export default Home;
