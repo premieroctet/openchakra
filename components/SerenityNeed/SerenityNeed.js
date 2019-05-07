@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -27,6 +28,7 @@ const styles = theme => ({
     height: 0,
     borderRadius: '20px',
     paddingTop: '118.25%', // 16:9
+    maxWidth: 345,
   },
   textBox: {
     paddingRight: 15,
@@ -46,7 +48,7 @@ const styles = theme => ({
   },
 });
 
-const popularCategories = (props) => {
+const serenityNeed = (props) => {
   const { classes } = props;
 
   return (
@@ -57,16 +59,22 @@ const popularCategories = (props) => {
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24}>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
+          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
+        </Grid>
+        <Grid item xs={4}>
+          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
+        </Grid>
+        <Grid item xs={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
       </Grid>
@@ -74,8 +82,8 @@ const popularCategories = (props) => {
   );
 };
 
-popularCategories.propTypes = {
+serenityNeed.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
-export default withStyles(styles)(popularCategories);
+export default withStyles(styles)(serenityNeed);
