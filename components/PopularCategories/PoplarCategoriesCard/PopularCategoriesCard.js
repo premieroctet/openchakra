@@ -1,0 +1,89 @@
+import React from 'react';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+
+const styles = {
+  textUp: {
+    textAlign: 'center',
+    paddingTop: '3rem',
+    fontFamily: 'helvetica',
+    fontWeight: 'bold',
+    fontSize: '20px',
+    color: 'white',
+    letterSpacing: '.2rem',
+  },
+  textDown: {
+    textAlign: 'center',
+    fontFamily: 'helvetica neue',
+    fontWeight: 'bold',
+    fontSize: '22px',
+    color: 'white',
+    padding: '.7rem',
+  },
+  textContainer: {
+    flex: 1,
+  },
+  container: {
+    flexDirection: 'column',
+    height: '100%',
+  },
+  row: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  card: {
+    maxWidth: '300px',
+    maxHeight: '400px',
+    height: '450px',
+    borderRadius: '30px',
+  },
+  cardAction: {
+    height: '100%',
+  },
+  cardMedia: {
+    height: '100%',
+  },
+  center: {
+    alignSelf: 'center',
+  },
+};
+
+const popularCategoriesCard = (props) => {
+  const { img, classes, categorie, desc } = props;
+
+  return (
+    <Card className={classes.card}>
+      <CardActionArea className={classes.cardAction}>
+        <CardMedia component="div" alt="food" image={img} className={classes.cardMedia}>
+          <Grid container className={classes.container}>
+            <Grid item xs={12} className={classes.textContainer}>
+              <Typography className={classes.textUp}>{categorie}</Typography>
+            </Grid>
+            <Grid container xs={12} className={classes.row}>
+              <Grid item xs={8} className={classes.center}>
+                <Typography className={classes.textDown}>{desc}</Typography>
+              </Grid>
+              <Grid item xs={4} className={classes.center}>
+                <Typography className={classes.textDown}>test2</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </CardMedia>
+      </CardActionArea>
+    </Card>
+  );
+};
+
+popularCategoriesCard.propTypes = {
+  img: PropTypes.string.isRequired,
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  categorie: PropTypes.string.isRequired,
+  desc: PropTypes.string.isRequired,
+};
+
+export default withStyles(styles)(popularCategoriesCard);

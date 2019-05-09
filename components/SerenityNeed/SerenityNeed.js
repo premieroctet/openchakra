@@ -54,26 +54,26 @@ const serenityNeed = (props) => {
     <Fragment>
       <Grid container className={classes.container}>
         <Typography variant="h5" className={classes.textBox}>
-          Nos catégories les plus populaires
+          Besoin de sérénité ?
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={12} md={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={0} md={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={0} md={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={0} md={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={0} md={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={0} md={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
       </Grid>

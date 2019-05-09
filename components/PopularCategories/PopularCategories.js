@@ -4,6 +4,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import PopularCategoriesCard from './PoplarCategoriesCard/PopularCategoriesCard';
 
 const styles = theme => ({
   container: {
@@ -57,16 +58,16 @@ const popularCategories = (props) => {
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
-        <Grid item xs={3}>
+        <Grid item xs={6} sm={3}>
+          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" />
+        </Grid>
+        <Grid item xs={6} sm={3}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={0} sm={3}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item sm={3}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
-        </Grid>
-        <Grid item sm={3}>
+        <Grid item xs={0} sm={3}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
       </Grid>

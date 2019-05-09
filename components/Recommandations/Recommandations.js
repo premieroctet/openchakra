@@ -64,7 +64,7 @@ const recommandations = (props) => {
         <Grid item xs={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
         <Grid item xs={4}>
@@ -73,7 +73,7 @@ const recommandations = (props) => {
         <Grid item xs={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
       </Grid>
