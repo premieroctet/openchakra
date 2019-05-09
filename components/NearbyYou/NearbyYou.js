@@ -47,14 +47,14 @@ const styles = theme => ({
   },
 });
 
-const serenityNeed = (props) => {
+const nearbyYou = (props) => {
   const { classes } = props;
 
   return (
     <Fragment>
       <Grid container className={classes.container}>
         <Typography variant="h5" className={classes.textBox}>
-          Nos catégories les plus populaires
+          Cela se passe près de chez vous
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
@@ -81,8 +81,8 @@ const serenityNeed = (props) => {
   );
 };
 
-serenityNeed.propTypes = {
+nearbyYou.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
-export default withStyles(styles)(serenityNeed);
+export default withStyles(styles)(nearbyYou);

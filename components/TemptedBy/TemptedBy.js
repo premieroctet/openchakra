@@ -25,9 +25,7 @@ const styles = theme => ({
   },
   media: {
     height: 0,
-    borderRadius: '20px',
-    paddingTop: '118.25%', // 16:9
-    maxWidth: 345,
+    paddingTop: '100.25%', // 16:9
   },
   textBox: {
     paddingRight: 15,
@@ -47,33 +45,27 @@ const styles = theme => ({
   },
 });
 
-const serenityNeed = (props) => {
+const temptedBy = (props) => {
   const { classes } = props;
 
   return (
     <Fragment>
       <Grid container className={classes.container}>
         <Typography variant="h5" className={classes.textBox}>
-          Nos catégories les plus populaires
+          Vous serez peut-être tentés par...
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={3}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={4}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
-        </Grid>
-        <Grid item xs={4}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
-        </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={3}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
       </Grid>
@@ -81,8 +73,8 @@ const serenityNeed = (props) => {
   );
 };
 
-serenityNeed.propTypes = {
+temptedBy.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
-export default withStyles(styles)(serenityNeed);
+export default withStyles(styles)(temptedBy);

@@ -56,17 +56,17 @@ const popularCategories = (props) => {
           Nos catégories les plus populaires
         </Typography>
       </Grid>
-      <Grid container className={classes.container} spacing={24}>
+      <Grid container className={classes.container} spacing={24} wrap="wrap">
         <Grid item xs={3}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
         <Grid item xs={3}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item sm={3}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item sm={3}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
         </Grid>
       </Grid>
