@@ -4,6 +4,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import BecomeAlfredBanner from './BecomeAlfredBanner/BecomeAlfredBanner';
+import BecomeAlfredPersonsCard from './BecomeAlfredPersonsCard/BecomeAlfredPersonsCard';
 
 const styles = theme => ({
   container: {
@@ -63,12 +65,12 @@ const becomeAlfred = (props) => {
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
         <Grid item xs={12}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
+          <BecomeAlfredBanner img="../../../static/joshua-earle-133254-unsplash.jpg" />
         </Grid>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
         <Grid item xs={4}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.mediaLittleCard} />
+          <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
         </Grid>
         <Grid item xs={4}>
           <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.mediaLittleCard} />

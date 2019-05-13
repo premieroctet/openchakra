@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
@@ -36,7 +37,9 @@ const recommandationsCard = (props) => {
             Service Sub Category
           </Typography>
           <Typography component="p">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vel pellentesque quam. Sed lobortis justo id pharetra laoreet. Curabitur sollicitudin iaculis dolor, nec faucibus libero.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Nullam vel pellentesque quam. Sed lobortis justo id pharetra laoreet.
+            Curabitur sollicitudin iaculis dolor, nec faucibus libero.
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -50,7 +53,8 @@ const recommandationsCard = (props) => {
 };
 
 recommandationsCard.propTypes = {
-  
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  img: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(recommandationsCard);
