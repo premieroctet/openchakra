@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
-import Navbar from '../components/Navbar/Navbar';
-import PopularCategories from '../components/PopularCategories/PopularCategories';
-import SerenityNeed from '../components/SerenityNeed/SerenityNeed';
-import BecomeAlfred from '../components/BecomeAlfred/BecomeAlfred';
-import Recommandations from '../components/Recommandations/Recommandations';
-import TemptedBy from '../components/TemptedBy/TemptedBy';
-import NearbyYou from '../components/NearbyYou/NearbyYou';
+import Navbar from '../components/home/Navbar/Navbar';
+import PopularCategories from '../components/home/PopularCategories/PopularCategories';
+import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
+import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
+import Recommandations from '../components/home/Recommandations/Recommandations';
+import TemptedBy from '../components/home/TemptedBy/TemptedBy';
+import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 
 const Home = () => (
   <Fragment>
