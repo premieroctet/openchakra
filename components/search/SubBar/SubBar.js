@@ -1,6 +1,5 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import Chip from '@material-ui/core/Chip';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
@@ -18,8 +17,10 @@ const subBar = (props) => {
   return (
     <AppBar color="default" position="static" className={classes.grow}>
       <Toolbar>
-        <Chip label="test" />
-        <Button>Test</Button>
+        <Button>Homme</Button>
+        <Button>Femme</Button>
+        <Button>Couleur</Button>
+        <Button>Brushing</Button>
       </Toolbar>
     </AppBar>
   );

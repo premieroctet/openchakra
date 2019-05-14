@@ -82,6 +82,7 @@ const navbar = (props) => {
         </div>
         <div className={classes.grow} />
         <Button variant="outlined" color="default" className={classes.buttonSpace}>Connexion</Button>
+        
         <Button variant="contained" color="default">Inscription</Button>
       </Toolbar>
     </AppBar>
