@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
+// eslint-disable-next-line no-unused-vars
 const styles = theme => ({
   grow: {
     flexGrow: 1,

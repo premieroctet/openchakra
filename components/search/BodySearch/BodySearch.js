@@ -31,6 +31,7 @@ const styles = theme => ({
 });
 
 const bodySearch = (props) => {
+  // eslint-disable-next-line react/prop-types
   const { classes } = props;
 
   return (

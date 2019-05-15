@@ -9,9 +9,11 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import CardMedia from '@material-ui/core/CardMedia';
 import Fab from '@material-ui/core/Fab';
+// eslint-disable-next-line object-curly-newline
 import { StarRate, FavoriteBorderOutlined, LocationOn, PermContactCalendar } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
+// eslint-disable-next-line no-unused-vars
 const styles = theme => ({
   card: {
     maxWidth: 300,
@@ -54,7 +56,6 @@ const styles = theme => ({
     justifySelf: 'center',
     height: 60,
     width: 60,
-    //marginBottom: 35,
   },
   darkOverlay: {
     height: '100%',
@@ -147,55 +148,3 @@ bodySearchCard.propTypes = {
 };
 
 export default withStyles(styles)(bodySearchCard);
-
-
-/**/
-
-/*return (
-  <Card className={classes.card}>
-    <CardActionArea>
-      <CardMedia component="div" alt="Nom du service" image="../../../../static/markus-spiske-502390-unsplash.jpg">
-        <CardContent>
-          <Grid container>
-            <div />
-            <Avatar alt="John Doe" src="../../../../static/John-Doe.jpg" />
-          </Grid> 
-        </CardContent>
-      </CardMedia>
-      <CardContent>
-        <Grid container>
-          <div />
-          <Avatar alt="John Doe" src="../../../../static/John-Doe.jpg" />
-        </Grid>
-        <Grid container>
-          <Typography variant="h5" component="h2">Service name</Typography>
-        </Grid>
-        <Grid container className={classes.gridContainer}>
-          <Typography gutterBottom>
-            Par Jean
-          </Typography>
-          <FavoriteBorderOutlined />
-        </Grid>
-        <Grid container>
-          <div>
-            <StarRate />
-            <StarRate />
-            <StarRate />
-            <StarRate />
-            <StarRate />
-          </div>
-          <Typography>(120)</Typography>
-        </Grid>
-        <Grid container>
-          <LocationOn />
-          <Typography className={classes.gpsText}>300m</Typography>
-        </Grid>
-      </CardContent>
-    </CardActionArea>
-    <CardActions>
-      <Button size="small" color="primary">
-        Réservez maintenant
-      </Button>
-    </CardActions>
-  </Card>
-);*/

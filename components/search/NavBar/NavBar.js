@@ -5,7 +5,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
-import moduleName from '@material-ui/icons';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -16,6 +15,9 @@ const styles = theme => ({
   },
   buttonSpace: {
     marginRight: '10px',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
   },
   search: {
     position: 'relative',
@@ -28,7 +30,6 @@ const styles = theme => ({
     width: '100%',
     [theme.breakpoints.up('xs')]: {
       marginLeft: '20px',
-      width: '30%',
     },
     [theme.breakpoints.up('sm')]: {
       marginLeft: '20px',
@@ -65,6 +66,11 @@ const styles = theme => ({
       },
     },
   },
+  mobileHide: {
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
+  },
 });
 
 const navbar = (props) => {
@@ -90,7 +96,7 @@ const navbar = (props) => {
         </div>
         <div className={classes.grow} />
         <Button variant="outlined" color="default" className={classes.buttonSpace}>Connexion</Button>
-        <Button variant="contained" color="default">Inscription</Button>
+        <Button variant="contained" color="default" className={classes.mobileHide}>Inscription</Button>
       </Toolbar>
     </AppBar>
   );
