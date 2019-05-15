@@ -47,16 +47,16 @@ const TemptedBy = (props) => {
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
         <Grid item xs={3}>
-          <TemptedByCard img="../../static/bleumarine.png" title="image bleu marine" desc="Description de la prestation lorem ipsum lalala lalala" className={classes.media} />
+          <TemptedByCard img="../../static/bleumarine.png" title="image bleu marine" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
         </Grid>
         <Grid item xs={3}>
-          <TemptedByCard img="../../static/saumonorange.png" title="image orange saumon" desc="Description de la prestation lorem ipsum lalala lalala" className={classes.media} />
+          <TemptedByCard img="../../static/saumonorange.png" title="image orange saumon" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
         </Grid>
         <Grid item sm={3}>
-          <TemptedByCard img="../../static/bleuclair.png" title="image bleu clair" desc="Description de la prestation lorem ipsum lalala lalala" className={classes.media} />
+          <TemptedByCard img="../../static/bleuclair.png" title="image bleu clair" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
         </Grid>
         <Grid item sm={3}>
-          <TemptedByCard img="../../static/violetclair.png" title="image violet clair" desc="Description de la prestation lorem ipsum lalala lalala" className={classes.media} />
+          <TemptedByCard img="../../static/violetclair.png" title="image violet clair" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
         </Grid>
       </Grid>
     </Fragment>

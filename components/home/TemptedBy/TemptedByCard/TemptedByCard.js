@@ -2,9 +2,11 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
+import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import { RestaurantMenu } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
 const styles = theme => ({
@@ -66,7 +68,7 @@ const styles = theme => ({
 
   const TemptedByCard = (props) => {
     // eslint-disable-next-line object-curly-newline
-    const { img, classes, desc } = props;
+    const { img, classes, desc, avatar } = props;
   
     return (
       <Card className={classes.card}>
@@ -74,15 +76,11 @@ const styles = theme => ({
           <CardMedia component="div" alt="color" image={img} className={classes.cardMedia}>
             <Grid container className={classes.container}>
               <Grid container xs={12} className={classes.row}>
+                <Grid item xs={5}></Grid>
                 <Grid item xs={4}></Grid>
-                <Grid item xs={4}></Grid>
-                <Grid item xs={4}>
-                 {/*<CardMedia
-                    className={classes.media}
-                    image='../../../../static/tools.png'
-                    title="tools"
-                 ></CardMedia>*/}
-                 <Typography className={classes.textUp}>Icon</Typography>
+                <Grid item xs={3}>
+                 <RestaurantMenu style={{color: 'white', fontSize: '4rem'}}/>
+                 {/*<Typography className={classes.textUp}>Icon</Typography>*/}
                 </Grid>
               </Grid>
               {/*<Grid container xs={12} className={classes.row}>

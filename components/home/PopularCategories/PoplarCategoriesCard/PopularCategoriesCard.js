@@ -2,9 +2,12 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
+import Avatar from '@material-ui/core/Avatar';
+import Badge from '@material-ui/core/Badge';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import { People } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
 const styles = theme => ({
@@ -59,9 +62,10 @@ const styles = theme => ({
   },
 });
 
+
 const popularCategoriesCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { img, classes, categorie, desc } = props;
+  const { img, classes, categorie, desc, avatar } = props;
 
   return (
     <Card className={classes.card}>
@@ -72,11 +76,14 @@ const popularCategoriesCard = (props) => {
               <Typography className={classes.textUp}>{categorie}</Typography>
             </Grid>
             <Grid container xs={12} className={classes.row}>
-              <Grid item xs={8} className={classes.center}>
+              <Grid item xs={9} className={classes.center}>
                 <Typography className={classes.textDown}>{desc}</Typography>
               </Grid>
-              <Grid item xs={4} className={classes.center}>
-                <Typography className={classes.textDown}>test2</Typography>
+              <Grid item xs={3} className={classes.center}>
+              <Badge badgeContent={563} color="primary">
+              {/*<Avatar alt="Unknown" src={avatar}/>*/}
+              <People style={{color: 'lightgrey'}}/>
+              </Badge>
               </Grid>
             </Grid>
           </Grid>
