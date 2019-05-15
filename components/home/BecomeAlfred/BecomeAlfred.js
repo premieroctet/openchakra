@@ -73,10 +73,10 @@ const becomeAlfred = (props) => {
           <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
         </Grid>
         <Grid item xs={4}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.mediaLittleCard} />
+          <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
         </Grid>
         <Grid item xs={4}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.mediaLittleCard} />
+          <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
         </Grid>
       </Grid>
     </Fragment>

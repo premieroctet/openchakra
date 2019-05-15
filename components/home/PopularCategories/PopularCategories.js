@@ -56,7 +56,7 @@ const popularCategories = (props) => {
           <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" />
         </Grid>
         <Grid item xs={0} sm={3}>
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" />
+        <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" />
         </Grid>
       </Grid>
     </Fragment>

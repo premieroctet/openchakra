@@ -4,6 +4,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import NearbyYouCard from './NearbyYou/NearbyYouCard';
 
 const styles = theme => ({
   container: {
@@ -54,27 +55,27 @@ const nearbyYou = (props) => {
     <Fragment>
       <Grid container className={classes.container}>
         <Typography variant="h5" className={classes.textBox}>
-          Cela se passe près de chez vous
+          Nos recommandations
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
         <Grid item xs={4}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
+          <NearbyYouCard img="../../../static/rachel-park-366508-unsplash.jpg" />
         </Grid>
         <Grid item xs={4}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
+          <NearbyYouCard img="../../../static/rachel-park-366508-unsplash.jpg" />
         </Grid>
         <Grid item sm={4}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
+          <NearbyYouCard img="../../../static/rachel-park-366508-unsplash.jpg" />
+        </Grid>
+        <Grid item xs={4}>
+          <NearbyYouCard img="../../../static/rachel-park-366508-unsplash.jpg" />
+        </Grid>
+        <Grid item xs={4}>
+          <NearbyYouCard img="../../../static/rachel-park-366508-unsplash.jpg" />
         </Grid>
         <Grid item sm={4}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
-        </Grid>
-        <Grid item sm={4}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
-        </Grid>
-        <Grid item sm={4}>
-          <CardMedia image="../../static/Image-noir-perso.jpeg" title="image noire" className={classes.media} />
+          <NearbyYouCard   img="../../../static/rachel-park-366508-unsplash.jpg" />
         </Grid>
       </Grid>
     </Fragment>
