@@ -32,7 +32,8 @@ const styles = theme => ({
   textBox: {
     paddingRight: 15,
     paddingLeft: 15,
-    marginBottom: 5,
+    marginBottom: 30,
+    marginTop: 35,
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -58,22 +59,22 @@ const recommandations = (props) => {
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item sm={4}>
+        <Grid item sm={12} sm={6} md={4} lg={4}>
           <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item sm={4}>
+        <Grid item sm={12} sm={6} md={4} lg={4}>
           <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
       </Grid>

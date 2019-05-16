@@ -10,14 +10,28 @@ import Chip from '@material-ui/core/Chip';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = {
+const styles = theme => ({
   card: {
-    maxWidth: 300,
+
+    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
+    [theme.breakpoints.up('xs')]: { // xs: 600px or larger
+      maxWidth: 450,
+    },
+    [theme.breakpoints.up('sm')]: { 
+      maxWidth: 400,
+      },
+    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+    maxWidth: 350,
+    },
+    [theme.breakpoints.up('lg')]: {
+      maxWidth: 300
+    },
+    
   },
   media: {
     height: 200,
   },
-};
+});
 
 const serenityNeedCard = (props) => {
   // eslint-disable-next-line object-curly-newline

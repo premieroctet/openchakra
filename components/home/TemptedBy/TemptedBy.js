@@ -31,7 +31,8 @@ const styles = theme => ({
   textBox: {
     paddingRight: 15,
     paddingLeft: 15,
-    marginBottom: 5,
+    marginBottom: 30,
+    marginTop: 35,
   },
 });
 
@@ -46,16 +47,16 @@ const TemptedBy = (props) => {
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} md={3} lg={3}>
           <TemptedByCard img="../../static/bleumarine.png" title="image bleu marine" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} md={3} lg={3}>
           <TemptedByCard img="../../static/saumonorange.png" title="image orange saumon" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
         </Grid>
-        <Grid item sm={3}>
+        <Grid item xs={12} sm={6} md={3} lg={3}>
           <TemptedByCard img="../../static/bleuclair.png" title="image bleu clair" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
         </Grid>
-        <Grid item sm={3}>
+        <Grid item xs={12} sm={6} md={3} lg={3}>
           <TemptedByCard img="../../static/violetclair.png" title="image violet clair" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
         </Grid>
       </Grid>

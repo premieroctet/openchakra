@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
-import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
@@ -25,6 +24,29 @@ const styles = theme => ({
       width: 1366,
     },
   },
+  container1: {
+    paddingRight: 15,
+    paddingLeft: 15,
+    marginRight: 'auto',
+    marginLeft: 'auto',
+
+    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
+    [theme.breakpoints.up('xs')]: {
+      width: 350,
+    },
+    [theme.breakpoints.up('sm')]: {
+      width: 500,
+    },
+    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+      width: 920,
+    },
+    [theme.breakpoints.up('lg')]: { // large: 1280px or larger
+      width: 1170,
+    },
+    [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
+      width: 1366,
+    },
+  },
   media: {
     height: 0,
     borderRadius: '20px',
@@ -38,7 +60,8 @@ const styles = theme => ({
   textBox: {
     paddingRight: 15,
     paddingLeft: 15,
-    marginBottom: 5,
+    marginBottom: 30,
+    marginTop: 35,
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -68,7 +91,7 @@ const becomeAlfred = (props) => {
           <BecomeAlfredBanner img="../../../static/joshua-earle-133254-unsplash.jpg" />
         </Grid>
       </Grid>
-      <Grid container className={classes.container} spacing={24} wrap="wrap">
+      {/*<Grid container className={classes.container} spacing={24} wrap="wrap">
         <Grid item xs={4}>
           <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
         </Grid>
@@ -78,7 +101,7 @@ const becomeAlfred = (props) => {
         <Grid item xs={4}>
           <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
         </Grid>
-      </Grid>
+  </Grid>*/}
     </Fragment>
   );
 };

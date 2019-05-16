@@ -14,15 +14,15 @@ const styles = theme => ({
   textUp: {
     textAlign: 'center',
     paddingTop: '3rem',
-    fontFamily: 'helvetica',
+    fontFamily: 'roboto',
     fontWeight: 'bold',
     fontSize: '20px',
     color: 'white',
     letterSpacing: '.2rem',
   },
   textDown: {
-    textAlign: 'center',
-    fontFamily: 'helvetica neue',
+    textAlign: 'left',
+    fontFamily: 'roboto',
     fontSize: '18px',
     color: 'white',
     padding: '.7rem',

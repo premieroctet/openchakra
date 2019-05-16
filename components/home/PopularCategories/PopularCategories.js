@@ -11,6 +11,7 @@ const styles = theme => ({
     paddingLeft: 15,
     marginRight: 'auto',
     marginLeft: 'auto',
+    width: '100%',
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -31,7 +32,8 @@ const styles = theme => ({
   textBox: {
     paddingRight: 15,
     paddingLeft: 15,
-    marginBottom: 5,
+    marginBottom: 30,
+    marginTop: 35,
   },
 });
 
@@ -46,16 +48,16 @@ const popularCategories = (props) => {
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
-        <Grid item xs={6} sm={3}>
+        <Grid item xs={3}>
           <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png"/>
         </Grid>
-        <Grid item xs={6} sm={3}>
+        <Grid item xs={3}>
           <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png"/>
         </Grid>
-        <Grid item xs={0} sm={3}>
+        <Grid item xs={3}>
           <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png"/>
         </Grid>
-        <Grid item xs={0} sm={3}>
+        <Grid item xs={3}>
         <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png"/>
         </Grid>
       </Grid>

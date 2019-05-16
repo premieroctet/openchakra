@@ -40,17 +40,24 @@ const styles = theme => ({
       flex: 1,
     },
     card: {
-      maxWidth: '300px',
       maxHeight: '300px',
       height: '200px',
       borderRadius: '5px',
   
-      [theme.breakpoints.up('md')]: { // medium: 960px or larger
-        height: '300px',
+          // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
+    [theme.breakpoints.up('xs')]: { // xs: 600px or larger
+      maxWidth: 450,
+      maxHeight: 300,
+    },
+    [theme.breakpoints.up('sm')]: { 
+      maxWidth: 400,
       },
-      [theme.breakpoints.up('sm')]: { // medium: 960px or larger
-        height: '250px',
-      },
+    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+    maxWidth: 350,
+    },
+    [theme.breakpoints.up('lg')]: {
+      maxWidth: 300
+    },
     },
     cardAction: {
       height: '100%',
@@ -78,8 +85,8 @@ const styles = theme => ({
               <Grid container xs={12} className={classes.row}>
                 <Grid item xs={5}></Grid>
                 <Grid item xs={4}></Grid>
-                <Grid item xs={3}>
-                 <RestaurantMenu style={{color: 'white', fontSize: '4rem'}}/>
+                <Grid container item xs={3}>
+                 <RestaurantMenu style={{color: 'white', fontSize: '4rem', maxWidth: '100%'}}/>
                  {/*<Typography className={classes.textUp}>Icon</Typography>*/}
                 </Grid>
               </Grid>

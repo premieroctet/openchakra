@@ -12,6 +12,7 @@ const styles = theme => ({
     paddingLeft: 15,
     marginRight: 'auto',
     marginLeft: 'auto',
+    width: '100%',
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -33,7 +34,8 @@ const styles = theme => ({
   textBox: {
     paddingRight: 15,
     paddingLeft: 15,
-    marginBottom: 5,
+    marginBottom: 30,
+    marginTop: 35,
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -59,22 +61,22 @@ const serenityNeed = (props) => {
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
-        <Grid item xs={12} sm={12} md={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <SerenityNeedCard img="../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item sm={0} md={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <SerenityNeedCard img="../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item sm={0} md={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <SerenityNeedCard img="../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item sm={0} md={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <SerenityNeedCard img="../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item sm={0} md={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <SerenityNeedCard img="../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item sm={0} md={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <SerenityNeedCard img="../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
       </Grid>
