@@ -10,6 +10,10 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+
+    [theme.breakpoints.down('md')]: {
+      alignSelf: 'center',
+    },
   },
   avatar: {
     height: 150,
@@ -22,19 +26,29 @@ const styles = theme => ({
   text: {
     margin: '1rem 0 .5rem 0',
   },
+  allContainer: {
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+    },
+  },
+  biographyContainer: {
+    [theme.breakpoints.down('xs')]: {
+      alignSelf: 'center',
+    },
+  },
 });
 
 const bioCard = (props) => {
   const { classes } = props;
 
   return (
-    <Grid container>
+    <Grid container className={classes.allContainer}>
       <Grid item xs={4} className={classes.avatarContainer}>
         <Avatar alt="John Doe" src="../../../../static/John-Doe.jpg" className={classes.avatar} />
         <Typography className={classes.text}>John Doe</Typography>
         <Typography>Rouen, France</Typography>
       </Grid>
-      <Grid item xs={8}>
+      <Grid item xs={8} className={classes.biographyContainer}>
         <Card className={classes.biography}>
           <Typography>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.

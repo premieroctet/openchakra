@@ -28,6 +28,20 @@ const styles = theme => ({
     marginTop: '2rem',
     marginBottom: '2rem',
   },
+  card2: {
+    display: 'flex',
+    justifyContent: 'center',
+    [theme.breakpoints.down('md')]: { // medium: 960px or larger
+      justifyContent: 'normal',
+    },
+  },
+  card3: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    [theme.breakpoints.down('md')]: { // medium: 960px or larger
+      justifyContent: 'normal',
+    },
+  },
 });
 
 const myBestSellers = (props) => {
@@ -40,13 +54,13 @@ const myBestSellers = (props) => {
         <Typography variant="h5" className={classes.title}>Mes meilleurs services</Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24}>
-        <Grid item xs={6} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <MyBestSellersCard img="../../../static/photo-1538342014732-212dc8f76863.jpeg" />
         </Grid>
-        <Grid item xs={6} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={4} className={classes.card2}>
           <MyBestSellersCard img="../../../static/photo-1538342014732-212dc8f76863.jpeg" />
         </Grid>
-        <Grid item xs={6} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={4} className={classes.card3}>
           <MyBestSellersCard img="../../../static/photo-1538342014732-212dc8f76863.jpeg" />
         </Grid>
       </Grid>

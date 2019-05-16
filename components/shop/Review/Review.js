@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import ReviewCard from './ReviewCard/ReviewCard';
 
@@ -37,10 +36,10 @@ const review = (props) => {
   return (
     <Fragment>
       <Grid container className={classes.container} spacing={24}>
-        <Grid item xs={6} sm={6} md={6}>
+        <Grid item xs={12} sm={6} md={6}>
           <ReviewCard />
         </Grid>
-        <Grid item xs={6} sm={6} md={6}>
+        <Grid item xs={12} sm={6} md={6}>
           <ReviewCard />
         </Grid>
       </Grid>

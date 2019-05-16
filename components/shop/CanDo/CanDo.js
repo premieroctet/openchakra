@@ -40,16 +40,16 @@ const canDo = (props) => {
         <Typography variant="h5" className={classes.title}>Je peux faire...</Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24}>
-        <Grid item xs={6} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <CanDoCard img="../../../static/photo-1538342014732-212dc8f76863.jpeg" />
         </Grid>
-        <Grid item xs={6} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <CanDoCard img="../../../static/photo-1538342014732-212dc8f76863.jpeg" />
         </Grid>
-        <Grid item xs={6} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <CanDoCard img="../../../static/photo-1538342014732-212dc8f76863.jpeg" />
         </Grid>
-        <Grid item xs={6} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <CanDoCard img="../../../static/photo-1538342014732-212dc8f76863.jpeg" />
         </Grid>
       </Grid>

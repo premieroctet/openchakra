@@ -15,6 +15,9 @@ const styles = theme => ({
     width: '100%',
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
+    [theme.breakpoints.up('xs')]: { // medium: 960px or larger
+      flexDirection: 'column',
+    },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: 920,
     },

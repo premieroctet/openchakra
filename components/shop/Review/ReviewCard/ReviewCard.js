@@ -3,12 +3,13 @@ import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import { Star } from '@material-ui/icons';
+import { StarRate } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   reviewCard: {
     padding: '2rem 4rem',
+    borderRadius: 10,
   },
   reviewContainer: {
     display: 'flex',
@@ -41,6 +42,16 @@ const styles = theme => ({
     marginTop: '1rem',
     justifyContent: 'flex-end',
   },
+  nameText: {
+    fontSize: 25,
+  },
+  starContainer: {
+    marginRight: '1rem',
+  },
+  oneWordText: {
+    fontSize: 20,
+    lineHeight: 1,
+  },
 });
 
 const reviewCard = (props) => {
@@ -56,15 +67,21 @@ const reviewCard = (props) => {
           <Grid item style={{ alignSelf: 'flex-end' }}>
             <Grid container className={classes.nameAndStarContainer}>
               <Grid item>
-                <Typography>John Doe</Typography>
+                <Typography className={classes.nameText}>John Doe</Typography>
               </Grid>
               <Grid item>
                 <Grid container className={classes.starAndQuickReviewContainer}>
-                  <Grid item>
-                    <Typography>Stars</Typography>
+                  <Grid item className={classes.starContainer}>
+                    <div>
+                      <StarRate fontSize="small" />
+                      <StarRate fontSize="small" />
+                      <StarRate fontSize="small" />
+                      <StarRate fontSize="small" />
+                      <StarRate fontSize="small" />
+                    </div>
                   </Grid>
                   <Grid item>
-                    <Typography>Excellent</Typography>
+                    <Typography className={classes.oneWordText}>&quot;Excellent&quot;</Typography>
                   </Grid>
                 </Grid>
               </Grid>
