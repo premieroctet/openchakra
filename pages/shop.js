@@ -3,6 +3,7 @@ import AlfredBanner from '../components/shop/AlfredBanner/AlfredBanner';
 import CanDo from '../components/shop/CanDo/CanDo';
 import MyBestSellers from '../components/shop/MyBestSellers/myBestSellers';
 import Bio from '../components/shop/Bio/Bio';
+import Review from '../components/shop/Review/Review';
 
 const shop = () => {
   return (
@@ -11,6 +12,7 @@ const shop = () => {
       <CanDo />
       <MyBestSellers />
       <Bio />
+      <Review />
     </Fragment>
   );
 };

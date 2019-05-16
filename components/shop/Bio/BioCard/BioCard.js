@@ -17,6 +17,7 @@ const styles = theme => ({
   },
   biography: {
     padding: '2rem',
+    borderRadius: 10,
   },
   text: {
     margin: '1rem 0 .5rem 0',
@@ -36,7 +37,18 @@ const bioCard = (props) => {
       <Grid item xs={8}>
         <Card className={classes.biography}>
           <Typography>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut sapien at odio faucibus porta. Nullam eget nibh pellentesque, lobortis nibh vitae, congue libero. Pellentesque congue rutrum vestibulum. Suspendisse et facilisis ipsum. Vestibulum semper ultricies massa, ut elementum elit ultricies sit amet. In fringilla lacus vel tellus ullamcorper ornare. In consequat nisl a auctor condimentum. Nunc in turpis ac odio auctor euismod gravida a felis. Maecenas sollicitudin ex eget nisi scelerisque semper. In ipsum enim, maximus ac fermentum vel, convallis et purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed luctus magna in lectus faucibus molestie. Nam lacinia porttitor ipsum, ut imperdiet orci rhoncus non.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Nam ut sapien at odio faucibus porta. Nullam eget nibh
+            pellentesque, lobortis nibh vitae, congue libero. Pellentesque
+            congue rutrum vestibulum. Suspendisse et facilisis ipsum.
+            Vestibulum semper ultricies massa, ut elementum elit ultricies
+            sit amet. In fringilla lacus vel tellus ullamcorper ornare. In
+            consequat nisl a auctor condimentum. Nunc in turpis ac odio
+            auctor euismod gravida a felis. Maecenas sollicitudin ex eget
+            nisi scelerisque semper. In ipsum enim, maximus ac fermentum vel,
+            convallis et purus. Pellentesque habitant morbi tristique senectus
+            et netus et malesuada fames ac turpis egestas. Sed luctus magna in
+            lectus faucibus molestie. Nam lacinia porttitor ipsum, ut imperdiet orci rhoncus non.
           </Typography>
         </Card>
       </Grid>
