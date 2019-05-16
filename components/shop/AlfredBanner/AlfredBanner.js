@@ -26,11 +26,11 @@ const style = theme => ({
   },
   itemAvatar: {
     flexDirection: 'column',
-    margin: '0 25%',
   },
   itemShare: {
     flexDirection: 'column',
-    marginTop: '11%',
+    alignSelf: 'flex-end',
+    marginBottom: '2rem',
   },
   textAvatar: {
     textAlign: 'center',
@@ -42,7 +42,8 @@ const style = theme => ({
     textAlign: 'center',
   },
   itemDispo: {
-    marginTop: '12%',
+    alignSelf: 'flex-end',
+    marginBottom: '2rem',
   },
   textDispo: {
     color: 'white',
