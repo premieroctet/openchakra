@@ -91,7 +91,7 @@ const becomeAlfred = (props) => {
           <BecomeAlfredBanner img="../../../static/joshua-earle-133254-unsplash.jpg" />
         </Grid>
       </Grid>
-      {/*<Grid container className={classes.container} spacing={24} wrap="wrap">
+      <Grid container className={classes.container} spacing={24} wrap="wrap">
         <Grid item xs={4}>
           <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
         </Grid>
@@ -101,7 +101,7 @@ const becomeAlfred = (props) => {
         <Grid item xs={4}>
           <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
         </Grid>
-  </Grid>*/}
+  </Grid>
     </Fragment>
   );
 };
