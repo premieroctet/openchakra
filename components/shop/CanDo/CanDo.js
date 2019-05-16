@@ -30,7 +30,7 @@ const styles = theme => ({
   },
 });
 
-const bodySearch = (props) => {
+const canDo = (props) => {
   // eslint-disable-next-line react/prop-types
   const { classes } = props;
 
@@ -57,4 +57,4 @@ const bodySearch = (props) => {
   );
 };
 
-export default withStyles(styles)(bodySearch);
+export default withStyles(styles)(canDo);
