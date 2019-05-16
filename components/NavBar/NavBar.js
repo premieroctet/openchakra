@@ -77,7 +77,7 @@ const navbar = (props) => {
   const { classes } = props;
 
   return (
-    <AppBar color="primary" position="static" className={classes.grow}>
+    <AppBar color="primary" position="fixed" className={classes.grow}>
       <Toolbar>
         <Typography variant="h6">
           My Alfred
