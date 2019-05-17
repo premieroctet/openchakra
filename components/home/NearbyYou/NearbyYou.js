@@ -60,22 +60,22 @@ const nearbyYou = (props) => {
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
         <Grid item xs={4}>
-          <NearbyYouCard img="../../../static/rachel-park-366508-unsplash.jpg" />
+          <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
         <Grid item xs={4}>
-          <NearbyYouCard img="../../../static/rachel-park-366508-unsplash.jpg" />
+          <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
         <Grid item sm={4}>
-          <NearbyYouCard img="../../../static/rachel-park-366508-unsplash.jpg" />
+          <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
         <Grid item xs={4}>
-          <NearbyYouCard img="../../../static/rachel-park-366508-unsplash.jpg" />
+          <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
         <Grid item xs={4}>
-          <NearbyYouCard img="../../../static/rachel-park-366508-unsplash.jpg" />
+          <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
         <Grid item sm={4}>
-          <NearbyYouCard   img="../../../static/rachel-park-366508-unsplash.jpg" />
+          <NearbyYouCard   img="../../../static/coiffure.jpg" />
         </Grid>
       </Grid>
     </Fragment>
