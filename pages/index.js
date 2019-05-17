@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import Navbar from '../components/home/Navbar/Navbar';
+import Navbar from '../components/NavBar/NavBar';
 import PopularCategories from '../components/home/PopularCategories/PopularCategories';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
