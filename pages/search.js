@@ -5,7 +5,6 @@ import BodySearch from '../components/search/BodySearch/BodySearch';
 
 const Search = () => (
   <Fragment>
-    <NavBar />
     <SubBar />
     <BodySearch />
   </Fragment>
