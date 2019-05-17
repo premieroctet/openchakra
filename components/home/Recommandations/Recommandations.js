@@ -65,16 +65,16 @@ const recommandations = (props) => {
         <Grid item xs={12} sm={6} md={4} lg={4}>
           <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item sm={12} sm={6} md={4} lg={4}>
-          <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
-        </Grid>
         <Grid item xs={12} sm={6} md={4} lg={4}>
           <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={4}>
           <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
-        <Grid item sm={12} sm={6} md={4} lg={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
+          <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg" />
         </Grid>
       </Grid>
