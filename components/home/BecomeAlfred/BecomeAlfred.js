@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import BecomeAlfredBanner from './BecomeAlfredBanner/BecomeAlfredBanner';
 import BecomeAlfredPersonsCard from './BecomeAlfredPersonsCard/BecomeAlfredPersonsCard';
+import Head from 'next/head';
 
 const styles = theme => ({
   container: {
@@ -91,17 +92,25 @@ const becomeAlfred = (props) => {
           <BecomeAlfredBanner img="../../../static/joshua-earle-133254-unsplash.jpg" />
         </Grid>
       </Grid>
-      <Grid container className={classes.container} spacing={24} wrap="wrap">
-        <Grid item xs={4}>
+      <div className="thewrap">
+        <section className="card2">
+
           <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
-        </Grid>
-        <Grid item xs={4}>
+
           <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
-        </Grid>
-        <Grid item xs={4}>
+          
           <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
-        </Grid>
-  </Grid>
+          
+          <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
+          
+          <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
+          
+          <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
+          
+          <BecomeAlfredPersonsCard alt="John Doe" avatar="../../../static/johndoe.jpg" />
+            
+        </section>
+      </div>
     </Fragment>
   );
 };

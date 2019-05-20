@@ -9,6 +9,10 @@ import { Typography } from '@material-ui/core';
 const styles = {
   card: {
     display: 'flex',
+    margin: '5px!important',
+    minWidth: '300px!important',
+    marginRight: '10px!important',
+    marginLeft: '10px!important',
   },
   personName: {
     alignSelf: 'center',

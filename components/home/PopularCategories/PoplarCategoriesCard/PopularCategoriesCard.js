@@ -39,17 +39,15 @@ const styles = theme => ({
     flex: 1,
   },
   card: {
-    maxWidth: '230px',
+    maxWidth: '300px',
     maxHeight: '400px',
     height: '350px',
     borderRadius: '30px',
+    margin: '5px!important',
+    minWidth: '300px!important',
+    marginRight: '10px!important',
+    marginLeft: '10px!important',
 
-    [theme.breakpoints.up('md')]: { // medium: 960px or larger
-      height: '300px',
-    },
-    [theme.breakpoints.up('sm')]: { // medium: 960px or larger
-      height: '250px',
-    },
   },
   cardAction: {
     height: '100%',
