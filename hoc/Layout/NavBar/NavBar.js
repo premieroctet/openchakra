@@ -175,7 +175,7 @@ class NavBar extends Component {
         </MenuItem>
         <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
-            <Link href='#'>
+            <Link href='/login'>
               <a className={classes.navbarLinkMobile}>
                 Connexion
               </a>
@@ -229,7 +229,7 @@ class NavBar extends Component {
                   </a>
                 </Link>
               </Typography>
-              <Link href='#'>
+              <Link href='/login'>
                 <Button variant="outlined" style={{ marginRight: '20px', color: 'white', border: '1px solid rgba(255, 255, 255, 1)' }}>
                   Connexion
                 </Button>
