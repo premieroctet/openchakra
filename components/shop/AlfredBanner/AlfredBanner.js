@@ -9,6 +9,7 @@ const style = theme => ({
   bannerContainer: {
     height: '55vh',
     backgroundImage: 'url("../../../static/photo-1538342014732-212dc8f76863.jpeg")',
+    marginTop: 64,
   },
   darkOverlay: {
     height: '100%',
