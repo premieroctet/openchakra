@@ -55,7 +55,7 @@ const nearbyYou = (props) => {
     <Fragment>
       <Grid container className={classes.container}>
         <Typography variant="h5" className={classes.textBox}>
-          Nos recommandations
+          Cela se passe près de chez vous
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
@@ -75,7 +75,7 @@ const nearbyYou = (props) => {
           <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
         <Grid item sm={4}>
-          <NearbyYouCard   img="../../../static/coiffure.jpg" />
+          <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
       </Grid>
     </Fragment>
