@@ -16,7 +16,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { grey, blue } from '@material-ui/core/colors';
+import Link from 'next/link';
 
 const styles = theme => ({
   root: {
@@ -89,18 +89,17 @@ const styles = theme => ({
   inscription: {
     color: 'primary',
   },
-});
-
-const lightGrey = grey[50];
-
-const signUpButtonTheme = createMuiTheme({
-  palette: {
-    primary: {500: lightGrey}
+  navbarItem: {
+    alignSelf: 'center',
+    color: 'white',
+    marginRight: '20px',
+    fontSize: '15px'
   },
-  typography: {
-    useNextVariants: true,
+  navbarLink: {
+    textDecoration: 'none',
+    color: 'white',
   }
-})
+});
 
 class NavBar extends Component {
   state = {
@@ -179,7 +178,7 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
               My Alfred
@@ -198,18 +197,49 @@ class NavBar extends Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <Button>
-                Connexion
-              </Button>
-              <MuiThemeProvider theme={signUpButtonTheme}>
+              <Typography className={classes.navbarItem}>
+                <Link href='#'>
+                  <a className={classes.navbarLink}>
+                    Devenir Alfred
+                  </a>
+                </Link>
+              </Typography>
+              <Typography className={classes.navbarItem}>
+                <Link href='#'>
+                  <a className={classes.navbarLink}>
+                    Aide
+                  </a>
+                </Link>
+              </Typography>
+              <Link href='#'>
+                <Button variant="outlined" style={{ marginRight: '20px', color: 'white', border: '1px solid rgba(255, 255, 255, 1)' }}>
+                  Connexion
+                </Button>
+              </Link>
+              <Link href='#'>
                 <Button
+                  style={{ backgroundColor: 'white', color: '#3f51b5'}}
                   variant="contained"
-                  color="lightG"
-                >
+                  >
                   Inscription
                 </Button>
-              </MuiThemeProvider>
-              <IconButton color="inherit">
+              </Link>
+            </div>
+            <div className={classes.sectionMobile}>
+              <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+                <MoreIcon />
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+        {renderMenu}
+        {renderMobileMenu}
+      </div>
+    );
+  }
+}
+
+/*<IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
                   <MailIcon />
                 </Badge>
@@ -226,20 +256,6 @@ class NavBar extends Component {
                 color="inherit"
               >
                 <AccountCircle />
-              </IconButton>
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-                <MoreIcon />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-        {renderMenu}
-        {renderMobileMenu}
-      </div>
-    );
-  }
-}
+              </IconButton>*/
 
 export default withStyles(styles)(NavBar);
