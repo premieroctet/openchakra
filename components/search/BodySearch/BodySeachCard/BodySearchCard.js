@@ -82,7 +82,9 @@ const styles = theme => ({
   rowLocation: {
     display: 'flex',
     flexDirection: 'row',
-    margin: '5px 20px 0 0',
+    justifyContent: 'space-between',
+    width: '100%',
+    padding: '0 12px',
   },
 });
 
@@ -102,9 +104,14 @@ const bodySearchCard = (props) => {
               </Grid>
               <Grid container className={classes.locationAvatarGrid}>
                 <Avatar alt="John Doe" src="../../../../static/John-Doe.jpg" className={classes.avatar} />
-                <Grid item className={classes.rowLocation}>
-                  <LocationOn className={classes.locationLogo} />
+              </Grid>
+              <Grid container className={classes.rowLocation}>
+                <Grid item style={{ display: 'flex', flexDirection: 'row', alignSelf: 'center' }}>
+                  <LocationOn style={{ color: 'white', marginRight: '5px' }} />
                   <Typography className={classes.locationText}>300m</Typography>
+                </Grid>
+                <Grid item style={{ alignSelf: 'center' }}>
+                  <Typography className={classes.locationText}>A partir de 40€</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -112,11 +119,11 @@ const bodySearchCard = (props) => {
         </CardMedia>
         <CardContent>
           <Typography variant="h6" component="h2">
-            Nom du service
+            John Doe
           </Typography>
           <Grid container>
             <Typography variant="body2" component="p">
-              Par Jean
+              Service: coiffure
             </Typography>
             <div>
               <StarRate fontSize="small" />
