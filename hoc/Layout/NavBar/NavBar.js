@@ -98,7 +98,11 @@ const styles = theme => ({
   navbarLink: {
     textDecoration: 'none',
     color: 'white',
-  }
+  },
+  navbarLinkMobile: {
+    color: 'black',
+    textDecoration: 'none',
+  },
 });
 
 class NavBar extends Component {
@@ -152,26 +156,40 @@ class NavBar extends Component {
         onClose={this.handleMenuClose}
       >
         <MenuItem onClick={this.handleMobileMenuClose}>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <MailIcon />
-            </Badge>
-          </IconButton>
-          <p>Messages</p>
+          <Typography>
+            <Link href='#'>
+              <a className={classes.navbarLinkMobile}>
+                Devenir Alfred
+              </a>
+            </Link>
+          </Typography>
         </MenuItem>
         <MenuItem onClick={this.handleMobileMenuClose}>
-          <IconButton color="inherit">
-            <Badge badgeContent={11} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <p>Notifications</p>
+          <Typography>
+            <Link href='#'>
+              <a className={classes.navbarLinkMobile}>
+                Aide
+              </a>
+            </Link>
+          </Typography>
         </MenuItem>
-        <MenuItem onClick={this.handleProfileMenuOpen}>
-          <IconButton color="inherit">
-            <AccountCircle />
-          </IconButton>
-          <p>Profile</p>
+        <MenuItem onClick={this.handleMobileMenuOpen}>
+          <Typography>
+            <Link href='#'>
+              <a className={classes.navbarLinkMobile}>
+                Connexion
+              </a>
+            </Link>
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={this.handleMobileMenuOpen}>
+          <Typography>
+            <Link href='#'>
+              <a className={classes.navbarLinkMobile}>
+                Inscription
+              </a>
+            </Link>
+          </Typography>
         </MenuItem>
       </Menu>
     );
