@@ -50,6 +50,7 @@ const login = (props) => {
                   placeholder="Email"
                   margin="normal"
                   style={{ width: '100%' }}
+                  type="email"
                 />
               </Grid>
               <Grid item>
@@ -59,6 +60,7 @@ const login = (props) => {
                   placeholder="Mot de passe"
                   margin="normal"
                   style={{ width: '100%' }}
+                  type="password"
                 />
                 <Typography>
                   <Link href='#'>
@@ -69,7 +71,7 @@ const login = (props) => {
                 </Typography>
               </Grid>
               <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                <Button variant="contained" color="primary" style={{ width: '100%' }}>
+                <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                   Connexion
                 </Button>
               </Grid>
