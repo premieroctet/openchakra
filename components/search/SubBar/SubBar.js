@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 const styles = theme => ({
   grow: {
     flexGrow: 1,
+    marginTop: 64,
   },
 });
 

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import NavBar from '../../components/NavBar/NavBar';
+import NavBar from './NavBar/NavBar';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Layout extends Component {
