@@ -7,6 +7,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
+import Checkboxes from '../components/Checkboxes/checkboxes';
+import Selectgenre from '../components/Select/select';
+
 
 import Layout from '../hoc/Layout/Layout';
 
@@ -29,8 +32,12 @@ const styles = {
     color: 'black',
     fontSize: 12,
   },
+  CGU: {
+    marginTop:'5px!important',
+  },
 };
 
+    
 const signup = (props) => {
   const { classes } = props;
 
@@ -64,6 +71,9 @@ const signup = (props) => {
                 />
               </Grid>
               <Grid item>
+                <Selectgenre/>
+              </Grid>
+              <Grid item>
                 <TextField
                   id="standard-with-placeholder"
                   label="Email"
@@ -81,15 +91,23 @@ const signup = (props) => {
                   margin="normal"
                   style={{ width: '100%' }}
                   type="password"
-                />
+                /> 
+              </Grid>
+              <Grid container>
+              <Grid className="CGU" item xs={6}>
                 <Typography>
                   <Link href='#'>
                     <a className={classes.linkText}>
                       Acceptez vous nos CGU ? 
                     </a>
                   </Link>
-                </Typography>
+                  </Typography>
               </Grid>
+              <Grid item xs={6}>
+                  <Checkboxes/>
+              </Grid> 
+              </Grid>
+             
               <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                 <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                   Inscription
