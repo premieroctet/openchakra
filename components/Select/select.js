@@ -31,6 +31,7 @@ class Selectgenre extends React.Component {
     labelWidth: 0,
   };
 
+ 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -40,20 +41,26 @@ class Selectgenre extends React.Component {
 
     return (
       <form className={classes.root} autoComplete="off">
-        <FormControl variant="filled" className={classes.formControl}>
-          <InputLabel htmlFor="filled-age-simple">Genre</InputLabel>
+        <FormControl className={classes.formControl}>
+          <InputLabel shrink htmlFor="genre-label-placeholder">
+            Genre
+          </InputLabel>
           <Select
             value={this.state.genre}
             onChange={this.handleChange}
-            input={<FilledInput name="genre" id="filled-age-simple" />}
+            input={<Input name="genre" id="genre-label-placeholder" />}
+            displayEmpty
+            name="genre"
+            className={classes.selectEmpty}
           >
             <MenuItem value="">
               <em>...</em>
             </MenuItem>
-            <MenuItem value={'Men'}>Homme</MenuItem>
-            <MenuItem value={'Women'}>Femme</MenuItem>
-            <MenuItem value={'Others'}>Non défini</MenuItem>
+            <MenuItem value={"Men"}>Homme</MenuItem>
+            <MenuItem value={"Women"}>Femme</MenuItem>
+            <MenuItem value={"Others"}>Non défini</MenuItem>
           </Select>
+          <FormHelperText>Quel est votre genre ?</FormHelperText>
         </FormControl>
       </form>
     );

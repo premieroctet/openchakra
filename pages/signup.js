@@ -9,20 +9,32 @@ import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Checkboxes from '../components/Checkboxes/checkboxes';
 import Selectgenre from '../components/Select/select';
+import Datenaissance from '../components/Datenaissance/datepicker';
 
 
 import Layout from '../hoc/Layout/Layout';
 
-const styles = {
+const styles = theme => ({
   signupContainer: {
     alignItems: 'center',
-    height: '100vh',
-    justifyContent: 'center',
+    height: '140vh',
+    justifyContent: 'top',
     flexDirection: 'column',
+
+    /*[theme.breakpoints.down('md')]: {
+      height: '140vh',
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: '145vh',  
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: '150vh',
+    },*/
   },
   card: {
     padding: '1.5rem 3rem',
     width: 400,
+    marginTop: '100px',
   },
   cardContant: {
     flexDirection: 'column',
@@ -31,11 +43,19 @@ const styles = {
     textDecoration: 'none',
     color: 'black',
     fontSize: 12,
+    lineHeight: 4.15,
   },
   CGU: {
     marginTop:'5px!important',
   },
-};
+  datenaissance: {
+    marginTop: 20,
+  },
+  selectgenre: {
+    marginTop: 20,
+    marginBottom: -15,
+  },
+});
 
     
 const signup = (props) => {
@@ -50,6 +70,9 @@ const signup = (props) => {
               <Typography style={{ fontSize: 30 }}>Inscription</Typography>
             </Grid>
             <form>
+            <Grid item className={classes.selectgenre}>
+              <Selectgenre/>
+            </Grid>
             <Grid item>
               <TextField
                 id="standard-with-placeholder"
@@ -70,8 +93,8 @@ const signup = (props) => {
                   type="email"
                 />
               </Grid>
-              <Grid item>
-                <Selectgenre/>
+              <Grid item className={classes.datenaissance}>
+                <Datenaissance/>
               </Grid>
               <Grid item>
                 <TextField
@@ -88,6 +111,16 @@ const signup = (props) => {
                   id="standard-with-placeholder"
                   label="Mot de passe"
                   placeholder="Mot de passe"
+                  margin="normal"
+                  style={{ width: '100%' }}
+                  type="password"
+                /> 
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="standard-with-placeholder"
+                  label="Réécrivez votre mot de passe"
+                  placeholder="Réécrivez votre mot de passe"
                   margin="normal"
                   style={{ width: '100%' }}
                   type="password"
