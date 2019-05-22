@@ -1,19 +1,16 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import NavBar from './NavBar/NavBar';
 
-// eslint-disable-next-line react/prefer-stateless-function
-class Layout extends Component {
-  render() {
-    const { children } = this.props;
+const layout = (props) => {
+  const { children } = props;
 
-    return (
-      <Fragment>
-        <NavBar />
-        {children}
-      </Fragment>
-    );
-  }
-}
+  return (
+    <Fragment>
+      <NavBar />
+      {children}
+    </Fragment>
+  );
+};
 
 
 export default Layout;
