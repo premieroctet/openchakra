@@ -1,0 +1,157 @@
+import React from 'react';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import { Typography } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/core/styles';
+import Link from 'next/link';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import Checkboxes from '../components/Checkboxes/checkboxes';
+import Selectgenre from '../components/Select/select';
+import Datenaissance from '../components/Datenaissance/datepicker';
+
+
+import Layout from '../hoc/Layout/Layout';
+
+const styles = theme => ({
+  signupContainer: {
+    alignItems: 'center',
+    height: '140vh',
+    justifyContent: 'top',
+    flexDirection: 'column',
+
+    /*[theme.breakpoints.down('md')]: {
+      height: '140vh',
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: '145vh',  
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: '150vh',
+    },*/
+  },
+  card: {
+    padding: '1.5rem 3rem',
+    width: 400,
+    marginTop: '100px',
+  },
+  cardContant: {
+    flexDirection: 'column',
+  },
+  linkText: {
+    textDecoration: 'none',
+    color: 'black',
+    fontSize: 12,
+    lineHeight: 4.15,
+  },
+  CGU: {
+    marginTop:'5px!important',
+  },
+  datenaissance: {
+    marginTop: 20,
+  },
+  selectgenre: {
+    marginTop: 20,
+    marginBottom: -15,
+  },
+});
+
+    
+const signup = (props) => {
+  const { classes } = props;
+
+  return (
+    <Layout>
+      <Grid container className={classes.signupContainer}>
+        <Card className={classes.card}>
+          <Grid>
+            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography style={{ fontSize: 30 }}>Inscription</Typography>
+            </Grid>
+            <form>
+            <Grid item className={classes.selectgenre}>
+              <Selectgenre/>
+            </Grid>
+            <Grid item>
+              <TextField
+                id="standard-with-placeholder"
+                label="Prenom"
+                placeholder="Prénom"
+                margin="normal"
+                style={{ width: '100%' }}
+                type="email"
+              />
+            </Grid>
+            <Grid item>
+                <TextField
+                  id="standard-with-placeholder"
+                  label="Nom"
+                  placeholder="Nom"
+                  margin="normal"
+                  style={{ width: '100%' }}
+                  type="email"
+                />
+              </Grid>
+              <Grid item className={classes.datenaissance}>
+                <Datenaissance/>
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="standard-with-placeholder"
+                  label="Email"
+                  placeholder="Email"
+                  margin="normal"
+                  style={{ width: '100%' }}
+                  type="email"
+                />
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="standard-with-placeholder"
+                  label="Mot de passe"
+                  placeholder="Mot de passe"
+                  margin="normal"
+                  style={{ width: '100%' }}
+                  type="password"
+                /> 
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="standard-with-placeholder"
+                  label="Réécrivez votre mot de passe"
+                  placeholder="Réécrivez votre mot de passe"
+                  margin="normal"
+                  style={{ width: '100%' }}
+                  type="password"
+                /> 
+              </Grid>
+              <Grid container>
+              <Grid className="CGU" item xs={6}>
+                <Typography>
+                  <Link href='#'>
+                    <a className={classes.linkText}>
+                      Acceptez vous nos CGU ? 
+                    </a>
+                  </Link>
+                  </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                  <Checkboxes/>
+              </Grid> 
+              </Grid>
+             
+              <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                  Inscription
+                </Button>
+              </Grid>
+            </form>
+          </Grid>
+        </Card>
+      </Grid>
+    </Layout>
+  );
+};
+
+export default withStyles(styles)(signup);

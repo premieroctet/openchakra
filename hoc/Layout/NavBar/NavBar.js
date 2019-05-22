@@ -184,7 +184,7 @@ class NavBar extends Component {
         </MenuItem>
         <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
-            <Link href='#'>
+            <Link href='/signup'>
               <a className={classes.navbarLinkMobile}>
                 Inscription
               </a>
@@ -234,7 +234,7 @@ class NavBar extends Component {
                   Connexion
                 </Button>
               </Link>
-              <Link href='#'>
+              <Link href='/signup'>
                 <Button
                   style={{ backgroundColor: 'white', color: '#3f51b5'}}
                   variant="contained"
