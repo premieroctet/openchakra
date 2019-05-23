@@ -9,6 +9,7 @@ const passport = require('passport');
 const cors = require('cors');
 
 const users = require('./routes/api/users');
+const category = require('./routes/api/category');
 
 nextApp.prepare().then(() => {
     const app = express();
@@ -34,6 +35,7 @@ nextApp.prepare().then(() => {
     app.use(cors());
 
     app.use('/myAlfred/api/users',users);
+    app.use('/myAlfred/api/category',category);
 
     const port = process.env.PORT || 5000;
 
