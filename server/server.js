@@ -20,6 +20,7 @@ const job = require('./routes/api/job');
 const message = require('./routes/api/message');
 const newsletter= require('./routes/api/newsletter');
 const searchFilter = require('./routes/api/searchFilter');
+const tags= require('./routes/api/tags');
 
 nextApp.prepare().then(() => {
     const app = express();
@@ -56,6 +57,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/message',message);
     app.use('/myAlfred/api/newsletter',newsletter);
     app.use('/myAlfred/api/searchFilter',searchFilter);
+    app.use('/myAlfred/api/tags',tags);
 
     const port = process.env.PORT || 5000;
 
