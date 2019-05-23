@@ -27,6 +27,8 @@ const serviceUser = require('./routes/api/serviceUser');
 const shop = require('./routes/api/shop');
 const calendar = require('./routes/api/calendar');
 
+const admin = require('./routes/api/admin/dashboard');
+
 nextApp.prepare().then(() => {
     const app = express();
 
@@ -68,6 +70,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/serviceUser',serviceUser);
     app.use('/myAlfred/api/shop',shop);
     app.use('/myAlfred/api/calendar',calendar);
+    app.use('/myAlfred/api/admin',admin);
 
     const port = process.env.PORT || 5000;
 
