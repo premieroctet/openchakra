@@ -17,6 +17,7 @@ const equipment= require('./routes/api/equipment');
 const favoris = require('./routes/api/favoris');
 const filterPresentation = require('./routes/api/filterPresentation');
 const job = require('./routes/api/job');
+const message = require('./routes/api/message');
 
 nextApp.prepare().then(() => {
     const app = express();
@@ -50,6 +51,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/favoris',favoris);
     app.use('/myAlfred/api/filterPresentation',filterPresentation);
     app.use('/myAlfred/api/job',job);
+    app.use('/myAlfred/api/message',message);
 
     const port = process.env.PORT || 5000;
 
