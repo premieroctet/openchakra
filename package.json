@@ -3,9 +3,10 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production nodemon server.js",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "server": "nodemon server.js"
   },
   "dependencies": {
     "@material-ui/core": "^3.9.3",
