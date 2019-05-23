@@ -26,7 +26,6 @@ router.get('/all', (req,res)=> {
 
 // @Route GET /myAlfred/api/category/:id
 // View one category
-// @Access private
 router.get('/:id', (req,res)=> {
 
     Category.findById(req.params.id)

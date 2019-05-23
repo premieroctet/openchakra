@@ -10,6 +10,7 @@ const cors = require('cors');
 
 const users = require('./routes/api/users');
 const category = require('./routes/api/category');
+const billing = require('./routes/api/billing');
 
 nextApp.prepare().then(() => {
     const app = express();
@@ -36,6 +37,7 @@ nextApp.prepare().then(() => {
 
     app.use('/myAlfred/api/users',users);
     app.use('/myAlfred/api/category',category);
+    app.use('/myAlfred/api/billing',billing);
 
     const port = process.env.PORT || 5000;
 
