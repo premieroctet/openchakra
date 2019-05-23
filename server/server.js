@@ -15,6 +15,7 @@ const booking = require('./routes/api/booking');
 const calculating = require('./routes/api/calculating');
 const equipment= require('./routes/api/equipment');
 const favoris = require('./routes/api/favoris');
+const filterPresentation = require('./routes/api/filterPresentation');
 
 nextApp.prepare().then(() => {
     const app = express();
@@ -46,6 +47,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/calculating',calculating);
     app.use('/myAlfred/api/equipment',equipment);
     app.use('/myAlfred/api/favoris',favoris);
+    app.use('/myAlfred/api/filterPresentation',filterPresentation);
 
     const port = process.env.PORT || 5000;
 
