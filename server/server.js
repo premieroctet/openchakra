@@ -24,6 +24,7 @@ const tags= require('./routes/api/tags');
 const service = require('./routes/api/service');
 const prestation= require('./routes/api/prestation');
 const serviceUser = require('./routes/api/serviceUser');
+const shop = require('./routes/api/shop');
 
 nextApp.prepare().then(() => {
     const app = express();
@@ -64,6 +65,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/service',service);
     app.use('/myAlfred/api/prestation',prestation);
     app.use('/myAlfred/api/serviceUser',serviceUser);
+    app.use('/myAlfred/api/shop',shop);
 
     const port = process.env.PORT || 5000;
 
