@@ -18,6 +18,7 @@ const favoris = require('./routes/api/favoris');
 const filterPresentation = require('./routes/api/filterPresentation');
 const job = require('./routes/api/job');
 const message = require('./routes/api/message');
+const newsletter= require('./routes/api/newsletter');
 
 nextApp.prepare().then(() => {
     const app = express();
@@ -52,6 +53,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/filterPresentation',filterPresentation);
     app.use('/myAlfred/api/job',job);
     app.use('/myAlfred/api/message',message);
+    app.use('/myAlfred/api/newsletter',newsletter);
 
     const port = process.env.PORT || 5000;
 
