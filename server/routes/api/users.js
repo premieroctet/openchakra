@@ -53,7 +53,7 @@ router.post('/register',(req,res) =>{
         })
 });
 
-// @Route POST /myAlfred/users/register/alfred
+// @Route POST /myAlfred/api/users/register/alfred
 // Register an alfred
 router.post('/register/alfred', (req, res) => {
     const {errors, isValid} = validateRegisterInput(req.body);
@@ -118,7 +118,7 @@ router.post('/register/alfred', (req, res) => {
         })
 });
 
-// @Route POST /myAlfred/users/register/user
+// @Route POST /myAlfred/api/users/register/user
 // Register a user
 router.post('/register/user', (req, res) => {
     const {errors, isValid} = validateRegisterInput(req.body);
@@ -175,7 +175,7 @@ router.post('/register/user', (req, res) => {
         })
 });
 
-// @Route POST /myAlfred/users/login
+// @Route POST /myAlfred/api/users/login
 // Login
 router.post('/login',(req, res)=> {
     const {errors, isValid} = validateLoginInput(req.body);
@@ -217,13 +217,13 @@ router.post('/login',(req, res)=> {
 });
 
 
-// @Route GET /myAlfred/users/logout
+// @Route GET /myAlfred/api/users/logout
 // logout
 router.get('/logout', function(req, res) {
     res.status(200).send({ success: false, token: null });
 });
 
-// @Route GET /myAlfred/users/all
+// @Route GET /myAlfred/api/users/all
 // List all users
 router.get('/all',(req,res) => {
 
@@ -237,7 +237,7 @@ router.get('/all',(req,res) => {
         .catch(err => res.status(404).json({ user: 'No users found' }))
 });
 
-// @Route GET /myAlfred/users/users
+// @Route GET /myAlfred/api/users/users
 // List all simple users
 router.get('/users',(req,res) => {
     User.find({is_admin: false, is_alfred: false})
@@ -250,7 +250,7 @@ router.get('/users',(req,res) => {
         .catch(err => res.status(404).json({ users: 'No billing found' }))
 });
 
-// @Route GET /myAlfred/users/users/:id
+// @Route GET /myAlfred/api/users/users/:id
 // Get one user
 router.get('/users/:id',(req,res) => {
     User.findById(req.params.id)
@@ -264,7 +264,7 @@ router.get('/users/:id',(req,res) => {
         .catch(err => res.status(404).json({ user: 'No user found' }));
 });
 
-// @Route PUT /myAlfred/users/users/:id
+// @Route PUT /myAlfred/api/users/users/:id
 // Update one user
 router.put('/users/:id',(req,res) => {
     User.findByIdAndUpdate(req.params.id,{name: req.body.name})
@@ -278,7 +278,7 @@ router.put('/users/:id',(req,res) => {
         .catch(err => res.status(404).json({ user: 'No user found' }));
 });
 
-// @Route GET /myAlfred/users/alfred
+// @Route GET /myAlfred/api/users/alfred
 // List all alfred
 router.get('/alfred',(req,res) => {
     User.find({is_alfred: true})
