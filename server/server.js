@@ -13,6 +13,7 @@ const category = require('./routes/api/category');
 const billing = require('./routes/api/billing');
 const booking = require('./routes/api/booking');
 const calculating = require('./routes/api/calculating');
+const equipment= require('./routes/api/equipment');
 
 nextApp.prepare().then(() => {
     const app = express();
@@ -42,6 +43,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/billing',billing);
     app.use('/myAlfred/api/booking',booking);
     app.use('/myAlfred/api/calculating',calculating);
+    app.use('/myAlfred/api/equipment',equipment);
 
     const port = process.env.PORT || 5000;
 
