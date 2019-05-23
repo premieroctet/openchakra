@@ -23,6 +23,7 @@ const searchFilter = require('./routes/api/searchFilter');
 const tags= require('./routes/api/tags');
 const service = require('./routes/api/service');
 const prestation= require('./routes/api/prestation');
+const serviceUser = require('./routes/api/serviceUser');
 
 nextApp.prepare().then(() => {
     const app = express();
@@ -62,6 +63,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/tags',tags);
     app.use('/myAlfred/api/service',service);
     app.use('/myAlfred/api/prestation',prestation);
+    app.use('/myAlfred/api/serviceUser',serviceUser);
 
     const port = process.env.PORT || 5000;
 
