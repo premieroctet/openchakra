@@ -37,7 +37,7 @@ class shop extends React.Component {
                     <CanDo shop={this.state.id}/>
                     <MyBestSellers/>
                     <Bio shop={this.state.id}/>
-                    <Review/>
+                    <Review shop={this.state.id}/>
                 </Layout>
             </Fragment>
         )

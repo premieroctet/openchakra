@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
 
 const Reviews = require('../../models/Reviews');
+const User = require('../../models/User');
 
 router.get('/test',(req, res) => res.json({msg: 'Reviews Works!'}) );
 
@@ -31,6 +32,12 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
 
                 const newReviews = new Reviews(reviewFields);
                 newReviews.save().then(reviews => res.json(reviews)).catch(err => console.log(err));
+
+                User.findByIdAndUpdate(req.body.alfred, {
+                    $inc: {number_of_reviews: 1}
+                })
+                    .then(data => console.log('update ok'))
+                    .catch(err => console.log(err))
 
         })
 });
