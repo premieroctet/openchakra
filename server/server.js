@@ -1,5 +1,6 @@
 const express = require('express');
 const next = require('next');
+
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dev = process.env.NODE_DEV !== 'production'; //true false
@@ -51,6 +52,10 @@ nextApp.prepare().then(() => {
     require('./config/passport')(passport);
 
     app.use(cors());
+
+    app.get('/shop/:id', (req, res) => {
+        return app.render(req, res, '/shop', { id: req.params.id })
+    })
 
     app.use('/myAlfred/api/users',users);
     app.use('/myAlfred/api/category',category);

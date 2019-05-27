@@ -3,6 +3,7 @@ import Layout from '../hoc/Layout/Layout';
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from '@material-ui/core/styles';
 import setAuthToken from '../utils/setAuthToken';
+import Link from 'next/link';
 
 const styles = {
     loginContainer: {
@@ -58,6 +59,8 @@ class Home extends React.Component {
 <div>
          {test ? ok : pasok}
 </div>
+
+        <Link href="/shop?id=5ce2a167d7e1ce19430f4b20" as="/shop/5ce2a167d7e1ce19430f4b20"><a>here</a></Link>
     </Grid>
 </Layout>
     )
