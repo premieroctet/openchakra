@@ -34,9 +34,9 @@ class shop extends React.Component {
             <Fragment>
                 <Layout>
                     <AlfredBanner shop={this.state.id}/>
-                    <CanDo/>
+                    <CanDo shop={this.state.id}/>
                     <MyBestSellers/>
-                    <Bio/>
+                    <Bio shop={this.state.id}/>
                     <Review/>
                 </Layout>
             </Fragment>

@@ -59,7 +59,6 @@ class alfredBanner extends React.Component{
   constructor(props) {
     super(props);
     this.state ={
-      shop: [],
       alfred: []
     };
 
@@ -76,10 +75,9 @@ class alfredBanner extends React.Component{
         .then(function (response) {
 
           let shop = response.data;
-          console.log(shop);
+
 
           self.setState({
-            shop:shop,
             alfred: shop.alfred
           })
 
@@ -94,9 +92,8 @@ class alfredBanner extends React.Component{
 
    render() {
     const { classes } = this.props;
-    const {shop} =  this.state;
     const {alfred} = this.state;
-    console.log(alfred);
+
 
 
     return (
