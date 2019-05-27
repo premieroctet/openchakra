@@ -11,6 +11,8 @@
 /dist
 /.next
 
+/hoc/Layout/Layout.js
+
 # misc
 .DS_Store
 .env
