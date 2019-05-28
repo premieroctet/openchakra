@@ -59,22 +59,22 @@ const nearbyYou = (props) => {
         </Typography>
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
-        <Grid item sm={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
-        <Grid item sm={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <NearbyYouCard img="../../../static/coiffure.jpg" />
         </Grid>
       </Grid>

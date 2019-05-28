@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Avatar from '@material-ui/core/Avatar';
@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 
-const styles = {
+const styles = theme => ({
   card: {
     display: 'flex',
     margin: '5px!important',
@@ -18,12 +18,12 @@ const styles = {
     alignSelf: 'center',
     padding: '.5rem',
   },
-};
+});
 
-const becomeAlfredPersonsCard = (props) => {
-  // eslint-disable-next-line object-curly-newline
-  const { classes, avatar } = props;
+class becomeAlfredPersonsCard extends Component {
 
+  render (props) {  
+  const { classes, avatar } = this.props;
   return (
     <Card className={classes.card}>
       <CardContent className={classes.card}>
@@ -31,8 +31,9 @@ const becomeAlfredPersonsCard = (props) => {
         <Typography className={classes.personName}>John Doe</Typography>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
+}
 
 becomeAlfredPersonsCard.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,

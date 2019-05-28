@@ -14,7 +14,6 @@ import { Block } from '@material-ui/icons';
 
 const styles = theme => ({
   headerhomeimg: {
-    marginTop: 64,
     backgroundImage: 'url(../../static/bailey-zindel-396399-unsplash.jpg)',
     backgroundRepeat: "no-repeat",
 	backgroundPosition: "center center",
@@ -91,7 +90,7 @@ const Homeheader = (props) => {
         
         <input accept="image/*" className={classes.input} id="icon-button-file" type="file" />
         <label htmlFor="icon-button-file">
-        <IconButton className={classes.button} aria-label="Search" color="white">
+        <IconButton className={classes.button} aria-label="Search">
         <Search />
       </IconButton>
       </label>

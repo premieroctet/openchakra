@@ -6,14 +6,15 @@ import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
 import Recommandations from '../components/home/Recommandations/Recommandations';
 import TemptedBy from '../components/home/TemptedBy/TemptedBy';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
+import Homeheader from '../components/home/Homeheader/Homeheader';
 
 const Home = () => (
   <Fragment>
     <Navbar />
+    <Homeheader />
     <PopularCategories />
     <SerenityNeed />
     <BecomeAlfred />
-    <Recommandations />
     <TemptedBy />
     <NearbyYou />
   </Fragment>

@@ -29,7 +29,7 @@ const styles = theme => ({
       display: 'flex',
     },
   },
-  card2: {
+  card22: {
     display: 'flex',
     height: 'auto',
 
@@ -79,60 +79,7 @@ const becomeAlfredBanner = (props) => {
 
   return (
     <Fragment>
-    <Card container className={classes.card1}>
-      <CardMedia
-        item
-        xs={12}
-        className={classes.cover}
-        image={img}
-        title="Live from space album cover"
-      />
-      <div item xs={12}  className={classes.details}>
-        <CardContent className={classes.content}>
-          <Typography component="h5" variant="h5" className={classes.padding}>
-            Devenir Alfred
-          </Typography>
-          <Typography style={{width: '100%'}} variant="body1" color="textSecondary" className={classes.padding}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sapien justo,
-            placerat ac commodo ut, aliquam non massa. Sed id nisl ut massa auctor
-            dapibus et id risus. Integer suscipit, nisi at viverra elementum, sapien
-            lectus ultricies mauris, eu aliquet elit enim laoreet velit. Aliquam
-            laoreet orci eu porttitor egestas. Aliquam porttitor sem quam, sit amet
-            semper ante rutrum sodales. Nulla aliquam ante ex.
-          </Typography>
-          <Button variant="contained" color="primary" className={classes.margin}>
-            Créer mon shop
-          </Button>
-        </CardContent>
-      </div>
-    </Card>
-    <Card className={classes.card2}>
-    <div item xs={12}  className={classes.details}>
-      <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image={img}
-          title="Live from space album cover"
-        />
-        <CardContent>
-          <Typography component="h5" variant="h5" className={classes.padding}>
-          Devenir Alfred
-        </Typography>
-        <Typography  variant="body1" color="textSecondary" className={classes.padding}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sapien justo,
-          placerat ac commodo ut, aliquam non massa. Sed id nisl ut massa auctor
-          dapibus et id risus. Integer suscipit, nisi at viverra elementum, sapien
-          lectus ultricies mauris, eu aliquet elit enim laoreet velit. Aliquam
-          laoreet orci eu porttitor egestas. Aliquam porttitor sem quam, sit amet
-          semper ante rutrum sodales. Nulla aliquam ante ex.
-        </Typography>
-        <Button variant="contained" color="primary" className={classes.margin}>
-          Créer mon shop
-        </Button>
-        </CardContent>
-      </CardActionArea>
-      </div>
-    </Card>
+    
   </Fragment>
   );
 };
