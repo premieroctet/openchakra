@@ -4,6 +4,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const bcrypt = require('bcryptjs');
+const axios = require('axios');
 
 const validateRegisterInput = require('../../validation/register');
 const validateSimpleRegisterInput = require('../../validation/simpleRegister');
@@ -25,7 +26,7 @@ router.post('/register',(req,res) =>{
 
     User.findOne({email: req.body.email})
         .then(user => {
-            if(user) {
+            if (user) {
                 errors.email = 'Email already exist';
                 return res.status(400).json({errors});
             } else {
@@ -33,22 +34,54 @@ router.post('/register',(req,res) =>{
                 userFields.name = req.body.name;
                 userFields.gender = req.body.gender;
                 userFields.firstname = req.body.firstname;
-                userFields.email= req.body.email;
+                userFields.email = req.body.email;
                 userFields.password = req.body.password;
                 userFields.birthday = req.body.birthday;
 
-                const newUser = new User (userFields);
-                bcrypt.genSalt(10, (err, salt) => {
-                    bcrypt.hash(newUser.password, salt, (err, hash) => {
-                        if(err) throw err;
-                        newUser.password = hash;
-                        newUser.save()
-                            .then(user => res.json(user))
-                            .catch(err => console.log(err));
+                userFields.billing_address = {};
+                userFields.billing_address.address = req.body.address;
+                userFields.billing_address.zip_code = req.body.zip_code;
+                userFields.billing_address.city = req.body.city;
+
+                if (req.body.country === '1') {
+                    userFields.billing_address.country = 'France';
+                } else {
+                    userFields.billing_address.country = 'Maroc';
+                }
+
+                userFields.billing_address.gps = {};
+
+                let address = req.body.address;
+                let city = req.body.city;
+
+                let newAddress = address.replace(/ /g, '+');
+
+                const url = newAddress + '%2C+' + city + '&format=geojson&limit=1';
+
+                axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
+                    .then(response => {
+
+                        let result = response.data.features;
+
+                        result.forEach(function (element) {
+                            userFields.billing_address.gps.lat = element.geometry.coordinates[1];
+                                userFields.billing_address.gps.lng = element.geometry.coordinates[0];
+                        });
+
+                        const newUser = new User(userFields);
+                        bcrypt.genSalt(10, (err, salt) => {
+                            bcrypt.hash(newUser.password, salt, (err, hash) => {
+                                if (err) throw err;
+                                newUser.password = hash;
+                                newUser.save()
+                                    .then(user => res.json(user))
+                                    .catch(err => console.log(err));
+                            })
+                        })
                     })
-                })
-
-
+                    .catch(error => {
+                        console.log(error)
+                    });
             }
         })
 });
@@ -268,6 +301,20 @@ router.get('/users/:id',(req,res) => {
 // Update one user
 router.put('/users/:id',(req,res) => {
     User.findByIdAndUpdate(req.params.id,{name: req.body.name})
+        .then(user => {
+            if(!user){
+                return res.status(400).json({msg: 'No user found'});
+            }
+            res.json(user);
+
+        })
+        .catch(err => res.status(404).json({ user: 'No user found' }));
+});
+
+// @Route PUT /myAlfred/api/users/alfredViews/:id
+// Update number of views for an alfred
+router.put('/alfredViews/:id',(req,res) => {
+    User.findByIdAndUpdate(req.params.id,{$inc: {number_of_views: 1}},{new:true})
         .then(user => {
             if(!user){
                 return res.status(400).json({msg: 'No user found'});

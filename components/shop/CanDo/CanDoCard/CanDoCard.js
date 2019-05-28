@@ -9,6 +9,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 // eslint-disable-next-line object-curly-newline
 import { FavoriteBorderOutlined, More } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
+import axios from "axios";
 
 // eslint-disable-next-line no-unused-vars
 const styles = theme => ({
@@ -83,40 +84,92 @@ const styles = theme => ({
   },
 });
 
-const canDoCard = (props) => {
-  // eslint-disable-next-line object-curly-newline
-  const { classes, img } = props;
+class canDoCard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state ={
+      shop: [],
+      service: []
+    };
+  }
 
-  return (
-    <Card className={classes.card}>
-      <CardActionArea>
-        <CardMedia className={classes.media} image={img} title="Coiffure">
-          <div className={classes.darkOverlay}>
-            <Grid container style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-around' }}>
-              <Grid item />
-              <Grid item style={{ alignSelf: 'center' }}>
-                <Typography style={{ color: 'white', fontSize: 25 }}>Nom du service</Typography>
-              </Grid>
-              <Grid container style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Grid item style={{ paddingLeft: 15 }}>
-                  <FavoriteBorderOutlined style={{ color: 'white' }} />
+  componentDidMount() {
+    let self = this;
+
+
+    const id = self.props.shops;
+
+
+    axios.get(`http://localhost:5000/myAlfred/api/shop/${id}`)
+        .then(function (response) {
+
+          let shop = response.data;
+          //console.log(shop.services);
+          shop.services.map(e => (
+             console.log(e.label.service.label)
+          ));
+
+
+          self.setState({
+            shop:shop,
+            service: shop.services
+          })
+
+
+
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+  }
+  // eslint-disable-next-line object-curly-newline
+  render() {
+    const {classes, img} = this.props;
+    const {service} = this.state;
+    const test = service.map(k => (
+        <p>{k.label.service.label}</p>
+    ));
+    /*const test = service2.map(k => (
+        <Card className={classes.card} key={k._id}>
+          <CardActionArea>
+            <CardMedia className={classes.media} image={img} title="Coiffure">
+              <div className={classes.darkOverlay}>
+                <Grid container style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                  justifyContent: 'space-around'
+                }}>
+                  <Grid item/>
+                  <Grid item style={{alignSelf: 'center'}}>
+                    <Typography style={{color: 'white', fontSize: 25}}>test</Typography>
+                  </Grid>
+                  <Grid container style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Grid item style={{paddingLeft: 15}}>
+                      <FavoriteBorderOutlined style={{color: 'white'}}/>
+                    </Grid>
+                    <Grid item style={{paddingRight: 15}}>
+                      <More style={{color: 'white'}}/>
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid item style={{ paddingRight: 15 }}>
-                  <More style={{ color: 'white' }} />
-                </Grid>
-              </Grid>
-            </Grid>
-          </div>
-        </CardMedia>
-        <CardContent>
-          <Typography component="p">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-  );
-};
+              </div>
+            </CardMedia>
+            <CardContent>
+              <Typography component="p">
+                {k.description}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+    ));*/
+
+    return (
+        {test}
+    );
+  }
+}
 
 canDoCard.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,

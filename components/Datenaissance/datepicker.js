@@ -26,6 +26,7 @@ function Datenaissance(props) {
         label="Date de naissance"
         type="date"
         defaultValue="1995-01-01"
+        name="birthday"
         className={classes.textField}
         InputLabelProps={{
           shrink: true,

@@ -3,7 +3,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 class Checkboxes extends React.Component {
   state = {
-    checkedA: true,
+    checkedA: false,
   };
 
   handleChange = name => event => {
