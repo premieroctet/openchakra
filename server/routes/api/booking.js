@@ -103,6 +103,28 @@ router.get('/myBooking',passport.authenticate('jwt',{session:false}),(req,res) =
 
 });
 
+// @Route GET /myAlfred/api/booking/last/:id
+// View 3 last booking for shop page
+router.get('/last/:id',(req,res) => {
+    Booking.find({alfred: req.params.id},{},{sort:{'date': -1}}).limit(3)
+        .populate('alfred')
+        .populate('user')
+        .populate('prestation')
+        .populate({path:'prestation',populate:{path: 'service',select:'label'}})
+        .then(booking => {
+            if(booking){
+                res.json(booking);
+            } else {
+                return res.status(400).json({msg: 'No booking found'});
+            }
+
+
+
+        })
+        .catch(err => console.log(err));
+
+});
+
 // @Route GET /myAlfred/booking/:id
 // View one booking
 // @Access private

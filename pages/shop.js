@@ -35,7 +35,7 @@ class shop extends React.Component {
                 <Layout>
                     <AlfredBanner shop={this.state.id}/>
                     <CanDo shop={this.state.id}/>
-                    <MyBestSellers/>
+                    <MyBestSellers shop={this.state.id}/>
                     <Bio shop={this.state.id}/>
                     <Review shop={this.state.id}/>
                 </Layout>
