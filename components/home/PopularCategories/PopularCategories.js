@@ -15,7 +15,7 @@ const styles = theme => ({
     marginRight: 'auto',
     marginLeft: 'auto',
     width: '100%',
-    marginTop: '60px',
+    marginTop: '30px',
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger

@@ -39,12 +39,12 @@ const styles = theme => ({
     flex: 1,
   },
   card: {
-    maxWidth: '300px',
-    maxHeight: '400px',
-    height: '350px',
+    maxWidth: '250px',
+    maxHeight: '350px',
+    height: '300px',
     borderRadius: '30px',
     margin: '5px!important',
-    minWidth: '300px!important',
+    minWidth: '250px!important',
     marginRight: '10px!important',
     marginLeft: '10px!important',
 
