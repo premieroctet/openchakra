@@ -79,7 +79,15 @@ class alfredBanner extends React.Component{
 
           self.setState({
             alfred: shop.alfred
-          })
+          });
+          let idAlfred = shop.alfred._id;
+          axios.put(`http://localhost:5000/myAlfred/api/users/alfredViews/${idAlfred}`)
+              .then(function (result) {
+                console.log('Views updated');
+              })
+              .catch(function (err) {
+                console.log(err);
+              })
 
 
 

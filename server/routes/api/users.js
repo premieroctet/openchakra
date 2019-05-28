@@ -278,6 +278,20 @@ router.put('/users/:id',(req,res) => {
         .catch(err => res.status(404).json({ user: 'No user found' }));
 });
 
+// @Route PUT /myAlfred/api/users/alfredViews/:id
+// Update number of views for an alfred
+router.put('/alfredViews/:id',(req,res) => {
+    User.findByIdAndUpdate(req.params.id,{$inc: {number_of_views: 1}},{new:true})
+        .then(user => {
+            if(!user){
+                return res.status(400).json({msg: 'No user found'});
+            }
+            res.json(user);
+
+        })
+        .catch(err => res.status(404).json({ user: 'No user found' }));
+});
+
 // @Route GET /myAlfred/api/users/alfred
 // List all alfred
 router.get('/alfred',(req,res) => {
