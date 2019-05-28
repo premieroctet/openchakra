@@ -59,9 +59,10 @@ class alfredBanner extends React.Component{
   constructor(props) {
     super(props);
     this.state ={
-      alfred: []
+      alfred: [],
+      idAlfred:''
     };
-
+    this.addFavoris = this.addFavoris.bind(this);
 
   }
 
@@ -78,7 +79,8 @@ class alfredBanner extends React.Component{
 
 
           self.setState({
-            alfred: shop.alfred
+            alfred: shop.alfred,
+            idAlfred: shop.alfred._id
           });
           let idAlfred = shop.alfred._id;
           axios.put(`http://localhost:5000/myAlfred/api/users/alfredViews/${idAlfred}`)
@@ -97,7 +99,18 @@ class alfredBanner extends React.Component{
           console.log(error);
         });
   }
+    addFavoris() {
 
+    const test = {alfred: this.state.idAlfred};
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.post(`http://localhost:5000/myAlfred/api/favoris/add`,test)
+        .then(response => {
+          console.log('Favoris ajouté')
+        })
+        .catch(err => {
+          console.log(err)
+        })
+  }
    render() {
     const { classes } = this.props;
     const {alfred} = this.state;
@@ -117,7 +130,7 @@ class alfredBanner extends React.Component{
                     </Typography>
                   </Grid>
                   <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
-                    <FavoriteBorderOutlined style={{ color: 'white' }} />
+                    <FavoriteBorderOutlined style={{ color: 'white' }} onClick={this.addFavoris} />
                     <Typography variant="body1" style={{ color: 'white', fontSize: 20 }}>
                       Add to wishlist
                     </Typography>
