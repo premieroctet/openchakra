@@ -1,0 +1,32 @@
+.thewrap {
+    display: flex!important;
+    width: 100%!important;;
+    height: 100%!important;;
+    margin: 0;
+    justify-content: center!important;;
+    align-items: center!important;;
+  }
+
+
+.card1 {
+    min-width: 100%!important;
+    min-height: 400px!important;
+    display: flex!important;
+    overflow-x: auto!important;
+  }
+
+  .card2 {
+    min-width: 100%!important;
+    min-height: 100px!important;
+    display: flex!important;
+    overflow-x: auto!important;
+    margin-top: 5px;
+  }
+
+.card1::-webkit-scrollbar {
+    display: none;
+  }   
+
+.card2::-webkit-scrollbar {
+    display: none;
+  }   
