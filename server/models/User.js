@@ -41,7 +41,11 @@ const UserSchema = new Schema({
             type: String
         },
         country: {
-            type: Number
+            type: String
+        },
+        gps : {
+            lat: Number,
+            lng: Number
         }
     },
     service_address: {
@@ -55,7 +59,11 @@ const UserSchema = new Schema({
             type: String
         },
         country: {
-            type: Number
+            type: String
+        },
+        gps: {
+            lat: Number,
+            lng: Number
         }
     },
     picture: {

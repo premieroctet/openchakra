@@ -28,7 +28,7 @@ import axios from "axios";
 const styles = theme => ({
   signupContainer: {
     alignItems: 'center',
-    height: '140vh',
+    height: '170vh',
     justifyContent: 'top',
     flexDirection: 'column',
 
@@ -79,6 +79,10 @@ class signup extends React.Component {
           email: '',
           password: '',
           password2: '',
+          address: '',
+          city: '',
+          country: '',
+          zip_code: '',
           errors: {}
         };
       }
@@ -102,7 +106,11 @@ class signup extends React.Component {
           birthday: this.state.birthday,
           email: this.state.email,
           password: this.state.password,
-          password2: this.state.password2
+          password2: this.state.password2,
+          address: this.state.address,
+          city: this.state.city,
+          zip_code: this.state.zip_code,
+          country: this.state.country
         };
 
         axios
@@ -238,6 +246,67 @@ class signup extends React.Component {
                             onChange={this.onChange}
                             error={errors.password2}
                         />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                            id="standard-with-placeholder"
+                            label="Adresse"
+                            placeholder="Adresse"
+                            margin="normal"
+                            style={{ width: '100%' }}
+                            type="text"
+                            name="address"
+                            value={this.state.address}
+                            onChange={this.onChange}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                            id="standard-with-placeholder"
+                            label="Ville"
+                            placeholder="Ville"
+                            margin="normal"
+                            style={{ width: '100%' }}
+                            type="text"
+                            name="city"
+                            value={this.state.city}
+                            onChange={this.onChange}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                            id="standard-with-placeholder"
+                            label="Code postal"
+                            placeholder="Code postal"
+                            margin="normal"
+                            style={{ width: '100%' }}
+                            type="text"
+                            name="zip_code"
+                            value={this.state.zip_code}
+                            onChange={this.onChange}
+                        />
+                      </Grid>
+                      <Grid item className={classes.selectgenre}>
+                        <FormControl className={classes.formControl}>
+                          <InputLabel shrink htmlFor="genre-label-placeholder">
+                            Pays
+                          </InputLabel>
+                          <Select
+                              input={<Input name="country" id="genre-label-placeholder" />}
+                              displayEmpty
+                              name="country"
+                              value={this.state.country}
+                              onChange={this.onChange}
+                              className={classes.selectEmpty}
+                          >
+                            <MenuItem value="">
+                              <em>...</em>
+                            </MenuItem>
+                            <MenuItem value={"1"}>France</MenuItem>
+                            <MenuItem value={"2"}>Maroc</MenuItem>
+                          </Select>
+                          <FormHelperText>Quel est votre pays ?</FormHelperText>
+                        </FormControl>
                       </Grid>
                       <Grid container>
                         <Grid className="CGU" item xs={6}>
