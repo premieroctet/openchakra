@@ -24,8 +24,8 @@ const navbar = (props) => {
         <Typography variant="h6" className={classes.grow}>
           My Alfred
         </Typography>
-        <Button variant="outlined" color="primary" className={classes.buttonSpace}>Connexion</Button>
-        <Button variant="contained" color="primary">Inscription</Button>
+        <Button href={'/login'} variant="outlined" color="primary" className={classes.buttonSpace}>Connexion</Button>
+        <Button href={'/signup'} variant="contained" color="primary">Inscription</Button>
       </Toolbar>
     </AppBar>
   );

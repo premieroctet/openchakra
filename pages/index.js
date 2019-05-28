@@ -7,19 +7,18 @@ import Recommandations from '../components/home/Recommandations/Recommandations'
 import TemptedBy from '../components/home/TemptedBy/TemptedBy';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import Homeheader from '../components/home/Homeheader/Homeheader';
+import setAuthToken from '../utils/setAuthToken';
 
-const Home = () => (
-  <Fragment>
-    <Navbar />
-    <Homeheader />
-    <PopularCategories />
-    <SerenityNeed />
-    <BecomeAlfred />
-    <TemptedBy />
-    <NearbyYou />
-  </Fragment>
-);
 
+/*<Layout>
+    <Grid container className={classes.loginContainer}>
+        <div>
+            {test ? ok : pasok}
+        </div>
+
+        <Link href="/shop?id=5ce2a167d7e1ce19430f4b20" as="/shop/5ce2a167d7e1ce19430f4b20"><a>here</a></Link>
+    </Grid>
+</Layout>*/
 class Home extends React.Component {
     constructor(props) {
         super(props);
@@ -48,15 +47,15 @@ class Home extends React.Component {
          const ok = <a href='' onClick={this.logout}>Connecté</a>;
         const pasok = 'Déconnecté';
     return (
-<Layout>
-    <Grid container className={classes.loginContainer}>
-<div>
-         {test ? ok : pasok}
-</div>
-
-        <Link href="/shop?id=5ce2a167d7e1ce19430f4b20" as="/shop/5ce2a167d7e1ce19430f4b20"><a>here</a></Link>
-    </Grid>
-</Layout>
+        <Fragment>
+            <Navbar />
+            <Homeheader />
+            <PopularCategories />
+            <SerenityNeed />
+            <BecomeAlfred />
+            <TemptedBy />
+            <NearbyYou />
+        </Fragment>
     )
 }
 
@@ -65,4 +64,4 @@ class Home extends React.Component {
 
 
 
-export default withStyles(styles)(Home);
+export default Home;
