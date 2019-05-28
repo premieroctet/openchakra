@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import NavBar from './NavBar/NavBar';
 
-const layout = (props) => {
+const Layout = (props) => {
   const { children } = props;
 
   return (
@@ -13,4 +13,4 @@ const layout = (props) => {
 };
 
 
-export default layout;
+export default Layout;
