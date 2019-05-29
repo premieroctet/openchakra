@@ -13,6 +13,7 @@ const styles = theme => ({
     paddingLeft: 15,
     marginRight: 'auto',
     marginLeft: 'auto',
+    marginTop: '30px',
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
