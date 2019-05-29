@@ -60,7 +60,7 @@ const popularCategories = (props) => {
       <div className="thewrap">
       <section className="card1">
 
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
+          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png"/>
 
           <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
         
@@ -76,7 +76,7 @@ const popularCategories = (props) => {
 
           <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
 
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" className="cardContent"/>
+          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
     
         </section>
         </div>

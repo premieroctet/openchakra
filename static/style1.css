@@ -4,7 +4,8 @@
     height: 100%!important;;
     margin: 0;
     justify-content: center!important;;
-    align-items: center!important;;
+    align-items: center!important;
+    padding-left: 194px!important;
   }
 
 
@@ -30,3 +31,8 @@
 .card2::-webkit-scrollbar {
     display: none;
   }   
+
+  
+.textField {
+    text-align: center!important,
+  }

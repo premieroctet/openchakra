@@ -15,7 +15,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   formControl: {
-    minWidth: 120,
+    minWidth: 200,
   },
 });
 function Selecthome(props) {
