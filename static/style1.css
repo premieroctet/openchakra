@@ -1,9 +1,9 @@
 .thewrap {
     display: flex!important;
-    width: 100%!important;;
-    height: 100%!important;;
+    width: 100%!important;
+    height: 100%!important;
     margin: 0;
-    justify-content: center!important;;
+    justify-content: center!important;
     align-items: center!important;
     padding-left: 194px!important;
   }
@@ -11,7 +11,7 @@
 
 .card1 {
     min-width: 100%!important;
-    min-height: 400px!important;
+    min-height: 280px!important;
     display: flex!important;
     overflow-x: auto!important;
   }

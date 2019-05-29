@@ -82,7 +82,6 @@ const popularCategoriesCard = (props) => {
   const { img, classes, categorie, desc, avatar } = props;
 
   return (
-    <div>
     <Card className={classes.card}>
       <CardActionArea className={classes.cardAction}>
         <CardMedia component="div" alt="food" image={img} className={classes.cardMedia}>
@@ -105,7 +104,6 @@ const popularCategoriesCard = (props) => {
         </CardMedia>
       </CardActionArea>
     </Card>
-    </div>
   );
 };
 
