@@ -71,6 +71,7 @@ class nearbyYou extends React.Component{
             this.setState({service:service})
           })
     } else {
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.get('http://localhost:5000/myAlfred/api/serviceUser/home')
           .then(response => {
             let service = response.data;

@@ -47,7 +47,9 @@ class popularCategories extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      category: []
+      category: [],
+
+
     }
   }
 
@@ -58,8 +60,10 @@ class popularCategories extends React.Component {
 
 
 
+
           this.setState({
-            category: category
+            category: category,
+
           })
         })
 
@@ -69,11 +73,13 @@ class popularCategories extends React.Component {
     const {classes} = this.props;
     const {category} = this.state;
 
+
+
     const categories = category.map(e => (
         <PopularCategoriesCard img={e.picture} categorie={e.label}
                                desc="Parce que quand on a faim, faut manger"
                                avatar="../../../static/unknown.png"
-                               number="12"/>
+                               number="1"/>
     ));
 
     return (

@@ -71,10 +71,39 @@ router.get('/all',(req,res)=> {
         .catch(err => res.status(404).json({ service: 'No service found' }));
 });
 
+// @Route GET /myAlfred/api/serviceUser/category/:id
+// Count number of service per category
+router.get('/category/:id',(req,res)=> {
+
+    ServiceUser.find()
+        .populate('user')
+        .populate('service')
+        .then(service => {
+            if(typeof service !== 'undefined' && service.length > 0){
+
+
+                    service.forEach(e => {
+                        if (e.service.category == req.params.id) {
+                            res.json({length: service.length})
+                        } else {
+                            res.json({length: 0})
+                        }
+                    });
+
+
+
+            } else {
+                return res.status(400).json({msg: 'No service found'});
+            }
+
+        })
+        .catch(err => console.log(err));
+});
+
 // @Route GET /myAlfred/api/serviceUser/near
 // View all service by city
 // @Access private
-router.get('/near',(req,res)=> {
+router.get('/near',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
     User.findById(req.user.id)
         .then(user => {

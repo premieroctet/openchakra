@@ -78,10 +78,10 @@ const popularCategoriesCard = (props) => {
                 <Typography className={classes.textDown}>{desc}</Typography>
               </Grid>
               <Grid item xs={3} className={classes.center}>
-              <Badge badgeContent={number} color="primary">
+                {/*<Badge badgeContent={number} color="primary">*/}
               {/*<Avatar alt="Unknown" src={avatar}/>*/}
-              <People style={{color: 'lightgrey'}}/>
-              </Badge>
+                {/*<People style={{color: 'lightgrey'}}/>*/}
+              {/*</Badge>*/}
               </Grid>
             </Grid>
           </Grid>
