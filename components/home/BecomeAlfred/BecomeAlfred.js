@@ -55,7 +55,7 @@ const styles = theme => ({
     },
   },
   media: {
-    height: 0,
+    height: 400,
     borderRadius: '20px',
     paddingTop: '30.25%', // 16:9
   },
@@ -144,20 +144,30 @@ const styles = theme => ({
   margin2: {
     margin: '0.7rem',
   },
-  media: {
-    height: 400,
-  },
+
   card: {
     display: 'flex',
     margin: '5px!important',
     minWidth: '300px!important',
     marginRight: '10px!important',
     marginLeft: '10px!important',
+
   },
   personName: {
     alignSelf: 'center',
     padding: '.5rem',
   },
+  card11: {
+    display: 'flex',
+    margin: '5px!important',
+    minWidth: '300px!important',
+    marginRight: '10px!important',
+    marginLeft: '10px!important',
+    marginTop: '30px!important',
+    marginBottom: '40px!important',
+    boxShadow: '0 6px 5px -6px grey',
+  },
+
 });
 
 class becomeAlfred extends React.Component{
@@ -183,7 +193,7 @@ class becomeAlfred extends React.Component{
     const {alfred} = this.state;
 
     const cards = alfred.map(e => (
-        <Card className={classes.card} key={e._id}>
+        <Card className={classes.card11} key={e._id}>
           <CardContent className={classes.card}>
             <Avatar alt="John Doe" src="../../../static/johndoe.jpg" />
             <Typography className={classes.personName}>{e.name} {e.firstname}</Typography>
