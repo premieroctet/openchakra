@@ -4,6 +4,11 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import TemptedByCard from './TemptedByCard/TemptedByCard';
+import axios from 'axios';
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardMedia from "@material-ui/core/CardMedia";
+import {RestaurantMenu} from "@material-ui/icons";
+import Card from "@material-ui/core/Card";
 
 const styles = theme => ({
   container: {
@@ -34,35 +39,141 @@ const styles = theme => ({
     marginBottom: 30,
     marginTop: 35,
   },
+  textUp: {
+    textAlign: 'left',
+    paddingTop: '1rem',
+    fontFamily: 'helvetica',
+    fontWeight: 'bold',
+    fontSize: '20px',
+    color: 'white',
+    letterSpacing: '.2rem',
+  },
+  leh3: {
+    fontWeight: 'bold',
+  },
+  textDown: {
+    textAlign: 'left',
+    fontFamily: 'roboto',
+    fontSize: '17px',
+    color: 'white',
+  },
+  textContainer: {
+    flex: 1,
+  },
+  container2: {
+    flexDirection: 'column',
+    height: '100%',
+  },
+  row: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  card: {
+    maxHeight: '300px',
+    height: '200px',
+    borderRadius: '5px',
+
+    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
+    [theme.breakpoints.up('xs')]: { // xs: 600px or larger
+      maxWidth: 450,
+      maxHeight: 300,
+    },
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: 400,
+    },
+    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+      maxWidth: 350,
+    },
+    [theme.breakpoints.up('lg')]: {
+      maxWidth: 300
+    },
+  },
+  cardAction: {
+    height: '100%',
+  },
+  cardMedia: {
+    height: '100%',
+  },
+  center: {
+    alignSelf: 'center',
+  },
+  enbas: {
+    alignSelf: 'flex-end',
+  },
 });
 
-const TemptedBy = (props) => {
-  const { classes } = props;
+class TemptedBy extends React.Component {
 
-  return (
-    <Fragment>
-      <Grid container className={classes.container}>
-        <Typography variant="h5" className={classes.textBox}>
-          Vous serez peut-être tentés par...
-        </Typography>
-      </Grid>
-      <Grid container className={classes.container} spacing={24} wrap="wrap">
-        <Grid item xs={12} sm={6} md={3} lg={3}>
-          <TemptedByCard img="../../static/bleumarine.png" title="image bleu marine" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
+  constructor(props) {
+    super(props);
+    this.state = {
+      prestation: [],
+    }
+  }
+
+  componentDidMount() {
+    axios.get('http://localhost:5000/myAlfred/api/prestation/home')
+        .then(response => {
+          let prestation = response.data;
+
+          this.setState({prestation: prestation})
+        })
+  }
+
+  render() {
+    const {classes} = this.props;
+    const background = ["../../static/bleumarine.png","../../static/saumonorange.png","../../static/bleuclair.png"
+                        ,"../../static/violetclair.png"];
+
+
+    const {prestation} = this.state;
+    const cards = prestation.map(e => (
+        <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
+
+          <Card className={classes.card}>
+            <CardActionArea className={classes.cardAction}>
+              <CardMedia component="div" alt="color" image={background[Math.floor(Math.random() * background.length)]} className={classes.cardMedia}>
+                <Grid container className={classes.container2}>
+                  <Grid container xs={12} className={classes.row}>
+                    <Grid item xs={5}></Grid>
+                    <Grid item xs={4}></Grid>
+                    <Grid container item xs={3}>
+                      <RestaurantMenu style={{color: 'white', fontSize: '4rem', maxWidth: '100%'}}/>
+                    </Grid>
+                  </Grid>
+                  <Grid container xs={12} className={classes.row}>
+                    <Grid item xs={1}>
+                      <Typography className={classes.textDown}></Typography>
+                    </Grid>
+                    <Grid item xs={9} className={classes.center}>
+                      <Typography className={classes.textDown}><span className={classes.leh3}>{e.label}</span><br/>Description de la prestation lorem ipsum lalala lalala</Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography className={classes.textDown}></Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </CardMedia>
+            </CardActionArea>
+          </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={3} lg={3}>
-          <TemptedByCard img="../../static/saumonorange.png" title="image orange saumon" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3} lg={3}>
-          <TemptedByCard img="../../static/bleuclair.png" title="image bleu clair" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3} lg={3}>
-          <TemptedByCard img="../../static/violetclair.png" title="image violet clair" desc="Description de la prestation lorem ipsum lalala lalala" avatar="../../../static/tools.svg" className={classes.media} />
-        </Grid>
-      </Grid>
-    </Fragment>
-  );
-};
+    ));
+
+    return (
+        <Fragment>
+          <Grid container className={classes.container}>
+            <Typography variant="h5" className={classes.textBox}>
+              Vous serez peut-être tentés par...
+            </Typography>
+          </Grid>
+          <Grid container className={classes.container} spacing={24} wrap="wrap">
+            {cards}
+
+          </Grid>
+        </Fragment>
+    );
+  }
+}
 
 TemptedBy.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,

@@ -27,6 +27,32 @@ router.get('/all',(req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/service/random/home
+// View random service homepage
+router.get('/random/home',(req,res)=> {
+
+    Service.countDocuments().exec(function (err, count) {
+
+        let limitrecords=6;
+
+        function getRandomArbitrary(min, max) {
+            return Math.ceil(Math.random() * (max - min) + min);
+        }
+        let skipRecords = getRandomArbitrary(1, count-limitrecords);
+
+        let random = Math.floor(Math.random() * count);
+
+
+        Service.find().populate('category').limit(6).skip(random).exec(
+            function (err, result) {
+
+                res.json(result)
+            })
+    })
+
+
+});
+
 // @Route GET /myAlfred/api/service/:id
 // View one service
 router.get('/:id',(req,res)=> {

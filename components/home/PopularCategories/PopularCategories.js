@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import PopularCategoriesCard from './PoplarCategoriesCard/PopularCategoriesCard';
 import Head from 'next/head';
+import axios from 'axios';
 
 const styles = theme => ({
 
@@ -41,48 +42,72 @@ const styles = theme => ({
   },
 });
 
-const popularCategories = (props) => {
-  const { classes } = props;
+class popularCategories extends React.Component {
 
-  return (
-    <Fragment>
-        <div>
-    <Head>
-      <title>Home</title>
-      <link href="../../../static/style1.css" rel="stylesheet" />
-    </Head>
-    </div>
-      <Grid container className={classes.container}>
-        <Typography variant="h5" className={classes.textBox}>
-          Nos catégories les plus populaires
-        </Typography>
-      </Grid>
-      <div className="thewrap">
-      <section className="card1">
+  constructor(props) {
+    super(props);
+    this.state = {
+      category: [],
 
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png"/>
 
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
-        
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
-      
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
+    }
+  }
 
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
+  componentDidMount() {
+    axios.get('http://localhost:5000/myAlfred/api/category/all')
+        .then(response => {
+          let category = response.data;
 
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
 
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
 
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
 
-          <PopularCategoriesCard img="../../static/monika-grabkowska-759473-unsplash.jpg" categorie="cuisine" desc="Parce que quand on a faim, faut manger" avatar="../../../static/unknown.png" />
-    
-        </section>
-        </div>
-      
-    </Fragment>
-  );
+          this.setState({
+            category: category,
+
+          })
+        })
+
+  }
+
+  render() {
+    const {classes} = this.props;
+    const {category} = this.state;
+
+
+
+    const categories = category.map(e => (
+        <PopularCategoriesCard img={e.picture} categorie={e.label}
+                               desc="Parce que quand on a faim, faut manger"
+                               avatar="../../../static/unknown.png"
+                               number="1"/>
+    ));
+
+    return (
+        <Fragment>
+          <div>
+            <Head>
+              <title>Home</title>
+              <link href="../../../static/style1.css" rel="stylesheet"/>
+            </Head>
+          </div>
+          <Grid container className={classes.container}>
+            <Typography variant="h5" className={classes.textBox}>
+              Nos catégories les plus populaires
+            </Typography>
+          </Grid>
+          <div className="thewrap">
+            <section className="card1">
+
+              {categories}
+
+
+
+            </section>
+          </div>
+
+        </Fragment>
+    );
+  }
 };
 
 popularCategories.propTypes = {
