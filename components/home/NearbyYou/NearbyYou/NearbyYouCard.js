@@ -88,7 +88,7 @@ const styles = theme => ({
 
 const nearbyYouCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { classes, img } = props;
+  const { classes, img, desc, title,alfred,avatar } = props;
 
   return (
     <Card className={classes.card}>
@@ -101,18 +101,18 @@ const nearbyYouCard = (props) => {
                 <FavoriteBorderOutlined className={classes.whiteLogo} />
               </Grid>
               <Grid container className={classes.locationAvatarGrid}>
-                <Avatar alt="John Doe" src="../../../../static/johndoe.jpg" className={classes.avatar} />
+                <Avatar alt="John Doe" src={avatar} className={classes.avatar} />
               </Grid>
             </Grid>
           </div>
         </CardMedia>
         <CardContent>
           <Typography variant="h6" component="h2">
-            Nom du service
+            {title}
           </Typography>
           <Grid container>
             <Typography variant="body2" component="p">
-              Par Jean
+              Par {alfred}
             </Typography>
             <div>
               <StarRate fontSize="small" />
@@ -123,7 +123,7 @@ const nearbyYouCard = (props) => {
             </div>
           </Grid>
           <Typography component="p" className={classes.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            {desc}
           </Typography>
         </CardContent>
       </CardActionArea>

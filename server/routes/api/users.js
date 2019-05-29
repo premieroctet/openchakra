@@ -325,6 +325,21 @@ router.put('/alfredViews/:id',(req,res) => {
         .catch(err => res.status(404).json({ user: 'No user found' }));
 });
 
+// @Route GET /myAlfred/api/users/home/alfred
+// List alfred homepage
+router.get('/home/alfred',(req,res) => {
+    User.find({is_alfred: true})
+        .sort({creation_date: -1})
+        .limit(10)
+        .then(user => {
+            if(!user) {
+                res.status(400).json({msg: 'No alfred found'});
+            }
+            res.json(user);
+        })
+        .catch(err => res.status(404).json({ alfred: 'No alfred found' }))
+});
+
 // @Route GET /myAlfred/api/users/alfred
 // List all alfred
 router.get('/alfred',(req,res) => {

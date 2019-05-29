@@ -16,14 +16,14 @@ const styles = theme => ({
     paddingTop: '3rem',
     fontFamily: 'roboto',
     fontWeight: 'bold',
-    fontSize: '20px',
+    fontSize: '18px',
     color: 'white',
     letterSpacing: '.2rem',
   },
   textDown: {
     textAlign: 'left',
     fontFamily: 'roboto',
-    fontSize: '18px',
+    fontSize: '16px',
     color: 'white',
     padding: '.7rem',
   },
@@ -33,12 +33,24 @@ const styles = theme => ({
   container: {
     flexDirection: 'column',
     height: '100%',
+    zIndex: '3',
   },
   row: {
     flexDirection: 'row',
     flex: 1,
   },
   card: {
+    maxWidth: '200px',
+    maxHeight: '300px',
+    height: '250px',
+    borderRadius: '30px',
+    margin: '5px!important',
+    minWidth: '200px!important',
+    marginRight: '10px!important',
+    marginLeft: '10px!important',
+    boxShadow: '0 12px 10px -5px grey',  
+  },
+  /*cardoverlay: {
     maxWidth: '250px',
     maxHeight: '350px',
     height: '300px',
@@ -47,8 +59,12 @@ const styles = theme => ({
     minWidth: '250px!important',
     marginRight: '10px!important',
     marginLeft: '10px!important',
-
-  },
+    position: 'absolute',
+    top: '119%',
+    zIndex: '2',
+    width: '100%',
+    backgroundImage: 'linear-gradient(to top, rgba(0,0,0,.5), rgba(0,0,0,.4), rgba(0,0,0,.3), rgba(0,0,0,.2), rgba(255,255,255,0))',
+  },*/
   cardAction: {
     height: '100%',
   },
@@ -63,7 +79,7 @@ const styles = theme => ({
 
 const popularCategoriesCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { img, classes, categorie, desc, avatar } = props;
+  const { img, classes, categorie, desc, avatar,number } = props;
 
   return (
     <Card className={classes.card}>
@@ -78,10 +94,10 @@ const popularCategoriesCard = (props) => {
                 <Typography className={classes.textDown}>{desc}</Typography>
               </Grid>
               <Grid item xs={3} className={classes.center}>
-              <Badge badgeContent={563} color="primary">
+                {/*<Badge badgeContent={number} color="primary">*/}
               {/*<Avatar alt="Unknown" src={avatar}/>*/}
-              <People style={{color: 'lightgrey'}}/>
-              </Badge>
+                {/*<People style={{color: 'lightgrey'}}/>*/}
+              {/*</Badge>*/}
               </Grid>
             </Grid>
           </Grid>
