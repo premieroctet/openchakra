@@ -4,6 +4,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 
 const ServiceUser = require('../../models/ServiceUser');
+const User = require('../../models/User');
 
 router.get('/test',(req, res) => res.json({msg: 'Service user Works!'}) );
 
@@ -69,6 +70,51 @@ router.get('/all',(req,res)=> {
         })
         .catch(err => res.status(404).json({ service: 'No service found' }));
 });
+
+// @Route GET /myAlfred/api/serviceUser/near
+// View all service by city
+// @Access private
+router.get('/near',(req,res)=> {
+
+    User.findById(req.user.id)
+        .then(user => {
+            ServiceUser.find({city: user.billing_address.city})
+                .populate('user')
+                .populate('service')
+                .limit(6)
+                .then(service => {
+                    if(typeof service !== 'undefined' && service.length > 0){
+                        res.json(service);
+                    } else {
+                        return res.status(400).json({msg: 'No service found'});
+                    }
+
+                })
+                .catch(err => res.status(404).json({ service: 'No service found' }));
+        });
+
+});
+
+// @Route GET /myAlfred/api/serviceUser/home
+// View service for home
+// @Access private
+router.get('/home',(req,res)=> {
+
+    ServiceUser.find()
+        .populate('user')
+        .populate('service')
+        .limit(6)
+        .then(service => {
+            if(typeof service !== 'undefined' && service.length > 0){
+                res.json(service);
+            } else {
+                return res.status(400).json({msg: 'No service found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ service: 'No service found' }));
+});
+
 
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser

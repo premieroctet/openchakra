@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import NearbyYouCard from './NearbyYou/NearbyYouCard';
+import axios from 'axios';
 
 const styles = theme => ({
   container: {
@@ -48,39 +49,69 @@ const styles = theme => ({
   },
 });
 
-const nearbyYou = (props) => {
-  const { classes } = props;
+class nearbyYou extends React.Component{
 
-  return (
-    <Fragment>
-      <Grid container className={classes.container}>
-        <Typography variant="h5" className={classes.textBox}>
-          Cela se passe près de chez vous
-        </Typography>
-      </Grid>
-      <Grid container className={classes.container} spacing={24} wrap="wrap">
-        <Grid item xs={12} sm={6} md={4}>
-          <NearbyYouCard img="../../../static/coiffure.jpg" />
+  constructor(props) {
+    super(props);
+    this.state = {
+      service: [],
+      logged: false
+    }
+  }
+
+  componentDidMount() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.setState({logged:true});
+
+      axios.get('http://localhost:5000/myAlfred/api/serviceUser/near')
+          .then(response => {
+            let service = response.data;
+
+            this.setState({service:service})
+          })
+    } else {
+      axios.get('http://localhost:5000/myAlfred/api/serviceUser/home')
+          .then(response => {
+            let service = response.data;
+
+            this.setState({service:service})
+          })
+    }
+  }
+
+  render() {
+
+
+    const {classes} = this.props;
+    const {service} = this.state;
+    const logged = this.state.logged;
+    const near = <Typography variant="h5" className={classes.textBox}>
+      Cela se passe près de chez vous
+    </Typography>;
+    const all = <Typography variant="h5" className={classes.textBox}>
+      Exemple de service
+    </Typography>;
+    const cards = service.map(e => (
+        <Grid item xs={12} sm={6} md={4} key={e._id}>
+          <NearbyYouCard img={e.service.picture} title={e.service.label} alfred={e.user.firstname}
+                         desc="lorem" avatar="../../../static/johndoe.jpg"/>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <NearbyYouCard img="../../../static/coiffure.jpg" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <NearbyYouCard img="../../../static/coiffure.jpg" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <NearbyYouCard img="../../../static/coiffure.jpg" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <NearbyYouCard img="../../../static/coiffure.jpg" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <NearbyYouCard img="../../../static/coiffure.jpg" />
-        </Grid>
-      </Grid>
-    </Fragment>
-  );
-};
+    ));
+
+    return (
+        <Fragment>
+          <Grid container className={classes.container}>
+            {logged ? near : all}
+          </Grid>
+          <Grid container className={classes.container} spacing={24} wrap="wrap">
+            {cards}
+
+          </Grid>
+        </Fragment>
+    );
+  }
+}
 
 nearbyYou.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
