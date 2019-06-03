@@ -14,8 +14,7 @@ router.get('/test',(req, res) => res.json({msg: 'Reviews Works!'}) );
 // Add a review
 // @Access private
 router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
-    Reviews.find({user: req.user.id})
-        .then(reviews => {
+
 
                 const reviewFields = {};
                 reviewFields.user = req.user.id;
@@ -29,6 +28,12 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
                 reviewFields.note.punctuality = req.body.punctuality;
                 reviewFields.note.prestation = req.body.prestation;
 
+                let quality = parseInt(req.body.quality_price,10);
+                let punctuality = parseInt(req.body.punctuality,10);
+                let prestation = parseInt(req.body.prestation,10);
+
+
+                reviewFields.note.global = (quality + punctuality + prestation)/3;
 
                 const newReviews = new Reviews(reviewFields);
                 newReviews.save().then(reviews => res.json(reviews)).catch(err => console.log(err));
@@ -37,9 +42,20 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
                     $inc: {number_of_reviews: 1}
                 })
                     .then(data => console.log('update ok'))
-                    .catch(err => console.log(err))
+                    .catch(err => console.log(err));
 
-        })
+                User.findById(req.body.alfred)
+                    .then(user => {
+                        user.score = (user.score+(quality + punctuality + prestation))/user.number_of_reviews;
+                        user.save().then(users => console.log('reviews update')).catch(err => console.log(err));
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+
+
+
+
 });
 
 // @Route GET /myAlfred/api/reviews/all

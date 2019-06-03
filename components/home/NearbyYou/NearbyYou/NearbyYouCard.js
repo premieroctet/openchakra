@@ -12,6 +12,7 @@ import Fab from '@material-ui/core/Fab';
 // eslint-disable-next-line object-curly-newline
 import { StarRate, FavoriteBorderOutlined, LocationOn, PermContactCalendar } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
+import Link from 'next/link';
 
 // eslint-disable-next-line no-unused-vars
 const styles = theme => ({
@@ -129,9 +130,11 @@ const nearbyYouCard = (props) => {
       </CardActionArea>
       <CardActions>
         <Grid container className={classes.gridButton}>
+          <Link style={{color:'white !important',textdecoration:'none' }} href="/shop?id=5ce2a167d7e1ce19430f4b20" as="/shop/5ce2a167d7e1ce19430f4b20">
           <Fab variant="extended" size="medium" color="primary" className={classes.bookButton}>
             Réservez
           </Fab>
+          </Link>
         </Grid>
       </CardActions>
     </Card>
