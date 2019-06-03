@@ -77,9 +77,7 @@ class popularCategories extends React.Component {
 
     const categories = category.map(e => (
         <PopularCategoriesCard img={e.picture} categorie={e.label}
-                               desc="Parce que quand on a faim, faut manger"
-                               avatar="../../../static/unknown.png"
-                               number="1"/>
+        />
     ));
 
     return (

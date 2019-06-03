@@ -79,7 +79,7 @@ const styles = theme => ({
 
 const popularCategoriesCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { img, classes, categorie, desc, avatar,number } = props;
+  const { img, classes, categorie} = props;
 
   return (
     <Card className={classes.card}>
@@ -90,9 +90,9 @@ const popularCategoriesCard = (props) => {
               <Typography className={classes.textUp}>{categorie}</Typography>
             </Grid>
             <Grid container xs={12} className={classes.row}>
-              <Grid item xs={9} className={classes.center}>
+              {/*<Grid item xs={9} className={classes.center}>
                 <Typography className={classes.textDown}>{desc}</Typography>
-              </Grid>
+              </Grid>*/}
               <Grid item xs={3} className={classes.center}>
                 {/*<Badge badgeContent={number} color="primary">*/}
               {/*<Avatar alt="Unknown" src={avatar}/>*/}
@@ -111,7 +111,6 @@ popularCategoriesCard.propTypes = {
   img: PropTypes.string.isRequired,
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   categorie: PropTypes.string.isRequired,
-  desc: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(popularCategoriesCard);

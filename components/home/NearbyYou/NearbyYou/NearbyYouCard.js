@@ -89,7 +89,7 @@ const styles = theme => ({
 
 const nearbyYouCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { classes, img, desc, title,alfred,avatar } = props;
+  const { classes, img, desc, title,alfred,avatar,score } = props;
 
   return (
     <Card className={classes.card}>
@@ -98,8 +98,7 @@ const nearbyYouCard = (props) => {
           <div className={classes.darkOverlay}>
             <Grid container className={classes.avatarContainer}>
               <Grid container className={classes.gridContainer}>
-                <PermContactCalendar className={classes.whiteLogo} />
-                <FavoriteBorderOutlined className={classes.whiteLogo} />
+
               </Grid>
               <Grid container className={classes.locationAvatarGrid}>
                 <Avatar alt="John Doe" src={avatar} className={classes.avatar} />
@@ -116,15 +115,11 @@ const nearbyYouCard = (props) => {
               Par {alfred}
             </Typography>
             <div>
-              <StarRate fontSize="small" />
-              <StarRate fontSize="small" />
-              <StarRate fontSize="small" />
-              <StarRate fontSize="small" />
-              <StarRate fontSize="small" />
+              {score}/5
             </div>
           </Grid>
           <Typography component="p" className={classes.text}>
-            {desc}
+
           </Typography>
         </CardContent>
       </CardActionArea>

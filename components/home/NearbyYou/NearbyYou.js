@@ -97,7 +97,7 @@ class nearbyYou extends React.Component{
     const cards = service.map(e => (
         <Grid item xs={12} sm={6} md={4} key={e._id}>
           <NearbyYouCard img={e.service.picture} title={e.service.label} alfred={e.user.firstname}
-                         desc="lorem" avatar="../../../static/johndoe.jpg"/>
+                         avatar="../../../static/johndoe.jpg" score={e.user.score}/>
         </Grid>
     ));
 
