@@ -1313,7 +1313,8 @@ router.post('/service/all', passport.authenticate('jwt',{session: false}),(req, 
                         category: mongoose.Types.ObjectId(req.body.category),
                         equipments: req.body.equipments,
                         tags: req.body.tags,
-                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`
+                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
+                        description: req.body.description
 
                     });
 
