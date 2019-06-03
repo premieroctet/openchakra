@@ -22,6 +22,9 @@ const ServiceSchema = new Schema({
     }],
     picture: {
         type: String
+    },
+    description: {
+        type: String
     }
 });
 
