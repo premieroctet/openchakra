@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import PopularCategoriesCard from './PoplarCategoriesCard/PopularCategoriesCard';
 import Head from 'next/head';
 import axios from 'axios';
+import Link from 'next/link';
 
 const styles = theme => ({
 
@@ -40,6 +41,13 @@ const styles = theme => ({
     marginBottom: 30,
     marginTop: 35,
   },
+  link: {
+    textDecoration: 'none',
+    '&:hover': {
+      color: 'grey',
+    }
+  },
+
 });
 
 class popularCategories extends React.Component {
@@ -76,8 +84,8 @@ class popularCategories extends React.Component {
 
 
     const categories = category.map(e => (
-        <PopularCategoriesCard img={e.picture} categorie={e.label}
-        />
+        <Link href={`/service?category=${e._id}`} as={`/service/${e._id}`}><a className={classes.link}><PopularCategoriesCard img={e.picture} categorie={e.label}
+        /></a></Link>
     ));
 
     return (

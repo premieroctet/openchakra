@@ -56,7 +56,11 @@ nextApp.prepare().then(() => {
 
     app.get('/shop/:id', (req, res) => {
         return app.render(req, res, '/shop', { id: req.params.id })
-    })
+    });
+
+    app.get('/service/:category', (req, res) => {
+        return app.render(req, res, '/service', { category: req.params.category })
+    });
 
     app.use('/myAlfred/api/users',users);
     app.use('/myAlfred/api/category',category);
