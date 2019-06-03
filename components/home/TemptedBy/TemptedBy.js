@@ -146,7 +146,7 @@ class TemptedBy extends React.Component {
                       <Typography className={classes.textDown}></Typography>
                     </Grid>
                     <Grid item xs={9} className={classes.center}>
-                      <Typography className={classes.textDown}><span className={classes.leh3}>{e.label}</span><br/>Description de la prestation lorem ipsum lalala lalala</Typography>
+                      <Typography className={classes.textDown}><span className={classes.leh3}>{e.label} ({e.filter_presentation.label})</span><br/>{e.price}€</Typography>
                     </Grid>
                     <Grid item xs={2}>
                       <Typography className={classes.textDown}></Typography>

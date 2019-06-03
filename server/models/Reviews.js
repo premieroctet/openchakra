@@ -25,6 +25,11 @@ const ReviewsSchema = new Schema({
             type: Number,
             max: 5,
             min: 0
+        },
+        global: {
+          type: Number,
+          max: 5,
+          min: 0
         }
     },
     date: {

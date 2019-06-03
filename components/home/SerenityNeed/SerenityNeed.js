@@ -12,6 +12,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
+import Link from 'next/link';
 
 const styles = theme => ({
   container: {
@@ -122,9 +123,11 @@ class serenityNeed extends React.Component {
               </CardContent>
             </CardActionArea>
             <CardActions>
+              <Link href={`/prestation?service=${e._id}`} as={`/prestation/${e._id}`}>
               <Button size="small" color="primary">
-                En savoir plus
+                Toutes les prestations
               </Button>
+              </Link>
             </CardActions>
           </Card>
         </Grid>
