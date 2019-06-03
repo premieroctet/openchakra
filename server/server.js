@@ -62,6 +62,10 @@ nextApp.prepare().then(() => {
         return app.render(req, res, '/service', { category: req.params.category })
     });
 
+    app.get('/prestation/:service', (req, res) => {
+        return app.render(req, res, '/prestation', { service: req.params.service })
+    });
+
     app.use('/myAlfred/api/users',users);
     app.use('/myAlfred/api/category',category);
     app.use('/myAlfred/api/billing',billing);
