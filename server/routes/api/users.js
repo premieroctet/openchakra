@@ -100,6 +100,36 @@ router.put('/profile/billingAddress',passport.authenticate('jwt',{session: false
         })
 });
 
+// @Route PUT /myAlfred/api/users/profile/phone
+// Add phone number in profile
+// @Access private
+router.put('/profile/phone',passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findByIdAndUpdate(req.user.id, {
+        phone: req.body.phone
+    },{new:true})
+        .then(user => {
+            res.json(user)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
+// @Route PUT /myAlfred/api/users/profile/job
+// Add job in profile
+// @Access private
+router.put('/profile/job',passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findByIdAndUpdate(req.user.id, {
+        job: req.body.job
+    },{new:true})
+        .then(user => {
+            res.json(user)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
 // @Route POST /myAlfred/api/users/register/alfred
 // Register an alfred
 router.post('/register/alfred', (req, res) => {
@@ -373,9 +403,7 @@ router.get('/alfred',(req,res) => {
 router.get('/current',passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findById(req.user.id)
         .then(user => {
-            if(!user) {
-                res.status(400).json({msg: 'No alfred found'});
-            }
+
             res.json(user);
         })
         .catch(err => res.status(404).json({ alfred: 'No alfred found' }))
