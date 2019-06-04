@@ -15,7 +15,9 @@ class profile extends React.Component {
             address: false,
             job: false,
             phone: false,
-            currentAddress: {}
+            currentAddress: {},
+            otherAddress: false,
+            currentOtherAddress: {}
 
         };
     }
@@ -26,6 +28,7 @@ class profile extends React.Component {
             .get('http://localhost:5000/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
+                this.setState({user:user})
 
                 if(user.billing_address.city) {
                     this.setState({address: true, currentAddress: user.billing_address})
@@ -42,8 +45,14 @@ class profile extends React.Component {
                 } else {
                     this.setState({job: false})
                 }
+                if(!user.service_address.city) {
+                    this.setState({otherAddress:false})
+                } else {
+                    this.setState({otherAddress: true, currentOtherAddress: user.service_address})
+                }
 
-                this.setState({user:user})
+
+
             })
             .catch(err =>
                 console.log(err)
@@ -55,15 +64,25 @@ class profile extends React.Component {
 
         const {user} = this.state;
         const address = this.state.address;
+        const otherAddress = this.state.otherAddress;
         const phone = this.state.phone;
         const job = this.state.job;
         const link = <Link href="/addAddress"><a>Ajouter une adresse</a></Link>;
+        const link2 = <Link href="/addOtherAddress"><a>Ajouter une seconde adresse</a></Link>;
         const {currentAddress} = this.state;
+        const {currentOtherAddress} = this.state;
         const fullAddress = <div>
             <p>Adresse : {currentAddress.address}</p>
             <p>Ville : {currentAddress.city}</p>
             <p>Code postal : {currentAddress.zip_code}</p>
             <p>Pays : {currentAddress.country}</p>
+        </div>;
+
+        const fullOtherAddress = <div><h4>Autre adresse</h4>
+            <p>Adresse : {currentOtherAddress.address}</p>
+            <p>Ville : {currentOtherAddress.city}</p>
+            <p>Code postal : {currentOtherAddress.zip_code}</p>
+            <p>Pays : {currentOtherAddress.country}</p>
         </div>;
 
         const addPhone = <Link href="/addPhone"><a>Ajouter un téléphone</a></Link>;
@@ -83,6 +102,7 @@ class profile extends React.Component {
                             <p>Email : {user.email}</p>
                             <p>Date de naissance : {moment(user.birthday).format('L')}</p>
                             {address ? fullAddress : link}
+                            {otherAddress ? fullOtherAddress : link2}
                             {phone ? currentPhone : addPhone}
                             {job ? currentJob : addJob}
                         </div>

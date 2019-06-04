@@ -54,8 +54,8 @@ router.post('/register',(req,res) =>{
         })
 });
 
-// @Route PUT /myAlfred/api/users/:id/billingAddress
-// Add an adress in the profile
+// @Route PUT /myAlfred/api/users/profile/billingAddress
+// Add an address in the profile
 // @Access private
 router.put('/profile/billingAddress',passport.authenticate('jwt',{session: false}), (req,res) => {
 
@@ -89,6 +89,52 @@ router.put('/profile/billingAddress',passport.authenticate('jwt',{session: false
                     result.forEach(function (element) {
                         user.billing_address.gps.lat = element.geometry.coordinates[1];
                         user.billing_address.gps.lng = element.geometry.coordinates[0];
+                    });
+
+                    user.save().then(user => res.json(user)).catch(err => console.log(err));
+
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        })
+});
+
+// @Route PUT /myAlfred/api/users/profile/serviceAddress
+// Add an other address in the profile
+// @Access private
+router.put('/profile/serviceAddress',passport.authenticate('jwt',{session: false}), (req,res) => {
+
+    User.findById(req.user.id)
+        .then(user => {
+            user.service_address = {};
+            user.service_address.address = req.body.address;
+            user.service_address.zip_code = req.body.zip_code;
+            user.service_address.city = req.body.city;
+
+            if (req.body.country === '1') {
+                user.service_address.country = 'France';
+            } else {
+                user.service_address.country = 'Maroc';
+            }
+
+            user.service_address.gps = {};
+
+            let address = req.body.address;
+            let city = req.body.city;
+
+            let newAddress = address.replace(/ /g, '+');
+
+            const url = newAddress + '%2C+' + city + '&format=geojson&limit=1';
+
+            axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
+                .then(response => {
+
+                    let result = response.data.features;
+
+                    result.forEach(function (element) {
+                        user.service_address.gps.lat = element.geometry.coordinates[1];
+                        user.service_address.gps.lng = element.geometry.coordinates[0];
                     });
 
                     user.save().then(user => res.json(user)).catch(err => console.log(err));
