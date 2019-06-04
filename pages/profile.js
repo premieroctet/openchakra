@@ -17,7 +17,9 @@ class profile extends React.Component {
             phone: false,
             currentAddress: {},
             otherAddress: false,
-            currentOtherAddress: {}
+            currentOtherAddress: {},
+            picture: false,
+            currentPicture: ''
 
         };
     }
@@ -28,7 +30,7 @@ class profile extends React.Component {
             .get('http://localhost:5000/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
-                this.setState({user:user})
+                this.setState({user:user});
 
                 if(user.billing_address.city) {
                     this.setState({address: true, currentAddress: user.billing_address})
@@ -44,6 +46,11 @@ class profile extends React.Component {
                     this.setState({job: true})
                 } else {
                     this.setState({job: false})
+                }
+                if(user.picture) {
+                    this.setState({picture: true})
+                } else {
+                    this.setState({picture: false})
                 }
                 if(!user.service_address.city) {
                     this.setState({otherAddress:false})
@@ -67,10 +74,13 @@ class profile extends React.Component {
         const otherAddress = this.state.otherAddress;
         const phone = this.state.phone;
         const job = this.state.job;
+        const picture = this.state.picture;
         const link = <Link href="/addAddress"><a>Ajouter une adresse</a></Link>;
         const link2 = <Link href="/addOtherAddress"><a>Ajouter une seconde adresse</a></Link>;
+        const addPicture = <Link href="/addPicture"><a>Ajouter une photo de profile</a></Link> ;
         const {currentAddress} = this.state;
         const {currentOtherAddress} = this.state;
+        const currentPicture = <img src={`../../${user.picture}`} alt="picture"/>;
         const fullAddress = <div>
             <p>Adresse : {currentAddress.address}</p>
             <p>Ville : {currentAddress.city}</p>
@@ -105,6 +115,7 @@ class profile extends React.Component {
                             {otherAddress ? fullOtherAddress : link2}
                             {phone ? currentPhone : addPhone}
                             {job ? currentJob : addJob}
+                            {picture ? currentPicture : addPicture}
                         </div>
                     </div>
                 </Layout>

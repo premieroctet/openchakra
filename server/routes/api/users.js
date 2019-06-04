@@ -12,6 +12,18 @@ const validateLoginInput = require('../../validation/login');
 
 const User = require('../../models/User');
 
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/profile/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const upload = multer({ storage: storage });
+
 
 router.get('/test',(req, res) => res.json({msg: 'Users Works!'}) );
 
@@ -167,6 +179,21 @@ router.put('/profile/phone',passport.authenticate('jwt',{session:false}),(req,re
 router.put('/profile/job',passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findByIdAndUpdate(req.user.id, {
         job: req.body.job
+    },{new:true})
+        .then(user => {
+            res.json(user)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
+// @Route PUT /myAlfred/api/users/profile/picture
+// Add a picture profile
+// @Access private
+router.post('/profile/picture',upload.single('myImage'),passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findByIdAndUpdate(req.user.id, {
+        picture: req.file.path
     },{new:true})
         .then(user => {
             res.json(user)
