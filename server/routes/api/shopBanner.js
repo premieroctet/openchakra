@@ -27,10 +27,10 @@ router.get('/:id',(req,res)=> {
 
     ShopBanner.findById(req.params.id)
         .then(picture => {
-            if(typeof picture !== 'undefined' && picture.length > 0){
-                res.json(picture);
-            } else {
+            if(Object.keys(picture).length === 0 && picture.constructor === Object){
                 return res.status(400).json({msg: 'No picture found'});
+            } else {
+                res.json(picture);
             }
 
         })

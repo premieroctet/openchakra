@@ -27,10 +27,10 @@ router.get('/:id',(req,res)=> {
 
         Job.findById(req.params.id)
             .then(job => {
-                if(typeof job !== 'undefined' && job.length > 0){
-                    res.json(job);
-                } else {
+                if(Object.keys(job).length === 0 && job.constructor === Object){
                     return res.status(400).json({msg: 'No job found'});
+                } else {
+                    res.json(job);
                 }
 
             })
