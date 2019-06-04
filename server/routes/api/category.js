@@ -30,11 +30,9 @@ router.get('/:id', (req,res)=> {
 
     Category.findById(req.params.id)
         .then(category => {
-            if(typeof category !== 'undefined' && category.length > 0){
+
                 res.json(category);
-            } else {
-                return res.status(400).json({msg: 'No category found'});
-            }
+
 
         })
         .catch(err => res.status(404).json({ category: 'No category found' }));

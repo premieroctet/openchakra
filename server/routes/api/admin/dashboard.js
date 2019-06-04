@@ -18,6 +18,7 @@ const Category = require('../../../models/Category');
 const Equipment = require('../../../models/Equipment');
 const Service = require('../../../models/Service');
 const Prestation = require('../../../models/Prestation');
+const ShopBanner = require('../../../models/ShopBanner');
 const validatePrestationInput = require('../../../validation/prestation');
 const validateRegisterInput = require('../../../validation/register');
 
@@ -1470,7 +1471,7 @@ router.post('/prestation/all',passport.authenticate('jwt',{session: false}),(req
 
 });
 
-// @Route GET /myAlfred/admin/prestation/all
+// @Route GET /myAlfred/api/admin/prestation/all
 // Get all prestations
 // @Access public
 router.get('/prestation/all',(req,res) => {
@@ -1494,7 +1495,7 @@ router.get('/prestation/all',(req,res) => {
         .catch(err => res.status(404).json({ billing: 'No prestation found' }));
 });
 
-// @Route GET /myAlfred/admin/prestation/all/:id
+// @Route GET /myAlfred/api/admin/prestation/all/:id
 // View one prestation
 // @Access public
 router.get('/prestation/all/:id',(req,res)=> {
@@ -1519,7 +1520,7 @@ router.get('/prestation/all/:id',(req,res)=> {
 
 });
 
-// @Route DELETE /myAlfred/admin/prestation/all/:id
+// @Route DELETE /myAlfred/api/admin/prestation/all/:id
 // Delete one prestation
 // @Access private
 router.delete('/prestation/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -1538,7 +1539,7 @@ router.delete('/prestation/all/:id',passport.authenticate('jwt',{session: false}
         .catch(err => res.status(404).json({ prestationnotfound: 'No prestation found' }));
 });
 
-// @Route PUT /myAlfred/admin/prestation/all/:id
+// @Route PUT /myAlfred/api/admin/prestation/all/:id
 // Update a prestation
 // @Access private
 router.put('/prestation/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1560,6 +1561,113 @@ router.put('/prestation/all/:id',passport.authenticate('jwt',{session: false}),(
                 res.json(prestation);
             })
             .catch(err => res.status(404).json({ prestationnotfound: 'No prestation found' }));
+    } else {
+        res.status(400).json({msg: 'Access denied'});
+    }
+
+});
+
+// SHOP BANNER
+
+// @Route POST /myAlfred/api/admin/shopBanner/all
+// Add picture for shop banner
+// @Access private
+router.post('/shopBanner/all', passport.authenticate('jwt',{session: false}),(req, res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+        ShopBanner.findOne({label: req.body.label})
+            .then(service => {
+                if(service){
+                    return res.status(400).json({msg:'This picture already exists'});
+                } else {
+                    const newBanner = new ShopBanner({
+                        label: req.body.label,
+                        picture: `https://source.unsplash.com/${req.body.picture}/1920x1080`,
+
+
+                    });
+
+                    newBanner.save().then(banner => res.json(banner)).catch(err => console.log(err));
+                }
+            })
+    } else {
+        res.status(400).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route GET /myAlfred/api/admin/shopBanner/all
+// Get all picture banner
+router.get('/shopBanner/all',(req,res) => {
+    ShopBanner.find()
+        .then(banner => {
+            if(!banner){
+                return res.status(400).json({msg: 'No banner found'});
+            }
+            res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
+            res.setHeader('X-Total-Count',banner.length);
+            res.json(banner);
+
+        })
+        .catch(err => res.status(404).json({banner: 'No banner found' }));
+});
+
+// @Route GET /myAlfred/api/admin/shopBanner/all/:id
+// View one shop banner
+router.get('/shopBanner/all/:id',(req,res)=> {
+
+    ShopBanner.findById(req.params.id)
+        .then(banner => {
+            if(!banner){
+                return res.status(400).json({msg: 'No banner found'});
+            }
+            res.json(banner);
+
+        })
+        .catch(err => res.status(404).json({ banner: 'No banner found' }));
+
+
+});
+
+// @Route DELETE /myAlfred/api/admin/shopBanner/all/:id
+// Delete one shop banner
+// @Access private
+router.delete('/shopBanner/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    ShopBanner.findById(req.params.id)
+        .then(banner => {
+            if(!admin) {
+                return res.status(401).json({ notauthorized: 'User not authorized' });
+
+
+            }
+            banner.remove().then(() => res.json({ success: true }));
+        })
+        .catch(err => res.status(404).json({ bannernotfound: 'No banner found' }));
+});
+
+// @Route PUT /myAlfred/api/admin/shopBanner/all/:id
+// Update a shop banner
+// @Access private
+router.put('/shopBanner/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+       ShopBanner.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,
+                }}, {new: true})
+            .then(banner => {
+                res.json(banner);
+            })
+            .catch(err => res.status(404).json({ bannernotfound: 'No banner found' }));
     } else {
         res.status(400).json({msg: 'Access denied'});
     }
