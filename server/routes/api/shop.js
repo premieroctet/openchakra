@@ -107,7 +107,7 @@ router.get('/:id',(req,res)=> {
         .populate('alfred')
         .populate({path:'services.label',populate:{path: 'service',select:'label'}})
         .then(shop => {
-            if(typeof shop === 'undefined' && shop.length <= 0){
+            if(Object.keys(shop).length === 0 && shop.constructor === Object){
                 return res.status(400).json({msg: 'No shop found'});
             }
             res.json(shop);

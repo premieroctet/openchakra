@@ -30,10 +30,11 @@ router.get('/:id',(req,res)=> {
 
     Billing.findById(req.params.id)
         .then(billing => {
-            if(typeof billing !== 'undefined' && billing.length > 0){
-                res.json(billing);
-            } else {
+            if(Object.keys(billing).length === 0 && billing.constructor === Object){
+
                 return res.status(400).json({msg: 'No billing found'});
+            } else {
+                res.json(billing);
             }
 
         })

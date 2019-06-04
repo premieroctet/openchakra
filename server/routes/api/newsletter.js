@@ -70,10 +70,10 @@ router.get('/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
     if(admin) {
         Newsletter.findById(req.params.id)
             .then(newsletter => {
-                if(typeof newsletter !== 'undefined' && newsletter.length > 0){
-                    res.json(newsletter);
-                } else {
+                if(Object.keys(newsletter).length === 0 && newsletter.constructor === Object){
                     return res.status(400).json({msg: 'No email found'});
+                } else {
+                    res.json(newsletter);
                 }
 
             })

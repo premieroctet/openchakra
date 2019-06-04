@@ -30,10 +30,10 @@ router.get('/:id',(req,res)=> {
 
         Calculating.findById(req.params.id)
             .then(calculating => {
-                if(typeof calculating !== 'undefined' && calculating.length > 0){
-                    res.json(calculating);
-                } else {
+                if(Object.keys(calculating).length === 0 && calculating.constructor === Object){
                     return res.status(400).json({msg: 'No calculating found'});
+                } else {
+                    res.json(calculating);
                 }
 
             })

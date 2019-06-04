@@ -89,10 +89,10 @@ router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
         .populate('alfred')
         .populate('user')
         .then(favoris => {
-            if(typeof favoris !== 'undefined' && favoris.length > 0){
-                res.json(favoris);
-            } else {
+            if(Object.keys(favoris).length === 0 && favoris.constructor === Object){
                 return res.status(400).json({msg: 'No favoris found'});
+            } else {
+                res.json(favoris);
             }
 
         })
