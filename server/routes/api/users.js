@@ -38,35 +38,6 @@ router.post('/register',(req,res) =>{
                 userFields.password = req.body.password;
                 userFields.birthday = req.body.birthday;
 
-                userFields.billing_address = {};
-                userFields.billing_address.address = req.body.address;
-                userFields.billing_address.zip_code = req.body.zip_code;
-                userFields.billing_address.city = req.body.city;
-
-                if (req.body.country === '1') {
-                    userFields.billing_address.country = 'France';
-                } else {
-                    userFields.billing_address.country = 'Maroc';
-                }
-
-                userFields.billing_address.gps = {};
-
-                let address = req.body.address;
-                let city = req.body.city;
-
-                let newAddress = address.replace(/ /g, '+');
-
-                const url = newAddress + '%2C+' + city + '&format=geojson&limit=1';
-
-                axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
-                    .then(response => {
-
-                        let result = response.data.features;
-
-                        result.forEach(function (element) {
-                            userFields.billing_address.gps.lat = element.geometry.coordinates[1];
-                                userFields.billing_address.gps.lng = element.geometry.coordinates[0];
-                        });
 
                         const newUser = new User(userFields);
                         bcrypt.genSalt(10, (err, salt) => {
@@ -78,11 +49,54 @@ router.post('/register',(req,res) =>{
                                     .catch(err => console.log(err));
                             })
                         })
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
+
             }
+        })
+});
+
+// @Route PUT /myAlfred/api/users/:id/billingAddress
+// Add an adress in the profile
+// @Access private
+router.put('/profile/billingAddress',passport.authenticate('jwt',{session: false}), (req,res) => {
+
+    User.findById(req.user.id)
+        .then(user => {
+            user.billing_address = {};
+            user.billing_address.address = req.body.address;
+            user.billing_address.zip_code = req.body.zip_code;
+            user.billing_address.city = req.body.city;
+
+            if (req.body.country === '1') {
+                user.billing_address.country = 'France';
+            } else {
+                user.billing_address.country = 'Maroc';
+            }
+
+            user.billing_address.gps = {};
+
+            let address = req.body.address;
+            let city = req.body.city;
+
+            let newAddress = address.replace(/ /g, '+');
+
+            const url = newAddress + '%2C+' + city + '&format=geojson&limit=1';
+
+            axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
+                .then(response => {
+
+                    let result = response.data.features;
+
+                    result.forEach(function (element) {
+                        user.billing_address.gps.lat = element.geometry.coordinates[1];
+                        user.billing_address.gps.lng = element.geometry.coordinates[0];
+                    });
+
+                    user.save().then(user => res.json(user)).catch(err => console.log(err));
+
+                })
+                .catch(error => {
+                    console.log(error)
+                });
         })
 });
 
@@ -344,6 +358,20 @@ router.get('/home/alfred',(req,res) => {
 // List all alfred
 router.get('/alfred',(req,res) => {
     User.find({is_alfred: true})
+        .then(user => {
+            if(!user) {
+                res.status(400).json({msg: 'No alfred found'});
+            }
+            res.json(user);
+        })
+        .catch(err => res.status(404).json({ alfred: 'No alfred found' }))
+});
+
+// @Route GET /myAlfred/api/users/current
+// Get the current user
+// @Access private
+router.get('/current',passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findById(req.user.id)
         .then(user => {
             if(!user) {
                 res.status(400).json({msg: 'No alfred found'});
