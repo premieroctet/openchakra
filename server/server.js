@@ -31,6 +31,7 @@ const reviews = require('./routes/api/reviews');
 const shopBanner = require('./routes/api/shopBanner');
 
 const admin = require('./routes/api/admin/dashboard');
+const path = require('path');
 
 nextApp.prepare().then(() => {
     const app = express();
@@ -38,6 +39,13 @@ nextApp.prepare().then(() => {
 // Body parser middleware
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json());
+
+    if (process.env.NODE_ENV === 'production') {
+
+        app.use(express.static(path.join(__dirname, '.next/')));
+
+    }
+
 
 // DB config
     const db = require('./config/keys').mongoUri;
