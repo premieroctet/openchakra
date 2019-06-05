@@ -1,91 +1,67 @@
-import React from 'react'
-import Link from 'next/link'
-import Head from '../components/head'
-import Nav from '../components/nav'
+import React, { Fragment } from 'react';
+import Navbar from '../components/home/Navbar/Navbar';
+import PopularCategories from '../components/home/PopularCategories/PopularCategories';
+import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
+import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
+import Recommandations from '../components/home/Recommandations/Recommandations';
+import TemptedBy from '../components/home/TemptedBy/TemptedBy';
+import NearbyYou from '../components/home/NearbyYou/NearbyYou';
+import Homeheader from '../components/home/Homeheader/Homeheader';
+import setAuthToken from '../utils/setAuthToken';
 
-const Home = () => (
-  <div>
-    <Head title="Home" />
-    <Nav />
 
-    <div className="hero">
-      <h1 className="title">Welcome to Next!</h1>
-      <p className="description">
-        To get started, edit <code>pages/index.js</code> and save to reload.
-      </p>
+/*<Layout>
+    <Grid container className={classes.loginContainer}>
+        <div>
+            {test ? ok : pasok}
+        </div>
 
-      <div className="row">
-        <Link href="https://github.com/zeit/next.js#getting-started">
-          <a className="card">
-            <h3>Getting Started &rarr;</h3>
-            <p>Learn more about Next on Github and in their examples</p>
-          </a>
-        </Link>
-        <Link href="https://open.segment.com/create-next-app">
-          <a className="card">
-            <h3>Examples &rarr;</h3>
-            <p>
-              Find other example boilerplates on the{' '}
-              <code>create-next-app</code> site
-            </p>
-          </a>
-        </Link>
-        <Link href="https://github.com/segmentio/create-next-app">
-          <a className="card">
-            <h3>Create Next App &rarr;</h3>
-            <p>Was this tool helpful? Let us know how we can improve it</p>
-          </a>
-        </Link>
-      </div>
-    </div>
+        <Link href="/shop?id=5ce2a167d7e1ce19430f4b20" as="/shop/5ce2a167d7e1ce19430f4b20"><a>here</a></Link>
+    </Grid>
+</Layout>*/
+class Home extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            'logged':false
+        }
+    }
 
-    <style jsx>{`
-      .hero {
-        width: 100%;
-        color: #333;
-      }
-      .title {
-        margin: 0;
-        width: 100%;
-        padding-top: 80px;
-        line-height: 1.15;
-        font-size: 48px;
-      }
-      .title,
-      .description {
-        text-align: center;
-      }
-      .row {
-        max-width: 880px;
-        margin: 80px auto 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .card {
-        padding: 18px 18px 24px;
-        width: 220px;
-        text-align: left;
-        text-decoration: none;
-        color: #434343;
-        border: 1px solid #9b9b9b;
-      }
-      .card:hover {
-        border-color: #067df7;
-      }
-      .card h3 {
-        margin: 0;
-        color: #067df7;
-        font-size: 18px;
-      }
-      .card p {
-        margin: 0;
-        padding: 12px 0 0;
-        font-size: 13px;
-        color: #333;
-      }
-    `}</style>
-  </div>
-)
+    componentDidMount() {
+        const token = localStorage.getItem('token');
+        if (token) {
+            this.setState({'logged':true})
+        }
+    }
 
-export default Home
+    logout() {
+        localStorage.removeItem('token');
+        // Remove auth header for future requests
+        setAuthToken(false);
+        window.location.reload();
+};
+
+     render()  {
+         const { classes } = this.props;
+        const test = this.state.logged;
+         const ok = <a href='' onClick={this.logout}>Connecté</a>;
+        const pasok = 'Déconnecté';
+    return (
+        <Fragment>
+            <Navbar />
+            <Homeheader />
+            <PopularCategories />
+            <SerenityNeed />
+            <BecomeAlfred />
+            <TemptedBy />
+            <NearbyYou />
+        </Fragment>
+    )
+}
+
+
+}
+
+
+
+export default Home;

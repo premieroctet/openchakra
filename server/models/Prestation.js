@@ -1,0 +1,43 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const PrestationSchema = new Schema({
+    label: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: String,
+        required: true
+    },
+    service: {
+        type: Schema.Types.ObjectId,
+        ref: 'service'
+    },
+    billing: {
+        type: Schema.Types.ObjectId,
+        ref: 'billing'
+    },
+    filter_presentation: {
+        type: Schema.Types.ObjectId,
+        ref: 'filterPresentation'
+    },
+    search_filter: [{
+        type: Schema.Types.ObjectId,
+        ref: 'searchFilter'
+    }],
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'category'
+    },
+    calculating: {
+        type: Schema.Types.ObjectId,
+        ref: 'calculating'
+    },
+    job: {
+        type: Schema.Types.ObjectId,
+        ref: 'job'
+    }
+});
+
+module.exports = Prestation = mongoose.model('prestation',PrestationSchema);
