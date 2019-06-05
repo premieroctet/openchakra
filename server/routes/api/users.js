@@ -13,6 +13,7 @@ const validateLoginInput = require('../../validation/login');
 const User = require('../../models/User');
 
 const multer = require("multer");
+const nodemailer = require("nodemailer");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -480,6 +481,34 @@ router.get('/current',passport.authenticate('jwt',{session:false}),(req,res) => 
             res.json(user);
         })
         .catch(err => res.status(404).json({ alfred: 'No alfred found' }))
+});
+
+// @Route GET /myAlfred/api/users/email
+// Test email
+router.get('/email/test',(req,res) => {
+
+    async function main() {
+        let transporter = nodemailer.createTransport({
+            host: 'smtp.ethereal.email',
+            port: 587,
+            auth: {
+                user: 'kirstin85@ethereal.email',
+                pass: '1D7q6PCENKSX5cj622'
+            }
+        });
+
+        let info = await transporter.sendMail({
+            from: 'kirstin85@ethereal.email', // sender address
+            to: "leslie.morales@gmail.com", // list of receivers
+            subject: "Email", // Subject line
+            text: "Test email", // plain text body
+            html: "<b>Test email</b>" // html body
+        });
+
+        console.log("Message sent: %s", info.messageId);
+
+    }
+    main().catch(console.error);
 });
 
 
