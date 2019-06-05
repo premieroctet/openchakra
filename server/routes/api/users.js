@@ -11,7 +11,8 @@ const validateSimpleRegisterInput = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
 
 const User = require('../../models/User');
-
+const ResetToken = require('../../models/ResetToken');
+const crypto = require('crypto');
 const multer = require("multer");
 const nodemailer = require("nodemailer");
 
@@ -476,6 +477,7 @@ router.get('/alfred',(req,res) => {
 // @Access private
 router.get('/current',passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findById(req.user.id)
+        .populate('resetToken')
         .then(user => {
 
             res.json(user);
@@ -509,6 +511,66 @@ router.get('/email/test',(req,res) => {
 
     }
     main().catch(console.error);
+});
+
+// @Route POST /myAlfred/api/users/forgotPassword
+// Send email with link for reset password
+router.post('/forgotPassword',(req,res) => {
+    const email = req.body.email;
+
+    User.findOne({email: email})
+        .then(user => {
+            if(user === null) {
+                res.json('email not in the database')
+            } else {
+                const token = crypto.randomBytes(20).toString('hex');
+                const newToken = new ResetToken({token:token});
+                newToken.save().then(token =>{
+                    user.update({resetToken: token._id}).catch(err => console.log(err));
+                });
+
+                let transporter = nodemailer.createTransport({
+                    host: 'smtp.ethereal.email',
+                    port: 587,
+                    auth: {
+                        user: 'kirstin85@ethereal.email',
+                        pass: '1D7q6PCENKSX5cj622'
+                    }
+                });
+
+                let info = transporter.sendMail({
+                    from: 'kirstin85@ethereal.email', // sender address
+                    to: `${user.email}`, // list of receivers
+                    subject: "Reset password", // Subject line
+                    text: `http://localhost:3000/resetPassword?token=${token}`, // plain text body
+                    html: '<a href='+'http://localhost:3000/resetPassword?token='+token+'>Cliquez içi</a>' // html body
+                });
+            }
+        })
+});
+
+// @Route POST /myAlfred/api/users/resetPassword
+// Reset the password
+router.post('/resetPassword',(req,res) => {
+   const password = req.body.password;
+   const token = req.body.token;
+   const email = req.body.email;
+
+   User.findOne({email: email})
+       .then(user => {
+           if(user.resetToken.token === token) {
+               bcrypt.genSalt(10, (err, salt) => {
+                   bcrypt.hash(password, salt, (err, hash) => {
+                       if (err) throw err;
+                       user.updateOne({password: hash})
+                           .then(user => res.json(user))
+                           .catch(err => console.log(err));
+                   })
+               })
+           } else {
+               res.json({msg: 'Invalid token'})
+           }
+       })
 });
 
 

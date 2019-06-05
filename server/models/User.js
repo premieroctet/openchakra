@@ -123,6 +123,10 @@ const UserSchema = new Schema({
     is_admin: {
         type: Boolean,
         default: false
+    },
+    resetToken: {
+        type: Schema.Types.ObjectId,
+        ref: 'resetToken'
     }
 
 
