@@ -8,6 +8,7 @@ class BecomeAlfred extends React.Component {
       categorie: '',
       service: '',
       filter: '',
+      prices:[],
       equipments: [],
       prestations: [],
       filterArr: [],
@@ -24,6 +25,7 @@ class BecomeAlfred extends React.Component {
     this.handlePrestationChange = this.handlePrestationChange.bind(this);
     this.handleFilterChange = this.handleFilterChange.bind(this);
     this.handleEquipmentChange = this.handleEquipmentChange.bind(this);
+    this.handlePrestationPriceChange = this.handlePrestationPriceChange.bind(this);
   }
 
   componentDidMount() {
@@ -55,7 +57,7 @@ class BecomeAlfred extends React.Component {
 
   async handleServiceChange(e) {
     if (this.state.filter != '' || this.state.prestations.length > 0) {
-      this.setState({
+      await this.setState({
         filter: '',
         prestations: [],
       });
@@ -79,7 +81,7 @@ class BecomeAlfred extends React.Component {
 
   async handleFilterChange(e) {
     if (this.state.prestations.length > 0) {
-      this.setState({
+      await this.setState({
         prestations: [],
       });
     }
@@ -104,15 +106,23 @@ class BecomeAlfred extends React.Component {
     console.log(prestations);
   }
 
-  handleEquipmentChange(e) {
+  async handleEquipmentChange(e) {
     const { equipments } = this.state;
     const item = e.target.value;
     const arr = equipments;
 
-    this.setState({
+    await this.setState({
       equipments: [...arr, item],
     })
     console.log(equipments);
+  }
+
+  async handlePrestationPriceChange(e) {
+    await this.setState({
+      price: e.target.value,
+    })
+    console.log(this.state.price);
+    console.log(this.state);
   }
 
   render() {
@@ -121,7 +131,7 @@ class BecomeAlfred extends React.Component {
     const prestationsShow = this.state.filter;
     const equipementShow = this.state.service;
     return (
-      <form>
+      <form onSubmit={e => e.preventDefault()}>
         <select require="true" value={this.state.categorie} onChange={this.handleCategoryChange}>
           <option>Choisissez une catégorie</option>
           {this.state.categoriesBack.map(i => {
@@ -167,15 +177,19 @@ class BecomeAlfred extends React.Component {
           <div>
             {this.state.prestationsBack.map(i => {
               return (
-                <label key={i._id}>
-                  {i.label}
-                  <input
-                    name={i._id}
-                    type="checkbox"
-                    value={i._id}
-                    onChange={this.handlePrestationChange}
-                  />
-                </label>
+                <React.Fragment key={i._id}>
+                  <label>
+                    {i.label}
+                    <input
+                      name={i._id}
+                      type="checkbox"
+                      value={i.label}
+                      onChange={this.handlePrestationChange}
+                    />
+                  </label>
+                  <input type="text" placeholder="Choisissez un prix" value={this.state.prices[0]} onChange={this.handlePrestationPriceChange} />
+                  <p>Prix moyen pour cette prestation: {i.price}€</p>
+                </React.Fragment>
               )
             })}
           </div>
@@ -186,12 +200,3 @@ class BecomeAlfred extends React.Component {
 }
 
 export default BecomeAlfred;
-
-/* {prestationsShow!= 0 &&
-  <select require="true" value={this.state.prestations[0]}>
-    <option>Choisissez une prestation</option>
-    {this.state.prestationsBack.map(i => {
-      return <option value={i._id} key={i._id}>{i.label}</option>
-    })}
-  </select>
-} */
