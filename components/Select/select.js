@@ -50,7 +50,7 @@ class Selectgenre extends React.Component {
             onChange={this.handleChange}
             input={<Input name="genre" id="genre-label-placeholder" />}
             displayEmpty
-            name="genre"
+            name="gender"
             className={classes.selectEmpty}
           >
             <MenuItem value="">

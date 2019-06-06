@@ -41,6 +41,7 @@ const styles = theme => ({
 const bioCard = (props) => {
   const { classes } = props;
 
+
   return (
     <Grid container className={classes.allContainer}>
       <Grid item xs={4} className={classes.avatarContainer}>

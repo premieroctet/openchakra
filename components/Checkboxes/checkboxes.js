@@ -14,7 +14,7 @@ const styles = theme => ({
 
 class Checkboxes extends React.Component {
   state = {
-    checkedA: true,
+    checkedA: false,
   };
 
   handleChange = name => event => {

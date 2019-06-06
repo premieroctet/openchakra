@@ -185,7 +185,7 @@ router.get('/users/users/:id',(req,res) => {
         .catch(err => res.status(404).json({ user: 'No user found' }));
 });
 
-// @Route PUT /myAlfred/admin/users/users/:id
+// @Route PUT /myAlfred/api/admin/users/users/:id
 // Update a user
 // @Access private
 router.put('/users/users/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -205,7 +205,7 @@ router.put('/users/users/:id',passport.authenticate('jwt',{session: false}),(req
 
 });
 
-// @Route DELETE /myAlfred/admin/users/users/:id
+// @Route DELETE /myAlfred/api/admin/users/users/:id
 // Delete one user
 // @Access private
 router.delete('/users/users/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -224,7 +224,7 @@ router.delete('/users/users/:id',passport.authenticate('jwt',{session: false}),(
         .catch(err => res.status(404).json({ user: 'No user found' }));
 });
 
-// @Route GET /myAlfred/admin/users/alfred
+// @Route GET /myAlfred/api/admin/users/alfred
 // List all alfred
 router.get('/users/alfred',(req,res) => {
     User.find({is_alfred: true})

@@ -7,14 +7,61 @@ import Recommandations from '../components/home/Recommandations/Recommandations'
 import TemptedBy from '../components/home/TemptedBy/TemptedBy';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import Homeheader from '../components/home/Homeheader/Homeheader';
-import MyCalendar from '../components/Calendar/calendar';
-import Mainform from '../components/Multistep/mainform';
-import Designuniform from '../components/Fullform/fullform';
+import setAuthToken from '../utils/setAuthToken';
 
-const Home = () => (
-  <Fragment>
-    <Designuniform />
-  </Fragment>
-);
+
+/*<Layout>
+    <Grid container className={classes.loginContainer}>
+        <div>
+            {test ? ok : pasok}
+        </div>
+
+        <Link href="/shop?id=5ce2a167d7e1ce19430f4b20" as="/shop/5ce2a167d7e1ce19430f4b20"><a>here</a></Link>
+    </Grid>
+</Layout>*/
+class Home extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            'logged':false
+        }
+    }
+
+    componentDidMount() {
+        const token = localStorage.getItem('token');
+        if (token) {
+            this.setState({'logged':true})
+        }
+    }
+
+    logout() {
+        localStorage.removeItem('token');
+        // Remove auth header for future requests
+        setAuthToken(false);
+        window.location.reload();
+};
+
+     render()  {
+         const { classes } = this.props;
+        const test = this.state.logged;
+         const ok = <a href='' onClick={this.logout}>Connecté</a>;
+        const pasok = 'Déconnecté';
+    return (
+        <Fragment>
+            <Navbar />
+            <Homeheader />
+            <PopularCategories />
+            <SerenityNeed />
+            <BecomeAlfred />
+            <TemptedBy />
+            <NearbyYou />
+        </Fragment>
+    )
+}
+
+
+}
+
+
 
 export default Home;

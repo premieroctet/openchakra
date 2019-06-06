@@ -12,6 +12,7 @@ import Fab from '@material-ui/core/Fab';
 // eslint-disable-next-line object-curly-newline
 import { StarRate, FavoriteBorderOutlined, LocationOn, PermContactCalendar } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
+import Link from 'next/link';
 
 // eslint-disable-next-line no-unused-vars
 const styles = theme => ({
@@ -88,7 +89,7 @@ const styles = theme => ({
 
 const nearbyYouCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { classes, img } = props;
+  const { classes, img, desc, title,alfred,avatar,score } = props;
 
   return (
     <Card className={classes.card}>
@@ -97,41 +98,38 @@ const nearbyYouCard = (props) => {
           <div className={classes.darkOverlay}>
             <Grid container className={classes.avatarContainer}>
               <Grid container className={classes.gridContainer}>
-                <PermContactCalendar className={classes.whiteLogo} />
-                <FavoriteBorderOutlined className={classes.whiteLogo} />
+
               </Grid>
               <Grid container className={classes.locationAvatarGrid}>
-                <Avatar alt="John Doe" src="../../../../static/johndoe.jpg" className={classes.avatar} />
+                <Avatar alt="John Doe" src={avatar} className={classes.avatar} />
               </Grid>
             </Grid>
           </div>
         </CardMedia>
         <CardContent>
           <Typography variant="h6" component="h2">
-            Nom du service
+            {title}
           </Typography>
           <Grid container>
             <Typography variant="body2" component="p">
-              Par Jean
+              Par {alfred}
             </Typography>
             <div>
-              <StarRate fontSize="small" />
-              <StarRate fontSize="small" />
-              <StarRate fontSize="small" />
-              <StarRate fontSize="small" />
-              <StarRate fontSize="small" />
+              {score}/5
             </div>
           </Grid>
           <Typography component="p" className={classes.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
         <Grid container className={classes.gridButton}>
+          <Link style={{color:'white !important',textdecoration:'none' }} href="/shop?id=5ce2a167d7e1ce19430f4b20" as="/shop/5ce2a167d7e1ce19430f4b20">
           <Fab variant="extended" size="medium" color="primary" className={classes.bookButton}>
             Réservez
           </Fab>
+          </Link>
         </Grid>
       </CardActions>
     </Card>

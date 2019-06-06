@@ -1,5 +1,6 @@
 const express = require('express');
 const next = require('next');
+
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dev = process.env.NODE_DEV !== 'production'; //true false
@@ -26,6 +27,7 @@ const prestation= require('./routes/api/prestation');
 const serviceUser = require('./routes/api/serviceUser');
 const shop = require('./routes/api/shop');
 const calendar = require('./routes/api/calendar');
+const reviews = require('./routes/api/reviews');
 
 const admin = require('./routes/api/admin/dashboard');
 
@@ -52,6 +54,18 @@ nextApp.prepare().then(() => {
 
     app.use(cors());
 
+    app.get('/shop/:id', (req, res) => {
+        return app.render(req, res, '/shop', { id: req.params.id })
+    });
+
+    app.get('/service/:category', (req, res) => {
+        return app.render(req, res, '/service', { category: req.params.category })
+    });
+
+    app.get('/prestation/:service', (req, res) => {
+        return app.render(req, res, '/prestation', { service: req.params.service })
+    });
+
     app.use('/myAlfred/api/users',users);
     app.use('/myAlfred/api/category',category);
     app.use('/myAlfred/api/billing',billing);
@@ -71,6 +85,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/shop',shop);
     app.use('/myAlfred/api/calendar',calendar);
     app.use('/myAlfred/api/admin',admin);
+    app.use('/myAlfred/api/reviews',reviews);
 
     const port = process.env.PORT || 5000;
 
