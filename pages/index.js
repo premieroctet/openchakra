@@ -7,16 +7,13 @@ import Recommandations from '../components/home/Recommandations/Recommandations'
 import TemptedBy from '../components/home/TemptedBy/TemptedBy';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import Homeheader from '../components/home/Homeheader/Homeheader';
+import MyCalendar from '../components/Calendar/calendar';
+import Mainform from '../components/Multistep/mainform';
+import Designuniform from '../components/Fullform/fullform';
 
 const Home = () => (
   <Fragment>
-    <Navbar />
-    <Homeheader />
-    <PopularCategories />
-    <SerenityNeed />
-    <BecomeAlfred />
-    <TemptedBy />
-    <NearbyYou />
+    <Designuniform />
   </Fragment>
 );
 
