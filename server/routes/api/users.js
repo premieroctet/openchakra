@@ -555,15 +555,17 @@ router.post('/resetPassword',(req,res) => {
    const password = req.body.password;
    const token = req.body.token;
    const email = req.body.email;
-
+    //console.log(token);
    User.findOne({email: email})
+       .populate('resetToken')
        .then(user => {
+
            if(user.resetToken.token === token) {
                bcrypt.genSalt(10, (err, salt) => {
                    bcrypt.hash(password, salt, (err, hash) => {
                        if (err) throw err;
                        user.updateOne({password: hash})
-                           .then(user => res.json(user))
+                           .then(user => res.json({success: 'password update'}))
                            .catch(err => console.log(err));
                    })
                })

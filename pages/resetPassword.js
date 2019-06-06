@@ -54,7 +54,8 @@ class resetPassword extends React.Component {
     }
     componentDidMount() {
         const token = this.props.token;
-        this.setState({token: token})
+        this.setState({token: token});
+        console.log(token);
     }
 
     onChange = e => {

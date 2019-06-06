@@ -5,7 +5,7 @@ const ResetTokenSchema = new Schema({
     date: {
         type: Date,
         default: Date.now,
-        expires: 3600
+        expires: 36000
     },
     token: String
 });
