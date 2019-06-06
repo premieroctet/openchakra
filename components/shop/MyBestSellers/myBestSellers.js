@@ -140,14 +140,14 @@ class myBestSellers extends React.Component{
 
     const id = self.props.shop;
 
-    axios.get(`http://localhost:5000/myAlfred/api/shop/${id}`)
+    axios.get(`http://localhost:3122/myAlfred/api/shop/${id}`)
         .then(function (response) {
 
           let shop = response.data;
           let idAlfred = shop.alfred._id;
 
 
-          axios.get(`http://localhost:5000/myAlfred/api/booking/last/5cc05ea97283fc59b4f498ff`)
+          axios.get(`http://localhost:3122/myAlfred/api/booking/last/5cc05ea97283fc59b4f498ff`)
               .then(function (result) {
                 let booking = result.data;
 

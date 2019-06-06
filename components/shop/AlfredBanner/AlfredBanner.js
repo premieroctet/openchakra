@@ -72,7 +72,7 @@ class alfredBanner extends React.Component{
 
 
     const id = self.props.shop;
-    axios.get(`http://localhost:5000/myAlfred/api/shop/${id}`)
+    axios.get(`http://localhost:3122/myAlfred/api/shop/${id}`)
         .then(function (response) {
 
           let shop = response.data;
@@ -83,7 +83,7 @@ class alfredBanner extends React.Component{
             idAlfred: shop.alfred._id
           });
           let idAlfred = shop.alfred._id;
-          axios.put(`http://localhost:5000/myAlfred/api/users/alfredViews/${idAlfred}`)
+          axios.put(`http://localhost:3122/myAlfred/api/users/alfredViews/${idAlfred}`)
               .then(function (result) {
                 console.log('Views updated');
               })
@@ -103,7 +103,7 @@ class alfredBanner extends React.Component{
 
     const test = {alfred: this.state.idAlfred};
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-    axios.post(`http://localhost:5000/myAlfred/api/favoris/add`,test)
+    axios.post(`http://localhost:3122/myAlfred/api/favoris/add`,test)
         .then(response => {
           console.log('Favoris ajouté')
         })

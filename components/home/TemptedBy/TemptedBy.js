@@ -112,7 +112,7 @@ class TemptedBy extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000/myAlfred/api/prestation/home')
+    axios.get('myAlfred/api/prestation/home')
         .then(response => {
           let prestation = response.data;
 

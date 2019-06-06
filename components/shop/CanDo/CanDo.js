@@ -122,7 +122,7 @@ class canDo extends React.Component{
 
     const id = self.props.shop;
 
-    axios.get(`http://localhost:5000/myAlfred/api/shop/${id}`)
+    axios.get(`http://localhost:3122/myAlfred/api/shop/${id}`)
         .then(function (response) {
 
           let shop = response.data;

@@ -17,7 +17,7 @@ class ShopBanner extends React.Component {
 
 
     componentWillMount() {
-        axios.get('http://localhost:5000/myAlfred/api/shopBanner/all')
+        axios.get('myAlfred/api/shopBanner/all')
             .then(response => {
                 let banner = response.data;
 

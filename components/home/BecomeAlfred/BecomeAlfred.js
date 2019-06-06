@@ -180,7 +180,7 @@ class becomeAlfred extends React.Component{
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000/myAlfred/api/users/home/alfred')
+    axios.get('myAlfred/api/users/home/alfred')
         .then(response => {
           let alfred = response.data;
 

@@ -55,7 +55,7 @@ router.get('/random/home',(req,res)=> {
 
 // @Route GET /myAlfred/api/service/:category
 // View all service per category
-router.get('/:category',(req,res)=> {
+router.get('/all/:category',(req,res)=> {
 
     Service.find({category: req.params.category})
         .populate('tags')
