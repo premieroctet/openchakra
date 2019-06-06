@@ -8,7 +8,12 @@ class BecomeAlfred extends React.Component {
       categorie: '',
       service: '',
       filter: '',
-      prices:[],
+      prestation: '',
+      perimeter: '',
+      city: '',
+      minimum_basket: '',
+      deadline_before_booking: '',
+      prices: [],
       equipments: [],
       prestations: [],
       filterArr: [],
@@ -26,6 +31,12 @@ class BecomeAlfred extends React.Component {
     this.handleFilterChange = this.handleFilterChange.bind(this);
     this.handleEquipmentChange = this.handleEquipmentChange.bind(this);
     this.handlePrestationPriceChange = this.handlePrestationPriceChange.bind(this);
+    this.handlePrestationSelectChange = this.handlePrestationSelectChange.bind(this);
+    this.handleForm = this.handleForm.bind(this);
+    this.handlePerimeter = this.handlePerimeter.bind(this);
+    this.handleCity = this.handleCity.bind(this);
+    this.handleMinimumBasket = this.handleMinimumBasket.bind(this);
+    this.handleDeadlineBeforeBooking = this.handleDeadlineBeforeBooking.bind(this);
   }
 
   componentDidMount() {
@@ -95,26 +106,37 @@ class BecomeAlfred extends React.Component {
       })
   }
 
-  handlePrestationChange(e) {
-    const { prestations } = this.state;
+  async handlePrestationChange(e) {
+    const { prestations, prestation, price } = this.state;
     const item = e.target.value;
     const arr = prestations;
 
-    this.setState({
-      prestations: [...arr, item],
+    await this.setState({
+      prestations: [...arr, {
+        id: prestation,
+        price: price,
+      }],
     })
     console.log(prestations);
   }
 
   async handleEquipmentChange(e) {
-    const { equipments } = this.state;
+    const { equipments, equipment } = this.state;
     const item = e.target.value;
     const arr = equipments;
 
     await this.setState({
-      equipments: [...arr, item],
+      // equipments: [...arr, item],
+      equipment: item,
     })
-    console.log(equipments);
+    console.log(equipment);
+  }
+
+  async handlePrestationSelectChange(e) {
+    await this.setState({
+      prestation: e.target.value,
+    })
+    console.log(this.state.prestation);
   }
 
   async handlePrestationPriceChange(e) {
@@ -123,6 +145,50 @@ class BecomeAlfred extends React.Component {
     })
     console.log(this.state.price);
     console.log(this.state);
+  }
+
+  handlePerimeter(e) {
+    this.setState({
+      perimeter: e.target.value,
+    });
+  }
+
+  handleCity(e) {
+    this.setState({
+      city: e.target.value,
+    });
+  }
+
+  handleDeadlineBeforeBooking(e) {
+    this.setState({
+      deadline_before_booking: e.target.value,
+    });
+  }
+
+  handleMinimumBasket(e) {
+    this.setState({
+      minimum_basket: e.target.value,
+    });
+  }
+
+  handleForm() {
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.post(`http://localhost:5000/myAlfred/api/serviceUser/add`, {
+      service: this.state.service,
+      prestation: this.state.prestation,
+      price: this.state.price,
+      city: this.state.city,
+      perimeter: this.state.perimeter,
+      minimum_basket: this.state.minimum_basket,
+      deadline_before_booking: this.state.deadline_before_booking,
+      equipment: this.state.equipment,
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
   render() {
@@ -140,19 +206,61 @@ class BecomeAlfred extends React.Component {
         </select>
         {servicesShow != '' &&
           <select require="true" value={this.state.service} onChange={this.handleServiceChange}>
-            <option>Choisissez une catégorie</option>
+            <option>Choisissez un service</option>
             {this.state.servicesBack.map(i => {
               return <option value={i._id} key={i._id}>{i.label}</option>
             })}
           </select>
         }
         {filterShow != '' &&
-          <select require="true" value={this.state.filter} onChange={this.handleFilterChange}>
-            <option>Choisissez un filtre</option>
-            {this.state.prestationsFiltersBack.map(i => {
-              return <option value={i.filter_presentation._id} key={i.filter_presentation._id}>{i.filter_presentation.label}</option>
-            })}
-          </select>
+          <React.Fragment>
+            <select require="true" value={this.state.filter} onChange={this.handleFilterChange}>
+              <option>Choisissez un filtre</option>
+              {this.state.prestationsFiltersBack.map(i => {
+                return <option value={i.filter_presentation._id} key={i.filter_presentation._id}>{i.filter_presentation.label}</option>
+              })}
+            </select>
+            <br />
+            <label>
+              Périmètre d'activitée
+              <input
+                type="text"
+                defaultValue=''
+                placeholder="Entrez un périmètre"
+                onChange={this.handlePerimeter}
+              />
+            </label>
+            <br />
+            <label>
+              Ville d'activité
+              <input
+                type="text"
+                defaultValue=''
+                placeholder="Entrez un lieu d'activité"
+                onChange={this.handleCity}
+              />
+            </label>
+            <br />
+            <label>
+              Minimum d'achat
+              <input
+                type="text"
+                defaultValue=''
+                placeholder="Entrez un minimum d'achat pour le panier"
+                onChange={this.handleMinimumBasket}
+              />
+            </label>
+            <br />
+            <label>
+              Délais de prévenance avant réservation
+              <input
+                type="text"
+                defaultValue=''
+                placeholder="Entrez un minimum d'achat pour le panier"
+                onChange={this.handleDeadlineBeforeBooking}
+              />
+            </label>
+          </React.Fragment>
         }
         {equipementShow != '' &&
           <div>
@@ -178,20 +286,17 @@ class BecomeAlfred extends React.Component {
             {this.state.prestationsBack.map(i => {
               return (
                 <React.Fragment key={i._id}>
-                  <label>
-                    {i.label}
-                    <input
-                      name={i._id}
-                      type="checkbox"
-                      value={i.label}
-                      onChange={this.handlePrestationChange}
-                    />
-                  </label>
-                  <input type="text" placeholder="Choisissez un prix" value={this.state.prices[0]} onChange={this.handlePrestationPriceChange} />
+                  <select require="true" defaultValue='' onChange={this.handlePrestationSelectChange}>
+                    <option>Choisissez une prestation</option>
+                    <option value={i._id}>{i.label}</option>
+                  </select>
+                  <input type="text" placeholder="Choisissez un prix" defaultValue='' onChange={this.handlePrestationPriceChange} />
+                  <button type="button" onClick={this.handlePrestationChange}>Valider</button>
                   <p>Prix moyen pour cette prestation: {i.price}€</p>
                 </React.Fragment>
               )
             })}
+            <button type="button" onClick={this.handleForm}>Valider form</button>
           </div>
         }
       </form>
