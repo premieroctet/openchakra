@@ -28,10 +28,10 @@ router.get('/:id',(req,res)=> {
 
         SearchFilter.findById(req.params.id)
             .then(searchFilter => {
-                if(typeof searchFilter !== 'undefined' && searchFilter.length > 0){
-                    res.json(searchFilter);
-                } else {
+                if(Object.keys(searchFilter).length === 0 && searchFilter.constructor === Object){
                     return res.status(400).json({msg: 'No searchFilter found'});
+                } else {
+                    res.json(searchFilter);
                 }
 
             })

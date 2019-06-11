@@ -30,10 +30,10 @@ router.get('/:id',(req,res)=> {
 
         Equipment.findById(req.params.id)
             .then(equipment => {
-                if(typeof equipment !== 'undefined' && equipment.length > 0){
-                    res.json(equipment);
-                } else {
+                if(Object.keys(equipment).length === 0 && equipment.constructor === Object){
                     return res.status(400).json({msg: 'No equipment found'});
+                } else {
+                    res.json(equipment);
                 }
 
             })

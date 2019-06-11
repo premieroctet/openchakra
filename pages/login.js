@@ -13,6 +13,7 @@ import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
+
 const styles = {
   loginContainer: {
     alignItems: 'center',
@@ -61,7 +62,6 @@ class login extends React.Component {
     axios.post('http://localhost:5000/myAlfred/api/users/login',user)
         .then(res => {
           const {token} = res.data;
-          console.log('login success');
           localStorage.setItem('token',token);
           setAuthToken(token);
           Router.push({pathname:'/'})
@@ -120,6 +120,7 @@ class login extends React.Component {
                     </Button>
                   </Grid>
                 </form>
+                <Link href="/forgotPassword"><a>Mot de passe oublié ?</a></Link>
               </Grid>
             </Card>
           </Grid>

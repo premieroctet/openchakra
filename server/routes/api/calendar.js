@@ -68,10 +68,10 @@ router.get('/:id',(req,res)=> {
     Calendar.findById(req.params.id)
         .populate('user')
         .then(event => {
-            if(typeof event !== 'undefined' && event.length > 0){
-                res.json(event);
-            } else {
+            if(Object.keys(event).length === 0 && event.constructor === Object){
                 return res.status(400).json({msg: 'No event found'});
+            } else {
+                res.json(event);
             }
 
         })

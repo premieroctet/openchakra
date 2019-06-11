@@ -156,10 +156,10 @@ router.get('/:id',(req,res)=> {
         .populate('prestations.prestation')
         .populate('equipments')
         .then(service => {
-            if(typeof service !== 'undefined' && service.length > 0){
-                res.json(service);
-            } else {
+            if(Object.keys(service).length === 0 && service.constructor === Object){
                 return res.status(400).json({msg: 'No service found'});
+            } else {
+                res.json(service);
             }
 
         })

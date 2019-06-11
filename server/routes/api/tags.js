@@ -28,10 +28,10 @@ router.get('/:id', (req,res)=> {
 
         Tags.findById(req.params.id)
             .then(tags => {
-                if(typeof tags !== 'undefined' && tags.length > 0){
-                    res.json(tags);
-                } else {
+                if(Object.keys(tags).length === 0 && tags.constructor === Object){
                     return res.status(400).json({msg: 'No tags found'});
+                } else {
+                    res.json(tags);
                 }
 
             })
