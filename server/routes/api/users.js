@@ -27,6 +27,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+const storage2 = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/profile/idCard/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const upload2 = multer({ storage: storage2 });
+
 
 router.get('/test',(req, res) => res.json({msg: 'Users Works!'}) );
 
@@ -233,6 +243,23 @@ router.post('/profile/picture',upload.single('myImage'),passport.authenticate('j
     },{new:true})
         .then(user => {
             res.json(user)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
+// @Route PUT /myAlfred/api/users/profile/idCard
+// Add an identity card
+// @Access private
+router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {name:'myCardV',maxCount:1}]),passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findById(req.user.id)
+        .then(user => {
+            user.id_card = {};
+            user.id_card.recto = req.files['myCardR'][0].path;
+            user.id_card.verso = req.files['myCardV'][0].path;
+
+            user.save().then(user => res.json(user)).catch(err => console.log(err));
         })
         .catch(err => {
             console.log(err)
