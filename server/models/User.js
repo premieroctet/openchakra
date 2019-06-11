@@ -76,6 +76,14 @@ const UserSchema = new Schema({
     job: {
         type: String
     },
+    id_card: {
+      recto: {
+          type: String
+      },
+      verso: {
+          type: String
+      }
+    },
     account: {
         bank_code: {
             type: String
@@ -112,6 +120,10 @@ const UserSchema = new Schema({
         type: Boolean,
         default: true
     },
+    is_confirmed: {
+      type: Boolean,
+      default: false
+    },
     is_alfred: {
         type: Boolean,
         default: false
@@ -123,6 +135,10 @@ const UserSchema = new Schema({
     is_admin: {
         type: Boolean,
         default: false
+    },
+    resetToken: {
+        type: Schema.Types.ObjectId,
+        ref: 'resetToken'
     }
 
 

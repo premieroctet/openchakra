@@ -57,22 +57,24 @@ router.get('/random/home',(req,res)=> {
 // View one service
 router.get('/:id',(req,res)=> {
 
-  Service.findById(req.params.id)
-      .populate('tags')
-      .populate('equipments')
-      .populate('category')
-      .then(service => {
-              res.json(service);
+    Service.findById(req.params.id)
+        .populate('tags')
+        .populate('equipments')
+        .populate('category')
+        .then(service => {
+            if(Object.keys(service).length === 0 && service.constructor === Object){
+                return res.status(400).json({msg: 'No service found'});
+            } else {
+                res.json(service);
+            }
 
-              return res.status(400).json({msg: 'No service found'});
-
-      })
-      .catch(err => res.status(404).json({ service: 'No service found' }));
+        })
+        .catch(err => res.status(404).json({ service: 'No service found' }));
 
 });
 
 // @Route GET /myAlfred/api/service/:category
-// View one all service per category
+// View all service per category
 router.get('/all/:category',(req,res)=> {
 
     Service.find({category: req.params.category})
@@ -90,5 +92,8 @@ router.get('/all/:category',(req,res)=> {
         .catch(err => res.status(404).json({ service: 'No service found' }));
 
 });
+
+
+
 
 module.exports = router;

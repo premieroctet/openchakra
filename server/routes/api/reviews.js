@@ -135,10 +135,10 @@ router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
         .populate('booking')
         .populate({path:'booking',populate:{path: 'prestation',select:'label'}})
         .then(reviews => {
-            if(typeof reviews !== 'undefined' && reviews.length > 0){
-                res.json(reviews);
-            } else {
+            if(Object.keys(reviews).length === 0 && reviews.constructor === Object){
                 return res.status(400).json({msg: 'No reviews found'});
+            } else {
+                res.json(reviews);
             }
 
         })

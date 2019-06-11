@@ -100,10 +100,10 @@ router.get('/:id',(req,res)=> {
         .populate('filter_presentation')
         .populate('calculating')
         .then(prestation => {
-            if(typeof prestation !== 'undefined' && prestation.length > 0){
-                res.json(prestation);
-            } else {
+            if(Object.keys(prestation).length === 0 && prestation.constructor === Object){
                 return res.status(400).json({msg: 'No prestation found'});
+            } else {
+                res.json(prestation);
             }
 
         })

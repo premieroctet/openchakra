@@ -28,10 +28,10 @@ router.get('/:id',(req,res)=> {
 
         FilterPresentation.findById(req.params.id)
             .then(filterPresentation => {
-                if(typeof filterPresentation !== 'undefined' && filterPresentation.length > 0){
-                    res.json(filterPresentation);
-                } else {
+                if(Object.keys(filterPresentation).length === 0 && filterPresentation.constructor === Object){
                     return res.status(400).json({msg: 'No filterPresentation found'});
+                } else {
+                    res.json(filterPresentation);
                 }
 
             })
