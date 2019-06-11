@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const bcrypt = require('bcryptjs');
 const axios = require('axios');
+const mongoose = require('mongoose');
 
 const validateRegisterInput = require('../../validation/register');
 const validateSimpleRegisterInput = require('../../validation/simpleRegister');
@@ -89,8 +90,8 @@ router.post('/register',(req,res) =>{
 
 // @Route PUT /myAlfred/api/users/validateAccount
 // Validate account after register
-router.put('/validateAccount',(req,res) => {
-    User.findByIdAndUpdate(req.query.user, {
+router.post('/validateAccount',(req,res) => {
+    User.findByIdAndUpdate(mongoose.Types.ObjectId(req.body.id), {
         is_confirmed: true
     },{new:true})
         .then(user => {

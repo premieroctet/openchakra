@@ -39,7 +39,7 @@ class validateAccount extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: '',
+            userID: '',
         };
     }
 
@@ -50,23 +50,21 @@ class validateAccount extends React.Component {
 
     componentDidMount() {
         const user = this.props.id_user;
-        this.setState({user: user});
+        this.setState({userID: user});
+
 
     }
 
     onSubmit = e => {
         e.preventDefault();
 
-        const id = this.state.user;
+        const user = {id:this.state.userID};
         axios
-            .put('http://localhost:5000/myAlfred/api/users/validateAccount',{
-             params: {
-                 user: id
-             }
-            })
+            .post('http://localhost:5000/myAlfred/api/users/validateAccount',user
+            )
             .then(res => {
                 alert('Compte validé');
-                Router.push({pathname:'/'})
+                //Router.push({pathname:'/'})
             })
             .catch(err =>
                 console.log(err)
@@ -88,9 +86,7 @@ class validateAccount extends React.Component {
                                 <Typography style={{ fontSize: 30 }}>Valider votre inscription</Typography>
                             </Grid>
                             <form onSubmit={this.onSubmit}>
-                                <Grid item>
 
-                                </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                                         Valider
