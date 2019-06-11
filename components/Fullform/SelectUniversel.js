@@ -38,7 +38,7 @@ class SelectUniversel extends React.Component {
     labelWidth: 0,
   };
 
- 
+
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -47,29 +47,29 @@ class SelectUniversel extends React.Component {
     const { classes } = this.props;
 
     return (
-      <form className={classes.root} autoComplete="off">
         <div className={classes.lesinputs}>
-        <FormControl className={classes.formControl}>
-          <InputLabel className={classes.formControl2} shrink htmlFor="service-label-placeholder">
-            Service
-          </InputLabel>
-          <Select
-            value={this.state.service}
-            onChange={this.handleChange}
-            input={<Input name="service" id="service-label-placeholder" />}
-            displayEmpty
-            name="service"
-            className={classes.selectEmpty}
-          >
-            <MenuItem value="">
-              <em>...</em>
-            </MenuItem>
-            <MenuItem value={"Coiffure"}>Coiffure</MenuItem>
-            <MenuItem value={"Plomberie"}>Plomberie</MenuItem>
-            <MenuItem value={"Menage"}>Ménage</MenuItem>
-            </Select>
-        </FormControl></div>
-      </form>
+          <FormControl className={classes.formControl}>
+            <InputLabel className={classes.formControl2} shrink htmlFor="service-label-placeholder">
+              Service
+            </InputLabel>
+            <Select
+              required="true"
+              value={this.props.value}
+              onChange={this.props.handle}
+              input={<Input name="service" id="service-label-placeholder" />}
+              displayEmpty
+              name="service"
+              className={classes.selectEmpty}
+            >
+              <MenuItem value="">
+                <em>Choisissez votre {this.props.choice}</em>
+              </MenuItem>
+              <MenuItem value={"Coiffure"}>Coiffure</MenuItem>
+              <MenuItem value={"Plomberie"}>Plomberie</MenuItem>
+              <MenuItem value={"Menage"}>Ménage</MenuItem>
+              </Select>
+          </FormControl>
+        </div>
     );
   }
 }

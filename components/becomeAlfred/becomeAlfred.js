@@ -180,7 +180,7 @@ class BecomeAlfred extends React.Component {
       city: this.state.city,
       perimeter: this.state.perimeter,
       minimum_basket: this.state.minimum_basket,
-      deadline_before_booking: this.state.deadline_before_booking,
+      deadline_before_booking: this.state.deadline_before_bookin,
       equipment: this.state.equipment,
     })
     .then(function (response) {
