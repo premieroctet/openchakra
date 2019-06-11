@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { string, number,  } from 'yup'
 
 class BecomeAlfred extends React.Component {
   constructor(props) {
