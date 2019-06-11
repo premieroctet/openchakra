@@ -59,12 +59,45 @@ router.post('/register',(req,res) =>{
                                 if (err) throw err;
                                 newUser.password = hash;
                                 newUser.save()
-                                    .then(user => res.json(user))
+                                    .then(user => {
+                                        res.json(user);
+                                        let transporter = nodemailer.createTransport({
+                                            host: 'smtp.ethereal.email',
+                                            port: 587,
+                                            auth: {
+                                                user: 'kirstin85@ethereal.email',
+                                                pass: '1D7q6PCENKSX5cj622'
+                                            }
+                                        });
+
+                                        let info = transporter.sendMail({
+                                            from: 'kirstin85@ethereal.email', // sender address
+                                            to: `${user.email}`, // list of receivers
+                                            subject: "Valider votre compte", // Subject line
+                                            text: `http://localhost:3000/validateAccount?user=${user._id}`, // plain text body
+                                            html: '<a href='+'http://localhost:3000/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
+                                        });
+                                    })
                                     .catch(err => console.log(err));
                             })
                         })
 
+
             }
+        })
+});
+
+// @Route PUT /myAlfred/api/users/validateAccount
+// Validate account after register
+router.put('/validateAccount',(req,res) => {
+    User.findByIdAndUpdate(req.query.user, {
+        is_confirmed: true
+    },{new:true})
+        .then(user => {
+            res.json(user)
+        })
+        .catch(err => {
+            console.log(err)
         })
 });
 
