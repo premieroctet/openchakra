@@ -63,6 +63,7 @@ class home extends React.Component {
                             <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>
                             <Link href="/dashboard/job/all"><a>Métiers</a></Link><br/>
                             <Link href="/dashboard/searchFilter/all"><a>Filtres de recherche</a></Link><br/>
+                            <Link href="/dashboard/tags/all"><a>Tags</a></Link><br/>
                         </Grid>
                     </Card>
                 </Grid>
