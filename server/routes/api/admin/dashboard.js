@@ -1140,7 +1140,7 @@ router.put('/category/all/:id',passport.authenticate('jwt',{session: false}),(re
     const admin = decode.is_admin;
 
     if(admin) {
-        Category.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: `https://source.unsplash.com/${req.body.picture}/400x300`}}, {new: true})
+        Category.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: req.body.picture}}, {new: true})
             .then(category => {
                 res.json(category);
             })
