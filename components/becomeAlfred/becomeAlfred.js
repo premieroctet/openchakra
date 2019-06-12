@@ -1,6 +1,141 @@
 import React from 'react';
 import axios from 'axios';
-import { string, number,  } from 'yup'
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Avatarsbutton from '../avatar/avatar';
+import '../../static/styleform.css';
+
+const styles = theme => ({
+  cardContainer: {
+    height: '120vh',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  card: {
+    padding: '1.5rem 2rem',
+    display: 'flex',
+    flexDirection: 'column',
+    height: 'auto',
+    maxHeight: 700,
+    overflow: 'auto',
+    width: '55%',
+  },
+  cardHeader: {
+    display: 'flex',
+    flexGrow: 1,
+    justifyContent: 'space-between',
+    marginBottom: '1rem',
+  },
+  cardProgressBar: {
+    display: 'flex',
+    flexGrow: 1,
+  },
+  cardBody: {
+    display: 'flex',
+    flexGrow: 8,
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: 'auto',
+    },
+  },
+  searchIcon: {
+    width: theme.spacing.unit * 9,
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+    width: '100%',
+  },
+  inputInput: {
+    backgroundColor: 'lightgrey',
+    paddingTop: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit * 10,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: 232,
+    },
+  },
+  chip: {
+    marginRight: 5,
+    marginBottom: 5,
+  },
+  categoryExpansion: {
+    marginBottom: 5,
+  },
+  textinput: {
+    marginTop: '35px',
+  },
+  dlidentite1: {
+    lineHeight: 5.3,
+    '&:hover': {
+      cursor: 'pointer',
+      color: '#000080',
+    }
+  },
+  dlidentite2: {
+    '&:hover': {
+      cursor: 'pointer',
+      color: '#000080',
+    }
+  },
+  vridentite: {
+    marginTop: 35,
+  },
+  titre1: {
+    fontSize: 18,
+  },
+  titre2: {
+    fontSize: 18,
+  },
+  titre3: {
+    fontSize: 18,
+  },
+  titre4: {
+    fontSize: 18,
+  },
+  petit1: {
+    fontSize: 12,
+  },
+  petit2: {
+    fontSize: 12,
+  },
+  checkboxespart: {
+    marginTop: 25,
+  },
+  finpres: {
+    marginTop: 25,
+  },
+  obligations: {
+    marginTop: 31,
+  },
+  input: {
+    display: 'none',
+  },
+});
 
 class BecomeAlfred extends React.Component {
   constructor(props) {
@@ -24,6 +159,20 @@ class BecomeAlfred extends React.Component {
       prestationsFiltersBack: [],
       prestationsBack: [],
       equipementsBack: [],
+
+      // Alfred's presentation
+      serviceDescription: '',
+      phone: '',
+      isParticular: false,
+      isProfessional: false,
+      isMicro_company: false,
+      isIndividualCompany: false,
+      siret: '',
+      creationDate: '',
+      denomination: '',
+      nafape: '',
+      isEngaged: false,
+      isCertified: false,
     };
 
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
@@ -38,6 +187,9 @@ class BecomeAlfred extends React.Component {
     this.handleCity = this.handleCity.bind(this);
     this.handleMinimumBasket = this.handleMinimumBasket.bind(this);
     this.handleDeadlineBeforeBooking = this.handleDeadlineBeforeBooking.bind(this);
+
+    // Alfred's Presentation
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   componentDidMount() {
@@ -86,7 +238,7 @@ class BecomeAlfred extends React.Component {
     axios.get(`http://localhost:5000/myAlfred/api/service/${this.state.service}`)
       .then(response => {
         const equipementsBack = response.data.equipments
-        this.setState({ equipementsBack: equipementsBack})
+        this.setState({ equipementsBack: equipementsBack })
         console.log(equipementsBack);
       })
   }
@@ -184,125 +336,397 @@ class BecomeAlfred extends React.Component {
       deadline_before_booking: this.state.deadline_before_bookin,
       equipment: this.state.equipment,
     })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  // Alfred's presentation
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
     });
+
+    console.log(this.state);
   }
 
   render() {
+    const { classes } = this.props;
     const servicesShow = this.state.categorie;
     const filterShow = this.state.service;
     const prestationsShow = this.state.filter;
     const equipementShow = this.state.service;
     return (
-      <form onSubmit={e => e.preventDefault()}>
-        <select require="true" value={this.state.categorie} onChange={this.handleCategoryChange}>
-          <option>Choisissez une catégorie</option>
-          {this.state.categoriesBack.map(i => {
-            return <option value={i._id} key={i._id}>{i.label}</option>
-          })}
-        </select>
-        {servicesShow != '' &&
-          <select require="true" value={this.state.service} onChange={this.handleServiceChange}>
-            <option>Choisissez un service</option>
-            {this.state.servicesBack.map(i => {
-              return <option value={i._id} key={i._id}>{i.label}</option>
-            })}
-          </select>
-        }
-        {filterShow != '' &&
-          <React.Fragment>
-            <select require="true" value={this.state.filter} onChange={this.handleFilterChange}>
-              <option>Choisissez un filtre</option>
-              {this.state.prestationsFiltersBack.map(i => {
-                return <option value={i.filter_presentation._id} key={i.filter_presentation._id}>{i.filter_presentation.label}</option>
-              })}
-            </select>
-            <br />
-            <label>
-              Périmètre d'activitée
-              <input
-                type="text"
-                defaultValue=''
-                placeholder="Entrez un périmètre"
-                onChange={this.handlePerimeter}
-              />
-            </label>
-            <br />
-            <label>
-              Ville d'activité
-              <input
-                type="text"
-                defaultValue=''
-                placeholder="Entrez un lieu d'activité"
-                onChange={this.handleCity}
-              />
-            </label>
-            <br />
-            <label>
-              Minimum d'achat
-              <input
-                type="text"
-                defaultValue=''
-                placeholder="Entrez un minimum d'achat pour le panier"
-                onChange={this.handleMinimumBasket}
-              />
-            </label>
-            <br />
-            <label>
-              Délais de prévenance avant réservation
-              <input
-                type="text"
-                defaultValue=''
-                placeholder="Entrez un minimum d'achat pour le panier"
-                onChange={this.handleDeadlineBeforeBooking}
-              />
-            </label>
-          </React.Fragment>
-        }
-        {equipementShow != '' &&
-          <div>
-            <div>
-              {this.state.equipementsBack.map(i => {
-                return (
-                  <label key={i._id}>
-                    {i.label}
-                    <input
-                      name={i._id}
-                      type="checkbox"
-                      value={i._id}
-                      onChange={this.handleEquipmentChange}
-                    />
-                  </label>
-                )
-              })}
-            </div>
-          </div>
-        }
-        {prestationsShow != 0 &&
-          <div>
-            {this.state.prestationsBack.map(i => {
-              return (
-                <React.Fragment key={i._id}>
-                  <select require="true" defaultValue='' onChange={this.handlePrestationSelectChange}>
-                    <option>Choisissez une prestation</option>
-                    <option value={i._id}>{i.label}</option>
+      <React.Fragment>
+        <form onSubmit={e => e.preventDefault()}>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>Catégorie, services & prestations</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <div class="form-style-6">
+                <select require="true" value={this.state.categorie} onChange={this.handleCategoryChange}>
+                  <option>Choisissez une catégorie</option>
+                  {this.state.categoriesBack.map(i => {
+                    return <option value={i._id} key={i._id}>{i.label}</option>
+                  })}
+                </select>
+                {servicesShow != '' &&
+                  <select require="true" value={this.state.service} onChange={this.handleServiceChange}>
+                    <option>Choisissez un service</option>
+                    {this.state.servicesBack.map(i => {
+                      return <option value={i._id} key={i._id}>{i.label}</option>
+                    })}
                   </select>
-                  <input type="text" placeholder="Choisissez un prix" defaultValue='' onChange={this.handlePrestationPriceChange} />
-                  <button type="button" onClick={this.handlePrestationChange}>Valider</button>
-                  <p>Prix moyen pour cette prestation: {i.price}€</p>
-                </React.Fragment>
-              )
-            })}
-            <button type="button" onClick={this.handleForm}>Valider form</button>
-          </div>
-        }
-      </form>
+                }
+                {filterShow != '' &&
+                  <React.Fragment>
+                    <select require="true" value={this.state.filter} onChange={this.handleFilterChange}>
+                      <option>Choisissez un filtre</option>
+                      {this.state.prestationsFiltersBack.map(i => {
+                        return <option value={i.filter_presentation._id} key={i.filter_presentation._id}>{i.filter_presentation.label}</option>
+                      })}
+                    </select>
+                    <br />
+                    <label>
+                      Périmètre d'activitée
+                      <input
+                        type="text"
+                        defaultValue=''
+                        placeholder="Entrez un périmètre"
+                        onChange={this.handlePerimeter}
+                      />
+                    </label>
+                    <br />
+                    <label>
+                      Ville d'activité
+                      <input
+                        type="text"
+                        defaultValue=''
+                        placeholder="Entrez un lieu d'activité"
+                        onChange={this.handleCity}
+                      />
+                    </label>
+                    <br />
+                    <label>
+                      Minimum d'achat
+                      <input
+                        type="text"
+                        defaultValue=''
+                        placeholder="Entrez un minimum d'achat pour le panier"
+                        onChange={this.handleMinimumBasket}
+                      />
+                    </label>
+                    <br />
+                    <label>
+                      Délais de prévenance avant réservation
+                      <input
+                        type="text"
+                        defaultValue=''
+                        placeholder="Entrez un minimum d'achat pour le panier"
+                        onChange={this.handleDeadlineBeforeBooking}
+                      />
+                    </label>
+                  </React.Fragment>
+                }
+                {equipementShow != '' &&
+                  <div>
+                    <div>
+                      {this.state.equipementsBack.map(i => {
+                        return (
+                          <label class="checkbox" key={i._id}>
+                            {i.label}
+                            <input
+                              name={i._id}
+                              type="checkbox"
+                              value={i._id}
+                              onChange={this.handleEquipmentChange}
+                            />
+                            <span class="checkbox__icon"></span>
+                          </label>
+                        )
+                      })}
+                    </div>
+                  </div>
+                }
+                {prestationsShow != 0 &&
+                  <div>
+                    {this.state.prestationsBack.map(i => {
+                      return (
+                        <React.Fragment key={i._id}>
+                          <select require="true" defaultValue='' onChange={this.handlePrestationSelectChange}>
+                            <option>Choisissez une prestation</option>
+                            <option value={i._id}>{i.label}</option>
+                          </select>
+                          <input type="text" placeholder="Choisissez un prix" defaultValue='' onChange={this.handlePrestationPriceChange} />
+                          <p>Prix moyen pour cette prestation: {i.price}€</p>
+                        </React.Fragment>
+                      )
+                    })}
+                    <button type="button" onClick={this.handleForm}>Valider form</button>
+                  </div>
+                }
+              </div>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel disabled>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+            >
+              <Typography>Calendrier</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              Calendrier
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+            >
+              <Typography>Présentation</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid container className={classes.cardContainer}>
+                <Card className={classes.card}>
+                  <Grid container>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={2}>
+                      <Avatarsbutton />
+                    </Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={7}>
+                      <Typography>
+                        Décrivez brievement vos services et votre expertise
+          Rédigez un résumé rapide de vos services. Mettez en évidence vos savoir faire, vos expériences et ce qui vous démarque des autres Alfred !
+            </Typography>
+                    </Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={2}></Grid>
+                    <Grid item xs={8} className={classes.textinput}>
+                      <label>
+                        Coiffure
+              <textarea cols="90" name="serviceDescription" value={this.serviceDescription} rows="8" placeholder="Description" onChange={this.handleInputChange} />
+                      </label>
+                    </Grid>
+                    <Grid item xs={2}></Grid>
+                  </Grid>
+                  <Grid container>
+                    <Grid item xs={12} className={classes.vridentite}>
+                      <Typography>Vérifiez votre identité</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography>Elles ne seront pas visibles par les utilisateurs</Typography>
+                    </Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={4}>
+                      <label>
+                        Numéro de téléphone
+            <input type="text" name="phone" value={this.phone} onChange={this.handleInputChange} />
+                      </label>
+                    </Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={5}>
+                      <Grid container>
+                        <Grid item xs={12}>
+                          <input accept="image/*" className="input" ref={this.fileInput} style={{ display: 'none' }} id="icon-button-file" type="file" />
+                          <label htmlFor="icon-button-file">
+                            <Typography className={classes.dlidentite1}>Téléchargez votre pièce d'identité(recto)</Typography>
+                          </label>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <input accept="image/*" className="input" style={{ display: 'none' }} id="icon-button-file" type="file" />
+                          <label htmlFor="icon-button-file">
+                            <Typography className={classes.dlidentite2}>Téléchargez votre pièce d'identité(verso)</Typography>
+                          </label>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={2}></Grid>
+                  </Grid>
+
+                  <Grid container className={classes.checkboxespart}>
+
+                    <Grid container>
+                      <Grid item xs={1}/*className={classes.checkbox1}*/>
+                        <input
+                          name="isParticular"
+                          type="checkbox"
+                          checked={this.state.isParticular}
+                          onChange={this.handleInputChange}
+                        />
+                      </Grid>
+                      <Grid item xs={11}>
+                        <Typography className={classes.titre1}>
+                          Je suis un Particulier
+            </Typography>
+                        <Typography>
+                          En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (mi-cro-entrepreuneur,...) s’impose. Il est également requis pour certains sec-teurs d’activité réglementés (travaux de plomberie, peinture, électricité...)
+            </Typography>
+                      </Grid>
+                    </Grid>
+
+                    {/* <Grid container>
+        <Grid item xs={1}>
+          <input type="checkbox" />
+        </Grid>
+        <Grid item xs={11}>
+            <Typography className={classes.petit1} >
+              <p>J'ai compris</p>
+            </Typography>
+          </Grid>
+       </Grid> */}
+
+                    <Grid container>
+                      <Grid item xs={1}>
+                        <input
+                          name="isProfessional"
+                          type="checkbox"
+                          checked={this.state.isProfessional}
+                          onChange={this.handleInputChange}
+                        />
+                      </Grid>
+                      <Grid item xs={11}>
+                        <Typography className={classes.titre2}>
+                          Je suis un Professionnel
+                        </Typography>
+                        <Typography>
+                          Un statut professionnel est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture.Un statut professionnel est requis dès que votre activité devient régulière
+                        </Typography>
+                      </Grid>
+                    </Grid>
+
+                    {/* <Grid container>
+          <Grid item xs={1}>
+            <input type="checkbox" />
+          </Grid>
+          <Grid item xs={11}>
+            <Typography className={classes.petit1} >
+              <p>J'ai compris</p>
+            </Typography>
+          </Grid>
+        </Grid> */}
+
+                    <Grid container>
+                      <Grid item xs={1}>
+                        <input
+                          name="isMicro_company"
+                          type="checkbox"
+                          checked={this.state.isMicro_company}
+                          onChange={this.handleInputChange}
+                        />
+                      </Grid>
+                      <Grid item xs={11}>
+                        <Typography className={classes.titre3}>
+                          <p>Micro-entreprise, auto-entrepreuneur</p>
+                        </Typography>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container>
+                      <Grid item xs={1}>
+                        <input
+                          name="isIndividualCompany"
+                          type="checkbox"
+                          checked={this.state.isIndividualCompany}
+                          onChange={this.handleInputChange}
+                        />
+                      </Grid>
+                      <Grid item xs={11}>
+                        <Typography className={classes.titre4}>
+                          <p>Entreprise individuelle, EIRL, MDA, professions libérales...</p>
+                        </Typography>
+                      </Grid>
+                    </Grid>
+
+                  </Grid>
+
+                  <Grid item xs={2}></Grid>
+
+
+                  <Grid container className={classes.finpres}>
+                    <Grid item xs={6}>
+                      <Grid container>
+                        <label>
+                          Numéro Siret
+                <input name="siret" value={this.state.siret} onChange={this.handleInputChange} type="text" />
+                        </label>
+                        <label>
+                          Date de création
+                <input name="creationDate" value={this.state.creationDate} onChange={this.handleInputChange} type="text" />
+                        </label>
+                        <label>
+                          Dénomination
+                <input name="denomination" value={this.state.denomination} onChange={this.handleInputChange} type="text" />
+                        </label>
+                        <label>
+                          Code NAF/APE
+                <input name="nafape" value={this.state.nafape} onChange={this.handleInputChange} type="text" />
+                        </label>
+                      </Grid>
+                    </Grid>
+
+                    <Grid item xs={6} className={classes.obligations}>
+                      <Grid item xs={12}>
+                        <Typography className={classes.titre2}>
+                          Vos obligations légales
+              </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography>
+                          Dans le cadre des prestations effectuées via My-Alfred, vous devez res-pecter toutes les obligations légales et réglementaires (fiascales, sociales, comptables, administratives etc... correspondant à votre statut.Numéro de téléphoneCode à 4 chiffresTerminer
+              </Typography>
+                      </Grid>
+                      <Grid container>
+                        <Grid item xs={2}>
+                          <input
+                            name="isengaged"
+                            type="checkbox"
+                            checked={this.state.isEngaged}
+                            onChange={this.handleInputChange}
+                          />
+                        </Grid>
+                        <Grid item xs={10}>
+                          <Typography className={classes.petit2}>
+                            <p>je m’engage à respecter toutes les obligations légales correspondant à mon statut.</p>
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid container>
+                        <Grid item xs={2}>
+                          <input
+                            name="isCertified"
+                            type="checkbox"
+                            checked={this.state.isCertified}
+                            onChange={this.handleInputChange}
+                          />
+                        </Grid>
+                        <Grid item xs={10}>
+                          <Typography className={classes.petit2}>
+                            <p>Je certifie sur l’honneur qu’il s’agit bien de mon entreprise</p>
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Card>
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        </form>
+      </React.Fragment>
     );
   }
 }
 
-export default BecomeAlfred;
+export default withStyles(styles)(BecomeAlfred);

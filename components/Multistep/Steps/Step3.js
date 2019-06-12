@@ -144,6 +144,39 @@ function handleDelete() {
   alert('You clicked the delete icon.'); // eslint-disable-line no-alert
 }
 class Step3 extends Component {
+  constructor(props) {
+    super(props);
+    this.fileInput = React.createRef();
+
+    this.state = {
+      serviceDescription: '',
+      phone: '',
+      isParticular: false,
+      isProfessional: false,
+      isMicro_company: false,
+      isIndividualCompany: false,
+      siret: '',
+      creationDate: '',
+      denomination: '',
+      nafape: '',
+      isEngaged: false,
+      isCertified: false,
+    }
+    
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+    });
+
+    console.log(this.state);
+  }
 
   render() {
     const { classes } = this.props;
@@ -169,8 +202,10 @@ Rédigez un résumé rapide de vos services. Mettez en évidence vos savoir fair
             <Grid item xs={1}></Grid>
             <Grid item xs={2}></Grid>
             <Grid item xs={8} className={classes.textinput}>
-              <Textcoiffure/>
-              <Textmenage />
+              <label>
+                Coiffure
+                <textarea cols="90" name="serviceDescription" value={this.serviceDescription} rows="8" placeholder="Description" onChange={this.handleInputChange} />
+              </label>
             </Grid>
             <Grid item xs={2}></Grid>
           </Grid>
@@ -183,13 +218,16 @@ Rédigez un résumé rapide de vos services. Mettez en évidence vos savoir fair
           </Grid>
           <Grid item xs={1}></Grid>
           <Grid item xs={4}>
-            <Textnumtel/>
+            <label>
+              Numéro de téléphone
+              <input type="text" name="phone" value={this.phone} onChange={this.handleInputChange} />
+            </label>
           </Grid>
           <Grid item xs={1}></Grid>
           <Grid item xs={5}>
             <Grid container>
               <Grid item xs={12}>
-                <input accept="image/*" className="input" style={{display:'none'}} id="icon-button-file" type="file" />
+                <input accept="image/*" className="input" ref={this.fileInput} style={{display:'none'}} id="icon-button-file" type="file" />
                 <label htmlFor="icon-button-file">
                   <Typography className={classes.dlidentite1}>Téléchargez votre pièce d'identité(recto)</Typography>
                 </label>
@@ -207,34 +245,44 @@ Rédigez un résumé rapide de vos services. Mettez en évidence vos savoir fair
 
         <Grid container className={classes.checkboxespart}>
 
-          <Grid container> 
+          <Grid container>
             <Grid item xs={1}/*className={classes.checkbox1}*/>
-              <Checkboxes/>
+              <input
+                name="isParticular"
+                type="checkbox"
+                checked={this.state.isParticular}
+                onChange={this.handleInputChange}
+              />
             </Grid>
             <Grid item xs={11}>
             <Typography className={classes.titre1}>
                 Je suis un Particulier
               </Typography>
               <Typography>
-              En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (mi-cro-entrepreuneur,...) s’impose. Il est également requis pour certains sec-teurs d’activité réglementés (travaux de plomberie, peinture, électricité...) 
+              En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (mi-cro-entrepreuneur,...) s’impose. Il est également requis pour certains sec-teurs d’activité réglementés (travaux de plomberie, peinture, électricité...)
               </Typography>
             </Grid>
           </Grid>
 
-          <Grid container>
+         {/* <Grid container>
           <Grid item xs={1}>
-            <Checkboxessmall/>
+            <input type="checkbox" />
           </Grid>
           <Grid item xs={11}>
               <Typography className={classes.petit1} >
                 <p>J'ai compris</p>
               </Typography>
             </Grid>
-          </Grid>
-          
-          <Grid container> 
+         </Grid> */}
+
+          <Grid container>
             <Grid item xs={1}>
-              <Checkboxes/>
+              <input
+                name="isProfessional"
+                type="checkbox"
+                checked={this.state.isProfessional}
+                onChange={this.handleInputChange}
+              />
             </Grid>
             <Grid item xs={11}>
               <Typography className={classes.titre2}>
@@ -246,20 +294,25 @@ Rédigez un résumé rapide de vos services. Mettez en évidence vos savoir fair
             </Grid>
           </Grid>
 
-          <Grid container>
+          {/* <Grid container>
             <Grid item xs={1}>
-              <Checkboxessmall/>
+              <input type="checkbox" />
             </Grid>
             <Grid item xs={11}>
               <Typography className={classes.petit1} >
                 <p>J'ai compris</p>
               </Typography>
             </Grid>
-          </Grid>
+          </Grid> */}
 
-          <Grid container> 
+          <Grid container>
             <Grid item xs={1}>
-              <Checkboxes/>
+              <input
+                name="isMicro_company"
+                type="checkbox"
+                checked={this.state.isMicro_company}
+                onChange={this.handleInputChange}
+              />
             </Grid>
             <Grid item xs={11}>
               <Typography className={classes.titre3}>
@@ -268,9 +321,14 @@ Rédigez un résumé rapide de vos services. Mettez en évidence vos savoir fair
             </Grid>
           </Grid>
 
-          <Grid container> 
+          <Grid container>
             <Grid item xs={1}>
-              <Checkboxes/>
+              <input
+                name="isIndividualCompany"
+                type="checkbox"
+                checked={this.state.isIndividualCompany}
+                onChange={this.handleInputChange}
+              />
             </Grid>
             <Grid item xs={11}>
               <Typography className={classes.titre4}>
@@ -282,15 +340,27 @@ Rédigez un résumé rapide de vos services. Mettez en évidence vos savoir fair
         </Grid>
 
             <Grid item xs={2}></Grid>
-          
+
 
           <Grid container className={classes.finpres}>
             <Grid item xs={6}>
               <Grid container>
-                <Textnumsiret/>
-                <Textdatecrea/>
-                <Textdenomination/>
-                <Textnumnafape/>
+                <label>
+                  Numéro Siret
+                  <input name="siret" value={this.state.siret} onChange={this.handleInputChange} type="text" />
+                </label>
+                <label>
+                  Date de création
+                  <input name="creationDate" value={this.state.creationDate} onChange={this.handleInputChange} type="text" />
+                </label>
+                <label>
+                  Dénomination
+                  <input name="denomination" value={this.state.denomination} onChange={this.handleInputChange} type="text" />
+                </label>
+                <label>
+                  Code NAF/APE
+                  <input name="nafape" value={this.state.nafape} onChange={this.handleInputChange} type="text" />
+                </label>
               </Grid>
             </Grid>
 
@@ -307,7 +377,12 @@ Rédigez un résumé rapide de vos services. Mettez en évidence vos savoir fair
               </Grid>
               <Grid container>
                 <Grid item xs={2}>
-                  <Checkboxes/>
+                  <input
+                    name="isengaged"
+                    type="checkbox"
+                    checked={this.state.isEngaged}
+                    onChange={this.handleInputChange}
+                  />
                 </Grid>
                 <Grid item xs={10}>
                   <Typography className={classes.petit2}>
@@ -317,7 +392,12 @@ Rédigez un résumé rapide de vos services. Mettez en évidence vos savoir fair
               </Grid>
               <Grid container>
                 <Grid item xs={2}>
-                  <Checkboxes/>
+                  <input
+                    name="isCertified"
+                    type="checkbox"
+                    checked={this.state.isCertified}
+                    onChange={this.handleInputChange}
+                  />
                 </Grid>
                 <Grid item xs={10}>
                   <Typography className={classes.petit2}>
