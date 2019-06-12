@@ -61,6 +61,7 @@ class home extends React.Component {
                             <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
                             <Link href="/dashboard/calculating/all"><a>Méthodes de calcul</a></Link><br/>
                             <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>
+                            <Link href="/dashboard/job/all"><a>Métiers</a></Link><br/>
                         </Grid>
                     </Card>
                 </Grid>
