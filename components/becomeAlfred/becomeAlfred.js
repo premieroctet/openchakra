@@ -9,7 +9,9 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Avatarsbutton from '../avatar/avatar';
+import IconButton from '@material-ui/core/IconButton';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
+
 import '../../static/styleform.css';
 
 const styles = theme => ({
@@ -135,6 +137,12 @@ const styles = theme => ({
   input: {
     display: 'none',
   },
+  button: {
+    margin: theme.spacing,
+  },
+  input: {
+    display: 'none'
+  },
 });
 
 class BecomeAlfred extends React.Component {
@@ -161,6 +169,9 @@ class BecomeAlfred extends React.Component {
       equipementsBack: [],
 
       // Alfred's presentation
+      id_recto: '',
+      id_verso: '',
+      picture: '',
       serviceDescription: '',
       phone: '',
       isParticular: false,
@@ -342,6 +353,50 @@ class BecomeAlfred extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
+
+    const formData = new FormData();
+      formData.append('myImage',this.state.picture);
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      };
+      axios.post("http://localhost:5000/myAlfred/api/users/profile/picture",formData,config)
+          .then((response) => {
+              alert("Photo ajouté");
+          }).catch((error) => {
+              console.log(error)
+      });
+
+    axios.post("https://localhost:5000/myAlfred/api/shop/add", {
+      booking_request: '',
+      my_alfred_conditions: '',
+      profile_picture: true,
+      identity_card: true,
+      recommandations: '',
+      welcome_message: 'Hello',
+      flexible_cancel: true,
+      moderate_cancel: true,
+      strict_cancel: true,
+      id_recto: '',
+      id_verso: '',
+      verified_phone: this.state.phone,
+      is_particular: this.state.isParticular,
+      is_professional: this.state.isProfessional,
+      self_employed: this.state.isMicro_company,
+      individual_company: this.state.isIndividualCompany,
+
+      creation_date: this.state.creationDate,
+      siret: this.state.siret,
+      naf_ape: this.state.nafape,
+
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
   // Alfred's presentation
@@ -474,7 +529,6 @@ class BecomeAlfred extends React.Component {
                         </React.Fragment>
                       )
                     })}
-                    <button type="button" onClick={this.handleForm}>Valider form</button>
                   </div>
                 }
               </div>
@@ -502,7 +556,16 @@ class BecomeAlfred extends React.Component {
                   <Grid container>
                     <Grid item xs={1}></Grid>
                     <Grid item xs={2}>
-                      <Avatarsbutton />
+                      <div>
+                        <div>
+                          <input accept="image/*" name="myImage" className="input" style={{ display: 'none' }} onChange={this.handleInputChange} id="icon-button-file" type="file" />
+                          <label htmlFor="icon-button-file">
+                            <IconButton color="primary" className={classes.button} style={{ width: 70, height: 70, backgroundColor: 'lightgrey' }} component="span">
+                              <PhotoCamera />
+                            </IconButton>
+                          </label>
+                        </div>
+                      </div>
                     </Grid>
                     <Grid item xs={1}></Grid>
                     <Grid item xs={7}>
@@ -539,13 +602,13 @@ class BecomeAlfred extends React.Component {
                     <Grid item xs={5}>
                       <Grid container>
                         <Grid item xs={12}>
-                          <input accept="image/*" className="input" ref={this.fileInput} style={{ display: 'none' }} id="icon-button-file" type="file" />
+                          <input accept="image/*" name="IDRecto" className="input" ref={this.fileInput} style={{ display: 'none' }} id="icon-button-file" type="file" />
                           <label htmlFor="icon-button-file">
                             <Typography className={classes.dlidentite1}>Téléchargez votre pièce d'identité(recto)</Typography>
                           </label>
                         </Grid>
                         <Grid item xs={12}>
-                          <input accept="image/*" className="input" style={{ display: 'none' }} id="icon-button-file" type="file" />
+                          <input accept="image/*" name="IDVerso" className="input" style={{ display: 'none' }} id="icon-button-file" type="file" />
                           <label htmlFor="icon-button-file">
                             <Typography className={classes.dlidentite2}>Téléchargez votre pièce d'identité(verso)</Typography>
                           </label>
@@ -684,7 +747,7 @@ class BecomeAlfred extends React.Component {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography>
-                          Dans le cadre des prestations effectuées via My-Alfred, vous devez res-pecter toutes les obligations légales et réglementaires (fiascales, sociales, comptables, administratives etc... correspondant à votre statut.Numéro de téléphoneCode à 4 chiffresTerminer
+                          Dans le cadre des prestations effectuées via My-Alfred, vous devez respecter toutes les obligations légales et réglementaires (fiascales, sociales, comptables, administratives etc... correspondant à votre statut.Numéro de téléphoneCode à 4 chiffresTerminer
               </Typography>
                       </Grid>
                       <Grid container>
@@ -717,6 +780,7 @@ class BecomeAlfred extends React.Component {
                           </Typography>
                         </Grid>
                       </Grid>
+                      <button type="button" onClick={this.handleForm}>Valider form</button>
                     </Grid>
                   </Grid>
                 </Card>
