@@ -62,6 +62,7 @@ class home extends React.Component {
                             <Link href="/dashboard/calculating/all"><a>Méthodes de calcul</a></Link><br/>
                             <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>
                             <Link href="/dashboard/job/all"><a>Métiers</a></Link><br/>
+                            <Link href="/dashboard/searchFilter/all"><a>Filtres de recherche</a></Link><br/>
                         </Grid>
                     </Card>
                 </Grid>
