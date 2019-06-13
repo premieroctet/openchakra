@@ -59,7 +59,7 @@ class login extends React.Component {
       password: this.state.password
     };
 
-    axios.post('http://localhost:5000/myAlfred/api/users/login',user)
+    axios.post('myAlfred/api/users/login',user)
         .then(res => {
           const {token} = res.data;
           localStorage.setItem('token',token);

@@ -62,7 +62,7 @@ class popularCategories extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000/myAlfred/api/category/all')
+    axios.get('myAlfred/api/category/all')
         .then(response => {
           let category = response.data;
 

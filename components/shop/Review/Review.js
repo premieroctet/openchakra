@@ -93,12 +93,12 @@ class review extends React.Component {
     let self = this;
 
     const id = self.props.shop;
-    axios.get(`http://localhost:5000/myAlfred/api/shop/${id}`)
+    axios.get(`http://localhost:3122/myAlfred/api/shop/${id}`)
         .then(function (result) {
           let shop = result.data;
           let idAlfred = shop.alfred._id;
 
-          axios.get(`http://localhost:5000/myAlfred/api/reviews/alfred/5cc05ea97283fc59b4f498ff`)
+          axios.get(`http://localhost:3122/myAlfred/api/reviews/alfred/5cc05ea97283fc59b4f498ff`)
               .then(function (response) {
 
                 let reviews = response.data;

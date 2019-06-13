@@ -5,9 +5,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dev = process.env.NODE_DEV !== 'production'; //true false
 const nextApp = next({ dev });
-const handle = nextApp.getRequestHandler(); //part of next config
+const routes = require('./routes')
+const routerHandler = routes.getRequestHandler(nextApp);
 const passport = require('passport');
+const glob = require('glob');
 const cors = require('cors');
+const { config } = require('../config/config');
 
 const users = require('./routes/api/users');
 const category = require('./routes/api/category');
@@ -31,24 +34,36 @@ const reviews = require('./routes/api/reviews');
 const shopBanner = require('./routes/api/shopBanner');
 
 const admin = require('./routes/api/admin/dashboard');
-
+const path = require('path');
+const app = express();
 nextApp.prepare().then(() => {
-    const app = express();
+
 
 // Body parser middleware
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json());
 
+    /*app.use(function (req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*')
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+        next()
+    });*/
+
+
 // DB config
-    const db = require('./config/keys').mongoUri;
+   // const db = require('./config/keys').mongoUri;
 
 // Connect to MongoDB
-    mongoose.connect(db,{useNewUrlParser: true})
+    mongoose.connect(config.databaseUrl,{useNewUrlParser: true})
         .then(() => console.log('MongoDB connected'))
         .catch(err => console.log(err));
 
 // Passport middleware
     app.use(passport.initialize());
+
+
+
+
 
 // Passport config
     require('./config/passport')(passport);
@@ -89,8 +104,12 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/reviews',reviews);
     app.use('/myAlfred/api/shopBanner',shopBanner);
 
-    const port = process.env.PORT || 5000;
-
-    app.listen(port, () => console.log(`Server running on port ${port}`));
+    //const port = process.env.PORT || 5000;
+    const rootPath = require('path').join(__dirname, '/..')
+    glob.sync(rootPath + '/server/api/*.js').forEach(controllerPath => {
+        if (!controllerPath.includes('.test.js')) require(controllerPath)(app)
+    })
+    app.get('*', routerHandler);
+    app.listen(config.serverPort, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`));
 });
 

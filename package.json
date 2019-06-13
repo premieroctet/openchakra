@@ -1,7 +1,8 @@
 {
   "name": "create-next-example-app",
+  "main": "server/server.js",
   "scripts": {
-    "dev": "next",
+    "dev": "nodemon -w server -w package.json server/server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server/server.js",
     "storybook": "start-storybook -p 6006",
@@ -20,6 +21,7 @@
     "cors": "^2.8.5",
     "date-fns": "^2.0.0-alpha.27",
     "express": "^4.16.4",
+    "glob": "^7.1.4",
     "jsonwebtoken": "^8.5.1",
     "jss": "^9.8.7",
     "moment": "^2.24.0",

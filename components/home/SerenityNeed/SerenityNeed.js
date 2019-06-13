@@ -89,7 +89,7 @@ class serenityNeed extends React.Component {
 
   componentDidMount() {
 
-    axios.get('http://localhost:5000/myAlfred/api/service/random/home')
+    axios.get('myAlfred/api/service/random/home')
         .then(response => {
           let service = response.data;
 
