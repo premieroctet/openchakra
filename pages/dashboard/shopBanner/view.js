@@ -7,7 +7,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 
-
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
@@ -40,8 +39,9 @@ class view extends React.Component {
         super(props);
 
         this.state = {
-            tags: {},
-            label: ''
+            shopBanner: {},
+            label: '',
+            picture: ''
 
         };
 
@@ -49,16 +49,16 @@ class view extends React.Component {
     }
 
     static getInitialProps ({ query: { id } }) {
-        return { tags_id: id }
+        return { banner_id: id }
 
     }
     componentDidMount() {
-        const id = this.props.tags_id;
+        const id = this.props.banner_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`http://localhost:5000/myAlfred/api/admin/tags/all/${id}`)
+        axios.get(`http://localhost:5000/myAlfred/api/admin/shopBanner/all/${id}`)
             .then(response => {
-                let tags = response.data;
-                this.setState({tags: tags});
+                let shopBanner = response.data;
+                this.setState({shopBanner: shopBanner});
 
             })
             .catch(err => {
@@ -68,21 +68,22 @@ class view extends React.Component {
     }
 
     onChange = e => {
-        const state = this.state.tags;
+
+        const state = this.state.shopBanner;
         state[e.target.name] = e.target.value;
-        this.setState({tags:state});
+        this.setState({shopBanner:state});
     };
 
     onSubmit = e => {
         e.preventDefault();
 
-        const { label } = this.state.tags;
-        const id = this.props.tags_id;
-        axios.put(`http://localhost:5000/myAlfred/api/admin/tags/all/${id}`,{label})
+        const { label, picture } = this.state.shopBanner;
+        const id = this.props.banner_id;
+        axios.put(`http://localhost:5000/myAlfred/api/admin/shopBanner/all/${id}`,{label,picture})
             .then(res => {
 
-                alert('Tag modifié avec succès');
-                Router.push({pathname:'/dashboard/tags/all'})
+                alert('Image modifiée avec succès');
+                Router.push({pathname:'/dashboard/shopBanner/all'})
             })
             .catch(err => {
                 console.log(err);
@@ -92,12 +93,12 @@ class view extends React.Component {
     };
 
     handleClick() {
-        const id = this.props.tags_id;
-        axios.delete(`http://localhost:5000/myAlfred/api/admin/tags/all/${id}`)
+        const id = this.props.banner_id;
+        axios.delete(`http://localhost:5000/myAlfred/api/admin/shopBanner/all/${id}`)
             .then(res => {
 
-                alert('Tag supprimé avec succès');
-                Router.push({pathname:'/dashboard/tags/all'})
+                alert('Image supprimée avec succès');
+                Router.push({pathname:'/dashboard/shopBanner/all'})
             })
             .catch(err => {
                 console.log(err);
@@ -109,7 +110,7 @@ class view extends React.Component {
 
     render()  {
         const { classes } = this.props;
-        const {tags} = this.state;
+        const {shopBanner} = this.state;
 
 
         return (
@@ -118,7 +119,7 @@ class view extends React.Component {
                     <Card className={classes.card}>
                         <Grid>
                             <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>{tags.label}</Typography>
+                                <Typography style={{ fontSize: 30 }}>{shopBanner.label}</Typography>
                             </Grid>
                             <form onSubmit={this.onSubmit}>
                                 <Grid item>
@@ -128,7 +129,19 @@ class view extends React.Component {
                                         style={{ width: '100%' }}
                                         type="text"
                                         name="label"
-                                        value={tags.label}
+                                        value={shopBanner.label}
+                                        onChange={this.onChange}
+
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        name="picture"
+                                        value={shopBanner.picture}
                                         onChange={this.onChange}
 
                                     />

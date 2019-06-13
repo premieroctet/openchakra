@@ -34,7 +34,7 @@ const styles = {
     },
 };
 
-class resetPassword extends React.Component {
+class view extends React.Component {
 
     constructor(props) {
         super(props);
@@ -152,4 +152,4 @@ class resetPassword extends React.Component {
 
 
 
-export default withStyles(styles)(resetPassword);
+export default withStyles(styles)(view);

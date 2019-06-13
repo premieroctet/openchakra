@@ -1662,7 +1662,7 @@ router.put('/shopBanner/all/:id',passport.authenticate('jwt',{session: false}),(
     const admin = decode.is_admin;
 
     if(admin) {
-       ShopBanner.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,
+       ShopBanner.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: req.body.picture
                 }}, {new: true})
             .then(banner => {
                 res.json(banner);
