@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-/admin_dashboard/node_modules
+
 
 # testing
 /coverage
