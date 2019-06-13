@@ -78,7 +78,7 @@ class add extends React.Component {
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("http://localhost:5000/myAlfred/api/admin/category/all")
+        axios.get("http://localhost:3122/myAlfred/api/admin/category/all")
             .then((response) => {
                 let category = response.data;
                 this.setState({all_category: category})
@@ -86,7 +86,7 @@ class add extends React.Component {
             console.log(error)
         });
 
-        axios.get("http://localhost:5000/myAlfred/api/admin/tags/all")
+        axios.get("http://localhost:3122/myAlfred/api/admin/tags/all")
             .then((response) => {
                 let tags = response.data;
                 this.setState({all_tags: tags})
@@ -94,7 +94,7 @@ class add extends React.Component {
             console.log(error)
         });
 
-        axios.get("http://localhost:5000/myAlfred/api/admin/equipment/all")
+        axios.get("http://localhost:3122/myAlfred/api/admin/equipment/all")
             .then((response) => {
                 let equipments = response.data;
                 this.setState({all_equipments: equipments})
@@ -132,7 +132,7 @@ class add extends React.Component {
 
         };
         axios
-            .post('http://localhost:5000/myAlfred/api/admin/service/all', newService)
+            .post('http://localhost:3122/myAlfred/api/admin/service/all', newService)
             .then(res => {
                 alert('Service ajouté');
                 Router.push({pathname:'/dashboard/services/all'})
@@ -155,10 +155,6 @@ class add extends React.Component {
             <MenuItem value={e._id}>{e.label}</MenuItem>
 
         ));
-
-        /*const tags = all_tags.map(f => (
-            <option value={f._id}>{f.label}</option>
-        ));*/
 
 
         return (

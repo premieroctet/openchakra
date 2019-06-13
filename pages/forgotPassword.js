@@ -58,7 +58,7 @@ class forgotPassword extends React.Component {
 
         };
 
-        axios.post('http://localhost:5000/myAlfred/api/users/forgotPassword',user)
+        axios.post('http://localhost:3122/myAlfred/api/users/forgotPassword',user)
             .then(res => {
                 cancel();
 

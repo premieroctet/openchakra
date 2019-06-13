@@ -55,7 +55,7 @@ class view extends React.Component {
     componentDidMount() {
         const id = this.props.calculating_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`http://localhost:5000/myAlfred/api/admin/calculating/all/${id}`)
+        axios.get(`http://localhost:3122/myAlfred/api/admin/calculating/all/${id}`)
             .then(response => {
                 let calculating = response.data;
                 this.setState({calculating: calculating});
@@ -78,7 +78,7 @@ class view extends React.Component {
 
         const { label } = this.state.calculating;
         const id = this.props.calculating_id;
-        axios.put(`http://localhost:5000/myAlfred/api/admin/calculating/all/${id}`,{label})
+        axios.put(`http://localhost:3122/myAlfred/api/admin/calculating/all/${id}`,{label})
             .then(res => {
 
                 alert('Méthode de calcul modifié avec succès');
@@ -93,7 +93,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.calculating_id;
-        axios.delete(`http://localhost:5000/myAlfred/api/admin/calculating/all/${id}`)
+        axios.delete(`http://localhost:3122/myAlfred/api/admin/calculating/all/${id}`)
             .then(res => {
 
                 alert('Méthode de calcul supprimée avec succès');

@@ -76,7 +76,7 @@ class addAddress extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .put('http://localhost:5000/myAlfred/api/users/profile/billingAddress', newAddress)
+            .put('http://localhost:3122/myAlfred/api/users/profile/billingAddress', newAddress)
             .then(res => {
                 console.log('ok');
                 Router.push({pathname:'/profile'})

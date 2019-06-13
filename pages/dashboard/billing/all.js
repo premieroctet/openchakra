@@ -47,7 +47,7 @@ class all extends React.Component {
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("http://localhost:5000/myAlfred/api/admin/billing/all")
+        axios.get("http://localhost:3122/myAlfred/api/admin/billing/all")
             .then((response) => {
                 let billing = response.data;
                 this.setState({billing: billing})

@@ -106,7 +106,7 @@ class signup extends React.Component {
         };
 
         axios
-            .post('myAlfred/api/users/register', newUser)
+            .post('http://localhost:3122/myAlfred/api/users/register', newUser)
             .then(res => {
               Router.push({pathname:'/login'})
             })

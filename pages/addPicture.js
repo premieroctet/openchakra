@@ -60,7 +60,7 @@ class addPicture extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post("http://localhost:5000/myAlfred/api/users/profile/picture",formData,config)
+        axios.post("http://localhost:3122/myAlfred/api/users/profile/picture",formData,config)
             .then((response) => {
                 alert("Photo ajouté");
                 Router.push({pathname:'/profile'})

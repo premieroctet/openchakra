@@ -66,7 +66,7 @@ class addIdCard extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post("http://localhost:5000/myAlfred/api/users/profile/idCard",formData,config)
+        axios.post("http://localhost:3122/myAlfred/api/users/profile/idCard",formData,config)
             .then((response) => {
                 alert("Carte d'identité ajouté");
                 Router.push({pathname:'/profile'})

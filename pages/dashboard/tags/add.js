@@ -58,7 +58,7 @@ class add extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .post('http://localhost:5000/myAlfred/api/admin/tags/all', newBilling)
+            .post('http://localhost:3122/myAlfred/api/admin/tags/all', newBilling)
             .then(res => {
                 alert('Tag ajouté');
                 Router.push({pathname:'/dashboard/tags/all'})

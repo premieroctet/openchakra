@@ -27,7 +27,7 @@ class profile extends React.Component {
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get('http://localhost:5000/myAlfred/api/users/current')
+            .get('http://localhost:3122/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});

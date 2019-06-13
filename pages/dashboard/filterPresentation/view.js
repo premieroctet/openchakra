@@ -55,7 +55,7 @@ class view extends React.Component {
     componentDidMount() {
         const id = this.props.filterPresentation_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`http://localhost:5000/myAlfred/api/admin/filterPresentation/all/${id}`)
+        axios.get(`http://localhost:3122/myAlfred/api/admin/filterPresentation/all/${id}`)
             .then(response => {
                 let filterPresentation = response.data;
                 this.setState({filterPresentation: filterPresentation});
@@ -78,7 +78,7 @@ class view extends React.Component {
 
         const { label } = this.state.filterPresentation;
         const id = this.props.filterPresentation_id;
-        axios.put(`http://localhost:5000/myAlfred/api/admin/filterPresentation/all/${id}`,{label})
+        axios.put(`http://localhost:3122/myAlfred/api/admin/filterPresentation/all/${id}`,{label})
             .then(res => {
 
                 alert('Filtre modifié avec succès');
@@ -93,7 +93,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.filterPresentation_id;
-        axios.delete(`http://localhost:5000/myAlfred/api/admin/filterPresentation/all/${id}`)
+        axios.delete(`http://localhost:3122/myAlfred/api/admin/filterPresentation/all/${id}`)
             .then(res => {
 
                 alert('Filtre supprimé avec succès');

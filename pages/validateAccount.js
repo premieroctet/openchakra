@@ -60,7 +60,7 @@ class validateAccount extends React.Component {
 
         const user = {id:this.state.userID};
         axios
-            .post('http://localhost:5000/myAlfred/api/users/validateAccount',user
+            .post('http://localhost:3122/myAlfred/api/users/validateAccount',user
             )
             .then(res => {
                 alert('Compte validé');

@@ -48,7 +48,7 @@ class all extends React.Component {
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("http://localhost:5000/myAlfred/api/admin/service/all")
+        axios.get("http://localhost:3122/myAlfred/api/admin/service/all")
             .then((response) => {
                 let service = response.data;
                 this.setState({service: service})
@@ -62,14 +62,6 @@ class all extends React.Component {
         const { classes } = this.props;
         const {service} = this.state;
 
-
-                /*const tags = service.tags.map(f => (
-                    <Chip label={f.label} color="primary" />
-                ));
-
-                const equipments = service.equipments.map(g => (
-                    <Chip label={g.label} color="primary" />
-                ));*/
 
                 const row = service.map(e => (
                     <tr key={e._id}>

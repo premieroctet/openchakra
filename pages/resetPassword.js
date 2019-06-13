@@ -72,7 +72,7 @@ class resetPassword extends React.Component {
 
         };
 
-        axios.post('http://localhost:5000/myAlfred/api/users/resetPassword',data)
+        axios.post('http://localhost:3122/myAlfred/api/users/resetPassword',data)
             .then(res => {
 
                 alert('Mot de passe modifié avec succès');

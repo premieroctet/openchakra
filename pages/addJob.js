@@ -56,7 +56,7 @@ class addPhone extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .put('http://localhost:5000/myAlfred/api/users/profile/job', newJob)
+            .put('http://localhost:3122/myAlfred/api/users/profile/job', newJob)
             .then(res => {
                 alert('Métier ajouté');
                 Router.push({pathname:'/profile'})

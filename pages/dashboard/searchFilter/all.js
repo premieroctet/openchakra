@@ -47,7 +47,7 @@ class all extends React.Component {
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("http://localhost:5000/myAlfred/api/admin/searchFilter/all")
+        axios.get("http://localhost:3122/myAlfred/api/admin/searchFilter/all")
             .then((response) => {
                 let searchFilter = response.data;
                 this.setState({searchFilter: searchFilter})

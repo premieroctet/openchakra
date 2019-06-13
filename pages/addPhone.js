@@ -56,7 +56,7 @@ class addPhone extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .put('http://localhost:5000/myAlfred/api/users/profile/phone', newPhone)
+            .put('http://localhost:3122/myAlfred/api/users/profile/phone', newPhone)
             .then(res => {
                 alert('Téléphone ajouté');
                 Router.push({pathname:'/profile'})

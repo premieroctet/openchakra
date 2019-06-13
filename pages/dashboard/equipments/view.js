@@ -54,7 +54,7 @@ class view extends React.Component {
     componentDidMount() {
         const id = this.props.equipment_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`http://localhost:5000/myAlfred/api/admin/equipment/all/${id}`)
+        axios.get(`http://localhost:3122/myAlfred/api/admin/equipment/all/${id}`)
             .then(response => {
                 let equipment = response.data;
                 this.setState({equipment: equipment});
@@ -77,7 +77,7 @@ class view extends React.Component {
 
         const { label } = this.state.equipment;
         const id = this.props.equipment_id;
-        axios.put(`http://localhost:5000/myAlfred/api/admin/equipment/all/${id}`,{label})
+        axios.put(`http://localhost:3122/myAlfred/api/admin/equipment/all/${id}`,{label})
             .then(res => {
 
                 alert('Equipement modifié avec succès');
@@ -92,7 +92,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.equipment_id;
-        axios.delete(`http://localhost:5000/myAlfred/api/admin/equipment/all/${id}`)
+        axios.delete(`http://localhost:3122/myAlfred/api/admin/equipment/all/${id}`)
             .then(res => {
 
                 alert('Equipement supprimé avec succès');

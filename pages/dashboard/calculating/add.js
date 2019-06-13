@@ -58,7 +58,7 @@ class add extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .post('http://localhost:5000/myAlfred/api/admin/calculating/all', newBilling)
+            .post('http://localhost:3122/myAlfred/api/admin/calculating/all', newBilling)
             .then(res => {
                 alert('Méthode de calcul ajoutée');
                 Router.push({pathname:'/dashboard/calculating/all'})
