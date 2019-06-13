@@ -383,8 +383,6 @@ router.post('/users/admin', passport.authenticate('jwt',{session: false}),(req, 
 router.post('/users/tempo/admin/add',(req, res) => {
     const {errors, isValid} = validateRegisterInput(req.body);
 
-
-
         if(!isValid) {
             return res.status(400).json(errors);
         }
