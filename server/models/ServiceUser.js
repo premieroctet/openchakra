@@ -35,6 +35,20 @@ const ServiceUserSchema = new Schema({
     },
     deadline_before_booking: {
         type: String
+    },
+    graduated: {
+        type: Boolean,
+        default: false
+    },
+    diploma: {
+        type: String
+    },
+    is_certified: {
+        type: Boolean,
+        default: false
+    },
+    certification: {
+        type: String
     }
 });
 

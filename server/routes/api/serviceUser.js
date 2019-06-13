@@ -6,6 +6,29 @@ const mongoose = require('mongoose');
 const ServiceUser = require('../../models/ServiceUser');
 const User = require('../../models/User');
 
+const multer = require("multer");
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/profile/diploma/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const upload = multer({ storage: storage });
+
+const storage2 = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/profile/certification/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const upload2 = multer({ storage: storage2 });
+
 router.get('/test',(req, res) => res.json({msg: 'Service user Works!'}) );
 
 // @Route POST /myAlfred/api/serviceUser/add
@@ -25,6 +48,12 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=>{
                 if(req.body.equipment) service.equipments.unshift(mongoose.Types.ObjectId(req.body.equipment));
                 service.save().then(services => res.json(services)).catch(err => console.log(err));
             } else {
+                if(req.body.diploma) {
+                    upload.single('diploma')
+                }
+                if(req.body.certification) {
+                    upload2.single('certification')
+                }
                 const fields = {};
                 fields.user= req.user.id;
                 fields.service = mongoose.Types.ObjectId(req.body.service);
@@ -33,6 +62,10 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=>{
                 fields.minimum_basket = req.body.minimum_basket;
                 fields.deadline_before_booking = req.body.deadline_before_booking;
                 fields.prestations = req.body.prestations;
+                fields.graduated = req.body.graduated;
+                if(req.body.diploma) fields.diploma = req.file.path;
+                fields.is_certified = req.body.is_certified;
+                if(req.body.certification) fields.certification = req.file.path;
 
                 const newPrestation = {
                     prestation: mongoose.Types.ObjectId(req.body.prestation),
@@ -45,6 +78,8 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=>{
                 fields.equipments.unshift(mongoose.Types.ObjectId(req.body.equipment));
                 const newService = new ServiceUser(fields);
                 newService.save().then(service => res.json(service)).catch(err => console.log(err));
+
+
             }
 
         })

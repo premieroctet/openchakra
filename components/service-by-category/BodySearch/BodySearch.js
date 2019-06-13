@@ -48,7 +48,7 @@ class bodySearch extends React.Component {
     let self = this;
 
     const id = self.props.category;
-    axios.get(`http://localhost:3122/myAlfred/api/service/all/${id}`)
+    axios.get(`http://localhost:5000/myAlfred/api/service/all/${id}`)
         .then(function (response) {
 
           let service = response.data;

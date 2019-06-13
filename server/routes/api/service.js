@@ -53,6 +53,26 @@ router.get('/random/home',(req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/service/:id
+// View one service
+router.get('/:id',(req,res)=> {
+
+    Service.findById(req.params.id)
+        .populate('tags')
+        .populate('equipments')
+        .populate('category')
+        .then(service => {
+            if(Object.keys(service).length === 0 && service.constructor === Object){
+                return res.status(400).json({msg: 'No service found'});
+            } else {
+                res.json(service);
+            }
+
+        })
+        .catch(err => res.status(404).json({ service: 'No service found' }));
+
+});
+
 // @Route GET /myAlfred/api/service/:category
 // View all service per category
 router.get('/all/:category',(req,res)=> {
@@ -73,25 +93,7 @@ router.get('/all/:category',(req,res)=> {
 
 });
 
-// @Route GET /myAlfred/api/service/:id
-// View one service
-router.get('/:id',(req,res)=> {
 
-        Service.findById(req.params.id)
-            .populate('tags')
-            .populate('equipments')
-            .populate('category')
-            .then(service => {
-                if(Object.keys(service).length === 0 && service.constructor === Object){
-                    return res.status(400).json({msg: 'No service found'});
-                } else {
-                    res.json(service);
-                }
-
-            })
-            .catch(err => res.status(404).json({ service: 'No service found' }));
-
-});
 
 
 module.exports = router;

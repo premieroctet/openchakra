@@ -13,6 +13,7 @@ import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
+
 const styles = {
   loginContainer: {
     alignItems: 'center',
@@ -119,6 +120,7 @@ class login extends React.Component {
                     </Button>
                   </Grid>
                 </form>
+                <Link href="/forgotPassword"><a>Mot de passe oublié ?</a></Link>
               </Grid>
             </Card>
           </Grid>
