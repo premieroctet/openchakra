@@ -910,7 +910,7 @@ router.put('/searchFilter/all/:id',passport.authenticate('jwt',{session: false})
 // Add tags for service
 // @Access private
 router.post('/tags/all', passport.authenticate('jwt',{session: false}),(req, res) => {
-    const {errors, isValid} = validateTagsInput(req.body);
+    const {errors, isValid} = validateBillingInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
@@ -1369,6 +1369,9 @@ router.get('/service/all',(req,res)=> {
 router.get('/service/all/:id',(req,res)=> {
 
     Service.findById(req.params.id)
+        .populate('tags')
+        .populate('equipments')
+        .populate('category')
         .then(service => {
             if(!service){
                 return res.status(400).json({msg: 'No service found'});
@@ -1412,7 +1415,7 @@ router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req
             {
                 $set: { label: req.body.label, equipments: req.body.equipments,category: mongoose.Types.ObjectId(req.body.category),
                     tags: req.body.tags,
-                    picture: `https://source.unsplash.com/${req.body.picture}/400x300`},
+                    picture: req.body.picture, description: req.body.description},
 
             } , {new: true})
             .then(service => {

@@ -76,7 +76,7 @@ class view extends React.Component {
         e.preventDefault();
 
         const { label } = this.state.equipment;
-        const id = this.props.tags_id;
+        const id = this.props.equipment_id;
         axios.put(`http://localhost:5000/myAlfred/api/admin/equipment/all/${id}`,{label})
             .then(res => {
 

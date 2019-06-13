@@ -65,7 +65,8 @@ class home extends React.Component {
                             <Link href="/dashboard/searchFilter/all"><a>Filtres de recherche</a></Link><br/>
                             <Link href="/dashboard/tags/all"><a>Tags</a></Link><br/>
                             <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
-                            <Link href="/dashboard/shopBanner/all"><a>Photo bannière shop</a></Link><br/>
+                            <Link href="/dashboard/shopBanner/all"><a>Photos bannière shop</a></Link><br/>
+                            <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                         </Grid>
                     </Card>
                 </Grid>
