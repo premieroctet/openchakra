@@ -195,6 +195,8 @@ class BecomeAlfred extends React.Component {
       nafape: '',
       isEngaged: false,
       isCertified: false,
+      myCardR: '',
+      myCardV: '',
 
       // Calendar
       cal_events: [],
@@ -230,6 +232,8 @@ class BecomeAlfred extends React.Component {
 
     // Alfred's Presentation
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleRecto = this.handleRecto.bind(this);
+    this.handleVerso = this.handleVerso.bind(this);
   }
 
   componentDidMount() {
@@ -265,6 +269,18 @@ class BecomeAlfred extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
+  }
+
+  handleRecto(e) {
+    this.setState({
+      myCardR: e.target.files[0]
+    })
+  }
+
+  handleVerso(e) {
+    this.setState({
+      myCardV: e.target.files[0]
+    })
   }
 
   handleSelect = ({ start, end }) => {
@@ -501,6 +517,16 @@ class BecomeAlfred extends React.Component {
       }).catch((error) => {
         console.log(error)
       });
+
+    const idCardForm = new FormData();
+    idCardForm.append('myCardR', this.state.myCardR);
+    idCardForm.append('myCardV', this.state.myCardV);
+    axios.post("http://localhost:5000/myAlfred/api/users/profile/idCard", idCardForm, config)
+      .then((response) => {
+        alert("id ajouté")
+      }).catch((error) => {
+        console.log(error)
+      })
 
   }
 
@@ -875,7 +901,7 @@ class BecomeAlfred extends React.Component {
               </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
-          <ExpansionPanel disabled={this.state.service === ''}>
+          <ExpansionPanel>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
             >
@@ -933,13 +959,13 @@ class BecomeAlfred extends React.Component {
                     <Grid item xs={5}>
                       <Grid container>
                         <Grid item xs={12}>
-                          <input accept="image/*" name="IDRectoVerso" className="input" ref={this.fileInput} style={{ display: 'none' }} id="icon-button-file" type="file" multiple onChange={this.handleFileChange} />
+                          <input accept="image/*" name="myCardR" className="input" ref={this.fileInput} style={{ display: 'none' }} id="icon-button-file" type="file" onChange={this.handleRecto} />
                           <label htmlFor="icon-button-file">
                             <Typography className={classes.dlidentite1}>Téléchargez votre pièce d'identité(recto)</Typography>
                           </label>
                         </Grid>
                         <Grid item xs={12}>
-                          <input accept="image/*" name="IDVerso" className="input" style={{ display: 'none' }} id="icon-button-file" type="file" onChange={this.handleFileChange} />
+                          <input accept="image/*" name="myCardV" className="input" style={{ display: 'none' }} id="icon-button-file" type="file" onChange={this.handleVerso} />
                           <label htmlFor="icon-button-file">
                             <Typography className={classes.dlidentite2}>Téléchargez votre pièce d'identité(verso)</Typography>
                           </label>
