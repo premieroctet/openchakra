@@ -21,7 +21,7 @@ router.get('/test',(req, res) => res.json({msg: 'Shop Works!'}) );
 // @Route POST /myAlfred/api/shop/add
 // Create a shop
 // @Access private
-router.post('/add', upload.single('myImage'), passport.authenticate('jwt',{session: false}),(req,res) => {
+router.post('/add', upload.single('IDRecto'), upload.single('IDVerso'), passport.authenticate('jwt',{session: false}),(req,res) => {
     const {isValid, errors} = validateShopInput(req.body);
     if(!isValid) {
         return res.status(400).json(errors);

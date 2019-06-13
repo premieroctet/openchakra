@@ -6,8 +6,6 @@ module.exports = function validateShopInput(data) {
     let errors = {};
 
 
-    data.id_recto = !isEmpty(data.id_recto) ? data.id_recto : '';
-    data.id_verso = !isEmpty(data.id_verso) ? data.id_verso : '';
     data.welcome_message = !isEmpty(data.welcome_message) ? data.welcome_message : '';
     data.name = !isEmpty(data.name) ? data.name : '';
     data.siret = !isEmpty(data.siret) ? data.siret : '';
@@ -19,16 +17,6 @@ module.exports = function validateShopInput(data) {
     const is_professional = data.is_professional;
     const siret = parseInt(data.siret,10);
 
-
-
-
-    if(Validator.isEmpty(data.id_recto)) {
-        errors.id_recto = 'ID card is required';
-    }
-
-    if(Validator.isEmpty(data.id_verso)) {
-        errors.id_verso = 'ID card is required';
-    }
 
     if(Validator.isEmpty(data.welcome_message)) {
         errors.welcome_message = 'Welcome message is required';

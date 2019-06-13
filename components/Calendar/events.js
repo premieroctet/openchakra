@@ -3,10 +3,9 @@ const now = new Date()
 export default [
   {
     id: 0,
-    title: 'Gauthier bouffe tes morts',
+    title: 'test d\'event',
     allDay: true,
-    start: new Date(2019, 5, 5),
-    end: new Date(2019, 5, 6
-      ),
+    start: '2019-06-12',
+    end: '2019-06-13',
   }
 ]

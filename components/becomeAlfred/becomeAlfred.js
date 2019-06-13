@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import moment from 'moment';
+import BigCalendar from 'react-big-calendar'
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -13,6 +15,9 @@ import IconButton from '@material-ui/core/IconButton';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 
 import '../../static/styleform.css';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import '../../static/stylecalendar.css';
+import { throwStatement } from '@babel/types';
 
 const styles = theme => ({
   cardContainer: {
@@ -140,10 +145,16 @@ const styles = theme => ({
   button: {
     margin: theme.spacing,
   },
-  input: {
-    display: 'none'
+  calendar: {
+    minHeight: '400px',
+  },
+  checkboxesMonth: {
+    marginTop: '20px',
   },
 });
+
+moment.locale('fr');
+const localizer = BigCalendar.momentLocalizer(moment);
 
 class BecomeAlfred extends React.Component {
   constructor(props) {
@@ -184,6 +195,23 @@ class BecomeAlfred extends React.Component {
       nafape: '',
       isEngaged: false,
       isCertified: false,
+
+      // Calendar
+      cal_events: [],
+      daysOff: false,
+      extendedTwelveMonths: false,
+      january: false,
+      february: false,
+      march: false,
+      april: false,
+      may: false,
+      june: false,
+      july: false,
+      august: false,
+      september: false,
+      october: false,
+      november: false,
+      december: false,
     };
 
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
@@ -198,18 +226,89 @@ class BecomeAlfred extends React.Component {
     this.handleCity = this.handleCity.bind(this);
     this.handleMinimumBasket = this.handleMinimumBasket.bind(this);
     this.handleDeadlineBeforeBooking = this.handleDeadlineBeforeBooking.bind(this);
+    this.handleFileChange = this.handleFileChange.bind(this);
 
     // Alfred's Presentation
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   componentDidMount() {
+    let self = this;
     axios.get('http://localhost:5000/myAlfred/api/category/all')
       .then(response => {
         const categoriesBack = response.data;
         this.setState({ categoriesBack: categoriesBack });
         console.log(this.state);
       })
+
+    axios.get('http://localhost:5000/myAlfred/api/calendar/all')
+      .then(function (response) {
+
+        let events = response.data;
+
+        for (let i = 0; i < events.length; i++) {
+
+          for (let j = 0; j < events[i].events.length; j++) {
+
+            events[i].events[j].start = moment.utc(events[i].events[j].start).toDate();
+            events[i].events[j].end = moment.utc(events[i].events[j].end).toDate();
+
+
+          }
+          self.setState({
+            cal_events: events[i].events
+          })
+        }
+
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  handleSelect = ({ start, end }) => {
+    const title = window.prompt('New Event name');
+    if (title) {
+      this.setState({
+        cal_events: [
+          ...this.state.cal_events,
+          {
+            start,
+            end,
+            title,
+          },
+        ],
+      });
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.post('http://localhost:5000/myAlfred/api/calendar/add', {
+        title: title,
+        start: start,
+        end: end
+      })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  };
+  onDeleteClick(id) {
+    const r = window.confirm("Would you like to remove this event?");
+    if (r) {
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios
+        .delete(`http://localhost:5000/myAlfred/api/calendar/event/${id}`)
+        .then(res =>
+          console.log(res)
+        )
+        .catch(err =>
+          console.log(err)
+        );
+
+      window.location.reload();
+    }
   }
 
   async handleCategoryChange(e) {
@@ -347,40 +446,27 @@ class BecomeAlfred extends React.Component {
       deadline_before_booking: this.state.deadline_before_bookin,
       equipment: this.state.equipment,
     })
-      .then(function (response) {
+      .then((response) => {
         console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+        this.setState({
+          service: response.data._id,
+        })
 
-    const formData = new FormData();
-      formData.append('myImage',this.state.picture);
-      const config = {
-        headers: {
-          'content-type': 'multipart/form-data'
-        }
-      };
-      axios.post("http://localhost:5000/myAlfred/api/users/profile/picture",formData,config)
-          .then((response) => {
-              alert("Photo ajouté");
-          }).catch((error) => {
-              console.log(error)
-      });
-
-    axios.post("https://localhost:5000/myAlfred/api/shop/add", {
-      booking_request: '',
-      my_alfred_conditions: '',
+        axios.post("http://localhost:5000/myAlfred/api/shop/add", {
+      service: this.state.service,
+      description: 'test',
+      booking_request: true,
+      my_alfred_conditions: true,
       profile_picture: true,
       identity_card: true,
-      recommandations: '',
+      recommandations: true,
       welcome_message: 'Hello',
       flexible_cancel: true,
       moderate_cancel: true,
       strict_cancel: true,
       id_recto: '',
       id_verso: '',
-      verified_phone: this.state.phone,
+      verified_phone: true,
       is_particular: this.state.isParticular,
       is_professional: this.state.isProfessional,
       self_employed: this.state.isMicro_company,
@@ -391,12 +477,38 @@ class BecomeAlfred extends React.Component {
       naf_ape: this.state.nafape,
 
     })
-    .then(function (response) {
-      console.log(response);
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    const formData = new FormData();
+    formData.append('myImage', this.state.myImage);
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data'
+      }
+    };
+    axios.post("http://localhost:5000/myAlfred/api/users/profile/picture", formData, config)
+      .then((response) => {
+        alert("Photo ajouté");
+      }).catch((error) => {
+        console.log(error)
+      });
+
+  }
+
+  handleFileChange(event) {
+    const name = event.target.name;
+    this.setState({
+      [name]: event.target.files[0]
     })
-    .catch(function (error) {
-      console.log(error);
-    });
   }
 
   // Alfred's presentation
@@ -418,6 +530,24 @@ class BecomeAlfred extends React.Component {
     const filterShow = this.state.service;
     const prestationsShow = this.state.filter;
     const equipementShow = this.state.service;
+    const { cal_events } = this.state;
+
+    const events = cal_events.map(event => (
+
+      <tr key={event._id}>
+        <td>{event.title}</td>
+        <td>{moment(event.start).format('l')}</td>
+        <td>
+          <button
+            onClick={this.onDeleteClick.bind(this, event._id)}
+            className="btndanger"
+          >
+            Delete
+                </button>
+        </td>
+      </tr>
+
+    ));
     return (
       <React.Fragment>
         <form onSubmit={e => e.preventDefault()}>
@@ -534,17 +664,218 @@ class BecomeAlfred extends React.Component {
               </div>
             </ExpansionPanelDetails>
           </ExpansionPanel>
-          <ExpansionPanel disabled>
+          <ExpansionPanel>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
             >
               <Typography>Calendrier</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              Calendrier
+              <Grid container className={classes.cardContainer}>
+                <Card className={classes.card}>
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <BigCalendar
+                        selectable
+                        events={cal_events}
+                        scrollToTime={new Date(1970, 1, 1, 6)}
+                        defaultView={'week'}
+                        views={['month', 'week', 'day']}
+                        onSelectEvent={event => alert(event.title)}
+                        onSelectSlot={this.handleSelect}
+                        defaultDate={new Date()}
+                        localizer={localizer}
+                        className={classes.calendar}
+                      />
+                    </Grid>
+                    <Grid item xs={3}></Grid>
+                    <Grid item xs={6}>
+                      <tbody className="listdelete">
+                        <tbody>
+                          {events}
+                        </tbody>
+                      </tbody>
+                    </Grid>
+                    <Grid item xs={3}></Grid>
+                    <Grid container className={classes.checkboxesMonth}>
+                      {/*Grandes checkboxes*/}
+                      <Grid item xs={6}>
+                        <label className="checkbox">
+                          <input
+                            name="extendedTwelveMonths"
+                            type="checkbox"
+                            checked={this.state.extendedTwelveMonths}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon bigcheck"></span>
+                          <span className="contenulabel">je souhaite étendre ces disponibilités aux 12 prochains mois</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <label className="checkbox">
+                          <input
+                            name="daysOff"
+                            type="checkbox"
+                            checked={this.state.daysOff}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon bigcheck"></span>
+                          <span className="contenulabel">Je souhaite étendre ces disponibilités aux jours fériés</span>
+                        </label>
+                      </Grid>
+
+                      {/*Petites checkboxes*/}
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="january"
+                            type="checkbox"
+                            checked={this.state.january}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Janvier</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="february"
+                            type="checkbox"
+                            checked={this.state.february}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Février</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="march"
+                            type="checkbox"
+                            checked={this.state.march}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Mars</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="april"
+                            type="checkbox"
+                            checked={this.state.april}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Avril</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="may"
+                            type="checkbox"
+                            checked={this.state.may}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Mai</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="june"
+                            type="checkbox"
+                            checked={this.state.june}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Juin</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="july"
+                            type="checkbox"
+                            checked={this.state.july}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Juillet</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="august"
+                            type="checkbox"
+                            checked={this.state.august}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Août</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="september"
+                            type="checkbox"
+                            checked={this.state.september}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Septembre</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="october"
+                            type="checkbox"
+                            checked={this.state.october}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Octobre</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="november"
+                            type="checkbox"
+                            checked={this.state.november}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Novembre</span>
+                        </label>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <label className="checkbox">
+                          <input
+                            name="december"
+                            type="checkbox"
+                            checked={this.state.december}
+                            onChange={this.handleInputChange}
+                          />
+                          <span className="checkbox__icon littlecheck"></span>
+                          <span className="contenulabel">Décembre</span>
+                        </label>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Card>
+              </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
-          <ExpansionPanel>
+          <ExpansionPanel disabled={this.state.service === ''}>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
             >
@@ -558,7 +889,7 @@ class BecomeAlfred extends React.Component {
                     <Grid item xs={2}>
                       <div>
                         <div>
-                          <input accept="image/*" name="myImage" className="input" style={{ display: 'none' }} onChange={this.handleInputChange} id="icon-button-file" type="file" />
+                          <input accept="image/*" name="myImage" className="input" style={{ display: 'none' }} onChange={this.handleFileChange} id="icon-button-file" type="file" />
                           <label htmlFor="icon-button-file">
                             <IconButton color="primary" className={classes.button} style={{ width: 70, height: 70, backgroundColor: 'lightgrey' }} component="span">
                               <PhotoCamera />
@@ -602,13 +933,13 @@ class BecomeAlfred extends React.Component {
                     <Grid item xs={5}>
                       <Grid container>
                         <Grid item xs={12}>
-                          <input accept="image/*" name="IDRecto" className="input" ref={this.fileInput} style={{ display: 'none' }} id="icon-button-file" type="file" />
+                          <input accept="image/*" name="IDRectoVerso" className="input" ref={this.fileInput} style={{ display: 'none' }} id="icon-button-file" type="file" multiple onChange={this.handleFileChange} />
                           <label htmlFor="icon-button-file">
                             <Typography className={classes.dlidentite1}>Téléchargez votre pièce d'identité(recto)</Typography>
                           </label>
                         </Grid>
                         <Grid item xs={12}>
-                          <input accept="image/*" name="IDVerso" className="input" style={{ display: 'none' }} id="icon-button-file" type="file" />
+                          <input accept="image/*" name="IDVerso" className="input" style={{ display: 'none' }} id="icon-button-file" type="file" onChange={this.handleFileChange} />
                           <label htmlFor="icon-button-file">
                             <Typography className={classes.dlidentite2}>Téléchargez votre pièce d'identité(verso)</Typography>
                           </label>
@@ -726,7 +1057,7 @@ class BecomeAlfred extends React.Component {
                         </label>
                         <label>
                           Date de création
-                <input name="creationDate" value={this.state.creationDate} onChange={this.handleInputChange} type="text" />
+                <input name="creationDate" value={this.state.creationDate} onChange={this.handleInputChange} type="date" />
                         </label>
                         <label>
                           Dénomination
@@ -753,7 +1084,7 @@ class BecomeAlfred extends React.Component {
                       <Grid container>
                         <Grid item xs={2}>
                           <input
-                            name="isengaged"
+                            name="isEngaged"
                             type="checkbox"
                             checked={this.state.isEngaged}
                             onChange={this.handleInputChange}
