@@ -1,6 +1,6 @@
-const appName = 'myalfred'
-const databaseName = 'test-myAlfred'
-const serverPort = process.env.PORT || 3122
+const appName = 'myalfred';
+const databaseName = 'test-myAlfred';
+const serverPort = process.env.PORT || 5000;
 
 const completeConfig = {
 

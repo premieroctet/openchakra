@@ -13,7 +13,7 @@ import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
-
+const url = "http://localhost:5000/";
 const styles = {
   loginContainer: {
     alignItems: 'center',
@@ -59,7 +59,7 @@ class login extends React.Component {
       password: this.state.password
     };
 
-    axios.post('myAlfred/api/users/login',user)
+    axios.post(url+'myAlfred/api/users/login',user)
         .then(res => {
           const {token} = res.data;
           localStorage.setItem('token',token);

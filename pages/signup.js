@@ -24,7 +24,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import axios from "axios";
 
-
+const url = "http://localhost:5000/";
 const styles = theme => ({
   signupContainer: {
     alignItems: 'center',
@@ -106,7 +106,7 @@ class signup extends React.Component {
         };
 
         axios
-            .post('myAlfred/api/users/register', newUser)
+            .post(url+'myAlfred/api/users/register', newUser)
             .then(res => {
               Router.push({pathname:'/login'})
             })
