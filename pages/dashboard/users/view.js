@@ -14,7 +14,7 @@ import Router from "next/router";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
-const url = "http://localhost:5000/";
+const url = "https://myalfred.hausdivision.com/";
 const styles = {
     loginContainer: {
         alignItems: 'center',

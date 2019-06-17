@@ -10,7 +10,7 @@ import axios from "axios";
 import Link from "next/link";
 import Chip from "@material-ui/core/Chip";
 
-const url = 'http://localhost:5000/';
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
     signupContainer: {

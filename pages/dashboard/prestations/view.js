@@ -19,7 +19,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Chip from "@material-ui/core/Chip";
 
-const url = "http://localhost:5000/";
+const url = "https://myalfred.hausdivision.com/";
 const styles = {
     loginContainer: {
         alignItems: 'center',
