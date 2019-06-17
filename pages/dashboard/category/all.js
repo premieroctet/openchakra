@@ -12,6 +12,7 @@ import axios from "axios";
 import Link from "next/link";
 
 
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
     signupContainer: {
@@ -49,7 +50,7 @@ class all extends React.Component {
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("http://localhost:3122/myAlfred/api/admin/category/all")
+        axios.get(url+"myAlfred/api/admin/category/all")
             .then((response) => {
                 let category = response.data;
                 this.setState({category: category})

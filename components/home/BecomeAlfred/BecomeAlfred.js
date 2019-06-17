@@ -12,6 +12,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import Button from '@material-ui/core/Button';
 import Avatar from "@material-ui/core/Avatar";
 import axios from 'axios';
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
   container: {
@@ -180,7 +181,7 @@ class becomeAlfred extends React.Component{
   }
 
   componentDidMount() {
-    axios.get('myAlfred/api/users/home/alfred')
+    axios.get(url+'myAlfred/api/users/home/alfred')
         .then(response => {
           let alfred = response.data;
 

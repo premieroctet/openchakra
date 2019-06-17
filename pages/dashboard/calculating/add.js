@@ -10,6 +10,7 @@ import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
     signupContainer: {
@@ -58,7 +59,7 @@ class add extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .post('http://localhost:3122/myAlfred/api/admin/calculating/all', newBilling)
+            .post(url+'myAlfred/api/admin/calculating/all', newBilling)
             .then(res => {
                 alert('Méthode de calcul ajoutée');
                 Router.push({pathname:'/dashboard/calculating/all'})

@@ -12,7 +12,8 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
-
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -55,7 +56,7 @@ class view extends React.Component {
     componentDidMount() {
         const id = this.props.tags_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`http://localhost:3122/myAlfred/api/admin/tags/all/${id}`)
+        axios.get(`${url}myAlfred/api/admin/tags/all/${id}`)
             .then(response => {
                 let tags = response.data;
                 this.setState({tags: tags});
@@ -78,7 +79,7 @@ class view extends React.Component {
 
         const { label } = this.state.tags;
         const id = this.props.tags_id;
-        axios.put(`http://localhost:3122/myAlfred/api/admin/tags/all/${id}`,{label})
+        axios.put(`${url}myAlfred/api/admin/tags/all/${id}`,{label})
             .then(res => {
 
                 alert('Tag modifié avec succès');
@@ -93,7 +94,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.tags_id;
-        axios.delete(`http://localhost:3122/myAlfred/api/admin/tags/all/${id}`)
+        axios.delete(`${url}myAlfred/api/admin/tags/all/${id}`)
             .then(res => {
 
                 alert('Tag supprimé avec succès');

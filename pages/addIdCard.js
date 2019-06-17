@@ -11,7 +11,8 @@ import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 
 
-
+const { config } = require('../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -66,7 +67,7 @@ class addIdCard extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post("http://localhost:3122/myAlfred/api/users/profile/idCard",formData,config)
+        axios.post(url+"myAlfred/api/users/profile/idCard",formData,config)
             .then((response) => {
                 alert("Carte d'identité ajouté");
                 Router.push({pathname:'/profile'})

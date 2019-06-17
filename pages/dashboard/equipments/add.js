@@ -10,6 +10,7 @@ import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
     signupContainer: {
@@ -59,7 +60,7 @@ class add extends React.Component {
                 }
             };
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-            axios.post("http://localhost:3122/myAlfred/api/admin/equipment/all",formData,config)
+            axios.post(url+"myAlfred/api/admin/equipment/all",formData,config)
                 .then((response) => {
                     alert("Equipment ajouté");
                     Router.push({pathname:'/dashboard/equipments/all'})

@@ -10,7 +10,8 @@ import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 
-
+const { config } = require('../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -60,7 +61,7 @@ class validateAccount extends React.Component {
 
         const user = {id:this.state.userID};
         axios
-            .post('http://localhost:3122/myAlfred/api/users/validateAccount',user
+            .post(url+'myAlfred/api/users/validateAccount',user
             )
             .then(res => {
                 alert('Compte validé');

@@ -20,7 +20,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import axios from "axios";
 
-
+const { config } = require('../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -76,7 +77,7 @@ class addOtherAddress extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .put('http://localhost:3122/myAlfred/api/users/profile/serviceAddress', newAddress)
+            .put(url+'myAlfred/api/users/profile/serviceAddress', newAddress)
             .then(res => {
                 alert('Adresse ajouté !');
                 Router.push({pathname:'/profile'})

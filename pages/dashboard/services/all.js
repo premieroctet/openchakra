@@ -11,7 +11,8 @@ import Link from "next/link";
 import Chip from "@material-ui/core/Chip";
 
 
-
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -48,7 +49,7 @@ class all extends React.Component {
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("http://localhost:3122/myAlfred/api/admin/service/all")
+        axios.get(url+"myAlfred/api/admin/service/all")
             .then((response) => {
                 let service = response.data;
                 this.setState({service: service})

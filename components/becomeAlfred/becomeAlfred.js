@@ -19,6 +19,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../static/stylecalendar.css';
 import { throwStatement } from '@babel/types';
 
+const { config } = require('../../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
   cardContainer: {
     height: '120vh',
@@ -240,20 +242,20 @@ class BecomeAlfred extends React.Component {
   componentDidMount() {
     let self = this;
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-    axios.get('http://localhost:5000/myAlfred/api/users/current')
+    axios.get(url+'myAlfred/api/users/current')
       .then(response => {
         const user = response.data._id;
         this.setState({ user: user });
       })
 
-    axios.get('http://localhost:5000/myAlfred/api/category/all')
+    axios.get(url+'myAlfred/api/category/all')
       .then(response => {
         const categoriesBack = response.data;
         this.setState({ categoriesBack: categoriesBack });
         console.log(this.state);
       })
 
-    axios.get('http://localhost:5000/myAlfred/api/calendar/all')
+    axios.get(url+'myAlfred/api/calendar/all')
       .then(function (response) {
 
         let events = response.data;
@@ -305,7 +307,7 @@ class BecomeAlfred extends React.Component {
         ],
       });
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      axios.post('http://localhost:5000/myAlfred/api/calendar/add', {
+      axios.post(url+'myAlfred/api/calendar/add', {
         title: title,
         start: start,
         end: end
@@ -323,7 +325,7 @@ class BecomeAlfred extends React.Component {
     if (r) {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios
-        .delete(`http://localhost:5000/myAlfred/api/calendar/event/${id}`)
+        .delete(`${url}myAlfred/api/calendar/event/${id}`)
         .then(res =>
           console.log(res)
         )
@@ -344,8 +346,7 @@ class BecomeAlfred extends React.Component {
       });
     }
     await this.setState({ categorie: e.target.value });
-    console.log(this.state.categorie);
-    axios.get(`http://localhost:5000/myAlfred/api/service/all/${this.state.categorie}`)
+    axios.get(`${url}myAlfred/api/service/all/${this.state.categorie}`)
       .then(response => {
         const servicesBack = response.data
         this.setState({ servicesBack: servicesBack })
@@ -361,15 +362,14 @@ class BecomeAlfred extends React.Component {
       });
     }
     await this.setState({ service: e.target.value });
-    console.log(this.state.service);
-    axios.get(`http://localhost:5000/myAlfred/api/prestation/${this.state.service}`)
+    axios.get(`${url}myAlfred/api/prestation/${this.state.service}`)
       .then(response => {
         const prestationsFiltersBack = response.data
         this.setState({ prestationsFiltersBack: prestationsFiltersBack })
         console.log(this.state.prestationsFiltersBack);
       });
 
-    axios.get(`http://localhost:5000/myAlfred/api/service/${this.state.service}`)
+    axios.get(`${url}myAlfred/api/service/${this.state.service}`)
       .then(response => {
         const equipementsBack = response.data.equipments
         this.setState({ equipementsBack: equipementsBack })
@@ -384,12 +384,10 @@ class BecomeAlfred extends React.Component {
       });
     }
     await this.setState({ filter: e.target.value });
-    console.log(this.state.filter);
-    axios.get(`http://localhost:5000/myAlfred/api/prestation/${this.state.service}/${this.state.filter}`)
+    axios.get(`${url}myAlfred/api/prestation/${this.state.service}/${this.state.filter}`)
       .then(response => {
         const prestationsBack = response.data
         this.setState({ prestationsBack: prestationsBack })
-        console.log(this.state.prestationsBack);
       })
   }
 
@@ -404,7 +402,7 @@ class BecomeAlfred extends React.Component {
         price: price,
       }],
     })
-    console.log(prestations);
+
   }
 
   async handleEquipmentChange(e) {
@@ -416,22 +414,21 @@ class BecomeAlfred extends React.Component {
       // equipments: [...arr, item],
       equipment: item,
     })
-    console.log(equipment);
+
   }
 
   async handlePrestationSelectChange(e) {
     await this.setState({
       prestation: e.target.value,
     })
-    console.log(this.state.prestation);
+
   }
 
   async handlePrestationPriceChange(e) {
     await this.setState({
       price: e.target.value,
     })
-    console.log(this.state.price);
-    console.log(this.state);
+
   }
 
   handlePerimeter(e) {
@@ -460,21 +457,21 @@ class BecomeAlfred extends React.Component {
 
   handleForm() {
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-    axios.put(`http://localhost:5000/myAlfred/api/users/users/${this.state.user}`)
+    axios.put(`${url}myAlfred/api/users/users/${this.state.user}`)
       .then((response) => {
         console.log(response)
       })
       .catch(function (error) {
         console.log(error);
       })
-    axios.post(`http://localhost:5000/myAlfred/api/serviceUser/add`, {
+    axios.post(`${url}myAlfred/api/serviceUser/add`, {
       service: this.state.service,
       prestation: this.state.prestation,
       price: this.state.price,
       city: this.state.city,
       perimeter: this.state.perimeter,
       minimum_basket: this.state.minimum_basket,
-      deadline_before_booking: this.state.deadline_before_bookin,
+      deadline_before_booking: this.state.deadline_before_booking,
       equipment: this.state.equipment,
     })
       .then((response) => {
@@ -483,7 +480,7 @@ class BecomeAlfred extends React.Component {
           service: response.data._id,
         })
 
-        axios.post("http://localhost:5000/myAlfred/api/shop/add", {
+        axios.post(url+"myAlfred/api/shop/add", {
       service: this.state.service,
       description: this.state.serviceDescription,
       booking_request: true,
@@ -526,7 +523,7 @@ class BecomeAlfred extends React.Component {
         'content-type': 'multipart/form-data'
       }
     };
-    axios.post("http://localhost:5000/myAlfred/api/users/profile/picture", formData, config)
+    axios.post(url+"myAlfred/api/users/profile/picture", formData, config)
       .then((response) => {
         alert("Photo ajouté");
       }).catch((error) => {
@@ -536,7 +533,7 @@ class BecomeAlfred extends React.Component {
     const idCardForm = new FormData();
     idCardForm.append('myCardR', this.state.myCardR);
     idCardForm.append('myCardV', this.state.myCardV);
-    axios.post("http://localhost:5000/myAlfred/api/users/profile/idCard", idCardForm, config)
+    axios.post(url+"myAlfred/api/users/profile/idCard", idCardForm, config)
       .then((response) => {
         alert("id ajouté")
       }).catch((error) => {

@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import NearbyYouCard from './NearbyYou/NearbyYouCard';
 import axios from 'axios';
 
+const url = "https://myalfred.hausdivision.com/";
+
 const styles = theme => ({
   container: {
     paddingRight: 15,
@@ -65,7 +67,7 @@ class nearbyYou extends React.Component{
     if (token) {
       this.setState({logged:true});
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      axios.get('myAlfred/api/serviceUser/near')
+      axios.get(url+'myAlfred/api/serviceUser/near')
           .then(response => {
             let service = response.data;
 
@@ -73,7 +75,7 @@ class nearbyYou extends React.Component{
           })
     } else {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      axios.get('myAlfred/api/serviceUser/home')
+      axios.get(url+'myAlfred/api/serviceUser/home')
           .then(response => {
             let service = response.data;
 

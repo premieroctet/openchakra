@@ -13,6 +13,7 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = {
     loginContainer: {
@@ -57,7 +58,7 @@ class view extends React.Component {
     componentDidMount() {
         const id = this.props.category_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`http://localhost:3122/myAlfred/api/admin/category/all/${id}`)
+        axios.get(`${url}myAlfred/api/admin/category/all/${id}`)
             .then(response => {
                let category = response.data;
                 this.setState({category: category});
@@ -86,7 +87,7 @@ class view extends React.Component {
         };*/
         const { label, picture } = this.state.category;
         const id = this.props.category_id;
-        axios.put(`http://localhost:3122/myAlfred/api/admin/category/all/${id}`,{label,picture})
+        axios.put(`${url}myAlfred/api/admin/category/all/${id}`,{label,picture})
             .then(res => {
 
                 alert('Categorie modifié avec succès');
@@ -101,7 +102,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.category_id;
-        axios.delete(`http://localhost:3122/myAlfred/api/admin/category/all/${id}`)
+        axios.delete(`${url}myAlfred/api/admin/category/all/${id}`)
             .then(res => {
 
                 alert('Categorie supprimée avec succès');

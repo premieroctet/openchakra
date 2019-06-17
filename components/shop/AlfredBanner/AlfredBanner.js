@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import { Share, FavoriteBorderOutlined, PermContactCalendar } from '@material-ui/icons';
 import axios from 'axios';
+const url = "https://myalfred.hausdivision.com/";
 
 const style = theme => ({
   bannerContainer: {
@@ -72,7 +73,7 @@ class alfredBanner extends React.Component{
 
 
     const id = self.props.shop;
-    axios.get(`http://localhost:3122/myAlfred/api/shop/${id}`)
+    axios.get(`${url}myAlfred/api/shop/${id}`)
         .then(function (response) {
 
           let shop = response.data;
@@ -83,7 +84,7 @@ class alfredBanner extends React.Component{
             idAlfred: shop.alfred._id
           });
           let idAlfred = shop.alfred._id;
-          axios.put(`http://localhost:3122/myAlfred/api/users/alfredViews/${idAlfred}`)
+          axios.put(`${url}myAlfred/api/users/alfredViews/${idAlfred}`)
               .then(function (result) {
                 console.log('Views updated');
               })
@@ -103,7 +104,7 @@ class alfredBanner extends React.Component{
 
     const test = {alfred: this.state.idAlfred};
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-    axios.post(`http://localhost:3122/myAlfred/api/favoris/add`,test)
+    axios.post(`${url}myAlfred/api/favoris/add`,test)
         .then(response => {
           console.log('Favoris ajouté')
         })

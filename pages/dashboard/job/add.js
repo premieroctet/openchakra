@@ -10,7 +10,8 @@ import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 
-
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -58,7 +59,7 @@ class add extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .post('http://localhost:3122/myAlfred/api/admin/job/all', newBilling)
+            .post(url+'myAlfred/api/admin/job/all', newBilling)
             .then(res => {
                 alert('Métier ajouté');
                 Router.push({pathname:'/dashboard/job/all'})

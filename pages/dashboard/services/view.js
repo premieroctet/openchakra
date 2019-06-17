@@ -19,7 +19,8 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Chip from "@material-ui/core/Chip";
 
-
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -88,7 +89,7 @@ class view extends React.Component {
     componentDidMount() {
         const id = this.props.service_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`http://localhost:3122/myAlfred/api/admin/service/all/${id}`)
+        axios.get(`${url}myAlfred/api/admin/service/all/${id}`)
             .then(response => {
                 let service = response.data;
                 this.setState({service: service, current_tags: service.tags, current_equipments: service.equipments, current_category: service.category});
@@ -99,7 +100,7 @@ class view extends React.Component {
                 console.log(err)
             });
 
-        axios.get("myAlfred/api/admin/category/all")
+        axios.get(url+"myAlfred/api/admin/category/all")
             .then((response) => {
                 let category = response.data;
                 this.setState({all_category: category})
@@ -107,7 +108,7 @@ class view extends React.Component {
             console.log(error)
         });
 
-        axios.get("myAlfred/api/admin/tags/all")
+        axios.get(url+"myAlfred/api/admin/tags/all")
             .then((response) => {
                 let tags = response.data;
                 this.setState({all_tags: tags})
@@ -115,7 +116,7 @@ class view extends React.Component {
             console.log(error)
         });
 
-        axios.get("myAlfred/api/admin/equipment/all")
+        axios.get(url+"myAlfred/api/admin/equipment/all")
             .then((response) => {
                 let equipments = response.data;
                 this.setState({all_equipments: equipments})
@@ -153,7 +154,7 @@ class view extends React.Component {
         const equipments = this.state.equipments;
         const { label,description,picture } = this.state.service;
         const id = this.props.service_id;
-        axios.put(`http://localhost:3122/myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,picture,equipments})
+        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,picture,equipments})
             .then(res => {
 
                 alert('Service modifié avec succès');
@@ -168,7 +169,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.service_id;
-        axios.delete(`http://localhost:3122/myAlfred/api/admin/service/all/${id}`)
+        axios.delete(`${url}myAlfred/api/admin/service/all/${id}`)
             .then(res => {
 
                 alert('Service supprimé avec succès');

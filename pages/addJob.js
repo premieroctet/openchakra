@@ -10,7 +10,8 @@ import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 
-
+const { config } = require('../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -56,7 +57,7 @@ class addPhone extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .put('http://localhost:3122/myAlfred/api/users/profile/job', newJob)
+            .put(url+'myAlfred/api/users/profile/job', newJob)
             .then(res => {
                 alert('Métier ajouté');
                 Router.push({pathname:'/profile'})
