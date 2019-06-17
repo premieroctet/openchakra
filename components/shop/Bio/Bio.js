@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import axios from "axios";
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
   container: {
@@ -82,7 +83,7 @@ class bio extends React.Component {
 
 
     const id = self.props.shop;
-    axios.get(`http://localhost:3122/myAlfred/api/shop/${id}`)
+    axios.get(`${url}myAlfred/api/shop/${id}`)
         .then(function (response) {
 
           let shop = response.data;

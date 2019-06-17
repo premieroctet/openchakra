@@ -10,6 +10,7 @@ import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
     signupContainer: {
@@ -58,7 +59,7 @@ class add extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .post('http://localhost:5000/myAlfred/api/admin/category/all', newCategory)
+            .post(url+'myAlfred/api/admin/category/all', newCategory)
             .then(res => {
                 alert('Catégorie ajouté');
                 Router.push({pathname:'/dashboard/category/all'})

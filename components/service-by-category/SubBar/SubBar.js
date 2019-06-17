@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
   grow: {
@@ -29,7 +30,7 @@ class subBar extends React.Component {
     let self = this;
 
     const id = self.props.category;
-    axios.get(`http://localhost:5000/myAlfred/api/service/all/${id}`)
+    axios.get(`${url}myAlfred/api/service/all/${id}`)
         .then(function (response) {
 
           let service = response.data;

@@ -13,7 +13,8 @@ import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
-const url = "http://localhost:5000/";
+const { config } = require('../config/config');
+const url = config.apiUrl;
 const styles = {
   loginContainer: {
     alignItems: 'center',

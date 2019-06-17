@@ -10,8 +10,9 @@ import axios from "axios";
 import Link from "next/link";
 import Chip from "@material-ui/core/Chip";
 
-const url = "http://localhost:5000/";
 
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -62,14 +63,6 @@ class all extends React.Component {
         const { classes } = this.props;
         const {service} = this.state;
 
-
-                /*const tags = service.tags.map(f => (
-                    <Chip label={f.label} color="primary" />
-                ));
-
-                const equipments = service.equipments.map(g => (
-                    <Chip label={g.label} color="primary" />
-                ));*/
 
                 const row = service.map(e => (
                     <tr key={e._id}>

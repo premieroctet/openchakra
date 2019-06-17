@@ -13,6 +13,7 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
   container: {
@@ -89,7 +90,7 @@ class serenityNeed extends React.Component {
 
   componentDidMount() {
 
-    axios.get('myAlfred/api/service/random/home')
+    axios.get(url+'myAlfred/api/service/random/home')
         .then(response => {
           let service = response.data;
 

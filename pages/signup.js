@@ -24,7 +24,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import axios from "axios";
 
-const url = "http://localhost:5000/";
+const { config } = require('../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
   signupContainer: {
     alignItems: 'center',

@@ -86,7 +86,7 @@ router.post('/register',(req,res) =>{
                                             to: `${user.email}`, // list of receivers
                                             subject: "Valider votre compte", // Subject line
                                             text: `http://localhost:3000/validateAccount?user=${user._id}`, // plain text body
-                                            html: '<a href='+'http://localhost:3000/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
+                                            html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
                                         });
                                     })
                                     .catch(err => console.log(err));
@@ -331,63 +331,6 @@ router.post('/register/alfred', (req, res) => {
         })
 });
 
-// @Route POST /myAlfred/api/users/register/user
-// Register a user
-router.post('/register/user', (req, res) => {
-    const {errors, isValid} = validateRegisterInput(req.body);
-
-    if(!isValid) {
-        return res.status(400).json(errors);
-    }
-
-    User.findOne({email: req.body.email})
-        .then(user => {
-            if(user) {
-                errors.email = 'Email already exist';
-                return res.status(400).json({errors});
-            } else {
-                const userFields = {};
-                userFields.name = req.body.name;
-                userFields.gender = req.body.gender;
-                userFields.firstname = req.body.firstname;
-                userFields.email= req.body.email;
-                userFields.password = req.body.password;
-                userFields.birthday = req.body.birthday;
-                userFields.phone =  req.body.phone;
-
-
-                userFields.billing_address = {};
-                if(req.body.address) userFields.billing_address.address = req.body.address;
-                if(req.body.city) userFields.billing_address.city = req.body.city;
-                if(req.body.zip_code) userFields.billing_address.zip_code = req.body.zip_code;
-                if(req.body.country) userFields.billing_address.country = req.body.country;
-
-                userFields.service_address = {};
-                if(req.body.service_address) userFields.service_address.address = req.body.service_address;
-                if(req.body.service_city) userFields.service_address.city = req.body.service_city;
-                if(req.body.service_zip_code) userFields.service_address.zip_code = req.body.service_zip_code;
-                if(req.body.service_country) userFields.service_address.country = req.body.service_country;
-
-                userFields.picture = req.body.picture;
-                if(req.body.job) userFields.job = req.body.job;
-
-
-                const newUser = new User (userFields);
-                bcrypt.genSalt(10, (err, salt) => {
-                    bcrypt.hash(newUser.password, salt, (err, hash) => {
-                        if(err) throw err;
-                        newUser.password = hash;
-                        newUser.save()
-                            .then(user => res.json(user))
-                            .catch(err => console.log(err));
-                    })
-                })
-            }
-
-
-        })
-});
-
 // @Route POST /myAlfred/api/users/login
 // Login
 router.post('/login',(req, res)=> {
@@ -478,9 +421,9 @@ router.get('/users/:id',(req,res) => {
 });
 
 // @Route PUT /myAlfred/api/users/users/:id
-// Update one user
+// Update one user is_alfred's status
 router.put('/users/:id',(req,res) => {
-    User.findByIdAndUpdate(req.params.id,{name: req.body.name})
+    User.findByIdAndUpdate(req.params.id,{is_alfred: true})
         .then(user => {
             if(!user){
                 return res.status(400).json({msg: 'No user found'});
@@ -604,7 +547,7 @@ router.post('/forgotPassword',(req,res) => {
                     to: `${user.email}`, // list of receivers
                     subject: "Reset password", // Subject line
                     text: `http://localhost:3000/resetPassword?token=${token}`, // plain text body
-                    html: '<a href='+'http://localhost:3000/resetPassword?token='+token+'>Cliquez içi</a>' // html body
+                    html: '<a href='+'https://myalfred.hausdivision.com/resetPassword?token='+token+'>Cliquez içi</a>' // html body
                 });
             }
         })
@@ -634,6 +577,34 @@ router.post('/resetPassword',(req,res) => {
                res.json({msg: 'Invalid token'})
            }
        })
+});
+
+const storage2 = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, 'static/profile/idCard/')
+  },
+  filename: function (req, file, cb) {
+      cb(null, file.originalname  )
+  }
+});
+const upload2 = multer({ storage: storage2 });
+
+
+// @Route PUT /myAlfred/api/users/profile/idCard
+// Add an identity card
+// @Access private
+router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {name:'myCardV',maxCount:1}]),passport.authenticate('jwt',{session:false}),(req,res) => {
+  User.findById(req.user.id)
+      .then(user => {
+          user.id_card = {};
+          user.id_card.recto = req.files['myCardR'][0].path;
+          user.id_card.verso = req.files['myCardV'][0].path;
+
+          user.save().then(user => res.json(user)).catch(err => console.log(err));
+      })
+      .catch(err => {
+          console.log(err)
+      })
 });
 
 

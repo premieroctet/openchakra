@@ -10,6 +10,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import { FavoriteBorderOutlined, More } from '@material-ui/icons';
 
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
   container: {
@@ -122,7 +123,7 @@ class canDo extends React.Component{
 
     const id = self.props.shop;
 
-    axios.get(`http://localhost:3122/myAlfred/api/shop/${id}`)
+    axios.get(`${url}myAlfred/api/shop/${id}`)
         .then(function (response) {
 
           let shop = response.data;

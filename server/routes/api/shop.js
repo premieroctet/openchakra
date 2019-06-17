@@ -2,6 +2,17 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
+const multer = require ('multer');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, 'static/shop/')
+  },
+  filename: function (req, file, cb) {
+      cb(null, file.originalname  )
+  }
+});
+const upload = multer({ storage: storage });
 
 const Shop = require('../../models/Shop');
 const validateShopInput = require('../../validation/shop');
@@ -10,7 +21,7 @@ router.get('/test',(req, res) => res.json({msg: 'Shop Works!'}) );
 // @Route POST /myAlfred/api/shop/add
 // Create a shop
 // @Access private
-router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
+router.post('/add', upload.single('IDRecto'), upload.single('IDVerso'), passport.authenticate('jwt',{session: false}),(req,res) => {
     const {isValid, errors} = validateShopInput(req.body);
     if(!isValid) {
         return res.status(400).json(errors);

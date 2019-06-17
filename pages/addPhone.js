@@ -10,7 +10,8 @@ import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 
-
+const { config } = require('../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -56,7 +57,7 @@ class addPhone extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .put('http://localhost:5000/myAlfred/api/users/profile/phone', newPhone)
+            .put(url+'myAlfred/api/users/profile/phone', newPhone)
             .then(res => {
                 alert('Téléphone ajouté');
                 Router.push({pathname:'/profile'})

@@ -10,7 +10,8 @@ import axios from "axios";
 import Link from "next/link";
 
 
-
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -47,7 +48,7 @@ class all extends React.Component {
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("http://localhost:5000/myAlfred/api/admin/shopBanner/all")
+        axios.get(url+"myAlfred/api/admin/shopBanner/all")
             .then((response) => {
                 let shopBanner = response.data;
                 this.setState({shopBanner: shopBanner})

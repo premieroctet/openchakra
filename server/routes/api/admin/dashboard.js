@@ -378,6 +378,7 @@ router.post('/users/admin', passport.authenticate('jwt',{session: false}),(req, 
 
 });
 
+
 // @Route PUT /myAlfred/admin/users/admin/:id
 // Update an admin
 // @Access private

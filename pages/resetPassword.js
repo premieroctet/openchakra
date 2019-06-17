@@ -13,7 +13,8 @@ import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
-
+const { config } = require('../config/config');
+const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -72,7 +73,7 @@ class resetPassword extends React.Component {
 
         };
 
-        axios.post('http://localhost:5000/myAlfred/api/users/resetPassword',data)
+        axios.post(url+'myAlfred/api/users/resetPassword',data)
             .then(res => {
 
                 alert('Mot de passe modifié avec succès');

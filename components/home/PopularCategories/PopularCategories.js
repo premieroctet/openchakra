@@ -9,6 +9,7 @@ import Head from 'next/head';
 import axios from 'axios';
 import Link from 'next/link';
 
+const url = "https://myalfred.hausdivision.com/";
 const styles = theme => ({
 
   container: {
@@ -62,7 +63,7 @@ class popularCategories extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('myAlfred/api/category/all')
+    axios.get(url+'myAlfred/api/category/all')
         .then(response => {
           let category = response.data;
 

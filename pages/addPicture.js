@@ -11,7 +11,8 @@ import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 
 
-
+const { config } = require('../config/config');
+const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -60,7 +61,7 @@ class addPicture extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post("http://localhost:5000/myAlfred/api/users/profile/picture",formData,config)
+        axios.post(url+"myAlfred/api/users/profile/picture",formData,config)
             .then((response) => {
                 alert("Photo ajouté");
                 Router.push({pathname:'/profile'})
