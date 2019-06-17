@@ -180,8 +180,8 @@ class BecomeAlfred extends React.Component {
       equipementsBack: [],
 
       // Alfred's presentation
-      id_recto: '',
-      id_verso: '',
+      //id_recto: '',
+      //id_verso: '',
       picture: '',
       serviceDescription: '',
       phone: '',
@@ -470,7 +470,7 @@ class BecomeAlfred extends React.Component {
 
         axios.post("http://localhost:5000/myAlfred/api/shop/add", {
       service: this.state.service,
-      description: 'test',
+      description: this.state.serviceDescription,
       booking_request: true,
       my_alfred_conditions: true,
       profile_picture: true,
@@ -936,7 +936,7 @@ class BecomeAlfred extends React.Component {
                     <Grid item xs={8} className={classes.textinput}>
                       <label>
                         Coiffure
-              <textarea cols="90" name="serviceDescription" value={this.serviceDescription} rows="8" placeholder="Description" onChange={this.handleInputChange} />
+                        <textarea cols="90" name="serviceDescription" value={this.serviceDescription} rows="8" placeholder="Description" onChange={this.handleInputChange} />
                       </label>
                     </Grid>
                     <Grid item xs={2}></Grid>
@@ -957,7 +957,7 @@ class BecomeAlfred extends React.Component {
                     </Grid>
                     <Grid item xs={1}></Grid>
                     <Grid item xs={5}>
-                      <Grid container>
+                      {/*<Grid container>
                         <Grid item xs={12}>
                           <input accept="image/*" name="myCardR" className="input" ref={this.fileInput} style={{ display: 'none' }} id="icon-button-file" type="file" onChange={this.handleRecto} />
                           <label htmlFor="icon-button-file">
@@ -970,7 +970,7 @@ class BecomeAlfred extends React.Component {
                             <Typography className={classes.dlidentite2}>Téléchargez votre pièce d'identité(verso)</Typography>
                           </label>
                         </Grid>
-                      </Grid>
+                      </Grid>*/}
                     </Grid>
                     <Grid item xs={2}></Grid>
                   </Grid>
