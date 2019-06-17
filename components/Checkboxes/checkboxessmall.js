@@ -12,9 +12,9 @@ const styles = theme => ({
   },
 });
 
-class Checkboxes extends React.Component {
+class Checkboxessmall extends React.Component {
   state = {
-    checkedA: false,
+    checkedA: true,
   };
 
   handleChange = name => event => {
@@ -30,8 +30,8 @@ class Checkboxes extends React.Component {
         <FormControlLabel
           control={
             <Checkbox
-              icon={<CheckBoxOutlineBlankIcon fontSize="medium" />}
-              checkedIcon={<CheckBoxIcon fontSize="medium" />}
+              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+              checkedIcon={<CheckBoxIcon fontSize="small" />}
               value="checkedI"
               color="primary"
             />
@@ -43,4 +43,4 @@ class Checkboxes extends React.Component {
   }
 }
 
-export default withStyles(styles)(Checkboxes);
+export default withStyles(styles)(Checkboxessmall);

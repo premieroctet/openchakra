@@ -34,13 +34,16 @@
     "passport-jwt": "^4.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
+    "react-big-calendar": "^0.21.0",
     "react-dom": "^16.8.6",
     "react-horizontal-scrolling-menu": "^0.5.8",
     "react-jss": "^8.6.1",
     "react-location-picker": "^1.3.0",
     "react-responsive-carousel": "^3.1.49",
+    "react-multistep": "^3.6.6",
     "styled-components": "^4.2.0",
-    "validator": "^10.11.0"
+    "validator": "^10.11.0",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",

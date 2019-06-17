@@ -421,9 +421,9 @@ router.get('/users/:id',(req,res) => {
 });
 
 // @Route PUT /myAlfred/api/users/users/:id
-// Update one user
+// Update one user is_alfred's status
 router.put('/users/:id',(req,res) => {
-    User.findByIdAndUpdate(req.params.id,{name: req.body.name})
+    User.findByIdAndUpdate(req.params.id,{is_alfred: true})
         .then(user => {
             if(!user){
                 return res.status(400).json({msg: 'No user found'});
@@ -577,6 +577,34 @@ router.post('/resetPassword',(req,res) => {
                res.json({msg: 'Invalid token'})
            }
        })
+});
+
+const storage2 = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, 'static/profile/idCard/')
+  },
+  filename: function (req, file, cb) {
+      cb(null, file.originalname  )
+  }
+});
+const upload2 = multer({ storage: storage2 });
+
+
+// @Route PUT /myAlfred/api/users/profile/idCard
+// Add an identity card
+// @Access private
+router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {name:'myCardV',maxCount:1}]),passport.authenticate('jwt',{session:false}),(req,res) => {
+  User.findById(req.user.id)
+      .then(user => {
+          user.id_card = {};
+          user.id_card.recto = req.files['myCardR'][0].path;
+          user.id_card.verso = req.files['myCardV'][0].path;
+
+          user.save().then(user => res.json(user)).catch(err => console.log(err));
+      })
+      .catch(err => {
+          console.log(err)
+      })
 });
 
 

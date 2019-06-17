@@ -30,14 +30,9 @@ router.get('/:id', (req,res)=> {
 
     Category.findById(req.params.id)
         .then(category => {
-
-                res.json(category);
-
-
+          res.json(category);
         })
         .catch(err => res.status(404).json({ category: 'No category found' }));
-
-
 });
 
 
