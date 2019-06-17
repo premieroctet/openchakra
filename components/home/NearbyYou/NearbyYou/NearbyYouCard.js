@@ -127,7 +127,7 @@ const nearbyYouCard = (props) => {
         <Grid container className={classes.gridButton}>
           <Link style={{color:'white !important',textdecoration:'none' }} href="/shop?id=5ce2a167d7e1ce19430f4b20" as="/shop/5ce2a167d7e1ce19430f4b20">
           <Fab variant="extended" size="medium" color="primary" className={classes.bookButton}>
-            Réservez
+            Voir le shop
           </Fab>
           </Link>
         </Grid>

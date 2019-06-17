@@ -56,7 +56,7 @@ router.post('/billing/all', passport.authenticate('jwt',{session: false}),(req, 
                 }
             })
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 
@@ -65,19 +65,25 @@ router.post('/billing/all', passport.authenticate('jwt',{session: false}),(req, 
 // @Route GET /myAlfred/api/admin/billing/all
 // View all billings system
 // @Access private
-router.get('/billing/all',(req,res)=> {
+router.get('/billing/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        Billing.find()
+            .then(billings => {
+                if (!billings) {
+                    return res.status(400).json({msg: 'No billing found'});
+                }
+                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
+                res.setHeader('X-Total-Count', billings.length);
+                res.json(billings);
 
-    Billing.find()
-        .then(billings => {
-            if(!billings){
-                return res.status(400).json({msg: 'No billing found'});
-            }
-            res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-            res.setHeader('X-Total-Count',billings.length);
-            res.json(billings);
-
-        })
-        .catch(err => res.status(404).json({ billing: 'No billing found' }));
+            })
+            .catch(err => res.status(404).json({billing: 'No billing found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 
 
 });
@@ -85,17 +91,24 @@ router.get('/billing/all',(req,res)=> {
 // @Route GET /myAlfred/api/admin/billing/all/:id
 // View one billings system
 // @Access private
-router.get('/billing/all/:id',(req,res)=> {
+router.get('/billing/all/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
-    Billing.findById(req.params.id)
-        .then(billing => {
-            if(!billing){
-                return res.status(400).json({msg: 'No billing found'});
-            }
-            res.json(billing);
+    if(admin) {
+        Billing.findById(req.params.id)
+            .then(billing => {
+                if (!billing) {
+                    return res.status(400).json({msg: 'No billing found'});
+                }
+                res.json(billing);
 
-        })
-        .catch(err => res.status(404).json({ billing: 'No billing found' }));
+            })
+            .catch(err => res.status(404).json({billing: 'No billing found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 
 
 });
@@ -143,47 +156,69 @@ router.put('/billing/all/:id',passport.authenticate('jwt',{session: false}),(req
 
 // @Route GET /myAlfred/admin/users/all
 // List all users
-router.get('/users/all',(req,res) => {
+router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
-    User.find({is_admin: false})
-        .then(user => {
-            if(!user) {
-                res.status(400).json({msg: 'No users found'});
-            }
-            res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-            res.setHeader('X-Total-Count',user.length);
-            res.json(user);
-        })
-        .catch(err => res.status(404).json({ user: 'No users found' }))
+    if(admin) {
+        User.find({is_admin: false})
+            .then(user => {
+                if (!user) {
+                    res.status(400).json({msg: 'No users found'});
+                }
+                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
+                res.setHeader('X-Total-Count', user.length);
+                res.json(user);
+            })
+            .catch(err => res.status(404).json({user: 'No users found'}))
+    } else {
+        res.status(400).json({msg: 'Access denied'});
+    }
 });
 
 // @Route GET /myAlfred/admin/users/users
 // List all simple users
-router.get('/users/users',(req,res) => {
-    User.find({is_admin: false, is_alfred: false})
-        .then(user => {
-            if(!user) {
-                res.status(400).json({msg: 'No users found'});
-            }
-            res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-            res.setHeader('X-Total-Count',user.length);
-            res.json(user);
-        })
-        .catch(err => res.status(404).json({ users: 'No billing found' }))
+router.get('/users/users',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        User.find({is_admin: false, is_alfred: false})
+            .then(user => {
+                if(!user) {
+                    res.status(400).json({msg: 'No users found'});
+                }
+                res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
+                res.setHeader('X-Total-Count',user.length);
+                res.json(user);
+            })
+            .catch(err => res.status(404).json({ users: 'No billing found' }))
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
 });
 
 // @Route GET /myAlfred/admin/users/users/:id
 // Get one user
-router.get('/users/users/:id',(req,res) => {
-    User.findById(req.params.id)
-        .then(user => {
-            if(!user){
-                return res.status(400).json({msg: 'No user found'});
-            }
-            res.json(user);
+router.get('/users/users/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        User.findById(req.params.id)
+            .then(user => {
+                if (!user) {
+                    return res.status(400).json({msg: 'No user found'});
+                }
+                res.json(user);
 
-        })
-        .catch(err => res.status(404).json({ user: 'No user found' }));
+            })
+            .catch(err => res.status(404).json({user: 'No user found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 });
 
 // @Route PUT /myAlfred/api/admin/users/users/:id
@@ -213,45 +248,64 @@ router.delete('/users/users/:id',passport.authenticate('jwt',{session: false}),(
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
-    User.findById(req.params.id)
-        .then(user => {
-            if(!admin) {
-                return res.status(401).json({ notauthorized: 'User not authorized' });
 
 
-            }
-            user.remove().then(() => res.json({ success: true }));
-        })
-        .catch(err => res.status(404).json({ user: 'No user found' }));
+        User.findById(req.params.id)
+            .then(user => {
+                if (!admin) {
+                    return res.status(401).json({notauthorized: 'User not authorized'});
+
+
+                }
+                user.remove().then(() => res.json({success: true}));
+            })
+            .catch(err => res.status(404).json({user: 'No user found'}));
+
 });
 
 // @Route GET /myAlfred/api/admin/users/alfred
 // List all alfred
-router.get('/users/alfred',(req,res) => {
-    User.find({is_alfred: true})
-        .then(user => {
-            if(!user) {
-                res.status(400).json({msg: 'No alfred found'});
-            }
-            res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-            res.setHeader('X-Total-Count',user.length);
-            res.json(user);
-        })
-        .catch(err => res.status(404).json({ alfred: 'No alfred found' }))
+router.get('/users/alfred',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+        User.find({is_alfred: true})
+            .then(user => {
+                if (!user) {
+                    res.status(400).json({msg: 'No alfred found'});
+                }
+                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
+                res.setHeader('X-Total-Count', user.length);
+                res.json(user);
+            })
+            .catch(err => res.status(404).json({alfred: 'No alfred found'}))
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 });
 
 // @Route GET /myAlfred/admin/users/alfred/:id
 // Get one alfred
-router.get('/users/alfred/:id',(req,res) => {
-    User.findById(req.params.id)
-        .then(user => {
-            if(!user){
-                return res.status(400).json({msg: 'No user found'});
-            }
-            res.json(user);
+router.get('/users/alfred/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
-        })
-        .catch(err => res.status(404).json({ user: 'No user found' }));
+    if(admin) {
+        User.findById(req.params.id)
+            .then(user => {
+                if (!user) {
+                    return res.status(400).json({msg: 'No user found'});
+                }
+                res.json(user);
+
+            })
+            .catch(err => res.status(404).json({user: 'No user found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 });
 
 // @Route PUT /myAlfred/admin/users/alfred/:id
@@ -409,6 +463,8 @@ router.delete('/users/admin/:id',passport.authenticate('jwt',{session: false}),(
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
+
+
     User.findById(req.params.id)
         .then(user => {
             if(!admin) {

@@ -117,9 +117,7 @@ class serenityNeed extends React.Component {
                   {e.label}
                 </Typography>
                 <Typography component="p">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vel pellentesque quam.
-                  Sed lobortis justo id pharetra laoreet. Curabitur sollicitudin iaculis dolor,
-                  nec faucibus libero.
+                  {e.description}
                 </Typography>
               </CardContent>
             </CardActionArea>

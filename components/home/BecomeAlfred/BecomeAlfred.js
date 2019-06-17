@@ -196,7 +196,7 @@ class becomeAlfred extends React.Component{
     const cards = alfred.map(e => (
         <Card className={classes.card11} key={e._id}>
           <CardContent className={classes.card}>
-            <Avatar alt="John Doe" src="../../../static/johndoe.jpg" />
+            <Avatar alt="John Doe" src={`../../../static/profile/${e.picture}`} />
             <Typography className={classes.personName}>{e.name} {e.firstname}</Typography>
           </CardContent>
         </Card>

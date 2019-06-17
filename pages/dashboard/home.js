@@ -12,7 +12,7 @@ import axios from "axios";
 import Link from "next/link";
 
 
-
+const jwt = require('jsonwebtoken');
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -40,39 +40,55 @@ const styles = theme => ({
 class home extends React.Component {
     constructor(props) {
         super(props);
-
+        this.state = {
+            is_admin: ''
+        }
     }
 
+    componentDidMount() {
+        const token = localStorage.getItem('token').split(' ')[1];
+        const decode = jwt.decode(token);
+        this.setState({is_admin: decode.is_admin});
+    }
 
 
     render() {
         const { classes } = this.props;
-
+        const admin= this.state.is_admin;
+        const list =
+                    <Grid>
+                        <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
+                            <Typography style={{ fontSize: 30 }}>Liste table base de données</Typography>
+                        </Grid>
+                        <Link href="/dashboard/category/all"><a>Catégories</a></Link><br/>
+                        <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
+                        <Link href="/dashboard/calculating/all"><a>Méthodes de calcul</a></Link><br/>
+                        <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>
+                        <Link href="/dashboard/job/all"><a>Métiers</a></Link><br/>
+                        <Link href="/dashboard/searchFilter/all"><a>Filtres de recherche</a></Link><br/>
+                        <Link href="/dashboard/tags/all"><a>Tags</a></Link><br/>
+                        <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
+                        <Link href="/dashboard/shopBanner/all"><a>Photos bannière shop</a></Link><br/>
+                        <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
+                        <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
+                        <Link href="/dashboard/users/all"><a>Utilisateurs</a></Link><br/>
+                    </Grid>;
+        const refused = <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography style={{ fontSize: 30 }}>Accès refusé</Typography>
+        </Grid>;
 
         return (
             <Layout>
                 <Grid container className={classes.signupContainer}>
                     <Card className={classes.card}>
                         <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>Liste table base de données</Typography>
-                            </Grid>
-                            <Link href="/dashboard/category/all"><a>Catégories</a></Link><br/>
-                            <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
-                            <Link href="/dashboard/calculating/all"><a>Méthodes de calcul</a></Link><br/>
-                            <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>
-                            <Link href="/dashboard/job/all"><a>Métiers</a></Link><br/>
-                            <Link href="/dashboard/searchFilter/all"><a>Filtres de recherche</a></Link><br/>
-                            <Link href="/dashboard/tags/all"><a>Tags</a></Link><br/>
-                            <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
-                            <Link href="/dashboard/shopBanner/all"><a>Photos bannière shop</a></Link><br/>
-                            <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
-                            <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
-                            <Link href="/dashboard/users/all"><a>Utilisateurs</a></Link><br/>
+                            {admin ? list : refused}
+
                         </Grid>
                     </Card>
                 </Grid>
             </Layout>
+
         );
     };
 }

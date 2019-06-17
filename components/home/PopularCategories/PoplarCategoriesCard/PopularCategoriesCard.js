@@ -16,7 +16,7 @@ const styles = theme => ({
     paddingTop: '3rem',
     fontFamily: 'roboto',
     fontWeight: 'bold',
-    fontSize: '2rem',
+    fontSize: '1.3rem',
     color: 'white',
     letterSpacing: '.2rem',
   },
