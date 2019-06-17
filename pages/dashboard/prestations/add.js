@@ -169,7 +169,7 @@ class add extends React.Component {
 
         };
         axios
-            .post(url+'myAlfred/api/admin/service/all', newPrestation)
+            .post(url+'myAlfred/api/admin/prestation/all', newPrestation)
             .then(res => {
                 alert('Prestation ajoutée');
                 Router.push({pathname:'/dashboard/prestations/all'})

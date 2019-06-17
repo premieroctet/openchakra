@@ -10,7 +10,7 @@ import axios from "axios";
 import Link from "next/link";
 import Chip from "@material-ui/core/Chip";
 
-
+const url = "http://localhost:5000/";
 
 const styles = theme => ({
     signupContainer: {
@@ -48,7 +48,7 @@ class all extends React.Component {
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("http://localhost:5000/myAlfred/api/admin/service/all")
+        axios.get(url+"myAlfred/api/admin/service/all")
             .then((response) => {
                 let service = response.data;
                 this.setState({service: service})
