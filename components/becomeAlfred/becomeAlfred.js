@@ -576,7 +576,7 @@ class BecomeAlfred extends React.Component {
     ));
     return (
       <React.Fragment>
-        <form onSubmit={e => e.preventDefault()}>
+        <form onSubmit={e => e.preventDefault()} style={{marginTop: 64}}>
           <ExpansionPanel>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
