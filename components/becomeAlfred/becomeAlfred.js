@@ -160,6 +160,7 @@ class BecomeAlfred extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: '',
       categorie: '',
       service: '',
       filter: '',
@@ -238,6 +239,13 @@ class BecomeAlfred extends React.Component {
 
   componentDidMount() {
     let self = this;
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.get('http://localhost:5000/myAlfred/api/users/current')
+      .then(response => {
+        const user = response.data._id;
+        this.setState({ user: user });
+      })
+
     axios.get('http://localhost:5000/myAlfred/api/category/all')
       .then(response => {
         const categoriesBack = response.data;
@@ -452,6 +460,13 @@ class BecomeAlfred extends React.Component {
 
   handleForm() {
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.put(`http://localhost:5000/myAlfred/api/users/users/${this.state.user}`)
+      .then((response) => {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
     axios.post(`http://localhost:5000/myAlfred/api/serviceUser/add`, {
       service: this.state.service,
       prestation: this.state.prestation,
