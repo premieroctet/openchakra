@@ -323,7 +323,7 @@ router.put('/users/alfred/:id',passport.authenticate('jwt',{session: false}),(re
             })
             .catch(err => res.status(404).json({ usernotfound: 'No user found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -366,22 +366,29 @@ router.get('/users/admin',passport.authenticate('jwt',{session: false}),(req, re
             })
             .catch(err => res.status(404).json({ admin: 'No admin found' }))
     } else {
-        res.json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 });
 
 // @Route GET /myAlfred/admin/users/admin/:id
 // Get one admin
 router.get('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
-    User.findById(req.params.id)
-        .then(user => {
-            if(!user){
-                return res.status(400).json({msg: 'No user found'});
-            }
-            res.json(user);
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        User.findById(req.params.id)
+            .then(user => {
+                if (!user) {
+                    return res.status(400).json({msg: 'No user found'});
+                }
+                res.json(user);
 
-        })
-        .catch(err => res.status(404).json({ user: 'No user found' }));
+            })
+            .catch(err => res.status(404).json({user: 'No user found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 });
 
 // @Route POST /myAlfred/admin/users/admin
@@ -427,7 +434,7 @@ router.post('/users/admin', passport.authenticate('jwt',{session: false}),(req, 
 
             })
     } else {
-        res.json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -451,7 +458,7 @@ router.put('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req
             })
             .catch(err => res.status(404).json({ usernotfound: 'No user found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
