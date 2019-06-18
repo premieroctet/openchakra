@@ -135,7 +135,7 @@ router.get('/alfred/:id_alfred',(req,res)=> {
 
     Shop.findOne({alfred: req.params.id_alfred})
         .populate('alfred')
-        .populate({path:'services.label',populate:{path: 'service',select:'label'}})
+        .populate({path:'services.label',populate:{path: 'service',select:['label','picture']}})
         .then(shop => {
             if(Object.keys(shop).length === 0 && shop.constructor === Object){
                 return res.status(400).json({msg: 'No shop found'});

@@ -85,7 +85,7 @@ class popularCategories extends React.Component {
 
 
     const categories = category.map(e => (
-        <Link href={`/service?category=${e._id}`} as={`/service/${e._id}`}><a className={classes.link}><PopularCategoriesCard img={e.picture} categorie={e.label}
+        <Link href={`/service?category=${e._id}`}><a className={classes.link}><PopularCategoriesCard img={e.picture} categorie={e.label}
         /></a></Link>
     ));
 

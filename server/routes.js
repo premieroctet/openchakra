@@ -14,6 +14,6 @@ module.exports = routesImplementation*/
 
 module.exports = routes()
     .add({name: 'beta', pattern: '/service/:category', page: 'service'})
-    .add({name: 'beta2', pattern: '/shop/:id', page: 'shop'})
+    .add({name: 'beta2', pattern: '/shop/:id_alfred', page: 'shop'})
 
 // Usage inside Page.getInitialProps (req = { pathname, asPath, query } = { pathname: '/', asPath: '/about', query: { slug: 'about' } })

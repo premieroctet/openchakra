@@ -117,7 +117,7 @@ class bio extends React.Component {
               <Grid item xs={4} className={classes.avatarContainer}>
                 <Avatar alt="John Doe" src={`../../../../${alfred.picture}`} className={classes.avatar} />
                 <Typography className={classes.text}>{alfred.name} {alfred.firstname}</Typography>
-                <Typography>{alfred.billing_address.city}, {alfred.billing_address.country}</Typography>
+                <Typography>Rouen, France</Typography>
               </Grid>
               <Grid item xs={8} className={classes.biographyContainer}>
                 <Card className={classes.biography}>

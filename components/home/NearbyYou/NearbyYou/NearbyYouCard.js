@@ -125,7 +125,7 @@ const nearbyYouCard = (props) => {
       </CardActionArea>
       <CardActions>
         <Grid container className={classes.gridButton}>
-          <Link style={{color:'white !important',textdecoration:'none' }} href={`/shop?id=${shop}`} as={`/shop/${shop}`}>
+          <Link style={{color:'white !important',textdecoration:'none' }} href={`/shop?id_alfred=${shop}`}>
           <Fab variant="extended" size="medium" color="primary" className={classes.bookButton}>
             Voir le shop
           </Fab>

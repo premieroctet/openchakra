@@ -70,8 +70,8 @@ nextApp.prepare().then(() => {
 
     app.use(cors());
 
-    app.get('/shop/:id', (req, res) => {
-        return app.render(req, res, '/shop', { id: req.params.id })
+    app.get('/shop/:id_alfred', (req, res) => {
+        return app.render(req, res, '/shop', { id_alfred: req.params.id_alfred })
     });
 
     app.get('/service/:category', (req, res) => {

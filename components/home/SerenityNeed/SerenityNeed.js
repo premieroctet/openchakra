@@ -122,7 +122,7 @@ class serenityNeed extends React.Component {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Link href={`/prestation?service=${e._id}`} as={`/prestation/${e._id}`}>
+              <Link href={`/prestation?service=${e._id}`}>
               <Button size="small" color="primary">
                 Toutes les prestations
               </Button>
