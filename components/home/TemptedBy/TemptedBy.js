@@ -124,8 +124,8 @@ class TemptedBy extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const background = ["../../static/bleumarine.png","../../static/saumonorange.png","../../static/bleuclair.png"
-                        ,"../../static/violetclair.png"];
+    const background = ["../../static/bleumarine.PNG","../../static/saumonorange.PNG","../../static/bleuclair.PNG"
+                        ,"../../static/violetclair.PNG"];
 
 
     const {prestation} = this.state;
