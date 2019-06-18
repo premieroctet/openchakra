@@ -134,10 +134,11 @@ router.put('/profile/billingAddress',passport.authenticate('jwt',{session: false
 
             let address = req.body.address;
             let city = req.body.city;
+            let zip = req.body.zip_code;
 
             let newAddress = address.replace(/ /g, '+');
 
-            const url = newAddress + '%2C+' + city + '&format=geojson&limit=1';
+            const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
 
             axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
                 .then(response => {
@@ -180,10 +181,11 @@ router.put('/profile/serviceAddress',passport.authenticate('jwt',{session: false
 
             let address = req.body.address;
             let city = req.body.city;
+            let zip = req.body.zip_code;
 
             let newAddress = address.replace(/ /g, '+');
 
-            const url = newAddress + '%2C+' + city + '&format=geojson&limit=1';
+            const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
 
             axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
                 .then(response => {
