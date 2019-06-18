@@ -64,8 +64,11 @@ class add extends React.Component {
                 alert('Métier ajouté');
                 Router.push({pathname:'/dashboard/job/all'})
             })
-            .catch(err =>
-                console.log(err)
+            .catch(err => {
+                    console.log(err);
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+                }
             );
 
 

@@ -89,7 +89,7 @@ const styles = theme => ({
 
 const nearbyYouCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { classes, img, desc, title,alfred,avatar,score } = props;
+  const { classes, img, desc, title,alfred,avatar,score,shop } = props;
 
   return (
     <Card className={classes.card}>
@@ -125,7 +125,7 @@ const nearbyYouCard = (props) => {
       </CardActionArea>
       <CardActions>
         <Grid container className={classes.gridButton}>
-          <Link style={{color:'white !important',textdecoration:'none' }} href="/shop?id=5ce2a167d7e1ce19430f4b20" as="/shop/5ce2a167d7e1ce19430f4b20">
+          <Link style={{color:'white !important',textdecoration:'none' }} href={`/shop?id=${shop}`} as={`/shop/${shop}`}>
           <Fab variant="extended" size="medium" color="primary" className={classes.bookButton}>
             Voir le shop
           </Fab>

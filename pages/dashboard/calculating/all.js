@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 import Link from "next/link";
+import Router from "next/router";
 
 
 const url = "https://myalfred.hausdivision.com/";
@@ -53,7 +54,9 @@ class all extends React.Component {
                 let calculating = response.data;
                 this.setState({calculating: calculating})
             }).catch((error) => {
-            console.log(error)
+            console.log(error);
+            localStorage.removeItem('token');
+            Router.push({pathname: '/login'})
         });
     }
 

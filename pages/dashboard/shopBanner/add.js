@@ -64,8 +64,11 @@ class add extends React.Component {
                 alert('Bannière ajouté');
                 Router.push({pathname:'/dashboard/shopBanner/all'})
             })
-            .catch(err =>
-                console.log(err)
+            .catch(err => {
+                    console.log(err);
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             );
 
 

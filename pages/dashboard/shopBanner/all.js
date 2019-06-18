@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 import Link from "next/link";
+import Router from "next/router";
 
 
 const { config } = require('../../../config/config');
@@ -53,7 +54,9 @@ class all extends React.Component {
                 let shopBanner = response.data;
                 this.setState({shopBanner: shopBanner})
             }).catch((error) => {
-            console.log(error)
+            console.log(error);
+            localStorage.removeItem('token');
+            Router.push({pathname: '/login'})
         });
     }
 

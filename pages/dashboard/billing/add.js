@@ -61,17 +61,17 @@ class add extends React.Component {
         axios
             .post(url+'myAlfred/api/admin/billing/all', newBilling)
             .then(res => {
-                if(res.status === 403 || res.status === 401) {
-                    localStorage.removeItem('token');
-                    Router.push({pathname: '/login'})
-                } else {
-                    alert('Méthode de facturation ajouté');
-                    Router.push({pathname:'/dashboard/billing/all'})
-                }
+                alert('Méthode de facturation ajouté');
+                Router.push({pathname:'/dashboard/billing/all'})
+
 
             })
-            .catch(err =>
-                console.log(err)
+            .catch(err => {
+                    console.log(err);
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+            }
+
             );
 
 

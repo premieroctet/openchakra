@@ -9,6 +9,7 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 import Link from "next/link";
 import Chip from "@material-ui/core/Chip";
+import Router from "next/router";
 
 
 const { config } = require('../../../config/config');
@@ -54,7 +55,9 @@ class all extends React.Component {
                 let service = response.data;
                 this.setState({service: service})
             }).catch((error) => {
-            console.log(error)
+            console.log(error);
+            localStorage.removeItem('token');
+            Router.push({pathname: '/login'})
         });
     }
 

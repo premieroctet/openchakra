@@ -91,7 +91,8 @@ class add extends React.Component {
                 let category = response.data;
                 this.setState({all_category: category})
             }).catch((error) => {
-            console.log(error)
+            console.log(error);
+
         });
 
         axios.get(url+"myAlfred/api/admin/service/all")
@@ -174,8 +175,11 @@ class add extends React.Component {
                 alert('Prestation ajoutée');
                 Router.push({pathname:'/dashboard/prestations/all'})
             })
-            .catch(err =>
-                console.log(err)
+            .catch(err => {
+                    console.log(err);
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             );
 
 

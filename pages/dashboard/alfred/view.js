@@ -64,17 +64,15 @@ class view extends React.Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(`${url}myAlfred/api/admin/users/alfred/${id}`)
             .then(response => {
-                if(response.status === 403 || response.status === 401) {
-                    localStorage.removeItem('token');
-                    Router.push({pathname: '/login'})
-                } else {
+
                     let alfred = response.data;
                     this.setState({alfred: alfred, super_alfred_now: user.super_alfred, is_active_now: alfred.active});
-                }
+
 
             })
             .catch(err => {
-                console.log(err)
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
             })
 
     }
@@ -96,16 +94,13 @@ class view extends React.Component {
         const id = this.props.alfred_id;
         axios.put(`${url}myAlfred/api/admin/users/alfred/${id}`,{super_alfred,active,is_alfred})
             .then(res => {
-                if(res.status === 403 || res.status === 401) {
-                    localStorage.removeItem('token');
-                    Router.push({pathname: '/login'})
-                } else {
                     alert('Utilisateur modifié avec succès');
                     Router.push({pathname: '/dashboard/alfred/all'})
-                }
+
             })
             .catch(err => {
-                console.log(err);
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
             })
 
 
@@ -115,16 +110,15 @@ class view extends React.Component {
         const id = this.props.alfred_id;
         axios.delete(`${url}myAlfred/api/admin/users/alfred/${id}`)
             .then(res => {
-                if(res.status === 403 || res.status === 401) {
-                    localStorage.removeItem('token');
-                    Router.push({pathname: '/login'})
-                } else {
+
                     alert('Utilisateur supprimé avec succès');
                     Router.push({pathname: '/dashboard/alfred/all'})
-                }
+
             })
             .catch(err => {
                 console.log(err);
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
             })
 
 

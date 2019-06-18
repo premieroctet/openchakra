@@ -4,9 +4,8 @@ import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
-import Link from 'next/link';
 import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
+
 
 
 import Layout from '../../../hoc/Layout/Layout';
@@ -42,26 +41,27 @@ class view extends React.Component {
         super(props);
 
         this.state = {
-            category: {},
-            label: '',
-            picture: ''
+            admin: {},
+            active: ''
+
 
         };
 
         this.handleClick = this.handleClick.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     static getInitialProps ({ query: { id } }) {
-        return { category_id: id }
+        return { admin_id: id }
 
     }
     componentDidMount() {
-        const id = this.props.category_id;
+        const id = this.props.admin_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/category/all/${id}`)
+        axios.get(`${url}myAlfred/api/admin/users/admin/${id}`)
             .then(response => {
-               let category = response.data;
-                this.setState({category: category});
+                let admin = response.data;
+                this.setState({admin: admin});
 
             })
             .catch(err => {
@@ -73,22 +73,31 @@ class view extends React.Component {
     }
 
     onChange = e => {
-        //this.setState({ [e.target.name]: e.target.value });
-        const state = this.state.category;
+        const state = this.state.admin;
         state[e.target.name] = e.target.value;
-        this.setState({category:state});
+        this.setState({admin:state});
     };
+
+    handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+    }
 
     onSubmit = e => {
         e.preventDefault();
-
-        const { label, picture } = this.state.category;
-        const id = this.props.category_id;
-        axios.put(`${url}myAlfred/api/admin/category/all/${id}`,{label,picture})
+        const {active} = this.state;
+        const { name,firstname,email,phone } = this.state.admin;
+        const id = this.props.admin_id;
+        axios.put(`${url}myAlfred/api/admin/users/admin/${id}`,{name,firstname,email,phone,active})
             .then(res => {
 
-                alert('Categorie modifié avec succès');
-                Router.push({pathname:'/dashboard/category/all'})
+                alert('Admin modifié avec succès');
+                Router.push({pathname:'/dashboard/admin/all'})
             })
             .catch(err => {
                 console.log(err);
@@ -100,12 +109,12 @@ class view extends React.Component {
     };
 
     handleClick() {
-        const id = this.props.category_id;
-        axios.delete(`${url}myAlfred/api/admin/category/all/${id}`)
+        const id = this.props.admin_id;
+        axios.delete(`${url}myAlfred/api/admin/users/admin/${id}`)
             .then(res => {
 
-                alert('Categorie supprimée avec succès');
-                Router.push({pathname:'/dashboard/category/all'})
+                alert('Admin supprimée avec succès');
+                Router.push({pathname:'/dashboard/billing/all'})
             })
             .catch(err => {
                 console.log(err);
@@ -119,7 +128,7 @@ class view extends React.Component {
 
     render()  {
         const { classes } = this.props;
-        const {category} = this.state;
+        const {admin} = this.state;
 
 
         return (
@@ -128,7 +137,7 @@ class view extends React.Component {
                     <Card className={classes.card}>
                         <Grid>
                             <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>{category.label}</Typography>
+                                <Typography style={{ fontSize: 30 }}>{admin.label}</Typography>
                             </Grid>
                             <form onSubmit={this.onSubmit}>
                                 <Grid item>
@@ -137,8 +146,8 @@ class view extends React.Component {
                                         margin="normal"
                                         style={{ width: '100%' }}
                                         type="text"
-                                        name="label"
-                                        value={category.label}
+                                        name="name"
+                                        value={admin.name}
                                         onChange={this.onChange}
 
                                     />
@@ -149,11 +158,46 @@ class view extends React.Component {
                                         margin="normal"
                                         style={{ width: '100%' }}
                                         type="text"
-                                        name="picture"
-                                        value={category.picture}
+                                        name="firstname"
+                                        value={admin.firstname}
                                         onChange={this.onChange}
 
                                     />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="email"
+                                        name="email"
+                                        value={admin.email}
+                                        onChange={this.onChange}
+
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        name="phone"
+                                        value={admin.phone}
+                                        onChange={this.onChange}
+
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <label>
+                                        Actif ?:
+                                        <input
+                                            name="active"
+                                            type="checkbox"
+                                            checked={this.state.active}
+                                            onChange={this.handleInputChange} />
+                                    </label>
+
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>

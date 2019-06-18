@@ -63,7 +63,9 @@ class view extends React.Component {
 
             })
             .catch(err => {
-                console.log(err)
+                console.log(err);
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
             })
 
     }
@@ -87,6 +89,8 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
             })
 
 
@@ -102,6 +106,8 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
             })
 
 

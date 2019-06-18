@@ -138,8 +138,11 @@ class add extends React.Component {
                 alert('Service ajouté');
                 Router.push({pathname:'/dashboard/services/all'})
             })
-            .catch(err =>
-                console.log(err)
+            .catch(err => {
+                    console.log(err);
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             );
 
 

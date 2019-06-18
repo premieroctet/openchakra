@@ -42,10 +42,8 @@ class view extends React.Component {
         super(props);
 
         this.state = {
-            is_alfred: '',
             user: {},
             active: false,
-            is_alfred_now: null,
             is_active_now: null
 
         };
@@ -64,11 +62,13 @@ class view extends React.Component {
         axios.get(`${url}myAlfred/api/admin/users/users/${id}`)
             .then(response => {
                 let user = response.data;
-                this.setState({user: user, is_alfred_now: user.is_alfred, is_active_now: user.active});
+                this.setState({user: user, is_active_now: user.active});
 
             })
             .catch(err => {
-                console.log(err)
+                console.log(err);
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
             })
 
     }
@@ -120,7 +120,6 @@ class view extends React.Component {
     render()  {
         const { classes } = this.props;
         const {user} = this.state;
-        const {is_alfred_now} = this.state;
         const {is_active_now} = this.state;
 
 
@@ -134,17 +133,6 @@ class view extends React.Component {
                                 <Typography style={{ fontSize: 30 }}>{user.name} {user.firstname}</Typography>
                             </Grid>
                             <form onSubmit={this.onSubmit}>
-                                <Grid item>
-                                     <label>
-                                            Alfred ?:
-                                            <input
-                                                name="is_alfred"
-                                                type="checkbox"
-                                                checked={this.state.is_alfred}
-                                                onChange={this.handleInputChange} />
-                                        </label>
-
-                                </Grid>
                                 <Grid item>
                                     <label>
                                         Actif ?:

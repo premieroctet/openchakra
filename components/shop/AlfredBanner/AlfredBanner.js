@@ -72,8 +72,8 @@ class alfredBanner extends React.Component{
     let self = this;
 
 
-    const id = self.props.shop;
-    axios.get(`${url}myAlfred/api/shop/${id}`)
+    const id_alfred = self.props.shop;
+    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
         .then(function (response) {
 
           let shop = response.data;
@@ -138,7 +138,7 @@ class alfredBanner extends React.Component{
                   </Grid>
                 </Grid>
                 <Grid item className={classes.itemAvatar}>
-                  <Avatar alt="John Doe" src="../../../../static/John-Doe.jpg" className={classes.avatar} />
+                  <Avatar alt="John Doe" src={`../../../../${alfred.picture}`} className={classes.avatar} />
                   <Typography className={classes.textAvatar}>{alfred.name} {alfred.firstname}</Typography>
                 </Grid>
                 <Grid item className={classes.itemDispo}>

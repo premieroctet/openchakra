@@ -55,7 +55,9 @@ class all extends React.Component {
                 let category = response.data;
                 this.setState({category: category})
             }).catch((error) => {
-            console.log(error)
+            console.log(error);
+            localStorage.removeItem('token');
+            Router.push({pathname: '/login'})
         });
     }
 

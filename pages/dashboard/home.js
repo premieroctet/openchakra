@@ -72,6 +72,8 @@ class home extends React.Component {
                         <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                         <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
                         <Link href="/dashboard/users/all"><a>Utilisateurs</a></Link><br/>
+                        <Link href="/dashboard/alfred/all"><a>Alfred</a></Link><br/>
+                        <Link href="/dashboard/admin/all"><a>Administrateurs</a></Link><br/>
                     </Grid>;
         const refused = <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
             <Typography style={{ fontSize: 30 }}>Accès refusé</Typography>

@@ -9,6 +9,7 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 import Link from "next/link";
 import Chip from "@material-ui/core/Chip";
+import Router from "next/router";
 
 const url = "https://myalfred.hausdivision.com/";
 
@@ -53,7 +54,9 @@ class all extends React.Component {
                 let user = response.data;
                 this.setState({user: user})
             }).catch((error) => {
-            console.log(error)
+            console.log(error);
+            localStorage.removeItem('token');
+            Router.push({pathname: '/login'})
         });
     }
 

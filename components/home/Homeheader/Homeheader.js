@@ -13,7 +13,7 @@ import { Typography } from '@material-ui/core';
    
 const styles = theme => ({
   headerhomeimg: {
-  backgroundImage: 'url(../../static/bailey-zindel-396399-unsplash.jpg)',
+  backgroundImage: 'url(../../static/bailey-zindel-396399-unsplash-min.jpg)',
   backgroundRepeat: "no-repeat",
 	backgroundPosition: "center center",
 	backgroundSize: "cover",
@@ -39,7 +39,6 @@ const styles = theme => ({
   left: '15%',
   transform: 'translate(-50%, -50%)',
   zIndex: '3',
-  width: '80%',
   padding: '20px',
   textAlign: 'center',
   backgroundColor: 'whitesmoke',
@@ -56,7 +55,6 @@ const styles = theme => ({
     left: '75%',
     transform: 'translate(-50%, -50%)',
     zIndex: '3',
-    width: '80%',
     padding: '20px',
     textAlign: 'center',
     width: '25%',

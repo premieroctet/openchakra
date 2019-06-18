@@ -50,16 +50,13 @@ class all extends React.Component {
 
         axios.get(url+"myAlfred/api/admin/users/alfred")
             .then((response) => {
-                if(response.status === 403 || response.status === 401) {
-                    localStorage.removeItem('token');
-                    Router.push({pathname: '/login'})
+                let alfred = response.data;
+                this.setState({alfred: alfred})
 
-                } else {
-                    let alfred = response.data;
-                    this.setState({alfred: alfred})
-                }
             }).catch((error) => {
-            console.log(error)
+            console.log(error);
+            localStorage.removeItem('token');
+            Router.push({pathname: '/login'})
         });
     }
 

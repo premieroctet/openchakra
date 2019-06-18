@@ -65,6 +65,8 @@ class add extends React.Component {
                     alert("Equipment ajouté");
                     Router.push({pathname:'/dashboard/equipments/all'})
                 }).catch((error) => {
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
             });
         }
         onChange(e) {

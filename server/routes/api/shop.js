@@ -129,6 +129,25 @@ router.get('/:id',(req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/shop/alfred/:alfred_id
+// Get a shop with alfred id
+router.get('/alfred/:id_alfred',(req,res)=> {
+
+    Shop.findOne({alfred: req.params.id_alfred})
+        .populate('alfred')
+        .populate({path:'services.label',populate:{path: 'service',select:'label'}})
+        .then(shop => {
+            if(Object.keys(shop).length === 0 && shop.constructor === Object){
+                return res.status(400).json({msg: 'No shop found'});
+            }
+            res.json(shop);
+
+        })
+        .catch(err => res.status(404).json({ shop: 'No shop found' }));
+
+
+});
+
 // @Route DELETE /myAlfred/api/shop/:id
 // Delete one shop
 // @Access private
