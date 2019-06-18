@@ -94,13 +94,13 @@ class review extends React.Component {
   componentDidMount() {
     let self = this;
 
-    const id = self.props.shop;
-    axios.get(`${url}myAlfred/api/shop/${id}`)
+    const id_alfred = self.props.shop;
+    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
         .then(function (result) {
           let shop = result.data;
           let idAlfred = shop.alfred._id;
 
-          axios.get(`${url}myAlfred/api/reviews/alfred/5cc05ea97283fc59b4f498ff`)
+          axios.get(`${url}myAlfred/api/reviews/alfred/${idAlfred}`)
               .then(function (response) {
 
                 let reviews = response.data;
@@ -136,7 +136,7 @@ class review extends React.Component {
           <Grid container className={classes.reviewContainer}>
             <Grid container className={classes.avatarPartContainer}>
               <Grid item className={classes.avatarContainer}>
-                <Avatar alt="John Doe" src="../../../../static/John-Doe.jpg" className={classes.avatar} />
+                <Avatar alt={e.user.name} src={e.user.picture} className={classes.avatar} />
               </Grid>
               <Grid item style={{ alignSelf: 'flex-end' }}>
                 <Grid container className={classes.nameAndStarContainer}>

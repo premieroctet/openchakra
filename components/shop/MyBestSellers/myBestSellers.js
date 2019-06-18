@@ -139,16 +139,16 @@ class myBestSellers extends React.Component{
 
 
 
-    const id = self.props.shop;
+    const id_alfred = self.props.shop;
 
-    axios.get(`${url}myAlfred/api/shop/${id}`)
+    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
         .then(function (response) {
 
           let shop = response.data;
           let idAlfred = shop.alfred._id;
 
 
-          axios.get(`${url}myAlfred/api/booking/last/5cc05ea97283fc59b4f498ff`)
+          axios.get(`${url}myAlfred/api/booking/last/${idAlfred}`)
               .then(function (result) {
                 let booking = result.data;
 
@@ -172,7 +172,7 @@ class myBestSellers extends React.Component{
     const {booking} = this.state;
     const card =booking.map(e =>(<Grid item xs={12} sm={6} md={4}> <Card className={classes.card} key={e._id}>
       <CardActionArea>
-        <CardMedia className={classes.media} image={"../../../static/photo-1538342014732-212dc8f76863.jpeg"} title="Coiffure">
+        <CardMedia className={classes.media} image={e.prestation.service.picture} title="Coiffure">
           <div className={classes.darkOverlay}>
             <Grid container className={classes.avatarContainer}>
               <Grid container className={classes.gridContainer}>

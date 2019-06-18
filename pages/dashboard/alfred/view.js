@@ -66,7 +66,7 @@ class view extends React.Component {
             .then(response => {
 
                     let alfred = response.data;
-                    this.setState({alfred: alfred, super_alfred_now: user.super_alfred, is_active_now: alfred.active});
+                    this.setState({alfred: alfred, super_alfred_now: alfred.super_alfred, is_active_now: alfred.active});
 
 
             })
