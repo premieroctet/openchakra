@@ -195,6 +195,13 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid> : ''
                             }
+                            <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                                <Link href={"/editPassword"}>
+                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                        Modifier mon mot de passe
+                                    </Button>
+                                </Link>
+                            </Grid>
                         </Grid>
                     </Card>
                 </Grid>

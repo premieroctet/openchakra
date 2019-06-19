@@ -29,6 +29,8 @@ class profile extends React.Component {
     }
 
     componentDidMount() {
+
+        localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
             .get(url+'myAlfred/api/users/current')

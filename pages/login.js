@@ -64,7 +64,8 @@ class login extends React.Component {
           const {token} = res.data;
           localStorage.setItem('token',token);
           setAuthToken(token);
-          Router.push({pathname:'/'})
+          let path = localStorage.getItem('path');
+          Router.push({pathname:path})
         })
         .catch(err => {
           console.log(err);

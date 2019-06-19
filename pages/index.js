@@ -8,17 +8,9 @@ import TemptedBy from '../components/home/TemptedBy/TemptedBy';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import Homeheader from '../components/home/Homeheader/Homeheader';
 import setAuthToken from '../utils/setAuthToken';
+import Router from "next/router";
 
 
-/*<Layout>
-    <Grid container className={classes.loginContainer}>
-        <div>
-            {test ? ok : pasok}
-        </div>
-
-        <Link href="/shop?id=5ce2a167d7e1ce19430f4b20" as="/shop/5ce2a167d7e1ce19430f4b20"><a>here</a></Link>
-    </Grid>
-</Layout>*/
 class Home extends React.Component {
     constructor(props) {
         super(props);
@@ -28,6 +20,7 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         const token = localStorage.getItem('token');
         if (token) {
             this.setState({'logged':true})

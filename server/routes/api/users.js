@@ -604,5 +604,39 @@ router.put('/profile/editProfile',passport.authenticate('jwt',{session:false}),(
         .catch(err => console.log(err))
 });
 
+// @Route PUT /myAlfred/api/users/profile/editPassword
+// Edit password
+// @Access private
+router.put('/profile/editPassword',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+
+    if(newPassword.length < 8) {
+        return res.status(400).json({error: '8 characters minimum'})
+    } else {
+        User.findById(req.user.id)
+            .then(user => {
+                bcrypt.compare(password, user.password)
+                    .then(isMatch => {
+                        if (isMatch) {
+                            bcrypt.genSalt(10, (err, salt) => {
+                                bcrypt.hash(newPassword, salt, (err, hash) => {
+                                    if (err) throw err;
+                                    user.password = hash;
+                                    user.save()
+                                        .then(user => res.json({success: 'Password update'}))
+                                        .catch(err => console.log(err));
+                                })
+                            })
+
+
+                        } else {
+                            return res.status(400).json({error: 'Incorrect password'});
+                        }
+                    });
+            })
+    }
+});
+
 
 module.exports = router;
