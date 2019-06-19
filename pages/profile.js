@@ -23,7 +23,8 @@ class profile extends React.Component {
             otherAddress: false,
             currentOtherAddress: {},
             picture: false,
-            currentPicture: ''
+            currentPicture: '',
+            is_alfred: false
 
         };
     }
@@ -65,6 +66,10 @@ class profile extends React.Component {
                     this.setState({otherAddress: true, currentOtherAddress: user.service_address})
                 }
 
+                if(user.is_alfred) {
+                    this.setState({is_alfred: true})
+                }
+
 
 
 
@@ -82,6 +87,7 @@ class profile extends React.Component {
     render() {
 
         const {user} = this.state;
+        const alfred = this.state.is_alfred;
         const address = this.state.address;
         const otherAddress = this.state.otherAddress;
         const phone = this.state.phone;
@@ -136,6 +142,11 @@ class profile extends React.Component {
                                 Editer mon profil
                             </Button>
                         </Link>
+                        {alfred ? <Link href={"/dashboardAlfred"}>
+                            <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                Dashboard Alfred
+                            </Button>
+                        </Link> : ''}
                     </Grid>
                 </Layout>
             </Fragment>

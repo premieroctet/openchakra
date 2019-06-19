@@ -425,7 +425,7 @@ router.get('/users/:id',(req,res) => {
 // @Route PUT /myAlfred/api/users/users/:id
 // Update one user is_alfred's status
 router.put('/users/:id',(req,res) => {
-    User.findByIdAndUpdate(req.params.id,{is_alfred: true})
+    User.findByIdAndUpdate(req.params.id,{is_alfred: true},{new: true})
         .then(user => {
             if(!user){
                 return res.status(400).json({msg: 'No user found'});
