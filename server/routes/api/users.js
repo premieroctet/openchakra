@@ -425,7 +425,7 @@ router.get('/users/:id',(req,res) => {
 // @Route PUT /myAlfred/api/users/users/:id
 // Update one user is_alfred's status
 router.put('/users/:id',(req,res) => {
-    User.findByIdAndUpdate(req.params.id,{is_alfred: true})
+    User.findByIdAndUpdate(req.params.id,{is_alfred: true},{new: true})
         .then(user => {
             if(!user){
                 return res.status(400).json({msg: 'No user found'});
@@ -579,6 +579,63 @@ router.post('/resetPassword',(req,res) => {
                res.json({msg: 'Invalid token'})
            }
        })
+});
+
+// @Route PUT /myAlfred/api/users/profile/editProfile
+// Edit email, job and phone
+// @Access private
+router.put('/profile/editProfile',passport.authenticate('jwt',{session:false}),(req,res) => {
+
+
+    User.findOne({email: req.body.email})
+        .then(user => {
+            if(user && req.body.email != req.user.email) {
+                return res.status(400).json({error: "This email already exist"})
+            } else {
+                User.findByIdAndUpdate(req.user.id, {
+                    email: req.body.email, phone: req.body.phone, job: req.body.job
+                }, {new: true})
+                    .then(user => {
+                        res.json({success: "Profile updated !"})
+                    })
+                    .catch(err => console.log(err))
+            }
+        })
+        .catch(err => console.log(err))
+});
+
+// @Route PUT /myAlfred/api/users/profile/editPassword
+// Edit password
+// @Access private
+router.put('/profile/editPassword',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+
+    if(newPassword.length < 8) {
+        return res.status(400).json({error: '8 characters minimum'})
+    } else {
+        User.findById(req.user.id)
+            .then(user => {
+                bcrypt.compare(password, user.password)
+                    .then(isMatch => {
+                        if (isMatch) {
+                            bcrypt.genSalt(10, (err, salt) => {
+                                bcrypt.hash(newPassword, salt, (err, hash) => {
+                                    if (err) throw err;
+                                    user.password = hash;
+                                    user.save()
+                                        .then(user => res.json({success: 'Password update'}))
+                                        .catch(err => console.log(err));
+                                })
+                            })
+
+
+                        } else {
+                            return res.status(400).json({error: 'Incorrect password'});
+                        }
+                    });
+            })
+    }
 });
 
 

@@ -13,7 +13,7 @@ import { Typography } from '@material-ui/core';
    
 const styles = theme => ({
   headerhomeimg: {
-  backgroundImage: 'url(../../static/bailey-zindel-396399-unsplash-min.jpg)',
+  backgroundImage: 'url(../../static/banner-home.jpeg)',
   backgroundRepeat: "no-repeat",
 	backgroundPosition: "center center",
 	backgroundSize: "cover",
@@ -46,13 +46,13 @@ const styles = theme => ({
 
     [theme.breakpoints.down('xs')]: { // extra-large: 1920px or larger
       width: '94%',
-      left: '50%',
-      top: '65%',
+      left: '45%',
+      top: '55%',
     },
     [theme.breakpoints.up('sm')]: { // extra-large: 1920px or larger
       width: '75%',
-      left: '50%',
-      top: '65%',
+      left: '45%',
+      top: '55%',
     },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: '45%',

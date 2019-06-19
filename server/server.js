@@ -70,17 +70,6 @@ nextApp.prepare().then(() => {
 
     app.use(cors());
 
-    app.get('/shop/:id_alfred', (req, res) => {
-        return app.render(req, res, '/shop', { id_alfred: req.params.id_alfred })
-    });
-
-    app.get('/service/:category', (req, res) => {
-        return app.render(req, res, '/service', { category: req.params.category })
-    });
-
-    app.get('/prestation/:service', (req, res) => {
-        return app.render(req, res, '/prestation', { service: req.params.service })
-    });
 
     app.use('/myAlfred/api/users',users);
     app.use('/myAlfred/api/category',category);
