@@ -47,12 +47,12 @@ const styles = theme => ({
     [theme.breakpoints.down('xs')]: { // extra-large: 1920px or larger
       width: '94%',
       left: '45%',
-      top: '55%',
+      top: '75%',
     },
     [theme.breakpoints.up('sm')]: { // extra-large: 1920px or larger
       width: '75%',
       left: '45%',
-      top: '55%',
+      top: '60%',
     },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: '45%',

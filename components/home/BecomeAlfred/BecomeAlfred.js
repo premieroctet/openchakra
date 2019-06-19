@@ -12,6 +12,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import Button from '@material-ui/core/Button';
 import Avatar from "@material-ui/core/Avatar";
 import axios from 'axios';
+import '../../../static/stylefixresponsive.css';
 const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
