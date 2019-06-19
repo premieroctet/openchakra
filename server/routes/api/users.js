@@ -581,5 +581,28 @@ router.post('/resetPassword',(req,res) => {
        })
 });
 
+// @Route PUT /myAlfred/api/users/profile/editProfile
+// Edit email, job and phone
+// @Access private
+router.put('/profile/editProfile',passport.authenticate('jwt',{session:false}),(req,res) => {
+
+
+    User.findOne({email: req.body.email})
+        .then(user => {
+            if(user && req.body.email != req.user.email) {
+                return res.status(400).json({error: "This email already exist"})
+            } else {
+                User.findByIdAndUpdate(req.user.id, {
+                    email: req.body.email, phone: req.body.phone, job: req.body.job
+                }, {new: true})
+                    .then(user => {
+                        res.json({success: "Profile updated !"})
+                    })
+                    .catch(err => console.log(err))
+            }
+        })
+        .catch(err => console.log(err))
+});
+
 
 module.exports = router;

@@ -214,8 +214,8 @@ class signup extends React.Component {
                       <Grid item>
                         <TextField
                             id="standard-with-placeholder"
-                            label="Mot de passe"
-                            placeholder="Mot de passe"
+                            label="Mot de passe (8 charactères min)"
+                            placeholder="Mot de passe (8 charactères min)"
                             margin="normal"
                             style={{ width: '100%' }}
                             type="password"
