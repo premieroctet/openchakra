@@ -62,11 +62,18 @@ class editShop extends React.Component {
                         {is_alfred ?
 
 
-                                    <a href={"/dashboardAlfred/editPictureBanner"}>
+                                    <Fragment><a href={"/dashboardAlfred/editPictureBanner"}>
 
                                         Modifier ma photo de bannière
 
                                     </a>
+                                        <br/>
+                                        <br/>
+                            <a href={"/dashboardAlfred/editWelcomeMessage"}>
+
+                                Modifier mon message d'accueil
+
+                            </a></Fragment>
 
 
                             : unauthorized}
