@@ -122,6 +122,7 @@ class NavBar extends Component {
 
     logout2() {
         localStorage.removeItem('token');
+        localStorage.removeItem('path');
         // Remove auth header for future requests
         setAuthToken(false);
         window.location.reload();

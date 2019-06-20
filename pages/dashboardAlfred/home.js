@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
-import Layout from '../hoc/Layout/Layout';
+import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
 import Button from "@material-ui/core/Button";
@@ -9,9 +9,9 @@ import Router from "next/router";
 
 moment.locale('fr');
 
-const { config } = require('../config/config');
+const { config } = require('../../config/config');
 const url = config.apiUrl;
-class dashboardAlfred extends React.Component {
+class home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -78,4 +78,4 @@ class dashboardAlfred extends React.Component {
     };
 }
 
-export default dashboardAlfred;
+export default home;
