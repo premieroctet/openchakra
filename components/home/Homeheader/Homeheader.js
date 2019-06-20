@@ -13,13 +13,16 @@ import { Typography } from '@material-ui/core';
    
 const styles = theme => ({
   headerhomeimg: {
+    marginTop: 64,
   backgroundImage: 'url(../../static/banner-home.jpeg)',
   backgroundRepeat: "no-repeat",
 	backgroundPosition: "center center",
 	backgroundSize: "cover",
-	backgroundAttachment: "fixed",
     width: '100%',
     height: 650,
+    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+      backgroundAttachment: "fixed",
+    },
   },
   headeroverlay: {
     marginTop: 64,

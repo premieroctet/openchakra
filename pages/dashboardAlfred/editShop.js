@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
-import Layout from '../hoc/Layout/Layout';
+import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
 import Button from "@material-ui/core/Button";
@@ -9,7 +9,7 @@ import Router from "next/router";
 
 moment.locale('fr');
 
-const { config } = require('../config/config');
+const { config } = require('../../config/config');
 const url = config.apiUrl;
 class dashboardAlfred extends React.Component {
     constructor(props) {
@@ -60,18 +60,16 @@ class dashboardAlfred extends React.Component {
                 <Layout>
                     <div style={{width: 1000, margin: '0 auto',marginTop: 64}}>
                         {is_alfred ?
-                            <Fragment><p>Nombre de vues du shop : {user.number_of_views}</p><br/>
-                            <p>Nombre d'avis : {user.number_of_reviews}</p><br/>
-                            <p>Note globale : {user.score}</p><br/>
-                                {user.super_alfred ? <p>Vous êtes un super Alfred</p> : <p>Vous n'êtes pas un super Alfred</p>}
-                                <Link href={"/dashboardAlfred/editShop"}>
+                            <Fragment>
+                                <Link href={"/dashboardAlfred/editShopBanner"}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                                        Modifier mon shop
+                                        Modifier ma photo de bannière
                                     </Button>
                                 </Link>
                             </Fragment>
                             : unauthorized}
                     </div>
+
                 </Layout>
             </Fragment>
         );

@@ -197,5 +197,18 @@ router.put('/:id',passport.authenticate('jwt',{session:false}), (req,res) => {
 
 });
 
+// @Route PUT /myAlfred/api/shop/editBanner
+// Edit picture banner for a shop
+// @Access private
+router.put('/editBanner',passport.authenticate('jwt',{session:false}),(req,res) => {
+    Shop.findOneAndUpdate({alfred: req.user.id},{picture: req.body.picture}, {new: true})
+        .then(shop => {
+            res.json(shop)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
 
 module.exports = router;

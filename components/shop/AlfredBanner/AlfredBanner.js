@@ -10,7 +10,7 @@ const url = "https://myalfred.hausdivision.com/";
 const style = theme => ({
   bannerContainer: {
     height: '55vh',
-    backgroundImage: 'url("../../../static/photo-1538342014732-212dc8f76863-min.jpeg")',
+    //backgroundImage: 'url("../../../static/photo-1538342014732-212dc8f76863-min.jpeg")',
     marginTop: 64,
   },
   darkOverlay: {
@@ -61,7 +61,9 @@ class alfredBanner extends React.Component{
     super(props);
     this.state ={
       alfred: [],
-      idAlfred:''
+      idAlfred:'',
+      shop: {},
+      have_picture: false
     };
     this.addFavoris = this.addFavoris.bind(this);
 
@@ -78,10 +80,14 @@ class alfredBanner extends React.Component{
 
           let shop = response.data;
 
+          if(typeof shop.picture != "undefined") {
+            self.setState({have_picture: true})
+          }
 
           self.setState({
             alfred: shop.alfred,
-            idAlfred: shop.alfred._id
+            idAlfred: shop.alfred._id,
+            shop:shop
           });
           let idAlfred = shop.alfred._id;
           axios.put(`${url}myAlfred/api/users/alfredViews/${idAlfred}`)
@@ -115,42 +121,48 @@ class alfredBanner extends React.Component{
    render() {
     const { classes } = this.props;
     const {alfred} = this.state;
+    const {shop} = this.state;
+    const {have_picture} = this.state;
 
 
 
     return (
         <Fragment>
-          <Grid container className={classes.bannerContainer}>
-            <Grid container className={classes.darkOverlay}>
-              <Grid container className={classes.container}>
-                <Grid item className={classes.itemShare}>
-                  <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
-                    <Share style={{ color: 'white' }} />
-                    <Typography variant="body1" style={{ color: 'white', fontSize: 20 }}>
-                      Share
-                    </Typography>
-                  </Grid>
-                  <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
-                    <FavoriteBorderOutlined style={{ color: 'white' }} onClick={this.addFavoris} />
-                    <Typography variant="body1" style={{ color: 'white', fontSize: 20 }}>
-                      Add to wishlist
-                    </Typography>
-                  </Grid>
+                <Grid container className={classes.bannerContainer}
+                      style={{backgroundImage: have_picture ? shop.picture: 'url("../../../static/photo-1538342014732-212dc8f76863-min.jpeg")'}}>
+                    <Grid container className={classes.darkOverlay}>
+                        <Grid container className={classes.container}>
+                            <Grid item className={classes.itemShare}>
+                                <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <Share style={{ color: 'white' }} />
+                                    <Typography variant="body1" style={{ color: 'white', fontSize: 20 }}>
+                                        Share
+                                    </Typography>
+                                </Grid>
+                                <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <FavoriteBorderOutlined style={{ color: 'white' }} onClick={this.addFavoris} />
+                                    <Typography variant="body1" style={{ color: 'white', fontSize: 20 }}>
+                                        Add to wishlist
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid item className={classes.itemAvatar}>
+                                <Avatar alt="John Doe" src={`../../../../${alfred.picture}`} className={classes.avatar} />
+                                <Typography className={classes.textAvatar}>{alfred.name} {alfred.firstname}</Typography>
+                            </Grid>
+                            <Grid item className={classes.itemDispo}>
+                                <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <PermContactCalendar style={{ color: 'white' }} />
+                                    <Typography style={{ fontSize: 20 }} variant="body1" className={classes.textDispo}>Disponibilité</Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </Grid>
-                <Grid item className={classes.itemAvatar}>
-                  <Avatar alt="John Doe" src={`../../../../${alfred.picture}`} className={classes.avatar} />
-                  <Typography className={classes.textAvatar}>{alfred.name} {alfred.firstname}</Typography>
-                </Grid>
-                <Grid item className={classes.itemDispo}>
-                  <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
-                    <PermContactCalendar style={{ color: 'white' }} />
-                    <Typography style={{ fontSize: 20 }} variant="body1" className={classes.textDispo}>Disponibilité</Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
         </Fragment>
+
+
+
     );
   }
 
