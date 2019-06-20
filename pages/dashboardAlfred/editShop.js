@@ -11,7 +11,7 @@ moment.locale('fr');
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
-class dashboardAlfred extends React.Component {
+class editShop extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -58,15 +58,17 @@ class dashboardAlfred extends React.Component {
         return (
             <Fragment>
                 <Layout>
-                    <div style={{width: 1000, margin: '0 auto',marginTop: 64}}>
+                    <div style={{width: 1000, margin: '0 auto',marginTop: 200}}>
                         {is_alfred ?
-                            <Fragment>
-                                <Link href={"/dashboardAlfred/editShopBanner"}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+
+
+                                    <a href={"/dashboardAlfred/editPictureBanner"}>
+
                                         Modifier ma photo de bannière
-                                    </Button>
-                                </Link>
-                            </Fragment>
+
+                                    </a>
+
+
                             : unauthorized}
                     </div>
 
@@ -76,4 +78,4 @@ class dashboardAlfred extends React.Component {
     };
 }
 
-export default dashboardAlfred;
+export default editShop;

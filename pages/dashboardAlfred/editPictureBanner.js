@@ -6,7 +6,7 @@ import axios from 'axios';
 import Router from "next/dist/client/router";
 const { config } = require('../../config/config');
 const url = config.apiUrl;
-class ShopBanner extends React.Component {
+class editPictureBanner extends React.Component {
 
     constructor(props) {
         super(props);
@@ -18,7 +18,7 @@ class ShopBanner extends React.Component {
     }
 
 
-    componentWillMount() {
+    /*componentWillMount() {
         axios.get(url+'myAlfred/api/shopBanner/all')
             .then(response => {
                 let banner = response.data;
@@ -26,11 +26,18 @@ class ShopBanner extends React.Component {
                 this.setState({banner: banner})
             })
             .catch(err =>{console.log(err)});
-    }
+    }*/
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.get(url+'myAlfred/api/shopBanner/all')
+            .then(response => {
+                let banner = response.data;
+
+                this.setState({banner: banner})
+            })
+            .catch(err =>{console.log(err)});
     }
 
     onSubmit = e => {
@@ -77,4 +84,4 @@ class ShopBanner extends React.Component {
 }
 
 
-export default ShopBanner;
+export default editPictureBanner;
