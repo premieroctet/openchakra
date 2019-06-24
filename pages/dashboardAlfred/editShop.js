@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
-import Layout from '../hoc/Layout/Layout';
+import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
 import Button from "@material-ui/core/Button";
@@ -9,9 +9,9 @@ import Router from "next/router";
 
 moment.locale('fr');
 
-const { config } = require('../config/config');
+const { config } = require('../../config/config');
 const url = config.apiUrl;
-class dashboardAlfred extends React.Component {
+class editShop extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -58,13 +58,32 @@ class dashboardAlfred extends React.Component {
         return (
             <Fragment>
                 <Layout>
-                    <div style={{width: 1000, margin: '0 auto',marginTop: 64}}>
+                    <div style={{width: 1000, margin: '0 auto',marginTop: 200}}>
                         {is_alfred ?
-                            <Fragment><p>Nombre de vues du shop : {user.number_of_views}</p><br/>
-                            <p>Nombre d'avis : {user.number_of_reviews}</p><br/>
-                            <p>Note globale : {user.score}</p><br/>
-                                {user.super_alfred ? <p>Vous êtes un super Alfred</p> : <p>Vous n'êtes pas un super Alfred</p>}
-                            </Fragment>
+
+
+                                    <Fragment><a href={"/dashboardAlfred/editPictureBanner"}>
+
+                                        Modifier ma photo de bannière
+
+                                    </a>
+                                        <br/>
+                                        <br/>
+                            <a href={"/dashboardAlfred/editWelcomeMessage"}>
+
+                                Modifier mon message d'accueil
+
+                            </a><br/><br/>
+                                        <a href={"/dashboardAlfred/editParameters"}>
+                                            Modifier les paramètres de réservation
+                                        </a><br/><br/>
+
+                                        <a href={"/dashboardAlfred/editStatus"}>
+                                            Modifier ma situation
+                                        </a>
+                                    </Fragment>
+
+
                             : unauthorized}
                     </div>
 
@@ -74,4 +93,4 @@ class dashboardAlfred extends React.Component {
     };
 }
 
-export default dashboardAlfred;
+export default editShop;

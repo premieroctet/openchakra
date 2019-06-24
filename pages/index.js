@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import Navbar from '../components/home/Navbar/Navbar';
+import Layout from "../hoc/Layout/Layouthome";
 import PopularCategories from '../components/home/PopularCategories/PopularCategories';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
@@ -41,7 +41,7 @@ class Home extends React.Component {
         const pasok = 'Déconnecté';
     return (
         <Fragment>
-            <Navbar />
+            <Layout />
             <Homeheader />
             <PopularCategories />
             <SerenityNeed />

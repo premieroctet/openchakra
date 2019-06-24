@@ -142,7 +142,7 @@ class profile extends React.Component {
                                 Editer mon profil
                             </Button>
                         </Link>
-                        {alfred ? <Link href={"/dashboardAlfred"}>
+                        {alfred ? <Link href={"/dashboardAlfred/home"}>
                             <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                                 Dashboard Alfred
                             </Button>
