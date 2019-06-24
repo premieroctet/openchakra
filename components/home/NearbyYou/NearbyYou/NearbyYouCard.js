@@ -93,7 +93,7 @@ const nearbyYouCard = (props) => {
 
   return (
     <Card className={classes.card}>
-      <CardActionArea>
+      <CardActionArea href={`/shop?id_alfred=${shop}`}>
         <CardMedia className={classes.media} image={img} title="Coiffure">
           <div className={classes.darkOverlay}>
             <Grid container className={classes.avatarContainer}>
