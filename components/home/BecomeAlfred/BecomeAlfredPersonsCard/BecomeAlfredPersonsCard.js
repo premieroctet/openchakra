@@ -26,8 +26,9 @@ const styles = theme => ({
     boxShadow: '0 6px 5px -6px grey',
   },
   personName: {
-    alignSelf: 'center',
+    alignSelf: 'right',
     padding: '.5rem',
+    textAlign: 'right',
   },
 });
 

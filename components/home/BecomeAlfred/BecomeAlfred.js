@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import Avatar from "@material-ui/core/Avatar";
 import axios from 'axios';
 import '../../../static/stylefixresponsive.css';
+import { dark } from 'react-syntax-highlighter/dist/styles/hljs';
 const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
@@ -157,7 +158,17 @@ const styles = theme => ({
   },
   personName: {
     alignSelf: 'center',
+    fontWeight: 'bold',
     padding: '.5rem',
+    textAlign: 'right!important',
+    color: '#33558B',
+  },
+  personName2: {
+    alignSelf: 'center',
+    padding: '.5rem',
+    textAlign: 'right!important',
+    fontSize: '0.8rem',
+    color: '#33558B',
   },
   card11: {
     display: 'flex',
@@ -169,7 +180,12 @@ const styles = theme => ({
     marginBottom: '40px!important',
     boxShadow: '0 6px 5px -6px grey',
   },
-
+  imgavat: {
+    marginTop: '60%',
+  },
+  petitpaddingpers: {
+    marginLeft: '-20%',
+  },
 });
 
 class becomeAlfred extends React.Component{
@@ -196,10 +212,29 @@ class becomeAlfred extends React.Component{
 
     const cards = alfred.map(e => (
         <Card className={classes.card11} key={e._id}>
+        <CardActionArea href={`/shop?id_alfred=${e._id}`}>
           <CardContent className={classes.card}>
-            <Avatar alt="John Doe" src={`../../../${e.picture}`} />
-            <Typography className={classes.personName}>{e.name} {e.firstname}</Typography>
+            <Grid container>
+              <Grid item xs={1}></Grid>
+              <Grid item xs={1}><Avatar className={classes.imgavat} alt="John Doe" src={`../../../${e.picture}`} /></Grid>
+              <Grid item xs={1}></Grid>
+              <Grid item xs={8} className={classes.petitpaddingpers}>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <Typography className={classes.personName}>{e.name} {e.firstname}</Typography>
+                  </Grid>  
+                  <Grid item xs={3}></Grid>  
+                  <Grid item xs={6}>
+                    <Typography className={classes.personName2}>{e.job}</Typography>
+                  </Grid>
+                  <Grid item xs={3}></Grid>  
+                </Grid>
+              </Grid>
+              <Grid item xs={2}></Grid>
+           
+            </Grid>
           </CardContent>
+          </CardActionArea>
         </Card>
     ));
 
