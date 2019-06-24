@@ -117,7 +117,7 @@ class editParameters extends React.Component {
             .put(url+'myAlfred/api/shop/editParameters', newParameters)
             .then(res => {
                 alert('Paramètres modifiés');
-                Router.push({pathname:'/dashboardAlfred'})
+                Router.push({pathname:'/dashboardAlfred/home'})
             })
             .catch(err =>
                 console.log(err)
@@ -146,8 +146,9 @@ class editParameters extends React.Component {
                                             <Checkbox
                                                 checked={this.state.booking_request}
                                                 onChange={this.onChange}
-                                                value="booking_request"
+                                                value={this.state.booking_request}
                                                 color="primary"
+                                                name={"booking_request"}
                                             />
                                         }
                                         label="Demande de réservation 24H avant"
@@ -159,8 +160,9 @@ class editParameters extends React.Component {
                                             <Checkbox
                                                 checked={this.state.my_alfred_conditions}
                                                 onChange={this.onChange}
-                                                value="my_alfred_conditions"
+                                                value={this.state.my_alfred_conditions}
                                                 color="primary"
+                                                name={"my_alfred_conditions"}
                                             />
                                         }
                                         label="Conditions myAlfred acceptées"
@@ -172,7 +174,8 @@ class editParameters extends React.Component {
                                             <Checkbox
                                                 checked={this.state.profile_picture}
                                                 onChange={this.onChange}
-                                                value="profile_picture"
+                                                value={this.state.profile_picture}
+                                                name="profile_picture"
                                                 color="primary"
                                             />
                                         }
@@ -185,7 +188,8 @@ class editParameters extends React.Component {
                                             <Checkbox
                                                 checked={this.state.identity_card}
                                                 onChange={this.onChange}
-                                                value="identity_card"
+                                                value={this.state.identity_card}
+                                                name="identity_card"
                                                 color="primary"
                                             />
                                         }
@@ -198,7 +202,8 @@ class editParameters extends React.Component {
                                             <Checkbox
                                                 checked={this.state.recommandations}
                                                 onChange={this.onChange}
-                                                value="recommandations"
+                                                value={this.state.recommandations}
+                                                name="recommandations"
                                                 color="primary"
                                             />
                                         }
@@ -211,7 +216,8 @@ class editParameters extends React.Component {
                                             <Checkbox
                                                 checked={this.state.flexible_cancel}
                                                 onChange={this.onChange}
-                                                value="flexible_cancel"
+                                                value={this.state.flexible_cancel}
+                                                name="flexible_cancel"
                                                 color="primary"
                                             />
                                         }
@@ -224,7 +230,8 @@ class editParameters extends React.Component {
                                             <Checkbox
                                                 checked={this.state.moderate_cancel}
                                                 onChange={this.onChange}
-                                                value="moderate_cancel"
+                                                value={this.state.moderate_cancel}
+                                                name="moderate_cancel"
                                                 color="primary"
                                             />
                                         }
@@ -237,7 +244,8 @@ class editParameters extends React.Component {
                                             <Checkbox
                                                 checked={this.state.strict_cancel}
                                                 onChange={this.onChange}
-                                                value="strict_cancel"
+                                                value={this.state.strict_cancel}
+                                                name="strict_cancel"
                                                 color="primary"
                                             />
                                         }

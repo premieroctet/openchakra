@@ -91,7 +91,7 @@ class editWelcomeMessage extends React.Component {
             .put(url+'myAlfred/api/shop/editWelcomeMessage', newMessage)
             .then(res => {
                 alert('Message modifié');
-                Router.push({pathname:'/dashboardAlfred'})
+                Router.push({pathname:'/dashboardAlfred/home'})
             })
             .catch(err =>
                 console.log(err)

@@ -42,11 +42,12 @@ class editPictureBanner extends React.Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const picture = e.target.label.value;
+        const data = {picture: e.target.label.value};
 
-        axios.put(url+'myAlfred/api/shop/editBanner',picture)
+        axios.put(url+'myAlfred/api/shop/editBanner',data)
             .then(res => {
-                alert('Photo modifiée')
+                alert('Photo modifiée');
+                Router.push('/dashboardAlfred/home')
             })
             .catch(err => {
                 console.log(err)

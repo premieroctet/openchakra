@@ -126,7 +126,7 @@ class editStatus extends React.Component {
             .put(url+'myAlfred/api/shop/editStatus', newStatus)
             .then(res => {
                 alert('Statut modifié');
-                Router.push({pathname:'/dashboardAlfred'})
+                Router.push('/dashboardAlfred/home')
             })
             .catch(err =>
                 console.log(err)
@@ -155,7 +155,8 @@ class editStatus extends React.Component {
                                             <Checkbox
                                                 checked={this.state.is_particular}
                                                 onChange={this.onChange}
-                                                value="is_particular"
+                                                value={this.state.is_particular}
+                                                name="is_particular"
                                                 color="primary"
                                             />
                                         }
@@ -168,7 +169,8 @@ class editStatus extends React.Component {
                                             <Checkbox
                                                 checked={this.state.is_professional}
                                                 onChange={this.onChange}
-                                                value="is_professional"
+                                                value={this.state.is_professional}
+                                                name="is_professional"
                                                 color="primary"
                                             />
                                         }
@@ -181,7 +183,8 @@ class editStatus extends React.Component {
                                             <Checkbox
                                                 checked={this.state.self_employed}
                                                 onChange={this.onChange}
-                                                value="self_employed"
+                                                value={this.state.self_employed}
+                                                name="self_employed"
                                                 color="primary"
                                             />
                                         }
@@ -194,7 +197,8 @@ class editStatus extends React.Component {
                                             <Checkbox
                                                 checked={this.state.individual_company}
                                                 onChange={this.onChange}
-                                                value="individual_company"
+                                                value={this.state.individual_company}
+                                                name="individual_company"
                                                 color="primary"
                                             />
                                         }

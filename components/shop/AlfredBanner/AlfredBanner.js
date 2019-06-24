@@ -129,7 +129,7 @@ class alfredBanner extends React.Component{
     return (
         <Fragment>
                 <Grid container className={classes.bannerContainer}
-                      style={{backgroundImage: have_picture ? shop.picture: 'url("../../../static/photo-1538342014732-212dc8f76863-min.jpeg")'}}>
+                      style={{backgroundImage: have_picture ? `url(${shop.picture})`: 'url("../../../static/photo-1538342014732-212dc8f76863-min.jpeg")'}}>
                     <Grid container className={classes.darkOverlay}>
                         <Grid container className={classes.container}>
                             <Grid item className={classes.itemShare}>

@@ -112,7 +112,7 @@ router.get('/all',(req,res)=> {
 
 // @Route GET /myAlfred/api/shop/:id
 // View one shop
-router.get('/:id',(req,res)=> {
+router.get('/all/:id',(req,res)=> {
 
     Shop.findById(req.params.id)
         .populate('alfred')
@@ -179,43 +179,6 @@ router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
         .catch(err => res.status(404).json({shopnotfound: 'No shop found'}));
 });
 
-// @Route PUT /myAlfred/api/shop/:id
-// Update a shop
-// @Access private
-router.put('/:id',passport.authenticate('jwt',{session:false}), (req,res) => {
-    if(req.body.self_employed || req.body.individual_company) {
-        Shop.findByIdAndUpdate(req.params.id, {
-            booking_request: req.body.booking_request, my_alfred_conditions: req.body.my_alfred_conditions,
-            profile_picture: req.body.profile_picture, identity_card: req.body.identity_card,
-            recommandations: req.body.recommandations,
-            flexible_cancel: req.body.flexible_cancel, moderate_cancel: req.body.moderate_cancel,
-            strict_cancel: req.body.strict_cancel, id_recto: req.body.id_recto,
-            id_verso: req.body.id_verso, verified_phone: req.body.verified_phone,
-            is_particular: req.body.is_particular, is_professional: req.body.is_professional,
-            self_employed: req.body.self_employed, individual_company: req.body.individual_company,
-            "company.name":req.body.name, "company.creation_date": req.body.creation_date,
-            "company.siret": req.body.siret, "company.naf_ape": req.body.naf_ape,
-            "company.vat_number": req.body.vat_number},{new:true})
-            .then(shop => {
-                res.json(shop)
-            })
-            .catch(err => res.status(404).json({shopnotfound: 'No shop found'}))
-    } else {
-        Shop.findByIdAndUpdate(req.params.id, {
-            booking_request: req.body.booking_request, my_alfred_conditions: req.body.my_alfred_conditions,
-            profile_picture: req.body.profile_picture, identity_card: req.body.identity_card,
-            recommandations: req.body.recommandations,
-            flexible_cancel: req.body.flexible_cancel, moderate_cancel: req.body.moderate_cancel,
-            strict_cancel: req.body.strict_cancel, id_recto: req.body.id_recto,
-            id_verso: req.body.id_verso, verified_phone: req.body.verified_phone,
-            is_particular: req.body.is_particular, is_professional: req.body.is_professional},{new:true})
-            .then(shop => {
-                res.json(shop)
-            })
-            .catch(err => res.status(404).json({shopnotfound: 'No shop found'}))
-    }
-
-});
 
 // @Route PUT /myAlfred/api/shop/editBanner
 // Edit picture banner for a shop
