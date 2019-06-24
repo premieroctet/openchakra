@@ -124,7 +124,7 @@ class TemptedBy extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const background = ["../../static/bleumarine.PNG","../../static/saumonorange.PNG","../../static/bleuclair.PNG"
+    const background = ["../../static/bleumarine.PNG","../../static/saumonrouge.PNG","../../static/bleuclair.PNG"
                         ,"../../static/violetclair.PNG"];
 
 
@@ -136,13 +136,6 @@ class TemptedBy extends React.Component {
             <CardActionArea className={classes.cardAction}>
               <CardMedia component="div" alt="color" image={background[Math.floor(Math.random() * background.length)]} className={classes.cardMedia}>
                 <Grid container className={classes.container2}>
-                  <Grid container xs={12} className={classes.row}>
-                    <Grid item xs={5}></Grid>
-                    <Grid item xs={4}></Grid>
-                    <Grid container item xs={3}>
-                      <RestaurantMenu style={{color: 'white', fontSize: '4rem', maxWidth: '100%'}}/>
-                    </Grid>
-                  </Grid>
                   <Grid container xs={12} className={classes.row}>
                     <Grid item xs={1}>
                       <Typography className={classes.textDown}></Typography>
