@@ -93,7 +93,8 @@ const nearbyYouCard = (props) => {
 
   return (
     <Card className={classes.card}>
-      <CardActionArea href={`/shop?id_alfred=${shop}`}>
+      <Link href={`/shop?id_alfred=${shop}`}>
+      <CardActionArea>
         <CardMedia className={classes.media} image={img} title="Coiffure">
           <div className={classes.darkOverlay}>
             <Grid container className={classes.avatarContainer}>
@@ -122,7 +123,9 @@ const nearbyYouCard = (props) => {
 
           </Typography>
         </CardContent>
+
       </CardActionArea>
+      </Link>
       <CardActions>
         <Grid container className={classes.gridButton}>
           <Link style={{color:'white !important',textdecoration:'none' }} href={`/shop?id_alfred=${shop}`}>

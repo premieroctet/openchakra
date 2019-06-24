@@ -12,6 +12,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import Button from '@material-ui/core/Button';
 import Avatar from "@material-ui/core/Avatar";
 import axios from 'axios';
+import Link from 'next/link';
 import '../../../static/stylefixresponsive.css';
 import { dark } from 'react-syntax-highlighter/dist/styles/hljs';
 const url = "https://myalfred.hausdivision.com/";
@@ -212,7 +213,8 @@ class becomeAlfred extends React.Component{
 
     const cards = alfred.map(e => (
         <Card className={classes.card11} key={e._id}>
-        <CardActionArea href={`/shop?id_alfred=${e._id}`}>
+          <Link href={`/shop?id_alfred=${e._id}`}>
+        <CardActionArea>
           <CardContent className={classes.card}>
             <Grid container>
               <Grid item xs={1}></Grid>
@@ -235,6 +237,7 @@ class becomeAlfred extends React.Component{
             </Grid>
           </CardContent>
           </CardActionArea>
+          </Link>
         </Card>
     ));
 
