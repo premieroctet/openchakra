@@ -262,5 +262,24 @@ router.put('/editParameters',passport.authenticate('jwt',{session:false}),(req,r
         })
 });
 
+// @Route PUT /myAlfred/api/shop/editStatus
+// Edit personal status for a shop
+// @Access private
+router.put('/editStatus',passport.authenticate('jwt',{session:false}),(req,res) => {
+    Shop.findOneAndUpdate({alfred: req.user.id},{
+        is_particular: req.body.is_particular, is_professional: req.body.is_professional,
+        self_employed: req.body.self_employed, individual_company: req.body.individual_company,
+        "company.name":req.body.name, "company.creation_date": req.body.creation_date,
+        "company.siret": req.body.siret, "company.naf_ape": req.body.naf_ape,
+        "company.vat_number": req.body.vat_number
+    }, {new: true})
+        .then(shop => {
+            res.json(shop)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
 
 module.exports = router;

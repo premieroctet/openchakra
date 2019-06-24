@@ -76,6 +76,10 @@ class editShop extends React.Component {
                             </a><br/><br/>
                                         <a href={"/dashboardAlfred/editParameters"}>
                                             Modifier les paramètres de réservation
+                                        </a><br/><br/>
+
+                                        <a href={"/dashboardAlfred/editStatus"}>
+                                            Modifier ma situation
                                         </a>
                                     </Fragment>
 
