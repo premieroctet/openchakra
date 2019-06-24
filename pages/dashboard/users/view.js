@@ -44,7 +44,7 @@ class view extends React.Component {
         this.state = {
             user: {},
             active: false,
-            is_active_now: null
+
 
         };
 
@@ -62,7 +62,7 @@ class view extends React.Component {
         axios.get(`${url}myAlfred/api/admin/users/users/${id}`)
             .then(response => {
                 let user = response.data;
-                this.setState({user: user, is_active_now: user.active});
+                this.setState({user: user, active: user.active});
 
             })
             .catch(err => {
@@ -86,9 +86,9 @@ class view extends React.Component {
     onSubmit = e => {
         e.preventDefault();
 
-        const { is_alfred, active } = this.state.user;
+        const data = {active: this.state.active};
         const id = this.props.user_id;
-        axios.put(`${url}myAlfred/api/admin/users/users/${id}`,{is_alfred,active})
+        axios.put(`${url}myAlfred/api/admin/users/users/${id}`,data)
             .then(res => {
 
                 alert('Utilisateur modifié avec succès');
@@ -120,7 +120,7 @@ class view extends React.Component {
     render()  {
         const { classes } = this.props;
         const {user} = this.state;
-        const {is_active_now} = this.state;
+
 
 
 
@@ -134,14 +134,18 @@ class view extends React.Component {
                             </Grid>
                             <form onSubmit={this.onSubmit}>
                                 <Grid item>
-                                    <label>
-                                        Actif ?:
-                                        <input
-                                            name="active"
-                                            type="checkbox"
-                                            checked={this.state.active}
-                                            onChange={this.handleInputChange} />
-                                    </label>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.active}
+                                                onChange={this.handleInputChange}
+                                                value={this.state.active}
+                                                color="primary"
+                                                name={"active"}
+                                            />
+                                        }
+                                        label="Actif ?"
+                                    />
 
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>

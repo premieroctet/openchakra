@@ -42,12 +42,10 @@ class view extends React.Component {
         super(props);
 
         this.state = {
-            super_alfred: '',
+            super_alfred: false,
             alfred: {},
             active: false,
-            super_alfred_now: null,
-            is_active_now: null,
-            is_alfred: ''
+            is_alfred: false
 
         };
 
@@ -66,7 +64,7 @@ class view extends React.Component {
             .then(response => {
 
                     let alfred = response.data;
-                    this.setState({alfred: alfred, super_alfred_now: alfred.super_alfred, is_active_now: alfred.active});
+                    this.setState({alfred: alfred, super_alfred: alfred.super_alfred, active: alfred.active, is_alfred: alfred.is_alfred});
 
 
             })
@@ -90,9 +88,9 @@ class view extends React.Component {
     onSubmit = e => {
         e.preventDefault();
 
-        const { super_alfred, active, is_alfred } = this.state.alfred;
+        const data = {is_alfred:this.state.is_alfred, active: this.state.active, super_alfred:this.state.super_alfred};
         const id = this.props.alfred_id;
-        axios.put(`${url}myAlfred/api/admin/users/alfred/${id}`,{super_alfred,active,is_alfred})
+        axios.put(`${url}myAlfred/api/admin/users/alfred/${id}`,data)
             .then(res => {
                     alert('Utilisateur modifié avec succès');
                     Router.push({pathname: '/dashboard/alfred/all'})
@@ -142,36 +140,48 @@ class view extends React.Component {
                             </Grid>
                             <form onSubmit={this.onSubmit}>
                                 <Grid item>
-                                    <label>
-                                        Alfred ?:
-                                        <input
-                                            name="is_alfred"
-                                            type="checkbox"
-                                            checked={this.state.is_alfred}
-                                            onChange={this.handleInputChange} />
-                                    </label>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.is_alfred}
+                                                onChange={this.handleInputChange}
+                                                value={this.state.is_alfred}
+                                                color="primary"
+                                                name={"is_alfred"}
+                                            />
+                                        }
+                                        label="Alfred ?"
+                                    />
 
                                 </Grid>
                                 <Grid item>
-                                    <label>
-                                        Actif ?:
-                                        <input
-                                            name="active"
-                                            type="checkbox"
-                                            checked={this.state.active}
-                                            onChange={this.handleInputChange} />
-                                    </label>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.active}
+                                                onChange={this.handleInputChange}
+                                                value={this.state.active}
+                                                color="primary"
+                                                name={"active"}
+                                            />
+                                        }
+                                        label="Actif ?"
+                                    />
 
                                 </Grid>
                                 <Grid item>
-                                    <label>
-                                        Super Alfred ?:
-                                        <input
-                                            name="super_alfred"
-                                            type="checkbox"
-                                            checked={this.state.super_alfred}
-                                            onChange={this.handleInputChange} />
-                                    </label>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.super_alfred}
+                                                onChange={this.handleInputChange}
+                                                value={this.state.super_alfred}
+                                                color="primary"
+                                                name={"super_alfred"}
+                                            />
+                                        }
+                                        label="Super Alfred ?"
+                                    />
 
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>

@@ -230,7 +230,7 @@ router.put('/users/users/:id',passport.authenticate('jwt',{session: false}),(req
     const admin = decode.is_admin;
 
     if(admin) {
-        User.findOneAndUpdate({_id: req.params.id},{$set: {is_alfred: req.body.is_alfred ,active: req.body.active}}, {new: true})
+        User.findOneAndUpdate({_id: req.params.id},{$set: {active: req.body.active}}, {new: true})
             .then(user => {
                 res.json(user);
             })
