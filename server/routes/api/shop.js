@@ -243,5 +243,24 @@ router.put('/editWelcomeMessage',passport.authenticate('jwt',{session:false}),(r
         })
 });
 
+// @Route PUT /myAlfred/api/shop/editParameters
+// Edit booking parameters for a shop
+// @Access private
+router.put('/editParameters',passport.authenticate('jwt',{session:false}),(req,res) => {
+    Shop.findOneAndUpdate({alfred: req.user.id},{
+        booking_request: req.body.booking_request, my_alfred_conditions: req.body.my_alfred_conditions,
+        profile_picture: req.body.profile_picture, identity_card: req.body.identity_card,
+        recommandations: req.body.recommandations,
+        flexible_cancel: req.body.flexible_cancel, moderate_cancel: req.body.moderate_cancel,
+        strict_cancel: req.body.strict_cancel
+    }, {new: true})
+        .then(shop => {
+            res.json(shop)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
 
 module.exports = router;

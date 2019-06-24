@@ -73,7 +73,11 @@ class editShop extends React.Component {
 
                                 Modifier mon message d'accueil
 
-                            </a></Fragment>
+                            </a><br/><br/>
+                                        <a href={"/dashboardAlfred/editParameters"}>
+                                            Modifier les paramètres de réservation
+                                        </a>
+                                    </Fragment>
 
 
                             : unauthorized}
