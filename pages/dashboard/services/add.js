@@ -16,6 +16,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Chip from '@material-ui/core/Chip';
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -70,10 +72,13 @@ class add extends React.Component {
             tags: [],
             equipments: [],
             description: '',
+            majoration: '',
+            isChecked: false,
             all_category: [],
             all_tags: [],
             all_equipments: []
         };
+        this.handleChecked = this.handleChecked.bind(this);
     }
 
     componentDidMount() {
@@ -120,6 +125,11 @@ class add extends React.Component {
 
     };
 
+    handleChecked () {
+        this.setState({isChecked: !this.state.isChecked});
+    }
+
+
     onSubmit = e => {
         e.preventDefault();
 
@@ -159,6 +169,7 @@ class add extends React.Component {
             <MenuItem value={e._id}>{e.label}</MenuItem>
 
         ));
+        const {isChecked} = this.state;
 
 
         return (
@@ -280,6 +291,36 @@ class add extends React.Component {
                                         onChange={this.onChange}
                                     />
                                 </Grid>
+                                <Grid item>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.isChecked}
+                                                onChange={this.handleChecked}
+                                                value={this.state.isChecked}
+                                                color="primary"
+                                                name={"isChecked"}
+                                            />
+                                        }
+                                        label="Majoration ?"
+                                    />
+
+                                </Grid>
+                                {isChecked ?
+                                    <Grid item>
+                                        <TextField
+                                            id="standard-with-placeholder"
+                                            label="Majoration"
+                                            placeholder="Majoration"
+                                            margin="normal"
+                                            style={{ width: '100%' }}
+                                            type="text"
+                                            name="majoration"
+                                            value={this.state.majoration}
+                                            onChange={this.onChange}
+                                        />
+                                    </Grid>
+                                    : ''}
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                                         Ajouter

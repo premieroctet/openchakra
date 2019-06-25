@@ -49,7 +49,8 @@ class add extends React.Component {
             email: '',
             password: '',
             birtday: '',
-            phone: ''
+            phone: '',
+            password2: ''
 
         };
     }
@@ -67,7 +68,8 @@ class add extends React.Component {
             birthday: this.state.birthday,
             email: this.state.email,
             password: this.state.password,
-            phone: this.state.phone
+            phone: this.state.phone,
+            password2: this.state.password2
 
 
         };
@@ -128,7 +130,7 @@ class add extends React.Component {
                                         name="firstname"
                                         value={this.state.firstname}
                                         onChange={this.onChange}
-                                        error={errors.firstname}
+
                                     />
                                 </Grid>
                                 <Grid item className={classes.datenaissance}>
@@ -157,21 +159,35 @@ class add extends React.Component {
                                         name="email"
                                         value={this.state.email}
                                         onChange={this.onChange}
-                                        error={errors.email}
+
                                     />
                                 </Grid>
                                 <Grid item>
                                     <TextField
                                         id="standard-with-placeholder"
                                         label="Mot de passe"
-                                        placeholder="Mot de passe"
+                                        placeholder="Mot de passe (8 charactères min)"
                                         margin="normal"
                                         style={{ width: '100%' }}
                                         type="password"
                                         name="password"
                                         value={this.state.password}
                                         onChange={this.onChange}
-                                        error={errors.password}
+
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        label="Répéter mot de passe"
+                                        placeholder="Mot de passe"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="password"
+                                        name="password2"
+                                        value={this.state.password2}
+                                        onChange={this.onChange}
+
                                     />
                                 </Grid>
                                 <Grid item>
@@ -185,7 +201,7 @@ class add extends React.Component {
                                         name="phone"
                                         value={this.state.phone}
                                         onChange={this.onChange}
-                                        error={errors.firstname}
+
                                     />
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>

@@ -37,6 +37,9 @@ const PrestationSchema = new Schema({
     job: {
         type: Schema.Types.ObjectId,
         ref: 'job'
+    },
+    description: {
+        type: String
     }
 });
 

@@ -25,6 +25,9 @@ const ServiceSchema = new Schema({
     },
     description: {
         type: String
+    },
+    majoration: {
+        type: String
     }
 });
 

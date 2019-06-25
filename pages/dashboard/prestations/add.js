@@ -73,6 +73,7 @@ class add extends React.Component {
             search_filter: [],
             calculating: '',
             job: '',
+            description: '',
             all_category: [],
             all_service: [],
             all_billing: [],
@@ -167,6 +168,7 @@ class add extends React.Component {
             job: this.state.job,
             search_filter: this.state.search_filter,
             filter_presentation: this.state.filter_presentation,
+            description: this.state.description
 
         };
         axios
@@ -409,6 +411,21 @@ class add extends React.Component {
                                         </Select>
                                         <FormHelperText>Sélectionner un metier</FormHelperText>
                                     </FormControl>
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        multiline
+                                        rowsMax="4"
+                                        name="description"
+                                        value={this.state.description}
+                                        onChange={this.onChange}
+                                        label={"Description"}
+                                        placeholder="Description"
+                                    />
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>

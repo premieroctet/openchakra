@@ -1393,7 +1393,8 @@ router.post('/service/all', passport.authenticate('jwt',{session: false}),(req, 
                         equipments: req.body.equipments,
                         tags: req.body.tags,
                         picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
-                        description: req.body.description
+                        description: req.body.description,
+                        majoration: req.body.majoration
 
                     });
 
@@ -1554,7 +1555,8 @@ router.post('/prestation/all',passport.authenticate('jwt',{session: false}),(req
                         search_filter: req.body.search_filter,
                         category: mongoose.Types.ObjectId(req.body.category),
                         calculating: mongoose.Types.ObjectId(req.body.calculating),
-                        job: mongoose.Types.ObjectId(req.body.job)
+                        job: mongoose.Types.ObjectId(req.body.job),
+                        description: req.body.description
                     });
                     newPrestation.save().then(prestation => res.json(prestation)).catch(err => console.log(err))
 

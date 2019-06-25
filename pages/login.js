@@ -43,7 +43,7 @@ class login extends React.Component {
     this.state = {
       username: '',
       password: '',
-      errors: {}
+
     };
   }
 
@@ -65,7 +65,11 @@ class login extends React.Component {
           localStorage.setItem('token',token);
           setAuthToken(token);
           let path = localStorage.getItem('path');
-          Router.push({pathname:path})
+
+
+              Router.push({pathname:path})
+
+
         })
         .catch(err => {
           console.log(err);
@@ -76,7 +80,7 @@ class login extends React.Component {
 
   render()  {
     const { classes } = this.props;
-    const {errors} = this.state;
+
 
     return (
         <Layout>
@@ -98,7 +102,7 @@ class login extends React.Component {
                         name="username"
                         value={this.state.username}
                         onChange={this.onChange}
-                        error={errors.username}
+
                     />
                   </Grid>
                   <Grid item>
@@ -112,7 +116,7 @@ class login extends React.Component {
                         name="password"
                         value={this.state.password}
                         onChange={this.onChange}
-                        error={errors.password}
+
                     />
                   </Grid>
                   <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>

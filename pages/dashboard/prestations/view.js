@@ -18,8 +18,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Chip from "@material-ui/core/Chip";
-
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -87,6 +87,7 @@ class view extends React.Component {
             search_filter: [],
             calculating: '',
             job: '',
+            description: ''
 
         };
 
@@ -198,11 +199,12 @@ class view extends React.Component {
         const calculating = this.state.calculating;
         const search_filter = this.state.search_filter;
         const job = this.state.job;
+        const description = this.state.description;
         const filter_presentation = this.state.filter_presentation;
         const { label,price } = this.state.prestation;
         const id = this.props.prestation_id;
         axios.put(`${url}myAlfred/api/admin/prestation/all/${id}`,{label,price,billing,category,service,search_filter,filter_presentation,
-                                                                                calculating,job})
+                                                                                calculating,job,description})
             .then(res => {
 
                 alert('Prestation modifiée avec succès');
@@ -467,6 +469,20 @@ class view extends React.Component {
                                             ))}
                                         </Select>
                                     </FormControl>
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        multiline
+                                        rowsMax="4"
+                                        name="description"
+                                        value={prestation.description}
+                                        onChange={this.onChange}
+                                        helperText={"Description"}
+                                    />
                                 </Grid>
 
 

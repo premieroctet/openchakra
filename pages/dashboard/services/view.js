@@ -18,6 +18,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Chip from "@material-ui/core/Chip";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -75,11 +77,14 @@ class view extends React.Component {
             all_equipments: [],
             category: '',
             tags: [],
-            equipments: []
+            equipments: [],
+            majoration: '',
+            isChecked: false
 
         };
 
         this.handleClick = this.handleClick.bind(this);
+        this.handleChecked = this.handleChecked.bind(this);
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -94,6 +99,9 @@ class view extends React.Component {
                 let service = response.data;
                 this.setState({service: service, current_tags: service.tags, current_equipments: service.equipments, current_category: service.category});
 
+                if(typeof service.majoration != "undefined") {
+                    this.setState({isChecked: true})
+                }
 
             })
             .catch(err => {
@@ -149,6 +157,10 @@ class view extends React.Component {
 
 
     };
+
+    handleChecked () {
+        this.setState({isChecked: !this.state.isChecked});
+    }
     onSubmit = e => {
         e.preventDefault();
         const tags = this.state.tags;
@@ -194,6 +206,7 @@ class view extends React.Component {
         const {all_category} = this.state;
         const {all_tags} = this.state;
         const {all_equipments} = this.state;
+        const {isChecked} = this.state;
 
         const categories = all_category.map(e => (
 
@@ -331,6 +344,34 @@ class view extends React.Component {
 
                                     />
                                 </Grid>
+                                <Grid item>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.isChecked}
+                                                onChange={this.handleChecked}
+                                                value={this.state.isChecked}
+                                                color="primary"
+                                                name={"isChecked"}
+                                            />
+                                        }
+                                        label="Majoration ?"
+                                    />
+
+                                </Grid>
+                                {isChecked ?
+                                    <Grid item>
+                                        <TextField
+                                            id="standard-with-placeholder"
+                                            margin="normal"
+                                            style={{ width: '100%' }}
+                                            type="text"
+                                            name="majoration"
+                                            value={service.majoration}
+                                            onChange={this.onChange}
+                                        />
+                                    </Grid>
+                                    : ''}
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                                         Modifier

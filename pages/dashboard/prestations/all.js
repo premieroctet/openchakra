@@ -11,7 +11,8 @@ import Link from "next/link";
 import Chip from "@material-ui/core/Chip";
 import Router from "next/router";
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
     signupContainer: {
@@ -48,7 +49,6 @@ class all extends React.Component {
 
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-
         axios.get(url+"myAlfred/api/admin/prestation/all")
             .then((response) => {
                 let prestation = response.data;

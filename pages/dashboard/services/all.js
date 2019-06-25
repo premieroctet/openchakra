@@ -17,7 +17,7 @@ const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '170vh',
+        height: '400vh',
         justifyContent: 'top',
         flexDirection: 'column',
 
