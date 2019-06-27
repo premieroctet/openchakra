@@ -9,13 +9,20 @@ import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import Input from "@material-ui/core/Input";
+import Chip from "@material-ui/core/Chip";
+import MenuItem from "@material-ui/core/MenuItem";
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '170vh',
+        height: '300vh',
         justifyContent: 'top',
         flexDirection: 'column',
 
@@ -34,19 +41,57 @@ const styles = theme => ({
         fontSize: 12,
         lineHeight: 4.15,
     },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    chip: {
+        margin: 2,
+    }
 });
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
 class add extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             label: '',
-            picture: ''
+            picture: '',
+            description: '',
+            all_tags: [],
+            tags: []
         };
+    }
+
+    componentDidMount() {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.get(url+"myAlfred/api/admin/tags/all")
+            .then((response) => {
+                let tags = response.data;
+                this.setState({all_tags: tags})
+            }).catch((error) => {
+            console.log(error)
+        });
     }
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
+    };
+
+    handleChange = e => {
+        this.setState({tags: e.target.value})
+
+
     };
 
     onSubmit = e => {
@@ -54,7 +99,9 @@ class add extends React.Component {
 
         const newCategory = {
             label: this.state.label,
-            picture: this.state.picture
+            picture: this.state.picture,
+            tags: this.state.tags,
+            description: this.state.description
 
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
@@ -76,6 +123,7 @@ class add extends React.Component {
 
     render() {
         const { classes } = this.props;
+        const {all_tags} = this.state;
 
 
         return (
@@ -110,6 +158,46 @@ class add extends React.Component {
                                         type="text"
                                         name="picture"
                                         value={this.state.picture}
+                                        onChange={this.onChange}
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
+                                        <Select
+                                            multiple
+                                            value={this.state.tags}
+                                            onChange={this.handleChange}
+                                            input={<Input id="select-multiple-chip" />}
+                                            renderValue={selected => (
+                                                <div className={classes.chips}>
+                                                    {selected.map(value => (
+                                                        <Chip key={value} label={value} className={classes.chip} />
+                                                    ))}
+                                                </div>
+                                            )}
+                                            MenuProps={MenuProps}
+                                        >
+                                            {all_tags.map(name => (
+                                                <MenuItem key={name._id} value={name._id} >
+                                                    {name.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        label="Description"
+                                        placeholder="Description"
+                                        multiline
+                                        rows="4"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        name="description"
+                                        value={this.state.description}
                                         onChange={this.onChange}
                                     />
                                 </Grid>

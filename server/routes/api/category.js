@@ -11,6 +11,7 @@ router.get('/test',(req, res) => res.json({msg: 'Category Works!'}) );
 router.get('/all', (req,res)=> {
 
     Category.find()
+        .populate('tags')
         .then(category => {
             if(typeof category !== 'undefined' && category.length > 0){
                 res.json(category);
@@ -29,6 +30,7 @@ router.get('/all', (req,res)=> {
 router.get('/:id', (req,res)=> {
 
     Category.findById(req.params.id)
+        .populate('tags')
         .then(category => {
           res.json(category);
         })

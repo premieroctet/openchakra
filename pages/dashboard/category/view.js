@@ -12,8 +12,14 @@ import FormControl from '@material-ui/core/FormControl';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import Input from "@material-ui/core/Input";
+import Chip from "@material-ui/core/Chip";
+import MenuItem from "@material-ui/core/MenuItem";
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = {
     loginContainer: {
@@ -34,6 +40,24 @@ const styles = {
         color: 'black',
         fontSize: 12,
     },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    chip: {
+        margin: 2,
+    },
+};
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
 };
 
 class view extends React.Component {
@@ -44,7 +68,11 @@ class view extends React.Component {
         this.state = {
             category: {},
             label: '',
-            picture: ''
+            picture: '',
+            tags: [],
+            description: '',
+            all_tags: [],
+            current_tags: [],
 
         };
 
@@ -56,19 +84,28 @@ class view extends React.Component {
 
     }
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         const id = this.props.category_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(`${url}myAlfred/api/admin/category/all/${id}`)
             .then(response => {
                let category = response.data;
-                this.setState({category: category});
+                this.setState({category: category,current_tags: category.tags,});
 
             })
             .catch(err => {
                 console.log(err);
                 localStorage.removeItem('token');
                 Router.push({pathname: '/login'})
-            })
+            });
+
+        axios.get(url+"myAlfred/api/admin/tags/all")
+            .then((response) => {
+                let tags = response.data;
+                this.setState({all_tags: tags})
+            }).catch((error) => {
+            console.log(error)
+        });
 
     }
 
@@ -79,12 +116,18 @@ class view extends React.Component {
         this.setState({category:state});
     };
 
+    handleChange = e => {
+        this.setState({tags: e.target.value})
+
+
+    };
+
     onSubmit = e => {
         e.preventDefault();
-
-        const { label, picture } = this.state.category;
+        const tags = this.state.tags;
+        const { label, picture, description } = this.state.category;
         const id = this.props.category_id;
-        axios.put(`${url}myAlfred/api/admin/category/all/${id}`,{label,picture})
+        axios.put(`${url}myAlfred/api/admin/category/all/${id}`,{label,picture,tags,description})
             .then(res => {
 
                 alert('Categorie modifié avec succès');
@@ -120,6 +163,8 @@ class view extends React.Component {
     render()  {
         const { classes } = this.props;
         const {category} = this.state;
+        const {all_tags} = this.state;
+        const {current_tags} = this.state;
 
 
         return (
@@ -151,6 +196,50 @@ class view extends React.Component {
                                         type="text"
                                         name="picture"
                                         value={category.picture}
+                                        onChange={this.onChange}
+
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <Typography style={{ fontSize: 20 }}>Tags</Typography>
+                                    {current_tags.map(e => (
+                                        <p>{e.label}</p>
+                                    ))}
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
+                                        <Select
+                                            multiple
+                                            value={this.state.tags}
+                                            onChange={this.handleChange}
+                                            input={<Input id="select-multiple-chip" />}
+                                            renderValue={selected => (
+                                                <div className={classes.chips}>
+                                                    {selected.map(value => (
+                                                        <Chip key={value} label={value} className={classes.chip} />
+                                                    ))}
+                                                </div>
+                                            )}
+                                            MenuProps={MenuProps}
+                                        >
+                                            {all_tags.map(name => (
+                                                <MenuItem key={name._id} value={name._id} >
+                                                    {name.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item>
+                                    <Typography style={{ fontSize: 20 }}>Description</Typography>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        multiline
+                                        rows="4"
+                                        name="description"
+                                        value={category.description}
                                         onChange={this.onChange}
 
                                     />

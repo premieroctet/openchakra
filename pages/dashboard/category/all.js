@@ -11,8 +11,8 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 import Link from "next/link";
 
-
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
     signupContainer: {
@@ -48,6 +48,7 @@ class all extends React.Component {
     }
 
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
         axios.get(url+"myAlfred/api/admin/category/all")

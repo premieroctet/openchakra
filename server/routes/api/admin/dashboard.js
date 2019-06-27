@@ -1129,7 +1129,9 @@ router.post('/category/all', passport.authenticate('jwt',{session: false}),(req,
                 } else {
                     const newCategory = new Category({
                         label: req.body.label,
-                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`
+                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
+                        description: req.body.description,
+                        tags: req.body.tags,
                     });
 
                     newCategory.save().then(category => res.json(category)).catch(err => console.log(err));
@@ -1151,6 +1153,7 @@ router.get('/category/all', passport.authenticate('jwt',{session: false}),(req,r
     const admin = decode.is_admin;
     if(admin) {
         Category.find()
+            .populate('tags')
             .then(category => {
                 if(!category){
                     return res.status(400).json({msg: 'No category found'});
@@ -1176,6 +1179,7 @@ router.get('/category/all/:id', passport.authenticate('jwt',{session: false}),(r
     const admin = decode.is_admin;
     if(admin) {
         Category.findById(req.params.id)
+            .populate('tags')
             .then(category => {
                 if(!category){
                     return res.status(400).json({msg: 'No category found'});
@@ -1218,7 +1222,8 @@ router.put('/category/all/:id',passport.authenticate('jwt',{session: false}),(re
     const admin = decode.is_admin;
 
     if(admin) {
-        Category.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: req.body.picture}}, {new: true})
+        Category.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: req.body.picture,tags: req.body.tags,
+            description: req.body.description}}, {new: true})
             .then(category => {
                 res.json(category);
             })
