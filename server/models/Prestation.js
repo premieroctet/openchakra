@@ -40,7 +40,14 @@ const PrestationSchema = new Schema({
     },
     description: {
         type: String
-    }
+    },
+    picture: {
+        type: String
+    },
+    tags: [{
+        type: Schema.Types.ObjectId,
+        ref: 'tag'
+    }]
 });
 
 module.exports = Prestation = mongoose.model('prestation',PrestationSchema);
