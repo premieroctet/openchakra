@@ -17,7 +17,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Chip from '@material-ui/core/Chip';
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
     signupContainer: {
@@ -74,6 +75,9 @@ class add extends React.Component {
             calculating: '',
             job: '',
             description: '',
+            picture: '',
+            tags: [],
+            all_tags: [],
             all_category: [],
             all_service: [],
             all_billing: [],
@@ -143,6 +147,14 @@ class add extends React.Component {
             }).catch((error) => {
             console.log(error)
         });
+
+        axios.get(url+"myAlfred/api/admin/tags/all")
+            .then((response) => {
+                let tags = response.data;
+                this.setState({all_tags: tags})
+            }).catch((error) => {
+            console.log(error)
+        });
     }
 
     onChange = e => {
@@ -151,6 +163,12 @@ class add extends React.Component {
 
     handleChange = e => {
         this.setState({search_filter: e.target.value})
+
+
+    };
+
+    handleChange2 = e => {
+        this.setState({tags: e.target.value})
 
 
     };
@@ -168,7 +186,9 @@ class add extends React.Component {
             job: this.state.job,
             search_filter: this.state.search_filter,
             filter_presentation: this.state.filter_presentation,
-            description: this.state.description
+            description: this.state.description,
+            picture: this.state.picture,
+            tags: this.state.tags
 
         };
         axios
@@ -196,6 +216,7 @@ class add extends React.Component {
         const {all_search_filter} = this.state;
         const {all_filter_presentation} = this.state;
         const {all_job} = this.state;
+        const {all_tags} = this.state;
 
         const categories = all_category.map(e => (
 
@@ -425,6 +446,44 @@ class add extends React.Component {
                                         onChange={this.onChange}
                                         label={"Description"}
                                         placeholder="Description"
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
+                                        <Select
+                                            multiple
+                                            value={this.state.tags}
+                                            onChange={this.handleChange2}
+                                            input={<Input id="select-multiple-chip" />}
+                                            renderValue={selected => (
+                                                <div className={classes.chips}>
+                                                    {selected.map(value => (
+                                                        <Chip key={value} label={value} className={classes.chip} />
+                                                    ))}
+                                                </div>
+                                            )}
+                                            MenuProps={MenuProps}
+                                        >
+                                            {all_tags.map(name => (
+                                                <MenuItem key={name._id} value={name._id} >
+                                                    {name.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        label="Id de l'image unsplash"
+                                        placeholder="Id de l'image unsplash"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        name="picture"
+                                        value={this.state.picture}
+                                        onChange={this.onChange}
                                     />
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>

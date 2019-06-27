@@ -1561,7 +1561,9 @@ router.post('/prestation/all',passport.authenticate('jwt',{session: false}),(req
                         category: mongoose.Types.ObjectId(req.body.category),
                         calculating: mongoose.Types.ObjectId(req.body.calculating),
                         job: mongoose.Types.ObjectId(req.body.job),
-                        description: req.body.description
+                        description: req.body.description,
+                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
+                        tags: req.body.tags
                     });
                     newPrestation.save().then(prestation => res.json(prestation)).catch(err => console.log(err))
 
@@ -1591,6 +1593,7 @@ router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,r
             .populate('search_filter')
             .populate('filter_presentation')
             .populate('calculating')
+            .populate('tags')
             .then(prestation => {
                 if (!prestation) {
                     return res.status(400).json({msg: 'No prestation found'});
@@ -1623,6 +1626,7 @@ router.get('/prestation/all/:id',passport.authenticate('jwt',{session:false}),(r
         .populate('search_filter')
         .populate('calculating')
         .populate('job')
+        .populate('tags')
         .then(prestation => {
             if(!prestation){
                 return res.status(400).json({msg: 'No prestation found'});
@@ -1674,7 +1678,10 @@ router.put('/prestation/all/:id',passport.authenticate('jwt',{session: false}),(
                 search_filter: req.body.search_filter,
                 category: mongoose.Types.ObjectId(req.body.category),
                 calculating: mongoose.Types.ObjectId(req.body.calculating),
-                job: mongoose.Types.ObjectId(req.body.job)}}, {new: true})
+                job: mongoose.Types.ObjectId(req.body.job),
+                picture: req.body.picture,
+                description: req.body.description,
+                tags: req.body.tags}}, {new: true})
             .then(prestation => {
                 res.json(prestation);
             })

@@ -17,6 +17,7 @@ router.get('/all',(req,res) => {
         .populate('search_filter')
         .populate('filter_presentation')
         .populate('calculating')
+        .populate('tags')
         .then(prestation => {
             if(typeof prestation !== 'undefined' && prestation.length > 0){
                 res.json(prestation);
@@ -39,6 +40,7 @@ router.get('/home',(req,res) => {
         .populate('search_filter')
         .populate('filter_presentation')
         .populate('calculating')
+        .populate('tags')
         .limit(4)
         .then(prestation => {
             if(typeof prestation !== 'undefined' && prestation.length > 0){
@@ -99,6 +101,7 @@ router.get('/:id',(req,res)=> {
         .populate('search_filter')
         .populate('filter_presentation')
         .populate('calculating')
+        .populate('tags')
         .then(prestation => {
             if(Object.keys(prestation).length === 0 && prestation.constructor === Object){
                 return res.status(400).json({msg: 'No prestation found'});

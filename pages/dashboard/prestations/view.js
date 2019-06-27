@@ -23,7 +23,7 @@ const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
-        height: '150vh',
+        height: '300vh',
         justifyContent: 'center',
         flexDirection: 'column',
     },
@@ -73,6 +73,7 @@ class view extends React.Component {
             current_filter_presentation: '',
             current_calculating: '',
             current_job: '',
+            current_tags: [],
             all_category: [],
             all_service: [],
             all_billing: [],
@@ -80,6 +81,7 @@ class view extends React.Component {
             all_job: [],
             all_search_filter: [],
             all_filter_presentation: [],
+            all_tags: [],
             category: '',
             service: '',
             billing: '',
@@ -87,7 +89,9 @@ class view extends React.Component {
             search_filter: [],
             calculating: '',
             job: '',
-            description: ''
+            description: '',
+            picture: '',
+            tags: [],
 
         };
 
@@ -107,7 +111,7 @@ class view extends React.Component {
                 this.setState({prestation: prestation, current_service: prestation.service,
                     current_billing: prestation.billing, current_category: prestation.category, current_calculating:prestation.calculating,
                     current_job: prestation.job, current_filter_presentation: prestation.filter_presentation,
-                    current_search_filter: prestation.search_filter});
+                    current_search_filter: prestation.search_filter, current_tags: prestation.tags});
 
 
             })
@@ -173,6 +177,14 @@ class view extends React.Component {
             console.log(error)
         });
 
+        axios.get(url+"myAlfred/api/admin/tags/all")
+            .then((response) => {
+                let tags = response.data;
+                this.setState({all_tags: tags})
+            }).catch((error) => {
+            console.log(error)
+        });
+
     }
 
     onChange = e => {
@@ -191,20 +203,26 @@ class view extends React.Component {
 
     };
 
+    handleChange2 = e => {
+        this.setState({tags: e.target.value})
+
+
+    };
+
     onSubmit = e => {
         e.preventDefault();
+        const tags = this.state.tags;
         const service = this.state.service;
         const category = this.state.category;
         const billing = this.state.billing;
         const calculating = this.state.calculating;
         const search_filter = this.state.search_filter;
         const job = this.state.job;
-        const description = this.state.description;
         const filter_presentation = this.state.filter_presentation;
-        const { label,price } = this.state.prestation;
+        const { label,price,picture,description } = this.state.prestation;
         const id = this.props.prestation_id;
         axios.put(`${url}myAlfred/api/admin/prestation/all/${id}`,{label,price,billing,category,service,search_filter,filter_presentation,
-                                                                                calculating,job,description})
+                                                                                calculating,job,description,picture,tags})
             .then(res => {
 
                 alert('Prestation modifiée avec succès');
@@ -243,6 +261,7 @@ class view extends React.Component {
         const {current_search_filter} = this.state;
         const {current_filter_presentation} = this.state;
         const {current_job} = this.state;
+        const {current_tags} = this.state;
         const {all_category} = this.state;
         const {all_service} = this.state;
         const {all_billing} = this.state;
@@ -250,6 +269,7 @@ class view extends React.Component {
         const {all_search_filter} = this.state;
         const {all_filter_presentation} = this.state;
         const {all_job} = this.state;
+        const {all_tags} = this.state;
 
         const categories = all_category.map(e => (
 
@@ -482,6 +502,49 @@ class view extends React.Component {
                                         value={prestation.description}
                                         onChange={this.onChange}
                                         helperText={"Description"}
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <Typography style={{ fontSize: 20 }}>Tags</Typography>
+                                    {current_tags.map(e => (
+                                        <p>{e.label}</p>
+                                    ))}
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
+                                        <Select
+                                            multiple
+                                            value={this.state.tags}
+                                            onChange={this.handleChange2}
+                                            input={<Input id="select-multiple-chip" />}
+                                            renderValue={selected => (
+                                                <div className={classes.chips}>
+                                                    {selected.map(value => (
+                                                        <Chip key={value} label={value} className={classes.chip} />
+                                                    ))}
+                                                </div>
+                                            )}
+                                            MenuProps={MenuProps}
+                                        >
+                                            {all_tags.map(name => (
+                                                <MenuItem key={name._id} value={name._id} >
+                                                    {name.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item>
+                                    <Typography style={{ fontSize: 20 }}>Image</Typography>
+                                    <img src={prestation.picture} alt={'logo'} width={100}/>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        name="picture"
+                                        value={prestation.picture}
+                                        onChange={this.onChange}
+
                                     />
                                 </Grid>
 
