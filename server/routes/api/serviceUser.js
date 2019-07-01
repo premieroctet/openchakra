@@ -179,6 +179,26 @@ router.get('/home',(req,res)=> {
         .catch(err => res.status(404).json({ service: 'No service found' }));
 });
 
+// @Route GET /myAlfred/api/serviceUser/currentAlfred
+// View all service for the current alfred
+// @Access private
+router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,res)=> {
+
+    ServiceUser.find({user: req.user.id})
+        .populate('service')
+        .populate('prestations.prestation')
+        .populate('equipments')
+        .then(service => {
+            if(Object.keys(service).length === 0 && service.constructor === Object){
+                return res.status(400).json({msg: 'No service found'});
+            } else {
+                res.json(service);
+            }
+
+        })
+        .catch(err => res.status(404).json({ service: 'No service found' }));
+});
+
 
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser
@@ -200,6 +220,8 @@ router.get('/:id',(req,res)=> {
         })
         .catch(err => res.status(404).json({ service: 'No service found' }));
 });
+
+
 
 // @Route DELETE /myAlfred/api/serviceUser/:id
 // Delete a service for an alfred
