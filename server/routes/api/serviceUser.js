@@ -85,6 +85,57 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=>{
         })
 });
 
+// @Route PUT /myAlfred/api/serviceUser/edit/:id
+// Update a serviceUser
+// @Access private
+router.put('/edit/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
+    ServiceUser.findById(req.params.id)
+        .then(serviceUser => {
+
+
+            serviceUser.city=req.body.city;
+            serviceUser.perimeter= req.body.perimeter;
+            serviceUser.minimum_basket= req.body.minimum_basket;
+            serviceUser.deadline_before_booking= req.body.deadline_before_booking;
+            serviceUser.majoration.active=req.body.active;
+            serviceUser.majoration.price=req.body.price;
+            serviceUser.equipments= req.body.equipments;
+
+
+            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
+
+        })
+        .catch(err => console.log(err))
+});
+
+// @Route POST /myAlfred/api/serviceUser/addDiploma/:id
+// Add a diploma for a service
+// @Access private
+router.post('/addDiploma/:id',upload.single('diploma'),passport.authenticate('jwt',{session:false}),(req,res) => {
+    ServiceUser.findById(req.params.id)
+        .then(serviceUser => {
+            serviceUser.diploma = req.file.path;
+            serviceUser.graduated = true;
+
+            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err))
+});
+
+// @Route POST /myAlfred/api/serviceUser/addCertification/:id
+// Add a certification for a service
+// @Access private
+router.post('/addCertification/:id',upload2.single('certification'),passport.authenticate('jwt',{session:false}),(req,res) => {
+    ServiceUser.findById(req.params.id)
+        .then(serviceUser => {
+            serviceUser.certification = req.file.path;
+            serviceUser.is_certified = true;
+
+            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err))
+});
+
 // @Route GET /myAlfred/api/serviceUser/all
 // View all service per user
 // @Access private
@@ -200,6 +251,7 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
 });
 
 
+
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser
 // @Access private
@@ -210,6 +262,7 @@ router.get('/:id',(req,res)=> {
         .populate('service')
         .populate('prestations.prestation')
         .populate('equipments')
+        .populate('service.equipments')
         .then(service => {
             if(Object.keys(service).length === 0 && service.constructor === Object){
                 return res.status(400).json({msg: 'No service found'});
@@ -234,17 +287,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, re
         .catch(err => res.status(404).json({eventnotfound: 'No event found'}));
 });
 
-// @Route PUT /myAlfred/api/serviceUser/:id
-// Update a serviceUser
-// @Access private
-router.put('/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
-    ServiceUser.findByIdAndUpdate(req.params.id, {city:req.body.city, perimeter: req.body.perimeter,
-            minimum_basket: req.body.minimum_basket, deadline_before_booking: req.body.deadline_before_booking },{new:true})
-        .then(service => {
-            res.json(service)
-        })
-        .catch(err => res.status(404).json({servicenotfound: 'No service found'}))
-});
+
 
 
 module.exports = router;

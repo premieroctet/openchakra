@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
+import Link from "next/link";
 
 
 const { config } = require('../../config/config');
@@ -113,6 +114,11 @@ class detailsService extends React.Component {
                             ))}
                         </ul>
                     </div>
+                    <Link href={"/dashboardAlfred/editService?id="+serviceUser._id}>
+                        <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                            Modifier
+                        </Button>
+                    </Link>
                 </Grid>
             </Layout>
         );
