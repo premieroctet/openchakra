@@ -49,6 +49,15 @@ const ServiceUserSchema = new Schema({
     },
     certification: {
         type: String
+    },
+    majoration: {
+        active: {
+            type: Boolean,
+            default: false
+        },
+        price: {
+            type: Number
+        }
     }
 });
 
