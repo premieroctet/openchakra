@@ -106,6 +106,18 @@ class detailsService extends React.Component {
                         ))}
                         </tbody>
                     </table>
+                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                        <Link href={'/dashboardAlfred/addPrestations?id='+this.props.service_id}>
+                            <Button type="button" variant="contained" color="primary" style={{ width: '100%' }}>
+                                Ajouter des prestations
+                            </Button>
+                        </Link>
+                        <Link href={'/dashboardAlfred/editPrestations?id='+this.props.service_id}>
+                            <Button type="button" variant="contained" color="primary" style={{ width: '100%' }}>
+                                Modifier mes prestations
+                            </Button>
+                        </Link>
+                    </Grid>
                     <div>
                         Vous fournissez :
                         <ul>
