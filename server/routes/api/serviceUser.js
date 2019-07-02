@@ -129,6 +129,27 @@ router.put('/addPrestation/:id',passport.authenticate('jwt',{session:false}),(re
         .catch(err => console.log(err))
 });
 
+// @Route PUT /myAlfred/api/serviceUser/editPrestation
+// Edit the price of a prestation for a service
+// @Access private
+router.put('/editPrestation/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
+    ServiceUser.findById(req.params.id)
+        .then(serviceUser => {
+
+
+            const index = serviceUser.prestations
+                .map(item => item.id)
+                .indexOf(req.body.prestation);
+
+            serviceUser.prestations[index].price = req.body.price;
+
+
+            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
+
+        })
+        .catch(err => console.log(err))
+});
+
 // @Route POST /myAlfred/api/serviceUser/addDiploma/:id
 // Add a diploma for a service
 // @Access private
@@ -276,7 +297,7 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser
 // @Access private
-router.get('/:id',(req,res)=> {
+router.get('/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
 
     ServiceUser.findById(req.params.id)
         .populate('user')
