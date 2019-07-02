@@ -23,7 +23,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Link from 'next/link';
 
 
-
+const _ = require('lodash');
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
@@ -59,6 +59,7 @@ class addPrestations extends React.Component {
             prestations: [],
             all_prestations: [],
             new_prestations: [],
+            prestation: {},
 
 
 
@@ -66,6 +67,7 @@ class addPrestations extends React.Component {
 
 
         };
+
 
     }
 
@@ -90,20 +92,25 @@ class addPrestations extends React.Component {
                         const data = response.data;
                         this.setState({all_prestations: data});
 
-
-                            //console.log(data);
                             this.state.prestations.forEach(e => {
-                                data.forEach(k => {
-                                    if (k.label === e.prestation.label) {
-                                        console.log('egal')
-                                    } else {
-                                       this.state.new_prestations.push(k);
 
-                                    }
 
-                                })
+
+                                let test2 = _.pullAllBy(data,[{'label': e.prestation.label}],'label');
+
+                                this.setState({new_prestations: test2});
+
+
+
+
+
 
                             })
+
+
+
+
+
 
                     })
                     .catch(error => {
@@ -117,32 +124,54 @@ class addPrestations extends React.Component {
 
 
 
+
+
     }
+
+
+
 
     onChange = e => {
         //this.setState({ [e.target.name]: e.target.value });
-        const state = this.state.serviceUser;
+        const state = this.state.prestation;
         state[e.target.name] = e.target.value;
-        this.setState({serviceUser:state});
+        this.setState({prestation:state});
     };
 
 
 
 
-    onSubmit = e => {
+     onSubmit = e => {
         e.preventDefault();
+        const id = this.props.service_id;
+        const price = e.target.price.value;
+        const prestation = e.target.prestation.value;
+
+        axios.put(url+`myAlfred/api/serviceUser/addPrestation/${id}`,{price,prestation})
+            .then(res => {
+                alert('Prestation ajouté avec succès');
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
 
 
     };
-
 
 
 
 
     render() {
+
         const { classes } = this.props;
         const {prestations} = this.state;
         const {new_prestations} = this.state;
+
+
+
+
+
 
 
 
@@ -155,23 +184,25 @@ class addPrestations extends React.Component {
                                 <Typography style={{ fontSize: 30 }}>Ajouter des prestations</Typography>
                             </Grid>
 
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th>Prestation</th>
-                                    <th>Prix</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {new_prestations.map(e => (
-                                    <tr>
-                                        <td>{e.label}</td>
-                                        <td><input type="text"/> </td>
-                                        <td> <button>Ajouter</button></td>
-                                    </tr>
+
+                                {new_prestations.map((e,index) => (
+                                    <div key={index}>
+                                        <form onSubmit={this.onSubmit}>
+
+                                        <p>{e.label}</p>
+                                        <p>{e.filter_presentation.label}</p>
+
+                                        <input type="number" name="price"/>
+                                        <input type="hidden" value={e._id} name="prestation"/>
+                                        <button type={"submit"}>Ajouter</button>
+
+
+                                        </form>
+                                    </div>
+
                                 ))}
-                                </tbody>
-                            </table>
+
+
                         </Grid>
                     </Card>
                 </Grid>

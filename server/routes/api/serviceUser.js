@@ -108,6 +108,27 @@ router.put('/edit/:id',passport.authenticate('jwt',{session:false}),(req,res) =>
         .catch(err => console.log(err))
 });
 
+// @Route PUT /myAlfred/api/serviceUser/addPrestation
+// Add a prestation for a service
+// @Access private
+router.put('/addPrestation/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
+    ServiceUser.findById(req.params.id)
+        .then(serviceUser => {
+
+
+            const newPrestation = {
+                prestation: mongoose.Types.ObjectId(req.body.prestation),
+                price: req.body.price
+            };
+            serviceUser.prestations.unshift(newPrestation);
+
+
+            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
+
+        })
+        .catch(err => console.log(err))
+});
+
 // @Route POST /myAlfred/api/serviceUser/addDiploma/:id
 // Add a diploma for a service
 // @Access private
