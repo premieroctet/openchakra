@@ -316,7 +316,24 @@ router.get('/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
         .catch(err => res.status(404).json({ service: 'No service found' }));
 });
 
+// @Route PUT /myAlfred/serviceUser/deletePrestation/:id
+// Delete one prestation from the list
+// @Access private
+router.put('/deletePrestation/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+        ServiceUser.findById(req.params.id)
+            .then(serviceUser => {
+                const removeIndex = serviceUser.prestations
+                    .map(item => item.id)
+                    .indexOf(req.body.prestation);
 
+                serviceUser.prestations.splice(removeIndex, 1);
+
+
+                serviceUser.save().then(list => res.json(list));
+            })
+            .catch(err => res.status(404).json(err));
+    }
+);
 
 // @Route DELETE /myAlfred/api/serviceUser/:id
 // Delete a service for an alfred

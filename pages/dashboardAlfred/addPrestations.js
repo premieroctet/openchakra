@@ -92,20 +92,24 @@ class addPrestations extends React.Component {
                         const data = response.data;
                         this.setState({all_prestations: data});
 
+                        if(typeof this.state.prestations !== 'undefined' && this.state.prestations.length > 0) {
+
+
                             this.state.prestations.forEach(e => {
 
 
+                                let test2 = _.pullAllBy(data, [{'label': e.prestation.label}], 'label');
 
-                                let test2 = _.pullAllBy(data,[{'label': e.prestation.label}],'label');
 
                                 this.setState({new_prestations: test2});
 
 
-
-
-
-
                             })
+                        } else {
+
+                            this.setState({new_prestations: data})
+
+                        }
 
 
 

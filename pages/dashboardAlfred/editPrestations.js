@@ -67,7 +67,7 @@ class editPrestations extends React.Component {
 
         };
 
-
+        this.handleClick = this.handleClick.bind(this);
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -128,6 +128,24 @@ class editPrestations extends React.Component {
 
     };
 
+    handleClick(prestation) {
+        const id = this.props.service_id;
+
+        axios.put(`${url}myAlfred/api/serviceUser/deletePrestation/${id}`,prestation)
+            .then(res => {
+
+                alert('Prestation supprimée avec succès');
+
+            })
+            .catch(err => {
+                console.log(err);
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            })
+
+
+    };
+
 
 
 
@@ -164,6 +182,9 @@ class editPrestations extends React.Component {
                                         <input type="number" name="price"/>
                                         <input type="hidden" name="prestation" value={e._id}/>
                                         <button type={"submit"}>Modifier</button>
+                                        <Button type="button" variant="contained" color="secondary" onClick={()=>this.handleClick(e._id)}>
+                                            Supprimer
+                                        </Button>
 
 
                                     </form>
