@@ -31,7 +31,7 @@ const url = config.apiUrl;
 const styles = theme => ({
   signupContainer: {
     alignItems: 'center',
-    height: '190vh',
+    height: '200vh',
     justifyContent: 'top',
     flexDirection: 'column',
 
@@ -100,7 +100,8 @@ class signup extends React.Component {
           zip_code: '',
           country: '',
           checked: false,
-          errors: {}
+          errors: {},
+
         };
         this.handleChecked = this.handleChecked.bind(this);
       }
@@ -127,13 +128,29 @@ class signup extends React.Component {
           birthday: this.state.birthday,
           email: this.state.email,
           password: this.state.password,
+          address: this.state.address,
+          zip_code: this.state.zip_code,
+          city: this.state.city,
+          country: this.state.country,
 
         };
+        const username = this.state.email;
+        const password = this.state.password;
+
 
         axios
             .post(url+'myAlfred/api/users/register', newUser)
             .then(res => {
-              Router.push({pathname:'/addPicture'})
+              axios.post(url+'myAlfred/api/users/login',{username, password})
+                  .then(response => {
+                    const {token} = response.data;
+                    localStorage.setItem('token',token);
+                    Router.push({pathname:'/addPicture'})
+                  })
+                  .catch(error => {
+                    console.log(error);
+                  })
+
             })
             .catch(err => {
                   console.log(err);

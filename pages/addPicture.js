@@ -126,7 +126,7 @@ class addPicture extends React.Component {
                             <form onSubmit={this.onSubmit}>
                                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 25}}>
 
-                                    <input accept="image/*" className="input" style={{display:'none'}} id="icon-button-file" type="file" onChange={(event) =>{this.handleChange(event);this.onChange}} name={"myImage"} />
+                                    <input accept="image/*" className="input" style={{display:'none'}} id="icon-button-file" type="file" onChange={(event) =>{this.handleChange(event);this.onChange(event)}} name={"myImage"} />
                                     <label htmlFor="icon-button-file">
                                         <IconButton color="primary" className={classes.button}  style={{width:150, height:150,backgroundColor:'lightgrey'}} component="span">
                                             <PhotoCamera style={{fontSize: '2rem'}} />
