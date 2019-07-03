@@ -23,30 +23,24 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import axios from "axios";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
   signupContainer: {
     alignItems: 'center',
-    height: '170vh',
+    height: '190vh',
     justifyContent: 'top',
     flexDirection: 'column',
 
-    /*[theme.breakpoints.down('md')]: {
-      height: '140vh',
-    },
-    [theme.breakpoints.down('sm')]: {
-      height: '145vh',
-    },
-    [theme.breakpoints.down('xs')]: {
-      height: '150vh',
-    },*/
   },
   card: {
-    padding: '1.5rem 3rem',
-    width: 400,
+    //padding: '1.5rem 3rem',
+    width: 800,
     marginTop: '100px',
+    fontFamily: 'helveticaNeue'
   },
   cardContant: {
     flexDirection: 'column',
@@ -62,57 +56,91 @@ const styles = theme => ({
   },
   datenaissance: {
     marginTop: 20,
+    width: '100%'
   },
-  selectgenre: {
-    marginTop: 20,
-    marginBottom: -15,
+  banner: {
+    marginBottom: 25,
+    backgroundColor: '#00abed',
+    height: 80,
+
   },
+  newContainer: {
+    padding: 20,
+  },
+  title: {
+    fontFamily: 'helveticaNeue',
+    color: 'white',
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: 0,
+    paddingTop: 22,
+    letterSpacing: 1,
+  },
+  country: {
+    width: '100%'
+  },
+  menu: {
+    width: 200,
+  },
+
+
 });
 
 class signup extends React.Component {
       constructor(props) {
         super(props);
         this.state = {
-          gender: '',
           firstname:'',
           name: '',
           birthday: '',
           email: '',
           password: '',
-          password2: '',
+          address: '',
+          city: '',
+          zip_code: '',
+          country: '',
+          checked: false,
           errors: {}
         };
+        this.handleChecked = this.handleChecked.bind(this);
       }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
-    }
-  }
-      onChange = e => {
+      componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
+      }
+
+
+  onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
       };
+
+  handleChecked () {
+    this.setState({checked: !this.state.checked});
+  }
 
       onSubmit = e => {
         e.preventDefault();
 
         const newUser = {
-          gender: this.state.gender,
           firstname: this.state.firstname,
           name: this.state.name,
           birthday: this.state.birthday,
           email: this.state.email,
           password: this.state.password,
-          password2: this.state.password2,
+
         };
 
         axios
             .post(url+'myAlfred/api/users/register', newUser)
             .then(res => {
-              Router.push({pathname:'/login'})
+              Router.push({pathname:'/addPicture'})
             })
-            .catch(err =>
-                console.log(err)
+            .catch(err => {
+                  console.log(err);
+                  this.setState({errors: err.response.data})
+
+            }
+
             );
 
 
@@ -126,68 +154,173 @@ class signup extends React.Component {
             <Layout>
               <Grid container className={classes.signupContainer}>
                 <Card className={classes.card}>
-                  <Grid>
-                    <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                      <Typography style={{ fontSize: 30 }}>Inscription</Typography>
-                    </Grid>
+                  <div className={classes.banner}>
+                    <h2 className={classes.title}>Inscription</h2>
+
+                  </div>
+                  <div className={classes.newContainer}>
+
                     <form onSubmit={this.onSubmit}>
-                      <Grid item className={classes.selectgenre}>
-                        <FormControl className={classes.formControl}>
-                          <InputLabel shrink htmlFor="genre-label-placeholder">
-                            Genre
-                          </InputLabel>
-                          <Select
-                              input={<Input name="gender" id="genre-label-placeholder" />}
-                              displayEmpty
-                              name="gender"
-                              value={this.state.gender}
+                      <Grid container>
+                        <Grid item style={{width: '100%'}}>
+                          <TextField
+                              id="standard-with-placeholder"
+                              label="Email"
+                              placeholder="Email"
+                              margin="normal"
+                              style={{ width: '100%' }}
+                              variant="outlined"
+                              type="email"
+                              name="email"
+                              value={this.state.email}
                               onChange={this.onChange}
-                              className={classes.selectEmpty}
+                              error={errors.email}
+                          />
+                          <em>{errors.email}</em>
+                        </Grid>
+                        <Grid item style={{width: '100%'}}>
+                          <TextField
+                              id="standard-with-placeholder"
+                              label="Prénom"
+                              placeholder="Prénom"
+                              margin="normal"
+                              style={{ width: '100%' }}
+                              variant="outlined"
+                              type="text"
+                              name="firstname"
+                              value={this.state.firstname}
+                              onChange={this.onChange}
+                              error={errors.firstname}
+                          />
+                          <em>{errors.firstname}</em>
+                        </Grid>
+                        <Grid item style={{width: '100%'}}>
+                          <TextField
+                              id="standard-with-placeholder"
+                              label="Nom"
+                              placeholder="Nom"
+                              margin="normal"
+                              variant="outlined"
+                              style={{ width: '100%' }}
+                              type="text"
+                              name="name"
+                              value={this.state.name}
+                              onChange={this.onChange}
+                              error={errors.name}
+                          />
+                          <em>{errors.name}</em>
+                        </Grid>
+                      </Grid>
+                      <Grid container style={{marginTop: 15}}>
+                        <Typography style={{fontSize: '1.2rem',fontFamily: 'helveticaNeue', width:'100%'}}>Adresse</Typography>
+                        <p style={{fontFamily: 'helveticaNeue'}}>Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous proposer<br/>
+                        ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</p>
+
+                        <Grid item style={{width: '100%'}}>
+                          <TextField
+                              id="standard-with-placeholder"
+                              label="Adresse"
+                              placeholder="Adresse"
+                              margin="normal"
+                              variant="outlined"
+                              style={{ width: '100%' }}
+                              type="text"
+                              name="address"
+                              value={this.state.address}
+                              onChange={this.onChange}
+                              error={errors.address}
+                          />
+                          <em>{errors.address}</em>
+                        </Grid>
+                        <Grid item style={{width: '25%', marginRight: 20}}>
+                          <TextField
+                              id="standard-with-placeholder"
+                              label="Code postal"
+                              placeholder="Code postal"
+                              margin="normal"
+                              variant="outlined"
+                              style={{ width: '100%' }}
+                              type="text"
+                              name="zip_code"
+                              value={this.state.zip_code}
+                              onChange={this.onChange}
+                              error={errors.zip_code}
+                          />
+                          <em>{errors.zip_code}</em>
+                        </Grid>
+                        <Grid item style={{width: '72.3%'}}>
+                          <TextField
+                              id="standard-with-placeholder"
+                              label="Ville"
+                              placeholder="Ville"
+                              margin="normal"
+                              variant="outlined"
+                              style={{ width: '100%' }}
+                              type="text"
+                              name="city"
+                              value={this.state.city}
+                              onChange={this.onChange}
+                              error={errors.city}
+                          />
+                          <em>{errors.city}</em>
+                        </Grid>
+                        <Grid item className={classes.country}>
+                          <TextField
+                              id="outlined-select-currency"
+                              select
+                              label="Pays"
+                              value={this.state.country}
+                              name="country"
+                              onChange={this.onChange}
+                              style={{ width: '100%' }}
+                              SelectProps={{
+                                MenuProps: {
+                                  className: classes.menu,
+                                },
+                              }}
+                              margin="normal"
+                              variant="outlined"
+                              error={errors.country}
                           >
-                            <MenuItem value="">
-                              <em>...</em>
+
+                                <MenuItem value="France">
+                                  France
+                                </MenuItem>
+                            <MenuItem value="Maroc">
+                              Maroc
                             </MenuItem>
-                            <MenuItem value={"Homme"}>Homme</MenuItem>
-                            <MenuItem value={"Femme"}>Femme</MenuItem>
-                            <MenuItem value={"Autre"}>Non défini</MenuItem>
-                          </Select>
-                          <FormHelperText>Quel est votre genre ?</FormHelperText>
-                        </FormControl>
+
+                          </TextField>
+                          <em>{errors.country}</em>
+                        </Grid>
+                        <Grid item style={{width: '100%'}}>
+                          <TextField
+                              id="standard-with-placeholder"
+                              label="Créer un mot de passe"
+                              placeholder="Créer un mot de passe"
+                              margin="normal"
+                              style={{ width: '100%' }}
+                              variant="outlined"
+                              type="password"
+                              name="password"
+                              value={this.state.password}
+                              onChange={this.onChange}
+                              error={errors.password}
+                              helperText="8 charactères minimum"
+                          />
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        <TextField
-                            id="standard-with-placeholder"
-                            label="Prénom"
-                            placeholder="Prénom"
-                            margin="normal"
-                            style={{ width: '100%' }}
-                            type="text"
-                            name="firstname"
-                            value={this.state.firstname}
-                            onChange={this.onChange}
-                            error={errors.firstname}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                            id="standard-with-placeholder"
-                            label="Nom"
-                            placeholder="Nom"
-                            margin="normal"
-                            style={{ width: '100%' }}
-                            type="text"
-                            name="name"
-                            value={this.state.name}
-                            onChange={this.onChange}
-                            error={errors.name}
-                        />
-                      </Grid>
+                      <Typography style={{fontSize: '1.2rem',fontFamily: 'helveticaNeue', width:'100%', marginTop: 15}}>Date de naissance</Typography>
+                      <p style={{fontFamily: 'helveticaNeue'}}>Pour vous inscrire, vous devez être agé d’au moins 16 ans. Les autres<br/>
+                        utilisateurs ne verront pas votre date de naissance.
+                      </p>
                       <Grid item className={classes.datenaissance}>
                         <TextField
                             id="date"
                             label="Date de naissance"
                             type="date"
                             name="birthday"
+                            style={{width: '100%'}}
                             className={classes.textField}
                             value={this.state.birthday}
                             onChange={this.onChange}
@@ -195,72 +328,44 @@ class signup extends React.Component {
                               shrink: true,
                             }}
                         />
-                        <FormHelperText>Quel est votre date de naissance ?</FormHelperText>
+
                       </Grid>
-                      <Grid item>
-                        <TextField
-                            id="standard-with-placeholder"
-                            label="Email"
-                            placeholder="Email"
-                            margin="normal"
-                            style={{ width: '100%' }}
-                            type="email"
-                            name="email"
-                            value={this.state.email}
-                            onChange={this.onChange}
-                            error={errors.email}
+
+
+
+                      <Grid container style={{marginTop: 15}}>
+                        <FormControlLabel
+                            control={
+                              <Checkbox
+                                  checked={this.state.checked}
+                                  onChange={this.handleChecked}
+                                  value="checked"
+                                  color="primary"
+                              />
+                            }
+                            label="J’accepte les conditions générales d’utilisation de My-Alfred."
                         />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                            id="standard-with-placeholder"
-                            label="Mot de passe (8 charactères min)"
-                            placeholder="Mot de passe (8 charactères min)"
-                            margin="normal"
-                            style={{ width: '100%' }}
-                            type="password"
-                            name="password"
-                            value={this.state.password}
-                            onChange={this.onChange}
-                            error={errors.password}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                            id="standard-with-placeholder"
-                            label="Réécrivez votre mot de passe"
-                            placeholder="Réécrivez votre mot de passe"
-                            margin="normal"
-                            style={{ width: '100%' }}
-                            type="password"
-                            name="password2"
-                            value={this.state.password2}
-                            onChange={this.onChange}
-                            error={errors.password2}
-                        />
-                      </Grid>
-                      <Grid container>
-                        <Grid className="CGU" item xs={6}>
-                          <Typography>
-                            <Link href='#'>
-                              <a className={classes.linkText}>
-                                Acceptez vous nos CGU ?
-                              </a>
-                            </Link>
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Checkboxes/>
-                        </Grid>
                       </Grid>
 
                       <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                        <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                        {this.state.checked ? <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                           Inscription
-                        </Button>
+                        </Button> : <Button disabled type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                          Inscription
+                        </Button> }
+
                       </Grid>
                     </form>
-                  </Grid>
+                    <hr/>
+                    <Grid container>
+                    <Grid item>
+                    <p>Vous avez déjà un compte My Alfred ? </p>
+                    </Grid>
+                    <Grid item style={{paddingTop: 16, marginLeft: 5}}>
+                      <Link href={'/login'}><a style={{color:'#68b7c5', textDecoration: 'none'}}>Connexion</a></Link>
+                    </Grid>
+                    </Grid>
+                  </div>
                 </Card>
               </Grid>
             </Layout>

@@ -9,20 +9,21 @@ import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
+import Link from "next/link";
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '170vh',
+        height: '100vh',
         justifyContent: 'top',
         flexDirection: 'column',
 
     },
     card: {
-        padding: '1.5rem 3rem',
-        width: 400,
+        fontFamily: 'helveticaNeue',
+        width: 800,
         marginTop: '100px',
     },
     cardContant: {
@@ -33,6 +34,24 @@ const styles = theme => ({
         color: 'black',
         fontSize: 12,
         lineHeight: 4.15,
+    },
+    banner: {
+        marginBottom: 25,
+        backgroundColor: '#00abed',
+        height: 80,
+
+    },
+    newContainer: {
+        padding: 20,
+    },
+    title: {
+        fontFamily: 'helveticaNeue',
+        color: 'white',
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: 0,
+        paddingTop: 22,
+        letterSpacing: 1,
     },
 });
 
@@ -60,7 +79,11 @@ class addPhone extends React.Component {
             .put(url+'myAlfred/api/users/profile/phone', newPhone)
             .then(res => {
                 alert('Téléphone ajouté');
-                Router.push({pathname:'/profile'})
+                if(localStorage.getItem('path') === '/signup') {
+                    Router.push({pathname: '/checkEmail'})
+                } else {
+                    Router.push({pathname:'/profile'})
+                }
             })
             .catch(err =>
                 console.log(err)
@@ -77,31 +100,43 @@ class addPhone extends React.Component {
             <Layout>
                 <Grid container className={classes.signupContainer}>
                     <Card className={classes.card}>
-                        <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>Ajouter un numéro de téléphone</Typography>
-                            </Grid>
-                            <form onSubmit={this.onSubmit}>
-                                <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        label="Numéro de téléphone"
-                                        placeholder="Numéro de téléphone"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="phone"
-                                        value={this.state.address}
-                                        onChange={this.onChange}
-                                    />
+                        <div className={classes.banner}>
+                            <h2 className={classes.title}>Confirmez votre numéro de téléphone</h2>
+
+                        </div>
+                            <div className={classes.newContainer}>
+                                <Typography style={{fontFamily: 'helveticaNeue'}}>De cette façon, vos Alfred ou vos clients pourront vous contacter si besoin.</Typography>
+                                <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
+                                    <img src='../static/smartphone.svg' style={{width: 100}}/>
                                 </Grid>
-                                <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                                        Ajouter
-                                    </Button>
+                                <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
+                                    <form onSubmit={this.onSubmit}>
+                                        <Grid item>
+                                            <TextField
+                                                id="standard-with-placeholder"
+                                                label="Numéro de téléphone"
+                                                placeholder="Numéro de téléphone"
+                                                margin="normal"
+                                                style={{ width: '100%' }}
+                                                type="text"
+                                                name="phone"
+                                                variant="outlined"
+                                                value={this.state.address}
+                                                onChange={this.onChange}
+                                            />
+                                        </Grid>
+                                        <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                                            <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                                Je confirme mon numéro
+                                            </Button>
+                                        </Grid>
+                                    </form>
                                 </Grid>
-                            </form>
-                        </Grid>
+                                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+                                    <Link href={'/'}><a style={{textDecoration: 'none', color: 'black'}}>Je le ferai plus tard</a></Link>
+                                </Grid>
+                            </div>
+
                     </Card>
                 </Grid>
             </Layout>
