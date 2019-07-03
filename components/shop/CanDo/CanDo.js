@@ -10,6 +10,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import { FavoriteBorderOutlined, More } from '@material-ui/icons';
 
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
   container: {
@@ -120,9 +121,9 @@ class canDo extends React.Component{
 
 
 
-    const id = self.props.shop;
+    const id_alfred = self.props.shop;
 
-    axios.get(`http://localhost:5000/myAlfred/api/shop/${id}`)
+    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
         .then(function (response) {
 
           let shop = response.data;
@@ -144,7 +145,6 @@ class canDo extends React.Component{
 
   }
 
-//<CanDoCard shops={this.state.id} img="../../../static/photo-1538342014732-212dc8f76863.jpeg"/>
 
   render() {
     const {classes} = this.props;
@@ -155,7 +155,7 @@ class canDo extends React.Component{
 
         <Card className={classes.card}>
           <CardActionArea>
-            <CardMedia className={classes.media} image={"../../../static/photo-1538342014732-212dc8f76863.jpeg"} title="Coiffure">
+            <CardMedia className={classes.media} image={e.label.service.picture} title="Coiffure">
               <div className={classes.darkOverlay}>
                 <Grid container style={{
                   display: 'flex',

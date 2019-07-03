@@ -37,7 +37,17 @@ const PrestationSchema = new Schema({
     job: {
         type: Schema.Types.ObjectId,
         ref: 'job'
-    }
+    },
+    description: {
+        type: String
+    },
+    picture: {
+        type: String
+    },
+    tags: [{
+        type: Schema.Types.ObjectId,
+        ref: 'tag'
+    }]
 });
 
 module.exports = Prestation = mongoose.model('prestation',PrestationSchema);

@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import axios from "axios";
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
   container: {
@@ -81,8 +82,8 @@ class bio extends React.Component {
     let self = this;
 
 
-    const id = self.props.shop;
-    axios.get(`http://localhost:5000/myAlfred/api/shop/${id}`)
+    const id_alfred = self.props.shop;
+    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
         .then(function (response) {
 
           let shop = response.data;
@@ -114,7 +115,7 @@ class bio extends React.Component {
           <Grid container className={classes.container} spacing={24}>
             <Grid container className={classes.allContainer}>
               <Grid item xs={4} className={classes.avatarContainer}>
-                <Avatar alt="John Doe" src="../../../../static/John-Doe.jpg" className={classes.avatar} />
+                <Avatar alt="John Doe" src={`../../../../${alfred.picture}`} className={classes.avatar} />
                 <Typography className={classes.text}>{alfred.name} {alfred.firstname}</Typography>
                 <Typography>Rouen, France</Typography>
               </Grid>

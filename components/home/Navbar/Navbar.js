@@ -16,7 +16,7 @@ const styles = {
   },
 };
 
-class navbar extends React.Component{
+class navbar extends React.Component {
   constructor(props){
     super(props);
     this.state = {

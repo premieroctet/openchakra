@@ -109,8 +109,8 @@ const styles = theme => ({
 const bodySearchCard = (props) => {
   // eslint-disable-next-line object-curly-newline
   const { classes,label, price, filter } = props;
-  const background = ["../../static/bleumarine.png","../../static/saumonorange.png","../../static/bleuclair.png"
-    ,"../../static/violetclair.png"];
+  const background = ["../../static/bleumarine.PNG","../../static/saumonorange.PNG","../../static/bleuclair.PNG"
+    ,"../../static/violetclair.PNG"];
 
   return (
       <Card className={classes.card}>

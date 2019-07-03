@@ -5,11 +5,12 @@ import { Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import { Share, FavoriteBorderOutlined, PermContactCalendar } from '@material-ui/icons';
 import axios from 'axios';
+const url = "https://myalfred.hausdivision.com/";
 
 const style = theme => ({
   bannerContainer: {
     height: '55vh',
-    backgroundImage: 'url("../../../static/photo-1538342014732-212dc8f76863.jpeg")',
+    //backgroundImage: 'url("../../../static/photo-1538342014732-212dc8f76863-min.jpeg")',
     marginTop: 64,
   },
   darkOverlay: {
@@ -60,7 +61,9 @@ class alfredBanner extends React.Component{
     super(props);
     this.state ={
       alfred: [],
-      idAlfred:''
+      idAlfred:'',
+      shop: {},
+      have_picture: false
     };
     this.addFavoris = this.addFavoris.bind(this);
 
@@ -71,19 +74,23 @@ class alfredBanner extends React.Component{
     let self = this;
 
 
-    const id = self.props.shop;
-    axios.get(`http://localhost:5000/myAlfred/api/shop/${id}`)
+    const id_alfred = self.props.shop;
+    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
         .then(function (response) {
 
           let shop = response.data;
 
+          if(typeof shop.picture != "undefined") {
+            self.setState({have_picture: true})
+          }
 
           self.setState({
             alfred: shop.alfred,
-            idAlfred: shop.alfred._id
+            idAlfred: shop.alfred._id,
+            shop:shop
           });
           let idAlfred = shop.alfred._id;
-          axios.put(`http://localhost:5000/myAlfred/api/users/alfredViews/${idAlfred}`)
+          axios.put(`${url}myAlfred/api/users/alfredViews/${idAlfred}`)
               .then(function (result) {
                 console.log('Views updated');
               })
@@ -103,7 +110,7 @@ class alfredBanner extends React.Component{
 
     const test = {alfred: this.state.idAlfred};
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-    axios.post(`http://localhost:5000/myAlfred/api/favoris/add`,test)
+    axios.post(`${url}myAlfred/api/favoris/add`,test)
         .then(response => {
           console.log('Favoris ajouté')
         })
@@ -114,42 +121,48 @@ class alfredBanner extends React.Component{
    render() {
     const { classes } = this.props;
     const {alfred} = this.state;
+    const {shop} = this.state;
+    const {have_picture} = this.state;
 
 
 
     return (
         <Fragment>
-          <Grid container className={classes.bannerContainer}>
-            <Grid container className={classes.darkOverlay}>
-              <Grid container className={classes.container}>
-                <Grid item className={classes.itemShare}>
-                  <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
-                    <Share style={{ color: 'white' }} />
-                    <Typography variant="body1" style={{ color: 'white', fontSize: 20 }}>
-                      Share
-                    </Typography>
-                  </Grid>
-                  <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
-                    <FavoriteBorderOutlined style={{ color: 'white' }} onClick={this.addFavoris} />
-                    <Typography variant="body1" style={{ color: 'white', fontSize: 20 }}>
-                      Add to wishlist
-                    </Typography>
-                  </Grid>
+                <Grid container className={classes.bannerContainer}
+                      style={{backgroundImage: have_picture ? `url(${shop.picture})`: 'url("../../../static/photo-1538342014732-212dc8f76863-min.jpeg")'}}>
+                    <Grid container className={classes.darkOverlay}>
+                        <Grid container className={classes.container}>
+                            <Grid item className={classes.itemShare}>
+                                <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <Share style={{ color: 'white' }} />
+                                    <Typography variant="body1" style={{ color: 'white', fontSize: 20 }}>
+                                        Share
+                                    </Typography>
+                                </Grid>
+                                <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <FavoriteBorderOutlined style={{ color: 'white' }} onClick={this.addFavoris} />
+                                    <Typography variant="body1" style={{ color: 'white', fontSize: 20 }}>
+                                        Add to wishlist
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid item className={classes.itemAvatar}>
+                                <Avatar alt="John Doe" src={`../../../../${alfred.picture}`} className={classes.avatar} />
+                                <Typography className={classes.textAvatar}>{alfred.name} {alfred.firstname}</Typography>
+                            </Grid>
+                            <Grid item className={classes.itemDispo}>
+                                <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <PermContactCalendar style={{ color: 'white' }} />
+                                    <Typography style={{ fontSize: 20 }} variant="body1" className={classes.textDispo}>Disponibilité</Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </Grid>
-                <Grid item className={classes.itemAvatar}>
-                  <Avatar alt="John Doe" src="../../../../static/John-Doe.jpg" className={classes.avatar} />
-                  <Typography className={classes.textAvatar}>{alfred.name} {alfred.firstname}</Typography>
-                </Grid>
-                <Grid item className={classes.itemDispo}>
-                  <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
-                    <PermContactCalendar style={{ color: 'white' }} />
-                    <Typography style={{ fontSize: 20 }} variant="body1" className={classes.textDispo}>Disponibilité</Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
         </Fragment>
+
+
+
     );
   }
 

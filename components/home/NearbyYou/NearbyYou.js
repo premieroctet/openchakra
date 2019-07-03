@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import NearbyYouCard from './NearbyYou/NearbyYouCard';
 import axios from 'axios';
 
+const url = "https://myalfred.hausdivision.com/";
+
 const styles = theme => ({
   container: {
     paddingRight: 15,
@@ -64,8 +66,8 @@ class nearbyYou extends React.Component{
     const token = localStorage.getItem('token');
     if (token) {
       this.setState({logged:true});
-
-      axios.get('http://localhost:5000/myAlfred/api/serviceUser/near')
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.get(url+'myAlfred/api/serviceUser/near')
           .then(response => {
             let service = response.data;
 
@@ -73,7 +75,7 @@ class nearbyYou extends React.Component{
           })
     } else {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      axios.get('http://localhost:5000/myAlfred/api/serviceUser/home')
+      axios.get(url+'myAlfred/api/serviceUser/home')
           .then(response => {
             let service = response.data;
 
@@ -92,12 +94,12 @@ class nearbyYou extends React.Component{
       Cela se passe près de chez vous
     </Typography>;
     const all = <Typography variant="h5" className={classes.textBox}>
-      Exemple de service
+    
     </Typography>;
     const cards = service.map(e => (
         <Grid item xs={12} sm={6} md={4} key={e._id}>
           <NearbyYouCard img={e.service.picture} title={e.service.label} alfred={e.user.firstname}
-                         avatar="../../../static/johndoe.jpg" score={e.user.score}/>
+                         avatar={`../../../${e.user.picture}`} score={e.user.score} shop={e.user._id}/>
         </Grid>
     ));
 

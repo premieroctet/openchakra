@@ -8,7 +8,14 @@ const CategorySchema = new Schema({
     },
     picture: {
         type: String
-    }
+    },
+    description: {
+        type: String
+    },
+    tags: [{
+    type: Schema.Types.ObjectId,
+    ref: 'tag'
+    }],
 });
 
 module.exports = Category = mongoose.model('category',CategorySchema);

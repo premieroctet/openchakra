@@ -17,6 +17,8 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
+import setAuthToken from "../../../utils/setAuthToken";
+import Router from "next/router";
 
 const styles = theme => ({
   root: {
@@ -109,6 +111,22 @@ class NavBar extends Component {
   state = {
     anchorEl: null,
     mobileMoreAnchorEl: null,
+    logged: false
+  };
+
+  componentDidMount() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.setState({logged:true})
+    }
+  }
+
+  logout2() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('path');
+    // Remove auth header for future requests
+    setAuthToken(false);
+    document.location.href="https://myalfred.hausdivision.com/";
   };
 
   handleProfileMenuOpen = event => {
@@ -133,6 +151,9 @@ class NavBar extends Component {
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const test = this.state.logged;
+    const logout = <Button variant="outlined" style={{ marginRight: '20px', color: 'white', border: '1px solid rgba(255, 255, 255, 1)' }}
+                           onClick={this.logout2}>Déconnexion</Button>;
 
     const renderMenu = (
       <Menu
@@ -216,7 +237,7 @@ class NavBar extends Component {
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <Typography className={classes.navbarItem}>
-                <Link href='#'>
+                <Link href='/becomeAlfred'>
                   <a className={classes.navbarLink}>
                     Devenir Alfred
                   </a>
@@ -229,19 +250,20 @@ class NavBar extends Component {
                   </a>
                 </Link>
               </Typography>
-              <Link href='/login'>
-                <Button variant="outlined" style={{ marginRight: '20px', color: 'white', border: '1px solid rgba(255, 255, 255, 1)' }}>
-                  Connexion
-                </Button>
-              </Link>
-              <Link href='/signup'>
+              {test ? logout : <React.Fragment><Link href='/login'>
+                    <Button variant="outlined" style={{ marginRight: '20px', color: 'white', border: '1px solid rgba(255, 255, 255, 1)' }}>
+                      Connexion
+                    </Button>
+                  </Link>
+                  <Link href='/signup'>
                 <Button
-                  style={{ backgroundColor: 'white', color: '#3f51b5'}}
-                  variant="contained"
-                  >
-                  Inscription
+                style={{ backgroundColor: 'white', color: '#3f51b5'}}
+                variant="contained"
+                >
+                Inscription
                 </Button>
-              </Link>
+                </Link></React.Fragment>}
+
             </div>
             <div className={classes.sectionMobile}>
               <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">

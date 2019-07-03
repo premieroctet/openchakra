@@ -6,13 +6,14 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
 import setAuthToken from '../utils/setAuthToken';
 
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
+const { config } = require('../config/config');
+const url = config.apiUrl;
 const styles = {
   loginContainer: {
     alignItems: 'center',
@@ -42,7 +43,7 @@ class login extends React.Component {
     this.state = {
       username: '',
       password: '',
-      errors: {}
+
     };
   }
 
@@ -58,13 +59,17 @@ class login extends React.Component {
       password: this.state.password
     };
 
-    axios.post('http://localhost:5000/myAlfred/api/users/login',user)
+    axios.post(url+'myAlfred/api/users/login',user)
         .then(res => {
           const {token} = res.data;
-          console.log('login success');
           localStorage.setItem('token',token);
           setAuthToken(token);
-          Router.push({pathname:'/'})
+          let path = localStorage.getItem('path');
+
+
+              Router.push({pathname:path})
+
+
         })
         .catch(err => {
           console.log(err);
@@ -75,7 +80,7 @@ class login extends React.Component {
 
   render()  {
     const { classes } = this.props;
-    const {errors} = this.state;
+
 
     return (
         <Layout>
@@ -97,7 +102,7 @@ class login extends React.Component {
                         name="username"
                         value={this.state.username}
                         onChange={this.onChange}
-                        error={errors.username}
+
                     />
                   </Grid>
                   <Grid item>
@@ -111,7 +116,7 @@ class login extends React.Component {
                         name="password"
                         value={this.state.password}
                         onChange={this.onChange}
-                        error={errors.password}
+
                     />
                   </Grid>
                   <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
@@ -120,6 +125,7 @@ class login extends React.Component {
                     </Button>
                   </Grid>
                 </form>
+                <Link href="/forgotPassword"><a>Mot de passe oublié ?</a></Link>
               </Grid>
             </Card>
           </Grid>

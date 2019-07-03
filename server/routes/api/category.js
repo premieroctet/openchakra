@@ -11,6 +11,7 @@ router.get('/test',(req, res) => res.json({msg: 'Category Works!'}) );
 router.get('/all', (req,res)=> {
 
     Category.find()
+        .populate('tags')
         .then(category => {
             if(typeof category !== 'undefined' && category.length > 0){
                 res.json(category);
@@ -24,20 +25,37 @@ router.get('/all', (req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/category/random/home
+// View random categories homepage
+router.get('/random/home',(req,res)=> {
+
+    Category.countDocuments().exec(function (err, count) {
+
+
+
+        let random = Math.floor(Math.random() * count);
+
+
+        Category.find().populate('tags').exec(
+            function (err, result) {
+
+                res.json(result)
+            })
+    })
+
+
+});
+
 // @Route GET /myAlfred/api/category/:id
 // View one category
 router.get('/:id', (req,res)=> {
 
     Category.findById(req.params.id)
+        .populate('tags')
         .then(category => {
-
-                res.json(category);
-
-
+          res.json(category);
         })
         .catch(err => res.status(404).json({ category: 'No category found' }));
-
-
 });
 
 

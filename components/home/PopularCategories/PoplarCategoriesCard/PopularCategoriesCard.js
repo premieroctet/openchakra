@@ -6,26 +6,14 @@ import Avatar from '@material-ui/core/Avatar';
 import Badge from '@material-ui/core/Badge';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import CardContent from '@material-ui/core/CardContent';
 import { withStyles } from '@material-ui/core/styles';
 import { People } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
 const styles = theme => ({
-  textUp: {
+  textcat: {
     textAlign: 'center',
-    paddingTop: '3rem',
-    fontFamily: 'roboto',
-    fontWeight: 'bold',
-    fontSize: '2rem',
-    color: 'white',
-    letterSpacing: '.2rem',
-  },
-  textDown: {
-    textAlign: 'left',
-    fontFamily: 'roboto',
-    fontSize: '16px',
-    color: 'white',
-    padding: '.7rem',
   },
   textContainer: {
     flex: 1,
@@ -48,28 +36,13 @@ const styles = theme => ({
     minWidth: '200px!important',
     marginRight: '10px!important',
     marginLeft: '10px!important',
-    boxShadow: '0 12px 10px -5px grey',  
+    boxShadow: '0 5px 4px -2px lightgrey',  
   },
-  /*cardoverlay: {
-    maxWidth: '250px',
-    maxHeight: '350px',
-    height: '300px',
-    borderRadius: '30px',
-    margin: '5px!important',
-    minWidth: '250px!important',
-    marginRight: '10px!important',
-    marginLeft: '10px!important',
-    position: 'absolute',
-    top: '119%',
-    zIndex: '2',
-    width: '100%',
-    backgroundImage: 'linear-gradient(to top, rgba(0,0,0,.5), rgba(0,0,0,.4), rgba(0,0,0,.3), rgba(0,0,0,.2), rgba(255,255,255,0))',
-  },*/
   cardAction: {
     height: '100%',
   },
   cardMedia: {
-    height: '100%',
+    height: '80%',
   },
   center: {
     alignSelf: 'center',
@@ -85,9 +58,14 @@ const popularCategoriesCard = (props) => {
     <Card className={classes.card}>
       <CardActionArea className={classes.cardAction}>
         <CardMedia component="div" alt="food" image={img} className={classes.cardMedia}>
+
+        </CardMedia>
+        <CardContent>
           <Grid container className={classes.container}>
             <Grid item xs={12} className={classes.textContainer}>
-              <Typography className={classes.textUp}>{categorie}</Typography>
+              <Typography className={classes.textcat} variant="body2" color="textSecondary" component="p">
+                {categorie}
+              </Typography>
             </Grid>
             <Grid container xs={12} className={classes.row}>
               {/*<Grid item xs={9} className={classes.center}>
@@ -101,7 +79,7 @@ const popularCategoriesCard = (props) => {
               </Grid>
             </Grid>
           </Grid>
-        </CardMedia>
+          </CardContent>
       </CardActionArea>
     </Card>
   );

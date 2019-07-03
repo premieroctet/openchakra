@@ -20,11 +20,18 @@ const styles = theme => ({
     maxWidth: 300,
     display: 'flex',
     flexDirection: 'column',
-    borderRadius: 10,
+    borderRadius: 0,
+    padding:10,
+    border:'solid thin #ccc',
+    backgroundColor:'transparent',
+    textAlign:'center',
+    margin:10,
+    boxShadow: '1px 3px 1px transparent'
   },
   gridContainer: {
     display: 'flex',
     justifyContent: 'space-between',
+    textAlign:'center'
   },
   gridButton: {
     display: 'flex',
@@ -42,6 +49,7 @@ const styles = theme => ({
   },
   text: {
     paddingTop: '.7rem',
+    textAlign:'center',
   },
   whiteLogo: {
     margin: '.5rem',
@@ -89,11 +97,16 @@ const styles = theme => ({
 
 const nearbyYouCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { classes, img, desc, title,alfred,avatar,score } = props;
+  const { classes, img, desc, title,alfred,avatar,score,shop } = props;
 
   return (
+   
+    
+
     <Card className={classes.card}>
+      <Link href={`/shop?id_alfred=${shop}`}>
       <CardActionArea>
+      
         <CardMedia className={classes.media} image={img} title="Coiffure">
           <div className={classes.darkOverlay}>
             <Grid container className={classes.avatarContainer}>
@@ -108,30 +121,24 @@ const nearbyYouCard = (props) => {
         </CardMedia>
         <CardContent>
           <Typography variant="h6" component="h2">
-            {title}
+            {alfred}
           </Typography>
-          <Grid container>
-            <Typography variant="body2" component="p">
-              Par {alfred}
+         
+          <Typography variant="body2" component="p" style={{textAlign:'center'}}>
+              <center> {title}</center>
             </Typography>
-            <div>
-              {score}/5
-            </div>
+            
+          <Grid container>
+           
+           
+            
           </Grid>
-          <Typography component="p" className={classes.text}>
-
-          </Typography>
+         
         </CardContent>
+
       </CardActionArea>
-      <CardActions>
-        <Grid container className={classes.gridButton}>
-          <Link style={{color:'white !important',textdecoration:'none' }} href="/shop?id=5ce2a167d7e1ce19430f4b20" as="/shop/5ce2a167d7e1ce19430f4b20">
-          <Fab variant="extended" size="medium" color="primary" className={classes.bookButton}>
-            Réservez
-          </Fab>
-          </Link>
-        </Grid>
-      </CardActions>
+      </Link>
+    
     </Card>
   );
 };
@@ -142,3 +149,7 @@ nearbyYouCard.propTypes = {
 };
 
 export default withStyles(styles)(nearbyYouCard);
+function newFunction() {
+  return <Fragment></Fragment>;
+}
+

@@ -13,6 +13,7 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
+const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
   container: {
@@ -40,13 +41,14 @@ const styles = theme => ({
     maxWidth: 345,
   },
   textBox: {
+    textAlign: 'center',
     paddingRight: 15,
     paddingLeft: 15,
     marginBottom: 30,
     marginTop: 35,
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
-    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+   /* [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: 920,
     },
     [theme.breakpoints.up('lg')]: { // large: 1280px or larger
@@ -54,10 +56,15 @@ const styles = theme => ({
     },
     [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
       width: 1366,
-    },
+    },*/
   },
   card: {
 
+    backgroundColor:'transparent',
+    textAlign:'center',
+    margin:10,
+    boxShadow: `1px 3px 1px transparent`,
+    
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('xs')]: { // xs: 600px or larger
       maxWidth: 450,
@@ -75,9 +82,24 @@ const styles = theme => ({
   },
   media2: {
     height: 200
-  }
+  },
+  grosHR: {
+    height: '10px',
+    backgroundColor: '#3f51b5',
+  },
 
 });
+
+function shuffleArray(array) {
+  let i = array.length - 1;
+  for (; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+}
 
 class serenityNeed extends React.Component {
   constructor(props) {
@@ -89,7 +111,7 @@ class serenityNeed extends React.Component {
 
   componentDidMount() {
 
-    axios.get('http://localhost:5000/myAlfred/api/service/random/home')
+    axios.get(url+'myAlfred/api/service/all')
         .then(response => {
           let service = response.data;
 
@@ -101,8 +123,9 @@ class serenityNeed extends React.Component {
   render() {
     const {classes} = this.props;
     const {service} = this.state;
-    const services = service.map(e => (
-        <Grid item xs={12} sm={6} md={4} lg={4} key={e._id}>
+    const resdata = shuffleArray(service);
+    const services = resdata.slice(0, 8).map(e => (
+        <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
           <Card className={classes.card}>
             <CardActionArea>
               <CardMedia
@@ -111,23 +134,17 @@ class serenityNeed extends React.Component {
                   title="Paysage"
               />
               <CardContent>
-                <Chip label={e.category.label} color="primary" />
+                
                 <Typography gutterBottom variant="h5" component="h2">
-                  {e.label}
+                 
                 </Typography>
                 <Typography component="p">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vel pellentesque quam.
-                  Sed lobortis justo id pharetra laoreet. Curabitur sollicitudin iaculis dolor,
-                  nec faucibus libero.
+                  {e.description}
                 </Typography>
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Link href={`/prestation?service=${e._id}`} as={`/prestation/${e._id}`}>
-              <Button size="small" color="primary">
-                Toutes les prestations
-              </Button>
-              </Link>
+              
             </CardActions>
           </Card>
         </Grid>
@@ -136,11 +153,27 @@ class serenityNeed extends React.Component {
     return (
         <Fragment>
           <Grid container className={classes.container}>
-            <Typography variant="h5" className={classes.textBox}>
-              Besoin de sérénité ?
-            </Typography>
-          </Grid>
-          <Grid container className={classes.container} spacing={24} wrap="wrap">
+            <Grid item xs={3}></Grid>
+            <Grid item xs={6}>
+              <div>
+                <Typography variant="h4" className={classes.textBox}>
+                Retrouvez de la sérénité !
+                </Typography>
+                <Grid container>
+                  <Grid item xs={5}></Grid>
+                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                  <Grid item xs={5}></Grid>
+                </Grid>
+                <Typography className={classes.textBox}>
+                Pensez à vous, libérez vous l’esprit de certaines contraintes et profitez du temps et du talents des autres…<br/> 
+                Echappez à votre quotidien, prenez le temps de trouver votre Alfred avec d’excellents commentaires pour
+                les services dont vous avez besoin !!!
+                </Typography>
+              </div>
+            </Grid>
+            <Grid item xs={3}></Grid>
+          
+            
 
             {services}
           </Grid>

@@ -32,7 +32,7 @@ const styles = theme => ({
 
 const bodySearchCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { classes, img,service } = props;
+  const { classes, img,service,desc } = props;
 
   return (
       <Card className={classes.card}>
@@ -48,9 +48,7 @@ const bodySearchCard = (props) => {
               {service}
             </Typography>
             <Typography component="p">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vel pellentesque quam.
-              Sed lobortis justo id pharetra laoreet. Curabitur sollicitudin iaculis dolor,
-              nec faucibus libero.
+              {desc}
             </Typography>
           </CardContent>
         </CardActionArea>

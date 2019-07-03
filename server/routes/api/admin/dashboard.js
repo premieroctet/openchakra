@@ -56,7 +56,7 @@ router.post('/billing/all', passport.authenticate('jwt',{session: false}),(req, 
                 }
             })
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 
@@ -65,19 +65,25 @@ router.post('/billing/all', passport.authenticate('jwt',{session: false}),(req, 
 // @Route GET /myAlfred/api/admin/billing/all
 // View all billings system
 // @Access private
-router.get('/billing/all',(req,res)=> {
+router.get('/billing/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        Billing.find()
+            .then(billings => {
+                if (!billings) {
+                    return res.status(400).json({msg: 'No billing found'});
+                }
+                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
+                res.setHeader('X-Total-Count', billings.length);
+                res.json(billings);
 
-    Billing.find()
-        .then(billings => {
-            if(!billings){
-                return res.status(400).json({msg: 'No billing found'});
-            }
-            res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-            res.setHeader('X-Total-Count',billings.length);
-            res.json(billings);
-
-        })
-        .catch(err => res.status(404).json({ billing: 'No billing found' }));
+            })
+            .catch(err => res.status(404).json({billing: 'No billing found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 
 
 });
@@ -85,17 +91,24 @@ router.get('/billing/all',(req,res)=> {
 // @Route GET /myAlfred/api/admin/billing/all/:id
 // View one billings system
 // @Access private
-router.get('/billing/all/:id',(req,res)=> {
+router.get('/billing/all/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
-    Billing.findById(req.params.id)
-        .then(billing => {
-            if(!billing){
-                return res.status(400).json({msg: 'No billing found'});
-            }
-            res.json(billing);
+    if(admin) {
+        Billing.findById(req.params.id)
+            .then(billing => {
+                if (!billing) {
+                    return res.status(400).json({msg: 'No billing found'});
+                }
+                res.json(billing);
 
-        })
-        .catch(err => res.status(404).json({ billing: 'No billing found' }));
+            })
+            .catch(err => res.status(404).json({billing: 'No billing found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 
 
 });
@@ -134,7 +147,7 @@ router.put('/billing/all/:id',passport.authenticate('jwt',{session: false}),(req
             })
             .catch(err => res.status(404).json({ billingnotfound: 'No billing found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -143,47 +156,69 @@ router.put('/billing/all/:id',passport.authenticate('jwt',{session: false}),(req
 
 // @Route GET /myAlfred/admin/users/all
 // List all users
-router.get('/users/all',(req,res) => {
+router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
-    User.find({is_admin: false})
-        .then(user => {
-            if(!user) {
-                res.status(400).json({msg: 'No users found'});
-            }
-            res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-            res.setHeader('X-Total-Count',user.length);
-            res.json(user);
-        })
-        .catch(err => res.status(404).json({ user: 'No users found' }))
+    if(admin) {
+        User.find({is_admin: false})
+            .then(user => {
+                if (!user) {
+                    res.status(400).json({msg: 'No users found'});
+                }
+                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
+                res.setHeader('X-Total-Count', user.length);
+                res.json(user);
+            })
+            .catch(err => res.status(404).json({user: 'No users found'}))
+    } else {
+        res.status(400).json({msg: 'Access denied'});
+    }
 });
 
 // @Route GET /myAlfred/admin/users/users
 // List all simple users
-router.get('/users/users',(req,res) => {
-    User.find({is_admin: false, is_alfred: false})
-        .then(user => {
-            if(!user) {
-                res.status(400).json({msg: 'No users found'});
-            }
-            res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-            res.setHeader('X-Total-Count',user.length);
-            res.json(user);
-        })
-        .catch(err => res.status(404).json({ users: 'No billing found' }))
+router.get('/users/users',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        User.find({is_admin: false, is_alfred: false})
+            .then(user => {
+                if(!user) {
+                    res.status(400).json({msg: 'No users found'});
+                }
+                res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
+                res.setHeader('X-Total-Count',user.length);
+                res.json(user);
+            })
+            .catch(err => res.status(404).json({ users: 'No billing found' }))
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
 });
 
 // @Route GET /myAlfred/admin/users/users/:id
 // Get one user
-router.get('/users/users/:id',(req,res) => {
-    User.findById(req.params.id)
-        .then(user => {
-            if(!user){
-                return res.status(400).json({msg: 'No user found'});
-            }
-            res.json(user);
+router.get('/users/users/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        User.findById(req.params.id)
+            .then(user => {
+                if (!user) {
+                    return res.status(400).json({msg: 'No user found'});
+                }
+                res.json(user);
 
-        })
-        .catch(err => res.status(404).json({ user: 'No user found' }));
+            })
+            .catch(err => res.status(404).json({user: 'No user found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 });
 
 // @Route PUT /myAlfred/api/admin/users/users/:id
@@ -195,13 +230,13 @@ router.put('/users/users/:id',passport.authenticate('jwt',{session: false}),(req
     const admin = decode.is_admin;
 
     if(admin) {
-        User.findOneAndUpdate({_id: req.params.id},{$set: {is_alfred: req.body.is_alfred ,active: req.body.active}}, {new: true})
+        User.findOneAndUpdate({_id: req.params.id},{$set: {active: req.body.active}}, {new: true})
             .then(user => {
                 res.json(user);
             })
             .catch(err => res.status(404).json({ usernotfound: 'No user found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -213,45 +248,64 @@ router.delete('/users/users/:id',passport.authenticate('jwt',{session: false}),(
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
-    User.findById(req.params.id)
-        .then(user => {
-            if(!admin) {
-                return res.status(401).json({ notauthorized: 'User not authorized' });
 
 
-            }
-            user.remove().then(() => res.json({ success: true }));
-        })
-        .catch(err => res.status(404).json({ user: 'No user found' }));
+        User.findById(req.params.id)
+            .then(user => {
+                if (!admin) {
+                    return res.status(401).json({notauthorized: 'User not authorized'});
+
+
+                }
+                user.remove().then(() => res.json({success: true}));
+            })
+            .catch(err => res.status(404).json({user: 'No user found'}));
+
 });
 
 // @Route GET /myAlfred/api/admin/users/alfred
 // List all alfred
-router.get('/users/alfred',(req,res) => {
-    User.find({is_alfred: true})
-        .then(user => {
-            if(!user) {
-                res.status(400).json({msg: 'No alfred found'});
-            }
-            res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-            res.setHeader('X-Total-Count',user.length);
-            res.json(user);
-        })
-        .catch(err => res.status(404).json({ alfred: 'No alfred found' }))
+router.get('/users/alfred',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+        User.find({is_alfred: true})
+            .then(user => {
+                if (!user) {
+                    res.status(400).json({msg: 'No alfred found'});
+                }
+                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
+                res.setHeader('X-Total-Count', user.length);
+                res.json(user);
+            })
+            .catch(err => res.status(404).json({alfred: 'No alfred found'}))
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 });
 
 // @Route GET /myAlfred/admin/users/alfred/:id
 // Get one alfred
-router.get('/users/alfred/:id',(req,res) => {
-    User.findById(req.params.id)
-        .then(user => {
-            if(!user){
-                return res.status(400).json({msg: 'No user found'});
-            }
-            res.json(user);
+router.get('/users/alfred/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
-        })
-        .catch(err => res.status(404).json({ user: 'No user found' }));
+    if(admin) {
+        User.findById(req.params.id)
+            .then(user => {
+                if (!user) {
+                    return res.status(400).json({msg: 'No user found'});
+                }
+                res.json(user);
+
+            })
+            .catch(err => res.status(404).json({user: 'No user found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 });
 
 // @Route PUT /myAlfred/admin/users/alfred/:id
@@ -269,7 +323,7 @@ router.put('/users/alfred/:id',passport.authenticate('jwt',{session: false}),(re
             })
             .catch(err => res.status(404).json({ usernotfound: 'No user found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -312,22 +366,29 @@ router.get('/users/admin',passport.authenticate('jwt',{session: false}),(req, re
             })
             .catch(err => res.status(404).json({ admin: 'No admin found' }))
     } else {
-        res.json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 });
 
 // @Route GET /myAlfred/admin/users/admin/:id
 // Get one admin
 router.get('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
-    User.findById(req.params.id)
-        .then(user => {
-            if(!user){
-                return res.status(400).json({msg: 'No user found'});
-            }
-            res.json(user);
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        User.findById(req.params.id)
+            .then(user => {
+                if (!user) {
+                    return res.status(400).json({msg: 'No user found'});
+                }
+                res.json(user);
 
-        })
-        .catch(err => res.status(404).json({ user: 'No user found' }));
+            })
+            .catch(err => res.status(404).json({user: 'No user found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 });
 
 // @Route POST /myAlfred/admin/users/admin
@@ -373,10 +434,11 @@ router.post('/users/admin', passport.authenticate('jwt',{session: false}),(req, 
 
             })
     } else {
-        res.json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
+
 
 // @Route PUT /myAlfred/admin/users/admin/:id
 // Update an admin
@@ -396,7 +458,7 @@ router.put('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req
             })
             .catch(err => res.status(404).json({ usernotfound: 'No user found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -408,6 +470,8 @@ router.delete('/users/admin/:id',passport.authenticate('jwt',{session: false}),(
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
+
+
     User.findById(req.params.id)
         .then(user => {
             if(!admin) {
@@ -451,7 +515,7 @@ router.post('/calculating/all', passport.authenticate('jwt',{session: false}),(r
                 }
             })
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 
@@ -460,19 +524,26 @@ router.post('/calculating/all', passport.authenticate('jwt',{session: false}),(r
 // @Route GET /myAlfred/admin/calculating/all
 // View all calculating system
 // @Access private
-router.get('/calculating/all', (req,res)=> {
+router.get('/calculating/all',passport.authenticate('jwt',{session:false}), (req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
+    if(admin) {
         Calculating.find()
             .then(calculating => {
-                if(!calculating){
+                if (!calculating) {
                     return res.status(400).json({msg: 'No calculating found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-                res.setHeader('X-Total-Count',calculating.length);
+                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
+                res.setHeader('X-Total-Count', calculating.length);
                 res.json(calculating);
 
             })
-            .catch(err => res.status(404).json({ calculating: 'No billing found' }));
+            .catch(err => res.status(404).json({calculating: 'No billing found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 
 
 });
@@ -480,8 +551,12 @@ router.get('/calculating/all', (req,res)=> {
 // @Route GET /myAlfred/admin/calculating/all/:id
 // View one calculating system
 // @Access private
-router.get('/calculating/all/:id', (req,res)=> {
+router.get('/calculating/all/:id',passport.authenticate('jwt',{session:false}), (req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
+    if(admin) {
         Calculating.findById(req.params.id)
             .then(calculating => {
                 if(!calculating){
@@ -491,6 +566,9 @@ router.get('/calculating/all/:id', (req,res)=> {
 
             })
             .catch(err => res.status(404).json({ billing: 'No calculating found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 
 
 });
@@ -529,7 +607,7 @@ router.put('calculating/all/:id',passport.authenticate('jwt',{session: false}),(
             })
             .catch(err => res.status(404).json({ calculatingnotfound: 'No calculating found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -565,7 +643,7 @@ router.post('/filterPresentation/all', passport.authenticate('jwt',{session: fal
                 }
             })
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 
@@ -591,7 +669,7 @@ router.get('/filterPresentation/all', passport.authenticate('jwt',{session: fals
             })
             .catch(err => res.status(404).json({ filterPresentation: 'No billing found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -614,7 +692,7 @@ router.get('/filterPresentation/all/:id', passport.authenticate('jwt',{session: 
             })
             .catch(err => res.status(404).json({ billing: 'No filterPresentation found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -653,7 +731,7 @@ router.put('/filterPresentation/all/:id',passport.authenticate('jwt',{session: f
             })
             .catch(err => res.status(404).json({ filterPresentationnotfound: 'No filterPresentation found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -688,7 +766,7 @@ router.post('/job/all', passport.authenticate('jwt',{session: false}),(req, res)
                 }
             })
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 
@@ -714,7 +792,7 @@ router.get('/job/all', passport.authenticate('jwt',{session: false}),(req,res)=>
             })
             .catch(err => res.status(404).json({ job: 'No billing found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -737,7 +815,7 @@ router.get('/job/all/:id', passport.authenticate('jwt',{session: false}),(req,re
             })
             .catch(err => res.status(404).json({ billing: 'No job found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -776,7 +854,7 @@ router.put('/job/all/:id',passport.authenticate('jwt',{session: false}),(req, re
             })
             .catch(err => res.status(404).json({ jobnotfound: 'No job found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -811,7 +889,7 @@ router.post('/searchFilter/all', passport.authenticate('jwt',{session: false}),(
                 }
             })
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 
@@ -837,7 +915,7 @@ router.get('/searchFilter/all', passport.authenticate('jwt',{session: false}),(r
             })
             .catch(err => res.status(404).json({ searchFilter: 'No billing found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -860,7 +938,7 @@ router.get('/searchFilter/all/:id', passport.authenticate('jwt',{session: false}
             })
             .catch(err => res.status(404).json({ billing: 'No searchFilter found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -899,7 +977,7 @@ router.put('/searchFilter/all/:id',passport.authenticate('jwt',{session: false})
             })
             .catch(err => res.status(404).json({ searchFilternotfound: 'No searchFilter found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -910,7 +988,7 @@ router.put('/searchFilter/all/:id',passport.authenticate('jwt',{session: false})
 // Add tags for service
 // @Access private
 router.post('/tags/all', passport.authenticate('jwt',{session: false}),(req, res) => {
-    const {errors, isValid} = validateTagsInput(req.body);
+    const {errors, isValid} = validateBillingInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
@@ -934,7 +1012,7 @@ router.post('/tags/all', passport.authenticate('jwt',{session: false}),(req, res
                 }
             })
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 
@@ -960,7 +1038,7 @@ router.get('/tags/all', passport.authenticate('jwt',{session: false}),(req,res)=
             })
             .catch(err => res.status(404).json({ tags: 'No tags found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -983,7 +1061,7 @@ router.get('/tags/all/:id', passport.authenticate('jwt',{session: false}),(req,r
             })
             .catch(err => res.status(404).json({ tags: 'No tags found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -1022,7 +1100,7 @@ router.put('/tags/all/:id',passport.authenticate('jwt',{session: false}),(req, r
             })
             .catch(err => res.status(404).json({ tagsnotfound: 'No tags found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -1051,14 +1129,16 @@ router.post('/category/all', passport.authenticate('jwt',{session: false}),(req,
                 } else {
                     const newCategory = new Category({
                         label: req.body.label,
-                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`
+                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
+                        description: req.body.description,
+                        tags: req.body.tags,
                     });
 
                     newCategory.save().then(category => res.json(category)).catch(err => console.log(err));
                 }
             })
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 
@@ -1073,6 +1153,7 @@ router.get('/category/all', passport.authenticate('jwt',{session: false}),(req,r
     const admin = decode.is_admin;
     if(admin) {
         Category.find()
+            .populate('tags')
             .then(category => {
                 if(!category){
                     return res.status(400).json({msg: 'No category found'});
@@ -1084,7 +1165,7 @@ router.get('/category/all', passport.authenticate('jwt',{session: false}),(req,r
             })
             .catch(err => res.status(404).json({ category: 'No billing found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -1098,6 +1179,7 @@ router.get('/category/all/:id', passport.authenticate('jwt',{session: false}),(r
     const admin = decode.is_admin;
     if(admin) {
         Category.findById(req.params.id)
+            .populate('tags')
             .then(category => {
                 if(!category){
                     return res.status(400).json({msg: 'No category found'});
@@ -1107,7 +1189,7 @@ router.get('/category/all/:id', passport.authenticate('jwt',{session: false}),(r
             })
             .catch(err => res.status(404).json({ billing: 'No category found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -1140,13 +1222,14 @@ router.put('/category/all/:id',passport.authenticate('jwt',{session: false}),(re
     const admin = decode.is_admin;
 
     if(admin) {
-        Category.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: `https://source.unsplash.com/${req.body.picture}/400x300`}}, {new: true})
+        Category.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: req.body.picture,tags: req.body.tags,
+            description: req.body.description}}, {new: true})
             .then(category => {
                 res.json(category);
             })
             .catch(err => res.status(404).json({ categorynotfound: 'No category found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -1156,7 +1239,7 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'client/public/images/')
+        cb(null, 'static/equipments/')
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname  )
@@ -1191,7 +1274,7 @@ router.post('/equipment/all',upload.single('logo'),passport.authenticate('jwt',{
                 }
             })
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 
@@ -1217,7 +1300,7 @@ router.get('/equipment/all', passport.authenticate('jwt',{session: false}),(req,
             })
             .catch(err => res.status(404).json({ equipment: 'No equipment found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -1240,7 +1323,7 @@ router.get('/equipment/all/:id', passport.authenticate('jwt',{session: false}),(
             })
             .catch(err => res.status(404).json({ equipment: 'No equipment found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -1282,7 +1365,7 @@ router.put('/equipment/all/:id',passport.authenticate('jwt',{session: false}),(r
             })
             .catch(err => res.status(404).json({ equipmentnotfound: 'No equipment found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -1315,7 +1398,8 @@ router.post('/service/all', passport.authenticate('jwt',{session: false}),(req, 
                         equipments: req.body.equipments,
                         tags: req.body.tags,
                         picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
-                        description: req.body.description
+                        description: req.body.description,
+                        majoration: req.body.majoration
 
                     });
 
@@ -1323,7 +1407,7 @@ router.post('/service/all', passport.authenticate('jwt',{session: false}),(req, 
                 }
             })
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 
@@ -1332,7 +1416,7 @@ router.post('/service/all', passport.authenticate('jwt',{session: false}),(req, 
 // @Route GET /myAlfred/admin/service/all
 // View all service
 // @Access private
-router.get('/service/all',(req,res)=> {
+router.get('/service/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
     if(req.query.category != null) {
         let label = req.query.category;
         Service.find({category: mongoose.Types.ObjectId(label) })
@@ -1345,6 +1429,11 @@ router.get('/service/all',(req,res)=> {
                 res.json(service)
             })
     }else {
+        const token = req.headers.authorization.split(' ')[1];
+        const decode = jwt.decode(token);
+        const admin = decode.is_admin;
+
+        if(admin) {
         Service.find()
             .populate('tags', ['label'])
             .populate('equipments', 'label')
@@ -1359,6 +1448,9 @@ router.get('/service/all',(req,res)=> {
 
             })
             .catch(err => res.status(404).json({service: 'No service found'}));
+        } else {
+            res.status(403).json({msg: 'Access denied'});
+        }
     }
 
 });
@@ -1366,9 +1458,16 @@ router.get('/service/all',(req,res)=> {
 // @Route GET /myAlfred/admin/service/all/:id
 // View one service
 // @Access private
-router.get('/service/all/:id',(req,res)=> {
+router.get('/service/all/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
+    if(admin) {
     Service.findById(req.params.id)
+        .populate('tags')
+        .populate('equipments')
+        .populate('category')
         .then(service => {
             if(!service){
                 return res.status(400).json({msg: 'No service found'});
@@ -1377,6 +1476,9 @@ router.get('/service/all/:id',(req,res)=> {
 
         })
         .catch(err => res.status(404).json({ billing: 'No service found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 
 });
 
@@ -1412,7 +1514,7 @@ router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req
             {
                 $set: { label: req.body.label, equipments: req.body.equipments,category: mongoose.Types.ObjectId(req.body.category),
                     tags: req.body.tags,
-                    picture: `https://source.unsplash.com/${req.body.picture}/400x300`},
+                    picture: req.body.picture, description: req.body.description},
 
             } , {new: true})
             .then(service => {
@@ -1422,7 +1524,7 @@ router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req
             })
             .catch(err => res.status(404).json({ servicenotfound: 'No service found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -1458,7 +1560,10 @@ router.post('/prestation/all',passport.authenticate('jwt',{session: false}),(req
                         search_filter: req.body.search_filter,
                         category: mongoose.Types.ObjectId(req.body.category),
                         calculating: mongoose.Types.ObjectId(req.body.calculating),
-                        job: mongoose.Types.ObjectId(req.body.job)
+                        job: mongoose.Types.ObjectId(req.body.job),
+                        description: req.body.description,
+                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
+                        tags: req.body.tags
                     });
                     newPrestation.save().then(prestation => res.json(prestation)).catch(err => console.log(err))
 
@@ -1466,7 +1571,7 @@ router.post('/prestation/all',passport.authenticate('jwt',{session: false}),(req
                 }
             })
     }else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -1474,32 +1579,45 @@ router.post('/prestation/all',passport.authenticate('jwt',{session: false}),(req
 // @Route GET /myAlfred/api/admin/prestation/all
 // Get all prestations
 // @Access public
-router.get('/prestation/all',(req,res) => {
-    Prestation.find()
-        .populate('category')
-        .populate('job')
-        .populate('service')
-        .populate('billing')
-        .populate('search_filter')
-        .populate('filter_presentation')
-        .populate('calculating')
-        .then(prestation => {
-            if(!prestation){
-                return res.status(400).json({msg: 'No prestation found'});
-            }
-            res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-            res.setHeader('X-Total-Count',prestation.length);
-            res.json(prestation);
+router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
-        })
-        .catch(err => res.status(404).json({ billing: 'No prestation found' }));
+    if(admin) {
+        Prestation.find()
+            .populate('category')
+            .populate('job')
+            .populate('service')
+            .populate('billing')
+            .populate('search_filter')
+            .populate('filter_presentation')
+            .populate('calculating')
+            .populate('tags')
+            .then(prestation => {
+                if (!prestation) {
+                    return res.status(400).json({msg: 'No prestation found'});
+                }
+                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
+                res.setHeader('X-Total-Count', prestation.length);
+                res.json(prestation);
+
+            })
+            .catch(err => res.status(404).json({billing: 'No prestation found'}));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 });
 
 // @Route GET /myAlfred/api/admin/prestation/all/:id
 // View one prestation
 // @Access public
-router.get('/prestation/all/:id',(req,res)=> {
+router.get('/prestation/all/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
+    if(admin) {
     Prestation.findById(req.params.id)
         .populate('service')
         .populate('billing')
@@ -1508,6 +1626,7 @@ router.get('/prestation/all/:id',(req,res)=> {
         .populate('search_filter')
         .populate('calculating')
         .populate('job')
+        .populate('tags')
         .then(prestation => {
             if(!prestation){
                 return res.status(400).json({msg: 'No prestation found'});
@@ -1516,6 +1635,9 @@ router.get('/prestation/all/:id',(req,res)=> {
 
         })
         .catch(err => res.status(404).json({ prestation: 'No prestation found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 
 
 });
@@ -1556,13 +1678,16 @@ router.put('/prestation/all/:id',passport.authenticate('jwt',{session: false}),(
                 search_filter: req.body.search_filter,
                 category: mongoose.Types.ObjectId(req.body.category),
                 calculating: mongoose.Types.ObjectId(req.body.calculating),
-                job: mongoose.Types.ObjectId(req.body.job)}}, {new: true})
+                job: mongoose.Types.ObjectId(req.body.job),
+                picture: req.body.picture,
+                description: req.body.description,
+                tags: req.body.tags}}, {new: true})
             .then(prestation => {
                 res.json(prestation);
             })
             .catch(err => res.status(404).json({ prestationnotfound: 'No prestation found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
@@ -1596,14 +1721,19 @@ router.post('/shopBanner/all', passport.authenticate('jwt',{session: false}),(re
                 }
             })
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });
 
 // @Route GET /myAlfred/api/admin/shopBanner/all
 // Get all picture banner
-router.get('/shopBanner/all',(req,res) => {
+router.get('/shopBanner/all',passport.authenticate('jwt',{session: false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
     ShopBanner.find()
         .then(banner => {
             if(!banner){
@@ -1615,12 +1745,19 @@ router.get('/shopBanner/all',(req,res) => {
 
         })
         .catch(err => res.status(404).json({banner: 'No banner found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 });
 
 // @Route GET /myAlfred/api/admin/shopBanner/all/:id
 // View one shop banner
-router.get('/shopBanner/all/:id',(req,res)=> {
+router.get('/shopBanner/all/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
+    if(admin) {
     ShopBanner.findById(req.params.id)
         .then(banner => {
             if(!banner){
@@ -1630,6 +1767,9 @@ router.get('/shopBanner/all/:id',(req,res)=> {
 
         })
         .catch(err => res.status(404).json({ banner: 'No banner found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 
 
 });
@@ -1662,14 +1802,14 @@ router.put('/shopBanner/all/:id',passport.authenticate('jwt',{session: false}),(
     const admin = decode.is_admin;
 
     if(admin) {
-       ShopBanner.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,
+       ShopBanner.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: req.body.picture
                 }}, {new: true})
             .then(banner => {
                 res.json(banner);
             })
             .catch(err => res.status(404).json({ bannernotfound: 'No banner found' }));
     } else {
-        res.status(400).json({msg: 'Access denied'});
+        res.status(403).json({msg: 'Access denied'});
     }
 
 });

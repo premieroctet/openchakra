@@ -17,8 +17,8 @@ class shop extends React.Component {
             id: ''
         }
     }
-    static getInitialProps ({ query: { id } }) {
-        return { aboutId: id }
+    static getInitialProps ({ query: { id_alfred } }) {
+        return { aboutId: id_alfred }
 
     }
 

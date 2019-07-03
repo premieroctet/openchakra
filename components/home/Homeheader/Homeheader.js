@@ -13,13 +13,16 @@ import { Typography } from '@material-ui/core';
    
 const styles = theme => ({
   headerhomeimg: {
-  backgroundImage: 'url(../../static/bailey-zindel-396399-unsplash.jpg)',
+    marginTop: 64,
+  backgroundImage: 'url(../../static/banner-home.jpeg)',
   backgroundRepeat: "no-repeat",
 	backgroundPosition: "center center",
 	backgroundSize: "cover",
-	backgroundAttachment: "fixed",
     width: '100%',
     height: 650,
+    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+      backgroundAttachment: "fixed",
+    },
   },
   headeroverlay: {
     marginTop: 64,
@@ -32,34 +35,79 @@ const styles = theme => ({
     backgroundImage: 'linear-gradient(to top, rgba(0,0,0,.5), rgba(0,0,0,.4), rgba(0,0,0,.3), rgba(0,0,0,.2), rgba(255,255,255,0))',
   },
   headerhome: {
-  color: 'lightgrey',
-  fontWeight: 'bold',
-  position: 'absolute',
-  top: '50%', 
-  left: '15%',
-  transform: 'translate(-50%, -50%)',
-  zIndex: '3',
-  width: '80%',
-  padding: '20px',
-  textAlign: 'center',
-  backgroundColor: 'whitesmoke',
-  width: '19%',
-  marginLeft: '5%',
-  borderRadius: '5px',
-  boxShadow: '6px 6px 5px -6px black',
+    color: 'lightgrey',
+    fontWeight: 'bold',
+    position: 'absolute',
+    transform: 'translate(-50%, -50%)',
+    zIndex: '3',
+    padding: '20px',
+    textAlign: 'center',
+    backgroundColor: 'whitesmoke',
+    marginLeft: '5%',
+    borderRadius: '5px',
+    boxShadow: '6px 6px 5px -6px black',
+
+    [theme.breakpoints.down('xs')]: { // extra-large: 1920px or larger
+      width: '94%',
+      left: '45%',
+      top: '75%',
+    },
+    [theme.breakpoints.up('sm')]: { // extra-large: 1920px or larger
+      width: '75%',
+      left: '45%',
+      top: '60%',
+    },
+    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+      width: '45%',
+      left: '23%',
+      top: '50%',
+    },
+    [theme.breakpoints.up('lg')]: { // large: 1280px or larger
+      width: '30%',
+      top: '50%',
+      left: '20%',
+    },
+    [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
+      width: '30%',
+      top: '50%',
+      left: '20%',
+    },
   },
   headerhome2: {
     color: 'whitesmoke!important',
     fontWeight: 'bold',
     position: 'absolute',
-    top: '50%', 
-    left: '75%',
     transform: 'translate(-50%, -50%)',
     zIndex: '3',
-    width: '80%',
     padding: '20px',
-    textAlign: 'center',
-    width: '25%',
+    textAlign: 'center!important',
+
+    [theme.breakpoints.up('xs')]: { // extra-large: 1920px or larger
+      width: '50%',
+      left: '50%',
+      top: '25%',
+    },
+    [theme.breakpoints.down('sm')]: { // extra-large: 1920px or larger
+      width: '50%',
+      left: '50%',
+      top: '25%',
+      display: 'none'
+    },
+    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+      width: '45%',
+      left: '75%',
+      top: '50%',
+    },
+    [theme.breakpoints.up('lg')]: { // large: 1280px or larger
+      width: '30%',
+      top: '50%',
+      left: '75%',
+    },
+    [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
+      width: '30%',
+      top: '50%',
+      left: '75%',
+    },
   },
   input: {
     display: 'none',

@@ -10,6 +10,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import {RestaurantMenu} from "@material-ui/icons";
 import Card from "@material-ui/core/Card";
 
+const url = "https://myalfred.hausdivision.com/";
+
 const styles = theme => ({
   container: {
     paddingRight: 15,
@@ -112,7 +114,7 @@ class TemptedBy extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000/myAlfred/api/prestation/home')
+    axios.get(url+'myAlfred/api/prestation/home')
         .then(response => {
           let prestation = response.data;
 
@@ -122,8 +124,8 @@ class TemptedBy extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const background = ["../../static/bleumarine.png","../../static/saumonorange.png","../../static/bleuclair.png"
-                        ,"../../static/violetclair.png"];
+    const background = ["../../static/bleumarine.PNG","../../static/saumonrouge.PNG","../../static/bleuclair.PNG"
+                        ,"../../static/violetclair.PNG"];
 
 
     const {prestation} = this.state;
@@ -134,13 +136,6 @@ class TemptedBy extends React.Component {
             <CardActionArea className={classes.cardAction}>
               <CardMedia component="div" alt="color" image={background[Math.floor(Math.random() * background.length)]} className={classes.cardMedia}>
                 <Grid container className={classes.container2}>
-                  <Grid container xs={12} className={classes.row}>
-                    <Grid item xs={5}></Grid>
-                    <Grid item xs={4}></Grid>
-                    <Grid container item xs={3}>
-                      <RestaurantMenu style={{color: 'white', fontSize: '4rem', maxWidth: '100%'}}/>
-                    </Grid>
-                  </Grid>
                   <Grid container xs={12} className={classes.row}>
                     <Grid item xs={1}>
                       <Typography className={classes.textDown}></Typography>

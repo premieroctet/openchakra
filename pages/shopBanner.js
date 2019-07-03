@@ -3,7 +3,8 @@ import Layout from '../hoc/Layout/Layout';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import axios from 'axios';
-
+const { config } = require('../config/config');
+const url = config.apiUrl;
 class ShopBanner extends React.Component {
 
     constructor(props) {
@@ -17,7 +18,7 @@ class ShopBanner extends React.Component {
 
 
     componentWillMount() {
-        axios.get('http://localhost:5000/myAlfred/api/shopBanner/all')
+        axios.get(url+'myAlfred/api/shopBanner/all')
             .then(response => {
                 let banner = response.data;
 
