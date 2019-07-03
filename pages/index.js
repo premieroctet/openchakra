@@ -7,8 +7,11 @@ import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
 import TemptedBy from '../components/home/TemptedBy/TemptedBy';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import Homeheader from '../components/home/Homeheader/Homeheader';
+import Feelingood from '../components/home/feelingood/feelingood';
+import Wellbeing from '../components/home/Wellbeing/Wellbeing';
 import setAuthToken from '../utils/setAuthToken';
 import Router from "next/router";
+import '../static/stylebg.css'
 
 
 class Home extends React.Component {
@@ -45,11 +48,10 @@ class Home extends React.Component {
             <Homeheader />
             <SerenityNeed />
             <BecomeAlfred />
-            
             <NearbyYou />
             <Profiteandlearn />
-            <TemptedBy />
-            <NearbyYou />
+            <Feelingood />
+            <Wellbeing />
         </Fragment>
     )
 }

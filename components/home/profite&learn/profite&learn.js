@@ -13,6 +13,7 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
+import "../../../static/stylesfonts.css"
 const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
@@ -40,24 +41,6 @@ const styles = theme => ({
     paddingTop: '118.25%', // 16:9
     maxWidth: 345,
   },
-  textBox: {
-    textAlign: 'center',
-    paddingRight: 15,
-    paddingLeft: 15,
-    marginBottom: 30,
-    marginTop: 35,
-
-    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
-   /* [theme.breakpoints.up('md')]: { // medium: 960px or larger
-      width: 920,
-    },
-    [theme.breakpoints.up('lg')]: { // large: 1280px or larger
-      width: 1170,
-    },
-    [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
-      width: 1366,
-    },*/
-  },
   card: {
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
@@ -77,10 +60,30 @@ const styles = theme => ({
   },
   media2: {
     height: 200
+  },  
+  textBox1: {
+    color: 'rgba(84,89,95,0.95)',
+    letterSpacing: -2,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingRight: 15,
+    paddingLeft: 15,
+    marginBottom: 15,
+    marginTop: 80,
+  },  
+  textBox2: {
+    color: 'rgba(84,89,95,0.95)',
+    paddingRight: 15,
+    paddingLeft: 15,
+    marginBottom: 15,
+    fontSize: 20,
+    fontWeight: 570,
+    marginTop: 10,
   },
   grosHR: {
     height: '10px',
-    backgroundColor: '#3f51b5',
+    backgroundColor: '#6ec1e4',
+    marginBottom: 60,
   },
 
 });
@@ -152,10 +155,10 @@ class profiteandlearn extends React.Component {
     return (
         <Fragment>
           <Grid container className={classes.container}>
-            <Grid item xs={3}></Grid>
-            <Grid item xs={6}>
+            <Grid item xs={2}></Grid>
+            <Grid item xs={8}>
               <div>
-                <Typography variant="h4" className={classes.textBox}>
+                <Typography variant="h4" className={classes.textBox1}>
                 Profitez et apprenez des talents de vos Alfred...
                 </Typography>
                 <Grid container>
@@ -165,11 +168,71 @@ class profiteandlearn extends React.Component {
                 </Grid>
               </div>
             </Grid>
-            <Grid item xs={3}></Grid>
-          
-            
-
+            <Grid item xs={2}></Grid>
             {services}
+            <Grid item xs={2}></Grid>
+            <Grid item xs={8}>
+              <div>
+                <Typography variant="h4" className={classes.textBox1}>
+                Proposez vos services, en 3 étapes !
+                </Typography>
+                <Grid container>
+                  <Grid item xs={5}></Grid>
+                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                  <Grid item xs={5}></Grid>
+                </Grid>
+              </div>
+            </Grid>
+            <Grid item xs={2}></Grid>
+            <Grid item xs={4}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/1.svg" title="1" alt="1" scale="0" style={{height:"50px", width:"50px",}}/>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography className={classes.textBox2}>
+                    Proposez vos services
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 10}}>
+                  <Typography className={classes.textBox}>
+                    Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement les prestations que vous souhaitez réaliser en vous appuyant sur une liste de plus de ..... services proposées sur My-Alfred. Un service n'apparait pas ? Proposez-le à nos équipes !
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={4}>
+            <Grid container>
+                <Grid item xs={12}>
+                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/2.svg" title="2" alt="2" scale="0" style={{height:"50px", width:"50px",}}/>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography className={classes.textBox2}>
+                    Fixer vos conditions
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 10}}>
+                  <Typography className={classes.textBox}>
+                  Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Et si vous avez besoin d'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences !                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={4}>
+            <Grid container>
+                <Grid item xs={12}>
+                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/3.svg" title="3" alt="3" scale="0" style={{height:"50px", width:"50px",}}/>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography className={classes.textBox2}>
+                    Réalisez vos premiers services
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 10}}>
+                  <Typography className={classes.textBox}>
+                    Une fois votre boutique en ligne, les personnes intéressées par vos prestations pourront réserver en ligne vos services. Si vous avez des questions avant la prestation, vous pourrez les contacter !                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
         </Fragment>
     );

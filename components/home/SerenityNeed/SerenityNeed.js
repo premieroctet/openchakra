@@ -13,6 +13,8 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
+import "../../../static/stylesfonts.css";
+
 const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
@@ -22,7 +24,6 @@ const styles = theme => ({
     marginRight: 'auto',
     marginLeft: 'auto',
     width: '100%',
-
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: 920,
@@ -34,29 +35,14 @@ const styles = theme => ({
       width: 1366,
     },
   },
+  container1: {
+    marginTop: '170px!important',
+  },
   media: {
     height: 0,
     borderRadius: '20px',
     paddingTop: '118.25%', // 16:9
     maxWidth: 345,
-  },
-  textBox: {
-    textAlign: 'center',
-    paddingRight: 15,
-    paddingLeft: 15,
-    marginBottom: 30,
-    marginTop: 35,
-
-    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
-   /* [theme.breakpoints.up('md')]: { // medium: 960px or larger
-      width: 920,
-    },
-    [theme.breakpoints.up('lg')]: { // large: 1280px or larger
-      width: 1170,
-    },
-    [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
-      width: 1366,
-    },*/
   },
   card: {
 
@@ -83,9 +69,28 @@ const styles = theme => ({
   media2: {
     height: 200
   },
+  textBox1: {
+    color: 'rgba(84,89,95,0.95)',
+    letterSpacing: -2,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingRight: 15,
+    paddingLeft: 15,
+    marginBottom: 15,
+    marginTop: 60,
+  },
+  textBox: {
+    fontFamily: 'Helvetica',
+    textAlign: 'center',
+    fontSize: 15,
+    paddingRight: 15,
+    paddingLeft: 15,
+    marginBottom: 60,
+    marginTop: 15,
+  },
   grosHR: {
     height: '10px',
-    backgroundColor: '#3f51b5',
+    backgroundColor: '#6ec1e4',
   },
 
 });
@@ -152,11 +157,12 @@ class serenityNeed extends React.Component {
 
     return (
         <Fragment>
+          <div className={classes.container1}>
           <Grid container className={classes.container}>
-            <Grid item xs={3}></Grid>
-            <Grid item xs={6}>
+            <Grid item xs={2}></Grid>
+            <Grid item xs={8}>
               <div>
-                <Typography variant="h4" className={classes.textBox}>
+                <Typography variant="h4" className={classes.textBox1}>
                 Retrouvez de la sérénité !
                 </Typography>
                 <Grid container>
@@ -171,12 +177,13 @@ class serenityNeed extends React.Component {
                 </Typography>
               </div>
             </Grid>
-            <Grid item xs={3}></Grid>
+            <Grid item xs={2}></Grid>
           
             
 
             {services}
           </Grid>
+          </div>
         </Fragment>
     );
   }

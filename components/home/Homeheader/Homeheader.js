@@ -9,15 +9,16 @@ import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
+import '../../../static/stylebg.css'
 
    
 const styles = theme => ({
   headerhomeimg: {
     marginTop: 64,
-  backgroundImage: 'url(../../static/banner-home.jpeg)',
   backgroundRepeat: "no-repeat",
 	backgroundPosition: "center center",
-	backgroundSize: "cover",
+  backgroundSize: "cover",
+  zIndex: -999,
     width: '100%',
     height: 650,
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -143,7 +144,13 @@ const Homeheader = (props) => {
 
   return (
     <Fragment>
-      <div className={classes.headerhomeimg}></div>
+      <div className={classes.headerhomeimg}>
+        <video id="background-video" loop autoPlay style={{width:'100%', zIndex: -999}}>
+          <source src="../../../static/bgmyalfred.mp4" type="video/mp4" />
+          <source src="../../../static/bgmyalfred.mp4" type="video/ogg" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
       <div className={classes.headeroverlay}></div>
       <div className={classes.headerhome2}>
         <Grid container>

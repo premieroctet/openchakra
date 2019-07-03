@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import NearbyYouCard from './NearbyYou/NearbyYouCard';
 import axios from 'axios';
+import "../../../static/stylesfonts.css"
 
 const url = "https://myalfred.hausdivision.com/";
 
@@ -16,6 +17,7 @@ const styles = theme => ({
     marginRight: 'auto',
     marginLeft: 'auto',
     marginTop: '30px',
+    width: '100%',
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -33,22 +35,29 @@ const styles = theme => ({
     borderRadius: '20px',
     paddingTop: '118.25%', // 16:9
     maxWidth: 345,
-  },
-  textBox: {
+  },  
+  textBox1: {
+    color: 'rgba(84,89,95,0.95)',
+    letterSpacing: -2,
+    fontWeight: 'bold',
+    textAlign: 'center',
     paddingRight: 15,
     paddingLeft: 15,
-    marginBottom: 5,
-
-    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
-    [theme.breakpoints.up('md')]: { // medium: 960px or larger
-      width: 920,
-    },
-    [theme.breakpoints.up('lg')]: { // large: 1280px or larger
-      width: 1170,
-    },
-    [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
-      width: 1366,
-    },
+    marginBottom: 15,
+    marginTop: 80,
+  },
+  textBox: {
+    fontFamily: 'Helvetica',
+    textAlign: 'center',
+    fontSize: 15,
+    paddingRight: 15,
+    paddingLeft: 15,
+    marginBottom: 60,
+    marginTop: 15,
+  },
+  grosHR: {
+    height: '10px',
+    backgroundColor: '#6ec1e4',
   },
 });
 
@@ -106,9 +115,26 @@ class nearbyYou extends React.Component{
     return (
         <Fragment>
           <Grid container className={classes.container}>
-            {logged ? near : all}
-          </Grid>
-          <Grid container className={classes.container} spacing={24} wrap="wrap">
+          <Grid item xs={2}></Grid>
+            <Grid item xs={8}>
+              <div>
+                <Typography variant="h4" className={classes.textBox1}>
+                  Nous sommes tous des Alfred !!!
+                </Typography>
+                <Grid container>
+                  <Grid item xs={5}></Grid>
+                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                  <Grid item xs={5}></Grid>
+                </Grid>
+                <Typography className={classes.textBox}>
+                  <span>Nous sommes tous des Alfred en puissance !!!<br/>
+                  Une passion ? un savoir-faire ? ou simplement du temps, envie de partager…Devenez Alfred et
+                  arrondissez vos fins de mois très simplement !</span>
+                </Typography>
+              </div>
+            </Grid>
+            <Grid item xs={2}></Grid>
+
             {cards}
 
           </Grid>

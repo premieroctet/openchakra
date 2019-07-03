@@ -89,6 +89,7 @@ const styles = theme => ({
     marginTop: '10%',
     display: 'flex',
     height: 'auto',
+    boxShadow: '1px 3px 1px transparent',
 
     [theme.breakpoints.up('xs')]: { // medium: 960px or larger
       display: 'none',
@@ -110,6 +111,7 @@ const styles = theme => ({
     marginTop: '10%',
     display: 'flex',
     height: 'auto',
+    boxShadow: '1px 3px 1px transparent',
 
     [theme.breakpoints.up('xs')]: { // medium: 960px or larger
       display: 'flex',
@@ -157,6 +159,7 @@ const styles = theme => ({
     minWidth: '300px!important',
     marginRight: '10px!important',
     marginLeft: '10px!important',
+    boxShadow: '1px 3px 1px transparent'
 
   },
   personName: {
@@ -181,7 +184,7 @@ const styles = theme => ({
     marginLeft: '10px!important',
     marginTop: '30px!important',
     marginBottom: '40px!important',
-    boxShadow: '0 6px 5px -6px grey',
+    boxShadow: '1px 3px 1px transparent',
   },
   imgavat: {
     marginTop: '60%',
