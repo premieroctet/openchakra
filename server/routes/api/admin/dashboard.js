@@ -22,7 +22,7 @@ const ShopBanner = require('../../../models/ShopBanner');
 const validatePrestationInput = require('../../../validation/prestation');
 const validateRegisterInput = require('../../../validation/register');
 
-
+const multer = require("multer");
 
 // BILLING
 
@@ -1107,10 +1107,20 @@ router.put('/tags/all/:id',passport.authenticate('jwt',{session: false}),(req, r
 
 // CATEGORY
 
+const storageCat = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/category/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const uploadCat = multer({ storage: storageCat });
+
 // @Route POST /myAlfred/admin/category/all
 // Add category for prestation
 // @Access private
-router.post('/category/all', passport.authenticate('jwt',{session: false}),(req, res) => {
+router.post('/category/all', uploadCat.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
     const {errors, isValid} = validateBillingInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
@@ -1129,7 +1139,7 @@ router.post('/category/all', passport.authenticate('jwt',{session: false}),(req,
                 } else {
                     const newCategory = new Category({
                         label: req.body.label,
-                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
+                        picture: req.file.path,
                         description: req.body.description,
                         tags: req.body.tags,
                     });
@@ -1235,7 +1245,7 @@ router.put('/category/all/:id',passport.authenticate('jwt',{session: false}),(re
 });
 
 // EQUIPMENTS
-const multer = require("multer");
+
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {

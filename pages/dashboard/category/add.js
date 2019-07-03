@@ -66,11 +66,12 @@ class add extends React.Component {
         super(props);
         this.state = {
             label: '',
-            picture: '',
+            picture: null,
             description: '',
             all_tags: [],
             tags: []
         };
+        this.onChangeFile = this.onChangeFile.bind(this);
     }
 
     componentDidMount() {
@@ -93,20 +94,21 @@ class add extends React.Component {
 
 
     };
+    onChangeFile(e){
+        this.setState({picture:e.target.files[0]})
+    }
 
     onSubmit = e => {
         e.preventDefault();
 
-        const newCategory = {
-            label: this.state.label,
-            picture: this.state.picture,
-            tags: this.state.tags,
-            description: this.state.description
+        const formData = new FormData();
+        formData.append('picture',this.state.picture);
+        formData.append('label',this.state.label);
+        formData.append('tags',this.state.tags);
 
-        };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .post(url+'myAlfred/api/admin/category/all', newCategory)
+            .post(url+'myAlfred/api/admin/category/all', formData)
             .then(res => {
                 alert('Catégorie ajouté');
                 Router.push({pathname:'/dashboard/category/all'})
@@ -149,17 +151,7 @@ class add extends React.Component {
                                     />
                                 </Grid>
                                 <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        label="Id de l'image unsplash"
-                                        placeholder="Id de l'image unsplash"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="picture"
-                                        value={this.state.picture}
-                                        onChange={this.onChange}
-                                    />
+                                    <input type="file" name="picture" onChange= {this.onChangeFile} accept="image/*" />
                                 </Grid>
                                 <Grid item>
                                     <FormControl className={classes.formControl}>

@@ -70,7 +70,7 @@ class all extends React.Component {
         const row = category.map(e => (
            <tr key={e._id}>
                <td>{e.label}</td>
-               <td><img src={e.picture} width={80}/> </td>
+               <td><img src={`../../../${e.picture}`} alt='image' width={80}/> </td>
                <td><a href={`/dashboard/category/view?id=${e._id}`}>Modifier</a> </td>
            </tr>
         ));
