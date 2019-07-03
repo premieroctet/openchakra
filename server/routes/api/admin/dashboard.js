@@ -1249,7 +1249,7 @@ const upload = multer({ storage: storage });
 // @Route POST /myAlfred/admin/equipment/all
 // Add equipment for service
 // @Access private
-router.post('/equipment/all',upload.single('logo'),passport.authenticate('jwt',{session: false}),(req, res) => {
+router.post('/equipment/all',upload.fields([{name: 'logo',maxCount: 1}, {name:'logo2',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req, res) => {
     const {errors, isValid} = validateBillingInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
@@ -1266,8 +1266,10 @@ router.post('/equipment/all',upload.single('logo'),passport.authenticate('jwt',{
                 } else {
                     const newEquipment = new Equipment({
                         label: req.body.label,
-                        logo: req.file.path,
-                        name_logo: req.file.filename
+                        logo: req.files['logo'][0].path,
+                        name_logo: req.files['logo'][0].filename,
+                        logo2: req.files['logo2'][0].path,
+                        name_logo2: req.files['logo2'][0].filename
                     });
 
                     newEquipment.save().then(equipment => res.json(equipment)).catch(err => console.log(err));

@@ -12,7 +12,8 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = {
     loginContainer: {
@@ -141,6 +142,9 @@ class view extends React.Component {
                                 </Grid>
                                 <Grid item>
                                     <img src={`../../../${equipment.logo}`} alt={'logo'} width={100}/>
+                                </Grid>
+                                <Grid item>
+                                    <img src={`../../../${equipment.logo2}`} alt={'logo2'} width={100}/>
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>

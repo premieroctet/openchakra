@@ -10,7 +10,8 @@ import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
     signupContainer: {
@@ -41,12 +42,14 @@ class add extends React.Component {
         super(props);
         this.state = {
             label: '',
-            file: null
+            file: null,
+            file2: null,
         };
 
         this.onFormSubmit = this.onFormSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onChange2 = this.onChange2.bind(this);
+        this.onChange3 = this.onChange3.bind(this);
     }
 
         onFormSubmit(e){
@@ -54,6 +57,7 @@ class add extends React.Component {
             const formData = new FormData();
             formData.append('logo',this.state.file);
             formData.append('label',this.state.label);
+            formData.append('logo2',this.state.file2);
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data'
@@ -77,6 +81,10 @@ class add extends React.Component {
         onChange2(e){
             this.setState({label:e.target.value})
         }
+
+    onChange3(e){
+        this.setState({file2:e.target.files[0]})
+    }
 
 
         render() {
@@ -107,6 +115,9 @@ class add extends React.Component {
                                 </Grid>
                                 <Grid item>
                                     <input type="file" name="logo" onChange= {this.onChange} accept="image/*" />
+                                </Grid>
+                                <Grid item>
+                                    <input type="file" name="logo2" onChange= {this.onChange3} accept="image/*" />
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
