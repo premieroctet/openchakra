@@ -1407,10 +1407,20 @@ router.put('/equipment/all/:id',passport.authenticate('jwt',{session: false}),(r
 
 // SERVICE
 
+const storageService = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/service/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const uploadService = multer({ storage: storageService });
+
 // @Route POST /myAlfred/admin/service/all
 // Add service for prestation
 // @Access private
-router.post('/service/all', passport.authenticate('jwt',{session: false}),(req, res) => {
+router.post('/service/all', uploadService.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
     const {errors, isValid} = validateBillingInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
@@ -1432,7 +1442,7 @@ router.post('/service/all', passport.authenticate('jwt',{session: false}),(req, 
                         category: mongoose.Types.ObjectId(req.body.category),
                         equipments: req.body.equipments,
                         tags: req.body.tags,
-                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
+                        picture: req.file.path,
                         description: req.body.description,
                         majoration: req.body.majoration
 
@@ -1445,6 +1455,27 @@ router.post('/service/all', passport.authenticate('jwt',{session: false}),(req, 
         res.status(403).json({msg: 'Access denied'});
     }
 
+
+});
+
+// @Route POST /myAlfred/admin/service/editPicture/:id
+// Edit picture
+// @Access private
+router.post('/service/editPicture/:id',uploadService.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+        Service.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+            .then(service => {
+                res.json(service);
+            })
+    }else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 
 });
 

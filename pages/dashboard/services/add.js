@@ -67,7 +67,7 @@ class add extends React.Component {
         super(props);
         this.state = {
             label: '',
-            picture: '',
+            picture: null,
             category: '',
             tags: [],
             equipments: [],
@@ -79,6 +79,7 @@ class add extends React.Component {
             all_equipments: []
         };
         this.handleChecked = this.handleChecked.bind(this);
+        this.onChangeFile = this.onChangeFile.bind(this);
     }
 
     componentDidMount() {
@@ -125,6 +126,10 @@ class add extends React.Component {
 
     };
 
+    onChangeFile(e){
+        this.setState({picture:e.target.files[0]})
+    }
+
     handleChecked () {
         this.setState({isChecked: !this.state.isChecked});
     }
@@ -133,17 +138,16 @@ class add extends React.Component {
     onSubmit = e => {
         e.preventDefault();
 
-        const newService = {
-            label: this.state.label,
-            picture: this.state.picture,
-            category: this.state.category,
-            tags: this.state.tags,
-            equipments: this.state.equipments,
-            description: this.state.description
+        const formData = new FormData();
+        formData.append('label',this.state.label);
+        formData.append('picture',this.state.picture);
+        formData.append('category',this.state.category);
+        formData.append('tags',this.state.tags);
+        formData.append('equipments',this.state.equipments);
+        formData.append('description',this.state.description);
 
-        };
         axios
-            .post(url+'myAlfred/api/admin/service/all', newService)
+            .post(url+'myAlfred/api/admin/service/all', formData)
             .then(res => {
                 alert('Service ajouté');
                 Router.push({pathname:'/dashboard/services/all'})
@@ -266,17 +270,7 @@ class add extends React.Component {
                                     </FormControl>
                                 </Grid>
                                 <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        label="Id de l'image unsplash"
-                                        placeholder="Id de l'image unsplash"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="picture"
-                                        value={this.state.picture}
-                                        onChange={this.onChange}
-                                    />
+                                    <input type="file" name="picture" onChange= {this.onChangeFile} accept="image/*" />
                                 </Grid>
                                 <Grid item>
                                     <TextField

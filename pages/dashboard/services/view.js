@@ -20,6 +20,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Chip from "@material-ui/core/Chip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import Link from "next/link";
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -166,9 +167,9 @@ class view extends React.Component {
         const tags = this.state.tags;
         const category = this.state.category;
         const equipments = this.state.equipments;
-        const { label,description,picture } = this.state.service;
+        const { label,description } = this.state.service;
         const id = this.props.service_id;
-        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,picture,equipments})
+        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,equipments})
             .then(res => {
 
                 alert('Service modifié avec succès');
@@ -258,20 +259,6 @@ class view extends React.Component {
                                         </Select>
                                     </FormControl>
 
-                                </Grid>
-                                <Grid item>
-                                    <Typography style={{ fontSize: 20 }}>Image</Typography>
-                                    <img src={service.picture} alt={'logo'} width={100}/>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="picture"
-                                        value={service.picture}
-                                        onChange={this.onChange}
-
-                                    />
                                 </Grid>
                                 <Grid item>
                                     <Typography style={{ fontSize: 20 }}>Tags</Typography>
@@ -381,6 +368,11 @@ class view extends React.Component {
                                     </Button>
                                 </Grid>
                             </form>
+                            <Link href={`editPicture?id=${this.props.service_id}`}>
+                                <Button type="button" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    Modifier la photo
+                                </Button>
+                            </Link>
                         </Grid>
                     </Card>
                 </Grid>
