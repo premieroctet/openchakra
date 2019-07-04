@@ -41,27 +41,31 @@ class add extends React.Component {
         super(props);
         this.state = {
             label: '',
-            picture: ''
+            picture: null
         };
+
+        this.onChangeFile = this.onChangeFile.bind(this);
     }
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     };
 
+    onChangeFile(e){
+        this.setState({picture:e.target.files[0]})
+    }
+
     onSubmit = e => {
         e.preventDefault();
+        const formData = new FormData();
+        formData.append('label',this.state.label);
+        formData.append('picture', this.state.picture);
 
-        const newBanner = {
-            label: this.state.label,
-            picture: this.state.picture
-
-        };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .post(url+'myAlfred/api/admin/shopBanner/all', newBanner)
+            .post(url+'myAlfred/api/admin/shopBanner/all', formData)
             .then(res => {
-                alert('Bannière ajouté');
+                alert('Bannière ajoutée');
                 Router.push({pathname:'/dashboard/shopBanner/all'})
             })
             .catch(err => {
@@ -101,17 +105,7 @@ class add extends React.Component {
                                     />
                                 </Grid>
                                 <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        label="Id de l'image unsplash"
-                                        placeholder="Id de l'image unsplash"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="picture"
-                                        value={this.state.picture}
-                                        onChange={this.onChange}
-                                    />
+                                    <input type="file" name="picture" onChange= {this.onChangeFile} accept="image/*" />
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>

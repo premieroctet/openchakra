@@ -68,7 +68,7 @@ class all extends React.Component {
         const row = shopBanner.map(e => (
             <tr key={e._id}>
                 <td>{e.label}</td>
-                <td><img src={e.picture} width={100}/> </td>
+                <td><img src={`../../../${e.picture}`} alt='image' width={80}/>  </td>
                 <td><a href={`/dashboard/shopBanner/view?id=${e._id}`}>Modifier</a> </td>
             </tr>
         ));

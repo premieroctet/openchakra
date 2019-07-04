@@ -39,7 +39,7 @@ class ShopBanner extends React.Component {
 
         const image = banner.map(e => (
             <div key={e._id}>
-                <img src={e.picture} />
+                <img src={`../../${e.picture}`} alt={e.label}/>
                 <div className="legend">
                 <p>{e.label}</p>
                     <form onSubmit={this.onSubmit}><input type='hidden' value={e.picture} name='label'/><button type='submit'>Choisir</button></form>

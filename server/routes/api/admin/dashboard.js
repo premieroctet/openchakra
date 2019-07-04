@@ -1790,10 +1790,20 @@ router.put('/prestation/all/:id',passport.authenticate('jwt',{session: false}),(
 
 // SHOP BANNER
 
+const storageBanner = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/shopBanner/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const uploadBanner = multer({ storage: storageBanner });
+
 // @Route POST /myAlfred/api/admin/shopBanner/all
 // Add picture for shop banner
 // @Access private
-router.post('/shopBanner/all', passport.authenticate('jwt',{session: false}),(req, res) => {
+router.post('/shopBanner/all', uploadBanner.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
 
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
@@ -1808,7 +1818,7 @@ router.post('/shopBanner/all', passport.authenticate('jwt',{session: false}),(re
                 } else {
                     const newBanner = new ShopBanner({
                         label: req.body.label,
-                        picture: `https://source.unsplash.com/${req.body.picture}/1920x1080`,
+                        picture: req.file.path,
 
 
                     });
@@ -1817,6 +1827,27 @@ router.post('/shopBanner/all', passport.authenticate('jwt',{session: false}),(re
                 }
             })
     } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route POST /myAlfred/admin/shopBanner/editPicture/:id
+// Edit picture
+// @Access private
+router.post('/shopBanner/editPicture/:id',uploadBanner.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+        ShopBanner.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+            .then(banner => {
+                res.json(banner);
+            })
+    }else {
         res.status(403).json({msg: 'Access denied'});
     }
 
@@ -1898,8 +1929,7 @@ router.put('/shopBanner/all/:id',passport.authenticate('jwt',{session: false}),(
     const admin = decode.is_admin;
 
     if(admin) {
-       ShopBanner.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: req.body.picture
-                }}, {new: true})
+       ShopBanner.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label}}, {new: true})
             .then(banner => {
                 res.json(banner);
             })

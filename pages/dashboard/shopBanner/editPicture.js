@@ -4,16 +4,19 @@ import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
+import Link from 'next/link';
 import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
 
 
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
-import Link from "next/link";
 
-const { config } = require('../../../config/config');
+
+const {config} = require('../../../config/config');
 const url = config.apiUrl;
+
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -33,21 +36,28 @@ const styles = {
         color: 'black',
         fontSize: 12,
     },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    chip: {
+        margin: 2,
+    },
 };
 
-class view extends React.Component {
+
+class editPicture extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            shopBanner: {},
-            label: '',
-
+            banner: {},
+            picture: null,
 
         };
 
-        this.handleClick = this.handleClick.bind(this);
+
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -55,13 +65,40 @@ class view extends React.Component {
 
     }
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         const id = this.props.banner_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(`${url}myAlfred/api/admin/shopBanner/all/${id}`)
             .then(response => {
-                let shopBanner = response.data;
-                this.setState({shopBanner: shopBanner});
+                let banner = response.data;
+                this.setState({banner: banner});
 
+            })
+            .catch(err => {
+                console.log(err);
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            });
+
+
+    }
+
+    onChange = e => {
+        this.setState({picture:e.target.files[0]})
+    };
+
+
+
+    onSubmit = e => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('picture',this.state.picture);
+        const id = this.props.banner_id;
+        axios.post(`${url}myAlfred/api/admin/shopBanner/editPicture/${id}`,formData)
+            .then(res => {
+
+                alert('Photo modifiée avec succès');
+                Router.push({pathname:'/dashboard/shopBanner/all'})
             })
             .catch(err => {
                 console.log(err);
@@ -69,52 +106,15 @@ class view extends React.Component {
                 Router.push({pathname: '/login'})
             })
 
-    }
-
-    onChange = e => {
-
-        const state = this.state.shopBanner;
-        state[e.target.name] = e.target.value;
-        this.setState({shopBanner:state});
-    };
-
-    onSubmit = e => {
-        e.preventDefault();
-
-        const { label} = this.state.shopBanner;
-        const id = this.props.banner_id;
-        axios.put(`${url}myAlfred/api/admin/shopBanner/all/${id}`,{label})
-            .then(res => {
-
-                alert('Image modifiée avec succès');
-                Router.push({pathname:'/dashboard/shopBanner/all'})
-            })
-            .catch(err => {
-                console.log(err);
-            })
-
 
     };
 
-    handleClick() {
-        const id = this.props.banner_id;
-        axios.delete(`${url}myAlfred/api/admin/shopBanner/all/${id}`)
-            .then(res => {
-
-                alert('Image supprimée avec succès');
-                Router.push({pathname:'/dashboard/shopBanner/all'})
-            })
-            .catch(err => {
-                console.log(err);
-            })
-
-
-    };
 
 
     render()  {
         const { classes } = this.props;
-        const {shopBanner} = this.state;
+        const {banner} = this.state;
+
 
 
         return (
@@ -123,35 +123,23 @@ class view extends React.Component {
                     <Card className={classes.card}>
                         <Grid>
                             <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>{shopBanner.label}</Typography>
+                                <Typography style={{ fontSize: 30 }}>{banner.label}</Typography>
                             </Grid>
                             <form onSubmit={this.onSubmit}>
+                                <img src={`../../../${banner.picture}`} alt='image' width={100}/>
                                 <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="label"
-                                        value={shopBanner.label}
-                                        onChange={this.onChange}
-
-                                    />
+                                    <input type="file" name="picture" onChange= {this.onChange} accept="image/*" />
                                 </Grid>
+
+
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                                         Modifier
                                     </Button>
-                                    <Button type="button" variant="contained" color="secondary" style={{ width: '100%' }} onClick={this.handleClick}>
-                                        Supprimer
-                                    </Button>
+
+
                                 </Grid>
                             </form>
-                            <Link href={`editPicture?id=${this.props.banner_id}`}>
-                                <Button type="button" variant="contained" color="primary" style={{ width: '100%' }}>
-                                    Modifier la photo
-                                </Button>
-                            </Link>
                         </Grid>
                     </Card>
                 </Grid>
@@ -162,4 +150,4 @@ class view extends React.Component {
 
 
 
-export default withStyles(styles)(view);
+export default withStyles(styles)(editPicture);
