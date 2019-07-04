@@ -238,8 +238,14 @@ class view extends React.Component {
                                     <Button type="button" variant="contained" color="secondary" style={{ width: '100%' }} onClick={this.handleClick}>
                                         Supprimer
                                     </Button>
+
                                 </Grid>
                             </form>
+                            <Link href={`editPicture?id=${this.props.category_id}`}>
+                                <Button type="button" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    Modifier la photo
+                                </Button>
+                            </Link>
                         </Grid>
                     </Card>
                 </Grid>

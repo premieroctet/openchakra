@@ -1154,6 +1154,29 @@ router.post('/category/all', uploadCat.single('picture'),passport.authenticate('
 
 });
 
+// @Route POST /myAlfred/admin/category/editPicture/:id
+// Edit the picture of a category
+// @Access private
+router.post('/category/editPicture/:id', uploadCat.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+
+        Category.findByIdAndUpdate(req.params.id,{picture: req.file.path},{new: true})
+            .then(category => {
+                res.json(category);
+            })
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+
+});
+
 // @Route GET /myAlfred/admin/category/all
 // View all categories
 // @Access private
@@ -1232,7 +1255,7 @@ router.put('/category/all/:id',passport.authenticate('jwt',{session: false}),(re
     const admin = decode.is_admin;
 
     if(admin) {
-        Category.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: req.body.picture,tags: req.body.tags,
+        Category.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,tags: req.body.tags,
             description: req.body.description}}, {new: true})
             .then(category => {
                 res.json(category);
