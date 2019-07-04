@@ -66,8 +66,8 @@ class all extends React.Component {
         const {prestation} = this.state;
 
 
-        const row = prestation.map(e => (
-            <tr key={e._id}>
+        const row = prestation.map((e,index) => (
+            <tr key={index}>
                 <td>{e.label}</td>
                 <td>{e.category.label} </td>
                 <td>{e.service.label} </td>

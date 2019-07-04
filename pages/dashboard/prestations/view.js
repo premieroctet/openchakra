@@ -18,6 +18,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Chip from "@material-ui/core/Chip";
+import Link from "next/link";
 const {config} = require('../../../config/config');
 const url = config.apiUrl;
 const styles = {
@@ -90,7 +91,6 @@ class view extends React.Component {
             calculating: '',
             job: '',
             description: '',
-            picture: '',
             tags: [],
 
         };
@@ -219,10 +219,10 @@ class view extends React.Component {
         const search_filter = this.state.search_filter;
         const job = this.state.job;
         const filter_presentation = this.state.filter_presentation;
-        const { label,price,picture,description } = this.state.prestation;
+        const { label,price,description } = this.state.prestation;
         const id = this.props.prestation_id;
         axios.put(`${url}myAlfred/api/admin/prestation/all/${id}`,{label,price,billing,category,service,search_filter,filter_presentation,
-                                                                                calculating,job,description,picture,tags})
+                                                                                calculating,job,description,tags})
             .then(res => {
 
                 alert('Prestation modifiée avec succès');
@@ -533,20 +533,7 @@ class view extends React.Component {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item>
-                                    <Typography style={{ fontSize: 20 }}>Image</Typography>
-                                    <img src={prestation.picture} alt={'logo'} width={100}/>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="picture"
-                                        value={prestation.picture}
-                                        onChange={this.onChange}
 
-                                    />
-                                </Grid>
 
 
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
@@ -558,6 +545,11 @@ class view extends React.Component {
                                     </Button>
                                 </Grid>
                             </form>
+                            <Link href={`editPicture?id=${this.props.prestation_id}`}>
+                                <Button type="button" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    Modifier la photo
+                                </Button>
+                            </Link>
                         </Grid>
                     </Card>
                 </Grid>

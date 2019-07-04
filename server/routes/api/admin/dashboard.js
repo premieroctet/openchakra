@@ -1567,10 +1567,20 @@ router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req
 
 // PRESTATION
 
+const storagePrestation = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/prestation/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const uploadPrestation = multer({ storage: storagePrestation });
+
 // @Route POST /myAlfred/admin/prestation/all
 // Add a prestation
 // @Access private
-router.post('/prestation/all',passport.authenticate('jwt',{session: false}),(req,res) => {
+router.post('/prestation/all',uploadPrestation.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
     const {errors, isValid} = validatePrestationInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
@@ -1597,13 +1607,34 @@ router.post('/prestation/all',passport.authenticate('jwt',{session: false}),(req
                         calculating: mongoose.Types.ObjectId(req.body.calculating),
                         job: mongoose.Types.ObjectId(req.body.job),
                         description: req.body.description,
-                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
+                        picture: req.file.path,
                         tags: req.body.tags
                     });
                     newPrestation.save().then(prestation => res.json(prestation)).catch(err => console.log(err))
 
 
                 }
+            })
+    }else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route POST /myAlfred/admin/prestation/editPicture/:id
+// Edit picture
+// @Access private
+router.post('/prestation/editPicture/:id',uploadPrestation.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+        Prestation.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+            .then(prestation => {
+                res.json(prestation);
             })
     }else {
         res.status(403).json({msg: 'Access denied'});
@@ -1714,7 +1745,6 @@ router.put('/prestation/all/:id',passport.authenticate('jwt',{session: false}),(
                 category: mongoose.Types.ObjectId(req.body.category),
                 calculating: mongoose.Types.ObjectId(req.body.calculating),
                 job: mongoose.Types.ObjectId(req.body.job),
-                picture: req.body.picture,
                 description: req.body.description,
                 tags: req.body.tags}}, {new: true})
             .then(prestation => {
