@@ -27,6 +27,14 @@ const ServiceUserSchema = new Schema({
     city: {
         type: String,
     },
+    gps : {
+      lat: {
+          type: Number
+      },
+      lng: {
+          type: Number
+      }
+    },
     perimeter: {
         type: Number
     },
