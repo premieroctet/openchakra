@@ -20,6 +20,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Chip from "@material-ui/core/Chip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import Link from "next/link";
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -92,6 +93,7 @@ class view extends React.Component {
 
     }
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         const id = this.props.service_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(`${url}myAlfred/api/admin/service/all/${id}`)
@@ -106,8 +108,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                if(err.response.status === 401 || err.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             });
 
         axios.get(url+"myAlfred/api/admin/category/all")
@@ -166,9 +170,9 @@ class view extends React.Component {
         const tags = this.state.tags;
         const category = this.state.category;
         const equipments = this.state.equipments;
-        const { label,description,picture } = this.state.service;
+        const { label,description,majoration } = this.state.service;
         const id = this.props.service_id;
-        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,picture,equipments})
+        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,equipments,majoration})
             .then(res => {
 
                 alert('Service modifié avec succès');
@@ -176,6 +180,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
+                if(err.response.status === 401 || err.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             })
 
 
@@ -191,6 +199,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
+                if(err.response.status === 401 || err.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             })
 
 
@@ -237,9 +249,9 @@ class view extends React.Component {
 
                                     />
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>{current_category.label}</Typography>
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Catégorie
                                         </InputLabel>
@@ -259,26 +271,12 @@ class view extends React.Component {
                                     </FormControl>
 
                                 </Grid>
-                                <Grid item>
-                                    <Typography style={{ fontSize: 20 }}>Image</Typography>
-                                    <img src={service.picture} alt={'logo'} width={100}/>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="picture"
-                                        value={service.picture}
-                                        onChange={this.onChange}
-
-                                    />
-                                </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>Tags</Typography>
                                     {current_tags.map(e => (
                                         <p>{e.label}</p>
                                     ))}
-                                        <FormControl className={classes.formControl}>
+                                        <FormControl className={classes.formControl} style={{width: '100%'}}>
                                             <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
                                             <Select
                                                 multiple
@@ -302,12 +300,12 @@ class view extends React.Component {
                                             </Select>
                                         </FormControl>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>Equipements</Typography>
                                     {current_equipments.map(f => (
                                         <p>{f.label}</p>
                                     ))}
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel htmlFor="select-multiple-chip">Equipements</InputLabel>
                                         <Select
                                             multiple
@@ -381,6 +379,11 @@ class view extends React.Component {
                                     </Button>
                                 </Grid>
                             </form>
+                            <Link href={`editPicture?id=${this.props.service_id}`}>
+                                <Button type="button" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    Modifier la photo
+                                </Button>
+                            </Link>
                         </Grid>
                     </Card>
                 </Grid>

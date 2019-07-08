@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
+import Link from "next/link";
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -42,7 +43,7 @@ class view extends React.Component {
         this.state = {
             shopBanner: {},
             label: '',
-            picture: ''
+
 
         };
 
@@ -80,9 +81,9 @@ class view extends React.Component {
     onSubmit = e => {
         e.preventDefault();
 
-        const { label, picture } = this.state.shopBanner;
+        const { label} = this.state.shopBanner;
         const id = this.props.banner_id;
-        axios.put(`${url}myAlfred/api/admin/shopBanner/all/${id}`,{label,picture})
+        axios.put(`${url}myAlfred/api/admin/shopBanner/all/${id}`,{label})
             .then(res => {
 
                 alert('Image modifiée avec succès');
@@ -137,18 +138,6 @@ class view extends React.Component {
 
                                     />
                                 </Grid>
-                                <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="picture"
-                                        value={shopBanner.picture}
-                                        onChange={this.onChange}
-
-                                    />
-                                </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                                         Modifier
@@ -158,6 +147,11 @@ class view extends React.Component {
                                     </Button>
                                 </Grid>
                             </form>
+                            <Link href={`editPicture?id=${this.props.banner_id}`}>
+                                <Button type="button" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    Modifier la photo
+                                </Button>
+                            </Link>
                         </Grid>
                     </Card>
                 </Grid>

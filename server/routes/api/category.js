@@ -25,6 +25,27 @@ router.get('/all', (req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/category/random/home
+// View random categories homepage
+router.get('/random/home',(req,res)=> {
+
+    Category.countDocuments().exec(function (err, count) {
+
+
+
+        let random = Math.floor(Math.random() * count);
+
+
+        Category.find().populate('tags').skip(random).exec(
+            function (err, result) {
+
+                res.json(result)
+            })
+    })
+
+
+});
+
 // @Route GET /myAlfred/api/category/:id
 // View one category
 router.get('/:id', (req,res)=> {

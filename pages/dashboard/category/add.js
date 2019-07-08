@@ -66,21 +66,25 @@ class add extends React.Component {
         super(props);
         this.state = {
             label: '',
-            picture: '',
+            picture: null,
             description: '',
             all_tags: [],
-            tags: []
+            tags: [],
+            errors: {},
         };
+        this.onChangeFile = this.onChangeFile.bind(this);
     }
 
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+"myAlfred/api/admin/tags/all")
             .then((response) => {
                 let tags = response.data;
                 this.setState({all_tags: tags})
             }).catch((error) => {
-            console.log(error)
+            console.log(error);
+
         });
     }
 
@@ -93,28 +97,33 @@ class add extends React.Component {
 
 
     };
+    onChangeFile(e){
+        this.setState({picture:e.target.files[0]})
+    }
 
     onSubmit = e => {
         e.preventDefault();
 
-        const newCategory = {
-            label: this.state.label,
-            picture: this.state.picture,
-            tags: this.state.tags,
-            description: this.state.description
+        const formData = new FormData();
+        formData.append('picture',this.state.picture);
+        formData.append('label',this.state.label);
+        formData.append('tags',this.state.tags);
+        formData.append('description',this.state.description);
 
-        };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .post(url+'myAlfred/api/admin/category/all', newCategory)
+            .post(url+'myAlfred/api/admin/category/all', formData)
             .then(res => {
                 alert('Catégorie ajouté');
                 Router.push({pathname:'/dashboard/category/all'})
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                this.setState({errors: err.response.data});
+                if(err.response.status === 401 || err.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
                 }
             );
 
@@ -124,6 +133,7 @@ class add extends React.Component {
     render() {
         const { classes } = this.props;
         const {all_tags} = this.state;
+        const {errors} = this.state;
 
 
         return (
@@ -146,29 +156,24 @@ class add extends React.Component {
                                         name="label"
                                         value={this.state.label}
                                         onChange={this.onChange}
+                                        error={errors.label}
                                     />
+                                    <em>{errors.label}</em>
                                 </Grid>
                                 <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        label="Id de l'image unsplash"
-                                        placeholder="Id de l'image unsplash"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="picture"
-                                        value={this.state.picture}
-                                        onChange={this.onChange}
-                                    />
+                                    <label>Image</label>
+                                    <input type="file" name="picture" onChange= {this.onChangeFile} accept="image/*" />
+                                    <em>{errors.picture}</em>
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{ width: '100%' }}>
+                                    <FormControl className={classes.formControl} style={{ width: '100%' }}>
                                         <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
                                         <Select
                                             multiple
+                                            style={{ width: '100%' }}
                                             value={this.state.tags}
                                             onChange={this.handleChange}
-                                            input={<Input id="select-multiple-chip" />}
+                                            input={<Input id="select-multiple-chip" style={{ width: '100%' }} />}
                                             renderValue={selected => (
                                                 <div className={classes.chips}>
                                                     {selected.map(value => (
@@ -177,6 +182,7 @@ class add extends React.Component {
                                                 </div>
                                             )}
                                             MenuProps={MenuProps}
+
                                         >
                                             {all_tags.map(name => (
                                                 <MenuItem key={name._id} value={name._id} >
@@ -185,6 +191,7 @@ class add extends React.Component {
                                             ))}
                                         </Select>
                                     </FormControl>
+                                    <em>{errors.tags}</em>
                                 </Grid>
                                 <Grid item>
                                     <TextField
@@ -199,7 +206,9 @@ class add extends React.Component {
                                         name="description"
                                         value={this.state.description}
                                         onChange={this.onChange}
+                                        error={errors.description}
                                     />
+                                    <em>{errors.description}</em>
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>

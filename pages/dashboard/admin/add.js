@@ -11,7 +11,8 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
     signupContainer: {
@@ -50,9 +51,13 @@ class add extends React.Component {
             password: '',
             birtday: '',
             phone: '',
-            password2: ''
+            password2: '',
+            errors: {},
 
         };
+    }
+    componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
     }
 
     onChange = e => {
@@ -84,8 +89,11 @@ class add extends React.Component {
             })
             .catch(err => {
                     console.log(err);
+                    this.setState({errors: err.response.data});
+                if(err.response.status === 401 || err.response.status === 403) {
                     localStorage.removeItem('token');
                     Router.push({pathname: '/login'})
+                }
                 }
 
             );
@@ -95,6 +103,7 @@ class add extends React.Component {
 
     render() {
         const { classes } = this.props;
+        const {errors} = this.state;
 
 
         return (
@@ -117,7 +126,9 @@ class add extends React.Component {
                                         name="name"
                                         value={this.state.name}
                                         onChange={this.onChange}
+                                        error={errors.name}
                                     />
+                                    <em>{errors.name}</em>
                                 </Grid>
                                 <Grid item>
                                     <TextField
@@ -130,8 +141,10 @@ class add extends React.Component {
                                         name="firstname"
                                         value={this.state.firstname}
                                         onChange={this.onChange}
+                                        error={errors.firstname}
 
                                     />
+                                    <em>{errors.firstname}</em>
                                 </Grid>
                                 <Grid item className={classes.datenaissance}>
                                     <TextField
@@ -146,49 +159,7 @@ class add extends React.Component {
                                             shrink: true,
                                         }}
                                     />
-                                    <FormHelperText>Quel est votre date de naissance ?</FormHelperText>
-                                </Grid>
-                                <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        label="Email"
-                                        placeholder="Email"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="email"
-                                        name="email"
-                                        value={this.state.email}
-                                        onChange={this.onChange}
-
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        label="Mot de passe"
-                                        placeholder="Mot de passe (8 charactères min)"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="password"
-                                        name="password"
-                                        value={this.state.password}
-                                        onChange={this.onChange}
-
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        label="Répéter mot de passe"
-                                        placeholder="Mot de passe"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="password"
-                                        name="password2"
-                                        value={this.state.password2}
-                                        onChange={this.onChange}
-
-                                    />
+                                    <FormHelperText>Date de naissance</FormHelperText>
                                 </Grid>
                                 <Grid item>
                                     <TextField
@@ -201,9 +172,60 @@ class add extends React.Component {
                                         name="phone"
                                         value={this.state.phone}
                                         onChange={this.onChange}
+                                        error={errors.phone}
 
                                     />
+                                    <em>{errors.phone}</em>
                                 </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        label="Email"
+                                        placeholder="Email"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="email"
+                                        name="email"
+                                        value={this.state.email}
+                                        onChange={this.onChange}
+                                        error={errors.email}
+
+                                    />
+                                    <em>{errors.email}</em>
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        label="Mot de passe"
+                                        placeholder="Mot de passe (8 charactères min)"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="password"
+                                        name="password"
+                                        value={this.state.password}
+                                        onChange={this.onChange}
+                                        error={errors.password}
+
+                                    />
+                                    <em>{errors.password}</em>
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        label="Répéter mot de passe"
+                                        placeholder="Mot de passe"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="password"
+                                        name="password2"
+                                        value={this.state.password2}
+                                        onChange={this.onChange}
+                                        error={errors.password2}
+
+                                    />
+                                    <em>{errors.password2}</em>
+                                </Grid>
+
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                                         Ajouter

@@ -7,7 +7,11 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
+import Link from 'next/link';
 import Layout from '../hoc/Layout/Layout';
+import IconButton from '@material-ui/core/IconButton';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
+
 import axios from "axios";
 
 
@@ -16,14 +20,13 @@ const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '170vh',
+        height: '100vh',
         justifyContent: 'top',
         flexDirection: 'column',
 
     },
     card: {
-        padding: '1.5rem 3rem',
-        width: 400,
+        width: 800,
         marginTop: '100px',
     },
     cardContant: {
@@ -35,6 +38,24 @@ const styles = theme => ({
         fontSize: 12,
         lineHeight: 4.15,
     },
+    banner: {
+        marginBottom: 25,
+        backgroundColor: '#00abed',
+        height: 80,
+
+    },
+    newContainer: {
+        padding: 20,
+    },
+    title: {
+        fontFamily: 'helveticaNeue',
+        color: 'white',
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: 0,
+        paddingTop: 22,
+        letterSpacing: 1,
+    },
 });
 
 class addPicture extends React.Component {
@@ -42,12 +63,21 @@ class addPicture extends React.Component {
         super(props);
         this.state = {
             picture: '',
+            file: null,
         };
+
+        this.handleChange = this.handleChange.bind(this)
     }
 
     onChange = e => {
         this.setState({picture:e.target.files[0]});
     };
+
+    handleChange(event) {
+        this.setState({
+            file:
+                URL.createObjectURL(event.target.files[0])    })
+    }
 
     onSubmit = e => {
         e.preventDefault();
@@ -64,7 +94,12 @@ class addPicture extends React.Component {
         axios.post(url+"myAlfred/api/users/profile/picture",formData,config)
             .then((response) => {
                 alert("Photo ajouté");
-                Router.push({pathname:'/profile'})
+                if(localStorage.getItem('path') === '/signup') {
+                    Router.push({pathname: '/addPhone'})
+                } else {
+                    Router.push({pathname:'/profile'})
+                }
+
             }).catch((error) => {
                 console.log(error)
         });
@@ -80,26 +115,43 @@ class addPicture extends React.Component {
             <Layout>
                 <Grid container className={classes.signupContainer}>
                     <Card className={classes.card}>
-                        <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>Ajouter votre photo</Typography>
-                            </Grid>
+                        <div className={classes.banner}>
+                            <h2 className={classes.title}>Ajouter votre photo de profil</h2>
+
+                        </div>
+
+                            <div className={classes.newContainer}>
+                                <Typography>Votre photo apparaîtra sur votre page de profil,. Assurez-vous d’utiliser une photo
+                                    qui montre clairement votre visage et qui ne contient pas d’information personnelles ou sensibles.</Typography>
                             <form onSubmit={this.onSubmit}>
-                                <Grid item>
-                                    <input type="file" name="myImage" onChange={this.onChange} accept="image/*" />
+                                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 25}}>
+
+                                    <input accept="image/*" className="input" style={{display:'none'}} id="icon-button-file" type="file" onChange={(event) =>{this.handleChange(event);this.onChange(event)}} name={"myImage"} />
+                                    <label htmlFor="icon-button-file">
+                                        <IconButton color="primary" className={classes.button}  style={{width:150, height:150,backgroundColor:'lightgrey'}} component="span">
+                                            <PhotoCamera style={{fontSize: '2rem'}} />
+                                        </IconButton>
+                                    </label>
+
                                 </Grid>
+                                <img src={this.state.file}/>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                                         Ajouter
                                     </Button>
                                 </Grid>
+                                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
+                                    <Link href={'/'}><a style={{textDecoration: 'none', color: 'black'}}>Je le ferai plus tard</a></Link>
+                                </Grid>
                             </form>
-                        </Grid>
+                            </div>
+
                     </Card>
                 </Grid>
             </Layout>
         );
     };
 }
+
 
 export default withStyles(styles)(addPicture);

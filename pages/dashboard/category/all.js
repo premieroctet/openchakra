@@ -57,8 +57,11 @@ class all extends React.Component {
                 this.setState({category: category})
             }).catch((error) => {
             console.log(error);
-            localStorage.removeItem('token');
-            Router.push({pathname: '/login'})
+            if(error.response.status === 401 || error.response.status === 403 ) {
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            }
+
         });
     }
 
@@ -70,7 +73,7 @@ class all extends React.Component {
         const row = category.map(e => (
            <tr key={e._id}>
                <td>{e.label}</td>
-               <td><img src={e.picture} width={80}/> </td>
+               <td><img src={`../../../${e.picture}`} alt='image' width={80}/> </td>
                <td><a href={`/dashboard/category/view?id=${e._id}`}>Modifier</a> </td>
            </tr>
         ));

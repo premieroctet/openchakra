@@ -20,9 +20,11 @@ const Service = require('../../../models/Service');
 const Prestation = require('../../../models/Prestation');
 const ShopBanner = require('../../../models/ShopBanner');
 const validatePrestationInput = require('../../../validation/prestation');
-const validateRegisterInput = require('../../../validation/register');
+const validateRegisterAdminInput = require('../../../validation/registerAdmin');
+const validateCategoryInput = require('../../../validation/category');
+const validateServiceInput = require('../../../validation/service');
 
-
+const multer = require("multer");
 
 // BILLING
 
@@ -45,8 +47,8 @@ router.post('/billing/all', passport.authenticate('jwt',{session: false}),(req, 
         Billing.findOne({label: req.body.label})
             .then(billing => {
                 if(billing){
-                    errors.label = 'This billing already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Cette méthode de facturation existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newBilling = new Billing({
                         label: req.body.label
@@ -75,8 +77,7 @@ router.get('/billing/all',passport.authenticate('jwt',{session:false}),(req,res)
                 if (!billings) {
                     return res.status(400).json({msg: 'No billing found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-                res.setHeader('X-Total-Count', billings.length);
+
                 res.json(billings);
 
             })
@@ -360,8 +361,7 @@ router.get('/users/admin',passport.authenticate('jwt',{session: false}),(req, re
                 if(!user) {
                     res.status(400).json({msg: 'No admin found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-                res.setHeader('X-Total-Count',user.length);
+
                 res.json(user);
             })
             .catch(err => res.status(404).json({ admin: 'No admin found' }))
@@ -372,6 +372,7 @@ router.get('/users/admin',passport.authenticate('jwt',{session: false}),(req, re
 
 // @Route GET /myAlfred/admin/users/admin/:id
 // Get one admin
+// @Access private and for admin only
 router.get('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
@@ -393,8 +394,9 @@ router.get('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req
 
 // @Route POST /myAlfred/admin/users/admin
 // Add an admin
+// @Access private and for admin only
 router.post('/users/admin', passport.authenticate('jwt',{session: false}),(req, res) => {
-    const {errors, isValid} = validateRegisterInput(req.body);
+    const {errors, isValid} = validateRegisterAdminInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
@@ -404,11 +406,11 @@ router.post('/users/admin', passport.authenticate('jwt',{session: false}),(req, 
             return res.status(400).json(errors);
         }
 
-        User.findOne({email: req.body.email})
+        User.findOne({email: req.body.email,is_admin: true})
             .then(user => {
                 if(user) {
-                    errors.email = 'Email already exist';
-                    return res.status(400).json({errors});
+                    errors.email = 'Email déjà existant';
+                    return res.status(400).json(errors);
                 } else {
                     const newUser = new User ({
                         name: req.body.name,
@@ -504,8 +506,8 @@ router.post('/calculating/all', passport.authenticate('jwt',{session: false}),(r
         Calculating.findOne({label: req.body.label})
             .then(calculating => {
                 if(calculating){
-                    errors.label = 'This calculating already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Cette méthode de calcul existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newCalculating = new Calculating({
                         label: req.body.label
@@ -535,8 +537,7 @@ router.get('/calculating/all',passport.authenticate('jwt',{session:false}), (req
                 if (!calculating) {
                     return res.status(400).json({msg: 'No calculating found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-                res.setHeader('X-Total-Count', calculating.length);
+
                 res.json(calculating);
 
             })
@@ -632,8 +633,8 @@ router.post('/filterPresentation/all', passport.authenticate('jwt',{session: fal
         FilterPresentation.findOne({label: req.body.label})
             .then(filterPresentation => {
                 if(filterPresentation){
-                    errors.label = 'This filterPresentation already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Ce filtre existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newFilterPresentation = new FilterPresentation({
                         label: req.body.label
@@ -1107,11 +1108,21 @@ router.put('/tags/all/:id',passport.authenticate('jwt',{session: false}),(req, r
 
 // CATEGORY
 
+const storageCat = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/category/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const uploadCat = multer({ storage: storageCat });
+
 // @Route POST /myAlfred/admin/category/all
 // Add category for prestation
 // @Access private
-router.post('/category/all', passport.authenticate('jwt',{session: false}),(req, res) => {
-    const {errors, isValid} = validateBillingInput(req.body);
+router.post('/category/all', uploadCat.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
+    const {errors, isValid} = validateCategoryInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
@@ -1124,18 +1135,41 @@ router.post('/category/all', passport.authenticate('jwt',{session: false}),(req,
         Category.findOne({label: req.body.label})
             .then(category => {
                 if(category){
-                    errors.label = 'This category already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Cette catégorie existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newCategory = new Category({
                         label: req.body.label,
-                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
+                        picture: req.file.path,
                         description: req.body.description,
                         tags: req.body.tags,
                     });
 
                     newCategory.save().then(category => res.json(category)).catch(err => console.log(err));
                 }
+            })
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+
+});
+
+// @Route POST /myAlfred/admin/category/editPicture/:id
+// Edit the picture of a category
+// @Access private
+router.post('/category/editPicture/:id', uploadCat.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+
+        Category.findByIdAndUpdate(req.params.id,{picture: req.file.path},{new: true})
+            .then(category => {
+                res.json(category);
             })
     } else {
         res.status(403).json({msg: 'Access denied'});
@@ -1222,7 +1256,7 @@ router.put('/category/all/:id',passport.authenticate('jwt',{session: false}),(re
     const admin = decode.is_admin;
 
     if(admin) {
-        Category.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: req.body.picture,tags: req.body.tags,
+        Category.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,tags: req.body.tags,
             description: req.body.description}}, {new: true})
             .then(category => {
                 res.json(category);
@@ -1235,7 +1269,7 @@ router.put('/category/all/:id',passport.authenticate('jwt',{session: false}),(re
 });
 
 // EQUIPMENTS
-const multer = require("multer");
+
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -1249,29 +1283,55 @@ const upload = multer({ storage: storage });
 // @Route POST /myAlfred/admin/equipment/all
 // Add equipment for service
 // @Access private
-router.post('/equipment/all',upload.single('logo'),passport.authenticate('jwt',{session: false}),(req, res) => {
+router.post('/equipment/all',upload.fields([{name: 'logo',maxCount: 1}, {name:'logo2',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req, res) => {
     const {errors, isValid} = validateBillingInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
 
     if(admin) {
-
+        if(!isValid) {
+            return res.status(400).json(errors);
+        }
 
         Equipment.findOne({label: req.body.label})
             .then(equipment => {
                 if(equipment){
-                    errors.label = 'This equipment already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Cet équipement existe déjà ';
+                    return res.status(400).json(errors);
                 } else {
                     const newEquipment = new Equipment({
                         label: req.body.label,
-                        logo: req.file.path,
-                        name_logo: req.file.filename
+                        logo: req.files['logo'][0].path,
+                        name_logo: req.files['logo'][0].filename,
+                        logo2: req.files['logo2'][0].path,
+                        name_logo2: req.files['logo2'][0].filename
                     });
 
                     newEquipment.save().then(equipment => res.json(equipment)).catch(err => console.log(err));
                 }
+            })
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+
+});
+
+// @Route POST /myAlfred/admin/equipment/editPicture/:id
+// Edit the logo for equipment
+// @Access private
+router.post('/equipment/editPicture/:id',upload.fields([{name: 'logo',maxCount: 1}, {name:'logo2',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req, res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+        Equipment.findByIdAndUpdate(req.params.id, {logo: req.files['logo'][0].path,logo2: req.files['logo2'][0].path},{new: true})
+            .then(equipment => {
+                res.json(equipment);
             })
     } else {
         res.status(403).json({msg: 'Access denied'});
@@ -1372,11 +1432,21 @@ router.put('/equipment/all/:id',passport.authenticate('jwt',{session: false}),(r
 
 // SERVICE
 
+const storageService = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/service/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const uploadService = multer({ storage: storageService });
+
 // @Route POST /myAlfred/admin/service/all
 // Add service for prestation
 // @Access private
-router.post('/service/all', passport.authenticate('jwt',{session: false}),(req, res) => {
-    const {errors, isValid} = validateBillingInput(req.body);
+router.post('/service/all', uploadService.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
+    const {errors, isValid} = validateServiceInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
@@ -1389,15 +1459,15 @@ router.post('/service/all', passport.authenticate('jwt',{session: false}),(req, 
         Service.findOne({label: req.body.label})
             .then(service => {
                 if(service){
-                    errors.label = 'This service already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Ce service existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newService = new Service({
                         label: req.body.label,
                         category: mongoose.Types.ObjectId(req.body.category),
                         equipments: req.body.equipments,
                         tags: req.body.tags,
-                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
+                        picture: req.file.path,
                         description: req.body.description,
                         majoration: req.body.majoration
 
@@ -1410,6 +1480,27 @@ router.post('/service/all', passport.authenticate('jwt',{session: false}),(req, 
         res.status(403).json({msg: 'Access denied'});
     }
 
+
+});
+
+// @Route POST /myAlfred/admin/service/editPicture/:id
+// Edit picture
+// @Access private
+router.post('/service/editPicture/:id',uploadService.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+        Service.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+            .then(service => {
+                res.json(service);
+            })
+    }else {
+        res.status(403).json({msg: 'Access denied'});
+    }
 
 });
 
@@ -1514,7 +1605,7 @@ router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req
             {
                 $set: { label: req.body.label, equipments: req.body.equipments,category: mongoose.Types.ObjectId(req.body.category),
                     tags: req.body.tags,
-                    picture: req.body.picture, description: req.body.description},
+                     description: req.body.description, majoration: req.body.majoration},
 
             } , {new: true})
             .then(service => {
@@ -1532,10 +1623,20 @@ router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req
 
 // PRESTATION
 
+const storagePrestation = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/prestation/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const uploadPrestation = multer({ storage: storagePrestation });
+
 // @Route POST /myAlfred/admin/prestation/all
 // Add a prestation
 // @Access private
-router.post('/prestation/all',passport.authenticate('jwt',{session: false}),(req,res) => {
+router.post('/prestation/all',uploadPrestation.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
     const {errors, isValid} = validatePrestationInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
@@ -1562,13 +1663,34 @@ router.post('/prestation/all',passport.authenticate('jwt',{session: false}),(req
                         calculating: mongoose.Types.ObjectId(req.body.calculating),
                         job: mongoose.Types.ObjectId(req.body.job),
                         description: req.body.description,
-                        picture: `https://source.unsplash.com/${req.body.picture}/400x300`,
+                        picture: req.file.path,
                         tags: req.body.tags
                     });
                     newPrestation.save().then(prestation => res.json(prestation)).catch(err => console.log(err))
 
 
                 }
+            })
+    }else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route POST /myAlfred/admin/prestation/editPicture/:id
+// Edit picture
+// @Access private
+router.post('/prestation/editPicture/:id',uploadPrestation.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+        Prestation.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+            .then(prestation => {
+                res.json(prestation);
             })
     }else {
         res.status(403).json({msg: 'Access denied'});
@@ -1679,7 +1801,6 @@ router.put('/prestation/all/:id',passport.authenticate('jwt',{session: false}),(
                 category: mongoose.Types.ObjectId(req.body.category),
                 calculating: mongoose.Types.ObjectId(req.body.calculating),
                 job: mongoose.Types.ObjectId(req.body.job),
-                picture: req.body.picture,
                 description: req.body.description,
                 tags: req.body.tags}}, {new: true})
             .then(prestation => {
@@ -1694,10 +1815,20 @@ router.put('/prestation/all/:id',passport.authenticate('jwt',{session: false}),(
 
 // SHOP BANNER
 
+const storageBanner = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/shopBanner/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname  )
+    }
+});
+const uploadBanner = multer({ storage: storageBanner });
+
 // @Route POST /myAlfred/api/admin/shopBanner/all
 // Add picture for shop banner
 // @Access private
-router.post('/shopBanner/all', passport.authenticate('jwt',{session: false}),(req, res) => {
+router.post('/shopBanner/all', uploadBanner.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
 
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
@@ -1712,7 +1843,7 @@ router.post('/shopBanner/all', passport.authenticate('jwt',{session: false}),(re
                 } else {
                     const newBanner = new ShopBanner({
                         label: req.body.label,
-                        picture: `https://source.unsplash.com/${req.body.picture}/1920x1080`,
+                        picture: req.file.path,
 
 
                     });
@@ -1721,6 +1852,27 @@ router.post('/shopBanner/all', passport.authenticate('jwt',{session: false}),(re
                 }
             })
     } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route POST /myAlfred/admin/shopBanner/editPicture/:id
+// Edit picture
+// @Access private
+router.post('/shopBanner/editPicture/:id',uploadBanner.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+        ShopBanner.findByIdAndUpdate(req.params.id, {picture: req.file.path}, {new: true})
+            .then(banner => {
+                res.json(banner);
+            })
+    }else {
         res.status(403).json({msg: 'Access denied'});
     }
 
@@ -1802,8 +1954,7 @@ router.put('/shopBanner/all/:id',passport.authenticate('jwt',{session: false}),(
     const admin = decode.is_admin;
 
     if(admin) {
-       ShopBanner.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label,picture: req.body.picture
-                }}, {new: true})
+       ShopBanner.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label}}, {new: true})
             .then(banner => {
                 res.json(banner);
             })

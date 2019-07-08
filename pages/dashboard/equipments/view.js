@@ -11,8 +11,10 @@ import Button from '@material-ui/core/Button';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
+import Link from "next/link";
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = {
     loginContainer: {
@@ -53,6 +55,7 @@ class view extends React.Component {
 
     }
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         const id = this.props.equipment_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(`${url}myAlfred/api/admin/equipment/all/${id}`)
@@ -63,8 +66,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                if(err.response.status === 401 || err.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             })
 
     }
@@ -88,8 +93,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                if(err.response.status === 401 || err.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             })
 
 
@@ -105,8 +112,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                if(err.response.status === 401 || err.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             })
 
 
@@ -142,6 +151,9 @@ class view extends React.Component {
                                 <Grid item>
                                     <img src={`../../../${equipment.logo}`} alt={'logo'} width={100}/>
                                 </Grid>
+                                <Grid item>
+                                    <img src={`../../../${equipment.logo2}`} alt={'logo2'} width={100}/>
+                                </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                                         Modifier
@@ -151,6 +163,11 @@ class view extends React.Component {
                                     </Button>
                                 </Grid>
                             </form>
+                            <Link href={`editPicture?id=${this.props.equipment_id}`}>
+                                <Button type="button" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    Modifier les logos
+                                </Button>
+                            </Link>
                         </Grid>
                     </Card>
                 </Grid>

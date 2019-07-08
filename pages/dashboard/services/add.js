@@ -67,7 +67,7 @@ class add extends React.Component {
         super(props);
         this.state = {
             label: '',
-            picture: '',
+            picture: null,
             category: '',
             tags: [],
             equipments: [],
@@ -76,12 +76,15 @@ class add extends React.Component {
             isChecked: false,
             all_category: [],
             all_tags: [],
-            all_equipments: []
+            all_equipments: [],
+            errors: {},
         };
         this.handleChecked = this.handleChecked.bind(this);
+        this.onChangeFile = this.onChangeFile.bind(this);
     }
 
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
         axios.get(url+"myAlfred/api/admin/category/all")
@@ -125,6 +128,10 @@ class add extends React.Component {
 
     };
 
+    onChangeFile(e){
+        this.setState({picture:e.target.files[0]})
+    }
+
     handleChecked () {
         this.setState({isChecked: !this.state.isChecked});
     }
@@ -133,25 +140,28 @@ class add extends React.Component {
     onSubmit = e => {
         e.preventDefault();
 
-        const newService = {
-            label: this.state.label,
-            picture: this.state.picture,
-            category: this.state.category,
-            tags: this.state.tags,
-            equipments: this.state.equipments,
-            description: this.state.description
+        const formData = new FormData();
+        formData.append('label',this.state.label);
+        formData.append('picture',this.state.picture);
+        formData.append('category',this.state.category);
+        formData.append('tags',this.state.tags);
+        formData.append('equipments',this.state.equipments);
+        formData.append('description',this.state.description);
+        formData.append('majoration',this.state.majoration);
 
-        };
         axios
-            .post(url+'myAlfred/api/admin/service/all', newService)
+            .post(url+'myAlfred/api/admin/service/all', formData)
             .then(res => {
                 alert('Service ajouté');
                 Router.push({pathname:'/dashboard/services/all'})
             })
             .catch(err => {
                     console.log(err);
+                    this.setState({errors: err.response.data});
+                if(err.response.status === 401 || err.response.status === 403 ) {
                     localStorage.removeItem('token');
                     Router.push({pathname: '/login'})
+                }
                 }
             );
 
@@ -163,6 +173,7 @@ class add extends React.Component {
         const {all_category} = this.state;
         const {all_tags} = this.state;
         const {all_equipments} = this.state;
+        const {errors} = this.state;
 
         const categories = all_category.map(e => (
 
@@ -192,10 +203,12 @@ class add extends React.Component {
                                         name="label"
                                         value={this.state.label}
                                         onChange={this.onChange}
+                                        error={errors.label}
                                     />
+                                    <em>{errors.label}</em>
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{width: '100%'}}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Catégorie
                                         </InputLabel>
@@ -214,9 +227,10 @@ class add extends React.Component {
                                         </Select>
                                         <FormHelperText>Sélectionner une catégorie</FormHelperText>
                                     </FormControl>
+                                    <em>{errors.category}</em>
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{width: '100%'}}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
                                         <Select
                                             multiple
@@ -239,9 +253,10 @@ class add extends React.Component {
                                             ))}
                                         </Select>
                                     </FormControl>
+                                    <em>{errors.tags}</em>
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{width: '100%'}}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel htmlFor="select-multiple-chip">Equipements</InputLabel>
                                         <Select
                                             multiple
@@ -264,19 +279,10 @@ class add extends React.Component {
                                             ))}
                                         </Select>
                                     </FormControl>
+                                    <em>{errors.equipments}</em>
                                 </Grid>
                                 <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        label="Id de l'image unsplash"
-                                        placeholder="Id de l'image unsplash"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="picture"
-                                        value={this.state.picture}
-                                        onChange={this.onChange}
-                                    />
+                                    <input type="file" name="picture" onChange= {this.onChangeFile} accept="image/*" />
                                 </Grid>
                                 <Grid item>
                                     <TextField
@@ -289,7 +295,9 @@ class add extends React.Component {
                                         name="description"
                                         value={this.state.description}
                                         onChange={this.onChange}
+                                        error={errors.description}
                                     />
+                                    <em>{errors.description}</em>
                                 </Grid>
                                 <Grid item>
                                     <FormControlLabel

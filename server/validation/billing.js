@@ -9,7 +9,7 @@ module.exports = function validateBillingInput(data) {
 
 
     if(Validator.isEmpty(data.label)) {
-        errors.label = 'Label field is required';
+        errors.label = 'Un label est requis';
     }
 
 

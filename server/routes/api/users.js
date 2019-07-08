@@ -63,6 +63,36 @@ router.post('/register',(req,res) =>{
                 userFields.password = req.body.password;
                 userFields.birthday = req.body.birthday;
 
+                userFields.billing_address = {};
+                userFields.billing_address.address = req.body.address;
+                userFields.billing_address.zip_code = req.body.zip_code;
+                userFields.billing_address.city = req.body.city;
+
+                if (req.body.country === 'France') {
+                    userFields.billing_address.country = 'France';
+                } else {
+                    userFields.billing_address.country = 'Maroc';
+                }
+
+                userFields.billing_address.gps = {};
+
+                let address = req.body.address;
+                let city = req.body.city;
+                let zip = req.body.zip_code;
+
+                let newAddress = address.replace(/ /g, '+');
+
+                const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
+
+                axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
+                    .then(response => {
+
+                        let result = response.data.features;
+
+                        result.forEach(function (element) {
+                            userFields.billing_address.gps.lat = element.geometry.coordinates[1];
+                            userFields.billing_address.gps.lng = element.geometry.coordinates[0];
+                        });
 
                         const newUser = new User(userFields);
                         bcrypt.genSalt(10, (err, salt) => {
@@ -85,13 +115,23 @@ router.post('/register',(req,res) =>{
                                             from: 'kirstin85@ethereal.email', // sender address
                                             to: `${user.email}`, // list of receivers
                                             subject: "Valider votre compte", // Subject line
-                                            text: `http://localhost:3000/validateAccount?user=${user._id}`, // plain text body
+                                            text: `https://myalfred.hausdivision.com/validateAccount?user=${user._id}`, // plain text body
                                             html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
                                         });
                                     })
                                     .catch(err => console.log(err));
                             })
                         })
+
+
+
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    });
+
+
+
 
 
             }
@@ -350,8 +390,8 @@ router.post('/login',(req, res)=> {
         .then(user => {
             // Check for user
             if(!user) {
-                errors.email = 'User not found';
-                return res.status(404).json({errors});
+                errors.username = 'Mot de passe ou email incorrect';
+                return res.status(400).json(errors);
             }
 
             // Check password
@@ -367,8 +407,8 @@ router.post('/login',(req, res)=> {
                             res.json({success: true, token: 'Bearer ' + token});
                         });
                     } else {
-                        errors.password = 'Password incorrect';
-                        return res.status(400).json({errors});
+                        errors.password = 'Mot de passe ou email incorrect';
+                        return res.status(400).json(errors);
                     }
                 });
         });
@@ -491,32 +531,33 @@ router.get('/current',passport.authenticate('jwt',{session:false}),(req,res) => 
         .catch(err => res.status(404).json({ alfred: 'No alfred found' }))
 });
 
-// @Route GET /myAlfred/api/users/email
-// Test email
-router.get('/email/test',(req,res) => {
+// @Route POST /myAlfred/api/users/email/check
+//  email
+router.post('/email/check',(req,res) => {
 
-    async function main() {
-        let transporter = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            auth: {
-                user: 'kirstin85@ethereal.email',
-                pass: '1D7q6PCENKSX5cj622'
-            }
-        });
+    User.findOne({email: req.body.email})
+        .then(user => {
+            let transporter = nodemailer.createTransport({
+                host: 'smtp.ethereal.email',
+                port: 587,
+                auth: {
+                    user: 'kirstin85@ethereal.email',
+                    pass: '1D7q6PCENKSX5cj622'
+                }
+            });
 
-        let info = await transporter.sendMail({
-            from: 'kirstin85@ethereal.email', // sender address
-            to: "leslie.morales@gmail.com", // list of receivers
-            subject: "Email", // Subject line
-            text: "Test email", // plain text body
-            html: "<b>Test email</b>" // html body
-        });
+            let info = transporter.sendMail({
+                from: 'kirstin85@ethereal.email', // sender address
+                to: `${user.email}`, // list of receivers
+                subject: "Valider votre compte", // Subject line
+                text: `https://myalfred.hausdivision.com/validateAccount?user=${user._id}`, // plain text body
+                html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        })
 
-        console.log("Message sent: %s", info.messageId);
-
-    }
-    main().catch(console.error);
 });
 
 // @Route POST /myAlfred/api/users/forgotPassword

@@ -80,6 +80,10 @@ class editShop extends React.Component {
 
                                         <a href={"/dashboardAlfred/editStatus"}>
                                             Modifier ma situation
+                                        </a><br/><br/>
+
+                                        <a href={"/dashboardAlfred/services"}>
+                                            Mes services
                                         </a>
                                     </Fragment>
 

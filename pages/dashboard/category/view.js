@@ -68,7 +68,6 @@ class view extends React.Component {
         this.state = {
             category: {},
             label: '',
-            picture: '',
             tags: [],
             description: '',
             all_tags: [],
@@ -95,8 +94,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                if(err.response.status === 401 || err.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             });
 
         axios.get(url+"myAlfred/api/admin/tags/all")
@@ -125,9 +126,9 @@ class view extends React.Component {
     onSubmit = e => {
         e.preventDefault();
         const tags = this.state.tags;
-        const { label, picture, description } = this.state.category;
+        const { label, description } = this.state.category;
         const id = this.props.category_id;
-        axios.put(`${url}myAlfred/api/admin/category/all/${id}`,{label,picture,tags,description})
+        axios.put(`${url}myAlfred/api/admin/category/all/${id}`,{label,tags,description})
             .then(res => {
 
                 alert('Categorie modifié avec succès');
@@ -135,8 +136,7 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+
             })
 
 
@@ -152,8 +152,7 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+
             })
 
 
@@ -184,18 +183,6 @@ class view extends React.Component {
                                         type="text"
                                         name="label"
                                         value={category.label}
-                                        onChange={this.onChange}
-
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="picture"
-                                        value={category.picture}
                                         onChange={this.onChange}
 
                                     />
@@ -251,8 +238,14 @@ class view extends React.Component {
                                     <Button type="button" variant="contained" color="secondary" style={{ width: '100%' }} onClick={this.handleClick}>
                                         Supprimer
                                     </Button>
+
                                 </Grid>
                             </form>
+                            <Link href={`editPicture?id=${this.props.category_id}`}>
+                                <Button type="button" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    Modifier la photo
+                                </Button>
+                            </Link>
                         </Grid>
                     </Card>
                 </Grid>

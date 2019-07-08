@@ -12,7 +12,8 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = {
     loginContainer: {
@@ -54,6 +55,7 @@ class view extends React.Component {
 
     }
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         const id = this.props.calculating_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(`${url}myAlfred/api/admin/calculating/all/${id}`)
@@ -64,8 +66,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                if(err.response.status === 401 || err.response.status === 403) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             })
 
     }
@@ -89,8 +93,7 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+
             })
 
 
@@ -106,8 +109,7 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+
             })
 
 

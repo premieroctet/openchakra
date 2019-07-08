@@ -8,7 +8,11 @@ const EquipmentSchema = new Schema({
     logo: {
         type: String
     },
-    name_logo: String
+    name_logo: String,
+    logo2: {
+        type: String
+    },
+    name_logo2: String
 });
 
 module.exports = EquipmentUser = mongoose.model('equipment',EquipmentSchema);

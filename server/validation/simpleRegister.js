@@ -8,40 +8,51 @@ module.exports = function validateSimpleRegisterInput(data) {
     data.firstname = !isEmpty(data.firstname) ? data.firstname : '';
     data.email = !isEmpty(data.email) ? data.email : '';
     data.password = !isEmpty(data.password) ? data.password : '';
-    data.password2 = !isEmpty(data.password2) ? data.password2 : '';
+    data.address = !isEmpty(data.address) ? data.address : '';
+    data.zip_code = !isEmpty(data.zip_code) ? data.zip_code : '';
+    data.city = !isEmpty(data.city) ? data.city : '';
+    data.country = !isEmpty(data.country) ? data.country : '';
 
 
 
     if(Validator.isEmpty(data.name)) {
-        errors.name = 'Name field is required';
+        errors.name = 'Veuillez saisir un nom';
     }
 
     if(Validator.isEmpty(data.firstname)) {
-        errors.firstname = 'Firstname field is required';
+        errors.firstname = 'Veuillez saisir un prénom';
     }
 
     if(Validator.isEmpty(data.email)) {
-        errors.email = 'Email field is required';
+        errors.email = 'Veuillez saisir un email';
     }
 
     if(!Validator.isEmail(data.email)) {
-        errors.email = 'Email is invalid';
+        errors.email = 'Email invalide';
     }
 
     if(Validator.isEmpty(data.password)) {
-        errors.password = 'Password field is required';
+        errors.password = 'Veuillez saisir un mot de passe';
     }
 
     if(!Validator.isLength(data.password, {min: 8, max: 30})){
-        errors.password = 'Password must be at least 8 characters';
+        errors.password = 'Le mot de passe doit contenir 8 charactères minimum';
     }
 
-    if(Validator.isEmpty(data.password2)) {
-        errors.password2 = 'Confirm password field is required';
+    if(Validator.isEmpty(data.address)) {
+        errors.address = 'Veuillez saisir une adresse';
     }
 
-    if(!Validator.equals(data.password, data.password2)) {
-        errors.password2 = 'Password must match';
+    if(Validator.isEmpty(data.zip_code)) {
+        errors.zip_code = 'Veuillez saisir un code postal';
+    }
+
+    if(Validator.isEmpty(data.city)) {
+        errors.city = 'Veuillez saisir une ville';
+    }
+
+    if(Validator.isEmpty(data.country)) {
+        errors.country = 'Veuillez choisir un pays';
     }
 
 

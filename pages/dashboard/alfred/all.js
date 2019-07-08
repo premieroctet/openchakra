@@ -10,7 +10,8 @@ import axios from "axios";
 import Router from 'next/router';
 
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
     signupContainer: {
@@ -46,6 +47,7 @@ class all extends React.Component {
     }
 
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
         axios.get(url+"myAlfred/api/admin/users/alfred")
@@ -55,8 +57,11 @@ class all extends React.Component {
 
             }).catch((error) => {
             console.log(error);
-            localStorage.removeItem('token');
-            Router.push({pathname: '/login'})
+            if(error.response.status === 401 || error.response.status === 403) {
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            }
+
         });
     }
 

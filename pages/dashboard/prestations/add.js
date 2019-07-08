@@ -75,7 +75,7 @@ class add extends React.Component {
             calculating: '',
             job: '',
             description: '',
-            picture: '',
+            picture: null,
             tags: [],
             all_tags: [],
             all_category: [],
@@ -86,6 +86,7 @@ class add extends React.Component {
             all_search_filter: [],
             all_filter_presentation: []
         };
+        this.onChangeFile = this.onChangeFile.bind(this);
     }
 
     componentDidMount() {
@@ -173,26 +174,28 @@ class add extends React.Component {
 
     };
 
+    onChangeFile(e){
+        this.setState({picture:e.target.files[0]})
+    }
+
     onSubmit = e => {
         e.preventDefault();
+        const formData = new FormData();
+        formData.append('label',this.state.label);
+        formData.append('price',this.state.price);
+        formData.append('category',this.state.category);
+        formData.append('service',this.state.service);
+        formData.append('billing',this.state.billing);
+        formData.append('calculating',this.state.calculating);
+        formData.append('job',this.state.job);
+        formData.append('search_filter',this.state.search_filter);
+        formData.append('filter_presentation',this.state.filter_presentation);
+        formData.append('description',this.state.description);
+        formData.append('picture',this.state.picture);
+        formData.append('tags',this.state.tags);
 
-        const newPrestation = {
-            label: this.state.label,
-            price: this.state.price,
-            category: this.state.category,
-            service: this.state.service,
-            billing: this.state.billing,
-            calculating: this.state.calculating,
-            job: this.state.job,
-            search_filter: this.state.search_filter,
-            filter_presentation: this.state.filter_presentation,
-            description: this.state.description,
-            picture: this.state.picture,
-            tags: this.state.tags
-
-        };
         axios
-            .post(url+'myAlfred/api/admin/prestation/all', newPrestation)
+            .post(url+'myAlfred/api/admin/prestation/all', formData)
             .then(res => {
                 alert('Prestation ajoutée');
                 Router.push({pathname:'/dashboard/prestations/all'})
@@ -474,17 +477,7 @@ class add extends React.Component {
                                     </FormControl>
                                 </Grid>
                                 <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        label="Id de l'image unsplash"
-                                        placeholder="Id de l'image unsplash"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="picture"
-                                        value={this.state.picture}
-                                        onChange={this.onChange}
-                                    />
+                                    <input type="file" name="picture" onChange= {this.onChangeFile} accept="image/*" />
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>

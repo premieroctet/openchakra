@@ -10,7 +10,8 @@ import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
     signupContainer: {
@@ -41,19 +42,27 @@ class add extends React.Component {
         super(props);
         this.state = {
             label: '',
-            file: null
+            file: null,
+            file2: null,
+            errors: {},
         };
 
         this.onFormSubmit = this.onFormSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onChange2 = this.onChange2.bind(this);
+        this.onChange3 = this.onChange3.bind(this);
     }
 
-        onFormSubmit(e){
+    componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
+    }
+
+    onFormSubmit(e){
             e.preventDefault();
             const formData = new FormData();
             formData.append('logo',this.state.file);
             formData.append('label',this.state.label);
+            formData.append('logo2',this.state.file2);
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data'
@@ -65,8 +74,12 @@ class add extends React.Component {
                     alert("Equipment ajouté");
                     Router.push({pathname:'/dashboard/equipments/all'})
                 }).catch((error) => {
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                    console.log(error);
+                    this.setState({errors: error.response.data});
+                if(error.response.status === 401 || error.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             });
         }
         onChange(e) {
@@ -78,9 +91,14 @@ class add extends React.Component {
             this.setState({label:e.target.value})
         }
 
+    onChange3(e){
+        this.setState({file2:e.target.files[0]})
+    }
+
 
         render() {
         const { classes } = this.props;
+        const {errors} = this.state;
 
 
         return (
@@ -103,10 +121,15 @@ class add extends React.Component {
                                         name="label"
                                         value={this.state.label}
                                         onChange={this.onChange2}
+                                        error={errors.label}
                                     />
+                                    <em>{errors.label}</em>
                                 </Grid>
                                 <Grid item>
                                     <input type="file" name="logo" onChange= {this.onChange} accept="image/*" />
+                                </Grid>
+                                <Grid item>
+                                    <input type="file" name="logo2" onChange= {this.onChange3} accept="image/*" />
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>

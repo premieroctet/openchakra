@@ -14,7 +14,8 @@ import Router from "next/router";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
