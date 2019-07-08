@@ -93,6 +93,7 @@ class view extends React.Component {
 
     }
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         const id = this.props.service_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(`${url}myAlfred/api/admin/service/all/${id}`)
@@ -107,8 +108,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                if(err.response.status === 401 || err.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             });
 
         axios.get(url+"myAlfred/api/admin/category/all")
@@ -167,9 +170,9 @@ class view extends React.Component {
         const tags = this.state.tags;
         const category = this.state.category;
         const equipments = this.state.equipments;
-        const { label,description } = this.state.service;
+        const { label,description,majoration } = this.state.service;
         const id = this.props.service_id;
-        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,equipments})
+        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,equipments,majoration})
             .then(res => {
 
                 alert('Service modifié avec succès');
@@ -177,6 +180,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
+                if(err.response.status === 401 || err.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             })
 
 
@@ -192,6 +199,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
+                if(err.response.status === 401 || err.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             })
 
 
@@ -238,9 +249,9 @@ class view extends React.Component {
 
                                     />
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>{current_category.label}</Typography>
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Catégorie
                                         </InputLabel>
@@ -260,12 +271,12 @@ class view extends React.Component {
                                     </FormControl>
 
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>Tags</Typography>
                                     {current_tags.map(e => (
                                         <p>{e.label}</p>
                                     ))}
-                                        <FormControl className={classes.formControl}>
+                                        <FormControl className={classes.formControl} style={{width: '100%'}}>
                                             <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
                                             <Select
                                                 multiple
@@ -289,12 +300,12 @@ class view extends React.Component {
                                             </Select>
                                         </FormControl>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>Equipements</Typography>
                                     {current_equipments.map(f => (
                                         <p>{f.label}</p>
                                     ))}
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel htmlFor="select-multiple-chip">Equipements</InputLabel>
                                         <Select
                                             multiple

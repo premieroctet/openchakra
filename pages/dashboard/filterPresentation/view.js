@@ -54,6 +54,7 @@ class view extends React.Component {
 
     }
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         const id = this.props.filterPresentation_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(`${url}myAlfred/api/admin/filterPresentation/all/${id}`)
@@ -64,8 +65,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                if(err.response.status === 401 || err.response.status === 403) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             })
 
     }

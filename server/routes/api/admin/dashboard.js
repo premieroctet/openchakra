@@ -22,6 +22,7 @@ const ShopBanner = require('../../../models/ShopBanner');
 const validatePrestationInput = require('../../../validation/prestation');
 const validateRegisterAdminInput = require('../../../validation/registerAdmin');
 const validateCategoryInput = require('../../../validation/category');
+const validateServiceInput = require('../../../validation/service');
 
 const multer = require("multer");
 
@@ -632,8 +633,8 @@ router.post('/filterPresentation/all', passport.authenticate('jwt',{session: fal
         FilterPresentation.findOne({label: req.body.label})
             .then(filterPresentation => {
                 if(filterPresentation){
-                    errors.label = 'This filterPresentation already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Ce filtre existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newFilterPresentation = new FilterPresentation({
                         label: req.body.label
@@ -1289,13 +1290,15 @@ router.post('/equipment/all',upload.fields([{name: 'logo',maxCount: 1}, {name:'l
     const admin = decode.is_admin;
 
     if(admin) {
-
+        if(!isValid) {
+            return res.status(400).json(errors);
+        }
 
         Equipment.findOne({label: req.body.label})
             .then(equipment => {
                 if(equipment){
-                    errors.label = 'This equipment already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Cet équipement existe déjà ';
+                    return res.status(400).json(errors);
                 } else {
                     const newEquipment = new Equipment({
                         label: req.body.label,
@@ -1443,7 +1446,7 @@ const uploadService = multer({ storage: storageService });
 // Add service for prestation
 // @Access private
 router.post('/service/all', uploadService.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
-    const {errors, isValid} = validateBillingInput(req.body);
+    const {errors, isValid} = validateServiceInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
@@ -1456,8 +1459,8 @@ router.post('/service/all', uploadService.single('picture'),passport.authenticat
         Service.findOne({label: req.body.label})
             .then(service => {
                 if(service){
-                    errors.label = 'This service already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Ce service existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newService = new Service({
                         label: req.body.label,
@@ -1602,7 +1605,7 @@ router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req
             {
                 $set: { label: req.body.label, equipments: req.body.equipments,category: mongoose.Types.ObjectId(req.body.category),
                     tags: req.body.tags,
-                    picture: req.body.picture, description: req.body.description},
+                     description: req.body.description, majoration: req.body.majoration},
 
             } , {new: true})
             .then(service => {

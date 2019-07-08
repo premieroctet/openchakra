@@ -44,6 +44,7 @@ class add extends React.Component {
             label: '',
             file: null,
             file2: null,
+            errors: {},
         };
 
         this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -52,7 +53,11 @@ class add extends React.Component {
         this.onChange3 = this.onChange3.bind(this);
     }
 
-        onFormSubmit(e){
+    componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
+    }
+
+    onFormSubmit(e){
             e.preventDefault();
             const formData = new FormData();
             formData.append('logo',this.state.file);
@@ -69,8 +74,12 @@ class add extends React.Component {
                     alert("Equipment ajouté");
                     Router.push({pathname:'/dashboard/equipments/all'})
                 }).catch((error) => {
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                    console.log(error);
+                    this.setState({errors: error.response.data});
+                if(error.response.status === 401 || error.response.status === 403 ) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             });
         }
         onChange(e) {
@@ -89,6 +98,7 @@ class add extends React.Component {
 
         render() {
         const { classes } = this.props;
+        const {errors} = this.state;
 
 
         return (
@@ -111,7 +121,9 @@ class add extends React.Component {
                                         name="label"
                                         value={this.state.label}
                                         onChange={this.onChange2}
+                                        error={errors.label}
                                     />
+                                    <em>{errors.label}</em>
                                 </Grid>
                                 <Grid item>
                                     <input type="file" name="logo" onChange= {this.onChange} accept="image/*" />
