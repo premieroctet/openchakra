@@ -41,10 +41,15 @@ class add extends React.Component {
         super(props);
         this.state = {
             label: '',
-            picture: null
+            picture: null,
+            errors: {},
         };
 
         this.onChangeFile = this.onChangeFile.bind(this);
+    }
+
+    componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
     }
 
     onChange = e => {
@@ -70,8 +75,11 @@ class add extends React.Component {
             })
             .catch(err => {
                     console.log(err);
+                    this.setState({errors: err.response.data});
+                if(err.response.status === 401 || err.response.status === 403) {
                     localStorage.removeItem('token');
                     Router.push({pathname: '/login'})
+                }
                 }
             );
 
@@ -80,6 +88,7 @@ class add extends React.Component {
 
     render() {
         const { classes } = this.props;
+        const {errors} = this.state;
 
 
         return (
@@ -102,7 +111,9 @@ class add extends React.Component {
                                         name="label"
                                         value={this.state.label}
                                         onChange={this.onChange}
+                                        error={errors.label}
                                     />
+                                    <em>{errors.label}</em>
                                 </Grid>
                                 <Grid item>
                                     <input type="file" name="picture" onChange= {this.onChangeFile} accept="image/*" />

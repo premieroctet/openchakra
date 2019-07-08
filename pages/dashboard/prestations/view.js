@@ -24,9 +24,9 @@ const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
-        height: '300vh',
         justifyContent: 'center',
         flexDirection: 'column',
+        marginTop: 67,
     },
     card: {
         padding: '1.5rem 3rem',
@@ -103,6 +103,7 @@ class view extends React.Component {
 
     }
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         const id = this.props.prestation_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(`${url}myAlfred/api/admin/prestation/all/${id}`)
@@ -117,8 +118,10 @@ class view extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                if(err.response.status === 401 || err.response.status === 403) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             });
 
         axios.get(url+"myAlfred/api/admin/category/all")
@@ -313,9 +316,9 @@ class view extends React.Component {
 
                                     />
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>{current_category.label}</Typography>
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Catégorie
                                         </InputLabel>
@@ -335,9 +338,9 @@ class view extends React.Component {
                                     </FormControl>
 
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>{current_service.label}</Typography>
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Service
                                         </InputLabel>
@@ -360,9 +363,9 @@ class view extends React.Component {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>{current_billing.label}</Typography>
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Méthode de facturation
                                         </InputLabel>
@@ -385,9 +388,9 @@ class view extends React.Component {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>{current_calculating.label}</Typography>
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Méthode de calcul
                                         </InputLabel>
@@ -410,9 +413,9 @@ class view extends React.Component {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>{current_filter_presentation.label}</Typography>
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Filtre de présentation
                                         </InputLabel>
@@ -436,12 +439,12 @@ class view extends React.Component {
                                     </FormControl>
                                 </Grid>
 
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>Filtres de recherche</Typography>
                                     {current_search_filter.map(e => (
                                         <p>{e.label}</p>
                                     ))}
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel htmlFor="select-multiple-chip">Filtres de recherche</InputLabel>
                                         <Select
                                             multiple
@@ -465,9 +468,9 @@ class view extends React.Component {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>{current_job.label}</Typography>
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Métier
                                         </InputLabel>
@@ -504,12 +507,12 @@ class view extends React.Component {
                                         helperText={"Description"}
                                     />
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%'}}>
                                     <Typography style={{ fontSize: 20 }}>Tags</Typography>
                                     {current_tags.map(e => (
                                         <p>{e.label}</p>
                                     ))}
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
                                         <Select
                                             multiple

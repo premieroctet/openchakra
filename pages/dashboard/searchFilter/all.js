@@ -47,6 +47,7 @@ class all extends React.Component {
     }
 
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
         axios.get(url+"myAlfred/api/admin/searchFilter/all")
@@ -55,8 +56,10 @@ class all extends React.Component {
                 this.setState({searchFilter: searchFilter})
             }).catch((error) => {
             console.log(error);
-            localStorage.removeItem('token');
-            Router.push({pathname: '/login'})
+            if(error.response.status === 401 || error.response.status === 403) {
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            }
         });
     }
 

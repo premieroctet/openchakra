@@ -76,8 +76,10 @@ class editPicture extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                if(err.response.status === 401 || err.response.status === 403) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
             });
 
 
@@ -102,8 +104,7 @@ class editPicture extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+
             })
 
 
