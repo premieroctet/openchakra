@@ -9,6 +9,12 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 import Link from "next/link";
 import Router from "next/router";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 
 
 const {config} = require('../../../config/config');
@@ -17,14 +23,13 @@ const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '170vh',
         justifyContent: 'top',
         flexDirection: 'column',
 
     },
     card: {
         padding: '1.5rem 3rem',
-        width: 400,
+
         marginTop: '100px',
     },
     cardContant: {
@@ -35,6 +40,9 @@ const styles = theme => ({
         color: 'black',
         fontSize: 12,
         lineHeight: 4.15,
+    },
+    table: {
+        minWidth: 650,
     },
 });
 
@@ -81,28 +89,34 @@ class all extends React.Component {
             <Layout>
                 <Grid container className={classes.signupContainer}>
                     <Card className={classes.card}>
-                        <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>Méthode de facturation</Typography>
-                            </Grid>
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th>Label</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {row}
-                                </tbody>
-                                <Grid item>
-                                    <Link href={"/dashboard/billing/add"}>
-                                        <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                                            Ajouter
-                                        </Button>
-                                    </Link>
-                                </Grid>
-                            </table>
-                        </Grid>
+                        <Paper style={{width: '100%'}}>
+                            <Table className={classes.table}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Label</TableCell>
+                                        <TableCell>Action</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {billing.map((e,index) => (
+                                        <TableRow key={index}>
+                                            <TableCell component="th" scope="row">
+                                                {e.label}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Link href={`/dashboard/billing/view?id=${e._id}`}><a>Modifier</a></Link>
+                                            </TableCell>
+
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Paper>
+                        <Link href={"/dashboard/billing/add"}>
+                            <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                Ajouter
+                            </Button>
+                        </Link>
                     </Card>
                 </Grid>
             </Layout>
