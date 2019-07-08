@@ -390,8 +390,8 @@ router.post('/login',(req, res)=> {
         .then(user => {
             // Check for user
             if(!user) {
-                errors.email = 'User not found';
-                return res.status(404).json({errors});
+                errors.username = 'Mot de passe ou email incorrect';
+                return res.status(400).json(errors);
             }
 
             // Check password
@@ -407,8 +407,8 @@ router.post('/login',(req, res)=> {
                             res.json({success: true, token: 'Bearer ' + token});
                         });
                     } else {
-                        errors.password = 'Password incorrect';
-                        return res.status(400).json({errors});
+                        errors.password = 'Mot de passe ou email incorrect';
+                        return res.status(400).json(errors);
                     }
                 });
         });

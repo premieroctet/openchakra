@@ -12,14 +12,14 @@ module.exports = function validateLoginInput(data) {
 
     if(!Validator.isEmail(data.username)) {
 
-        errors.username = 'Email is invalid';
+        errors.username = 'Email invalide';
     }
     if(Validator.isEmpty(data.username)) {
-        errors.username = 'Email field is required';
+        errors.username = 'Veuillez saisir une adresse email';
     }
 
     if(Validator.isEmpty(data.password)) {
-        errors.password = 'Password field is required';
+        errors.password = 'Veuillez saisir un mot de passe';
     }
 
     return {

@@ -43,6 +43,7 @@ class login extends React.Component {
     this.state = {
       username: '',
       password: '',
+      errors: {}
 
     };
   }
@@ -73,6 +74,7 @@ class login extends React.Component {
         })
         .catch(err => {
           console.log(err);
+          this.setState({errors: err.response.data});
         })
 
 
@@ -80,6 +82,7 @@ class login extends React.Component {
 
   render()  {
     const { classes } = this.props;
+    const {errors} = this.state;
 
 
     return (
@@ -102,8 +105,10 @@ class login extends React.Component {
                         name="username"
                         value={this.state.username}
                         onChange={this.onChange}
+                        error={errors.username}
 
                     />
+                    <em>{errors.username}</em>
                   </Grid>
                   <Grid item>
                     <TextField
@@ -116,8 +121,10 @@ class login extends React.Component {
                         name="password"
                         value={this.state.password}
                         onChange={this.onChange}
+                        error={errors.password}
 
                     />
+                    <em>{errors.password}</em>
                   </Grid>
                   <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
