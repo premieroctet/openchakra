@@ -11,7 +11,8 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
     signupContainer: {

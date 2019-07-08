@@ -11,7 +11,8 @@ import Link from "next/link";
 import Button from "@material-ui/core/Button";
 
 
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
     signupContainer: {
