@@ -168,8 +168,7 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
                 if (!user) {
                     res.status(400).json({msg: 'No users found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-                res.setHeader('X-Total-Count', user.length);
+
                 res.json(user);
             })
             .catch(err => res.status(404).json({user: 'No users found'}))
@@ -190,8 +189,6 @@ router.get('/users/users',passport.authenticate('jwt',{session:false}),(req,res)
                 if(!user) {
                     res.status(400).json({msg: 'No users found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-                res.setHeader('X-Total-Count',user.length);
                 res.json(user);
             })
             .catch(err => res.status(404).json({ users: 'No billing found' }))
@@ -277,8 +274,7 @@ router.get('/users/alfred',passport.authenticate('jwt',{session:false}),(req,res
                 if (!user) {
                     res.status(400).json({msg: 'No alfred found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-                res.setHeader('X-Total-Count', user.length);
+
                 res.json(user);
             })
             .catch(err => res.status(404).json({alfred: 'No alfred found'}))
@@ -1000,8 +996,8 @@ router.post('/tags/all', passport.authenticate('jwt',{session: false}),(req, res
         Tags.findOne({label: req.body.label})
             .then(tags => {
                 if(tags){
-                    errors.label = 'This tags already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Ce tags existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newTags = new Tags({
                         label: req.body.label

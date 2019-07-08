@@ -17,14 +17,13 @@ const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '170vh',
         justifyContent: 'top',
         flexDirection: 'column',
 
     },
     card: {
         padding: '1.5rem 3rem',
-        width: 400,
+        width: 500,
         marginTop: '100px',
     },
     cardContant: {
@@ -48,6 +47,7 @@ class all extends React.Component {
     }
 
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
         axios.get(url+"myAlfred/api/admin/users/users")
@@ -56,8 +56,10 @@ class all extends React.Component {
                 this.setState({user: user})
             }).catch((error) => {
             console.log(error);
-            localStorage.removeItem('token');
-            Router.push({pathname: '/login'})
+            if(error.response.status === 401 || error.response.status === 403) {
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            }
         });
     }
 
