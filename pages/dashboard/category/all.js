@@ -57,8 +57,11 @@ class all extends React.Component {
                 this.setState({category: category})
             }).catch((error) => {
             console.log(error);
-            localStorage.removeItem('token');
-            Router.push({pathname: '/login'})
+            if(error.response.status === 401 || error.response.status === 403 ) {
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            }
+
         });
     }
 

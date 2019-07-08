@@ -21,6 +21,7 @@ const Prestation = require('../../../models/Prestation');
 const ShopBanner = require('../../../models/ShopBanner');
 const validatePrestationInput = require('../../../validation/prestation');
 const validateRegisterAdminInput = require('../../../validation/registerAdmin');
+const validateCategoryInput = require('../../../validation/category');
 
 const multer = require("multer");
 
@@ -1120,7 +1121,7 @@ const uploadCat = multer({ storage: storageCat });
 // Add category for prestation
 // @Access private
 router.post('/category/all', uploadCat.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
-    const {errors, isValid} = validateBillingInput(req.body);
+    const {errors, isValid} = validateCategoryInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
@@ -1133,8 +1134,8 @@ router.post('/category/all', uploadCat.single('picture'),passport.authenticate('
         Category.findOne({label: req.body.label})
             .then(category => {
                 if(category){
-                    errors.label = 'This category already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Cette catégorie existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newCategory = new Category({
                         label: req.body.label,
