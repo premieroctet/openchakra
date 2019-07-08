@@ -21,6 +21,8 @@
     "cors": "^2.8.5",
     "date-fns": "^2.0.0-alpha.27",
     "express": "^4.16.4",
+    "fast-csv": "^3.0.1",
+    "file-system": "^2.2.2",
     "glob": "^7.1.4",
     "jsonwebtoken": "^8.5.1",
     "jss": "^9.8.7",
