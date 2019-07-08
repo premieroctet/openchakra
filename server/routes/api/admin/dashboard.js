@@ -20,7 +20,7 @@ const Service = require('../../../models/Service');
 const Prestation = require('../../../models/Prestation');
 const ShopBanner = require('../../../models/ShopBanner');
 const validatePrestationInput = require('../../../validation/prestation');
-const validateRegisterInput = require('../../../validation/register');
+const validateRegisterAdminInput = require('../../../validation/registerAdmin');
 
 const multer = require("multer");
 
@@ -45,8 +45,8 @@ router.post('/billing/all', passport.authenticate('jwt',{session: false}),(req, 
         Billing.findOne({label: req.body.label})
             .then(billing => {
                 if(billing){
-                    errors.label = 'This billing already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Cette méthode de facturation existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newBilling = new Billing({
                         label: req.body.label
@@ -75,8 +75,7 @@ router.get('/billing/all',passport.authenticate('jwt',{session:false}),(req,res)
                 if (!billings) {
                     return res.status(400).json({msg: 'No billing found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-                res.setHeader('X-Total-Count', billings.length);
+
                 res.json(billings);
 
             })
@@ -360,8 +359,7 @@ router.get('/users/admin',passport.authenticate('jwt',{session: false}),(req, re
                 if(!user) {
                     res.status(400).json({msg: 'No admin found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-                res.setHeader('X-Total-Count',user.length);
+
                 res.json(user);
             })
             .catch(err => res.status(404).json({ admin: 'No admin found' }))
@@ -372,6 +370,7 @@ router.get('/users/admin',passport.authenticate('jwt',{session: false}),(req, re
 
 // @Route GET /myAlfred/admin/users/admin/:id
 // Get one admin
+// @Access private and for admin only
 router.get('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
@@ -393,8 +392,9 @@ router.get('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req
 
 // @Route POST /myAlfred/admin/users/admin
 // Add an admin
+// @Access private and for admin only
 router.post('/users/admin', passport.authenticate('jwt',{session: false}),(req, res) => {
-    const {errors, isValid} = validateRegisterInput(req.body);
+    const {errors, isValid} = validateRegisterAdminInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
@@ -404,11 +404,11 @@ router.post('/users/admin', passport.authenticate('jwt',{session: false}),(req, 
             return res.status(400).json(errors);
         }
 
-        User.findOne({email: req.body.email})
+        User.findOne({email: req.body.email,is_admin: true})
             .then(user => {
                 if(user) {
-                    errors.email = 'Email already exist';
-                    return res.status(400).json({errors});
+                    errors.email = 'Email déjà existant';
+                    return res.status(400).json(errors);
                 } else {
                     const newUser = new User ({
                         name: req.body.name,
@@ -504,8 +504,8 @@ router.post('/calculating/all', passport.authenticate('jwt',{session: false}),(r
         Calculating.findOne({label: req.body.label})
             .then(calculating => {
                 if(calculating){
-                    errors.label = 'This calculating already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Cette méthode de calcul existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newCalculating = new Calculating({
                         label: req.body.label
@@ -535,8 +535,7 @@ router.get('/calculating/all',passport.authenticate('jwt',{session:false}), (req
                 if (!calculating) {
                     return res.status(400).json({msg: 'No calculating found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-                res.setHeader('X-Total-Count', calculating.length);
+
                 res.json(calculating);
 
             })

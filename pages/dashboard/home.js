@@ -46,6 +46,7 @@ class home extends React.Component {
     }
 
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         const token = localStorage.getItem('token').split(' ')[1];
         const decode = jwt.decode(token);
         this.setState({is_admin: decode.is_admin});
