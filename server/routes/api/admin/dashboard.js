@@ -1315,6 +1315,28 @@ router.post('/equipment/all',upload.fields([{name: 'logo',maxCount: 1}, {name:'l
 
 });
 
+// @Route POST /myAlfred/admin/equipment/editPicture/:id
+// Edit the logo for equipment
+// @Access private
+router.post('/equipment/editPicture/:id',upload.fields([{name: 'logo',maxCount: 1}, {name:'logo2',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req, res) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+        Equipment.findByIdAndUpdate(req.params.id, {logo: req.files['logo'][0].path,logo2: req.files['logo2'][0].path},{new: true})
+            .then(equipment => {
+                res.json(equipment);
+            })
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+
+});
+
 // @Route GET /myAlfred/admin/equipment/all
 // View all equipments
 // @Access private

@@ -4,14 +4,15 @@ import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
+import Link from 'next/link';
 import Button from '@material-ui/core/Button';
-
+import FormControl from '@material-ui/core/FormControl';
 
 
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
-import Link from "next/link";
+
 
 const {config} = require('../../../config/config');
 const url = config.apiUrl;
@@ -35,19 +36,29 @@ const styles = {
         color: 'black',
         fontSize: 12,
     },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    chip: {
+        margin: 2,
+    },
 };
 
-class view extends React.Component {
+
+class editPicture extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            equipment: {}
+            equipment: {},
+            logo: null,
+            logo2: null,
 
         };
 
-        this.handleClick = this.handleClick.bind(this);
+
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -55,6 +66,7 @@ class view extends React.Component {
 
     }
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         const id = this.props.equipment_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(`${url}myAlfred/api/admin/equipment/all/${id}`)
@@ -67,26 +79,32 @@ class view extends React.Component {
                 console.log(err);
                 localStorage.removeItem('token');
                 Router.push({pathname: '/login'})
-            })
+            });
+
 
     }
 
     onChange = e => {
-        const state = this.state.equipment;
-        state[e.target.name] = e.target.value;
-        this.setState({equipment:state});
+        this.setState({logo:e.target.files[0]})
     };
+
+    onChange2(e){
+        this.setState({logo2:e.target.files[0]})
+    }
+
+
 
     onSubmit = e => {
         e.preventDefault();
-
-        const { label } = this.state.equipment;
+        const formData = new FormData();
+        formData.append('logo',this.state.logo);
+        formData.append('logo2',this.state.file2);
         const id = this.props.equipment_id;
-        axios.put(`${url}myAlfred/api/admin/equipment/all/${id}`,{label})
+        axios.post(`${url}myAlfred/api/admin/equipment/editPicture/${id}`,formData)
             .then(res => {
 
-                alert('Equipement modifié avec succès');
-                Router.push({pathname:'/dashboard/equipments/all'})
+                alert('Logos modifiés avec succès');
+                Router.push({pathname:'/dashboard/equipment/all'})
             })
             .catch(err => {
                 console.log(err);
@@ -97,27 +115,12 @@ class view extends React.Component {
 
     };
 
-    handleClick() {
-        const id = this.props.equipment_id;
-        axios.delete(`${url}myAlfred/api/admin/equipment/all/${id}`)
-            .then(res => {
-
-                alert('Equipement supprimé avec succès');
-                Router.push({pathname:'/dashboard/equipments/all'})
-            })
-            .catch(err => {
-                console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
-            })
-
-
-    };
 
 
     render()  {
         const { classes } = this.props;
         const {equipment} = this.state;
+
 
 
         return (
@@ -130,37 +133,28 @@ class view extends React.Component {
                             </Grid>
                             <form onSubmit={this.onSubmit}>
                                 <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="label"
-                                        value={equipment.label}
-                                        onChange={this.onChange}
-
-                                    />
-                                </Grid>
-                                <Grid item>
                                     <img src={`../../../${equipment.logo}`} alt={'logo'} width={100}/>
+                                </Grid>
+
+                                <Grid item>
+                                    <input type="file" name="logo" onChange= {this.onChange} accept="image/*" />
                                 </Grid>
                                 <Grid item>
                                     <img src={`../../../${equipment.logo2}`} alt={'logo2'} width={100}/>
                                 </Grid>
+                                <Grid item>
+                                    <input type="file" name="logo2" onChange= {this.onChange2} accept="image/*" />
+                                </Grid>
+
+
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                                         Modifier
                                     </Button>
-                                    <Button type="button" variant="contained" color="secondary" style={{ width: '100%' }} onClick={this.handleClick}>
-                                        Supprimer
-                                    </Button>
+
+
                                 </Grid>
                             </form>
-                            <Link href={`editPicture?id=${this.props.equipment_id}`}>
-                                <Button type="button" variant="contained" color="primary" style={{ width: '100%' }}>
-                                    Modifier les logos
-                                </Button>
-                            </Link>
                         </Grid>
                     </Card>
                 </Grid>
@@ -171,4 +165,4 @@ class view extends React.Component {
 
 
 
-export default withStyles(styles)(view);
+export default withStyles(styles)(editPicture);
