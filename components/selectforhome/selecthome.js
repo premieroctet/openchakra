@@ -15,7 +15,11 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   formControl: {
-    minWidth: 200,
+    width: '100%',
+    border: 'solid thin #333',
+    borderRadius:'10px',
+    padding:10,
+   
   },
 });
 function Selecthome(props) {
@@ -39,6 +43,7 @@ function Selecthome(props) {
           onChange={handleChange}
           input={<Input name="services" id="service-auto-width" />}
           autoWidth
+         
         >
           <MenuItem value="">
             <em>Aucune</em>

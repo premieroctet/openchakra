@@ -58,6 +58,11 @@ const styles = theme => ({
     },
 
   },
+  textdesc: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: '10%!important',    
+    },
+  },
   media2: {
     height: 200
   },  
@@ -184,7 +189,7 @@ class profiteandlearn extends React.Component {
               </div>
             </Grid>
             <Grid item xs={2}></Grid>
-            <Grid item xs={4}>
+            <Grid item md={4} xs={12} className={classes.textdesc}>
               <Grid container>
                 <Grid item xs={12}>
                   <img src="http://my-alfred.io/wp-content/uploads/2019/03/1.svg" title="1" alt="1" scale="0" style={{height:"50px", width:"50px",}}/>
@@ -201,7 +206,7 @@ class profiteandlearn extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item md={4} xs={12} className={classes.textdesc}>
             <Grid container>
                 <Grid item xs={12}>
                   <img src="http://my-alfred.io/wp-content/uploads/2019/03/2.svg" title="2" alt="2" scale="0" style={{height:"50px", width:"50px",}}/>
@@ -217,7 +222,7 @@ class profiteandlearn extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item md={4} xs={12} className={classes.textdesc}>
             <Grid container>
                 <Grid item xs={12}>
                   <img src="http://my-alfred.io/wp-content/uploads/2019/03/3.svg" title="3" alt="3" scale="0" style={{height:"50px", width:"50px",}}/>

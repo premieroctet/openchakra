@@ -9,6 +9,9 @@ import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import Homeheader from '../components/home/Homeheader/Homeheader';
 import Feelingood from '../components/home/feelingood/feelingood';
 import Wellbeing from '../components/home/Wellbeing/Wellbeing';
+import Proposeservice from '../components/home/proposeservice/Proposeservice';
+import Verypractical from '../components/home/Verypractical/Verypractical';
+import Assureback from '../components/home/AssureBack/Assureback';
 import setAuthToken from '../utils/setAuthToken';
 import Router from "next/router";
 import '../static/stylebg.css'
@@ -52,6 +55,9 @@ class Home extends React.Component {
             <Profiteandlearn />
             <Feelingood />
             <Wellbeing />
+            <Proposeservice />
+            <Verypractical />
+            <Assureback />
         </Fragment>
     )
 }

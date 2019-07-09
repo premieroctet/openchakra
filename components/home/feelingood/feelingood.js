@@ -99,8 +99,8 @@ class feelingood extends React.Component{
     const {service} = this.state;
     const resdata = shuffleArray(service);
 
-    const cards = resdata.slice(0, 6).map(e => (
-        <Grid item xs={12} sm={6} md={4}>
+    const cards = resdata.slice(0, 4).map(e => (
+        <Grid item xs={12} sm={6} md={3}>
           <FeelingoodCard img={e.picture} title={e.label} />
         </Grid>
     ));

@@ -14,6 +14,7 @@ import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
 import "../../../static/stylesfonts.css";
+import "../../../static/style1.css";
 
 const url = "https://myalfred.hausdivision.com/";
 
@@ -36,7 +37,19 @@ const styles = theme => ({
     },
   },
   container1: {
-    marginTop: '170px!important',
+
+    [theme.breakpoints.down('xs')]: { //  medium: 960px or larger
+      marginTop: '10px!important',
+    },
+    [theme.breakpoints.up('sm')]: { //  medium: 960px or larger
+      marginTop: '10px!important',
+    },
+    [theme.breakpoints.up('md')]: { //  medium: 960px or larger
+      marginTop: '10px!important',
+    },
+    [theme.breakpoints.up('lg')]: { //  medium: 960px or larger
+      marginTop: '180px!important',
+    },
   },
   media: {
     height: 0,
@@ -129,10 +142,11 @@ class serenityNeed extends React.Component {
     const {classes} = this.props;
     const {service} = this.state;
     const resdata = shuffleArray(service);
-    const services = resdata.slice(0, 8).map(e => (
-        <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
+    const services = resdata.slice(0, 12).map(e => (
+        <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
           <Card className={classes.card}>
             <CardActionArea>
+              
               <CardMedia
                   className={classes.media2}
                   image={e.picture}
@@ -178,10 +192,21 @@ class serenityNeed extends React.Component {
               </div>
             </Grid>
             <Grid item xs={2}></Grid>
-          
             
+            <div className="thewrap">
+            <section className="sectioncard">
 
+              {services}
+
+
+
+            </section>
+          </div>
+            <Grid container className="thewrap2">
+
+            
             {services}
+            </Grid>
           </Grid>
           </div>
         </Fragment>

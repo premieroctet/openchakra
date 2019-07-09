@@ -1,19 +1,20 @@
-import React, { Fragment } from './node_modules/react';
-import Grid from './node_modules/@material-ui/core/Grid';
-import CardMedia from './node_modules/@material-ui/core/CardMedia';
-import { withStyles } from './node_modules/@material-ui/core/styles';
-import PropTypes from './node_modules/prop-types';
-import Typography from './node_modules/@material-ui/core/Typography';
+import React, { Fragment } from 'react';
+import Grid from '@material-ui/core/Grid';
+import CardMedia from '@material-ui/core/CardMedia';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
 //import SerenityNeedCard from './SerenityNeedCard/SerenityNeedCard';
-import CardActionArea from "./node_modules/@material-ui/core/CardActionArea";
-import CardContent from "./node_modules/@material-ui/core/CardContent";
-import Chip from "./node_modules/@material-ui/core/Chip";
-import CardActions from "./node_modules/@material-ui/core/CardActions";
-import Button from "./node_modules/@material-ui/core/Button";
-import Card from "./node_modules/@material-ui/core/Card";
-import axios from './node_modules/axios';
-import Link from './node_modules/next/link';
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import Chip from "@material-ui/core/Chip";
+import CardActions from "@material-ui/core/CardActions";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import axios from 'axios';
+import Link from 'next/link';
 import "../../../static/stylesfonts.css";
+import "../../../static/style1.css";
 
 const url = "https://myalfred.hausdivision.com/";
 
@@ -24,7 +25,6 @@ const styles = theme => ({
     marginRight: 'auto',
     marginLeft: 'auto',
     width: '100%',
-
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: 920,
@@ -104,7 +104,7 @@ function shuffleArray(array) {
   return array;
 }
 
-class serenityNeed extends React.Component {
+class Verypractical extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -127,10 +127,11 @@ class serenityNeed extends React.Component {
     const {classes} = this.props;
     const {service} = this.state;
     const resdata = shuffleArray(service);
-    const services = resdata.slice(0, 8).map(e => (
-        <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
+    const services = resdata.slice(0, 12).map(e => (
+        <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
           <Card className={classes.card}>
             <CardActionArea>
+              
               <CardMedia
                   className={classes.media2}
                   image={e.picture}
@@ -155,12 +156,13 @@ class serenityNeed extends React.Component {
 
     return (
         <Fragment>
+          <div className={classes.container1}>
           <Grid container className={classes.container}>
             <Grid item xs={2}></Grid>
             <Grid item xs={8}>
               <div>
                 <Typography variant="h4" className={classes.textBox1}>
-                Retrouvez de la sérénité !
+                  Bien pratique !
                 </Typography>
                 <Grid container>
                   <Grid item xs={5}></Grid>
@@ -168,25 +170,36 @@ class serenityNeed extends React.Component {
                   <Grid item xs={5}></Grid>
                 </Grid>
                 <Typography className={classes.textBox}>
-                Pensez à vous, libérez vous l’esprit de certaines contraintes et profitez du temps et du talents des autres…<br/> 
-                Echappez à votre quotidien, prenez le temps de trouver votre Alfred avec d’excellents commentaires pour
-                les services dont vous avez besoin !!!
+                  Petits tracas du quotidien, imprévus, 
+                  nos Alfred près de chez vous sont là pour vous prêter main forte et vous faciliter la vie ! 
                 </Typography>
               </div>
             </Grid>
             <Grid item xs={2}></Grid>
-          
             
+            <div className="thewrap">
+            <section className="sectioncard">
 
+              {services}
+
+
+
+            </section>
+          </div>
+            <Grid container className="thewrap2">
+
+            
             {services}
+            </Grid>
           </Grid>
+          </div>
         </Fragment>
     );
   }
 };
 
-serenityNeed.propTypes = {
+Verypractical.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
-export default withStyles(styles)(serenityNeed);
+export default withStyles(styles)(Verypractical);

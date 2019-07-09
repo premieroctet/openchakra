@@ -13,26 +13,53 @@ import '../../../static/stylebg.css'
 
    
 const styles = theme => ({
-  headerhomeimg: {
-    marginTop: 64,
-  backgroundRepeat: "no-repeat",
-	backgroundPosition: "center center",
-  backgroundSize: "cover",
-  zIndex: -999,
-    width: '100%',
-    height: 650,
-    [theme.breakpoints.up('md')]: { // medium: 960px or larger
-      backgroundAttachment: "fixed",
+  headerimg: {
+    [theme.breakpoints.up('lg')]: { // medium: 960px or larger
+     display: 'none',
     },
+
+  /* Center and scale the image nicely */
+  backgroundImage: 'url(../../../static/bg.jpg)',
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+  marginTop: 64,
+  top: '0%',
+  left: '0%',
+  zIndex: '2',
+  width: '100%',
+  minHeight: '122vh',
+  },
+  headerhomevid: {
+
+    [theme.breakpoints.down('md')]: { // medium: 960px or larger
+      backgroundAttachment: "fixed",
+     display: 'none',
+    },
+    marginTop: 64,
+  /* Full height */
+  height: '100vh!important',
+  width: '100%!important',
+
+  /* Center and scale the image nicely */
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+    
+    
   },
   headeroverlay: {
+    [theme.breakpoints.up('lg')]: { // medium: 960px or larger
+      backgroundAttachment: "fixed",
+     display: 'none',
+    },
     marginTop: 64,
     position: 'absolute',
     top: '0%',
     left: '0%',
     zIndex: '2',
     width: '100%',
-    height: 650,
+    minHeight: '90vh',
     backgroundImage: 'linear-gradient(to top, rgba(0,0,0,.5), rgba(0,0,0,.4), rgba(0,0,0,.3), rgba(0,0,0,.2), rgba(255,255,255,0))',
   },
   headerhome: {
@@ -41,31 +68,35 @@ const styles = theme => ({
     position: 'absolute',
     transform: 'translate(-50%, -50%)',
     zIndex: '3',
-    padding: '20px',
     textAlign: 'center',
     backgroundColor: 'whitesmoke',
     marginLeft: '5%',
-    borderRadius: '5px',
+    borderRadius: '10px',
     boxShadow: '6px 6px 5px -6px black',
+    padding:'2%',
+    minHeight:'500px', 
+    bottom:50, 
+    marginTop:-10,
+
 
     [theme.breakpoints.down('xs')]: { // extra-large: 1920px or larger
-      width: '94%',
+      width: '88%',
       left: '45%',
-      top: '75%',
+      top: '60%',
     },
     [theme.breakpoints.up('sm')]: { // extra-large: 1920px or larger
       width: '75%',
       left: '45%',
-      top: '60%',
+      top: '55%',
     },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
-      width: '45%',
+      width: '43%',
       left: '23%',
-      top: '50%',
+      top: '55%',
     },
     [theme.breakpoints.up('lg')]: { // large: 1280px or larger
-      width: '30%',
-      top: '50%',
+      width: '38%',
+      top: '55%',
       left: '20%',
     },
     [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
@@ -112,13 +143,17 @@ const styles = theme => ({
   },
   input: {
     display: 'none',
+   
   },
   locationcity: {
     color: 'black',
+    width:'100%',
   },
   formlabel: {
-    display: 'inline-block',
+    //display: 'inline-block',
     textAlign: 'center',
+    width:'100%',
+    
   },
   homepunchline: {
     color: 'lightgrey!important',
@@ -126,16 +161,24 @@ const styles = theme => ({
   homeform: {
     color: '#505050!important',
     textAlign: 'left',
-    paddingLeft: '25px',
+    width:'100%',
   },
   selecthomecategory:{
     paddingBottom: "15px",
+    width:'100%',
   },
   pickerhomelocation: {
     paddingBottom: "15px",
+    width:'100%',
   },
   button: {
-    marginTop: "15px",
+    marginTop: "60px",
+    width:'100%',
+    color:'white',
+    backgroundColor:'rgb(240, 77, 94)',
+    padding:15,
+    borderRadius:10,
+    border:'0px solid transparent',
   },
 });
 
@@ -144,8 +187,9 @@ const Homeheader = (props) => {
 
   return (
     <Fragment>
-      <div className={classes.headerhomeimg}>
-        <video id="background-video" loop autoPlay style={{width:'100%', zIndex: -999}}>
+      <div className={classes.headerimg}></div>
+      <div className={classes.headerhomevid}>
+        <video id="background-video" loop autoPlay style={{width: '100%'}}>
           <source src="../../../static/bgmyalfred.mp4" type="video/mp4" />
           <source src="../../../static/bgmyalfred.mp4" type="video/ogg" />
           Your browser does not support the video tag.
@@ -159,14 +203,14 @@ const Homeheader = (props) => {
           </Grid>
         </Grid>
       </div>
-      <div className={classes.headerhome}>
-        <Grid container>
+      <div className={classes.headerhome} style={{ }}>
+        <Grid container  style={{ padding:'2%', bottom:30, }}>
           <Grid item xs={12}>
           <Typography><h2 className={classes.homeform}>Et si vous pouviez reserver n'importe quel service immediatement ?</h2></Typography>
           </Grid>
-        <Grid item xs={12}>
-        <form className={classes.formlabel}>
-        <div className={classes.selecthomecategory}>
+        <Grid item xs={12}  style={{ width:'100%',}}>
+        <form className={classes.formlabel} style={{ width:'100%',}} >
+        <div className={classes.selecthomecategory} style={{ width:'100%', }}>
           <Selecthome  />
         </div>
         <div className={classes.pickerhomelocation}>
@@ -176,7 +220,9 @@ const Homeheader = (props) => {
                 disabled
                 id="standard-disabled"
                 defaultValue="Rouen, FR"
-                style={{textAlign: "center", width: "200px"}}
+                style={{textAlign: "center", width: "100%", border: 'solid thin #333',
+                borderRadius:'10px',
+                padding:10,}}
                 margin="normal"
               />
             </Grid>
