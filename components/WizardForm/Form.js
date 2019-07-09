@@ -295,7 +295,54 @@ class Wizard extends React.Component {
                 axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
                 axios.post(url+'myAlfred/api/serviceUser/add',formData)
                     .then(res => {
-                        alert("C'est passé !!")
+                        alert("C'est passé !!");
+
+                            const booking_request = values.createShop.booking_request;
+                            const my_alfred_conditions = values.createShop.my_alfred_conditions;
+                            const profile_picture = values.createShop.profile_picture_user;
+                            const identity_card = values.createShop.identity_card;
+                            const recommandations = values.createShop.recommandations;
+                            const welcome_message = values.createShop.welcome_message;
+                            const flexible_cancel = values.createShop.flexible_cancel;
+                            const moderate_cancel = values.createShop.moderate_cancel;
+                            const strict_cancel = values.createShop.strict_cancel;
+
+
+
+                            const is_particular = values.createShop.is_particular;
+                            const is_professional = values.createShop.is_professional;
+                            const self_employed = values.createShop.is_microCompany;
+                            const individual_company = values.createShop.isIndividualCompany;
+                            const name = values.createShop.denomination;
+                            const creation_date = values.createShop.creationDate;
+                            const naf_ape = values.createShop.nafape;
+                            const siret = values.createShop.siret;
+
+                            axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
+                                .then(response => {
+                                    let data = response.data;
+                                    let arrayService = [];
+                                    let descriptionService = e.descService;
+                                    data.forEach(q => {
+
+                                        let objService = {label: q._id, description:descriptionService};
+                                        arrayService.push(objService);
+                                        console.log(arrayService);
+                                    });
+
+                                    axios.post(url+'myAlfred/api/shop/add',{booking_request,my_alfred_conditions,profile_picture,identity_card
+                                    , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
+                                    self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
+                                        .then(result => {
+                                            alert('Shop créée avec succès !');
+                                        })
+                                        .catch(error => {
+                                            console.log(error);
+                                        })
+                                })
+
+
+
                     })
                     .catch(err => {
                         console.log(err);

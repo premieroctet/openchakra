@@ -75,9 +75,6 @@ const ShopSchema = new Schema({
         },
         naf_ape: {
             type: String
-        },
-        vat_number: {
-            type: String
         }
     },
     services: [{
