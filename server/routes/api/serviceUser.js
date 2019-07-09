@@ -19,40 +19,19 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-const storage2 = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'static/profile/certification/')
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname  )
-    }
-});
-const upload2 = multer({ storage: storage2 });
+
 
 router.get('/test',(req, res) => res.json({msg: 'Service user Works!'}) );
 
 // @Route POST /myAlfred/api/serviceUser/add
 // Connect an alfred to a service
 // @Access private
-router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=>{
+router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certification',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req,res)=>{
     ServiceUser.findOne({user: req.user.id, service: req.body.service})
         .then(service => {
-            if(service){
-                if(req.body.prestation && req.body.price) {
-                    const newPrestation = {
-                        prestation: mongoose.Types.ObjectId(req.body.prestation),
-                        price: req.body.price
-                    };
-                    service.prestations.unshift(newPrestation);
-                }
-                if(req.body.equipment) service.equipments.unshift(mongoose.Types.ObjectId(req.body.equipment));
-                service.save().then(services => res.json(services)).catch(err => console.log(err));
-            } else {
-                if(req.body.diploma) {
-                    upload.single('diploma')
-                }
-                if(req.body.certification) {
-                    upload2.single('certification')
+
+                if(service) {
+                    return res.status(400).json({msg: "Ce service existe déjà"});
                 }
                 const fields = {};
                 fields.user= req.user.id;
@@ -61,26 +40,39 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=>{
                 fields.perimeter = req.body.perimeter;
                 fields.minimum_basket = req.body.minimum_basket;
                 fields.deadline_before_booking = req.body.deadline_before_booking;
-                fields.prestations = req.body.prestations;
-                fields.graduated = req.body.graduated;
-                if(req.body.diploma) fields.diploma = req.file.path;
-                fields.is_certified = req.body.is_certified;
-                if(req.body.certification) fields.certification = req.file.path;
+                fields.prestations = JSON.parse(req.body.prestations);
+                if(req.body.graduated === 'true') {
+                    fields.graduated = true;
+                } else {
+                    fields.graduated = false;
+                }
 
-                const newPrestation = {
-                    prestation: mongoose.Types.ObjectId(req.body.prestation),
-                    price: req.body.price
-                };
+                fields.diploma = req.files['diploma'][0].path;
+            if(req.body.is_certified === 'true') {
+                fields.is_certified = true;
+            } else {
+                fields.is_certified = false;
+            }
+                fields.certification = req.files['certification'][0].path;
 
-                fields.prestations = [];
-                fields.equipments = [];
-                fields.prestations.unshift(newPrestation);
-                fields.equipments.unshift(mongoose.Types.ObjectId(req.body.equipment));
+
+
+
+                fields.equipments = JSON.parse(req.body.equipments);
+                fields.majoration = {};
+                if(req.body.active === 'true') {
+                    fields.majoration.active = true;
+                } else {
+                    fields.majoration.active = false;
+                }
+
+                fields.majoration.price = parseInt(req.body.price);
                 const newService = new ServiceUser(fields);
                 newService.save().then(service => res.json(service)).catch(err => console.log(err));
 
 
-            }
+
+
 
         })
 });
@@ -167,7 +159,7 @@ router.post('/addDiploma/:id',upload.single('diploma'),passport.authenticate('jw
 // @Route POST /myAlfred/api/serviceUser/addCertification/:id
 // Add a certification for a service
 // @Access private
-router.post('/addCertification/:id',upload2.single('certification'),passport.authenticate('jwt',{session:false}),(req,res) => {
+router.post('/addCertification/:id',upload.single('certification'),passport.authenticate('jwt',{session:false}),(req,res) => {
     ServiceUser.findById(req.params.id)
         .then(serviceUser => {
             serviceUser.certification = req.file.path;

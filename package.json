@@ -23,6 +23,7 @@
     "express": "^4.16.4",
     "fast-csv": "^3.0.1",
     "file-system": "^2.2.2",
+    "formik": "^1.5.7",
     "glob": "^7.1.4",
     "jsonwebtoken": "^8.5.1",
     "jss": "^9.8.7",
@@ -46,6 +47,7 @@
     "react-multistep": "^3.6.6",
     "react-responsive-carousel": "^3.1.49",
     "react-select": "^3.0.4",
+    "react-tabs": "^3.0.0",
     "styled-components": "^4.2.0",
     "validator": "^10.11.0",
     "yup": "^0.27.0"
