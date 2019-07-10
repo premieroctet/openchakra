@@ -297,7 +297,7 @@ class Wizard extends React.Component {
                 axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
                 axios.post(url+'myAlfred/api/serviceUser/add',formData)
                     .then(res => {
-                        alert("C'est passé !!");
+                        alert("Service ajouté");
 
                             const booking_request = values.createShop.booking_request;
                             const my_alfred_conditions = values.createShop.my_alfred_conditions;
@@ -336,6 +336,8 @@ class Wizard extends React.Component {
                                     self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
                                         .then(result => {
                                             alert('Shop créée avec succès !');
+
+
                                         })
                                         .catch(error => {
                                             console.log(error);
@@ -349,6 +351,36 @@ class Wizard extends React.Component {
                         console.log(err);
                     })
             });
+            const formDataIdProfile = new FormData();
+            formDataIdProfile.append('myCardR',values.createShop.id_recto);
+            formDataIdProfile.append('myCardV',values.createShop.id_verso);
+            axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
+                .then(res => {
+                    alert('Profil mis à jours')
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+            const profilePicture = values.alfredUpdate.profile_picture_user;
+            const formDataPicture = new FormData();
+            formDataPicture.append('myImage',profilePicture);
+            axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
+                .then(res => {
+                    alert('Photo ajoutée')
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+            const phoneUser = values.alfredUpdate.phone;
+            axios.post(url+'myAlfred/api/users/profile/phone',phoneUser)
+                .then(res => {
+                    alert('Téléphone ajouté');
+                })
+                .catch(err => {
+                    console.log(err);
+                });
 
             return console.log(values);
         } else {

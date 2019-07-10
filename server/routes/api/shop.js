@@ -6,7 +6,7 @@ const multer = require ('multer');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-      cb(null, 'static/shop/')
+      cb(null, 'static/profile/idCard/')
   },
   filename: function (req, file, cb) {
       cb(null, file.originalname  )
@@ -71,6 +71,7 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
             }
         })
 });
+
 
 // @Route GET /myAlfred/api/shop/all
 // View all shop

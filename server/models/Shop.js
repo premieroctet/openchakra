@@ -37,12 +37,6 @@ const ShopSchema = new Schema({
         type: Boolean,
         default: false
     },
-    id_recto: {
-        type: String
-    },
-    id_verso: {
-        type: String
-    },
     verified_phone: {
         type: Boolean,
         default: false
