@@ -82,7 +82,10 @@ const styles = theme => ({
   media2: {
     height: 200,
 
-    [theme.breakpoints.down('xs')]: { // xs: 600px or larger
+    [theme.breakpoints.down('md')]: { 
+      width: '200px!important',
+    },
+    [theme.breakpoints.down('xs')]: { 
       width: '200px!important',
     },
     [theme.breakpoints.down('sm')]: {

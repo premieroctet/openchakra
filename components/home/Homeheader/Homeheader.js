@@ -74,7 +74,7 @@ const styles = theme => ({
     borderRadius: '10px',
     boxShadow: '6px 6px 5px -6px black',
     padding:'2%',
-    minHeight:'500px', 
+    minHeight:'525px', 
     bottom:50, 
     marginTop:-10,
 
@@ -90,12 +90,12 @@ const styles = theme => ({
       top: '55%',
     },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
-      width: '43%',
+      width: '40%',
       left: '23%',
       top: '55%',
     },
     [theme.breakpoints.up('lg')]: { // large: 1280px or larger
-      width: '38%',
+      width: '30%',
       top: '55%',
       left: '20%',
     },
@@ -165,7 +165,7 @@ const styles = theme => ({
   },
   selecthomecategory:{
     paddingBottom: "15px",
-    width:'100%',
+    width:'120%',
   },
   pickerhomelocation: {
     paddingBottom: "15px",

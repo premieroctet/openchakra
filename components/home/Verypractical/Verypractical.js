@@ -56,7 +56,7 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       maxWidth: 400,
     },
-    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+    [theme.breakpoints.up('md')]: { 
       maxWidth: 350,
     },
     [theme.breakpoints.up('lg')]: {
@@ -67,7 +67,10 @@ const styles = theme => ({
   media2: {
     height: 200,
 
-    [theme.breakpoints.down('xs')]: { // xs: 600px or larger
+    [theme.breakpoints.down('md')]: { 
+      width: '200px!important',
+    },
+    [theme.breakpoints.down('xs')]: { 
       width: '200px!important',
     },
     [theme.breakpoints.down('sm')]: {
