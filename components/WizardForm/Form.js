@@ -255,6 +255,7 @@ class Wizard extends React.Component {
                 const perimeter = e.perimeter;
                 const minimum_basket = e.minimumBasket;
                 const deadline_before_booking = e.delayBeforeShop + ' ' + e.delayBeforeShopDWM;
+                const description = e.descService;
 
                 let graduated = false;
                 let diploma = null;
@@ -291,6 +292,7 @@ class Wizard extends React.Component {
                 formData.append('certification',certification);
                 formData.append('active',active.toString());
                 formData.append('price',price.toString());
+                formData.append('description',description);
 
                 axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
                 axios.post(url+'myAlfred/api/serviceUser/add',formData)
@@ -322,12 +324,11 @@ class Wizard extends React.Component {
                                 .then(response => {
                                     let data = response.data;
                                     let arrayService = [];
-                                    let descriptionService = e.descService;
+
                                     data.forEach(q => {
 
-                                        let objService = {label: q._id, description:descriptionService};
-                                        arrayService.push(objService);
-                                        console.log(arrayService);
+                                        arrayService.push(q._id);
+
                                     });
 
                                     axios.post(url+'myAlfred/api/shop/add',{booking_request,my_alfred_conditions,profile_picture,identity_card

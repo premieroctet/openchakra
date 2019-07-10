@@ -47,17 +47,30 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
                     fields.graduated = false;
                 }
 
-                fields.diploma = req.files['diploma'][0].path;
+                const diploma = 'diploma';
+                const certification = 'certification';
+                if(diploma in req.files) {
+
+                    fields.diploma = req.files['diploma'][0].path;
+                } else {
+                    console.log('No file uploaded');
+                }
             if(req.body.is_certified === 'true') {
                 fields.is_certified = true;
             } else {
                 fields.is_certified = false;
             }
+            if(certification in req.files) {
+
                 fields.certification = req.files['certification'][0].path;
+            } else {
+                console.log('No file uploaded');
+            }
 
 
 
 
+                fields.description = req.body.description;
                 fields.equipments = JSON.parse(req.body.equipments);
                 fields.majoration = {};
                 if(req.body.active === 'true') {

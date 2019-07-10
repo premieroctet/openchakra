@@ -78,13 +78,9 @@ const ShopSchema = new Schema({
         }
     },
     services: [{
-        label :{
-            type: Schema.Types.ObjectId,
-            ref: 'serviceUser'
-        },
-        description: {
-            type: String
-        }
+        type: Schema.Types.ObjectId,
+        ref: 'serviceUser'
+
     }],
     alfred: {
         type: Schema.Types.ObjectId,
