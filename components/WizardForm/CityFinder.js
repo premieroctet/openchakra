@@ -6,6 +6,9 @@ import Select from 'react-select';
 import axios from 'axios';
 import {ErrorMessage} from 'formik';
 
+const {config} = require('../../config/config');
+const url = config.apiUrl;
+
 class CityFinder extends React.Component {
 
     constructor(props) {
@@ -16,10 +19,42 @@ class CityFinder extends React.Component {
             cities: [],
             check: false,
             city: null,
+            user: {},
+            address: {},
 
 
         };
         this.onChange2 = this.onChange2.bind(this);
+    }
+
+    componentDidMount() {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.get(url+'myAlfred/api/users/current')
+            .then(res => {
+                let data = res.data;
+                this.setState({user: data, address: data.billing_address});
+                const code = this.state.address.zip_code;
+                const newCode = code.substring(0,2);
+                this.setState({code: newCode});
+
+                axios.get(`https://geo.api.gouv.fr/communes?codeDepartement=${newCode}&fields=nom&format=json&geometry=centre`)
+                    .then(response => {
+                        const data2 = response.data;
+                        this.setState({cities: data2, check: true});
+
+
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+
+            })
+
+
+
+
+
     }
 
     onChange = e => {
@@ -29,7 +64,6 @@ class CityFinder extends React.Component {
 
     onChange2 = city => {
         this.setState({ city });
-        console.log(city);
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.city`, city)
     };
 
@@ -88,6 +122,7 @@ class CityFinder extends React.Component {
                 {check ?
                     <Grid item>
                         <Select
+                            styles={{menu: (styles) => Object.assign(styles, {zIndex: 1000})}}
                             value={city}
                             onChange={this.onChange2}
                             options={options}

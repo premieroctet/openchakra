@@ -6,7 +6,7 @@ const multer = require ('multer');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-      cb(null, 'static/shop/')
+      cb(null, 'static/profile/idCard/')
   },
   filename: function (req, file, cb) {
       cb(null, file.originalname  )
@@ -26,18 +26,11 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
     if(!isValid) {
         return res.status(400).json(errors);
     }
-    Shop.find({alfred: req.user.id})
+    Shop.findOne({alfred: req.user.id})
         .then(shop => {
-            if(typeof shop !== 'undefined' && shop.length > 0) {
-                if(req.body.arrayService) {
 
-                    shop.services = req.body.arrayService;
-                    shop.save().then(services => res.json(services)).catch(err => console.log(err));
-
-                }else {
-
-                    return res.status(400).json({msg: 'This shop already exist'});
-                }
+            if(shop !== null) {
+                console.log('Existe déjà');
             } else {
                 const shopFields = {};
                 shopFields.alfred = req.user.id;
@@ -79,13 +72,15 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
         })
 });
 
+
 // @Route GET /myAlfred/api/shop/all
 // View all shop
 router.get('/all',(req,res)=> {
 
     Shop.find()
         .populate('alfred')
-        .populate({path:'services.label',populate:{path: 'service',select:'label'}})
+        .populate('services')
+        .populate({path:'services',populate:{path: 'service',select:'label'}})
         .then(shop => {
             if(typeof shop !== 'undefined' && shop.length > 0){
                 res.json(shop);

@@ -255,6 +255,7 @@ class Wizard extends React.Component {
                 const perimeter = e.perimeter;
                 const minimum_basket = e.minimumBasket;
                 const deadline_before_booking = e.delayBeforeShop + ' ' + e.delayBeforeShopDWM;
+                const description = e.descService;
 
                 let graduated = false;
                 let diploma = null;
@@ -291,11 +292,12 @@ class Wizard extends React.Component {
                 formData.append('certification',certification);
                 formData.append('active',active.toString());
                 formData.append('price',price.toString());
+                formData.append('description',description);
 
                 axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
                 axios.post(url+'myAlfred/api/serviceUser/add',formData)
                     .then(res => {
-                        alert("C'est passé !!");
+                        alert("Service ajouté");
 
                             const booking_request = values.createShop.booking_request;
                             const my_alfred_conditions = values.createShop.my_alfred_conditions;
@@ -322,12 +324,11 @@ class Wizard extends React.Component {
                                 .then(response => {
                                     let data = response.data;
                                     let arrayService = [];
-                                    let descriptionService = e.descService;
+
                                     data.forEach(q => {
 
-                                        let objService = {label: q._id, description:descriptionService};
-                                        arrayService.push(objService);
-                                        console.log(arrayService);
+                                        arrayService.push(q._id);
+
                                     });
 
                                     axios.post(url+'myAlfred/api/shop/add',{booking_request,my_alfred_conditions,profile_picture,identity_card
@@ -335,6 +336,8 @@ class Wizard extends React.Component {
                                     self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
                                         .then(result => {
                                             alert('Shop créée avec succès !');
+
+
                                         })
                                         .catch(error => {
                                             console.log(error);
@@ -348,6 +351,36 @@ class Wizard extends React.Component {
                         console.log(err);
                     })
             });
+            const formDataIdProfile = new FormData();
+            formDataIdProfile.append('myCardR',values.createShop.id_recto);
+            formDataIdProfile.append('myCardV',values.createShop.id_verso);
+            axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
+                .then(res => {
+                    alert('Profil mis à jours')
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+            const profilePicture = values.alfredUpdate.profile_picture_user;
+            const formDataPicture = new FormData();
+            formDataPicture.append('myImage',profilePicture);
+            axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
+                .then(res => {
+                    alert('Photo ajoutée')
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+            const phoneUser = values.alfredUpdate.phone;
+            axios.post(url+'myAlfred/api/users/profile/phone',phoneUser)
+                .then(res => {
+                    alert('Téléphone ajouté');
+                })
+                .catch(err => {
+                    console.log(err);
+                });
 
             return console.log(values);
         } else {
@@ -466,7 +499,7 @@ class Wizard extends React.Component {
                                 </button>
                             )}
                         </div>
-                        <Debug />
+
                     </form>
                 )}
             />
@@ -659,8 +692,8 @@ class Form extends React.Component {
         const { isChecked, isProfessional } = this.state;
 
         return (
-            <div className="App">
-                <h1>Devenir Alfred </h1>
+            <div className="App" style={{marginTop: 100}}>
+
                 <Wizard
                     initialValues={{
                         categories: [],
@@ -1123,13 +1156,13 @@ class Form extends React.Component {
                                                                                         {...field}
                                                                                         style={{width: '40%'}}
                                                                                         select
-                                                                                        variant="outlined"
                                                                                         margin="dense"
+                                                                                        variant="outlined"
                                                                                         label="Jours / semaines / mois"
                                                                                     >
-                                                                                        <MenuItem value="day">Jour(s)</MenuItem>
-                                                                                        <MenuItem value="week">semaine(s)</MenuItem>
-                                                                                        <MenuItem value="month">mois</MenuItem>
+                                                                                        <MenuItem value="jours">Jour(s)</MenuItem>
+                                                                                        <MenuItem value="semaines">semaine(s)</MenuItem>
+                                                                                        <MenuItem value="mois">mois</MenuItem>
                                                                                     </TextField>
                                                                                 )
                                                                             }}

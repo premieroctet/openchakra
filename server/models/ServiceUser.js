@@ -66,6 +66,9 @@ const ServiceUserSchema = new Schema({
         price: {
             type: Number
         }
+    },
+    description: {
+        type: String
     }
 });
 
