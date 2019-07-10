@@ -104,6 +104,13 @@ const styles = theme => ({
         color: 'black',
         textDecoration: 'none',
     },
+    primaryalfred: {
+        color: '#23c1ed',
+    },
+    secondaryalfred: {
+        backgroundColor:'#23c1ed',
+        color: 'white',
+    },
 });
 
 class NavBar extends Component {
@@ -151,7 +158,7 @@ class NavBar extends Component {
         const isMenuOpen = Boolean(anchorEl);
         const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
         const test = this.state.logged;
-        const logout = <Button variant="outlined" color="primary" className={classes.buttonSpace}
+        const logout = <Button variant="outlined" className={classes.primaryalfred}
                                onClick={this.logout2}>Déconnexion</Button>;
 
         const logoutMobile = <MenuItem onClick={this.logout2}>
@@ -263,14 +270,14 @@ class NavBar extends Component {
                             </Typography>
                             {test ? logout :
                                 <React.Fragment><Link href={'/login'}>
-                                    <Button variant="outlined" color="primary" style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
+                                    <Button variant="outlined" className={classes.primaryalfred} style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
                                         Connexion
                                     </Button>
                                 </Link>
                                 <Link href={'/signup'}>
                                 <Button
                                 variant="contained"
-                                color="primary"
+                                className={classes.secondaryalfred}
                                 >
                                 Inscription
                                 </Button>

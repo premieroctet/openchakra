@@ -74,7 +74,7 @@ const styles = theme => ({
     borderRadius: '10px',
     boxShadow: '6px 6px 5px -6px black',
     padding:'2%',
-    minHeight:'525px', 
+    minHeight:'580px', 
     bottom:50, 
     marginTop:-10,
 
@@ -95,12 +95,12 @@ const styles = theme => ({
       top: '55%',
     },
     [theme.breakpoints.up('lg')]: { // large: 1280px or larger
-      width: '30%',
+      width: '28%',
       top: '55%',
       left: '20%',
     },
     [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
-      width: '30%',
+      width: '28%',
       top: '50%',
       left: '20%',
     },
@@ -153,6 +153,7 @@ const styles = theme => ({
     //display: 'inline-block',
     textAlign: 'center',
     width:'100%',
+    marginBottom: '-60px',
     
   },
   homepunchline: {
@@ -162,23 +163,28 @@ const styles = theme => ({
     color: '#505050!important',
     textAlign: 'left',
     width:'100%',
+    fontSize: '33px!important',
+    fontFamily: 'Helvetica',
+    letterSpacing: '-1px',
+    lineHeight: '39px!important',
+    paddingLeft: '20px',
   },
   selecthomecategory:{
-    paddingBottom: "15px",
-    width:'120%',
+    marginBottom: '-15px',
+    marginTop: '-30px',
+    marginLeft: '-9px',
   },
   pickerhomelocation: {
-    paddingBottom: "15px",
     width:'100%',
   },
   button: {
-    marginTop: "60px",
     width:'100%',
-    color:'white',
-    backgroundColor:'rgb(240, 77, 94)',
+    backgroundColor:'#23c1ed',
+    color: 'white',
     padding:15,
     borderRadius:10,
     border:'0px solid transparent',
+    marginBottom: '-60px',
   },
 });
 
@@ -203,10 +209,10 @@ const Homeheader = (props) => {
           </Grid>
         </Grid>
       </div>
-      <div className={classes.headerhome} style={{ }}>
-        <Grid container  style={{ padding:'2%', bottom:30, }}>
+      <div className={classes.headerhome}>
+        <Grid container>
           <Grid item xs={12}>
-          <Typography><h2 className={classes.homeform}>Et si vous pouviez reserver n'importe quel service immediatement ?</h2></Typography>
+          <Typography><h2 className={classes.homeform}>Et si vous pouviez réserver n'importe quel service immediatement ?</h2></Typography>
           </Grid>
         <Grid item xs={12}  style={{ width:'100%',}}>
         <form className={classes.formlabel} style={{ width:'100%',}} >
@@ -220,10 +226,12 @@ const Homeheader = (props) => {
                 disabled
                 id="standard-disabled"
                 defaultValue="Rouen, FR"
-                style={{textAlign: "center", width: "100%", border: 'solid thin #333',
-                borderRadius:'10px',
+                style={{textAlign: "center", width: "100%",
+                borderRadius:'3px',
                 padding:10,}}
                 margin="normal"
+                variant="outlined"
+                label="Lieu"
               />
             </Grid>
             </Grid>

@@ -148,9 +148,13 @@ const styles = theme => ({
   },
   margin: {
     margin: '0.7rem',
+    backgroundColor:'#23c1ed',
+    color: 'white',
   },
   margin2: {
     margin: '0.7rem',
+    backgroundColor:'#23c1ed',
+    color: 'white',
   },
 
   card: {
@@ -274,7 +278,7 @@ class becomeAlfred extends React.Component{
                       répertoriez vos services, indiquez vos disponibilités, 
                       vos tarifs et profitez d’un complément de revenu ! 
                     </Typography>
-                    <Button variant="contained" color="primary" className={classes.margin}>
+                    <Button variant="contained" className={classes.margin}>
                       Créer mon shop
                     </Button>
                   </CardContent>
@@ -298,7 +302,7 @@ class becomeAlfred extends React.Component{
                         vos tarifs et profitez d’un complément de revenu ! 
                       </Typography>
                     </CardContent>
-                    <Button variant="contained" color="primary" className={classes.margin2}>
+                    <Button variant="contained" className={classes.margin2}>
                       Créer mon shop
                     </Button>
                   </CardActionArea>
