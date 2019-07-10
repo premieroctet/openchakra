@@ -80,7 +80,14 @@ const styles = theme => ({
 
   },
   media2: {
-    height: 200
+    height: 200,
+
+    [theme.breakpoints.down('xs')]: { // xs: 600px or larger
+      width: '200px!important',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '200px!important',
+    },
   },
   textBox1: {
     color: 'rgba(84,89,95,0.95)',

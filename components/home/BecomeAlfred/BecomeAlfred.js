@@ -192,6 +192,9 @@ const styles = theme => ({
   petitpaddingpers: {
     marginLeft: '-20%',
   },
+  centercontent: {
+    textAlign: 'center!important',
+  },
 });
 
 class becomeAlfred extends React.Component{
@@ -267,12 +270,9 @@ class becomeAlfred extends React.Component{
                     </Typography>
                     <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
                                 className={classes.padding}>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sapien justo,
-                      placerat ac commodo ut, aliquam non massa. Sed id nisl ut massa auctor
-                      dapibus et id risus. Integer suscipit, nisi at viverra elementum, sapien
-                      lectus ultricies mauris, eu aliquet elit enim laoreet velit. Aliquam
-                      laoreet orci eu porttitor egestas. Aliquam porttitor sem quam, sit amet
-                      semper ante rutrum sodales. Nulla aliquam ante ex.
+                      Créez en quelques minutes votre espace Alfred, 
+                      répertoriez vos services, indiquez vos disponibilités, 
+                      vos tarifs et profitez d’un complément de revenu ! 
                     </Typography>
                     <Button variant="contained" color="primary" className={classes.margin}>
                       Créer mon shop
@@ -282,7 +282,7 @@ class becomeAlfred extends React.Component{
               </Card>
               <Card className={classes.card22}>
                 <div item xs={12} className={classes.details}>
-                  <CardActionArea>
+                  <CardActionArea className={classes.centercontent}>
                     <CardMedia
                         className={classes.media}
                         image='../../static/joshua-earle-133254-unsplash.jpg'
@@ -293,12 +293,9 @@ class becomeAlfred extends React.Component{
                         Devenir Alfred
                       </Typography>
                       <Typography variant="body1" color="textSecondary" className={classes.padding}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sapien justo,
-                        placerat ac commodo ut, aliquam non massa. Sed id nisl ut massa auctor
-                        dapibus et id risus. Integer suscipit, nisi at viverra elementum, sapien
-                        lectus ultricies mauris, eu aliquet elit enim laoreet velit. Aliquam
-                        laoreet orci eu porttitor egestas. Aliquam porttitor sem quam, sit amet
-                        semper ante rutrum sodales. Nulla aliquam ante ex.
+                        Créez en quelques minutes votre espace Alfred, 
+                        répertoriez vos services, indiquez vos disponibilités, 
+                        vos tarifs et profitez d’un complément de revenu ! 
                       </Typography>
                     </CardContent>
                     <Button variant="contained" color="primary" className={classes.margin2}>
