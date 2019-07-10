@@ -462,7 +462,7 @@ router.get('/users/:id',(req,res) => {
         .catch(err => res.status(404).json({ user: 'No user found' }));
 });
 
-// @Route PUT /myAlfred/api/users/users/:id
+// @Route PUT /myAlfred/api/users/users/becomeAlfred
 // Update one user is_alfred's status
 router.put('/users/becomeAlfred',passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findByIdAndUpdate(req.user.id,{is_alfred: true},{new: true})

@@ -381,6 +381,13 @@ class Wizard extends React.Component {
                 .catch(err => {
                     console.log(err);
                 });
+            axios.put(url+'myAlfred/api/users/users/becomeAlfred')
+                .then(res => {
+                    alert('Vous êtes maintenant un Alfred');
+                })
+                .catch(err => {
+                    console.log(err);
+                })
 
             return console.log(values);
         } else {
