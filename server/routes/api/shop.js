@@ -6,7 +6,7 @@ const multer = require ('multer');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-      cb(null, 'static/shop/')
+      cb(null, 'static/profile/idCard/')
   },
   filename: function (req, file, cb) {
       cb(null, file.originalname  )
@@ -21,26 +21,16 @@ router.get('/test',(req, res) => res.json({msg: 'Shop Works!'}) );
 // @Route POST /myAlfred/api/shop/add
 // Create a shop
 // @Access private
-router.post('/add', upload.single('IDRecto'), upload.single('IDVerso'), passport.authenticate('jwt',{session: false}),(req,res) => {
+router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
     const {isValid, errors} = validateShopInput(req.body);
     if(!isValid) {
         return res.status(400).json(errors);
     }
-    Shop.find({alfred: req.user.id})
+    Shop.findOne({alfred: req.user.id})
         .then(shop => {
-            if(typeof shop !== 'undefined' && shop.length > 0) {
-                if(req.body.service && req.body.description) {
-                    const newService = {
-                        label: mongoose.Types.ObjectId(req.body.service),
-                        description: req.body.description
-                    };
-                    shop.services.unshift(newService);
-                    shop.save().then(services => res.json(services)).catch(err => console.log(err));
 
-                }else {
-
-                    return res.status(400).json({msg: 'This shop already exist'});
-                }
+            if(shop !== null) {
+                console.log('Existe déjà');
             } else {
                 const shopFields = {};
                 shopFields.alfred = req.user.id;
@@ -53,8 +43,6 @@ router.post('/add', upload.single('IDRecto'), upload.single('IDVerso'), passport
                 shopFields.flexible_cancel = req.body.flexible_cancel;
                 shopFields.moderate_cancel = req.body.moderate_cancel;
                 shopFields.strict_cancel = req.body.strict_cancel;
-                shopFields.id_recto = req.body.id_recto;
-                shopFields.id_verso = req.body.id_verso;
                 shopFields.verified_phone = req.body.verified_phone;
                 shopFields.is_particular = req.body.is_particular;
                 shopFields.is_professional = req.body.is_professional;
@@ -66,16 +54,12 @@ router.post('/add', upload.single('IDRecto'), upload.single('IDVerso'), passport
                 if (req.body.creation_date) shopFields.company.creation_date = req.body.creation_date;
                 if (req.body.siret) shopFields.company.siret = req.body.siret;
                 if (req.body.naf_ape) shopFields.company.naf_ape = req.body.naf_ape;
-                if (req.body.vat_number) shopFields.company.vat_number = req.body.vat_number;
 
-                const newService = {
-                    label: mongoose.Types.ObjectId(req.body.service),
-                    description: req.body.description
-                };
 
-                shopFields.services = [];
-                shopFields.services.unshift(newService);
-                shopFields.picture = req.body.picture;
+
+
+                shopFields.services = req.body.arrayService;
+                shopFields.picture = "static/shopBanner/sky-690293_1920.jpg";
 
                 const newShop = new Shop(shopFields);
 
@@ -88,13 +72,15 @@ router.post('/add', upload.single('IDRecto'), upload.single('IDVerso'), passport
         })
 });
 
+
 // @Route GET /myAlfred/api/shop/all
 // View all shop
 router.get('/all',(req,res)=> {
 
     Shop.find()
         .populate('alfred')
-        .populate({path:'services.label',populate:{path: 'service',select:'label'}})
+        .populate('services')
+        .populate({path:'services',populate:{path: 'service',select:'label'}})
         .then(shop => {
             if(typeof shop !== 'undefined' && shop.length > 0){
                 res.json(shop);

@@ -84,12 +84,14 @@ class add extends React.Component {
             all_calculating: [],
             all_job: [],
             all_search_filter: [],
-            all_filter_presentation: []
+            all_filter_presentation: [],
+            errors: {},
         };
         this.onChangeFile = this.onChangeFile.bind(this);
     }
 
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
         axios.get(url+"myAlfred/api/admin/category/all")
@@ -202,8 +204,12 @@ class add extends React.Component {
             })
             .catch(err => {
                     console.log(err);
+                    this.setState({errors: err.response.data});
+
+                if(err.response.status === 401 || err.response.status === 403) {
                     localStorage.removeItem('token');
                     Router.push({pathname: '/login'})
+                }
                 }
             );
 
@@ -220,6 +226,7 @@ class add extends React.Component {
         const {all_filter_presentation} = this.state;
         const {all_job} = this.state;
         const {all_tags} = this.state;
+        const {errors} = this.state;
 
         const categories = all_category.map(e => (
 
@@ -250,7 +257,9 @@ class add extends React.Component {
                                         name="label"
                                         value={this.state.label}
                                         onChange={this.onChange}
+                                        error={errors.label}
                                     />
+                                    <em>{errors.label}</em>
                                 </Grid>
                                 <Grid item>
                                     <TextField
@@ -265,8 +274,8 @@ class add extends React.Component {
                                         onChange={this.onChange}
                                     />
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{width: '100%'}}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Catégorie
                                         </InputLabel>
@@ -285,9 +294,10 @@ class add extends React.Component {
                                         </Select>
                                         <FormHelperText>Sélectionner une catégorie</FormHelperText>
                                     </FormControl>
+                                    <em>{errors.category}</em>
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{width: '100%'}}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Service
                                         </InputLabel>
@@ -310,9 +320,10 @@ class add extends React.Component {
                                         </Select>
                                         <FormHelperText>Sélectionner un service</FormHelperText>
                                     </FormControl>
+                                    <em>{errors.service}</em>
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{width: '100%'}}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Méthode de facturation
                                         </InputLabel>
@@ -335,9 +346,10 @@ class add extends React.Component {
                                         </Select>
                                         <FormHelperText>Sélectionner une méthode de facturation</FormHelperText>
                                     </FormControl>
+                                    <em>{errors.billing}</em>
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{width: '100%'}}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Méthode de calcul
                                         </InputLabel>
@@ -360,9 +372,10 @@ class add extends React.Component {
                                         </Select>
                                         <FormHelperText>Sélectionner une méthode de calcul</FormHelperText>
                                     </FormControl>
+                                    <em>{errors.calculating}</em>
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{width: '100%'}}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Filtre de présentation
                                         </InputLabel>
@@ -385,9 +398,10 @@ class add extends React.Component {
                                         </Select>
                                         <FormHelperText>Sélectionner un filtre de présentation</FormHelperText>
                                     </FormControl>
+                                    <em>{errors.filter_presentation}</em>
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{width: '100%'}}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel htmlFor="select-multiple-chip">Filtres de recherche</InputLabel>
                                         <Select
                                             multiple
@@ -410,9 +424,10 @@ class add extends React.Component {
                                             ))}
                                         </Select>
                                     </FormControl>
+                                    <em>{errors.search_filter}</em>
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{width: '100%'}}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Métier
                                         </InputLabel>
@@ -435,6 +450,7 @@ class add extends React.Component {
                                         </Select>
                                         <FormHelperText>Sélectionner un metier</FormHelperText>
                                     </FormControl>
+                                    <em>{errors.job}</em>
                                 </Grid>
                                 <Grid item>
                                     <TextField
@@ -449,10 +465,12 @@ class add extends React.Component {
                                         onChange={this.onChange}
                                         label={"Description"}
                                         placeholder="Description"
+                                        error={errors.description}
                                     />
+                                    <em>{errors.description}</em>
                                 </Grid>
-                                <Grid item>
-                                    <FormControl className={classes.formControl}>
+                                <Grid item style={{width: '100%'}}>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
                                         <Select
                                             multiple
@@ -475,6 +493,7 @@ class add extends React.Component {
                                             ))}
                                         </Select>
                                     </FormControl>
+                                    <em>{errors.tags}</em>
                                 </Grid>
                                 <Grid item>
                                     <input type="file" name="picture" onChange= {this.onChangeFile} accept="image/*" />

@@ -127,7 +127,7 @@ class login extends React.Component {
                     <em>{errors.password}</em>
                   </Grid>
                   <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
                       Connexion
                     </Button>
                   </Grid>

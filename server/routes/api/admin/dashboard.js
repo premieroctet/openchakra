@@ -168,8 +168,7 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
                 if (!user) {
                     res.status(400).json({msg: 'No users found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-                res.setHeader('X-Total-Count', user.length);
+
                 res.json(user);
             })
             .catch(err => res.status(404).json({user: 'No users found'}))
@@ -190,8 +189,6 @@ router.get('/users/users',passport.authenticate('jwt',{session:false}),(req,res)
                 if(!user) {
                     res.status(400).json({msg: 'No users found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-                res.setHeader('X-Total-Count',user.length);
                 res.json(user);
             })
             .catch(err => res.status(404).json({ users: 'No billing found' }))
@@ -277,8 +274,7 @@ router.get('/users/alfred',passport.authenticate('jwt',{session:false}),(req,res
                 if (!user) {
                     res.status(400).json({msg: 'No alfred found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-                res.setHeader('X-Total-Count', user.length);
+
                 res.json(user);
             })
             .catch(err => res.status(404).json({alfred: 'No alfred found'}))
@@ -756,8 +752,8 @@ router.post('/job/all', passport.authenticate('jwt',{session: false}),(req, res)
         Job.findOne({label: req.body.label})
             .then(job => {
                 if(job){
-                    errors.label = 'This job already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Ce métier existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newJob = new Job({
                         label: req.body.label
@@ -786,8 +782,6 @@ router.get('/job/all', passport.authenticate('jwt',{session: false}),(req,res)=>
                 if(!job){
                     return res.status(400).json({msg: 'No job found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-                res.setHeader('X-Total-Count',job.length);
                 res.json(job);
 
             })
@@ -879,8 +873,8 @@ router.post('/searchFilter/all', passport.authenticate('jwt',{session: false}),(
         SearchFilter.findOne({label: req.body.label})
             .then(searchFilter => {
                 if(searchFilter){
-                    errors.label = 'This searchFilter already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Ce filtre existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newSearchFilter = new SearchFilter({
                         label: req.body.label
@@ -1002,8 +996,8 @@ router.post('/tags/all', passport.authenticate('jwt',{session: false}),(req, res
         Tags.findOne({label: req.body.label})
             .then(tags => {
                 if(tags){
-                    errors.label = 'This tags already exists';
-                    return res.status(400).json({errors});
+                    errors.label = 'Ce tags existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newTags = new Tags({
                         label: req.body.label
@@ -1650,7 +1644,8 @@ router.post('/prestation/all',uploadPrestation.single('picture'),passport.authen
         Prestation.findOne({label: req.body.label, filter_presentation: req.body.filter_presentation})
             .then(prestation => {
                 if(prestation) {
-                    errors.label = 'This prestation already exist';
+                    errors.label = 'Cette prestation existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newPrestation = new Prestation({
                         label: req.body.label,
@@ -1720,8 +1715,7 @@ router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,r
                 if (!prestation) {
                     return res.status(400).json({msg: 'No prestation found'});
                 }
-                res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-                res.setHeader('X-Total-Count', prestation.length);
+
                 res.json(prestation);
 
             })
@@ -1829,17 +1823,20 @@ const uploadBanner = multer({ storage: storageBanner });
 // Add picture for shop banner
 // @Access private
 router.post('/shopBanner/all', uploadBanner.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
-
+    const {errors, isValid} = validateBillingInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
 
     if(admin) {
-
+        if(!isValid){
+            return res.status(400).json(errors);
+        }
         ShopBanner.findOne({label: req.body.label})
             .then(service => {
                 if(service){
-                    return res.status(400).json({msg:'This picture already exists'});
+                    errors.label = 'Cette bannière existe déjà';
+                    return res.status(400).json(errors);
                 } else {
                     const newBanner = new ShopBanner({
                         label: req.body.label,
@@ -1891,8 +1888,6 @@ router.get('/shopBanner/all',passport.authenticate('jwt',{session: false}),(req,
             if(!banner){
                 return res.status(400).json({msg: 'No banner found'});
             }
-            res.setHeader('Access-Control-Expose-Headers','X-Total-Count');
-            res.setHeader('X-Total-Count',banner.length);
             res.json(banner);
 
         })

@@ -41,8 +41,13 @@ class add extends React.Component {
         super(props);
         this.state = {
             label: '',
+            errors: {},
 
         };
+    }
+
+    componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
     }
 
     onChange = e => {
@@ -66,8 +71,11 @@ class add extends React.Component {
             })
             .catch(err => {
                     console.log(err);
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
+                    this.setState({errors: err.response.data});
+                if(err.response.status === 401 || err.response.status === 403) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
+                }
                 }
             );
 
@@ -76,6 +84,7 @@ class add extends React.Component {
 
     render() {
         const { classes } = this.props;
+        const {errors} = this.state;
 
 
         return (
@@ -98,7 +107,9 @@ class add extends React.Component {
                                         name="label"
                                         value={this.state.label}
                                         onChange={this.onChange}
+                                        error={errors.label}
                                     />
+                                    <em>{errors.label}</em>
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>

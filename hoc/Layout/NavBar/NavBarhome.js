@@ -92,13 +92,13 @@ const styles = theme => ({
     },
     navbarItem: {
         alignSelf: 'center',
-        color: 'white',
+        color: '#545659',
         marginRight: '20px',
         fontSize: '15px'
     },
     navbarLink: {
         textDecoration: 'none',
-        color: 'white',
+        color: '#545659',
     },
     navbarLinkMobile: {
         color: 'black',
@@ -151,7 +151,7 @@ class NavBar extends Component {
         const isMenuOpen = Boolean(anchorEl);
         const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
         const test = this.state.logged;
-        const logout = <Button variant="outlined" color="primary" className={classes.buttonSpace}
+        const logout = <Button variant="outlined" className={classes.buttonSpace} style={{ marginRight: '20px', backgroundColor: '#01abed', color: 'white' }}
                                onClick={this.logout2}>Déconnexion</Button>;
 
         const logoutMobile = <MenuItem onClick={this.logout2}>
@@ -194,7 +194,7 @@ class NavBar extends Component {
                         </Link>
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={this.handleMobileMenuClose}>
+                {/*<MenuItem onClick={this.handleMobileMenuClose}>
                     <Typography>
                         <Link href='#'>
                             <a className={classes.navbarLinkMobile}>
@@ -202,7 +202,7 @@ class NavBar extends Component {
                             </a>
                         </Link>
                     </Typography>
-                </MenuItem>
+                </MenuItem>*/}
                 {test ? logoutMobile : <React.Fragment>
                     <MenuItem onClick={this.handleMobileMenuOpen}>
                         <Typography>
@@ -230,9 +230,9 @@ class NavBar extends Component {
             <div className={classes.root}>
                 <AppBar color="white" position="fixed">
                     <Toolbar>
-                        <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-                            My Alfred
-                        </Typography>
+                        <Link href={'/'}>
+                            <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
+                        </Link>
                         <div className={classes.search}>
                             <div className={classes.searchIcon}>
                                 <SearchIcon />
@@ -248,19 +248,19 @@ class NavBar extends Component {
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
                             <Typography className={classes.navbarItem}>
-                                <Link href='#'>
+                                <Link href={'/becomeAlfredForm'}>
                                     <a className={classes.navbarLink}>
                                         Devenir Alfred
                                     </a>
                                 </Link>
                             </Typography>
-                            <Typography className={classes.navbarItem}>
+                            {/*<Typography className={classes.navbarItem}>
                                 <Link href='#'>
                                     <a className={classes.navbarLink}>
                                         Aide
                                     </a>
                                 </Link>
-                            </Typography>
+                            </Typography>*/}
                             {test ? logout :
                                 <React.Fragment><Link href={'/login'}>
                                     <Button variant="outlined" color="primary" style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
@@ -271,6 +271,7 @@ class NavBar extends Component {
                                 <Button
                                 variant="contained"
                                 color="primary"
+                                style={{color: 'white'}}
                                 >
                                 Inscription
                                 </Button>

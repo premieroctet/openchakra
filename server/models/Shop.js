@@ -37,12 +37,6 @@ const ShopSchema = new Schema({
         type: Boolean,
         default: false
     },
-    id_recto: {
-        type: String
-    },
-    id_verso: {
-        type: String
-    },
     verified_phone: {
         type: Boolean,
         default: false
@@ -75,19 +69,12 @@ const ShopSchema = new Schema({
         },
         naf_ape: {
             type: String
-        },
-        vat_number: {
-            type: String
         }
     },
     services: [{
-        label :{
-            type: Schema.Types.ObjectId,
-            ref: 'serviceUser'
-        },
-        description: {
-            type: String
-        }
+        type: Schema.Types.ObjectId,
+        ref: 'serviceUser'
+
     }],
     alfred: {
         type: Schema.Types.ObjectId,
