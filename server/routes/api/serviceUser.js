@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const ServiceUser = require('../../models/ServiceUser');
 const User = require('../../models/User');
-
+const axios = require('axios');
 const multer = require("multer");
 
 
@@ -66,22 +66,41 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
             } else {
                 console.log('No file uploaded');
             }
+            fields.gps = {};
+
+            const url = req.body.city +'&format=geojson&limit=1';
+            axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
+                .then(response => {
+
+                    let result = response.data.features;
+
+                    result.forEach(function (element) {
+                        fields.gps.lat = element.geometry.coordinates[1];
+                        fields.gps.lng = element.geometry.coordinates[0];
+                    });
+
+                    fields.description = req.body.description;
+                    fields.equipments = JSON.parse(req.body.equipments);
+                    fields.majoration = {};
+                    if(req.body.active === 'true') {
+                        fields.majoration.active = true;
+                    } else {
+                        fields.majoration.active = false;
+                    }
+
+                    fields.majoration.price = parseInt(req.body.price);
+                    const newService = new ServiceUser(fields);
+                    newService.save().then(service => res.json(service)).catch(err => console.log(err));
+
+                })
+                .catch(error => {
+                    console.log(error)
+                });
 
 
 
 
-                fields.description = req.body.description;
-                fields.equipments = JSON.parse(req.body.equipments);
-                fields.majoration = {};
-                if(req.body.active === 'true') {
-                    fields.majoration.active = true;
-                } else {
-                    fields.majoration.active = false;
-                }
 
-                fields.majoration.price = parseInt(req.body.price);
-                const newService = new ServiceUser(fields);
-                newService.save().then(service => res.json(service)).catch(err => console.log(err));
 
 
 
