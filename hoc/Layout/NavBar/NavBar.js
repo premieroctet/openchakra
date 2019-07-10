@@ -51,6 +51,7 @@ const styles = theme => ({
       marginLeft: theme.spacing.unit * 3,
       width: 'auto',
     },
+    display: 'none'
   },
   searchIcon: {
     width: theme.spacing.unit * 9,
@@ -93,13 +94,13 @@ const styles = theme => ({
   },
   navbarItem: {
     alignSelf: 'center',
-    color: 'white',
+    color: '#545659',
     marginRight: '20px',
     fontSize: '15px'
   },
   navbarLink: {
     textDecoration: 'none',
-    color: 'white',
+    color: '#545659',
   },
   navbarLinkMobile: {
     color: 'black',
@@ -152,7 +153,7 @@ class NavBar extends Component {
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const test = this.state.logged;
-    const logout = <Button variant="outlined" style={{ marginRight: '20px', color: 'white', border: '1px solid rgba(255, 255, 255, 1)' }}
+    const logout = <Button variant="outlined" style={{ marginRight: '20px', backgroundColor: '#01abed', color: 'white' }}
                            onClick={this.logout2}>Déconnexion</Button>;
 
     const renderMenu = (
@@ -178,14 +179,14 @@ class NavBar extends Component {
       >
         <MenuItem onClick={this.handleMobileMenuClose}>
           <Typography>
-            <Link href='#'>
+            <Link href={'/becomeAlfredForm'}>
               <a className={classes.navbarLinkMobile}>
                 Devenir Alfred
               </a>
             </Link>
           </Typography>
         </MenuItem>
-        <MenuItem onClick={this.handleMobileMenuClose}>
+        {/*<MenuItem onClick={this.handleMobileMenuClose}>
           <Typography>
             <Link href='#'>
               <a className={classes.navbarLinkMobile}>
@@ -193,10 +194,10 @@ class NavBar extends Component {
               </a>
             </Link>
           </Typography>
-        </MenuItem>
+        </MenuItem>*/}
         <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
-            <Link href='/login'>
+            <Link href={'/login'}>
               <a className={classes.navbarLinkMobile}>
                 Connexion
               </a>
@@ -205,7 +206,7 @@ class NavBar extends Component {
         </MenuItem>
         <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
-            <Link href='/signup'>
+            <Link href={'/signup'}>
               <a className={classes.navbarLinkMobile}>
                 Inscription
               </a>
@@ -217,11 +218,11 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="fixed">
+        <AppBar  color="white" position="fixed">
           <Toolbar>
-            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-              My Alfred
-            </Typography>
+            <Link href={'/'}>
+              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
+            </Link>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -237,28 +238,29 @@ class NavBar extends Component {
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <Typography className={classes.navbarItem}>
-                <Link href='/becomeAlfred'>
+                <Link href={'/becomeAlfredForm'}>
                   <a className={classes.navbarLink}>
                     Devenir Alfred
                   </a>
                 </Link>
               </Typography>
-              <Typography className={classes.navbarItem}>
+              {/*<Typography className={classes.navbarItem}>
                 <Link href='#'>
                   <a className={classes.navbarLink}>
                     Aide
                   </a>
                 </Link>
-              </Typography>
-              {test ? logout : <React.Fragment><Link href='/login'>
-                    <Button variant="outlined" style={{ marginRight: '20px', color: 'white', border: '1px solid rgba(255, 255, 255, 1)' }}>
+              </Typography>*/}
+              {test ? logout : <React.Fragment><Link href={'/login'}>
+                    <Button variant="outlined" color={'primary'} style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
                       Connexion
                     </Button>
                   </Link>
-                  <Link href='/signup'>
+                  <Link href={'/signup'}>
                 <Button
-                style={{ backgroundColor: 'white', color: '#3f51b5'}}
+                style={{ color: 'white'}}
                 variant="contained"
+                color={'primary'}
                 >
                 Inscription
                 </Button>

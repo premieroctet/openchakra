@@ -501,7 +501,7 @@ class Wizard extends React.Component {
                                 </button>
                             )}
                         </div>
-                        <Debug />
+
                     </form>
                 )}
             />
@@ -694,8 +694,8 @@ class Form extends React.Component {
         const { isChecked, isProfessional } = this.state;
 
         return (
-            <div className="App">
-                <h1>Devenir Alfred </h1>
+            <div className="App" style={{marginTop: 100}}>
+
                 <Wizard
                     initialValues={{
                         categories: [],
@@ -1107,13 +1107,13 @@ class Form extends React.Component {
                                                                                         {...field}
                                                                                         style={{width: '40%'}}
                                                                                         select
-                                                                                        variant="outlined"
                                                                                         margin="dense"
+                                                                                        variant="outlined"
                                                                                         label="Jours / semaines / mois"
                                                                                     >
-                                                                                        <MenuItem value="day">Jour(s)</MenuItem>
-                                                                                        <MenuItem value="week">semaine(s)</MenuItem>
-                                                                                        <MenuItem value="month">mois</MenuItem>
+                                                                                        <MenuItem value="jours">Jour(s)</MenuItem>
+                                                                                        <MenuItem value="semaines">semaine(s)</MenuItem>
+                                                                                        <MenuItem value="mois">mois</MenuItem>
                                                                                     </TextField>
                                                                                 )
                                                                             }}
