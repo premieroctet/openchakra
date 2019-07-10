@@ -60,7 +60,7 @@ const styles = theme => ({
   },
   banner: {
     marginBottom: 25,
-    backgroundColor: '#00abed',
+    backgroundColor: '#2FBCD3',
     height: 80,
 
   },

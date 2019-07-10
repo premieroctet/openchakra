@@ -189,7 +189,7 @@ const styles = theme => ({
     },
     banner: {
         marginBottom: 25,
-        backgroundColor: '#00abed',
+        backgroundColor: '#2FBCD3',
     },
     newContainer: {
         padding: 20,
@@ -740,8 +740,8 @@ class Form extends React.Component {
                                 <div className={classes.banner}>
                                     <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'white'}}>Etape 1 - Choisissez vos catégories et services</h3>
                                     <div>
-                                        <Bar style={{width: '15% !important'}}>
-                                            <Fill />
+                                        <Bar>
+                                            <Fill4 />
                                         </Bar>
                                     </div>
                                 </div>
@@ -942,7 +942,7 @@ class Form extends React.Component {
                                             <Tabs>
                                                 <TabList>
                                                     {this.state.allInOneServ.map((data, index) => {
-                                                        return <Tab key={index} style={{backgroundColor: '#00abed', color: 'white', fontSize: '25px', border: '1px solid white'}}>{data.serviceLabel}</Tab>
+                                                        return <Tab key={index} style={{backgroundColor: '#2FBCD3', color: 'white', fontSize: '25px', border: '1px solid white'}}>{data.serviceLabel}</Tab>
                                                     })}
                                                 </TabList>
                                                 {this.state.allInOneServ.map((s, index) => {
@@ -2345,6 +2345,14 @@ const Fill2 = styled.div`
     border-radius: inherit;
     transition: width .2s ease-in;
     width: 95%;
+`;
+
+const Fill4 = styled.div`
+    background: #cacfe4;
+    height: 100%;
+    border-radius: inherit;
+    transition: width .2s ease-in;
+    width: 15%;
 `;
 
 export default withStyles(styles)(Form);

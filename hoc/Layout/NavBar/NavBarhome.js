@@ -248,7 +248,7 @@ class NavBar extends Component {
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
                             <Typography className={classes.navbarItem}>
-                                <Link href='#'>
+                                <Link href={'/becomeAlfredForm'}>
                                     <a className={classes.navbarLink}>
                                         Devenir Alfred
                                     </a>
