@@ -65,15 +65,13 @@ class CityFinder extends React.Component {
 
         return (
             <Grid>
-                <Grid item style={{ display: 'flex'}}>
-                    <Typography>Ville</Typography>
-                </Grid>
                 <Grid item>
                     <TextField
                         id="standard-with-placeholder"
                         label="Code département"
                         placeholder="Code département"
                         margin="normal"
+                        variant="outlined"
                         style={{ width: '100%' }}
                         type="text"
                         name="code"

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import "react-tabs/style/react-tabs.css";
 import InputRange from 'react-input-range';
-import "react-input-range/lib/css/index.css";
+import "../../static/inputRange.css";
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -361,7 +361,8 @@ class Wizard extends React.Component {
     phoneRegEx = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
     Step1Schema = null;
     Step2Schema = Yup.object().shape({
-        submission: Yup.array().of(Yup.object().shape({
+          submission: Yup.array().of(Yup.object().shape({
+            descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
             minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').required('Le minimum d\'achat est requis'),
             delayBeforeShop: Yup.number().typeError('Le délais doit être un nombre').required(),
             delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi jours, semaines et mois').required(),
@@ -385,9 +386,6 @@ class Wizard extends React.Component {
         })
     });
     Step5Schema = Yup.object().shape({
-        submission: Yup.array().of(Yup.object().shape({
-            descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
-        })),
         alfredUpdate: Yup.object().shape({
             phone: Yup.string().matches(this.phoneRegEx, 'Numéro de téléphone invalide')
         }),
@@ -844,7 +842,8 @@ class Form extends React.Component {
                                                                                 axios.get(`${url}myAlfred/api/prestation/${service}/${filterObj.id}`)
                                                                                     .then(res => {
                                                                                         res.data.map(prestation => {
-                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: 0, checked: false };
+                                                                                            console.log(prestation)
+                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: 0, billing: prestation.billing.label, checked: false };
                                                                                             servCompObj.filters.map(p => {
                                                                                                 if (p.id === prestationObj.filterId) {
                                                                                                     p.prestations.push(prestationObj);
@@ -884,7 +883,7 @@ class Form extends React.Component {
                                 </Field>
                                 <Field
                                     render={({form}) => (
-                                        <Button type="submit" variant="contained" color="primary" style={{marginTop: '45px'}} disabled={form.values.submission.length > 0 ? false : true}>
+                                        <Button type="submit" variant="contained" color="primary" style={{marginTop: '45px', color: form.values.submission.length > 0 ? 'white' : null }} disabled={form.values.submission.length > 0 ? false : true}>
                                             Étape suivante
                                         </Button>
                                     )}
@@ -898,7 +897,7 @@ class Form extends React.Component {
                                 <div className={classes.banner}>
                                     <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'white'}}>Etape 1 - Configuration de vos services</h3>
                                     <div>
-                                        <Bar style={{width: '40% !important'}}>
+                                        <Bar style={{width: '40%!important'}}>
                                             <Fill />
                                         </Bar>
                                     </div>
@@ -910,7 +909,7 @@ class Form extends React.Component {
                                             <Tabs>
                                                 <TabList>
                                                     {this.state.allInOneServ.map((data, index) => {
-                                                        return <Tab key={index}>{data.serviceLabel}</Tab>
+                                                        return <Tab key={index} style={{backgroundColor: '#00abed', color: 'white', fontSize: '25px', border: '1px solid white'}}>{data.serviceLabel}</Tab>
                                                     })}
                                                 </TabList>
                                                 {this.state.allInOneServ.map((s, index) => {
@@ -965,7 +964,7 @@ class Form extends React.Component {
                                                                                                                 <React.Fragment>
                                                                                                                     <TextField
                                                                                                                         {...field}
-                                                                                                                        label="Prix"
+                                                                                                                        label={`Prix/${p.billing}`}
                                                                                                                         type="number"
                                                                                                                         disabled={!p.checked}
                                                                                                                         margin="none"
@@ -986,6 +985,7 @@ class Form extends React.Component {
                                                                         })}
                                                                     </Grid>
                                                                     <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
+
 
                                                                     <div style={{padding: '0 2rem'}}>
                                                                         <Typography>Je fournis</Typography>
@@ -1018,6 +1018,55 @@ class Form extends React.Component {
                                                                 </div>
                                                             </div>
                                                             <div style={{padding: '1.5rem 2rem'}}>
+                                                            <Grid container>
+                                                    <div className={classes.title1}>
+                                                        <h4
+                                                            style={{ color: "white" }}
+                                                            className={classes.text1}
+                                                        >
+                                                            Décrivez brievement vos services et votre
+                                                            expertise.
+                                                        </h4>
+                                                    </div>
+                                                    <Typography>
+                                                        Rédigez un résumé rapide de vos services. Mettez en
+                                                        évidence vos savoir faire, vos expériences et ce qui
+                                                        vous démarque des autres Alfred !
+                                                    </Typography>
+                                                    <Grid item xs={1} />
+                                                    <Grid item xs={2} />
+                                                        <Grid
+                                                            item
+                                                            key={index}
+                                                            style={{ width: "100%", marginBottom: 15 }}
+                                                        >
+                                                            <Field
+                                                                name={`submission[${index}].descService`}
+                                                                render={({field}) => {
+                                                                    return (
+                                                                        <TextField
+                                                                            {...field}
+                                                                            id="outlined-multiline-static"
+                                                                            label="Description du service"
+                                                                            multiline
+                                                                            rows="6"
+                                                                            margin="normal"
+                                                                            variant="outlined"
+                                                                            style={{ width: "100%" }}
+                                                                            //name={s.serviceLabel}
+                                                                            //value={this.state[s.serviceLabel]}
+                                                                            //onChange={this.handleInputChange}
+                                                                        />
+                                                                    )
+                                                                }}
+                                                            />
+                                                            <ErrorMessage name={`submission[${index}].descService`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                        </Grid>
+
+                                                    <Grid item xs={2} />
+                                                </Grid>
+
+                                                <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
                                                                 <Grid container>
                                                                     <Grid item xs={12}>
                                                                         <CityFinder formikCtx={arrayHelpers} index={index} />
@@ -1109,7 +1158,7 @@ class Form extends React.Component {
                                                                             }} className="form-control"
                                                                             />
                                                                         </label>
-                                                                        <Thumb file={arrayHelpers.form.values.submission[index].diploma} />
+                                                                        <Thumb file={arrayHelpers.form.values.submission[index].certification} />
                                                                     </Grid>
                                                                     <div style={{width: '100%'}}>
                                                                         <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
@@ -1191,7 +1240,7 @@ class Form extends React.Component {
                                     }
 
                                     return (
-                                        <Button type="submit" variant="contained" color="primary" disabled={checkArr.some(check) ? true : false}>
+                                        <Button type="submit" variant="contained" color="primary" style={{marginTop: '45px', color: !checkArr.some(check) ? 'white' : null }} disabled={checkArr.some(check) ? true : false}>
                                             Étape suivante
                                         </Button>
                                     )
@@ -1420,7 +1469,7 @@ class Form extends React.Component {
                                                                 Votre message de bienvenue validant votre
                                                                 réservation
                                                                 <br />
-                                                                <em style={{ fontSize: 10 }}>
+                                                                <em style={{ fontSize: 13 }}>
                                                                     Les utilisateurs verront votre message lorsque
                                                                     vous confirmerez leur réservation.
                                                                 </em>
@@ -1575,7 +1624,7 @@ class Form extends React.Component {
                                     }
 
                                     return (
-                                        <Button type="submit" variant="contained" color="primary" disabled={cancel}>
+                                        <Button type="submit" variant="contained" style={{marginTop: '45px', color: !cancel ? 'white' : null }} color="primary" disabled={cancel}>
                                             Étape suivante
                                         </Button>
                                     )
@@ -1656,69 +1705,7 @@ class Form extends React.Component {
                                                         </Typography>
                                                     </Grid>
                                                 </Grid>
-                                                <Grid container>
-                                                    <div className={classes.title1}>
-                                                        <h4
-                                                            style={{ color: "white" }}
-                                                            className={classes.text1}
-                                                        >
-                                                            Décrivez brievement vos services et votre
-                                                            expertise.
-                                                        </h4>
-                                                    </div>
-                                                    <Typography>
-                                                        Rédigez un résumé rapide de vos services. Mettez en
-                                                        évidence vos savoir faire, vos expériences et ce qui
-                                                        vous démarque des autres Alfred !
-                                                    </Typography>
-                                                    <Grid item xs={1} />
-                                                    <Grid item xs={2} />
-                                                    {form.values.submission.map((s, index) => (
-                                                        <Grid
-                                                            item
-                                                            key={index}
-                                                            style={{ width: "100%", marginBottom: 15 }}
-                                                        >
-                                                            <Field
-                                                                name={`submission[${index}].descService`}
-                                                                render={({field}) => {
-                                                                    return (
-                                                                        <TextField
-                                                                            {...field}
-                                                                            id="outlined-multiline-static"
-                                                                            label={s.serviceLabel}
-                                                                            multiline
-                                                                            rows="6"
-                                                                            margin="normal"
-                                                                            variant="outlined"
-                                                                            style={{ width: "100%" }}
-                                                                            //name={s.serviceLabel}
-                                                                            //value={this.state[s.serviceLabel]}
-                                                                            //onChange={this.handleInputChange}
-                                                                        />
-                                                                    )
-                                                                }}
-                                                            />
-                                                            <ErrorMessage name={`submission[${index}].descService`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                            {/*<Button
-                                  type="button"
-                                  variant="contained"
-                                  color={"primary"}
-                                  size="small"
-                                  onClick={() => {
-                                    this.handleChangeTextarea(
-                                      this.state[s.serviceLabel],
-                                      s.serviceLabel
-                                    );
-                                  }}
-                                >
-                                  Enregistrer
-                                </Button>*/}
-                                                        </Grid>
-                                                    ))}
-
-                                                    <Grid item xs={2} />
-                                                </Grid>
+                                                
                                                 <Grid container>
                                                     <Grid item xs={12} className={classes.vridentite}>
                                                         <div className={classes.title1}>
@@ -2185,7 +2172,7 @@ class Form extends React.Component {
                                                 }
 
                                                 return (
-                                                    <Button type="submit" variant="contained" color="primary" disabled={check}>
+                                                    <Button type="submit" variant="contained" style={{marginTop: '45px', color: !check ? 'white' : null }} color="primary" disabled={check}>
                                                         Envoyer
                                                     </Button>
                                                 )
