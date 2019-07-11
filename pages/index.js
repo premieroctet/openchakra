@@ -134,8 +134,8 @@ class index extends React.Component {
                 <nav className="navbar fixed-top navbar-dark navbar-expand-lg scrolling-navbar" style={{backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(47, 188, 211)'}}>
                     <div className="container">
                         {/* Brand */}
-                        <a className="navbar-brand" href="https://mdbootstrap.com/docs/jquery/" target="_blank">
-                            <img src="../static/assets/img/logo.png" width={100} height="auto"/>
+                        <a className="navbar-brand" href={'/'}>
+                            <img src="../static/assets/img/logo.png" width={100} height="auto" alt={'logo'}/>
                         </a>
                         {/* Collapse */}
                         <button className="navbar-toggler" type="button" data-toggle="collapse"
@@ -190,8 +190,8 @@ class index extends React.Component {
                 <div className={classes.headerImg}/>
                 <div className={classes.headerhomevid}>
                 <video id="background-video" loop autoPlay style={{width: '100%'}}>
-                    <source src="../static/assets/img/bgdark.mp4" type="video/mp4" />
-                    <source src="../static/assets/img/bgdark.mp4" type="video/ogg" />
+                    <source src="../static/assets/img/bgdark.webm" type="video/webm" />
+                    <source src="../static/assets/img/bgdark.webm" type="video/ogg" />
                     Your browser does not support the video tag.
                 </video>
                 </div>
@@ -366,8 +366,8 @@ class index extends React.Component {
                         <div style={{height: '112.5vh'}} className={classes.footerVideo}>
                             <div className={classes.footerImg}/>
                         <video id="background-video" loop autoPlay style={{width: '100%',marginTop: 23}} className={classes.video}>
-                            <source src="../static/assets/img/bgdark.mp4" type="video/mp4" />
-                            <source src="../static/assets/img/bgdark.mp4" type="video/ogg" />
+                            <source src="../static/assets/img/bgdark.webm" type="video/webm" />
+                            <source src="../static/assets/img/bgdark.webm" type="video/ogg" />
                             Your browser does not support the video tag.
                         </video>
                         </div>
