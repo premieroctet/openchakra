@@ -10,7 +10,6 @@ import "../../../static/stylesfonts.css"
 
 const url = "https://myalfred.hausdivision.com/";
 
-const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
   container: {
