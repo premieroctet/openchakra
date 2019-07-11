@@ -53,7 +53,7 @@ const styles = theme => ({
       backgroundAttachment: "fixed",
      display: 'none',
     },
-    marginTop: 85,
+    marginTop: 112,
     position: 'absolute',
     top: '0%',
     left: '0%',
