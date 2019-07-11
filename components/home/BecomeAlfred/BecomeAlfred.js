@@ -86,8 +86,10 @@ const styles = theme => ({
     },
   },
   card1: {
+    marginTop: '10%',
     display: 'flex',
     height: 'auto',
+    boxShadow: '1px 3px 1px transparent',
 
     [theme.breakpoints.up('xs')]: { // medium: 960px or larger
       display: 'none',
@@ -106,8 +108,10 @@ const styles = theme => ({
     },
   },
   card22: {
+    marginTop: '10%',
     display: 'flex',
     height: 'auto',
+    boxShadow: '1px 3px 1px transparent',
 
     [theme.breakpoints.up('xs')]: { // medium: 960px or larger
       display: 'flex',
@@ -144,9 +148,13 @@ const styles = theme => ({
   },
   margin: {
     margin: '0.7rem',
+    backgroundColor:'#23c1ed',
+    color: 'white',
   },
   margin2: {
     margin: '0.7rem',
+    backgroundColor:'#23c1ed',
+    color: 'white',
   },
 
   card: {
@@ -155,6 +163,7 @@ const styles = theme => ({
     minWidth: '300px!important',
     marginRight: '10px!important',
     marginLeft: '10px!important',
+    boxShadow: '1px 3px 1px transparent'
 
   },
   personName: {
@@ -179,13 +188,16 @@ const styles = theme => ({
     marginLeft: '10px!important',
     marginTop: '30px!important',
     marginBottom: '40px!important',
-    boxShadow: '0 6px 5px -6px grey',
+    boxShadow: '1px 3px 1px transparent',
   },
   imgavat: {
     marginTop: '60%',
   },
   petitpaddingpers: {
     marginLeft: '-20%',
+  },
+  centercontent: {
+    textAlign: 'center!important',
   },
 });
 
@@ -244,9 +256,6 @@ class becomeAlfred extends React.Component{
     return (
         <Fragment>
           <Grid container className={classes.container}>
-            <Typography variant="h5" className={classes.textBox}>
-              Vous aussi, lancez-vous !
-            </Typography>
           </Grid>
           <Grid container className={classes.container} spacing={24} wrap="wrap">
             <Grid item xs={12}>
@@ -265,14 +274,11 @@ class becomeAlfred extends React.Component{
                     </Typography>
                     <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
                                 className={classes.padding}>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sapien justo,
-                      placerat ac commodo ut, aliquam non massa. Sed id nisl ut massa auctor
-                      dapibus et id risus. Integer suscipit, nisi at viverra elementum, sapien
-                      lectus ultricies mauris, eu aliquet elit enim laoreet velit. Aliquam
-                      laoreet orci eu porttitor egestas. Aliquam porttitor sem quam, sit amet
-                      semper ante rutrum sodales. Nulla aliquam ante ex.
+                      Créez en quelques minutes votre espace Alfred, 
+                      répertoriez vos services, indiquez vos disponibilités, 
+                      vos tarifs et profitez d’un complément de revenu ! 
                     </Typography>
-                    <Button variant="contained" color="primary" className={classes.margin}>
+                    <Button variant="contained" className={classes.margin}>
                       Créer mon shop
                     </Button>
                   </CardContent>
@@ -280,7 +286,7 @@ class becomeAlfred extends React.Component{
               </Card>
               <Card className={classes.card22}>
                 <div item xs={12} className={classes.details}>
-                  <CardActionArea>
+                  <CardActionArea className={classes.centercontent}>
                     <CardMedia
                         className={classes.media}
                         image='../../static/joshua-earle-133254-unsplash.jpg'
@@ -291,15 +297,12 @@ class becomeAlfred extends React.Component{
                         Devenir Alfred
                       </Typography>
                       <Typography variant="body1" color="textSecondary" className={classes.padding}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sapien justo,
-                        placerat ac commodo ut, aliquam non massa. Sed id nisl ut massa auctor
-                        dapibus et id risus. Integer suscipit, nisi at viverra elementum, sapien
-                        lectus ultricies mauris, eu aliquet elit enim laoreet velit. Aliquam
-                        laoreet orci eu porttitor egestas. Aliquam porttitor sem quam, sit amet
-                        semper ante rutrum sodales. Nulla aliquam ante ex.
+                        Créez en quelques minutes votre espace Alfred, 
+                        répertoriez vos services, indiquez vos disponibilités, 
+                        vos tarifs et profitez d’un complément de revenu ! 
                       </Typography>
                     </CardContent>
-                    <Button variant="contained" color="primary" className={classes.margin2}>
+                    <Button variant="contained" className={classes.margin2}>
                       Créer mon shop
                     </Button>
                   </CardActionArea>
@@ -307,6 +310,7 @@ class becomeAlfred extends React.Component{
               </Card>
             </Grid>
           </Grid>
+          {/* 
           <div className="thewrap">
             <section className="card2">
 
@@ -314,6 +318,7 @@ class becomeAlfred extends React.Component{
 
             </section>
           </div>
+          */}
         </Fragment>
     );
   }

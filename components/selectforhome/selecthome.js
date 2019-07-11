@@ -8,6 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
   root: {
@@ -15,7 +16,10 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   formControl: {
-    minWidth: 200,
+    width: '104.7%', 
+    borderRadius:'3px',
+    padding:10,
+   
   },
 });
 function Selecthome(props) {
@@ -32,21 +36,29 @@ function Selecthome(props) {
   }
 
   return (
-    <form className={classes.root} autoComplete="off">
+    <form className={classes.root} autoComplete="on">
       <FormControl className={classes.formControl}>
-        <Select
-          value={values.services}
-          onChange={handleChange}
-          input={<Input name="services" id="service-auto-width" />}
-          autoWidth
-        >
-          <MenuItem value="">
-            <em>Aucune</em>
-          </MenuItem>
-          <MenuItem value={'coiffure'}>Coiffure</MenuItem>
-          <MenuItem value={'plomberie'}>Plomberie</MenuItem>
-          <MenuItem value={'cuisine'}>Cuisine</MenuItem>
-        </Select>
+        <TextField
+        id="outlined-select"
+        select
+        label="Quel services ?"
+        style={{textAlign: "center", width: "104.7%",
+                borderRadius:'3px',
+                padding:10,
+              fontSize: '30!important',}}
+        className={classes.textField}
+        value={values.services}
+        SelectProps={{ 
+          MenuProps: {
+            className: classes.menu,
+          },
+        }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        margin="normal"
+        variant="outlined"
+      />
       </FormControl>
     </form>
   );

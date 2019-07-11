@@ -37,6 +37,7 @@ const styles = theme => ({
     paddingTop: '118.25%', // 16:9
   },
   textBox: {
+    textAlign: 'center',
     paddingRight: 15,
     paddingLeft: 15,
     marginBottom: 30,
@@ -48,8 +49,23 @@ const styles = theme => ({
       color: 'grey',
     }
   },
+  grosHR: {
+    height: '10px',
+    backgroundColor: '#3f51b5',
+  },
 
 });
+
+function shuffleArray(array) {
+  let i = array.length - 1;
+  for (; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+}
 
 class popularCategories extends React.Component {
 
@@ -83,10 +99,10 @@ class popularCategories extends React.Component {
     const {category} = this.state;
 
 
-
-    const categories = category.map(e => (
-        <Link href={`/service?category=${e._id}`}><a className={classes.link}><PopularCategoriesCard img={e.picture} categorie={e.label}
-        /></a></Link>
+    const resdata = shuffleArray(category);
+    const categories = resdata.slice(0, 4).map(e => (
+        <Grid item xs={3}><Link href={`/service?category=${e._id}`}><a className={classes.link}><PopularCategoriesCard img={e.picture} categorie={e.label}
+        /></a></Link></Grid>
     ));
 
     return (
@@ -94,24 +110,30 @@ class popularCategories extends React.Component {
           <div>
             <Head>
               <title>Home</title>
-              <link href="../../../static/style1.css" rel="stylesheet"/>
             </Head>
           </div>
           <Grid container className={classes.container}>
-            <Typography variant="h5" className={classes.textBox}>
-              Nos catégories les plus populaires
-            </Typography>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={6}>
+              <div>
+                <Typography variant="h4" className={classes.textBox}>
+                  Nous sommes tous des Alfred !
+                </Typography>
+                <Grid container>
+                  <Grid item xs={5}></Grid>
+                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                  <Grid item xs={5}></Grid>
+                </Grid>
+                <Typography className={classes.textBox}>
+                  <span>Nous sommes tous des Alfred en puissance !!!<br/>
+                  Une passion ? un savoir-faire ? ou simplement du temps, envie de partager…Devenez Alfred et
+                  arrondissez vos fins de mois très simplement !</span>
+                </Typography>
+              </div>
+            </Grid>
+            <Grid item xs={3}></Grid>
+            {categories}
           </Grid>
-          <div className="thewrap">
-            <section className="card1">
-
-              {categories}
-
-
-
-            </section>
-          </div>
-
         </Fragment>
     );
   }
