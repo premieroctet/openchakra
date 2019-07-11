@@ -40,7 +40,7 @@ const styles = theme => ({
     },
     banner: {
         marginBottom: 25,
-        backgroundColor: '#00abed',
+        backgroundColor: '#2FBCD3',
         height: 80,
 
     },
@@ -136,7 +136,7 @@ class addPicture extends React.Component {
                                 </Grid>
                                 <img src={this.state.file}/>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
                                         Ajouter
                                     </Button>
                                 </Grid>

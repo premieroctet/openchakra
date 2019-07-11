@@ -37,7 +37,7 @@ const styles = theme => ({
     },
     banner: {
         marginBottom: 25,
-        backgroundColor: '#00abed',
+        backgroundColor: '#2FBCD3',
         height: 80,
 
     },
@@ -122,7 +122,7 @@ class checkEmail extends React.Component {
                                         <Typography>Vous n'avez pas reçu l'email ?</Typography>
                                     </Grid>
                                     <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                        <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                        <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
                                             Me renvoyer l'e-mail
                                         </Button>
                                     </Grid>
