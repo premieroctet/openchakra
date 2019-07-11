@@ -1,7 +1,7 @@
 import React from "react";
 
 import { withStyles } from '@material-ui/core/styles';
-
+import Router from "next/router";
 const styles = theme => ({
     view: {
         position: 'absolute',
@@ -80,6 +80,7 @@ class index extends React.Component {
     }
 
     componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
         document.addEventListener('scroll', () => {
             const isTop = window.scrollY < 100;
             if (isTop !== this.state.isTop) {
