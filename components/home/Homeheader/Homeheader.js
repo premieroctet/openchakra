@@ -184,7 +184,7 @@ const styles = theme => ({
     padding:15,
     borderRadius:10,
     border:'0px solid transparent',
-    marginBottom: '-60px',
+
   },
 });
 
