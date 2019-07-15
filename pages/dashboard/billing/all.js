@@ -154,6 +154,9 @@ class all extends React.Component {
 
         return (
             <Layout>
+                <Grid container style={{marginTop: 70}}>
+                    <Link href={'/dashboard/home'}>Accueil dashboard</Link>
+                </Grid>
                 <Grid container className={classes.signupContainer}>
                     <Card className={classes.card}>
                         <Paper style={{width: '100%'}}>

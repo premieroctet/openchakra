@@ -244,13 +244,12 @@ class index extends React.Component {
                                                 {/* Heading */}
                                                 <div className="md-form">
                                                     <i className="fas fa-user prefix grey-text"/>
-                                                    <input type="text" id="form3" className="form-control"/>
-                                                    <label htmlFor="form3">Prénom </label>
+                                                    <input type="text" id="form3" className="form-control" placeholder={'Prénom'}/>
+
                                                 </div>
                                                 <div className="md-form">
                                                     <i className="fas fa-envelope prefix grey-text"/>
-                                                    <input type="text" id="form2" className="form-control"/>
-                                                    <label htmlFor="form2">Email </label>
+                                                    <input type="text" id="form2" className="form-control" placeholder={'Email'}/>
                                                 </div>
                                                 <fieldset className="form-check">
                                                     <input type="checkbox" className="form-check-input" id="checkbox1"/>

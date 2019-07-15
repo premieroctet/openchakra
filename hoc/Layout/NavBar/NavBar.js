@@ -153,7 +153,7 @@ class NavBar extends Component {
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const test = this.state.logged;
-    const logout = <Button variant="outlined" color='primary' style={{ marginRight: '20px', color: 'white' }}
+    const logout = <Button variant="outlined" color='primary' style={{ marginRight: '20px' }}
                            onClick={this.logout2}>Déconnexion</Button>;
 
     const renderMenu = (
