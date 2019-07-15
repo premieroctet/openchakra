@@ -164,7 +164,7 @@ router.put('/profile/billingAddress',passport.authenticate('jwt',{session: false
             user.billing_address.zip_code = req.body.zip_code;
             user.billing_address.city = req.body.city;
 
-            if (req.body.country === '1') {
+            if (req.body.country === 'France') {
                 user.billing_address.country = 'France';
             } else {
                 user.billing_address.country = 'Maroc';
@@ -211,7 +211,7 @@ router.put('/profile/serviceAddress',passport.authenticate('jwt',{session: false
             user.service_address.zip_code = req.body.zip_code;
             user.service_address.city = req.body.city;
 
-            if (req.body.country === '1') {
+            if (req.body.country === 'France') {
                 user.service_address.country = 'France';
             } else {
                 user.service_address.country = 'Maroc';

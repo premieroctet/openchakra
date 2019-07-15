@@ -6,11 +6,29 @@ import moment from 'moment';
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
+import { withStyles } from '@material-ui/core/styles';
+import Card from "@material-ui/core/Card";
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from "@material-ui/core/Typography";
+import EditInformations from '../components/profile/editInformations';
+import EditPassword from '../components/profile/editPassword';
+import EditAddress from '../components/profile/editAddress';
+import EditOtherAddress from '../components/profile/editOtherAddress';
 
 moment.locale('fr');
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
+
+const styles = theme => ({
+    bigContainer: {
+        marginTop: 70,
+        flexGrow: 1,
+    },
+});
+
 class profile extends React.Component {
     constructor(props) {
         super(props);
@@ -24,9 +42,15 @@ class profile extends React.Component {
             currentOtherAddress: {},
             picture: false,
             currentPicture: '',
-            is_alfred: false
+            is_alfred: false,
+            value: 0,
+            setValue: 0,
+            value2: 0,
+            setValue2: 0,
 
         };
+        this.handleChangeTabs = this.handleChangeTabs.bind(this);
+        this.handleChangeTabs2 = this.handleChangeTabs2.bind(this);
     }
 
     componentDidMount() {
@@ -77,15 +101,25 @@ class profile extends React.Component {
             })
             .catch(err => {
                     console.log(err);
+                if(err.response.status === 401 || err.response.status === 403) {
                     localStorage.removeItem('token');
                     Router.push({pathname: '/login'})
                 }
+            }
             );
+    }
+
+    handleChangeTabs(event, value) {
+        this.setState({value});
+    }
+
+    handleChangeTabs2(event, value2) {
+        this.setState({value2});
     }
 
 
     render() {
-
+        const {classes} = this.props;
         const {user} = this.state;
         const alfred = this.state.is_alfred;
         const address = this.state.address;
@@ -94,64 +128,143 @@ class profile extends React.Component {
         const job = this.state.job;
         const picture = this.state.picture;
         const link = <Link href={"/addAddress"}><a>Ajouter une adresse</a></Link>;
-        const link2 = <Link href="/addOtherAddress"><a>Ajouter une seconde adresse</a></Link>;
-        const addPicture = <Link href="/addPicture"><a>Ajouter une photo de profile</a></Link> ;
+        const link2 = <Link href={"/addOtherAddress"}><a>Ajouter une seconde adresse</a></Link>;
+        const addPicture = <Link href={"/addPicture"}><a>Ajouter une photo de profile</a></Link>;
         const {currentAddress} = this.state;
         const {currentOtherAddress} = this.state;
         const currentPicture = <img src={`../../${user.picture}`} alt="picture"/>;
-        const fullAddress = <div>
+
+        const fullAddress = <React.Fragment><h4>Adresse principale</h4>
             <p>Adresse : {currentAddress.address}</p>
             <p>Ville : {currentAddress.city}</p>
             <p>Code postal : {currentAddress.zip_code}</p>
             <p>Pays : {currentAddress.country}</p>
-        </div>;
+        </React.Fragment>;
 
-        const fullOtherAddress = <div><h4>Autre adresse</h4>
+        const fullOtherAddress = <React.Fragment><h4>Autre adresse</h4>
             <p>Adresse : {currentOtherAddress.address}</p>
             <p>Ville : {currentOtherAddress.city}</p>
             <p>Code postal : {currentOtherAddress.zip_code}</p>
-            <p>Pays : {currentOtherAddress.country}</p>
-        </div>;
+            <p>Pays : {currentOtherAddress.country}</p></React.Fragment>
+        ;
 
-        const addPhone = <Link href="/addPhone"><a>Ajouter un téléphone</a></Link>;
-        const currentPhone = <p>Numéro de téléphone : {user.phone}</p>;
+        const addPhone = <Link href={"/addPhone"}><a>Ajouter un téléphone</a></Link>;
+        const currentPhone = <p>{user.phone}</p>;
 
-        const addJob = <Link href="/addJob"><a>Ajouter un emploi</a></Link>;
-        const currentJob = <p>{user.job}</p>;
+        const addJob = <Link href={"/addJob"}><a>Ajouter un emploi</a></Link>;
+        const currentJob = <p>Métier : {user.job}</p>;
+
+        const {value} = this.state;
+        const {value2} = this.state;
 
         return (
             <Fragment>
                 <Layout>
-                    <div style={{width: 1000, margin: '0 auto',marginTop: 64}}>
-                        <p>Bienvenue {user.name} {user.firstname} !</p>
+                    <Grid container className={classes.bigContainer}>
+                        <Grid item xs={4}>
+                            <Grid container>
+                                <Grid item>
+                                    {picture ? currentPicture : addPicture}
+                                    Bonjour {user.name} {user.firstname}
+                                </Grid>
+                            </Grid>
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    <p>{user.email}</p>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <p>{moment(user.birthday).format('L')}</p>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    {phone ? currentPhone : addPhone}
+                                </Grid>
+                                <Grid item xs={12}>
+                                    {job ? currentJob : addJob}
+                                </Grid>
+                            </Grid>
+                            <Grid container>
+                            <Link href={"/editProfile"}>
+                                <Button type="submit" variant="contained" color="primary" style={{ width: '100%', color: 'white' }}>
+                                    Editer mon profil
+                                </Button>
+                            </Link>
+                            {alfred ? <Link href={"/dashboardAlfred/home"}>
+                                <Button type="submit" variant="contained" color="primary" style={{ width: '100%', color: 'white' }}>
+                                    Dashboard Alfred
+                                </Button>
+                            </Link> : ''}
 
-                        <div>
-                            <h4>Vos informations</h4>
-                            <p>Email : {user.email}</p>
-                            <p>Date de naissance : {moment(user.birthday).format('L')}</p>
-                            {address ? fullAddress : link}<br/>
-                            {otherAddress ? fullOtherAddress : link2}<br/>
-                            {phone ? currentPhone : addPhone}<br/>
-                            {job ? currentJob : addJob}<br/>
-                            {picture ? currentPicture : addPicture}<br/>
-                        </div>
-                    </div>
-                    <Grid item>
-                        <Link href={"/editProfile"}>
-                            <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                                Editer mon profil
-                            </Button>
-                        </Link>
-                        {alfred ? <Link href={"/dashboardAlfred/home"}>
-                            <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                                Dashboard Alfred
-                            </Button>
-                        </Link> : ''}
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Grid container>
+
+
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <Card>
+                                        <AppBar position="static" color={'primary'}>
+                                            <Tabs value={value} onChange={this.handleChangeTabs}>
+                                                <Tab label="Informations" />
+                                                <Tab label="Sécurité" />
+                                            </Tabs>
+                                        </AppBar>
+                                        {value === 0 && <TabContainer>
+                                            <EditInformations/>
+                                        </TabContainer>}
+
+                                        {value === 1 && <TabContainer>
+                                            <EditPassword/>
+                                        </TabContainer>}
+
+
+                                    </Card>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Card>
+                                        <AppBar position="static" color={'primary'}>
+                                            <Tabs value={value2} onChange={this.handleChangeTabs2}>
+                                                <Tab label="Adresse principale" />
+                                                <Tab label="Autre adresse" />
+                                            </Tabs>
+                                        </AppBar>
+                                        {value2 === 0 && <TabContainer>
+                                            <EditAddress/>
+                                        </TabContainer>}
+
+                                        {value2 === 1 && <TabContainer>
+                                            <EditOtherAddress/>
+                                        </TabContainer>}
+
+
+                                    </Card>
+                                </Grid>
+                            </Grid>
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    {address ? fullAddress : link}
+                                </Grid>
+                                <Grid item xs={6}>
+                                    {otherAddress ? fullOtherAddress : link2}<br/>
+                                </Grid>
+                            </Grid>
+                            </Grid>
+                        </Grid>
+
                     </Grid>
                 </Layout>
+
             </Fragment>
         );
     };
 }
 
-export default profile;
+function TabContainer(props) {
+    return (
+        <Typography component="div" style={{ padding: 8 * 3 }}>
+            {props.children}
+        </Typography>
+    );
+}
+
+export default withStyles(styles)(profile);
