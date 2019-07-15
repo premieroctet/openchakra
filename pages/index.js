@@ -2,6 +2,7 @@ import React from "react";
 
 import { withStyles } from '@material-ui/core/styles';
 import Router from "next/router";
+import Link from 'next/link';
 const styles = theme => ({
     view: {
         position: 'absolute',
@@ -153,22 +154,28 @@ class index extends React.Component {
                             {/* Right */}
                             <ul className="navbar-nav nav-flex-icons">
                                 <li className="nav-item">
-                                    <a href={"/signup"} className="nav-link   rounded" target="_blank"
+                                    <Link href={'/signup'}>
+                                    <a className="nav-link   rounded"
                                        style={{backgroundColor: 'transparent'}}>
                                         Inscription
                                     </a>
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <a href={"/login"} className="nav-link   rounded" target="_blank"
+                                    <Link href={'/login'}>
+                                    <a className="nav-link   rounded"
                                        style={{backgroundColor: 'transparent'}}>
                                         Connexion
                                     </a>
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <a href={"/signup"} className="nav-link   rounded" target="_blank"
+                                    <Link href={'/signup'}>
+                                    <a className="nav-link   rounded"
                                        style={{backgroundColor: '#2FBCD3', border: 'snow thin solid'}}>
                                         Devenir Alfred
                                     </a>
+                                    </Link>
                                 </li>
                                 {/*<li className="nav-item">
                                     <a href="#" className="nav-link" target="_blank">
@@ -221,17 +228,18 @@ class index extends React.Component {
                                         indiquez vos disponibilités, vos tarifs et profitez d’un complément de revenu !
                                     </p>
                                     <br/>
-                                    <a target="_blank" href={'/signup'} className="btn  btn-lg text-capitalize "
+                                    <Link href={'/signup'}>
+                                    <a className="btn  btn-lg text-capitalize "
                                        style={{backgroundColor: '#2FBCD3'}}>Devenir Alfred
-                                    </a>
+                                    </a></Link>
                                 </div>
                                 {/*Grid column*/}
                                 {/*Grid column*/}
                                 <div className="col-md-6 col-xl-5 mb-4 float-right" style={{float: 'right'}}>
                                     <h5 className="card-header  white-text text-center py-4 "
-                                        style={{backgroundColor: 'rgb(240, 77, 94)'}}>
-                                        <a href="#" style={{textDecoration: 'none', color: 'white'}}><strong>Créez votre
-                                            boutique de services</strong></a>
+                                        style={{backgroundColor: 'rgb(240, 77, 94)'}}><Link href={'/signup'}>
+                                        <a style={{textDecoration: 'none', color: 'white'}}><strong>Créez votre
+                                            boutique de services</strong></a></Link>
                                     </h5>
                                     {/*Card*/}
                                     <div className="card">
@@ -259,9 +267,11 @@ class index extends React.Component {
                                                 </fieldset>
                                                 <br/><br/>
                                                 <div className="text-right">
-                                                    <button className="btn  btn-block my-4" type="submit"
-                                                            style={{backgroundColor: '#2FBCD3', color: 'white'}}><a style={{color: 'white'}} href={'/signup'}> Envoyer</a>
+                                                    <a style={{color: 'white'}} href={'/signup'}>
+                                                    <button  className="btn  btn-block my-4" type="button"
+                                                            style={{backgroundColor: '#2FBCD3', color: 'white'}}> Envoyer
                                                     </button>
+                                                        </a>
                                                 </div>
                                             </form>
                                             {/* Form */}
