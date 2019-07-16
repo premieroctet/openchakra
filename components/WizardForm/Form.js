@@ -798,8 +798,10 @@ class Form extends React.Component {
                                                                         <Typography>{categorie.label}</Typography>
                                                                     </ExpansionPanelSummary>
                                                                     <ExpansionPanelDetails>
+                                                                        <Grid container>
                                                                         {categorie[categorie.label.replace(/\s/g, '') + 'Services'].map((service, index) => {
                                                                             return (
+                                                                                <Grid item xs={3}>
                                                                                 <FormControlLabel
                                                                                     key={index}
                                                                                     control={
@@ -832,8 +834,10 @@ class Form extends React.Component {
                                                                                     }
                                                                                     label={service.label}
                                                                                 />
+                                                                                </Grid>
                                                                             )
                                                                         })}
+                                                                    </Grid>
                                                                     </ExpansionPanelDetails>
                                                                 </ExpansionPanel>
                                                             )
