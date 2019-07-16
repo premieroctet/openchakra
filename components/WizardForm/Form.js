@@ -1057,7 +1057,9 @@ class Form extends React.Component {
                                                                     <div style={{padding: '1rem 2rem 1rem 2rem'}}>
                                                                         <Typography style={{marginBottom: '1rem'}}>Localisation : définissez le périmètre que vous souhaitez couvrir</Typography>
                                                                         <InputRange
-                                                                            maxValue={100}
+                                                                            formatLabel={value => `${value}km`}
+                                                                            step={10}
+                                                                            maxValue={1000}
                                                                             minValue={5}
                                                                             value={arrayHelpers.form.values.submission[index].perimeter}
                                                                             onChange={inputRangeValue => arrayHelpers.form.setFieldValue(`submission[${index}].perimeter`, inputRangeValue)}
