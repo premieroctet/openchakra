@@ -128,7 +128,7 @@ class signup extends React.Component {
           birthday: this.state.birthday,
           email: this.state.email,
           password: this.state.password,
-          address: this.state.address,
+          address: this.state.address.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
           zip_code: this.state.zip_code,
           city: this.state.city,
           country: this.state.country,
@@ -159,6 +159,7 @@ class signup extends React.Component {
             }
 
             );
+
 
 
       };
