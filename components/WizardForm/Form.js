@@ -506,8 +506,9 @@ class Wizard extends React.Component {
                                 </button>
                             )}
                         </div>
-
+                        <Debug />
                     </form>
+                    
                 )}
             />
         );
@@ -611,6 +612,15 @@ class Form extends React.Component {
     }
 
     componentDidMount() {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.get(url+'myAlfred/api/users/current')
+            .then(res => {
+                console.log(res.data.billing_address.city);
+                this.state.userCity = {label: res.data.billing_address.city, value: res.data.billing_address.city};
+            })
+            .catch(error => {
+                console.log(error);
+            })
         axios.get(url+'myAlfred/api/category/all')
             .then(response => {
                 let categories = response.data;
@@ -864,9 +874,12 @@ class Form extends React.Component {
                                                         //console.log(services);
                                                         let arrServices = [];
                                                         services.map((service, index) => {
+                                                            this.setState({
+                                                                [`userCityClicked${index}`]: false
+                                                            })
                                                             axios.get(`${url}myAlfred/api/service/${service}`)
                                                                 .then(res => {
-                                                                    let servCompObj = { CategoryLabel : res.data.category.label, serviceId: res.data._id, serviceLabel: res.data.label, descService: '', minimumBasket: '', diploma: null,certification: null, perimeter: 50, delayBeforeShop: '', delayBeforeShopDWM: null, city: null, increases: { label: res.data.majoration, price: 0, checked: false }, prestationsCount: 0, cancelChoice: false, equipments: [], filters: [] }
+                                                                    let servCompObj = { CategoryLabel : res.data.category.label, serviceId: res.data._id, serviceLabel: res.data.label, descService: '', minimumBasket: '', diploma: null,certification: null, perimeter: 50, delayBeforeShop: '', delayBeforeShopDWM: null, city: this.state.userCity, increases: { label: res.data.majoration, price: 0, checked: false }, prestationsCount: 0, cancelChoice: false, equipments: [], filters: [] }
                                                                     res.data.equipments.map(e => {
                                                                         const equipObj = { id: e._id, label: e.label, logo: e.logo, name_logo: e.name_logo, checked: false }
                                                                         servCompObj.equipments.push(equipObj);
@@ -1038,9 +1051,10 @@ class Form extends React.Component {
                                                                             return (
                                                                                 <label key={indexe}>
                                                                                     {e.label}
-                                                                                    <input
+                                                                                    <Checkbox
+                                                                                        color="primary"
                                                                                         type="checkbox"
-                                                                                        value={e.checked}
+                                                                                        checked={e.checked}
                                                                                         onChange={() => {
                                                                                             e.checked = !e.checked;
                                                                                             arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
@@ -1051,7 +1065,31 @@ class Form extends React.Component {
                                                                         })}
                                                                     </div>
                                                                     <div style={{padding: '1rem 2rem 1rem 2rem'}}>
-                                                                        <CityFinder formikCtx={arrayHelpers} index={index}/>
+                                                                        <Typography style={{marginBottom: '1rem'}}>Choisissez l'addresse que vous souhaitez utiliser</Typography>
+                                                                        <Typography>Par défault, la ville utilisée sera celle que vous avez utilisé pour l'inscription ({this.state.userCity.label})</Typography>
+                                                                            <FormControlLabel
+                                                                                control={
+                                                                                    <Checkbox
+                                                                                        checked={this.state[`userCityClicked${index}`]}
+                                                                                        color="primary"
+                                                                                        type="checkbox"
+                                                                                        onChange={async () => {
+                                                                                            let userCityChecked = !this.state[`userCityClicked${index}`];
+                                                                                            this.setState({[`userCityClicked${index}`]: userCityChecked})
+
+                                                                                            if (userCityChecked === true) {
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].city`, null)
+                                                                                            } else {
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].city`, this.state.userCity);
+                                                                                            }
+                                                                                        }}
+                                                                                    />
+                                                                                }
+                                                                                label={`Sélectionnez une autre ville`}
+                                                                            />
+                                                                            {this.state[`userCityClicked${index}`] === true ?
+                                                                                <CityFinder formikCtx={arrayHelpers} index={index}/>
+                                                                            : null}
                                                                     </div>
                                                                     
                                                                     <div style={{padding: '1rem 2rem 1rem 2rem'}}>

@@ -92,7 +92,8 @@ class CityFinder extends React.Component {
         const {city} =  this.state;
         const options = cities.map(citie => ({
             label: citie.nom,
-            value: citie.nom
+            value: citie.nom,
+            checked: false
         }));
         console.log(options)
 
