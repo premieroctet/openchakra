@@ -103,10 +103,7 @@ class editAddress extends React.Component {
 
         return (
 
-                        <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 15 }}>Modifier mon adresse</Typography>
-                            </Grid>
+
                             <form onSubmit={this.onSubmit}>
                                 <Grid item>
                                     <TextField
@@ -173,7 +170,7 @@ class editAddress extends React.Component {
                                     </Button>
                                 </Grid>
                             </form>
-                        </Grid>
+
 
         );
     };

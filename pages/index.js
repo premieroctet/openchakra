@@ -201,7 +201,7 @@ class index extends React.Component {
                                 </li></React.Fragment>}
                                 {alfred ? '':
                                 <li className="nav-item">
-                                    <Link href={'/signup'}>
+                                    <Link href={'/becomeAlfredForm'}>
                                     <a className="nav-link   rounded"
                                        style={{backgroundColor: '#2FBCD3', border: 'snow thin solid'}}>
                                         Devenir Alfred
@@ -259,7 +259,7 @@ class index extends React.Component {
                                         indiquez vos disponibilités, vos tarifs et profitez d’un complément de revenu !
                                     </p>
                                     <br/>
-                                    <Link href={'/signup'}>
+                                    <Link href={'/becomeAlfredForm'}>
                                     <a className="btn  btn-lg text-capitalize "
                                        style={{backgroundColor: '#2FBCD3'}}>Devenir Alfred
                                     </a></Link>
@@ -268,7 +268,7 @@ class index extends React.Component {
                                 {/*Grid column*/}
                                 <div className="col-md-6 col-xl-5 mb-4 float-right" style={{float: 'right'}}>
                                     <h5 className="card-header  white-text text-center py-4 "
-                                        style={{backgroundColor: 'rgb(240, 77, 94)'}}><Link href={'/signup'}>
+                                        style={{backgroundColor: '#F8727F'}}><Link href={'/becomeAlfredForm'}>
                                         <a style={{textDecoration: 'none', color: 'white'}}><strong>Créez votre
                                             boutique de services</strong></a></Link>
                                     </h5>
@@ -422,8 +422,9 @@ class index extends React.Component {
                                     <p>Nous sommes tous des Alfred. Chacun d'entre nous doit pouvoir partager ses savoir
                                         faire, ses compétences, ses passions... tantôt Alfred, tantôt consommateur de
                                         services d'Alfred, rejoignez la communauté Alfred en quelques clics !</p>
+                                    <Link href={'/becomeAlfredForm'}>
                                     <a className="btn" style={{backgroundColor: '#2FBCD3'}}><i
-                                        className="fas fa-heart left"/> Devenir Alfred</a>
+                                        className="fas fa-heart left"/> Devenir Alfred</a></Link>
                                 </div>
                             </div>
                         </div>

@@ -27,6 +27,7 @@ const styles = theme => ({
         marginTop: 70,
         flexGrow: 1,
     },
+
 });
 
 class profile extends React.Component {
@@ -225,7 +226,7 @@ class profile extends React.Component {
                                         <AppBar position="static" color={'primary'}>
                                             <Tabs value={value2} onChange={this.handleChangeTabs2}>
                                                 <Tab label="Adresse principale" />
-                                                <Tab label="Autre adresse" />
+                                                <Tab label="Adresse secondaire" />
                                             </Tabs>
                                         </AppBar>
                                         {value2 === 0 && <TabContainer>
@@ -242,10 +243,17 @@ class profile extends React.Component {
                             </Grid>
                             <Grid container>
                                 <Grid item xs={6}>
-                                    {address ? fullAddress : link}
+                                    <Card>
+                                        Mes réservations
+
+                                    </Card>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    {otherAddress ? fullOtherAddress : link2}<br/>
+                                    <Card>
+                                        Mes messages
+
+
+                                    </Card>
                                 </Grid>
                             </Grid>
                             </Grid>

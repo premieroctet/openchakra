@@ -324,7 +324,7 @@ class signup extends React.Component {
                               value={this.state.password}
                               onChange={this.onChange}
                               error={errors.password}
-                              helperText="8 charactères minimum"
+                              helperText="8 caractères minimum"
                           />
                         </Grid>
                       </Grid>

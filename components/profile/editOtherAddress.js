@@ -37,10 +37,7 @@ const styles = theme => ({
         fontSize: 12,
         lineHeight: 4.15,
     },
-    selectgenre: {
-        marginTop: 20,
-        marginBottom: -15,
-    },
+
 });
 
 class editOtherAddress extends React.Component {
@@ -106,10 +103,7 @@ class editOtherAddress extends React.Component {
 
         return (
 
-                        <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 15 }}>Modifier mon autre adresse</Typography>
-                            </Grid>
+
                             <form onSubmit={this.onSubmit}>
                                 <Grid item>
                                     <TextField
@@ -176,7 +170,7 @@ class editOtherAddress extends React.Component {
                                     </Button>
                                 </Grid>
                             </form>
-                        </Grid>
+
 
         );
     };
