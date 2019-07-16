@@ -122,11 +122,19 @@ class CityFinder extends React.Component {
                 {check ?
                     <Grid item>
                         <Select
+                            placeholder="Sélectionnez votre département"
                             styles={{menu: (styles) => Object.assign(styles, {zIndex: 1000})}}
                             value={city}
                             onChange={this.onChange2}
                             options={options}
                             helperText="Choisissez maintenant votre ville en la recherchant dans le menu"
+                            theme={theme => ({
+                                ...theme,
+                                colors: {
+                                    ...theme.colors,
+                                    primary: '#2FBCD3',
+                                }
+                            })}
                         />
                     </Grid>
                     : ''}

@@ -405,7 +405,7 @@ class Wizard extends React.Component {
             descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
             minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').required('Le minimum d\'achat est requis'),
             delayBeforeShop: Yup.number().typeError('Le délais doit être un nombre').required(),
-            delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi jours, semaines et mois').required(),
+            delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi heures, jours et semaines').required(),
             city: Yup.object().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
             filters: Yup.array().of(Yup.object().shape({
                 prestations: Yup.array().of(Yup.object().shape({
@@ -759,6 +759,7 @@ class Form extends React.Component {
                                         this.state.categories && this.state.categories.length > 0 ? (
                                             <div style={{padding: '2rem'}}>
                                                 <MultipleSelect
+                                                    placeholder="Sélectionnez vos catégories..."
                                                     option={this.state.categories}
                                                     value={arrayHelpers.form.values.categories}
                                                     disabled={this.state.isDisabledCategoryInput}
@@ -799,45 +800,45 @@ class Form extends React.Component {
                                                                     </ExpansionPanelSummary>
                                                                     <ExpansionPanelDetails>
                                                                         <Grid container>
-                                                                        {categorie[categorie.label.replace(/\s/g, '') + 'Services'].map((service, index) => {
-                                                                            return (
-                                                                                <Grid item xs={3}>
-                                                                                <FormControlLabel
-                                                                                    key={index}
-                                                                                    control={
-                                                                                        <Checkbox
-                                                                                            color="primary"
-                                                                                            type="checkbox"
-                                                                                            checked={service.checked}
-                                                                                            onChange={() => {
-                                                                                                service.checked = !service.checked
-                                                                                                if(service.checked === true) {
-                                                                                                    arrayHelpers.form.values.services.push(service.value);
-                                                                                                    const servicesLength = arrayHelpers.form.values.services.length;
-                                                                                                    this.setState({
-                                                                                                        servicesLength,
-                                                                                                        servicesValues: arrayHelpers.form.values.services
-                                                                                                    })
+                                                                            {categorie[categorie.label.replace(/\s/g, '') + 'Services'].map((service, index) => {
+                                                                                return (
+                                                                                    <Grid item xs={3}>
+                                                                                        <FormControlLabel
+                                                                                            key={index}
+                                                                                            control={
+                                                                                                <Checkbox
+                                                                                                    color="primary"
+                                                                                                    type="checkbox"
+                                                                                                    checked={service.checked}
+                                                                                                    onChange={() => {
+                                                                                                        service.checked = !service.checked
+                                                                                                        if(service.checked === true) {
+                                                                                                            arrayHelpers.form.values.services.push(service.value);
+                                                                                                            const servicesLength = arrayHelpers.form.values.services.length;
+                                                                                                            this.setState({
+                                                                                                                servicesLength,
+                                                                                                                servicesValues: arrayHelpers.form.values.services
+                                                                                                            })
 
-                                                                                                } else if (service.checked === false) {
-                                                                                                    const index = arrayHelpers.form.values.services.indexOf(service.value);
-                                                                                                    arrayHelpers.form.values.services.splice(index, 1);
-                                                                                                    const servicesLength = arrayHelpers.form.values.services.length;
-                                                                                                    this.setState({
-                                                                                                        servicesLength,
-                                                                                                        servicesValues: arrayHelpers.form.values.services
-                                                                                                    })
-                                                                                                }
-                                                                                                arrayHelpers.form.setFieldValue(`categories[${categorie.label.replace(/\s/g, '') + 'Services'}].checked`, service.checked)
-                                                                                            }}
+                                                                                                        } else if (service.checked === false) {
+                                                                                                            const index = arrayHelpers.form.values.services.indexOf(service.value);
+                                                                                                            arrayHelpers.form.values.services.splice(index, 1);
+                                                                                                            const servicesLength = arrayHelpers.form.values.services.length;
+                                                                                                            this.setState({
+                                                                                                                servicesLength,
+                                                                                                                servicesValues: arrayHelpers.form.values.services
+                                                                                                            })
+                                                                                                        }
+                                                                                                        arrayHelpers.form.setFieldValue(`categories[${categorie.label.replace(/\s/g, '') + 'Services'}].checked`, service.checked)
+                                                                                                    }}
+                                                                                                />
+                                                                                            }
+                                                                                            label={service.label}
                                                                                         />
-                                                                                    }
-                                                                                    label={service.label}
-                                                                                />
-                                                                                </Grid>
-                                                                            )
-                                                                        })}
-                                                                    </Grid>
+                                                                                    </Grid>
+                                                                                )
+                                                                            })}
+                                                                        </Grid>
                                                                     </ExpansionPanelDetails>
                                                                 </ExpansionPanel>
                                                             )
@@ -1049,7 +1050,10 @@ class Form extends React.Component {
                                                                             )
                                                                         })}
                                                                     </div>
-
+                                                                    <div style={{padding: '1rem 2rem 1rem 2rem'}}>
+                                                                        <CityFinder formikCtx={arrayHelpers} index={index}/>
+                                                                    </div>
+                                                                    
                                                                     <div style={{padding: '1rem 2rem 1rem 2rem'}}>
                                                                         <Typography style={{marginBottom: '1rem'}}>Localisation : définissez le périmètre que vous souhaitez couvrir</Typography>
                                                                         <InputRange
@@ -1068,13 +1072,13 @@ class Form extends React.Component {
                                                             style={{ color: "white" }}
                                                             className={classes.text1}
                                                         >
-                                                            Décrivez brievement vos services et votre
+                                                            Décrivez brievement votre service et votre
                                                             expertise.
                                                         </h4>
                                                     </div>
                                                     <Typography>
-                                                        Rédigez un résumé rapide de vos services. Mettez en
-                                                        évidence vos savoir faire, vos expériences et ce qui
+                                                        Rédigez un résumé rapide de votre services. Mettez en
+                                                        évidence votre savoir faire, votre expérience et ce qui
                                                         vous démarque des autres Alfred !
                                                     </Typography>
                                                     <Grid item xs={1} />
@@ -1110,11 +1114,7 @@ class Form extends React.Component {
                                                     <Grid item xs={2} />
                                                 </Grid>
 
-                                                <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
                                                                 <Grid container>
-                                                                    <Grid item xs={12}>
-                                                                        <CityFinder formikCtx={arrayHelpers} index={index} />
-                                                                    </Grid>
                                                                     <div style={{width: '100%'}}>
                                                                         <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
                                                                     </div>
@@ -1150,10 +1150,10 @@ class Form extends React.Component {
                                                                                     <TextField
                                                                                         {...field}
                                                                                         style={{width: '55%', marginRight: '5%'}}
-                                                                                        label="Délais"
+                                                                                        label="Délai"
                                                                                         margin="dense"
                                                                                         variant="outlined"
-                                                                                        helperText="Délais de prévenance avant réservation."
+                                                                                        helperText="Délai de prévenance avant réservation."
                                                                                     />
                                                                                 )
                                                                             }}
@@ -1169,11 +1169,11 @@ class Form extends React.Component {
                                                                                         select
                                                                                         margin="dense"
                                                                                         variant="outlined"
-                                                                                        label="Jours / semaines / mois"
+                                                                                        label="Heures / jours / semaines"
                                                                                     >
-                                                                                        <MenuItem value="jours">Jour(s)</MenuItem>
-                                                                                        <MenuItem value="semaines">semaine(s)</MenuItem>
-                                                                                        <MenuItem value="mois">mois</MenuItem>
+                                                                                        <MenuItem value="heures">Jour(s)</MenuItem>
+                                                                                        <MenuItem value="jours">semaine(s)</MenuItem>
+                                                                                        <MenuItem value="semaines">mois</MenuItem>
                                                                                     </TextField>
                                                                                 )
                                                                             }}

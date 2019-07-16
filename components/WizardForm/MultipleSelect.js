@@ -7,10 +7,18 @@ function MultipleSelect(props) {
     return (
         <Select
             closeMenuOnSelect={false}
+            placeholder={props.placeholder}
             isMulti
             isDisabled={props.disabled}
             options={props.option}
             onChange={props.update}
+            theme={theme => ({
+                ...theme,
+                colors: {
+                    ...theme.colors,
+                    primary: '#2FBCD3',
+                }
+            })}
         />
     );
 }
