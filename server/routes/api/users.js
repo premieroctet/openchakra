@@ -67,70 +67,42 @@ router.post('/register',(req,res) =>{
                 userFields.billing_address.address = req.body.address;
                 userFields.billing_address.zip_code = req.body.zip_code;
                 userFields.billing_address.city = req.body.city;
+                userFields.billing_address.country = req.body.country;
 
-                if (req.body.country === 'France') {
-                    userFields.billing_address.country = 'France';
-                } else {
-                    userFields.billing_address.country = 'Maroc';
-                }
+
 
                 userFields.billing_address.gps = {};
+                userFields.billing_address.gps.lat = req.body.lat;
+                userFields.billing_address.gps.lng = req.body.lng;
 
-                let address = req.body.address;
-                let city = req.body.city;
-                let zip = req.body.zip_code;
+                const newUser = new User(userFields);
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(newUser.password, salt, (err, hash) => {
+                        if (err) throw err;
+                        newUser.password = hash;
+                        newUser.save()
+                            .then(user => {
+                                res.json(user);
+                                let transporter = nodemailer.createTransport({
+                                    host: 'smtp.ethereal.email',
+                                    port: 587,
+                                    auth: {
+                                        user: 'kirstin85@ethereal.email',
+                                        pass: '1D7q6PCENKSX5cj622'
+                                    }
+                                });
 
-                let newAddress = address.replace(/ /g, '+');
-
-                const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
-
-                axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
-                    .then(response => {
-
-                        let result = response.data.features;
-
-                        result.forEach(function (element) {
-                            userFields.billing_address.gps.lat = element.geometry.coordinates[1];
-                            userFields.billing_address.gps.lng = element.geometry.coordinates[0];
-                        });
-
-                        const newUser = new User(userFields);
-                        bcrypt.genSalt(10, (err, salt) => {
-                            bcrypt.hash(newUser.password, salt, (err, hash) => {
-                                if (err) throw err;
-                                newUser.password = hash;
-                                newUser.save()
-                                    .then(user => {
-                                        res.json(user);
-                                        let transporter = nodemailer.createTransport({
-                                            host: 'smtp.ethereal.email',
-                                            port: 587,
-                                            auth: {
-                                                user: 'kirstin85@ethereal.email',
-                                                pass: '1D7q6PCENKSX5cj622'
-                                            }
-                                        });
-
-                                        let info = transporter.sendMail({
-                                            from: 'kirstin85@ethereal.email', // sender address
-                                            to: `${user.email}`, // list of receivers
-                                            subject: "Valider votre compte", // Subject line
-                                            text: `https://myalfred.hausdivision.com/validateAccount?user=${user._id}`, // plain text body
-                                            html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
-                                        });
-                                    })
-                                    .catch(err => console.log(err));
+                                let info = transporter.sendMail({
+                                    from: 'kirstin85@ethereal.email', // sender address
+                                    to: `${user.email}`, // list of receivers
+                                    subject: "Valider votre compte", // Subject line
+                                    text: `https://myalfred.hausdivision.com/validateAccount?user=${user._id}`, // plain text body
+                                    html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
+                                });
                             })
-                        })
-
-
-
+                            .catch(err => console.log(err));
                     })
-                    .catch(error => {
-                        console.log(error)
-                    });
-
-
+                })
 
 
 
