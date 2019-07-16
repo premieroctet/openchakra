@@ -198,7 +198,7 @@ class index extends React.Component {
                 <div className={classes.headerhomevid}>
                 <video id="background-video" loop autoPlay muted playsinline style={{width: '100%'}}>
                     <source src="../static/assets/img/bgdark.webm" type="video/webm" />
-                    <source src="../static/assets/img/bgdark.mp4" type="video/mp4" />
+                    <source src="../static/assets/img/bgdarklight.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
                 </div>
@@ -326,15 +326,15 @@ class index extends React.Component {
                                     float: 'right !important',
                                     marginLeft: '150px'
                                 }}>
-                                    <video width="100%" height="100%" autoPlay="autoplay" loop>
-                                        <source src="http://pluslite.fr/media/myalfred/Phone1.mp4" type="video/mp4"/>
+                                    <video width="100%" height="100%" autoPlay muted playsinline loop>
+                                        <source src="../static/assets/img/Phone1.mp4" type="video/mp4"/>
                                     </video>
                                 </div>
                                 <div
                                     className="col-md-5 d-none d-md-block  justify-content-center align-items-center jarallax  "
                                     data-jarallax-element={-140} style={{padding: '50px', marginTop: '-50px'}}>
-                                    <video width="100%" height="100%" autoPlay="autoplay" loop>
-                                        <source src="http://pluslite.fr/media/myalfred/Phone2.mp4" type="video/mp4"/>
+                                    <video width="100%" height="100%" autoPlay muted playsinline loop>
+                                        <source src="../static/assets/img/Phone2.mp4" type="video/mp4"/>
                                     </video>
                                 </div>
                                 <div className="col-md-6 card-body pull-right">
@@ -361,8 +361,8 @@ class index extends React.Component {
                                          marginLeft: '170px',
                                          marginTop: '-50px'
                                      }}>
-                                    <video width="100%" height="100%" autoPlay="autoplay" loop>
-                                        <source src="http://pluslite.fr/media/myalfred/Phone3.mp4" type="video/mp4"/>
+                                    <video width="100%" height="100%" autoPlay muted playsinline loop>
+                                        <source src="../static/assets/img/Phone3.mp4" type="video/mp4"/>
                                     </video>
                                 </div>
                             </div>
@@ -376,7 +376,7 @@ class index extends React.Component {
                             <div className={classes.footerImg}/>
                         <video id="background-video" loop autoPlay muted playsinline style={{width: '100%',marginTop: 23}} className={classes.video}>
                             <source src="../static/assets/img/bgdark.webm" type="video/webm" />
-                            <source src="../static/assets/img/bgdark.mp4" type="video/mp4" />
+                            <source src="../static/assets/img/bgdarklight.mp4" type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>
                         </div>
