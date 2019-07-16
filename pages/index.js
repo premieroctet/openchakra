@@ -3,6 +3,8 @@ import React from "react";
 import { withStyles } from '@material-ui/core/styles';
 import Router from "next/router";
 import Link from 'next/link';
+import setAuthToken from "../utils/setAuthToken";
+const jwt = require('jsonwebtoken');
 const styles = theme => ({
     view: {
         position: 'absolute',
@@ -74,7 +76,9 @@ class index extends React.Component {
         super(props);
         this.state = {
             isTop: true,
-            navCollapsed: true
+            navCollapsed: true,
+            logged: false,
+            alfred: false,
         };
         this.onScroll = this.onScroll.bind(this);
         this._onToggleNav = this._onToggleNav.bind(this);
@@ -88,7 +92,23 @@ class index extends React.Component {
                 this.onScroll(isTop);
             }
         });
+        const token = localStorage.getItem('token');
+        if (token) {
+            this.setState({logged:true});
+            const token2 = localStorage.getItem('token').split(' ')[1];
+            const decode = jwt.decode(token2);
+            this.setState({alfred: decode.is_alfred});
+        }
+
     }
+
+    logout2() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('path');
+        // Remove auth header for future requests
+        setAuthToken(false);
+        window.location.reload();
+    };
 
     onScroll(isTop) {
         this.setState({ isTop });
@@ -102,7 +122,16 @@ class index extends React.Component {
     render() {
         const {classes} = this.props;
         const {navCollapsed} = this.state;
+        const logged = this.state.logged;
+        const alfred = this.state.alfred;
+        const logout = <li className="nav-item">
 
+                <a className="nav-link   rounded"
+                   style={{backgroundColor: '#2FBCD3', border: 'snow thin solid', marginRight: 10}} onClick={() => this.logout2()}>
+                    Déconnexion
+                </a>
+
+        </li>;
 
 
         return (
@@ -153,6 +182,7 @@ class index extends React.Component {
                             </ul>
                             {/* Right */}
                             <ul className="navbar-nav nav-flex-icons">
+                                {logged ? logout :<React.Fragment>
                                 <li className="nav-item">
                                     <Link href={'/signup'}>
                                     <a className="nav-link   rounded"
@@ -168,7 +198,8 @@ class index extends React.Component {
                                         Connexion
                                     </a>
                                     </Link>
-                                </li>
+                                </li></React.Fragment>}
+                                {alfred ? '':
                                 <li className="nav-item">
                                     <Link href={'/signup'}>
                                     <a className="nav-link   rounded"
@@ -176,7 +207,7 @@ class index extends React.Component {
                                         Devenir Alfred
                                     </a>
                                     </Link>
-                                </li>
+                                </li>}
                                 {/*<li className="nav-item">
                                     <a href="#" className="nav-link" target="_blank">
                                         <i className="fab fa-facebook-f"/>

@@ -18,7 +18,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
-
+const jwt = require('jsonwebtoken');
 const styles = theme => ({
     root: {
         width: '100%',
@@ -110,13 +110,17 @@ class NavBar extends Component {
     state = {
         anchorEl: null,
         mobileMoreAnchorEl: null,
-        logged: false
+        logged: false,
+        alfred: false,
     };
 
     componentDidMount() {
         const token = localStorage.getItem('token');
         if (token) {
-            this.setState({logged:true})
+            this.setState({logged:true});
+            const token2 = localStorage.getItem('token').split(' ')[1];
+            const decode = jwt.decode(token2);
+            this.setState({alfred: decode.is_alfred});
         }
     }
 
@@ -151,6 +155,7 @@ class NavBar extends Component {
         const isMenuOpen = Boolean(anchorEl);
         const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
         const test = this.state.logged;
+        const alfred = this.state.alfred;
         const logout = <Button variant="outlined" color='primary' className={classes.buttonSpace} style={{ marginRight: '20px' }}
                                onClick={this.logout2}>Déconnexion</Button>;
 
@@ -185,15 +190,16 @@ class NavBar extends Component {
                 open={isMobileMenuOpen}
                 onClose={this.handleMenuClose}
             >
+                {alfred ? '' :
                 <MenuItem onClick={this.handleMobileMenuClose}>
                     <Typography>
-                        <Link href='#'>
+                        <Link href={'/becomeAlfredForm'}>
                             <a className={classes.navbarLinkMobile}>
                                 Devenir Alfred
                             </a>
                         </Link>
                     </Typography>
-                </MenuItem>
+                </MenuItem>}
                 {/*<MenuItem onClick={this.handleMobileMenuClose}>
                     <Typography>
                         <Link href='#'>
@@ -247,13 +253,14 @@ class NavBar extends Component {
                         </div>
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
+                            {alfred ? '' :
                             <Typography className={classes.navbarItem}>
                                 <Link href={'/becomeAlfredForm'}>
                                     <a className={classes.navbarLink}>
                                         Devenir Alfred
                                     </a>
                                 </Link>
-                            </Typography>
+                            </Typography>}
                             {/*<Typography className={classes.navbarItem}>
                                 <Link href='#'>
                                     <a className={classes.navbarLink}>

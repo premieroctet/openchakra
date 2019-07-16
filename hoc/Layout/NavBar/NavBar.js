@@ -20,6 +20,8 @@ import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
 import Router from "next/router";
 
+const jwt = require('jsonwebtoken');
+
 const styles = theme => ({
   root: {
     width: '100%',
@@ -112,13 +114,17 @@ class NavBar extends Component {
   state = {
     anchorEl: null,
     mobileMoreAnchorEl: null,
-    logged: false
+    logged: false,
+    alfred: false,
   };
 
   componentDidMount() {
     const token = localStorage.getItem('token');
     if (token) {
-      this.setState({logged:true})
+      this.setState({logged:true});
+      const token2 = localStorage.getItem('token').split(' ')[1];
+      const decode = jwt.decode(token2);
+      this.setState({alfred: decode.is_alfred});
     }
   }
 
@@ -127,7 +133,8 @@ class NavBar extends Component {
     localStorage.removeItem('path');
     // Remove auth header for future requests
     setAuthToken(false);
-    document.location.href="https://myalfred.hausdivision.com/";
+    //document.location.href="https://myalfred.hausdivision.com/";
+    Router.push('/');
   };
 
   handleProfileMenuOpen = event => {
@@ -153,8 +160,19 @@ class NavBar extends Component {
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const test = this.state.logged;
+    const alfred = this.state.alfred;
     const logout = <Button variant="outlined" color='primary' style={{ marginRight: '20px' }}
-                           onClick={this.logout2}>Déconnexion</Button>;
+                           onClick={()=>this.logout2()}>Déconnexion</Button>;
+
+    const logoutMobile = <MenuItem onClick={()=>this.logout2()}>
+      <Typography>
+        <Link>
+          <a className={classes.navbarLinkMobile}>
+            Déconnexion
+          </a>
+        </Link>
+      </Typography>
+    </MenuItem>;
 
     const renderMenu = (
       <Menu
@@ -177,6 +195,7 @@ class NavBar extends Component {
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
+        { alfred ? '' :
         <MenuItem onClick={this.handleMobileMenuClose}>
           <Typography>
             <Link href={'/becomeAlfredForm'}>
@@ -185,7 +204,7 @@ class NavBar extends Component {
               </a>
             </Link>
           </Typography>
-        </MenuItem>
+        </MenuItem>}
         {/*<MenuItem onClick={this.handleMobileMenuClose}>
           <Typography>
             <Link href='#'>
@@ -195,6 +214,7 @@ class NavBar extends Component {
             </Link>
           </Typography>
         </MenuItem>*/}
+        {test ? logoutMobile : <React.Fragment>
         <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
             <Link href={'/login'}>
@@ -212,7 +232,7 @@ class NavBar extends Component {
               </a>
             </Link>
           </Typography>
-        </MenuItem>
+        </MenuItem></React.Fragment>}
       </Menu>
     );
 
@@ -237,13 +257,14 @@ class NavBar extends Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
+              {alfred ? '' :
               <Typography className={classes.navbarItem}>
                 <Link href={'/becomeAlfredForm'}>
                   <a className={classes.navbarLink}>
                     Devenir Alfred
                   </a>
                 </Link>
-              </Typography>
+              </Typography>}
               {/*<Typography className={classes.navbarItem}>
                 <Link href='#'>
                   <a className={classes.navbarLink}>
