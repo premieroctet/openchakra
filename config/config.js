@@ -18,7 +18,7 @@ const completeConfig = {
     },
 
     development: {
-        appUrl: `http://localhost:${serverPort}/`
+        appUrl: `https://myalfred.hausdivision.com/`
     },
 
     production: {
