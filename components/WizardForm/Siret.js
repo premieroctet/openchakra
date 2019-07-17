@@ -123,7 +123,7 @@ class siret extends React.Component {
                         )
                     }} />
                     <ErrorMessage name={`createShop.siret`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                    <Button type="button" variant='outlined' color="primary" style={{marginTop: 25, marginLeft: 15}} onClick={() => this.onSubmit()}>
+                    <Button type="button" variant='contained' color="secondary" style={{marginTop: 25, marginLeft: 15,color: 'white'}} onClick={() => this.onSubmit()}>
                         Valider
                     </Button>
                 </Grid>
