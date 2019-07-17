@@ -303,6 +303,7 @@ class Wizard extends React.Component {
                         alert("Service ajouté");
 
                             const booking_request = values.createShop.booking_request;
+                            const no_booking_request = values.createShop.no_booking_request;
                             const my_alfred_conditions = values.createShop.my_alfred_conditions;
                             const profile_picture = values.createShop.profile_picture_user;
                             const identity_card = values.createShop.identity_card;
@@ -334,7 +335,7 @@ class Wizard extends React.Component {
 
                                     });
 
-                                    axios.post(url+'myAlfred/api/shop/add',{booking_request,my_alfred_conditions,profile_picture,identity_card
+                                    axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
                                     , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
                                     self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
                                         .then(result => {
@@ -596,6 +597,7 @@ class Form extends React.Component {
             isEngaged: false,
             isCertified: false,
             booking_request: false,
+            no_booking_request: false,
             my_alfred_conditions: false,
             profile_picture_user: false,
             identity_card: false,
@@ -711,6 +713,7 @@ class Form extends React.Component {
                         submission: [],
                         createShop: {
                             booking_request: false,
+                            no_booking_request: false,
                             my_alfred_conditions: false,
                             profile_picture_user: false,
                             identity_card: false,
@@ -1338,10 +1341,36 @@ class Form extends React.Component {
                                                                 name={"booking_request"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                                 checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
-                                                                style={{fontSize: 18}}
+
                                                             />
                                                         }
-                                                        label="Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H"
+                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helveticaNeue'}}>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.</Typography>}
+
+
+                                                    />
+                                                )
+                                            }} />
+                                        </Grid>
+                                        <Grid item style={{marginLeft: 20, marginTop: 15}}>
+                                            <Field render={({form}) => {
+                                                return (
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={form.values.createShop.no_booking_request}
+                                                                onChange={() => {
+                                                                    form.values.createShop.no_booking_request = !form.values.createShop.no_booking_request;
+                                                                    form.setFieldValue('createShop.no_booking_request', form.values.createShop.no_booking_request);
+                                                                }}
+                                                                value={form.values.createShop.no_booking_request}
+                                                                color="primary"
+                                                                name={"no_booking_request"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+
+                                                            />
+                                                        }
+                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helveticaNeue'}}>Les utilisateurs peuvent réserver mes services directement sans demande de réservation.</Typography>}
 
                                                     />
                                                 )
@@ -1354,7 +1383,7 @@ class Form extends React.Component {
                                             Vos conditions de réservations
                                         </h6>
 
-                                        <Typography style={{marginBottom: 20}}>
+                                        <Typography style={{marginBottom: 20,fontFamily: 'helveticaNeue'}}>
                                             Il se peut que vous ayez moins de réservation si vous
                                             ajoutez des conditions. Les personnes qui ne répondent pas
                                             à vos critères peuvent quand même envoyer une demande
@@ -1376,12 +1405,12 @@ class Form extends React.Component {
                                                                 name={"my_alfred_conditions"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                                 checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
-                                                                style={{marginTop: -39, fontSize: 18}}
+                                                                style={{marginTop: -39}}
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                            <p style={{marginBottom: 0}}>Conditions My-Alfred</p>
-                                                    <p style={{marginTop: 0}}>
+                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Conditions My-Alfred</p>
+                                                    <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                         Numéro de téléphone confirmé, adresse e-mail, informations de paiements et acceptation
                                                         du règlement intérieur.
                                                 </p>
@@ -1408,12 +1437,12 @@ class Form extends React.Component {
                                                                 name={"profile_picture_user"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                                 checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
-                                                                style={{marginTop: -39,fontSize: 18}}
+                                                                style={{marginTop: -39}}
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                        <p style={{marginBottom: 0}}>Photo de profil</p>
-                                                        <p style={{marginTop: 0}}>
+                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Photo de profil</p>
+                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                             Si vous activez cette condition, vous ne pourrez voir les photos de profil des
                                                             voyageurs qu'une fois la réservation confirmée. En savoir plus
                                                         </p>
@@ -1439,12 +1468,12 @@ class Form extends React.Component {
                                                                 name={"identity_card"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                                 checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
-                                                                style={{marginTop: -11,fontSize: 18}}
+                                                                style={{marginTop: -11}}
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                        <p style={{marginBottom: 0}}>Pièce d'identité officielle</p>
-                                                        <p style={{marginTop: 0}}>
+                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Pièce d'identité officielle</p>
+                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                             Ces voyageurs ont vérifié leur identité.
                                                         </p>
                                                     </React.Fragment>}
@@ -1469,12 +1498,12 @@ class Form extends React.Component {
                                                                 name={"recommandations"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                                 checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
-                                                                style={{marginTop: -39,fontSize: 18}}
+                                                                style={{marginTop: -39}}
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                            <p style={{marginBottom: 0}}>Recommandations d'autres Alfred</p>
-                                                            <p style={{marginTop: 0}}>
+                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Recommandations d'autres Alfred</p>
+                                                            <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                                 Ces utilisateurs ont déjà utilisés des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commen- taires négatifs.
                                                             </p>
                                                         </React.Fragment>}
@@ -1520,7 +1549,7 @@ class Form extends React.Component {
                                            Vos conditions d'annulation
                                         </h6>
 
-                                        <Typography>
+                                        <Typography style={{fontFamily: 'helveticaNeue'}}>
                                             Choisissez vos conditions en cas d'annulation de la part
                                             des utilisateurs.
                                         </Typography>
@@ -1548,14 +1577,14 @@ class Form extends React.Component {
                                                                 name={"flexible_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                                 checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
-                                                                style={{marginTop: -20,fontSize: 18}}
+                                                                style={{marginTop: -20}}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                <p style={{marginBottom: 0}}>Flexibles</p>
+                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Flexibles</p>
 
-                                                                <p style={{marginTop: 0}}>
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                                     Remboursement intégral jusqu'à 1 jour avant la
                                                                     prestation
                                                                 </p>
@@ -1586,13 +1615,13 @@ class Form extends React.Component {
                                                                 name={"moderate_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                                 checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
-                                                                style={{marginTop: -20,fontSize: 18}}
+                                                                style={{marginTop: -20}}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                <p style={{marginBottom: 0}}>Modérées</p>
-                                                                <p style={{marginTop: 0}}>
+                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Modérées</p>
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                                     Remboursement intégral jusqu'à 5 jours avant la
                                                                     prestation
                                                                 </p>
@@ -1623,13 +1652,13 @@ class Form extends React.Component {
                                                                 name={"strict_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                                 checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
-                                                                style={{ marginTop: -100,fontSize: 18 }}
+                                                                style={{ marginTop: -100 }}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                <p style={{ marginBottom: 0 }}>Strictes</p>
-                                                                <p style={{marginTop: 0}}>
+                                                                <p style={{ marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue' }}>Strictes</p>
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                                     Remboursement intégral pour les annulations
                                                                     effectuées dans les 48 heures suivant la
                                                                     réservation, si la date de ma prestation

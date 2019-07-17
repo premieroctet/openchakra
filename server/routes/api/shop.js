@@ -35,6 +35,7 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
                 const shopFields = {};
                 shopFields.alfred = req.user.id;
                 shopFields.booking_request = req.body.booking_request;
+                shopFields.no_booking_request = req.body.no_booking_request;
                 shopFields.my_alfred_conditions = req.body.my_alfred_conditions;
                 shopFields.profile_picture = req.body.profile_picture;
                 shopFields.identity_card = req.body.identity_card;
