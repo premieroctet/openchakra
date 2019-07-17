@@ -1000,7 +1000,9 @@ router.post('/tags/all', passport.authenticate('jwt',{session: false}),(req, res
                     return res.status(400).json(errors);
                 } else {
                     const newTags = new Tags({
-                        label: req.body.label
+                        label: req.body.label,
+                        title: req.body.title,
+                        description: req.body.description
                     });
 
                     newTags.save().then(tags => res.json(tags)).catch(err => console.log(err));
@@ -1089,7 +1091,7 @@ router.put('/tags/all/:id',passport.authenticate('jwt',{session: false}),(req, r
     const admin = decode.is_admin;
 
     if(admin) {
-        Tags.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label}}, {new: true})
+        Tags.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label, title: req.body.title, description: req.body.description}}, {new: true})
             .then(tags => {
                 res.json(tags);
             })
