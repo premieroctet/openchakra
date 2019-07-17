@@ -30,6 +30,7 @@ import MultipleSelect from './MultipleSelect';
 import Calendar from '../Calendar/calendar';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CityFinder from './CityFinder';
+import Siret from './Siret';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -2041,75 +2042,11 @@ class Form extends React.Component {
                                                     )}
                                                 </Grid>
 
-                                                {isProfessional ? (
-                                                    <Grid container>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.siret" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Siret"
-                                                                        placeholder="Siret"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.siret`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.creationDate" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="date"
-                                                                        label="Date de création"
-                                                                        type="date"
-                                                                        variant="filled"
-                                                                        InputLabelProps={{
-                                                                            shrink: true
-                                                                        }}
-                                                                        style={{ marginTop: 14.5 }}
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.creationDate`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.denomination" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Dénomination"
-                                                                        placeholder="Dénomination"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.denomination`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.nafape" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Code NAF/APE"
-                                                                        placeholder="Code NAF/APE"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.nafape`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                    </Grid>
+                                                {isProfessional ? (<Field render={({form}) => {
+                                                    return (
+                                                    <Siret formikCtx={form}/>
+                                                    )}}/>
+
                                                 ) : (
                                                     ""
                                                 )}

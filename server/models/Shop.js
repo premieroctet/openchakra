@@ -62,7 +62,7 @@ const ShopSchema = new Schema({
             type: String
         },
         creation_date: {
-            type: Date
+            type: String
         },
         siret: {
             type: String
