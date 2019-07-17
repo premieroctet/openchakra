@@ -49,14 +49,30 @@ const ServiceUserSchema = new Schema({
         default: false
     },
     diploma: {
-        type: String
+        name: {
+            type: String
+        },
+        year: {
+            type: Date
+        },
+        file: {
+            type: String
+        }
     },
     is_certified: {
         type: Boolean,
         default: false
     },
     certification: {
-        type: String
+        name: {
+            type: String
+        },
+        year: {
+            type: Date
+        },
+        file: {
+            type: String
+        }
     },
     majoration: {
         active: {
@@ -67,7 +83,24 @@ const ServiceUserSchema = new Schema({
             type: Number
         }
     },
+    option: {
+      label: {
+          type: String
+      },
+      unity: {
+          type: String
+      },
+      price: {
+          type: Number
+      },
+      option_extra: {
+          type: String
+      }
+    },
     description: {
+        type: String
+    },
+    level: {
         type: String
     }
 });
