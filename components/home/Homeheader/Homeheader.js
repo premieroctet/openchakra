@@ -196,8 +196,8 @@ const Homeheader = (props) => {
       <div className={classes.headerimg}></div>
       <div className={classes.headerhomevid}>
         <video id="background-video" loop autoPlay muted playsinline style={{width: '100%'}}>
-          <source src="../../../static/assets/img/bgdark.webm" type="video/webm" />
-          <source src="../../../static/assets/img/bgdark.mp4" type="video/mp4" />
+          <source src="../../../static/assets/img/bg2.mp4" type="video/mp4" />
+          <source src="../../../static/assets/img/bg2.mp4" type="video/ogg" />
           Your browser does not support the video tag.
         </video>
       </div>

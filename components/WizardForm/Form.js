@@ -164,7 +164,7 @@ const styles = theme => ({
         margin: theme.spacing,
     },
     title1: {
-        backgroundColor: '#6d7892',
+        backgroundColor: '#F8727F',
         paddingTop: 5,
         paddingBottom: 5,
         paddingLeft: 20,
@@ -173,7 +173,7 @@ const styles = theme => ({
         marginBottom: 10,
     },
     title2: {
-        backgroundColor: '#6d7892',
+        backgroundColor: '#F8727F',
         paddingTop: 5,
         paddingBottom: 5,
         paddingLeft: 20,

@@ -25,22 +25,40 @@ import FormControl from "@material-ui/core/FormControl";
 import axios from "axios";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import AlgoliaPlaces from "algolia-places-react";
+import '../static/stylesfonts.css'
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
-  signupContainer: {
+  fullContainer: {
+    backgroundImage: 'url(../static/bailey-zindel-396399-unsplash.jpg)',
+    filter: 'blur(5px)',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
     alignItems: 'center',
-    height: '200vh',
+    height: '180vh',
     justifyContent: 'top',
     flexDirection: 'column',
-
+  },
+  signupContainer: {
+    backgroundColor: 'rgba(0,0,0, 0.35)',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    alignItems: 'center',
+    height: '180vh',
+    flexDirection: 'column',
+    position: 'absolute',
+    top: '90%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: '2',
   },
   card: {
     //padding: '1.5rem 3rem',
-    width: 800,
+    width: 600,
     marginTop: '100px',
-    fontFamily: 'helveticaNeue'
+    boxShadow: '0px 2px 66px -37px rgba(10,10,10,0.65)',
   },
   cardContant: {
     flexDirection: 'column',
@@ -68,7 +86,6 @@ const styles = theme => ({
     padding: 20,
   },
   title: {
-    fontFamily: 'helveticaNeue',
     color: 'white',
     display: 'flex',
     justifyContent: 'center',
@@ -101,9 +118,12 @@ class signup extends React.Component {
           country: '',
           checked: false,
           errors: {},
+          lat: '',
+          lng: '',
 
         };
         this.handleChecked = this.handleChecked.bind(this);
+        this.onChangeAddress = this.onChangeAddress.bind(this);
       }
 
       componentDidMount() {
@@ -114,6 +134,12 @@ class signup extends React.Component {
   onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
       };
+
+    onChangeAddress({query, rawAnswer, suggestion, suggestionIndex}) {
+        this.setState({city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode,country: suggestion.country,
+            lat: suggestion.latlng.lat, lng: suggestion.latlng.lng});
+
+    }
 
   handleChecked () {
     this.setState({checked: !this.state.checked});
@@ -132,6 +158,8 @@ class signup extends React.Component {
           zip_code: this.state.zip_code,
           city: this.state.city,
           country: this.state.country,
+          lat: this.state.lat,
+          lng: this.state.lng,
 
         };
         const username = this.state.email;
@@ -161,6 +189,7 @@ class signup extends React.Component {
             );
 
 
+
       };
 
       render() {
@@ -169,7 +198,9 @@ class signup extends React.Component {
 
         return (
             <Layout>
+              <Grid className={classes.fullContainer}></Grid>
               <Grid container className={classes.signupContainer}>
+                <div className="fonts">
                 <Card className={classes.card}>
                   <div className={classes.banner}>
                     <h2 className={classes.title}>Inscription</h2>
@@ -195,7 +226,7 @@ class signup extends React.Component {
                           />
                           <em>{errors.email}</em>
                         </Grid>
-                        <Grid item style={{width: '100%'}}>
+                        <Grid item style={{width: '48%', marginRight: 20}}>
                           <TextField
                               id="standard-with-placeholder"
                               label="Prénom"
@@ -211,7 +242,7 @@ class signup extends React.Component {
                           />
                           <em>{errors.firstname}</em>
                         </Grid>
-                        <Grid item style={{width: '100%'}}>
+                        <Grid item style={{width: '48%'}}>
                           <TextField
                               id="standard-with-placeholder"
                               label="Nom"
@@ -229,10 +260,26 @@ class signup extends React.Component {
                         </Grid>
                       </Grid>
                       <Grid container style={{marginTop: 15}}>
-                        <Typography style={{fontSize: '1.2rem',fontFamily: 'helveticaNeue', width:'100%'}}>Adresse</Typography>
-                        <p style={{fontFamily: 'helveticaNeue'}}>Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous proposer<br/>
+                        <Typography style={{fontSize: '1.2rem', width:'100%'}}>Adresse</Typography>
+                        <p>Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous proposer<br/>
                         ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</p>
+                        <Grid item style={{width: '100%'}}> <AlgoliaPlaces
+                              placeholder='Recherchez votre adresse'
 
+                              options={{
+                                  appId: 'plKATRG826CP',
+                                  apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                                  language: 'fr',
+                                  countries: ['fr'],
+                                  type: 'address',
+                                  useDeviceLocation: 'true'
+
+
+                              }}
+
+
+                              onChange={(suggestion) =>this.onChangeAddress(suggestion)}
+                        /></Grid>
                         <Grid item style={{width: '100%'}}>
                           <TextField
                               id="standard-with-placeholder"
@@ -265,7 +312,7 @@ class signup extends React.Component {
                           />
                           <em>{errors.zip_code}</em>
                         </Grid>
-                        <Grid item style={{width: '72.3%'}}>
+                        <Grid item style={{width: '71%'}}>
                           <TextField
                               id="standard-with-placeholder"
                               label="Ville"
@@ -283,31 +330,17 @@ class signup extends React.Component {
                         </Grid>
                         <Grid item className={classes.country}>
                           <TextField
-                              id="outlined-select-currency"
-                              select
+                              id="standard-with-placeholder"
                               label="Pays"
                               value={this.state.country}
                               name="country"
+                              type="text"
                               onChange={this.onChange}
                               style={{ width: '100%' }}
-                              SelectProps={{
-                                MenuProps: {
-                                  className: classes.menu,
-                                },
-                              }}
                               margin="normal"
                               variant="outlined"
                               error={errors.country}
-                          >
-
-                                <MenuItem value="France">
-                                  France
-                                </MenuItem>
-                            <MenuItem value="Maroc">
-                              Maroc
-                            </MenuItem>
-
-                          </TextField>
+                          />
                           <em>{errors.country}</em>
                         </Grid>
                         <Grid item style={{width: '100%'}}>
@@ -323,12 +356,12 @@ class signup extends React.Component {
                               value={this.state.password}
                               onChange={this.onChange}
                               error={errors.password}
-                              helperText="8 charactères minimum"
+                              helperText="8 caractères minimum"
                           />
                         </Grid>
                       </Grid>
-                      <Typography style={{fontSize: '1.2rem',fontFamily: 'helveticaNeue', width:'100%', marginTop: 15}}>Date de naissance</Typography>
-                      <p style={{fontFamily: 'helveticaNeue'}}>Pour vous inscrire, vous devez être agé d’au moins 16 ans. Les autres<br/>
+                      <Typography style={{fontSize: '1.2rem', width:'100%', marginTop: 15}}>Date de naissance</Typography>
+                      <p>Pour vous inscrire, vous devez être agé d’au moins 16 ans. Les autres<br/>
                         utilisateurs ne verront pas votre date de naissance.
                       </p>
                       <Grid item className={classes.datenaissance}>
@@ -384,6 +417,7 @@ class signup extends React.Component {
                     </Grid>
                   </div>
                 </Card>
+                </div>
               </Grid>
             </Layout>
         );
