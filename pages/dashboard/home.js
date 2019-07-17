@@ -79,6 +79,7 @@ class home extends React.Component {
                         <Link href="/dashboard/shopBanner/all"><a>Photos bannière shop</a></Link><br/>
                         <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                         <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
+                        <Link href="/dashboard/options/all"><a>Options</a></Link><br/>
                         <Link href="/dashboard/users/all"><a>Utilisateurs</a></Link><br/>
                         <Link href="/dashboard/alfred/all"><a>Alfred</a></Link><br/>
                         <Link href="/dashboard/admin/all"><a>Administrateurs</a></Link><br/>

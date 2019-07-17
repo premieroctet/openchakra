@@ -19,6 +19,7 @@ const Equipment = require('../../../models/Equipment');
 const Service = require('../../../models/Service');
 const Prestation = require('../../../models/Prestation');
 const ShopBanner = require('../../../models/ShopBanner');
+const Options = require('../../../models/Options');
 const validatePrestationInput = require('../../../validation/prestation');
 const validateRegisterAdminInput = require('../../../validation/registerAdmin');
 const validateCategoryInput = require('../../../validation/category');
@@ -1956,6 +1957,124 @@ router.put('/shopBanner/all/:id',passport.authenticate('jwt',{session: false}),(
                 res.json(banner);
             })
             .catch(err => res.status(404).json({ bannernotfound: 'No banner found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// OPTIONS
+
+// @Route POST /myAlfred/admin/options/all
+// Add options
+// @Access private
+router.post('/options/all', passport.authenticate('jwt',{session: false}),(req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+        Options.findOne({label: req.body.label})
+            .then(options => {
+                if(options){
+                    return res.status(400).json({msg: 'Cette option existe déjà'});
+                } else {
+                    const newOptions = new Options({
+                        label: req.body.label,
+                        description: req.body.description,
+                        billing: req.body.billing
+                    });
+
+                    newOptions.save().then(options => res.json(options)).catch(err => console.log(err));
+                }
+            })
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+
+});
+
+// @Route GET /myAlfred/admin/options/all
+// View all options
+// @Access private
+router.get('/options/all', passport.authenticate('jwt',{session: false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        Options.find()
+            .then(options => {
+                if(!options){
+                    return res.status(400).json({msg: 'No options found'});
+                }
+                res.json(options);
+
+            })
+            .catch(err => res.status(404).json({ options: 'No options found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route GET /myAlfred/admin/options/all/:id
+// View one option
+// @Access private
+router.get('/options/all/:id', passport.authenticate('jwt',{session: false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        Options.findById(req.params.id)
+            .then(options => {
+                if(!options){
+                    return res.status(400).json({msg: 'No options found'});
+                }
+                res.json(options);
+
+            })
+            .catch(err => res.status(404).json({ options: 'No options found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route DELETE /myAlfred/admin/options/all/:id
+// Delete one option
+// @Access private
+router.delete('/options/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    Options.findById(req.params.id)
+        .then(options => {
+            if(!admin) {
+                return res.status(401).json({ notauthorized: 'User not authorized' });
+
+
+            }
+            options.remove().then(() => res.json({ success: true }));
+        })
+        .catch(err => res.status(404).json({ optionsnotfound: 'No options found' }));
+});
+
+// @Route PUT /myAlfred/admin/options/all/:id
+// Update an option
+// @Access private
+router.put('/options/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+        Options.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label, description: req.body.description, billing: req.body.billing}}, {new: true})
+            .then(options => {
+                res.json(options);
+            })
+            .catch(err => res.status(404).json({ optionsnotfound: 'No options found' }));
     } else {
         res.status(403).json({msg: 'Access denied'});
     }
