@@ -968,7 +968,7 @@ class Form extends React.Component {
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card}>
+                            {/*<Card className={classes.card}>*/}
                                 <div className={classes.banner}>
                                     <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'white'}}>Etape 1 - Configuration de vos services</h3>
                                     <div>
@@ -1357,7 +1357,7 @@ class Form extends React.Component {
                                     )
                                 }} />
                                 {/*</div>*/}
-                            </Card>
+                            {/*</Card>*/}
                         </Grid>
                         <Grid container className={classes.cardContainer}>
                             <hr style={{margin: '1rem 0'}}></hr>
