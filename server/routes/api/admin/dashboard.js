@@ -1139,7 +1139,7 @@ router.post('/category/all', uploadCat.single('picture'),passport.authenticate('
                         label: req.body.label,
                         picture: req.file.path,
                         description: req.body.description,
-                        tags: req.body.tags,
+                        tags: JSON.parse(req.body.tags),
                     });
 
                     newCategory.save().then(category => res.json(category)).catch(err => console.log(err));

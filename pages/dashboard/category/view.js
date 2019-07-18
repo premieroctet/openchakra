@@ -17,6 +17,7 @@ import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
 import Chip from "@material-ui/core/Chip";
 import MenuItem from "@material-ui/core/MenuItem";
+import Select2 from 'react-select';
 
 const {config} = require('../../../config/config');
 const url = config.apiUrl;
@@ -72,10 +73,12 @@ class view extends React.Component {
             description: '',
             all_tags: [],
             current_tags: [],
+            selectedTags: null,
 
         };
 
         this.handleClick = this.handleClick.bind(this);
+        this.handleChangeTags = this.handleChangeTags.bind(this);
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -90,6 +93,10 @@ class view extends React.Component {
             .then(response => {
                let category = response.data;
                 this.setState({category: category,current_tags: category.tags,});
+                this.setState({selectedTags :this.state.current_tags.map(b => ({
+                        label: b.label,
+                        value: b._id
+                    })) });
 
             })
             .catch(err => {
@@ -117,15 +124,23 @@ class view extends React.Component {
         this.setState({category:state});
     };
 
-    handleChange = e => {
-        this.setState({tags: e.target.value})
-
+    handleChangeTags = selectedTags => {
+        this.setState({ selectedTags });
 
     };
 
+
     onSubmit = e => {
         e.preventDefault();
-        const tags = this.state.tags;
+        let arrayTags = [];
+        if(this.state.selectedTags != null){
+            this.state.selectedTags.forEach(w => {
+
+                arrayTags.push(w.value);
+
+            });
+        }
+        const tags = arrayTags;
         const { label, description } = this.state.category;
         const id = this.props.category_id;
         axios.put(`${url}myAlfred/api/admin/category/all/${id}`,{label,tags,description})
@@ -164,6 +179,10 @@ class view extends React.Component {
         const {category} = this.state;
         const {all_tags} = this.state;
         const {current_tags} = this.state;
+        const optionsTags = all_tags.map(tag => ({
+            label: tag.label,
+            value: tag._id
+        }));
 
 
         return (
@@ -187,36 +206,21 @@ class view extends React.Component {
 
                                     />
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
                                     <Typography style={{ fontSize: 20 }}>Tags</Typography>
-                                    {current_tags.map(e => (
-                                        <p>{e.label}</p>
-                                    ))}
-                                    <FormControl className={classes.formControl}>
-                                        <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
-                                        <Select
-                                            multiple
-                                            value={this.state.tags}
-                                            onChange={this.handleChange}
-                                            input={<Input id="select-multiple-chip" />}
-                                            renderValue={selected => (
-                                                <div className={classes.chips}>
-                                                    {selected.map(value => (
-                                                        <Chip key={value} label={value} className={classes.chip} />
-                                                    ))}
-                                                </div>
-                                            )}
-                                            MenuProps={MenuProps}
-                                        >
-                                            {all_tags.map(name => (
-                                                <MenuItem key={name._id} value={name._id} >
-                                                    {name.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
+                                        <Select2
+                                            value={this.state.selectedTags}
+                                            onChange={this.handleChangeTags}
+                                            options={optionsTags}
+                                            isMulti
+                                            isSearchable
+                                            closeMenuOnSelect={false}
+
+                                        />
                                     </FormControl>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{marginTop: 20}}>
                                     <Typography style={{ fontSize: 20 }}>Description</Typography>
                                     <TextField
                                         id="standard-with-placeholder"
