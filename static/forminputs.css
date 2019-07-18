@@ -1,0 +1,14 @@
+.forminputs:hover{
+cursor: pointer!important;
+background: rgba(47, 189, 211, 0.1);
+}
+
+.forminputs{
+    padding: 10px 5px 10px 5px;
+    color: #2FBCD3;
+    border-radius: 3px;
+    font-size: 13.5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}

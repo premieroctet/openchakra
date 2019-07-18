@@ -32,6 +32,8 @@ import MultipleSelect from './MultipleSelect';
 import Calendar from '../Calendar/calendar';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CityFinder from './CityFinder';
+import '../../static/forminputs.css';
+import '../../static/stylesfonts.css';
 import Siret from './Siret';
 
 const { config } = require('../../config/config');
@@ -52,7 +54,6 @@ const styles = theme => ({
         //maxHeight: 700,
         overflow: 'auto',
         width: 800,
-        fontFamily: 'helveticaNeue',
 
     },
     cardHeader: {
@@ -186,7 +187,6 @@ const styles = theme => ({
     text1: {
         marginTop: 5,
         marginBottom: 5,
-        fontFamily: 'helveticaNeue',
         letterSpacing: 1,
         fontWeight: '100',
     },
@@ -196,7 +196,7 @@ const styles = theme => ({
     },
     newContainer: {
         padding: 20,
-    }
+    },
 
 });
 
@@ -705,6 +705,7 @@ class Form extends React.Component {
 
         return (
             <div className="App" style={{marginTop: 100}}>
+                <div className="fonts">
 
                 <Wizard
                     initialValues={{
@@ -751,7 +752,7 @@ class Form extends React.Component {
                         <Grid container className={classes.cardContainer}>
                             <Card className={classes.card} style={{minHeight: '400px !important'}}>
                                 <div className={classes.banner}>
-                                    <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'white'}}>Etape 1 - Choisissez vos catégories et services</h3>
+                                    <h3 style={{ marginLeft: 10, color: 'white'}}>Etape 1 - Choisissez vos catégories et services</h3>
                                     <div>
                                         <Bar>
                                             <Fill4 />
@@ -941,7 +942,7 @@ class Form extends React.Component {
                         <Grid container className={classes.cardContainer}>
                             <Card className={classes.card}>
                                 <div className={classes.banner}>
-                                    <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'white'}}>Etape 1 - Configuration de vos services</h3>
+                                    <h3 style={{marginLeft: 10, color: 'white'}}>Etape 1 - Configuration de vos services</h3>
                                     <div>
                                         <Bar style={{width: '40%!important'}}>
                                             <Fill />
@@ -1187,9 +1188,9 @@ class Form extends React.Component {
                                                                         <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
                                                                     </div>
                                                                     <Grid item xs={12}>
-                                                                        <label>
-                                                                            Diplôme
-                                                                            <input id="file" name="diploma" type="file" onChange={(event) => {
+                                                                        <label style={{display: 'inline-block', marginTop: 5}} className="forminputs">
+                                                                            <span className="fonts">Diplôme</span> {/* :<img class="diploma" style={{width: 22, height: 22, marginBottom: -7}} src="../static/diploma.svg" alt="diploma" />*/}
+                                                                            <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden', position: 'absolute', zIndex: -1}} name="diploma" type="file" onChange={(event) => {
                                                                                 arrayHelpers.form.setFieldValue(`submission.${index}.diploma`, event.currentTarget.files[0]);
                                                                             }} className="form-control"
                                                                             />
@@ -1197,9 +1198,9 @@ class Form extends React.Component {
                                                                         <Thumb file={arrayHelpers.form.values.submission[index].diploma} />
                                                                     </Grid>
                                                                     <Grid item xs={12}>
-                                                                        <label>
-                                                                            Certification
-                                                                            <input id="file" name="certification" type="file" onChange={(event) => {
+                                                                        <label style={{display: 'inline-block', marginTop: 5}} className="forminputs">
+                                                                            <span className="fonts">Certification </span> {/*: <img class="certification" style={{width: 22, height: 22, marginBottom: -7}} src="../static/diploma.svg" alt="certification" />*/}
+                                                                            <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden', position: 'absolute', zIndex: -1}} name="certification" type="file" onChange={(event) => {
                                                                                 arrayHelpers.form.setFieldValue(`submission.${index}.certification`, event.currentTarget.files[0]);
                                                                             }} className="form-control"
                                                                             />
@@ -1304,7 +1305,6 @@ class Form extends React.Component {
                                 <div className={classes.banner}>
                                     <h3
                                         style={{
-                                            fontFamily: "helveticaNeue",
                                             marginLeft: 10,
                                             color: "white"
                                         }}
@@ -1704,7 +1704,6 @@ class Form extends React.Component {
                                             <div className={classes.banner}>
                                                 <h3
                                                     style={{
-                                                        fontFamily: "helveticaNeue",
                                                         marginLeft: 10,
                                                         color: "white"
                                                     }}
@@ -2183,6 +2182,7 @@ class Form extends React.Component {
                         </Field>
                     </Wizard.Page>
                 </Wizard>
+                </div>
             </div>
         )
     }
