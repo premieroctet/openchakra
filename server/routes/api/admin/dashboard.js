@@ -1656,13 +1656,13 @@ router.post('/prestation/all',uploadPrestation.single('picture'),passport.authen
                         service: mongoose.Types.ObjectId(req.body.service),
                         billing: mongoose.Types.ObjectId(req.body.billing),
                         filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
-                        search_filter: req.body.search_filter,
+                        search_filter: JSON.parse(req.body.search_filter),
                         category: mongoose.Types.ObjectId(req.body.category),
                         calculating: mongoose.Types.ObjectId(req.body.calculating),
                         job: mongoose.Types.ObjectId(req.body.job),
                         description: req.body.description,
                         picture: req.file.path,
-                        tags: req.body.tags
+                        tags: JSON.parse(req.body.tags)
                     });
                     newPrestation.save().then(prestation => res.json(prestation)).catch(err => console.log(err))
 

@@ -25,14 +25,12 @@ const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '170vh',
         justifyContent: 'top',
         flexDirection: 'column',
 
     },
     card: {
         padding: '1.5rem 3rem',
-        width: 400,
         marginTop: '100px',
     },
     cardContant: {
