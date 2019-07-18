@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Select2 from 'react-select';
 
 
 
@@ -80,12 +81,16 @@ class view extends React.Component {
             tags: [],
             equipments: [],
             majoration: '',
-            isChecked: false
+            isChecked: false,
+            selectedOption: null,
+            selectedTags: null,
 
         };
 
         this.handleClick = this.handleClick.bind(this);
         this.handleChecked = this.handleChecked.bind(this);
+        this.handleChangeSelect = this.handleChangeSelect.bind(this);
+        this.handleChangeTags = this.handleChangeTags.bind(this);
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -99,11 +104,25 @@ class view extends React.Component {
         axios.get(`${url}myAlfred/api/admin/service/all/${id}`)
             .then(response => {
                 let service = response.data;
-                this.setState({service: service, current_tags: service.tags, current_equipments: service.equipments, current_category: service.category});
+                this.setState({service: service, current_tags: service.tags, current_equipments: service.equipments, current_category: service.category,
+                category: service.category._id});
 
-                if(typeof service.majoration != "undefined") {
+                if(service.majoration != null) {
                     this.setState({isChecked: true})
                 }
+
+                this.setState({selectedOption :this.state.current_equipments.map(a => ({
+                        label: a.label,
+                        value: a._id
+                    })) });
+
+                this.setState({selectedTags :this.state.current_tags.map(b => ({
+                        label: b.label,
+                        value: b._id
+                    })) });
+
+
+
 
             })
             .catch(err => {
@@ -162,14 +181,42 @@ class view extends React.Component {
 
     };
 
+    handleChangeSelect = selectedOption => {
+        this.setState({ selectedOption });
+
+    };
+
+    handleChangeTags = selectedTags => {
+        this.setState({ selectedTags });
+
+    };
+
     handleChecked () {
         this.setState({isChecked: !this.state.isChecked});
     }
     onSubmit = e => {
         e.preventDefault();
-        const tags = this.state.tags;
+        let arrayEquipments = [];
+        let arrayTags = [];
+        if(this.state.selectedOption != null){
+            this.state.selectedOption.forEach(c => {
+
+                arrayEquipments.push(c.value);
+
+            });
+        }
+
+        if(this.state.selectedTags != null){
+            this.state.selectedTags.forEach(w => {
+
+                arrayTags.push(w.value);
+
+            });
+        }
+
+        const tags = arrayTags;
         const category = this.state.category;
-        const equipments = this.state.equipments;
+        const equipments = arrayEquipments;
         const { label,description,majoration } = this.state.service;
         const id = this.props.service_id;
         axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,equipments,majoration})
@@ -226,6 +273,18 @@ class view extends React.Component {
 
         ));
 
+        const options = all_equipments.map(equipment => ({
+            label: equipment.label,
+            value: equipment._id
+        }));
+
+        const optionsTags = all_tags.map(tag => ({
+            label: tag.label,
+            value: tag._id
+        }));
+
+
+
 
 
         return (
@@ -249,7 +308,7 @@ class view extends React.Component {
 
                                     />
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
                                     <Typography style={{ fontSize: 20 }}>{current_category.label}</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
@@ -271,65 +330,37 @@ class view extends React.Component {
                                     </FormControl>
 
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
                                     <Typography style={{ fontSize: 20 }}>Tags</Typography>
-                                    {current_tags.map(e => (
-                                        <p>{e.label}</p>
-                                    ))}
                                         <FormControl className={classes.formControl} style={{width: '100%'}}>
                                             <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
-                                            <Select
-                                                multiple
-                                                value={this.state.tags}
-                                                onChange={this.handleChange}
-                                                input={<Input id="select-multiple-chip" />}
-                                                renderValue={selected => (
-                                                    <div className={classes.chips}>
-                                                        {selected.map(value => (
-                                                            <Chip key={value} label={value} className={classes.chip} />
-                                                        ))}
-                                                    </div>
-                                                )}
-                                                MenuProps={MenuProps}
-                                            >
-                                                {all_tags.map(name => (
-                                                    <MenuItem key={name._id} value={name._id} >
-                                                        {name.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
+                                            <Select2
+                                                value={this.state.selectedTags}
+                                                onChange={this.handleChangeTags}
+                                                options={optionsTags}
+                                                isMulti
+                                                isSearchable
+                                                closeMenuOnSelect={false}
+
+                                            />
                                         </FormControl>
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
                                     <Typography style={{ fontSize: 20 }}>Equipements</Typography>
-                                    {current_equipments.map(f => (
-                                        <p>{f.label}</p>
-                                    ))}
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel htmlFor="select-multiple-chip">Equipements</InputLabel>
-                                        <Select
-                                            multiple
-                                            value={this.state.equipments}
-                                            onChange={this.handleChange2}
-                                            input={<Input id="select-multiple-chip" />}
-                                            renderValue={selected => (
-                                                <div className={classes.chips}>
-                                                    {selected.map(value => (
-                                                        <Chip key={value} label={value} className={classes.chip} />
-                                                    ))}
-                                                </div>
-                                            )}
-                                            MenuProps={MenuProps}
-                                        >
-                                            {all_equipments.map(name => (
-                                                <MenuItem key={name._id} value={name._id} >
-                                                    {name.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
+                                        <Select2
+                                            value={this.state.selectedOption}
+                                            onChange={this.handleChangeSelect}
+                                            options={options}
+                                            isMulti
+                                            isSearchable
+                                            closeMenuOnSelect={false}
+
+                                        />
                                     </FormControl>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{marginTop: 20}}>
                                     <Typography style={{ fontSize: 20 }}>Description</Typography>
                                     <TextField
                                         id="standard-with-placeholder"
@@ -339,6 +370,8 @@ class view extends React.Component {
                                         name="description"
                                         value={service.description}
                                         onChange={this.onChange}
+                                        multiline
+                                        rows={4}
 
                                     />
                                 </Grid>

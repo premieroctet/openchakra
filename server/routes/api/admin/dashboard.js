@@ -1462,8 +1462,8 @@ router.post('/service/all', uploadService.single('picture'),passport.authenticat
                     const newService = new Service({
                         label: req.body.label,
                         category: mongoose.Types.ObjectId(req.body.category),
-                        equipments: req.body.equipments,
-                        tags: req.body.tags,
+                        equipments: JSON.parse(req.body.equipments),
+                        tags: JSON.parse(req.body.tags),
                         picture: req.file.path,
                         description: req.body.description,
                         majoration: req.body.majoration
