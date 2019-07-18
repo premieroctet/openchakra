@@ -36,7 +36,7 @@ module.exports = function validateSimpleRegisterInput(data) {
     }
 
     if(!Validator.isLength(data.password, {min: 8, max: 30})){
-        errors.password = 'Le mot de passe doit contenir 8 charactères minimum';
+        errors.password = 'Le mot de passe doit contenir 8 caractères minimum';
     }
 
     if(Validator.isEmpty(data.address)) {

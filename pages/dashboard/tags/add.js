@@ -41,6 +41,8 @@ class add extends React.Component {
         super(props);
         this.state = {
             label: '',
+            title: '',
+            description: '',
             errors: {},
 
         };
@@ -58,6 +60,8 @@ class add extends React.Component {
 
         const newBilling = {
             label: this.state.label,
+            title: this.state.title,
+            description: this.state.description
 
 
         };
@@ -109,6 +113,38 @@ class add extends React.Component {
                                         error={errors.label}
                                     />
                                     <em>{errors.label}</em>
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        label="Titre"
+                                        placeholder="Titre"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        name="title"
+                                        value={this.state.title}
+                                        onChange={this.onChange}
+
+                                    />
+
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        label="Description"
+                                        placeholder="Description"
+                                        margin="normal"
+                                        multiline
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        name="description"
+                                        value={this.state.description}
+                                        rows={4}
+                                        onChange={this.onChange}
+
+                                    />
+
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>

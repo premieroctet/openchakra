@@ -184,7 +184,7 @@ const styles = theme => ({
     padding:15,
     borderRadius:10,
     border:'0px solid transparent',
-    marginBottom: '-60px',
+
   },
 });
 
@@ -196,8 +196,8 @@ const Homeheader = (props) => {
       <div className={classes.headerimg}></div>
       <div className={classes.headerhomevid}>
         <video id="background-video" loop autoPlay muted playsinline style={{width: '100%'}}>
-          <source src="../../../static/assets/img/bg2.mp4" type="video/mp4" />
-          <source src="../../../static/assets/img/bg2.mp4" type="video/ogg" />
+          <source src="../../../static/assets/img/videoLight.mp4" type="video/mp4" />
+          <source src="../../../static/assets/img/videoLight.mp4" type="video/ogg" />
           Your browser does not support the video tag.
         </video>
       </div>

@@ -70,7 +70,7 @@ class addAddress extends React.Component {
         e.preventDefault();
 
         const newAddress = {
-            address: this.state.address,
+            address: this.state.address.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
             city: this.state.city,
             zip_code: this.state.zip_code,
             country: this.state.country

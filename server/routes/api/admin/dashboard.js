@@ -19,6 +19,7 @@ const Equipment = require('../../../models/Equipment');
 const Service = require('../../../models/Service');
 const Prestation = require('../../../models/Prestation');
 const ShopBanner = require('../../../models/ShopBanner');
+const Options = require('../../../models/Options');
 const validatePrestationInput = require('../../../validation/prestation');
 const validateRegisterAdminInput = require('../../../validation/registerAdmin');
 const validateCategoryInput = require('../../../validation/category');
@@ -1000,7 +1001,9 @@ router.post('/tags/all', passport.authenticate('jwt',{session: false}),(req, res
                     return res.status(400).json(errors);
                 } else {
                     const newTags = new Tags({
-                        label: req.body.label
+                        label: req.body.label,
+                        title: req.body.title,
+                        description: req.body.description
                     });
 
                     newTags.save().then(tags => res.json(tags)).catch(err => console.log(err));
@@ -1089,7 +1092,7 @@ router.put('/tags/all/:id',passport.authenticate('jwt',{session: false}),(req, r
     const admin = decode.is_admin;
 
     if(admin) {
-        Tags.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label}}, {new: true})
+        Tags.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label, title: req.body.title, description: req.body.description}}, {new: true})
             .then(tags => {
                 res.json(tags);
             })
@@ -1136,7 +1139,7 @@ router.post('/category/all', uploadCat.single('picture'),passport.authenticate('
                         label: req.body.label,
                         picture: req.file.path,
                         description: req.body.description,
-                        tags: req.body.tags,
+                        tags: JSON.parse(req.body.tags),
                     });
 
                     newCategory.save().then(category => res.json(category)).catch(err => console.log(err));
@@ -1459,8 +1462,8 @@ router.post('/service/all', uploadService.single('picture'),passport.authenticat
                     const newService = new Service({
                         label: req.body.label,
                         category: mongoose.Types.ObjectId(req.body.category),
-                        equipments: req.body.equipments,
-                        tags: req.body.tags,
+                        equipments: JSON.parse(req.body.equipments),
+                        tags: JSON.parse(req.body.tags),
                         picture: req.file.path,
                         description: req.body.description,
                         majoration: req.body.majoration
@@ -1653,13 +1656,13 @@ router.post('/prestation/all',uploadPrestation.single('picture'),passport.authen
                         service: mongoose.Types.ObjectId(req.body.service),
                         billing: mongoose.Types.ObjectId(req.body.billing),
                         filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
-                        search_filter: req.body.search_filter,
+                        search_filter: JSON.parse(req.body.search_filter),
                         category: mongoose.Types.ObjectId(req.body.category),
                         calculating: mongoose.Types.ObjectId(req.body.calculating),
                         job: mongoose.Types.ObjectId(req.body.job),
                         description: req.body.description,
                         picture: req.file.path,
-                        tags: req.body.tags
+                        tags: JSON.parse(req.body.tags)
                     });
                     newPrestation.save().then(prestation => res.json(prestation)).catch(err => console.log(err))
 
@@ -1954,6 +1957,124 @@ router.put('/shopBanner/all/:id',passport.authenticate('jwt',{session: false}),(
                 res.json(banner);
             })
             .catch(err => res.status(404).json({ bannernotfound: 'No banner found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// OPTIONS
+
+// @Route POST /myAlfred/admin/options/all
+// Add options
+// @Access private
+router.post('/options/all', passport.authenticate('jwt',{session: false}),(req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+
+        Options.findOne({label: req.body.label})
+            .then(options => {
+                if(options){
+                    return res.status(400).json({msg: 'Cette option existe déjà'});
+                } else {
+                    const newOptions = new Options({
+                        label: req.body.label,
+                        description: req.body.description,
+                        billing: req.body.billing
+                    });
+
+                    newOptions.save().then(options => res.json(options)).catch(err => console.log(err));
+                }
+            })
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+
+});
+
+// @Route GET /myAlfred/admin/options/all
+// View all options
+// @Access private
+router.get('/options/all', passport.authenticate('jwt',{session: false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        Options.find()
+            .then(options => {
+                if(!options){
+                    return res.status(400).json({msg: 'No options found'});
+                }
+                res.json(options);
+
+            })
+            .catch(err => res.status(404).json({ options: 'No options found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route GET /myAlfred/admin/options/all/:id
+// View one option
+// @Access private
+router.get('/options/all/:id', passport.authenticate('jwt',{session: false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    if(admin) {
+        Options.findById(req.params.id)
+            .then(options => {
+                if(!options){
+                    return res.status(400).json({msg: 'No options found'});
+                }
+                res.json(options);
+
+            })
+            .catch(err => res.status(404).json({ options: 'No options found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route DELETE /myAlfred/admin/options/all/:id
+// Delete one option
+// @Access private
+router.delete('/options/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+    Options.findById(req.params.id)
+        .then(options => {
+            if(!admin) {
+                return res.status(401).json({ notauthorized: 'User not authorized' });
+
+
+            }
+            options.remove().then(() => res.json({ success: true }));
+        })
+        .catch(err => res.status(404).json({ optionsnotfound: 'No options found' }));
+});
+
+// @Route PUT /myAlfred/admin/options/all/:id
+// Update an option
+// @Access private
+router.put('/options/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+        Options.findOneAndUpdate({_id: req.params.id},{$set: {label: req.body.label, description: req.body.description, billing: req.body.billing}}, {new: true})
+            .then(options => {
+                res.json(options);
+            })
+            .catch(err => res.status(404).json({ optionsnotfound: 'No options found' }));
     } else {
         res.status(403).json({msg: 'Access denied'});
     }

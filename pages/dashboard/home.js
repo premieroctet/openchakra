@@ -47,9 +47,16 @@ class home extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        const token = localStorage.getItem('token').split(' ')[1];
-        const decode = jwt.decode(token);
-        this.setState({is_admin: decode.is_admin});
+        const auth = localStorage.getItem('token');
+        if(auth === null) {
+            Router.push('/login')
+        } else {
+
+
+            const token = localStorage.getItem('token').split(' ')[1];
+            const decode = jwt.decode(token);
+            this.setState({is_admin: decode.is_admin});
+        }
     }
 
 
@@ -72,6 +79,7 @@ class home extends React.Component {
                         <Link href="/dashboard/shopBanner/all"><a>Photos bannière shop</a></Link><br/>
                         <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                         <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
+                        <Link href="/dashboard/options/all"><a>Options</a></Link><br/>
                         <Link href="/dashboard/users/all"><a>Utilisateurs</a></Link><br/>
                         <Link href="/dashboard/alfred/all"><a>Alfred</a></Link><br/>
                         <Link href="/dashboard/admin/all"><a>Administrateurs</a></Link><br/>

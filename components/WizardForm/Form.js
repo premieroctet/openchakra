@@ -24,6 +24,8 @@ import * as Yup from 'yup';
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import CircleCheckedFilled from '@material-ui/icons/CheckCircle';
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 
 import { Debug } from './Debug';
 import MultipleSelect from './MultipleSelect';
@@ -32,6 +34,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CityFinder from './CityFinder';
 import '../../static/forminputs.css';
 import '../../static/stylesfonts.css';
+import Siret from './Siret';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -188,7 +191,7 @@ const styles = theme => ({
         fontWeight: '100',
     },
     banner: {
-        marginBottom: 25,
+
         backgroundColor: '#2FBCD3',
     },
     newContainer: {
@@ -300,6 +303,7 @@ class Wizard extends React.Component {
                         alert("Service ajouté");
 
                             const booking_request = values.createShop.booking_request;
+                            const no_booking_request = values.createShop.no_booking_request;
                             const my_alfred_conditions = values.createShop.my_alfred_conditions;
                             const profile_picture = values.createShop.profile_picture_user;
                             const identity_card = values.createShop.identity_card;
@@ -331,7 +335,7 @@ class Wizard extends React.Component {
 
                                     });
 
-                                    axios.post(url+'myAlfred/api/shop/add',{booking_request,my_alfred_conditions,profile_picture,identity_card
+                                    axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
                                     , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
                                     self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
                                         .then(result => {
@@ -593,6 +597,7 @@ class Form extends React.Component {
             isEngaged: false,
             isCertified: false,
             booking_request: false,
+            no_booking_request: false,
             my_alfred_conditions: false,
             profile_picture_user: false,
             identity_card: false,
@@ -709,6 +714,7 @@ class Form extends React.Component {
                         submission: [],
                         createShop: {
                             booking_request: false,
+                            no_booking_request: false,
                             my_alfred_conditions: false,
                             profile_picture_user: false,
                             identity_card: false,
@@ -1303,7 +1309,7 @@ class Form extends React.Component {
                                             color: "white"
                                         }}
                                     >
-                                        Etape 2
+                                        Etape 2 - Indiquez vos disponibilités et conditions
                                     </h3>
 
                                     <div>
@@ -1313,14 +1319,13 @@ class Form extends React.Component {
                                     </div>
                                 </div>
                                 <div className={classes.newContainer}>
-                                    <Typography>Paramètres de réservation</Typography>
                                     <Grid container>
-                                        <div className={classes.title1}>
-                                            <h4 style={{ color: "white" }} className={classes.text1}>
-                                                Comment les utilisateurs peuvent réserver
-                                            </h4>
-                                        </div>
-                                        <Grid item>
+
+                                            <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                Comment les utilisateurs peuvent réserver ?
+                                            </h6>
+
+                                        <Grid item style={{marginLeft: 20}}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1334,27 +1339,57 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.booking_request}
                                                                 color="primary"
                                                                 name={"booking_request"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+
                                                             />
                                                         }
-                                                        label="Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H"
+                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helveticaNeue'}}>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.</Typography>}
+
+
+                                                    />
+                                                )
+                                            }} />
+                                        </Grid>
+                                        <Grid item style={{marginLeft: 20, marginTop: 15}}>
+                                            <Field render={({form}) => {
+                                                return (
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={form.values.createShop.no_booking_request}
+                                                                onChange={() => {
+                                                                    form.values.createShop.no_booking_request = !form.values.createShop.no_booking_request;
+                                                                    form.setFieldValue('createShop.no_booking_request', form.values.createShop.no_booking_request);
+                                                                }}
+                                                                value={form.values.createShop.no_booking_request}
+                                                                color="primary"
+                                                                name={"no_booking_request"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+
+                                                            />
+                                                        }
+                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helveticaNeue'}}>Les utilisateurs peuvent réserver mes services directement sans demande de réservation.</Typography>}
+
                                                     />
                                                 )
                                             }} />
                                         </Grid>
                                     </Grid>
+                                    <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                     <Grid container>
-                                        <div className={classes.title1}>
-                                            <h4 style={{ color: "white" }} className={classes.text1}>
-                                                Conditions de réservation
-                                            </h4>
-                                        </div>
-                                        <Typography>
+                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                            Vos conditions de réservations
+                                        </h6>
+
+                                        <Typography style={{marginBottom: 20,fontFamily: 'helveticaNeue'}}>
                                             Il se peut que vous ayez moins de réservation si vous
                                             ajoutez des conditions. Les personnes qui ne répondent pas
                                             à vos critères peuvent quand même envoyer une demande
                                         </Typography>
 
-                                        <Grid item style={{ marginRight: 62 }}>
+                                        <Grid item style={{ marginLeft: 20 }}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1368,32 +1403,25 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.my_alfred_conditions}
                                                                 color="primary"
                                                                 name={"my_alfred_conditions"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -39}}
                                                             />
                                                         }
-                                                        label="Conditions My-Alfred"
-                                                        style={{ marginRight: 5 }}
+                                                        label={<React.Fragment>
+                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Conditions My-Alfred</p>
+                                                    <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                        Numéro de téléphone confirmé, adresse e-mail, informations de paiements et acceptation
+                                                        du règlement intérieur.
+                                                </p>
+                                            </React.Fragment>}
+
                                                     />
                                                 )
                                             }} />
 
-                                            <Tooltip
-                                                title="Numéro de téléphone confirmé, adresse e-mail, informations de paiements et acceptation
-                                du règlement intérieur."
-                                            >
-                                                <button
-                                                    disabled
-                                                    style={{
-                                                        border: 0,
-                                                        borderRadius: 20,
-                                                        color: "white",
-                                                        backgroundColor: "#00abed"
-                                                    }}
-                                                >
-                                                    ?
-                                                </button>
-                                            </Tooltip>
                                         </Grid>
-                                        <Grid item>
+                                        <Grid item style={{ marginLeft: 20 }} >
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1407,28 +1435,24 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.profile_picture_user}
                                                                 color="primary"
                                                                 name={"profile_picture_user"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -39}}
                                                             />
                                                         }
-                                                        label="+ Photo de profil"
-                                                        style={{ marginRight: 5 }}
+                                                        label={<React.Fragment>
+                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Photo de profil</p>
+                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                            Si vous activez cette condition, vous ne pourrez voir les photos de profil des
+                                                            voyageurs qu'une fois la réservation confirmée. En savoir plus
+                                                        </p>
+                                                    </React.Fragment>}
+
                                                     />
                                                 )
                                             }} />
-                                            <Tooltip title="Si vous activez cette condition, vous ne pourrez voir les photos de profil des voyageurs qu'une fois la réservation confirmée.">
-                                                <button
-                                                    disabled
-                                                    style={{
-                                                        border: 0,
-                                                        borderRadius: 20,
-                                                        color: "white",
-                                                        backgroundColor: "#00abed"
-                                                    }}
-                                                >
-                                                    ?
-                                                </button>
-                                            </Tooltip>
                                         </Grid>
-                                        <Grid item style={{ marginRight: 30 }}>
+                                        <Grid item style={{ marginLeft: 20 }}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1442,28 +1466,23 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.identity_card}
                                                                 color="primary"
                                                                 name={"identity_card"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -11}}
                                                             />
                                                         }
-                                                        label="+ Carte d'identité officielle"
-                                                        style={{ marginRight: 5 }}
+                                                        label={<React.Fragment>
+                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Pièce d'identité officielle</p>
+                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                            Ces voyageurs ont vérifié leur identité.
+                                                        </p>
+                                                    </React.Fragment>}
+
                                                     />
                                                 )
                                             }} />
-                                            <Tooltip title="Ces voyageurs ont vérifié leur identité.">
-                                                <button
-                                                    disabled
-                                                    style={{
-                                                        border: 0,
-                                                        borderRadius: 20,
-                                                        color: "white",
-                                                        backgroundColor: "#00abed"
-                                                    }}
-                                                >
-                                                    ?
-                                                </button>
-                                            </Tooltip>
                                         </Grid>
-                                        <Grid item>
+                                        <Grid item style={{ marginLeft: 20 }}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1477,27 +1496,31 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.recommandations}
                                                                 color="primary"
                                                                 name={"recommandations"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -39}}
                                                             />
                                                         }
-                                                        label="+ Recommandations d'autres Alfred"
-                                                        style={{ marginRight: 5 }}
+                                                        label={<React.Fragment>
+                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Recommandations d'autres Alfred</p>
+                                                            <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                                Ces utilisateurs ont déjà utilisés des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commen- taires négatifs.
+                                                            </p>
+                                                        </React.Fragment>}
+
                                                     />
                                                 )
                                             }} />
-                                            <Tooltip title="Ces utilisateurs ont déjà utilisés des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commen- taires négatifs.">
-                                                <button
-                                                    disabled
-                                                    style={{
-                                                        border: 0,
-                                                        borderRadius: 20,
-                                                        color: "white",
-                                                        backgroundColor: "#00abed"
-                                                    }}
-                                                >
-                                                    ?
-                                                </button>
-                                            </Tooltip>
                                         </Grid>
+
+                                    </Grid>
+                                    <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
+                                    <Grid container>
+                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                            Votre message de bienvenue validant votre
+                                            réservation
+                                        </h6>
+                                        <Typography>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation.</Typography>
                                         <Grid item style={{ marginTop: 15, width: "100%" }}>
                                             <Field name="createShop.welcome_message" render={({field, form}) => {
                                                 return (
@@ -1505,15 +1528,7 @@ class Form extends React.Component {
                                                         {...field}
                                                         id="outlined-multiline-static"
                                                         label={
-                                                            <React.Fragment>
-                                                                Votre message de bienvenue validant votre
-                                                                réservation
-                                                                <br />
-                                                                <em style={{ fontSize: 13 }}>
-                                                                    Les utilisateurs verront votre message lorsque
-                                                                    vous confirmerez leur réservation.
-                                                                </em>
-                                                            </React.Fragment>
+                                                            'Votre message'
                                                         }
                                                         multiline
                                                         rows="6"
@@ -1527,19 +1542,20 @@ class Form extends React.Component {
                                             <ErrorMessage name={'createShop.welcome_message'} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                         </Grid>
                                     </Grid>
+                                    <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                     <Grid container>
-                                        <div className={classes.title1}>
-                                            <h4 style={{ color: "white" }} className={classes.text1}>
-                                                Conditions d'annulation
-                                            </h4>
-                                        </div>
-                                        <Typography>
+
+                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                           Vos conditions d'annulation
+                                        </h6>
+
+                                        <Typography style={{fontFamily: 'helveticaNeue'}}>
                                             Choisissez vos conditions en cas d'annulation de la part
                                             des utilisateurs.
                                         </Typography>
                                         <Grid
                                             item
-                                            style={{ width: "100%", marginTop: 10, marginBottom: 10 }}
+                                            style={{ width: "100%", marginTop: 10, marginBottom: 10, marginLeft: 20 }}
                                         >
                                             <Field render={({form}) => {
                                                 return (
@@ -1559,23 +1575,26 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.flexible_cancel}
                                                                 color="primary"
                                                                 name={"flexible_cancel"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -20}}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                Flexibles
-                                                                <br />
-                                                                <em>
+                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Flexibles</p>
+
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                                     Remboursement intégral jusqu'à 1 jour avant la
                                                                     prestation
-                                                                </em>
+                                                                </p>
                                                             </React.Fragment>
                                                         }
                                                     />
                                                 )
                                             }} />
                                         </Grid>
-                                        <Grid item style={{ width: "100%" }}>
+                                        <Grid item style={{ width: "100%", marginLeft: 20 }}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1594,23 +1613,25 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.moderate_cancel}
                                                                 color="primary"
                                                                 name={"moderate_cancel"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -20}}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                Modérées
-                                                                <br />
-                                                                <em>
+                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Modérées</p>
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                                     Remboursement intégral jusqu'à 5 jours avant la
                                                                     prestation
-                                                                </em>
+                                                                </p>
                                                             </React.Fragment>
                                                         }
                                                     />
                                                 )
                                             }} />
                                         </Grid>
-                                        <Grid item>
+                                        <Grid item style={{marginLeft: 20}}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1629,13 +1650,15 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.strict_cancel}
                                                                 color="primary"
                                                                 name={"strict_cancel"}
-                                                                style={{ marginTop: -72 }}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{ marginTop: -100 }}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                <p style={{ marginBottom: 0 }}>Strictes</p>
-                                                                <em>
+                                                                <p style={{ marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue' }}>Strictes</p>
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                                     Remboursement intégral pour les annulations
                                                                     effectuées dans les 48 heures suivant la
                                                                     réservation, si la date de ma prestation
@@ -1645,7 +1668,7 @@ class Form extends React.Component {
                                                                     Aucun remboursement pour les annulations
                                                                     effectuées dans les 7 jours précédant la date de
                                                                     la prestation.
-                                                                </em>
+                                                                </p>
                                                             </React.Fragment>
                                                         }
                                                     />
@@ -2040,75 +2063,11 @@ class Form extends React.Component {
                                                     )}
                                                 </Grid>
 
-                                                {isProfessional ? (
-                                                    <Grid container>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.siret" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Siret"
-                                                                        placeholder="Siret"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.siret`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.creationDate" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="date"
-                                                                        label="Date de création"
-                                                                        type="date"
-                                                                        variant="filled"
-                                                                        InputLabelProps={{
-                                                                            shrink: true
-                                                                        }}
-                                                                        style={{ marginTop: 14.5 }}
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.creationDate`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.denomination" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Dénomination"
-                                                                        placeholder="Dénomination"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.denomination`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.nafape" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Code NAF/APE"
-                                                                        placeholder="Code NAF/APE"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.nafape`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                    </Grid>
+                                                {isProfessional ? (<Field render={({form}) => {
+                                                    return (
+                                                    <Siret formikCtx={form}/>
+                                                    )}}/>
+
                                                 ) : (
                                                     ""
                                                 )}

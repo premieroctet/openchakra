@@ -6,6 +6,10 @@ const ShopSchema = new Schema({
         type: Boolean,
         default: false
     },
+    no_booking_request: {
+      type: Boolean,
+      default: false
+    },
     my_alfred_conditions: {
         type: Boolean,
         default: false
@@ -62,7 +66,7 @@ const ShopSchema = new Schema({
             type: String
         },
         creation_date: {
-            type: Date
+            type: String
         },
         siret: {
             type: String

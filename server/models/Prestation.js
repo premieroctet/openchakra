@@ -8,7 +8,6 @@ const PrestationSchema = new Schema({
     },
     price: {
         type: String,
-        required: true
     },
     service: {
         type: Schema.Types.ObjectId,

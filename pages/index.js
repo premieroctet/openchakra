@@ -2,6 +2,9 @@ import React from "react";
 
 import { withStyles } from '@material-ui/core/styles';
 import Router from "next/router";
+import Link from 'next/link';
+import setAuthToken from "../utils/setAuthToken";
+const jwt = require('jsonwebtoken');
 const styles = theme => ({
     view: {
         position: 'absolute',
@@ -73,7 +76,9 @@ class index extends React.Component {
         super(props);
         this.state = {
             isTop: true,
-            navCollapsed: true
+            navCollapsed: true,
+            logged: false,
+            alfred: false,
         };
         this.onScroll = this.onScroll.bind(this);
         this._onToggleNav = this._onToggleNav.bind(this);
@@ -87,7 +92,23 @@ class index extends React.Component {
                 this.onScroll(isTop);
             }
         });
+        const token = localStorage.getItem('token');
+        if (token) {
+            this.setState({logged:true});
+            const token2 = localStorage.getItem('token').split(' ')[1];
+            const decode = jwt.decode(token2);
+            this.setState({alfred: decode.is_alfred});
+        }
+
     }
+
+    logout2() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('path');
+        // Remove auth header for future requests
+        setAuthToken(false);
+        window.location.reload();
+    };
 
     onScroll(isTop) {
         this.setState({ isTop });
@@ -101,7 +122,16 @@ class index extends React.Component {
     render() {
         const {classes} = this.props;
         const {navCollapsed} = this.state;
+        const logged = this.state.logged;
+        const alfred = this.state.alfred;
+        const logout = <li className="nav-item">
 
+                <a className="nav-link   rounded"
+                   style={{backgroundColor: '#2FBCD3', border: 'snow thin solid', marginRight: 10}} onClick={() => this.logout2()}>
+                    Déconnexion
+                </a>
+
+        </li>;
 
 
         return (
@@ -152,24 +182,32 @@ class index extends React.Component {
                             </ul>
                             {/* Right */}
                             <ul className="navbar-nav nav-flex-icons">
+                                {logged ? logout :<React.Fragment>
                                 <li className="nav-item">
-                                    <a href={"/signup"} className="nav-link   rounded" target="_blank"
+                                    <Link href={'/signup'}>
+                                    <a className="nav-link   rounded"
                                        style={{backgroundColor: 'transparent'}}>
                                         Inscription
                                     </a>
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <a href={"/login"} className="nav-link   rounded" target="_blank"
+                                    <Link href={'/login'}>
+                                    <a className="nav-link   rounded"
                                        style={{backgroundColor: 'transparent'}}>
                                         Connexion
                                     </a>
-                                </li>
+                                    </Link>
+                                </li></React.Fragment>}
+                                {alfred ? '':
                                 <li className="nav-item">
-                                    <a href={"/signup"} className="nav-link   rounded" target="_blank"
+                                    <Link href={'/becomeAlfredForm'}>
+                                    <a className="nav-link   rounded"
                                        style={{backgroundColor: '#2FBCD3', border: 'snow thin solid'}}>
                                         Devenir Alfred
                                     </a>
-                                </li>
+                                    </Link>
+                                </li>}
                                 {/*<li className="nav-item">
                                     <a href="#" className="nav-link" target="_blank">
                                         <i className="fab fa-facebook-f"/>
@@ -191,7 +229,7 @@ class index extends React.Component {
                 <div className={classes.headerhomevid}>
                 <video id="background-video" loop autoPlay muted playsinline style={{width: '100%'}}>
                     <source src="../static/assets/img/bgdark.webm" type="video/webm" />
-                    <source src="../static/assets/img/bgdark.mp4" type="video/mp4" />
+                    <source src="../static/assets/img/bgdarklight.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
                 </div>
@@ -221,17 +259,18 @@ class index extends React.Component {
                                         indiquez vos disponibilités, vos tarifs et profitez d’un complément de revenu !
                                     </p>
                                     <br/>
-                                    <a target="_blank" href={'/signup'} className="btn  btn-lg text-capitalize "
+                                    <Link href={'/becomeAlfredForm'}>
+                                    <a className="btn  btn-lg text-capitalize "
                                        style={{backgroundColor: '#2FBCD3'}}>Devenir Alfred
-                                    </a>
+                                    </a></Link>
                                 </div>
                                 {/*Grid column*/}
                                 {/*Grid column*/}
                                 <div className="col-md-6 col-xl-5 mb-4 float-right" style={{float: 'right'}}>
                                     <h5 className="card-header  white-text text-center py-4 "
-                                        style={{backgroundColor: 'rgb(240, 77, 94)'}}>
-                                        <a href="#" style={{textDecoration: 'none', color: 'white'}}><strong>Créez votre
-                                            boutique de services</strong></a>
+                                        style={{backgroundColor: '#F8727F'}}><Link href={'/becomeAlfredForm'}>
+                                        <a style={{textDecoration: 'none', color: 'white'}}><strong>Créez votre
+                                            boutique de services</strong></a></Link>
                                     </h5>
                                     {/*Card*/}
                                     <div className="card">
@@ -259,9 +298,11 @@ class index extends React.Component {
                                                 </fieldset>
                                                 <br/><br/>
                                                 <div className="text-right">
-                                                    <button className="btn  btn-block my-4" type="submit"
-                                                            style={{backgroundColor: '#2FBCD3', color: 'white'}}><a style={{color: 'white'}} href={'/signup'}> Envoyer</a>
+                                                    <a style={{color: 'white'}} href={'/signup'}>
+                                                    <button  className="btn  btn-block my-4" type="button"
+                                                            style={{backgroundColor: '#2FBCD3', color: 'white'}}> Envoyer
                                                     </button>
+                                                        </a>
                                                 </div>
                                             </form>
                                             {/* Form */}
@@ -316,15 +357,15 @@ class index extends React.Component {
                                     float: 'right !important',
                                     marginLeft: '150px'
                                 }}>
-                                    <video width="100%" height="100%" autoPlay="autoplay" loop>
-                                        <source src="http://pluslite.fr/media/myalfred/Phone1.mp4" type="video/mp4"/>
+                                    <video width="100%" height="100%" autoPlay muted playsinline loop>
+                                        <source src="../static/assets/img/Phone1.mp4" type="video/mp4"/>
                                     </video>
                                 </div>
                                 <div
                                     className="col-md-5 d-none d-md-block  justify-content-center align-items-center jarallax  "
                                     data-jarallax-element={-140} style={{padding: '50px', marginTop: '-50px'}}>
-                                    <video width="100%" height="100%" autoPlay="autoplay" loop>
-                                        <source src="http://pluslite.fr/media/myalfred/Phone2.mp4" type="video/mp4"/>
+                                    <video width="100%" height="100%" autoPlay muted playsinline loop>
+                                        <source src="../static/assets/img/Phone2.mp4" type="video/mp4"/>
                                     </video>
                                 </div>
                                 <div className="col-md-6 card-body pull-right">
@@ -351,8 +392,8 @@ class index extends React.Component {
                                          marginLeft: '170px',
                                          marginTop: '-50px'
                                      }}>
-                                    <video width="100%" height="100%" autoPlay="autoplay" loop>
-                                        <source src="http://pluslite.fr/media/myalfred/Phone3.mp4" type="video/mp4"/>
+                                    <video width="100%" height="100%" autoPlay muted playsinline loop>
+                                        <source src="../static/assets/img/Phone3.mp4" type="video/mp4"/>
                                     </video>
                                 </div>
                             </div>
@@ -366,7 +407,7 @@ class index extends React.Component {
                             <div className={classes.footerImg}/>
                         <video id="background-video" loop autoPlay muted playsinline style={{width: '100%',marginTop: 23}} className={classes.video}>
                             <source src="../static/assets/img/bgdark.webm" type="video/webm" />
-                            <source src="../static/assets/img/bgdark.mp4" type="video/mp4" />
+                            <source src="../static/assets/img/bgdarklight.mp4" type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>
                         </div>
@@ -381,8 +422,9 @@ class index extends React.Component {
                                     <p>Nous sommes tous des Alfred. Chacun d'entre nous doit pouvoir partager ses savoir
                                         faire, ses compétences, ses passions... tantôt Alfred, tantôt consommateur de
                                         services d'Alfred, rejoignez la communauté Alfred en quelques clics !</p>
+                                    <Link href={'/becomeAlfredForm'}>
                                     <a className="btn" style={{backgroundColor: '#2FBCD3'}}><i
-                                        className="fas fa-heart left"/> Devenir Alfred</a>
+                                        className="fas fa-heart left"/> Devenir Alfred</a></Link>
                                 </div>
                             </div>
                         </div>

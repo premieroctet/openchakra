@@ -32,6 +32,7 @@ const shop = require('./routes/api/shop');
 const calendar = require('./routes/api/calendar');
 const reviews = require('./routes/api/reviews');
 const shopBanner = require('./routes/api/shopBanner');
+const options = require('./routes/api/options');
 
 const admin = require('./routes/api/admin/dashboard');
 const path = require('path');
@@ -92,6 +93,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/admin',admin);
     app.use('/myAlfred/api/reviews',reviews);
     app.use('/myAlfred/api/shopBanner',shopBanner);
+    app.use('/myAlfred/api/options',options);
 
     //const port = process.env.PORT || 5000;
     const rootPath = require('path').join(__dirname, '/..')
