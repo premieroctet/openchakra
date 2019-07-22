@@ -41,7 +41,7 @@ function Selecthome(props) {
         <TextField
         id="outlined-select"
         select
-        label="Quel services ?"
+        label="Quel service ?"
         style={{textAlign: "center", width: "104.7%",
                 borderRadius:'3px',
                 padding:10,
