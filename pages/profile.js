@@ -18,6 +18,7 @@ import EditAddress from '../components/profile/editAddress';
 import EditOtherAddress from '../components/profile/editOtherAddress';
 import Booking from '../components/profile/booking';
 import Messages from '../components/profile/messages';
+import EditPicture from '../components/profile/editPicture';
 import Modal from "@material-ui/core/Modal";
 
 moment.locale('fr');
@@ -36,8 +37,8 @@ const styles = theme => ({
         backgroundColor: 'white',
         border: '2px solid #000',
         outline: 'none',
-        top: 50,
-        left: 50,
+        top: '50%',
+        left: '50%',
         transform: 'translate(-50%, -50%)'
     },
 
@@ -203,10 +204,7 @@ class profile extends React.Component {
                                         onClose={this.handleClose}
                                     >
                                         <div className={classes.paper}>
-                                            <h2 id="modal-title">Text in a modal</h2>
-                                            <p id="simple-modal-description">
-                                                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                                            </p>
+                                            <EditPicture/>
                                         </div>
                                     </Modal>
                                 </Grid>
