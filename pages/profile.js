@@ -16,6 +16,9 @@ import EditInformations from '../components/profile/editInformations';
 import EditPassword from '../components/profile/editPassword';
 import EditAddress from '../components/profile/editAddress';
 import EditOtherAddress from '../components/profile/editOtherAddress';
+import Booking from '../components/profile/booking';
+import Messages from '../components/profile/messages';
+import Modal from "@material-ui/core/Modal";
 
 moment.locale('fr');
 
@@ -26,6 +29,16 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
+    },
+    paper: {
+        position: 'absolute',
+        width: 400,
+        backgroundColor: 'white',
+        border: '2px solid #000',
+        outline: 'none',
+        top: 50,
+        left: 50,
+        transform: 'translate(-50%, -50%)'
     },
 
 });
@@ -48,10 +61,13 @@ class profile extends React.Component {
             setValue: 0,
             value2: 0,
             setValue2: 0,
+            open: false,
 
         };
         this.handleChangeTabs = this.handleChangeTabs.bind(this);
         this.handleChangeTabs2 = this.handleChangeTabs2.bind(this);
+        this.handleOpen = this.handleOpen.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     componentDidMount() {
@@ -118,6 +134,14 @@ class profile extends React.Component {
         this.setState({value2});
     }
 
+    handleOpen = () => {
+        this.setState({open: true});
+    };
+
+    handleClose = () => {
+        this.setState({open: false});
+    };
+
 
     render() {
         const {classes} = this.props;
@@ -168,6 +192,24 @@ class profile extends React.Component {
                                     {picture ? currentPicture : addPicture}
                                     Bonjour {user.name} {user.firstname}
                                 </Grid>
+                                <Grid item>
+                                    <Button color={'primary'} type={'button'} onClick={this.handleOpen}>
+                                        Modifier ma photo
+                                    </Button>
+                                    <Modal
+                                        aria-labelledby="simple-modal-title"
+                                        aria-describedby="simple-modal-description"
+                                        open={this.state.open}
+                                        onClose={this.handleClose}
+                                    >
+                                        <div className={classes.paper}>
+                                            <h2 id="modal-title">Text in a modal</h2>
+                                            <p id="simple-modal-description">
+                                                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                                            </p>
+                                        </div>
+                                    </Modal>
+                                </Grid>
                             </Grid>
                             <Grid container>
                                 <Grid item xs={12}>
@@ -205,7 +247,7 @@ class profile extends React.Component {
                                 <Grid item xs={6}>
                                     <Card>
                                         <AppBar position="static" color={'primary'}>
-                                            <Tabs value={value} onChange={this.handleChangeTabs}>
+                                            <Tabs value={value} indicatorColor={'secondary'} onChange={this.handleChangeTabs}>
                                                 <Tab label="Informations" />
                                                 <Tab label="Sécurité" />
                                             </Tabs>
@@ -224,7 +266,7 @@ class profile extends React.Component {
                                 <Grid item xs={6}>
                                     <Card>
                                         <AppBar position="static" color={'primary'}>
-                                            <Tabs value={value2} onChange={this.handleChangeTabs2}>
+                                            <Tabs value={value2} indicatorColor={'secondary'} onChange={this.handleChangeTabs2}>
                                                 <Tab label="Adresse principale" />
                                                 <Tab label="Adresse secondaire" />
                                             </Tabs>
@@ -244,13 +286,13 @@ class profile extends React.Component {
                             <Grid container>
                                 <Grid item xs={6}>
                                     <Card>
-                                        Mes réservations
+                                        <Booking/>
 
                                     </Card>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Card>
-                                        Mes messages
+                                        <Messages/>
 
 
                                     </Card>
