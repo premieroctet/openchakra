@@ -25,12 +25,16 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Switch from "@material-ui/core/Switch";
+import CircleCheckedFilled from '@material-ui/icons/CheckCircle';
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
+import Select from 'react-select';
 
 import { Debug } from './Debug';
 import MultipleSelect from './MultipleSelect';
 import Calendar from '../Calendar/calendar';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CityFinder from './CityFinder';
+import Siret from './Siret';
 import '../../static/form.css';
 
 const { config } = require('../../config/config');
@@ -198,6 +202,11 @@ const styles = theme => ({
     },
     newContainer: {
         padding: 20,
+    },
+    imgDiv: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
     }
 
 });
@@ -616,7 +625,7 @@ class Wizard extends React.Component {
                                     )*/}
                                 </div>
                             </div>
-                            <div style={{width: '40%', overflow: 'hidden'}}>
+                            <div className="imgDiv" style={{width: '40%', overflow: 'hidden'}}>
                                 <img src='../../static/backgrounds-blank-blue-953214.jpg' height='100%'  width='100%'/>
                             </div>
                         </form>
@@ -714,7 +723,7 @@ class Form extends React.Component {
             flexible_cancel: false,
             moderate_cancel: false,
             strict_cancel: false,
-            welcome_message: ""
+            welcome_message: "",
         }
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -997,11 +1006,12 @@ class Form extends React.Component {
                                                         let arrServices = [];
                                                         services.map((service, index) => {
                                                             this.setState({
-                                                                [`userCityClicked${index}`]: false
+                                                                [`userCityClicked${index}`]: false,
+                                                                [`otherOptionChecked${index}`]: false
                                                             })
                                                             axios.get(`${url}myAlfred/api/service/${service}`)
                                                                 .then(res => {
-                                                                    let servCompObj = { CategoryLabel : res.data.category.label, serviceId: res.data._id, serviceLabel: res.data.label, descService: '', minimumBasket: '', diploma: null,certification: null, perimeter: 50, delayBeforeShop: '', delayBeforeShopDWM: null, city: this.state.userCity, increases: { label: res.data.majoration, price: 0, checked: false }, prestationsCount: 0, cancelChoice: false, equipments: [], filters: [] }
+                                                                    let servCompObj = { CategoryLabel : res.data.category.label, serviceId: res.data._id, serviceLabel: res.data.label, descService: '', minimumBasket: '', diploma: null,certification: null, perimeter: 50, delayBeforeShop: '', delayBeforeShopDWM: null, city: this.state.userCity, experienceYears: null, option: null, increases: { label: res.data.majoration, price: 0, checked: false }, prestationsCount: 0, cancelChoice: false, equipments: [], filters: [] }
                                                                     res.data.equipments.map(e => {
                                                                         const equipObj = { id: e._id, label: e.label, logo: e.logo, name_logo: e.name_logo, checked: false }
                                                                         servCompObj.equipments.push(equipObj);
@@ -1160,7 +1170,163 @@ class Form extends React.Component {
                                                                             })}
                                                                         </Grid>
                                                                         <hr style={{margin: '1rem 0'}}></hr>
-
+                                                                        <div>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Options</Typography>
+                                                                            <Field render={({form}) => {
+                                                                                return (
+                                                                                    <Select 
+                                                                                        placeholder="Options disponibles"
+                                                                                        isDisabled={this.state[`otherOptionChecked${index}`]}
+                                                                                        options={[
+                                                                                            {value: 'Option1', label: 'Option1', unity: 'm2'},
+                                                                                            {value: 'Option2', label: 'Option2', unity: 'prestation'},
+                                                                                            {value: 'Option3', label: 'Option3', unity: 'mm2'},
+                                                                                            {value: 'Option4', label: 'Option4', unity: 'mm2'},
+                                                                                        ]}
+                                                                                        onChange={async opt => {
+                                                                                            const optObj = { label: opt.value, price: null, unity: null, type: null }
+                                                                                            await form.setFieldValue(`submission[${index}].option`, optObj);
+                                                                                        }}
+                                                                                        theme={theme => ({
+                                                                                            ...theme,
+                                                                                            colors: {
+                                                                                                ...theme.colors,
+                                                                                                primary: '#2FBCD3',
+                                                                                            }
+                                                                                        })}
+                                                                                    />
+                                                                                )
+                                                                            }} />
+                                                                            {arrayHelpers.form.values.submission[index].option !== null ? 
+                                                                                <Field 
+                                                                                    name={`submission.${index}.option.price`}
+                                                                                    render={({form, field}) => {
+                                                                                        console.log(form)
+                                                                                        return (
+                                                                                            <TextField 
+                                                                                                {...field}
+                                                                                                type="number"
+                                                                                                InputProps={{
+                                                                                                    startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                }}
+                                                                                            />
+                                                                                        )
+                                                                                    }} 
+                                                                                />
+                                                                                : null
+                                                                            }
+                                                                            <div>
+                                                                                <FormControlLabel 
+                                                                                    control={
+                                                                                        <Checkbox 
+                                                                                            color="primary"
+                                                                                            type="checkbox"
+                                                                                            checked={this.state[`otherOptionChecked${index}`]}
+                                                                                            onChange={() => {
+                                                                                                this.setState({
+                                                                                                    [`otherOptionChecked${index}`]: !this.state[`otherOptionChecked${index}`]
+                                                                                                });
+                                                                                                const optObj = { label: null, price: null, unity: null, type: null } 
+                                                                                                arrayHelpers.form.setFieldValue(`submission.${index}.option`, optObj)
+                                                                                            }}
+                                                                                        />
+                                                                                    }
+                                                                                    label="Entrer une autre option"
+                                                                                />
+                                                                                {this.state[`otherOptionChecked${index}`] === true ?
+                                                                                    <Grid container spacing={3}>
+                                                                                        <Grid item xs={3}>
+                                                                                            <Field 
+                                                                                                name={`submission.${index}.option.label`}
+                                                                                                render={({form, field}) => {
+                                                                                                    console.log(form)
+                                                                                                    return (
+                                                                                                        <TextField 
+                                                                                                            {...field}
+                                                                                                            type="text"
+                                                                                                        />
+                                                                                                    )
+                                                                                                }} 
+                                                                                            />
+                                                                                        </Grid>
+                                                                                        <Grid item xs={3}>
+                                                                                            <Field 
+                                                                                                name={`submission.${index}.option.price`}
+                                                                                                render={({form, field}) => {
+                                                                                                    console.log(form)
+                                                                                                    return (
+                                                                                                        <TextField 
+                                                                                                            {...field}
+                                                                                                            type="number"
+                                                                                                            InputProps={{
+                                                                                                                startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                            }}
+                                                                                                        />
+                                                                                                    )
+                                                                                                }} 
+                                                                                            />
+                                                                                        </Grid>
+                                                                                        <Grid item xs={3}>
+                                                                                            <Field 
+                                                                                                name={`submission.${index}.option.unity`}
+                                                                                                render={({form, field}) => {
+                                                                                                    console.log(form)
+                                                                                                    return (
+                                                                                                        <Select 
+                                                                                                            placeholder="Unité"
+                                                                                                            options={[
+                                                                                                                {value: 'm2', label: 'm2'},
+                                                                                                                {value: 'cm2', label: 'cm2'},
+                                                                                                                {value: 'mm2', label: 'mm2'},
+                                                                                                            ]}
+                                                                                                            onChange={async unity => {
+                                                                                                                await form.setFieldValue(`submission[${index}].option.unity`, unity);
+                                                                                                            }}
+                                                                                                            theme={theme => ({
+                                                                                                                ...theme,
+                                                                                                                colors: {
+                                                                                                                    ...theme.colors,
+                                                                                                                    primary: '#2FBCD3',
+                                                                                                                }
+                                                                                                            })}
+                                                                                                        />
+                                                                                                    )
+                                                                                                }} 
+                                                                                            />
+                                                                                        </Grid>
+                                                                                        <Grid item xs={3}>
+                                                                                            <Field 
+                                                                                                name={`submission.${index}.option.type`}
+                                                                                                render={({form, field}) => {
+                                                                                                    console.log(form)
+                                                                                                    return (
+                                                                                                        <Select 
+                                                                                                            placeholder="Type"
+                                                                                                            options={[
+                                                                                                                {value: 'option', label: 'Option'},
+                                                                                                                {value: 'supplement', label: 'Supplément'},
+                                                                                                            ]}
+                                                                                                            onChange={async type => {
+                                                                                                                await form.setFieldValue(`submission[${index}].option.type`, type);
+                                                                                                            }}
+                                                                                                            theme={theme => ({
+                                                                                                                ...theme,
+                                                                                                                colors: {
+                                                                                                                    ...theme.colors,
+                                                                                                                    primary: '#2FBCD3',
+                                                                                                                }
+                                                                                                            })}
+                                                                                                        />
+                                                                                                    )
+                                                                                                }} 
+                                                                                            />
+                                                                                        </Grid>
+                                                                                    </Grid>
+                                                                                    : null
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                        <hr style={{margin: '1rem 0'}}></hr>
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez ce que vous fournissez</Typography>
                                                                             <Typography>
@@ -1334,6 +1500,28 @@ class Form extends React.Component {
                                                                             </Typography>
                                                                             <Grid container style={{marginTop: '.5rem'}}>
                                                                                 <Grid item xs={12}>
+                                                                                    <Typography>Nombre d'années d'expériences</Typography>
+                                                                                    <Select 
+                                                                                        placeholder="Vos années d'expériences"
+                                                                                        options={[
+                                                                                            {value: 'ZeroOrOne', label: 'Entre 0 et 1 an'},
+                                                                                            {value: 'OneToFive', label: 'Entre 1 et 5 ans'},
+                                                                                            {value: 'FiveToTen', label: 'Entre 5 et 10 ans'},
+                                                                                            {value: 'MoreThanTen', label: 'Plus de 10 ans'},
+                                                                                        ]}
+                                                                                        onChange={async exp => {
+                                                                                            await arrayHelpers.form.setFieldValue(`submission[${index}].experienceYears`, exp);
+                                                                                        }}
+                                                                                        theme={theme => ({
+                                                                                            ...theme,
+                                                                                            colors: {
+                                                                                                ...theme.colors,
+                                                                                                primary: '#2FBCD3',
+                                                                                            }
+                                                                                        })}
+                                                                                    />
+                                                                                </Grid>
+                                                                                <Grid item xs={12}>
                                                                                     <label>
                                                                                         Diplôme
                                                                                         <input id="file" name="diploma" type="file" onChange={(event) => {
@@ -1437,15 +1625,14 @@ class Form extends React.Component {
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
                             <Card className={classes.card}>
-                                <div className={classes.newContainer}>
-                                    <Typography>Paramètres de réservation</Typography>
+                            <div className={classes.newContainer}>
                                     <Grid container>
-                                        <div className={classes.title1}>
-                                            <h4 style={{ color: "white" }} className={classes.text1}>
-                                                Comment les utilisateurs peuvent réserver
-                                            </h4>
-                                        </div>
-                                        <Grid item>
+
+                                            <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                Comment les utilisateurs peuvent réserver ?
+                                            </h6>
+
+                                        <Grid item style={{marginLeft: 20}}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1459,27 +1646,57 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.booking_request}
                                                                 color="primary"
                                                                 name={"booking_request"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+
                                                             />
                                                         }
-                                                        label="Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H"
+                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helveticaNeue'}}>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.</Typography>}
+
+
+                                                    />
+                                                )
+                                            }} />
+                                        </Grid>
+                                        <Grid item style={{marginLeft: 20, marginTop: 15}}>
+                                            <Field render={({form}) => {
+                                                return (
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={form.values.createShop.no_booking_request}
+                                                                onChange={() => {
+                                                                    form.values.createShop.no_booking_request = !form.values.createShop.no_booking_request;
+                                                                    form.setFieldValue('createShop.no_booking_request', form.values.createShop.no_booking_request);
+                                                                }}
+                                                                value={form.values.createShop.no_booking_request}
+                                                                color="primary"
+                                                                name={"no_booking_request"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+
+                                                            />
+                                                        }
+                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helveticaNeue'}}>Les utilisateurs peuvent réserver mes services directement sans demande de réservation.</Typography>}
+
                                                     />
                                                 )
                                             }} />
                                         </Grid>
                                     </Grid>
+                                    <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                     <Grid container>
-                                        <div className={classes.title1}>
-                                            <h4 style={{ color: "white" }} className={classes.text1}>
-                                                Conditions de réservation
-                                            </h4>
-                                        </div>
-                                        <Typography>
+                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                            Vos conditions de réservations
+                                        </h6>
+
+                                        <Typography style={{marginBottom: 20,fontFamily: 'helveticaNeue'}}>
                                             Il se peut que vous ayez moins de réservation si vous
                                             ajoutez des conditions. Les personnes qui ne répondent pas
                                             à vos critères peuvent quand même envoyer une demande
                                         </Typography>
 
-                                        <Grid item style={{ marginRight: 62 }}>
+                                        <Grid item style={{ marginLeft: 20 }}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1493,32 +1710,25 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.my_alfred_conditions}
                                                                 color="primary"
                                                                 name={"my_alfred_conditions"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -39}}
                                                             />
                                                         }
-                                                        label="Conditions My-Alfred"
-                                                        style={{ marginRight: 5 }}
+                                                        label={<React.Fragment>
+                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Conditions My-Alfred</p>
+                                                    <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                        Numéro de téléphone confirmé, adresse e-mail, informations de paiements et acceptation
+                                                        du règlement intérieur.
+                                                </p>
+                                            </React.Fragment>}
+
                                                     />
                                                 )
                                             }} />
 
-                                            <Tooltip
-                                                title="Numéro de téléphone confirmé, adresse e-mail, informations de paiements et acceptation
-                                du règlement intérieur."
-                                            >
-                                                <button
-                                                    disabled
-                                                    style={{
-                                                        border: 0,
-                                                        borderRadius: 20,
-                                                        color: "white",
-                                                        backgroundColor: "#00abed"
-                                                    }}
-                                                >
-                                                    ?
-                                                </button>
-                                            </Tooltip>
                                         </Grid>
-                                        <Grid item>
+                                        <Grid item style={{ marginLeft: 20 }} >
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1532,28 +1742,24 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.profile_picture_user}
                                                                 color="primary"
                                                                 name={"profile_picture_user"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -39}}
                                                             />
                                                         }
-                                                        label="+ Photo de profil"
-                                                        style={{ marginRight: 5 }}
+                                                        label={<React.Fragment>
+                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Photo de profil</p>
+                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                            Si vous activez cette condition, vous ne pourrez voir les photos de profil des
+                                                            voyageurs qu'une fois la réservation confirmée. En savoir plus
+                                                        </p>
+                                                    </React.Fragment>}
+
                                                     />
                                                 )
                                             }} />
-                                            <Tooltip title="Si vous activez cette condition, vous ne pourrez voir les photos de profil des voyageurs qu'une fois la réservation confirmée.">
-                                                <button
-                                                    disabled
-                                                    style={{
-                                                        border: 0,
-                                                        borderRadius: 20,
-                                                        color: "white",
-                                                        backgroundColor: "#00abed"
-                                                    }}
-                                                >
-                                                    ?
-                                                </button>
-                                            </Tooltip>
                                         </Grid>
-                                        <Grid item style={{ marginRight: 30 }}>
+                                        <Grid item style={{ marginLeft: 20 }}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1567,28 +1773,23 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.identity_card}
                                                                 color="primary"
                                                                 name={"identity_card"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -11}}
                                                             />
                                                         }
-                                                        label="+ Carte d'identité officielle"
-                                                        style={{ marginRight: 5 }}
+                                                        label={<React.Fragment>
+                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Pièce d'identité officielle</p>
+                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                            Ces voyageurs ont vérifié leur identité.
+                                                        </p>
+                                                    </React.Fragment>}
+
                                                     />
                                                 )
                                             }} />
-                                            <Tooltip title="Ces voyageurs ont vérifié leur identité.">
-                                                <button
-                                                    disabled
-                                                    style={{
-                                                        border: 0,
-                                                        borderRadius: 20,
-                                                        color: "white",
-                                                        backgroundColor: "#00abed"
-                                                    }}
-                                                >
-                                                    ?
-                                                </button>
-                                            </Tooltip>
                                         </Grid>
-                                        <Grid item>
+                                        <Grid item style={{ marginLeft: 20 }}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1602,27 +1803,31 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.recommandations}
                                                                 color="primary"
                                                                 name={"recommandations"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -39}}
                                                             />
                                                         }
-                                                        label="+ Recommandations d'autres Alfred"
-                                                        style={{ marginRight: 5 }}
+                                                        label={<React.Fragment>
+                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Recommandations d'autres Alfred</p>
+                                                            <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                                Ces utilisateurs ont déjà utilisés des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commen- taires négatifs.
+                                                            </p>
+                                                        </React.Fragment>}
+
                                                     />
                                                 )
                                             }} />
-                                            <Tooltip title="Ces utilisateurs ont déjà utilisés des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commen- taires négatifs.">
-                                                <button
-                                                    disabled
-                                                    style={{
-                                                        border: 0,
-                                                        borderRadius: 20,
-                                                        color: "white",
-                                                        backgroundColor: "#00abed"
-                                                    }}
-                                                >
-                                                    ?
-                                                </button>
-                                            </Tooltip>
                                         </Grid>
+
+                                    </Grid>
+                                    <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
+                                    <Grid container>
+                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                            Votre message de bienvenue validant votre
+                                            réservation
+                                        </h6>
+                                        <Typography>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation.</Typography>
                                         <Grid item style={{ marginTop: 15, width: "100%" }}>
                                             <Field name="createShop.welcome_message" render={({field, form}) => {
                                                 return (
@@ -1630,15 +1835,7 @@ class Form extends React.Component {
                                                         {...field}
                                                         id="outlined-multiline-static"
                                                         label={
-                                                            <React.Fragment>
-                                                                Votre message de bienvenue validant votre
-                                                                réservation
-                                                                <br />
-                                                                <em style={{ fontSize: 13 }}>
-                                                                    Les utilisateurs verront votre message lorsque
-                                                                    vous confirmerez leur réservation.
-                                                                </em>
-                                                            </React.Fragment>
+                                                            'Votre message'
                                                         }
                                                         multiline
                                                         rows="6"
@@ -1652,19 +1849,20 @@ class Form extends React.Component {
                                             <ErrorMessage name={'createShop.welcome_message'} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                         </Grid>
                                     </Grid>
+                                    <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                     <Grid container>
-                                        <div className={classes.title1}>
-                                            <h4 style={{ color: "white" }} className={classes.text1}>
-                                                Conditions d'annulation
-                                            </h4>
-                                        </div>
-                                        <Typography>
+
+                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                           Vos conditions d'annulation
+                                        </h6>
+
+                                        <Typography style={{fontFamily: 'helveticaNeue'}}>
                                             Choisissez vos conditions en cas d'annulation de la part
                                             des utilisateurs.
                                         </Typography>
                                         <Grid
                                             item
-                                            style={{ width: "100%", marginTop: 10, marginBottom: 10 }}
+                                            style={{ width: "100%", marginTop: 10, marginBottom: 10, marginLeft: 20 }}
                                         >
                                             <Field render={({form}) => {
                                                 return (
@@ -1684,23 +1882,26 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.flexible_cancel}
                                                                 color="primary"
                                                                 name={"flexible_cancel"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -20}}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                Flexibles
-                                                                <br />
-                                                                <em>
+                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Flexibles</p>
+
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                                     Remboursement intégral jusqu'à 1 jour avant la
                                                                     prestation
-                                                                </em>
+                                                                </p>
                                                             </React.Fragment>
                                                         }
                                                     />
                                                 )
                                             }} />
                                         </Grid>
-                                        <Grid item style={{ width: "100%" }}>
+                                        <Grid item style={{ width: "100%", marginLeft: 20 }}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1719,23 +1920,25 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.moderate_cancel}
                                                                 color="primary"
                                                                 name={"moderate_cancel"}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{marginTop: -20}}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                Modérées
-                                                                <br />
-                                                                <em>
+                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Modérées</p>
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                                     Remboursement intégral jusqu'à 5 jours avant la
                                                                     prestation
-                                                                </em>
+                                                                </p>
                                                             </React.Fragment>
                                                         }
                                                     />
                                                 )
                                             }} />
                                         </Grid>
-                                        <Grid item>
+                                        <Grid item style={{marginLeft: 20}}>
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
@@ -1754,13 +1957,15 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.strict_cancel}
                                                                 color="primary"
                                                                 name={"strict_cancel"}
-                                                                style={{ marginTop: -72 }}
+                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                style={{ marginTop: -100 }}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                <p style={{ marginBottom: 0 }}>Strictes</p>
-                                                                <em>
+                                                                <p style={{ marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue' }}>Strictes</p>
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
                                                                     Remboursement intégral pour les annulations
                                                                     effectuées dans les 48 heures suivant la
                                                                     réservation, si la date de ma prestation
@@ -1770,7 +1975,7 @@ class Form extends React.Component {
                                                                     Aucun remboursement pour les annulations
                                                                     effectuées dans les 7 jours précédant la date de
                                                                     la prestation.
-                                                                </em>
+                                                                </p>
                                                             </React.Fragment>
                                                         }
                                                     />
@@ -1779,6 +1984,7 @@ class Form extends React.Component {
                                         </Grid>
                                     </Grid>
                                 </div>
+
                                 {/*<Field render={({form}) => {
                                     let cancel = true;
 
@@ -1804,8 +2010,11 @@ class Form extends React.Component {
                                     <Grid container className={classes.cardContainer}>
                                         <Card className={classes.card}>
                                             <div className={classes.newContainer}>
-                                                <Typography style={{ paddingBottom: 20 }}>
-                                                    Présentez vous !
+                                                <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                    Téléchargez une photo de profil
+                                                </h6>
+                                                <Typography style={{fontFamily: 'helveticaNeue'}}>
+                                                    Téléchargez une photo de claire et lumineuse, de bonne qualité. Pour un rendu optimal, la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif, avec seulement vous sur la photo.
                                                 </Typography>
                                                 <Grid container style={{ marginBottom: 15 }}>
                                                     <Grid item xs={1} />
@@ -1848,23 +2057,16 @@ class Form extends React.Component {
                                                     </Grid>
                                                     <Grid item xs={1} />
                                                     <Grid item xs={7}>
-                                                        <Typography>
-                                                            Téléchargez votre photo de profil
-                                                        </Typography>
                                                     </Grid>
                                                 </Grid>
-                                                
+                                                <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                                 <Grid container>
-                                                    <Grid item xs={12} className={classes.vridentite}>
-                                                        <div className={classes.title1}>
-                                                            <h4
-                                                                style={{ color: "white" }}
-                                                                className={classes.text1}
-                                                            >
-                                                                Vérifiez votre identité
-                                                            </h4>
-                                                        </div>
-                                                    </Grid>
+                                                    <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                        Vérifiez votre identité
+                                                    </h6>
+                                                    <Typography style={{fontFamily: 'helveticaNeue'}}>
+                                                        Ces informations ne seront pas visibles par les utilisateurs. Un profil vérifié est plus engageant pour les utilisateurs !
+                                                    </Typography>
                                                     <Grid item xs={12}>
                                                         <Typography>
                                                             Vos informations ne seront pas visibles par les
@@ -1981,17 +2183,6 @@ class Form extends React.Component {
                                                 </Grid>
 
                                                 <Grid container className={classes.checkboxespart}>
-                                                    <div
-                                                        className={classes.title1}
-                                                        style={{ marginBottom: 15 }}
-                                                    >
-                                                        <h4
-                                                            style={{ color: "white" }}
-                                                            className={classes.text1}
-                                                        >
-                                                            Votre statut
-                                                        </h4>
-                                                    </div>
                                                     <Grid container>
                                                         <Grid item xs={1}>
                                                             <Field render={({form}) => {
@@ -2019,6 +2210,8 @@ class Form extends React.Component {
                                                                                 name={"isParticular"}
                                                                                 color="primary"
                                                                                 value={form.values.createShop.is_particular}
+                                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
                                                                             />
                                                                         }
                                                                     />
@@ -2026,9 +2219,9 @@ class Form extends React.Component {
                                                             }} />
                                                         </Grid>
                                                         <Grid item xs={11}>
-                                                            <Typography className={classes.titre1}>
-                                                                Je suis un Particulier
-                                                            </Typography>
+                                                            <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                Je suis un particulier
+                                                            </h6>
                                                             <Typography>
                                                                 En tant que particulier, vous pouvez rendre des
                                                                 services occasionnels sur My-Alfred. Si votre
@@ -2066,6 +2259,8 @@ class Form extends React.Component {
                                                                                 name={"isProfessional"}
                                                                                 color="primary"
                                                                                 value={form.values.createShop.is_professional}
+                                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
                                                                             />
                                                                         }
                                                                     />
@@ -2073,9 +2268,9 @@ class Form extends React.Component {
                                                             }} />
                                                         </Grid>
                                                         <Grid item xs={11}>
-                                                            <Typography className={classes.titre2}>
-                                                                Je suis un Professionnel
-                                                            </Typography>
+                                                            <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                Je suis un professionnel
+                                                            </h6>
                                                             <Typography>
                                                                 Un statut professionnel est nécessaire pour les
                                                                 métiers réglementés et permet une activité
@@ -2150,7 +2345,14 @@ class Form extends React.Component {
                                                 </Grid>
 
                                                 {isProfessional ? (
-                                                    <Grid container>
+                                                    <Field render={({form}) => {
+                                                        return (
+                                                            <Siret formikCtx={form}/>
+                                                        )
+                                                        }}
+                                                    />
+    
+                                                    /*<Grid container>
                                                         <Grid item xs={12} md={6}>
                                                             <Field name="createShop.siret" render={({field}) => {
                                                                 return (
@@ -2217,32 +2419,22 @@ class Form extends React.Component {
                                                             }} />
                                                             <ErrorMessage name={`createShop.nafape`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                         </Grid>
-                                                    </Grid>
+                                                        </Grid>*/
                                                 ) : (
                                                     ""
                                                 )}
 
+                                                <hr style={{margin: '1rem 0'}}></hr>
+
                                                 <Grid container>
                                                     <Grid item xs={12}>
-                                                        <div
-                                                            className={classes.title1}
-                                                            style={{ marginBottom: 15 }}
-                                                        >
-                                                            <h4
-                                                                style={{ color: "white" }}
-                                                                className={classes.text1}
-                                                            >
-                                                                Vos obligations légales
-                                                            </h4>
-                                                        </div>
+                                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                            Vos obligations légales
+                                                        </h6>
                                                     </Grid>
 
                                                     <Typography>
-                                                        Dans le cadre des prestations effectuées via
-                                                        MyAlfred, vous devez respecter toutes les
-                                                        obligations légales et réglementaires (fiscales,
-                                                        sociales, comptables, administratives, etc...)
-                                                        correspondant à votre statut.
+                                                        Dans le cadre des prestations effectuées via My-Alfred, vous devez respecter toutes les obligations légales et réglementaires (fiscales, sociales, comptables, administratives etc...) liées à votre statut.
                                                     </Typography>
 
                                                     <Grid container>

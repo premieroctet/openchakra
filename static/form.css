@@ -1,3 +1,9 @@
 body {
   overflow: hidden;
 }
+
+@media screen and (max-width: 960px) {
+  .imgDiv {
+    display: none;
+  }
+}
