@@ -35,7 +35,8 @@ const styles = theme => ({
         position: 'absolute',
         width: 400,
         backgroundColor: 'white',
-        border: '2px solid #000',
+        border: '1px solid lightgrey',
+        borderRadius: 6,
         outline: 'none',
         top: '50%',
         left: '50%',
@@ -158,7 +159,7 @@ class profile extends React.Component {
         const addPicture = <Link href={"/addPicture"}><a>Ajouter une photo de profile</a></Link>;
         const {currentAddress} = this.state;
         const {currentOtherAddress} = this.state;
-        const currentPicture = <img src={`../../${user.picture}`} alt="picture"/>;
+        const currentPicture = <img src={`../../${user.picture}`} style={{borderRadius: '50%',cursor:"pointer"}} alt="picture" onClick={this.handleOpen}/>;
 
         const fullAddress = <React.Fragment><h4>Adresse principale</h4>
             <p>Adresse : {currentAddress.address}</p>
@@ -187,16 +188,24 @@ class profile extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
+
                         <Grid item xs={4}>
-                            <Grid container>
+                            <Grid container style={{width: '90%', borderRight: '0.5px solid lightgrey',height: '90vh'}}>
+                                <Grid container style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
                                 <Grid item>
                                     {picture ? currentPicture : addPicture}
-                                    Bonjour {user.name} {user.firstname}
+
                                 </Grid>
-                                <Grid item>
-                                    <Button color={'primary'} type={'button'} onClick={this.handleOpen}>
+                                    <Grid item style={{marginLeft: 10}}>
+                                        <p>Bonjour,</p>
+                                        <p>{user.name} {user.firstname}</p>
+                                    </Grid>
+
+                                </Grid>
+
+                                {/*<Button size="small" color={'primary'} type={'button'} onClick={this.handleOpen}>
                                         Modifier ma photo
-                                    </Button>
+                                    </Button>*/}
                                     <Modal
                                         aria-labelledby="simple-modal-title"
                                         aria-describedby="simple-modal-description"
@@ -207,28 +216,23 @@ class profile extends React.Component {
                                             <EditPicture/>
                                         </div>
                                     </Modal>
-                                </Grid>
-                            </Grid>
-                            <Grid container>
-                                <Grid item xs={12}>
+
+
+                            <Grid container style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
+                                <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
                                     <p>{user.email}</p>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
                                     <p>{moment(user.birthday).format('L')}</p>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
                                     {phone ? currentPhone : addPhone}
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
                                     {job ? currentJob : addJob}
                                 </Grid>
                             </Grid>
                             <Grid container>
-                            <Link href={"/editProfile"}>
-                                <Button type="submit" variant="contained" color="primary" style={{ width: '100%', color: 'white' }}>
-                                    Editer mon profil
-                                </Button>
-                            </Link>
                             {alfred ? <Link href={"/dashboardAlfred/home"}>
                                 <Button type="submit" variant="contained" color="primary" style={{ width: '100%', color: 'white' }}>
                                     Dashboard Alfred
@@ -236,6 +240,7 @@ class profile extends React.Component {
                             </Link> : ''}
 
                             </Grid>
+                        </Grid>
                         </Grid>
                         <Grid item xs={8}>
                             <Grid container>

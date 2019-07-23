@@ -21,7 +21,6 @@ const styles = theme => ({
     },
     card: {
         padding: '1.5rem 3rem',
-        marginTop: '100px',
     },
     cardContant: {
         flexDirection: 'column',
@@ -98,9 +97,6 @@ class editPicture extends React.Component {
                 <Grid container className={classes.signupContainer}>
                     <Card className={classes.card}>
                         <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>Modifier votre photo</Typography>
-                            </Grid>
                             <Grid item>
                                 <img src={`../../${user.picture}`} alt="picture"/>
                             </Grid>
@@ -109,7 +105,7 @@ class editPicture extends React.Component {
                                     <input type="file" name="myImage" onChange={this.onChange} accept="image/*" />
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
                                         Valider
                                     </Button>
                                 </Grid>
