@@ -255,7 +255,7 @@ class editParameters extends React.Component {
 
 
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color:'white' }}>
                                         Valider
                                     </Button>
                                 </Grid>

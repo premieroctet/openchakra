@@ -60,16 +60,19 @@ class editStatus extends React.Component {
             is_professional: false,
             self_employed: false,
             individual_company: false,
-            name: '',
-            creation_date: '',
             siret: '',
-            naf_ape: '',
-            vat_number: '',
+            nafape: '',
+            creationDate: '',
+            denomination: '',
             shop: {},
-            company: {}
+            company: {},
+            check: false,
 
 
         };
+        this.onSubmit2 = this.onSubmit2.bind(this);
+        this.handleChecked = this.handleChecked.bind(this);
+        this.handleChecked2 = this.handleChecked2.bind(this);
     }
 
     componentDidMount() {
@@ -81,8 +84,12 @@ class editStatus extends React.Component {
                 this.setState({shop:shop, is_particular: shop.is_particular, is_professional: shop.is_professional,
                     self_employed: shop.self_employed, individual_company: shop.individual_company, company: shop.company});
 
-                this.setState({name: this.state.company.name, creation_date: this.state.company.creation_date, siret: this.state.company.siret,
-                naf_ape: this.state.company.naf_ape, vat_number: this.state.company.vat_number});
+                this.setState({denomination: this.state.company.name, creationDate: this.state.company.creation_date, siret: this.state.company.siret,
+                nafape: this.state.company.naf_ape});
+
+                if(this.state.is_professional === true) {
+                    this.setState({check: true})
+                }
 
 
             })
@@ -103,6 +110,22 @@ class editStatus extends React.Component {
 
     };
 
+    handleChecked () {
+        this.setState({check: !this.state.check});
+        this.setState({is_particular: false})
+    }
+
+    handleChecked2 () {
+        this.setState({check: !this.state.check});
+        this.setState({is_professional: false});
+        this.setState({self_employed: false});
+        this.setState({individual_company: false});
+        this.setState({denomination: ''});
+        this.setState({siret: ''});
+        this.setState({nafape: ''});
+        this.setState({creationDate: ''});
+    }
+
     onChange2 = e => {
         this.setState({ [e.target.name]: e.target.value });
     };
@@ -115,18 +138,18 @@ class editStatus extends React.Component {
             is_professional: this.state.is_professional,
             self_employed: this.state.self_employed,
             individual_company: this.state.individual_company,
-            name: this.state.name,
-            creation_date: this.state.creation_date,
+            name: this.state.denomination,
+            creation_date: this.state.creationDate,
             siret: this.state.siret,
-            naf_ape: this.state.naf_ape,
-            vat_number: this.state.vat_number,
+            naf_ape: this.state.nafape,
+
 
         };
         axios
             .put(url+'myAlfred/api/shop/editStatus', newStatus)
             .then(res => {
                 alert('Statut modifié');
-                Router.push('/dashboardAlfred/home')
+                Router.push('/dashboardAlfred/editShop')
             })
             .catch(err =>
                 console.log(err)
@@ -135,8 +158,36 @@ class editStatus extends React.Component {
 
     };
 
+    onSubmit2 = e => {
+        e.preventDefault();
+        const code = this.state.siret;
+
+        axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siret/${code}`)
+            .then(res => {
+                const data = res.data;
+                this.setState({denomination: data.etablissement.l1_normalisee, nafape: data.etablissement.activite_principale});
+                const date = data.etablissement.date_creation;
+                const year = date.substring(0,4);
+                const month = date.substring(4,6);
+                const day = date.substring(6,8);
+                const result = day+'/'+month+'/'+year;
+                //const finalDate = moment(result).format('YYYY-MM-DD');
+                this.setState({creationDate: result});
+
+                this.setState({siret: code});
+
+
+
+
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    };
+
     render() {
         const { classes } = this.props;
+        const {check} = this.state;
 
 
 
@@ -154,7 +205,7 @@ class editStatus extends React.Component {
                                         control={
                                             <Checkbox
                                                 checked={this.state.is_particular}
-                                                onChange={this.onChange}
+                                                onChange={(e)=>{this.onChange(e);this.handleChecked2()}}
                                                 value={this.state.is_particular}
                                                 name="is_particular"
                                                 color="primary"
@@ -168,7 +219,7 @@ class editStatus extends React.Component {
                                         control={
                                             <Checkbox
                                                 checked={this.state.is_professional}
-                                                onChange={this.onChange}
+                                                onChange={(e)=>{this.onChange(e);this.handleChecked()}}
                                                 value={this.state.is_professional}
                                                 name="is_professional"
                                                 color="primary"
@@ -177,6 +228,8 @@ class editStatus extends React.Component {
                                         label="Je suis un professionnel"
                                     />
                                 </Grid>
+                                {check ?
+                                    <React.Fragment>
                                 <Grid item>
                                     <FormControlLabel
                                         control={
@@ -206,31 +259,7 @@ class editStatus extends React.Component {
                                     />
                                 </Grid>
                                 <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="name"
-                                        value={this.state.name}
-                                        onChange={this.onChange2}
-                                        helperText={"Nom de la société"}
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <TextField
-                                        id="date"
-                                        label="Date de création"
-                                        type="date"
-                                        name="creation_date"
-                                        value={this.state.creation_date}
-                                        onChange={this.onChange}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item>
+
                                     <TextField
                                         id="standard-with-placeholder"
                                         margin="normal"
@@ -241,35 +270,24 @@ class editStatus extends React.Component {
                                         onChange={this.onChange2}
                                         helperText={"Siret"}
                                     />
+                                        <Button type="button" onClick={this.onSubmit2} variant="contained" color="primary" style={{ width: '100%',color:'white' }}>
+                                            Valider
+                                        </Button>
+
                                 </Grid>
                                 <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="naf_ape"
-                                        value={this.state.naf_ape}
-                                        onChange={this.onChange2}
-                                        helperText={"Naf ape"}
-                                    />
+                                    <p>Dénomination : {this.state.denomination}</p>
                                 </Grid>
                                 <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="vat_number"
-                                        value={this.state.vat_number}
-                                        onChange={this.onChange2}
-                                        helperText={"Numéro de tva"}
-                                    />
+                                    <p>Date de création : {this.state.creationDate}</p>
                                 </Grid>
 
+                                <Grid item>
+                                    <p>NAF/APE : {this.state.nafape}</p>
+                                </Grid></React.Fragment> : null }
 
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color:'white' }}>
                                         Valider
                                     </Button>
                                 </Grid>

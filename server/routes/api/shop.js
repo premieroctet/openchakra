@@ -221,7 +221,6 @@ router.put('/editStatus',passport.authenticate('jwt',{session:false}),(req,res) 
         self_employed: req.body.self_employed, individual_company: req.body.individual_company,
         "company.name":req.body.name, "company.creation_date": req.body.creation_date,
         "company.siret": req.body.siret, "company.naf_ape": req.body.naf_ape,
-        "company.vat_number": req.body.vat_number
     }, {new: true})
         .then(shop => {
             res.json(shop)
