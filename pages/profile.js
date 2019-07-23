@@ -21,6 +21,7 @@ import Messages from '../components/profile/messages';
 import EditPicture from '../components/profile/editPicture';
 import Modal from "@material-ui/core/Modal";
 
+
 moment.locale('fr');
 
 const { config } = require('../config/config');
@@ -145,6 +146,7 @@ class profile extends React.Component {
     };
 
 
+
     render() {
         const {classes} = this.props;
         const {user} = this.state;
@@ -233,11 +235,13 @@ class profile extends React.Component {
                                 </Grid>
                             </Grid>
                             <Grid container>
+                                <div style={{position: 'relative',width: '100%'}}>
                             {alfred ? <Link href={"/dashboardAlfred/home"}>
-                                <Button type="submit" variant="contained" color="primary" style={{ width: '100%', color: 'white' }}>
+                                <Button type="submit" variant="contained" color="primary" style={{ width: '100%', color: 'white',maxHeight:60
+                                ,position: 'absolute',bottom: 0}}>
                                     Dashboard Alfred
                                 </Button>
-                            </Link> : ''}
+                            </Link> : ''}</div>
 
                             </Grid>
                         </Grid>
@@ -247,11 +251,11 @@ class profile extends React.Component {
 
 
                             <Grid container>
-                                <Grid item xs={6}>
-                                    <Card>
-                                        <AppBar position="static" color={'primary'}>
-                                            <Tabs value={value} indicatorColor={'secondary'} onChange={this.handleChangeTabs}>
-                                                <Tab label="Informations" />
+                                <Grid item xs={6} style={{maxWidth: '45%'}}>
+                                    <Card style={{height: 380}}>
+                                        <AppBar position="static" color={'inherit'}>
+                                            <Tabs value={value} indicatorColor={'secondary'} onChange={this.handleChangeTabs} variant="scrollable" scrollButtons="auto" >
+                                                <Tab label="Informations"  />
                                                 <Tab label="Sécurité" />
                                             </Tabs>
                                         </AppBar>
@@ -266,15 +270,19 @@ class profile extends React.Component {
 
                                     </Card>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <Card>
-                                        <AppBar position="static" color={'primary'}>
-                                            <Tabs value={value2} indicatorColor={'secondary'} onChange={this.handleChangeTabs2}>
+                                <Grid item xs={6} style={{marginLeft: 10}}>
+                                    <Card style={{height: 380,overflowY: "auto"}}>
+                                        <AppBar position="sticky" color={'inherit'}>
+
+                                            <Tabs value={value2} indicatorColor={'secondary'} onChange={this.handleChangeTabs2} variant="scrollable" scrollButtons="auto"
+                                                   >
                                                 <Tab label="Adresse principale" />
                                                 <Tab label="Adresse secondaire" />
                                             </Tabs>
+
                                         </AppBar>
-                                        {value2 === 0 && <TabContainer>
+
+                                        {value2 === 0 && <TabContainer >
                                             <EditAddress/>
                                         </TabContainer>}
 
@@ -282,19 +290,18 @@ class profile extends React.Component {
                                             <EditOtherAddress/>
                                         </TabContainer>}
 
-
                                     </Card>
                                 </Grid>
                             </Grid>
-                            <Grid container>
-                                <Grid item xs={6}>
-                                    <Card>
+                            <Grid container style={{marginTop: 30}}>
+                                <Grid item xs={6} style={{maxWidth: '45%'}}>
+                                    <Card style={{overflowY: "auto",height: 230}}>
                                         <Booking/>
 
                                     </Card>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <Card>
+                                <Grid item xs={6} style={{marginLeft: 10}}>
+                                    <Card style={{overflowY: "auto",height: 230}}>
                                         <Messages/>
 
 

@@ -56,9 +56,9 @@ class messages extends React.Component {
 
 
 
-                <AppBar position="static" color="primary" style={{height: 48}}>
+                <AppBar position="sticky" color="inherit" style={{height: 48}}>
                     <Toolbar style={{minHeight: 48}}>
-                        <Typography variant="h6" color="inherit">
+                        <Typography variant="h6" style={{fontSize: 14,textTransform: "uppercase"}} color="inherit">
                             Mes messages
                         </Typography>
                     </Toolbar>
