@@ -31,6 +31,7 @@ import MultipleSelect from './MultipleSelect';
 import Calendar from '../Calendar/calendar';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CityFinder from './CityFinder';
+import '../../static/form.css';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -41,15 +42,18 @@ const styles = theme => ({
     cardContainer: {
         alignItems: 'center',
         justifyContent: 'center',
+        padding: '1.5rem 3rem 0 3rem'
     },
     card: {
+        minHeight: '400px !important',
+        boxShadow: 'none',
         //padding: '1.5rem 2rem',
         display: 'flex',
         flexDirection: 'column',
-        height: 'auto',
+        height: '86vh',
         //maxHeight: 700,
         overflow: 'auto',
-        width: 800,
+        maxWidth: 1000,
         fontFamily: 'helveticaNeue',
 
     },
@@ -219,7 +223,7 @@ class Wizard extends React.Component {
         this.setState(state => ({
             page: Math.max(state.page - 1, 0),
         }));
-
+        
     validate = values => {
         const activePage = React.Children.toArray(this.props.children)[
             this.state.page
@@ -486,29 +490,137 @@ class Wizard extends React.Component {
                 validate={this.validate}
                 onSubmit={this.handleSubmit}
                 render={({ values, handleSubmit, isSubmitting, setFieldValue, handleReset }) => (
-                    <form onSubmit={handleSubmit}>
-                        {activePage}
-                        <div className="buttons">
-                            {/* POUR REVENIR EN ARRIERE */}
-                            {/*page > 0 && (
-                <button
-                  type="button"
-                  className="secondary"
-                  onClick={this.previous}
-                >
-                  « Previous
-                </button>
-              )*/}
-
-                            {!isLastPage && <button type="submit">Next »</button>}
-                            {isLastPage && (
-                                <button type="submit" disabled={isSubmitting}>
-                                    Submit
-                                </button>
-                            )}
+                    <React.Fragment>
+                        <div style={{backgroundColor: 'white'}}>
+                            {page === 0 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez vos catégories et services</h3> : null}
+                            {page === 1 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de vos services</h3> : null}
+                            {page === 2 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+                            {page === 3 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+                            {page === 4 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
+                            <div>
+                                <Bar style={{backgroundColor: '#2FBCD3'}}>
+                                    <Fill4 />
+                                </Bar>
+                            </div>
                         </div>
-                        <Debug />
-                    </form>
+                        <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row'}}>
+                            <div style={{position: 'relative', backgroundColor: 'white'}}>
+                                <div style={{height: '85%', overflowY: 'scroll'}}>
+                                    {activePage}
+                                </div>
+                                <div className="buttons" style={{position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '0 3rem 3rem 3rem', backgroundColor: 'transparent', zIndex: '9999999'}}>
+                                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                        <Button
+                                            color="primary"
+                                            type="button"
+                                            onClick={this.previous}
+                                            disabled={page === 0 ? true : false}
+                                        >
+                                            Retour
+                                        </Button>
+                                        {page === 0 && <Button
+                                            type="submit"
+                                            variant="contained"
+                                            color="secondary"
+                                            style={{color: 'white'}}
+                                            disabled={values.submission.length > 0 ? false : true}
+                                        >
+                                            Suivant
+                                        </Button>}
+                                        {page === 1 && 
+                                            <Field render={({form}) => {
+                                                const checkArr = [];
+
+                                                form.values.submission.map(pc => {
+                                                    if (pc.prestationsCount > 0) {
+                                                        return checkArr.push(true);
+                                                        //return form.values.checkArr.push(true);
+                                                    } else {
+                                                        return checkArr.push(false);
+                                                        //return form.values.checkArr.push(false);
+                                                    }
+                                                })
+
+                                                const check = el => {
+                                                    return el === false;
+                                                }
+
+                                                return (
+                                                    <Button type="submit" variant="contained" color="secondary" style={{marginTop: '45px', color: !checkArr.some(check) ? 'white' : null }} disabled={checkArr.some(check) ? true : false}>
+                                                        Suivant
+                                                    </Button>
+                                                )
+                                            }} 
+                                        />}
+                                        {page === 2 && <Button
+                                            type="submit"
+                                            variant="contained"
+                                            color="secondary"
+                                            style={{color: 'white'}}
+                                        >
+                                            Suivant
+                                        </Button>}
+                                        {page === 3 && 
+                                        <Field render={({form}) => {
+                                            let cancel = true;
+        
+                                            if (form.values.createShop.flexible_cancel === true || form.values.createShop.moderate_cancel === true || form.values.createShop.strict_cancel === true) {
+                                                cancel = false;
+                                            } else {
+                                                cancel = true;
+                                            }
+        
+                                            return (
+                                                <Button type="submit" variant="contained" color="secondary" style={{marginTop: '45px', color: !cancel ? 'white' : null }} disabled={cancel}>
+                                                    Suivant
+                                                </Button>
+                                            )
+                                        }} />}
+                                        {page === 4 &&
+                                            <Field render={({form}) => {
+                                                let check = true;
+
+                                                if (form.values.createShop.is_particular === true) {
+                                                    check = false;
+                                                } else if(form.values.createShop.is_professional === true && form.values.createShop.is_microCompany === true) {
+                                                    check = false;
+                                                } else if (form.values.createShop.is_professional === true && form.values.createShop.isIndividualCompany === true) {
+                                                    check = false;
+                                                } else {
+                                                    check = true;
+                                                }
+
+                                                return (
+                                                    <Button type="submit" variant="contained" style={{marginTop: '45px', color: !check ? 'white' : null }} color="secondary" disabled={check}>
+                                                        Envoyer
+                                                    </Button>
+                                                )
+                                            }} />}
+                                    </div>
+                                    {/* POUR REVENIR EN ARRIERE */}
+                                    {/*page > 0 && (
+                        <button
+                        type="button"
+                        className="secondary"
+                        onClick={this.previous}
+                        >
+                        « Previous
+                        </button>
+                    )*/}
+
+                                    {/*!isLastPage && <button type="submit">Next »</button>*/}
+                                    {/*isLastPage && (
+                                        <button type="submit" disabled={isSubmitting}>
+                                            Submit
+                                        </button>
+                                    )*/}
+                                </div>
+                            </div>
+                            <div style={{width: '40%', overflow: 'hidden'}}>
+                                <img src='../../static/backgrounds-blank-blue-953214.jpg' height='100%'  width='100%'/>
+                            </div>
+                        </form>
+                    </React.Fragment>
                     
                 )}
             />
@@ -710,7 +822,7 @@ class Form extends React.Component {
         const { isChecked, isProfessional } = this.state;
 
         return (
-            <div className="App" style={{marginTop: 100}}>
+            <div className="App" style={{marginTop: 64}}>
 
                 <Wizard
                     initialValues={{
@@ -743,7 +855,8 @@ class Form extends React.Component {
                         alfredUpdate: {
                             phone: '',
                             profile_picture_user: null,
-                        }
+                        },
+                        checkArr: []
                     }}
                     onSubmit={(values, actions) => {
                         sleep(300).then(() => {
@@ -754,17 +867,9 @@ class Form extends React.Component {
                 >
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card} style={{minHeight: '400px !important'}}>
-                                <div className={classes.banner}>
-                                    <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'white'}}>Etape 1 - Choisissez vos catégories et services</h3>
-                                    <div>
-                                        <Bar>
-                                            <Fill4 />
-                                        </Bar>
-                                    </div>
-                                </div>
+                            <Card className={classes.card}>
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
-                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>Vos catégories de service</Typography>
+                                    <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Vos catégories de service</Typography>
                                     <Typography>
                                         Commencez par sélectionner vos catégories de services. Par exemple, si vous souhaitez réalisé un service de coiffure, sélectionnez la catégorie «Beauté et bien-être».
                                         Ne vous limitez pas ! Vous pouvez selectionner plusieurs catégories.
@@ -956,27 +1061,12 @@ class Form extends React.Component {
                                             </div> : null;
                                     }}
                                 </Field>
-                                <Field
-                                    render={({form}) => (
-                                        <Button type="submit" variant="contained" color="primary" style={{marginTop: '45px', color: form.values.submission.length > 0 ? 'white' : null }} disabled={form.values.submission.length > 0 ? false : true}>
-                                            Étape suivante
-                                        </Button>
-                                    )}
-                                />
                             </Card>
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
-                            {/*<Card className={classes.card}>*/}
-                                <div className={classes.banner}>
-                                    <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'white'}}>Etape 1 - Configuration de vos services</h3>
-                                    <div>
-                                        <Bar style={{width: '40%!important'}}>
-                                            <Fill />
-                                        </Bar>
-                                    </div>
-                                </div>
+                            <Card className={classes.card}>
                                 <FieldArray
                                     name="submission"
                                     render={(arrayHelpers) => {
@@ -1272,7 +1362,7 @@ class Form extends React.Component {
                                                                 <div style={{padding: '2rem'}}>
                                                             
 
-                                                                    <Grid container>
+                                                                    {/*<Grid container>
                                                                         {s.increases.label !== undefined ? (
                                                                             <React.Fragment>
                                                                                 <Grid item xs={12}>
@@ -1320,12 +1410,12 @@ class Form extends React.Component {
                                                                                 </Grid>
                                                                             </React.Fragment>
                                                                         ) : null}
-                                                                        {/*<label htmlFor="raised-button-file">
+                                                                        <label htmlFor="raised-button-file">
                                     <Button variant="contained" component="span">
                                         Ajouter un diplôme
                                     </Button>
-                                        </label> */}
-                                                                    </Grid>
+                                        </label>
+                                                                                </Grid>*/}
                                                                 </div>
                                                             </TabPanel>
                                                         )
@@ -1335,48 +1425,11 @@ class Form extends React.Component {
                                     }}
                                 />
                                 {/*<div>*/}
-                                <Field render={({form}) => {
-                                    const checkArr = [];
-
-                                    form.values.submission.map(pc => {
-                                        if (pc.prestationsCount > 0) {
-                                            return checkArr.push(true);
-                                        } else {
-                                            return checkArr.push(false);
-                                        }
-                                    })
-
-                                    const check = el => {
-                                        return el === false;
-                                    }
-
-                                    return (
-                                        <Button type="submit" variant="contained" color="primary" style={{marginTop: '45px', color: !checkArr.some(check) ? 'white' : null }} disabled={checkArr.some(check) ? true : false}>
-                                            Étape suivante
-                                        </Button>
-                                    )
-                                }} />
+                                
                                 {/*</div>*/}
-                            {/*</Card>*/}
+                            </Card>
                         </Grid>
-                        <Grid container className={classes.cardContainer}>
-                            <hr style={{margin: '1rem 0'}}></hr>
-                            <div style={{display: 'flex', justifyContent: 'space-between', width: '50%'}}>
-                                <Button
-                                    color="primary"
-                                >
-                                    Retour
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="secondary"
-                                    style={{color: 'white'}}
-                                >
-                                    Suivant
-                                </Button>
-                            </div>
-                        </Grid>
+                        
                     </Wizard.Page>
                     <Wizard.Page>
                         <Calendar />
@@ -1384,23 +1437,6 @@ class Form extends React.Component {
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
                             <Card className={classes.card}>
-                                <div className={classes.banner}>
-                                    <h3
-                                        style={{
-                                            fontFamily: "helveticaNeue",
-                                            marginLeft: 10,
-                                            color: "white"
-                                        }}
-                                    >
-                                        Etape 2
-                                    </h3>
-
-                                    <div>
-                                        <Bar>
-                                            <Fill />
-                                        </Bar>
-                                    </div>
-                                </div>
                                 <div className={classes.newContainer}>
                                     <Typography>Paramètres de réservation</Typography>
                                     <Grid container>
@@ -1743,7 +1779,7 @@ class Form extends React.Component {
                                         </Grid>
                                     </Grid>
                                 </div>
-                                <Field render={({form}) => {
+                                {/*<Field render={({form}) => {
                                     let cancel = true;
 
                                     if (form.values.createShop.flexible_cancel === true || form.values.createShop.moderate_cancel === true || form.values.createShop.strict_cancel === true) {
@@ -1757,7 +1793,7 @@ class Form extends React.Component {
                                             Étape suivante
                                         </Button>
                                     )
-                                }} />
+                                }} />*/}
                             </Card>
                         </Grid>
                     </Wizard.Page>
@@ -1767,23 +1803,6 @@ class Form extends React.Component {
                                 <React.Fragment>
                                     <Grid container className={classes.cardContainer}>
                                         <Card className={classes.card}>
-                                            <div className={classes.banner}>
-                                                <h3
-                                                    style={{
-                                                        fontFamily: "helveticaNeue",
-                                                        marginLeft: 10,
-                                                        color: "white"
-                                                    }}
-                                                >
-                                                    Etape 3
-                                                </h3>
-
-                                                <div>
-                                                    <Bar>
-                                                        <Fill2 />
-                                                    </Bar>
-                                                </div>
-                                            </div>
                                             <div className={classes.newContainer}>
                                                 <Typography style={{ paddingBottom: 20 }}>
                                                     Présentez vous !
@@ -2287,25 +2306,6 @@ class Form extends React.Component {
                                                     </Grid>
                                                 </Grid>
                                             </div>
-                                            <Field render={({form}) => {
-                                                let check = true;
-
-                                                if (form.values.createShop.is_particular === true) {
-                                                    check = false;
-                                                } else if(form.values.createShop.is_professional === true && form.values.createShop.is_microCompany === true) {
-                                                    check = false;
-                                                } else if (form.values.createShop.is_professional === true && form.values.createShop.isIndividualCompany === true) {
-                                                    check = false;
-                                                } else {
-                                                    check = true;
-                                                }
-
-                                                return (
-                                                    <Button type="submit" variant="contained" style={{marginTop: '45px', color: !check ? 'white' : null }} color="primary" disabled={check}>
-                                                        Envoyer
-                                                    </Button>
-                                                )
-                                            }} />
                                         </Card>
                                     </Grid>
                                 </React.Fragment>

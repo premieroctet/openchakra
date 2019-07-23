@@ -9,18 +9,18 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import '../../static/stylecalendar.css'
 const styles = theme => ({
   cardContainer: {
-    height: '120vh',
+    height: '85vh',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'scroll'
   },
   card: {
     padding: '1.5rem 2rem',
     display: 'flex',
     flexDirection: 'column',
-    height: 'auto',
-    maxHeight: 700,
     overflow: 'auto',
-    width: '70%',
+    width: '60%',
+    boxShadow: 'none'
   },
   calendar: {
     minHeight: '400px',
