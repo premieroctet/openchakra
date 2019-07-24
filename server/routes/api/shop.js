@@ -47,14 +47,14 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
                 shopFields.verified_phone = req.body.verified_phone;
                 shopFields.is_particular = req.body.is_particular;
                 shopFields.is_professional = req.body.is_professional;
-                if(req.body.self_employed) shopFields.self_employed = req.body.self_employed;
-                if(req.body.individual_company) shopFields.individual_company = req.body.individual_company;
+
 
                 shopFields.company = {};
                 if (req.body.name) shopFields.company.name = req.body.name;
                 if (req.body.creation_date) shopFields.company.creation_date = req.body.creation_date;
                 if (req.body.siret) shopFields.company.siret = req.body.siret;
                 if (req.body.naf_ape) shopFields.company.naf_ape = req.body.naf_ape;
+                if (req.body.status) shopFields.company.status = req.body.status;
 
 
 
@@ -218,9 +218,8 @@ router.put('/editParameters',passport.authenticate('jwt',{session:false}),(req,r
 router.put('/editStatus',passport.authenticate('jwt',{session:false}),(req,res) => {
     Shop.findOneAndUpdate({alfred: req.user.id},{
         is_particular: req.body.is_particular, is_professional: req.body.is_professional,
-        self_employed: req.body.self_employed, individual_company: req.body.individual_company,
         "company.name":req.body.name, "company.creation_date": req.body.creation_date,
-        "company.siret": req.body.siret, "company.naf_ape": req.body.naf_ape,
+        "company.siret": req.body.siret, "company.naf_ape": req.body.naf_ape, "company.status":req.body.status
     }, {new: true})
         .then(shop => {
             res.json(shop)

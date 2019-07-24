@@ -58,12 +58,11 @@ class editStatus extends React.Component {
         this.state = {
             is_particular: false,
             is_professional: false,
-            self_employed: false,
-            individual_company: false,
             siret: '',
             nafape: '',
             creationDate: '',
             denomination: '',
+            status: '',
             shop: {},
             company: {},
             check: false,
@@ -82,10 +81,10 @@ class editStatus extends React.Component {
             .then(res => {
                 let shop = res.data;
                 this.setState({shop:shop, is_particular: shop.is_particular, is_professional: shop.is_professional,
-                    self_employed: shop.self_employed, individual_company: shop.individual_company, company: shop.company});
+                     company: shop.company});
 
                 this.setState({denomination: this.state.company.name, creationDate: this.state.company.creation_date, siret: this.state.company.siret,
-                nafape: this.state.company.naf_ape});
+                nafape: this.state.company.naf_ape, status: this.state.company.status});
 
                 if(this.state.is_professional === true) {
                     this.setState({check: true})
@@ -118,12 +117,11 @@ class editStatus extends React.Component {
     handleChecked2 () {
         this.setState({check: !this.state.check});
         this.setState({is_professional: false});
-        this.setState({self_employed: false});
-        this.setState({individual_company: false});
         this.setState({denomination: ''});
         this.setState({siret: ''});
         this.setState({nafape: ''});
         this.setState({creationDate: ''});
+        this.setState({status: ''});
     }
 
     onChange2 = e => {
@@ -136,8 +134,7 @@ class editStatus extends React.Component {
         const newStatus = {
             is_particular: this.state.is_particular,
             is_professional: this.state.is_professional,
-            self_employed: this.state.self_employed,
-            individual_company: this.state.individual_company,
+            status: this.state.status,
             name: this.state.denomination,
             creation_date: this.state.creationDate,
             siret: this.state.siret,
@@ -165,7 +162,8 @@ class editStatus extends React.Component {
         axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siret/${code}`)
             .then(res => {
                 const data = res.data;
-                this.setState({denomination: data.etablissement.l1_normalisee, nafape: data.etablissement.activite_principale});
+                this.setState({denomination: data.etablissement.l1_normalisee, nafape: data.etablissement.activite_principale,
+                status: data.etablissement.libelle_nature_juridique_entreprise});
                 const date = data.etablissement.date_creation;
                 const year = date.substring(0,4);
                 const month = date.substring(4,6);
@@ -230,34 +228,7 @@ class editStatus extends React.Component {
                                 </Grid>
                                 {check ?
                                     <React.Fragment>
-                                <Grid item>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={this.state.self_employed}
-                                                onChange={this.onChange}
-                                                value={this.state.self_employed}
-                                                name="self_employed"
-                                                color="primary"
-                                            />
-                                        }
-                                        label="Je suis auto-entrepreneur"
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={this.state.individual_company}
-                                                onChange={this.onChange}
-                                                value={this.state.individual_company}
-                                                name="individual_company"
-                                                color="primary"
-                                            />
-                                        }
-                                        label="Micro entreprise"
-                                    />
-                                </Grid>
+
                                 <Grid item>
 
                                     <TextField
@@ -284,7 +255,12 @@ class editStatus extends React.Component {
 
                                 <Grid item>
                                     <p>NAF/APE : {this.state.nafape}</p>
-                                </Grid></React.Fragment> : null }
+                                </Grid>
+                                        <Grid item>
+                                            <p>Statut juridique : {this.state.status}</p>
+                                        </Grid>
+
+                                    </React.Fragment> : null }
 
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color:'white' }}>

@@ -53,14 +53,6 @@ const ShopSchema = new Schema({
         type: Boolean,
 
     },
-    self_employed: {
-        type: Boolean,
-
-    },
-    individual_company: {
-        type: Boolean,
-
-    },
     company: {
         name: {
             type: String
@@ -72,6 +64,9 @@ const ShopSchema = new Schema({
             type: String
         },
         naf_ape: {
+            type: String
+        },
+        status: {
             type: String
         }
     },
