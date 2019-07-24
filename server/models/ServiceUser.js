@@ -24,16 +24,23 @@ const ServiceUserSchema = new Schema({
             ref: 'equipment'
 
     }],
-    city: {
-        type: String,
-    },
-    gps : {
-      lat: {
-          type: Number
-      },
-      lng: {
-          type: Number
-      }
+    service_address: {
+        address: {
+            type: String
+        },
+        city: {
+            type: String
+        },
+        zip_code: {
+            type: String
+        },
+        country: {
+            type: String
+        },
+        gps : {
+            lat: Number,
+            lng: Number
+        }
     },
     perimeter: {
         type: Number
