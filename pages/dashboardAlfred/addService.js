@@ -73,6 +73,7 @@ class addService extends React.Component {
         this.handleChangeCategory = this.handleChangeCategory.bind(this);
         this.handleChangeSelect = this.handleChangeSelect.bind(this);
         this.handleCityClick = this.handleCityClick.bind(this);
+        this.handleLevel = this.handleLevel.bind(this);
     }
 
     componentDidMount() {
@@ -159,6 +160,10 @@ class addService extends React.Component {
     onChange2 = city => {
         this.setState({ city });
 
+    };
+
+    handleLevel = level => {
+      this.setState({level})
     };
 
 
@@ -313,6 +318,25 @@ class addService extends React.Component {
 
                                     />
                                 </Grid>
+                                <Grid item>
+                                    <Select
+                                        placeholder="Vos années d'expériences"
+                                        options={[
+                                            {value: 'ZeroOrOne', label: 'Entre 0 et 1 an'},
+                                            {value: 'OneToFive', label: 'Entre 1 et 5 ans'},
+                                            {value: 'FiveToTen', label: 'Entre 5 et 10 ans'},
+                                            {value: 'MoreThanTen', label: 'Plus de 10 ans'},
+                                        ]}
+                                        onChange={this.handleLevel}
+                                        theme={theme => ({
+                                            ...theme,
+                                            colors: {
+                                                ...theme.colors,
+                                                primary: '#2FBCD3',
+                                            }
+                                        })}
+                                    />
+                                </Grid>
                                 {city_check ?
 
                                     <React.Fragment>
@@ -345,6 +369,7 @@ class addService extends React.Component {
                                                     helperText="Choisissez maintenant votre ville en la recherchant dans le menu"
                                                 />
                                             </Grid>
+
 
                                     </React.Fragment>
                                     : null}
