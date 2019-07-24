@@ -86,11 +86,13 @@ class add extends React.Component {
             all_filter_presentation: [],
             selectedOption: null,
             selectedTags: null,
+            selectedBilling: null,
             errors: {},
         };
         this.onChangeFile = this.onChangeFile.bind(this);
         this.handleChangeSelect = this.handleChangeSelect.bind(this);
         this.handleChangeTags = this.handleChangeTags.bind(this);
+        this.handleChangeBilling = this.handleChangeBilling.bind(this);
     }
 
     componentDidMount() {
@@ -183,6 +185,11 @@ class add extends React.Component {
 
     };
 
+    handleChangeBilling = selectedBilling => {
+        this.setState({ selectedBilling });
+
+    };
+
     handleChange2 = e => {
         this.setState({tags: e.target.value})
 
@@ -196,6 +203,7 @@ class add extends React.Component {
     onSubmit = e => {
         let arrayFilter = [];
         let arrayTags = [];
+        let arrayBilling = [];
         if(this.state.selectedOption != null){
             this.state.selectedOption.forEach(c => {
 
@@ -211,13 +219,21 @@ class add extends React.Component {
 
             });
         }
+
+        if(this.state.selectedBilling != null){
+            this.state.selectedBilling.forEach(t => {
+
+                arrayBilling.push(t.value);
+
+            });
+        }
         e.preventDefault();
         const formData = new FormData();
         formData.append('label',this.state.label);
         formData.append('price',this.state.price);
         formData.append('category',this.state.category);
         formData.append('service',this.state.service);
-        formData.append('billing',this.state.billing);
+        formData.append('billing',JSON.stringify(arrayBilling));
         formData.append('calculating',this.state.calculating);
         formData.append('job',this.state.job);
         formData.append('search_filter',JSON.stringify(arrayFilter));
@@ -272,6 +288,11 @@ class add extends React.Component {
         const optionsTags = all_tags.map(tag => ({
             label: tag.label,
             value: tag._id
+        }));
+
+        const optionsBilling = all_billing.map(billing => ({
+            label: billing.label,
+            value: billing._id
         }));
 
 
@@ -363,28 +384,18 @@ class add extends React.Component {
                                     <em>{errors.service}</em>
                                 </Grid>
                                 <Grid item style={{width: '100%',marginTop: 20}}>
+                                    <Typography style={{ fontSize: 17 }}>Méthodes de facturation</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Méthode de facturation
-                                        </InputLabel>
-                                        <Select
-                                            input={<Input name="billing" id="genre-label-placeholder" />}
-                                            displayEmpty
-                                            name="billing"
-                                            value={this.state.billing}
-                                            onChange={this.onChange}
-                                            className={classes.selectEmpty}
-                                        >
-                                            <MenuItem value="">
-                                                <em>...</em>
-                                            </MenuItem>
-                                            {all_billing.map(e => (
-                                                <MenuItem key={e._id} value={e._id} >
-                                                    {e.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                        <FormHelperText>Sélectionner une méthode de facturation</FormHelperText>
+
+                                        <Select2
+                                            value={this.state.selectedBilling}
+                                            onChange={this.handleChangeBilling}
+                                            options={optionsBilling}
+                                            isMulti
+                                            isSearchable
+                                            closeMenuOnSelect={false}
+
+                                        />
                                     </FormControl>
                                     <em>{errors.billing}</em>
                                 </Grid>

@@ -70,7 +70,7 @@ class view extends React.Component {
             current_service: '',
             current_search_filter: [],
             current_category: '',
-            current_billing: '',
+            current_billing: [],
             current_filter_presentation: '',
             current_calculating: '',
             current_job: '',
@@ -94,12 +94,13 @@ class view extends React.Component {
             tags: [],
             selectedTags: null,
             selectedFilter: null,
-
+            selectedBilling: null,
         };
 
         this.handleClick = this.handleClick.bind(this);
         this.handleChangeTags = this.handleChangeTags.bind(this);
         this.handleChangeFilter = this.handleChangeFilter.bind(this);
+        this.handleChangeBilling = this.handleChangeBilling.bind(this);
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -128,6 +129,11 @@ class view extends React.Component {
                 this.setState({selectedFilter :this.state.current_search_filter.map(p => ({
                         label: p.label,
                         value: p._id
+                    })) });
+
+                this.setState({selectedBilling :this.state.current_billing.map(q => ({
+                        label: q.label,
+                        value: q._id
                     })) });
 
 
@@ -226,10 +232,16 @@ class view extends React.Component {
 
     };
 
+    handleChangeBilling = selectedBilling => {
+        this.setState({ selectedBilling });
+
+    };
+
     onSubmit = e => {
         e.preventDefault();
         let arrayFilter = [];
         let arrayTags = [];
+        let arrayBilling = [];
         if(this.state.selectedFilter != null){
             this.state.selectedFilter.forEach(c => {
 
@@ -245,10 +257,18 @@ class view extends React.Component {
 
             });
         }
+
+        if(this.state.selectedBilling != null){
+            this.state.selectedBilling.forEach(w => {
+
+                arrayBilling.push(w.value);
+
+            });
+        }
         const tags = arrayTags;
         const service = this.state.service;
         const category = this.state.category;
-        const billing = this.state.billing;
+        const billing = arrayBilling;
         const calculating = this.state.calculating;
         const search_filter = arrayFilter;
         const job = this.state.job;
@@ -319,6 +339,11 @@ class view extends React.Component {
         const optionsTags = all_tags.map(tag => ({
             label: tag.label,
             value: tag._id
+        }));
+
+        const optionsBilling = all_billing.map(billing => ({
+            label: billing.label,
+            value: billing._id
         }));
 
 
@@ -405,28 +430,18 @@ class view extends React.Component {
                                     </FormControl>
                                 </Grid>
                                 <Grid item style={{width: '100%',marginTop:20}}>
-                                    <Typography style={{ fontSize: 20 }}>{current_billing.label}</Typography>
+                                    <Typography style={{ fontSize: 20 }}>Méthodes de facturations</Typography>
+
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Méthode de facturation
-                                        </InputLabel>
-                                        <Select
-                                            input={<Input name="billing" id="genre-label-placeholder" />}
-                                            displayEmpty
-                                            name="billing"
-                                            value={this.state.billing}
-                                            onChange={this.onChange2}
-                                            className={classes.selectEmpty}
-                                        >
-                                            <MenuItem value="">
-                                                <em>...</em>
-                                            </MenuItem>
-                                            {all_billing.map(e => (
-                                                <MenuItem key={e._id} value={e._id} >
-                                                    {e.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
+                                        <Select2
+                                            value={this.state.selectedBilling}
+                                            onChange={this.handleChangeBilling}
+                                            options={optionsBilling}
+                                            isMulti
+                                            isSearchable
+                                            closeMenuOnSelect={false}
+
+                                        />
                                     </FormControl>
                                 </Grid>
                                 <Grid item style={{width: '100%',marginTop:20}}>

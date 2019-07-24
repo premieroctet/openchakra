@@ -13,10 +13,10 @@ const PrestationSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'service'
     },
-    billing: {
+    billing: [{
         type: Schema.Types.ObjectId,
         ref: 'billing'
-    },
+    }],
     filter_presentation: {
         type: Schema.Types.ObjectId,
         ref: 'filterPresentation'
