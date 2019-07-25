@@ -6,14 +6,13 @@ const AvailabilitySchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    date:[ {
       monday: {
           event: [{
               begin: {
-                  type: Date
+                  type: String
               },
               end: {
-                  type: Date
+                  type: String
               },
               service: {
                   type: Schema.Types.ObjectId,
@@ -28,10 +27,10 @@ const AvailabilitySchema = new Schema({
       tuesday: {
             event: [{
                 begin: {
-                    type: Date
+                    type: String
                 },
                 end: {
-                    type: Date
+                    type: String
                 },
                 service: {
                     type: Schema.Types.ObjectId,
@@ -46,10 +45,10 @@ const AvailabilitySchema = new Schema({
       wednesday: {
             event: [{
                 begin: {
-                    type: Date
+                    type: String
                 },
                 end: {
-                    type: Date
+                    type: String
                 },
                 service: {
                     type: Schema.Types.ObjectId,
@@ -64,10 +63,10 @@ const AvailabilitySchema = new Schema({
       thursday: {
             event: [{
                 begin: {
-                    type: Date
+                    type: String
                 },
                 end: {
-                    type: Date
+                    type: String
                 },
                 service: {
                     type: Schema.Types.ObjectId,
@@ -82,10 +81,10 @@ const AvailabilitySchema = new Schema({
       friday: {
             event: [{
                 begin: {
-                    type: Date
+                    type: String
                 },
                 end: {
-                    type: Date
+                    type: String
                 },
                 service: {
                     type: Schema.Types.ObjectId,
@@ -100,10 +99,10 @@ const AvailabilitySchema = new Schema({
       saturday: {
             event: [{
                 begin: {
-                    type: Date
+                    type: String
                 },
                 end: {
-                    type: Date
+                    type: String
                 },
                 service: {
                     type: Schema.Types.ObjectId,
@@ -118,10 +117,10 @@ const AvailabilitySchema = new Schema({
       sunday: {
             event: [{
                 begin: {
-                    type: Date
+                    type: String
                 },
                 end: {
-                    type: Date
+                    type: String
                 },
                 service: {
                     type: Schema.Types.ObjectId,
@@ -132,8 +131,7 @@ const AvailabilitySchema = new Schema({
                     default: false
                 }
             }]
-      }
-    }],
+      },
     period: {
         active: {
             type: Boolean,
