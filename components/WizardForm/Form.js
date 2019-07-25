@@ -27,6 +27,7 @@ import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Switch from "@material-ui/core/Switch";
 import CircleCheckedFilled from '@material-ui/icons/CheckCircle';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
+import FiberManualRecord from '@material-ui/icons/FiberManualRecord';
 import Select from 'react-select';
 
 import { Debug } from './Debug';
@@ -36,6 +37,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CityFinder from './CityFinder';
 import Siret from './Siret';
 import '../../static/form.css';
+import '../../static/forminputs.css';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -507,7 +509,7 @@ class Wizard extends React.Component {
                             {page === 3 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
                             {page === 4 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
                             <div>
-                                <Bar style={{backgroundColor: '#2FBCD3'}}>
+                                <Bar style={{backgroundColor: '#cacfe4'}}>
                                     <Fill4 />
                                 </Bar>
                             </div>
@@ -517,7 +519,7 @@ class Wizard extends React.Component {
                                 <div style={{height: '85%', overflowY: 'scroll'}}>
                                     {activePage}
                                 </div>
-                                <div className="buttons" style={{position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '0 3rem 3rem 3rem', backgroundColor: 'transparent', zIndex: '9999999'}}>
+                                <div className="buttons" style={{position: 'absolute', bottom: 0, left: 0, top: page === 2 ? '726px' : 'none', width: '100%', padding: '0 3rem 3rem 3rem', backgroundColor: 'transparent', zIndex: '9999999'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                         <Button
                                             color="primary"
@@ -565,7 +567,7 @@ class Wizard extends React.Component {
                                             type="submit"
                                             variant="contained"
                                             color="secondary"
-                                            style={{color: 'white'}}
+                                            style={{marginTop: '45px', color: 'white'}}
                                         >
                                             Suivant
                                         </Button>}
@@ -880,7 +882,7 @@ class Form extends React.Component {
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Vos catégories de service</Typography>
                                     <Typography>
-                                        Commencez par sélectionner vos catégories de services. Par exemple, si vous souhaitez réalisé un service de coiffure, sélectionnez la catégorie «Beauté et bien-être».
+                                        Commencez par sélectionner vos catégories de services. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être».
                                         Ne vous limitez pas ! Vous pouvez selectionner plusieurs catégories.
                                     </Typography>
                                 </div>
@@ -945,7 +947,7 @@ class Form extends React.Component {
                                                                                         <FormControlLabel
                                                                                             key={index}
                                                                                             control={
-                                                                                                <Checkbox
+                                                                                                <Switch
                                                                                                     color="primary"
                                                                                                     type="checkbox"
                                                                                                     checked={service.checked}
@@ -1011,7 +1013,7 @@ class Form extends React.Component {
                                                             })
                                                             axios.get(`${url}myAlfred/api/service/${service}`)
                                                                 .then(res => {
-                                                                    let servCompObj = { CategoryLabel : res.data.category.label, serviceId: res.data._id, serviceLabel: res.data.label, descService: '', minimumBasket: '', diploma: null,certification: null, perimeter: 50, delayBeforeShop: '', delayBeforeShopDWM: null, city: this.state.userCity, experienceYears: null, option: null, increases: { label: res.data.majoration, price: 0, checked: false }, prestationsCount: 0, cancelChoice: false, equipments: [], filters: [] }
+                                                                    let servCompObj = { CategoryLabel : res.data.category.label, serviceId: res.data._id, serviceLabel: res.data.label, descService: '', minimumBasket: '', diploma: { label: null, year: null, document: null }, certification: { label : null, year: null, document: null }, perimeter: 50, delayBeforeShop: '', delayBeforeShopDWM: null, city: this.state.userCity, experienceYears: null, option: null, increases: { label: res.data.majoration, price: 0, checked: false }, prestationsCount: 0, cancelChoice: false, equipments: [], filters: [] }
                                                                     res.data.equipments.map(e => {
                                                                         const equipObj = { id: e._id, label: e.label, logo: e.logo, name_logo: e.name_logo, checked: false }
                                                                         servCompObj.equipments.push(equipObj);
@@ -1413,8 +1415,8 @@ class Form extends React.Component {
                                                                                 <Typography style={{marginBottom: '1.5rem', fontSize: 17}}>Définissez à présent le périmètre que vous souhaitez couvrir :</Typography>
                                                                                 <InputRange
                                                                                     formatLabel={value => `${value}km`}
-                                                                                    step={10}
-                                                                                    maxValue={1000}
+                                                                                    step={5}
+                                                                                    maxValue={500}
                                                                                     minValue={5}
                                                                                     value={arrayHelpers.form.values.submission[index].perimeter}
                                                                                     onChange={inputRangeValue => arrayHelpers.form.setFieldValue(`submission[${index}].perimeter`, inputRangeValue)}
@@ -1522,24 +1524,86 @@ class Form extends React.Component {
                                                                                     />
                                                                                 </Grid>
                                                                                 <Grid item xs={12}>
-                                                                                    <label>
-                                                                                        Diplôme
-                                                                                        <input id="file" name="diploma" type="file" onChange={(event) => {
-                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma`, event.currentTarget.files[0]);
+                                                                                    <Field
+                                                                                        name={`submission.${index}.diploma.label`}
+                                                                                        render={({field}) => {
+                                                                                            return (
+                                                                                                <TextField
+                                                                                                    {...field}
+                                                                                                    style={{width: '30%', marginRight: '5%'}}
+                                                                                                    label="Nom du diplôme"
+                                                                                                    margin="dense"
+                                                                                                    variant="outlined"
+                                                                                                    //helperText="Délai de prévenance avant réservation."
+                                                                                                />
+                                                                                            )
+                                                                                        }}
+                                                                                    />
+                                                                                    <Field
+                                                                                        name={`submission.${index}.diploma.year`}
+                                                                                        render={({field}) => {
+                                                                                            return (
+                                                                                                <TextField
+                                                                                                    {...field}
+                                                                                                    style={{width: '30%', marginRight: '5%'}}
+                                                                                                    label="Année d'obtention"
+                                                                                                    margin="dense"
+                                                                                                    variant="outlined"
+                                                                                                    //helperText="Délai de prévenance avant réservation."
+                                                                                                />
+                                                                                            )
+                                                                                        }}
+                                                                                    />
+                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                        Joindre mon diplôme
+                                                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" onChange={(event) => {
+                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma.document`, event.currentTarget.files[0]);
                                                                                         }} className="form-control"
                                                                                         />
                                                                                     </label>
-                                                                                    <Thumb file={arrayHelpers.form.values.submission[index].diploma} />
+                                                                                    <span>{arrayHelpers.form.values.submission[index].diploma.document !== null ? arrayHelpers.form.values.submission[index].diploma.document.name : null}</span>
+                                                                                    {/*<Thumb file={arrayHelpers.form.values.submission[index].diploma} />*/}
                                                                                 </Grid>
                                                                                 <Grid item xs={12}>
-                                                                                    <label>
-                                                                                        Certification
-                                                                                        <input id="file" name="certification" type="file" onChange={(event) => {
-                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification`, event.currentTarget.files[0]);
+                                                                                    <Field
+                                                                                        name={`submission.${index}.certification.label`}
+                                                                                        render={({field}) => {
+                                                                                            return (
+                                                                                                <TextField
+                                                                                                    {...field}
+                                                                                                    style={{width: '30%', marginRight: '5%'}}
+                                                                                                    label="Nom du certificat"
+                                                                                                    margin="dense"
+                                                                                                    variant="outlined"
+                                                                                                    //helperText="Délai de prévenance avant réservation."
+                                                                                                />
+                                                                                            )
+                                                                                        }}
+                                                                                    />
+                                                                                    <Field
+                                                                                        name={`submission.${index}.certification.year`}
+                                                                                        render={({field}) => {
+                                                                                            return (
+                                                                                                <TextField
+                                                                                                    {...field}
+                                                                                                    style={{width: '30%', marginRight: '5%'}}
+                                                                                                    label="Année d'obtention"
+                                                                                                    margin="dense"
+                                                                                                    variant="outlined"
+                                                                                                    //helperText="Délai de prévenance avant réservation."
+                                                                                                />
+                                                                                            )
+                                                                                        }}
+                                                                                    />
+                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                        Joindre ma certification
+                                                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certification" type="file" onChange={(event) => {
+                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification.document`, event.currentTarget.files[0]);
                                                                                         }} className="form-control"
                                                                                         />
                                                                                     </label>
-                                                                                    <Thumb file={arrayHelpers.form.values.submission[index].certification} />
+                                                                                    <span>{arrayHelpers.form.values.submission[index].certification.document !== null ? arrayHelpers.form.values.submission[index].certification.document.name : null}</span>
+                                                                                    {/*<Thumb file={arrayHelpers.form.values.submission[index].certification} />*/}
                                                                                 </Grid>
                                                                             </Grid>
                                                                             
@@ -1856,7 +1920,7 @@ class Form extends React.Component {
                                            Vos conditions d'annulation
                                         </h6>
 
-                                        <Typography style={{fontFamily: 'helveticaNeue'}}>
+                                        <Typography style={{fontFamily: 'helveticaNeue', width: '100%'}}>
                                             Choisissez vos conditions en cas d'annulation de la part
                                             des utilisateurs.
                                         </Typography>
@@ -1883,7 +1947,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"flexible_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<CircleCheckedFilled color="primary" style={{fontSize: 30}} />}
                                                                 style={{marginTop: -20}}
                                                             />
                                                         }
@@ -2620,7 +2684,7 @@ const Bar = styled.div`
 `;
 
 const Fill = styled.div`
-  background: #cacfe4;
+  background: #2FBCD3;
   height: 100%;
   border-radius: inherit;
   transition: width .2s ease-in;
@@ -2628,7 +2692,7 @@ const Fill = styled.div`
 `;
 
 const Fill2 = styled.div`
-    background: #cacfe4;
+    background: #2FBCD3;
     height: 100%;
     border-radius: inherit;
     transition: width .2s ease-in;
@@ -2636,7 +2700,7 @@ const Fill2 = styled.div`
 `;
 
 const Fill4 = styled.div`
-    background: #cacfe4;
+    background: #2FBCD3;
     height: 100%;
     border-radius: inherit;
     transition: width .2s ease-in;
