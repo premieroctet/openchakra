@@ -242,7 +242,7 @@ class Wizard extends React.Component {
                     a.prestations.forEach(b => {
 
                         if(b.checked === true) {
-                            const newObj = {prestation: b.id, price: b.price};
+                            const newObj = {prestation: b.id, price: b.price, billing: b.billing};
                             arrayPrestations.push(newObj);
 
                         }
@@ -890,7 +890,7 @@ class Form extends React.Component {
                                                                                     .then(res => {
                                                                                         res.data.map(prestation => {
                                                                                             console.log(prestation)
-                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: 0, billing: prestation.billing.label, checked: false };
+                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: 0, billing: prestation.billing, checked: false };
                                                                                             servCompObj.filters.map(p => {
                                                                                                 if (p.id === prestationObj.filterId) {
                                                                                                     p.prestations.push(prestationObj);
@@ -1003,7 +1003,8 @@ class Form extends React.Component {
                                                                                                     label={p.label}
                                                                                                 />
                                                                                                 {p.checked === true ?
-                                                                                                    <Field
+                                                                                                    <React.Fragment>
+                                                                                                        <Field
                                                                                                         name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`}
                                                                                                         placeholder="prix"
                                                                                                         render={({field, form}) => {
@@ -1011,7 +1012,7 @@ class Form extends React.Component {
                                                                                                                 <React.Fragment>
                                                                                                                     <TextField
                                                                                                                         {...field}
-                                                                                                                        label={`Prix/${p.billing}`}
+                                                                                                                        label={`Prix/`}
                                                                                                                         type="number"
                                                                                                                         disabled={!p.checked}
                                                                                                                         margin="none"
@@ -1023,7 +1024,33 @@ class Form extends React.Component {
                                                                                                                 </React.Fragment>
                                                                                                             )
                                                                                                         }}
-                                                                                                    /> : null}
+                                                                                                    />
+                                                                                                    <Field
+                                                                                                    name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`}
+                                                                                                    placeholder="méthode de facturation"
+                                                                                                    render={({field, form}) => {
+                                                                                                        return (
+                                                                                                            <React.Fragment>
+                                                                                                                <TextField
+                                                                                                                    {...field}
+                                                                                                                    helperText={`Méthode de facturation`}
+                                                                                                                    disabled={!p.checked}
+                                                                                                                    select
+                                                                                                                    margin="none"
+
+                                                                                                                >
+                                                                                                                    {p.billing.map(option => (
+                                                                                                                        <MenuItem key={option.value} value={option.label}>
+                                                                                                                            {option.label}
+                                                                                                                        </MenuItem>
+                                                                                                                    ))}
+                                                                                                                </TextField>
+                                                                                                                <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                                            </React.Fragment>
+                                                                                                        )
+                                                                                                    }}
+                                                                                                    />
+                                                                                                    </React.Fragment>: null}
                                                                                             </div>
                                                                                         )
                                                                                     })}

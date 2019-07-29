@@ -11,11 +11,13 @@ const ServiceUserSchema = new Schema({
         ref: 'service'
     },
     prestations:[{
-        prestation:{type: Schema.Types.ObjectId,
-            ref: 'prestation'}
-
-
-        ,
+        prestation:{
+            type: Schema.Types.ObjectId,
+            ref: 'prestation'
+        },
+        billing: {
+            type: String
+        },
         price: Number
     }],
     equipments: [{
