@@ -15,7 +15,19 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
     const fields = {};
     fields.user = req.user.id;
     fields.monday = {};
+    fields.tuesday = {};
+    fields.wednesday = {};
+    fields.thursday = {};
+    fields.friday = {};
+    fields.saturday = {};
+    fields.sunday = {};
     fields.monday.event = req.body.monday_event;
+    fields.tuesday.event = req.body.tuesday_event;
+    fields.wednesday.event = req.body.wednesday_event;
+    fields.thursday.event = req.body.thursday_event;
+    fields.friday.event = req.body.friday_event;
+    fields.saturday.event = req.body.saturday_event;
+    fields.sunday.event = req.body.sunday_event;
     fields.period = {};
     fields.period.active = req.body.active;
     fields.period.month_begin = req.body.month_begin;
@@ -32,6 +44,7 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
 router.get('/all',(req,res)=> {
 
     Availability.find()
+        .populate('services')
         .then(availability => {
             res.json(availability);
         })

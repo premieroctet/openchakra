@@ -14,10 +14,10 @@ const AvailabilitySchema = new Schema({
               end: {
                   type: String
               },
-              service: {
+              services: [{
                   type: Schema.Types.ObjectId,
                   ref: 'serviceUser'
-              },
+              }],
               all_services: {
                   type: Boolean,
                   default: false
@@ -32,10 +32,10 @@ const AvailabilitySchema = new Schema({
                 end: {
                     type: String
                 },
-                service: {
+                services: [{
                     type: Schema.Types.ObjectId,
                     ref: 'serviceUser'
-                },
+                }],
                 all_services: {
                     type: Boolean,
                     default: false
@@ -50,10 +50,10 @@ const AvailabilitySchema = new Schema({
                 end: {
                     type: String
                 },
-                service: {
+                services: [{
                     type: Schema.Types.ObjectId,
                     ref: 'serviceUser'
-                },
+                }],
                 all_services: {
                     type: Boolean,
                     default: false
@@ -68,10 +68,10 @@ const AvailabilitySchema = new Schema({
                 end: {
                     type: String
                 },
-                service: {
+                services: [{
                     type: Schema.Types.ObjectId,
                     ref: 'serviceUser'
-                },
+                }],
                 all_services: {
                     type: Boolean,
                     default: false
@@ -86,10 +86,10 @@ const AvailabilitySchema = new Schema({
                 end: {
                     type: String
                 },
-                service: {
+                services: [{
                     type: Schema.Types.ObjectId,
                     ref: 'serviceUser'
-                },
+                }],
                 all_services: {
                     type: Boolean,
                     default: false
@@ -104,10 +104,10 @@ const AvailabilitySchema = new Schema({
                 end: {
                     type: String
                 },
-                service: {
+                services: [{
                     type: Schema.Types.ObjectId,
                     ref: 'serviceUser'
-                },
+                }],
                 all_services: {
                     type: Boolean,
                     default: false
@@ -122,10 +122,10 @@ const AvailabilitySchema = new Schema({
                 end: {
                     type: String
                 },
-                service: {
+                services: [{
                     type: Schema.Types.ObjectId,
                     ref: 'serviceUser'
-                },
+                }],
                 all_services: {
                     type: Boolean,
                     default: false
