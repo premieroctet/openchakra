@@ -415,12 +415,13 @@ class Wizard extends React.Component {
     };
 
     phoneRegEx = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
+    Step0Schema = null;
     Step1Schema = null;
     Step2Schema = Yup.object().shape({
           submission: Yup.array().of(Yup.object().shape({
             descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
             minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').required('Le minimum d\'achat est requis'),
-            delayBeforeShop: Yup.number().typeError('Le délais doit être un nombre').required(),
+            delayBeforeShop: Yup.number().typeError('Le délai doit être un nombre').required(),
             delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi heures, jours et semaines').required(),
             city: Yup.object().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
             filters: Yup.array().of(Yup.object().shape({
@@ -485,7 +486,7 @@ class Wizard extends React.Component {
         })
     })
 
-    schemaArray =[this.Step1Schema, this.Step2Schema, this.Step3Schema, this.Step4Schema, this.Step5Schema]
+    schemaArray =[this.Step0Schema, this.Step1Schema, this.Step2Schema, this.Step3Schema, this.Step4Schema, this.Step5Schema]
 
     render() {
         const { schemaArray } = this;
@@ -502,34 +503,42 @@ class Wizard extends React.Component {
                 onSubmit={this.handleSubmit}
                 render={({ values, handleSubmit, isSubmitting, setFieldValue, handleReset }) => (
                     <React.Fragment>
-                        <div style={{backgroundColor: 'white'}}>
-                            {page === 0 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez vos catégories et services</h3> : null}
-                            {page === 1 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de vos services</h3> : null}
-                            {page === 2 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
-                            {page === 3 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
-                            {page === 4 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
+                        {page !== 0 && <div style={{backgroundColor: 'white'}}>
+                            {page === 1 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez vos catégories et services</h3> : null}
+                            {page === 2 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de vos services</h3> : null}
+                            {page === 3 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+                            {page === 4 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+                            {page === 5 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
                             <div>
                                 <Bar style={{backgroundColor: '#cacfe4'}}>
                                     <Fill4 />
                                 </Bar>
                             </div>
-                        </div>
+                        </div>}
                         <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row'}}>
-                            <div style={{position: 'relative', backgroundColor: 'white'}}>
-                                <div style={{height: '85%', overflowY: 'scroll'}}>
+                            <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none'}}>
+                                <div style={{height: page !== 0 ? '85%' : '94vh', overflowY: 'scroll'}}>
                                     {activePage}
                                 </div>
                                 <div className="buttons" style={{position: 'absolute', bottom: 0, left: 0, top: page === 2 ? '726px' : 'none', width: '100%', padding: '0 3rem 3rem 3rem', backgroundColor: 'transparent', zIndex: '9999999'}}>
-                                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                        <Button
+                                    <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
+                                        {page !== 0 && <Button
                                             color="primary"
                                             type="button"
                                             onClick={this.previous}
                                             disabled={page === 0 ? true : false}
                                         >
                                             Retour
-                                        </Button>
+                                        </Button>}
                                         {page === 0 && <Button
+                                            type="submit"
+                                            variant="contained"
+                                            color="secondary"
+                                            style={{color: 'white'}}
+                                        >
+                                            Suivant
+                                        </Button>}
+                                        {page === 1 && <Button
                                             type="submit"
                                             variant="contained"
                                             color="secondary"
@@ -538,7 +547,7 @@ class Wizard extends React.Component {
                                         >
                                             Suivant
                                         </Button>}
-                                        {page === 1 && 
+                                        {page === 2 && 
                                             <Field render={({form}) => {
                                                 const checkArr = [];
 
@@ -563,7 +572,7 @@ class Wizard extends React.Component {
                                                 )
                                             }} 
                                         />}
-                                        {page === 2 && <Button
+                                        {page === 3 && <Button
                                             type="submit"
                                             variant="contained"
                                             color="secondary"
@@ -571,7 +580,7 @@ class Wizard extends React.Component {
                                         >
                                             Suivant
                                         </Button>}
-                                        {page === 3 && 
+                                        {page === 4 && 
                                         <Field render={({form}) => {
                                             let cancel = true;
         
@@ -587,7 +596,7 @@ class Wizard extends React.Component {
                                                 </Button>
                                             )
                                         }} />}
-                                        {page === 4 &&
+                                        {page === 5 &&
                                             <Field render={({form}) => {
                                                 let check = true;
 
@@ -878,6 +887,36 @@ class Form extends React.Component {
                 >
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
+                            <Card className={classes.card} style={{width: '100%'}}>
+                                <div style={{padding: '0rem 2rem 1rem 2rem'}}>
+                                    <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
+                                    <hr style={{margin: '1rem 0'}} />
+                                </div>
+                                <div className="steps">
+                                    <div className="step1">
+                                        <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 1</Typography>
+                                        <hr style={{border: '4px solid grey', marginRight: 150}} />
+                                        <Typography style={{fontSize: 18}}>Créez votre boutique de service</Typography>
+                                        <Typography>Sélectionnez les services que vous souhaitez offrir</Typography>
+                                    </div>
+                                    <div className="step2">
+                                        <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 2</Typography>
+                                        <hr style={{border: '4px solid grey', marginRight: 150}} />
+                                        <Typography style={{fontSize: 18}}>Indiquez vos disponiblités & conditions</Typography>
+                                        <Typography>Indiquez vos disponibilités ,paramètres de réservation et vos conditions d’annulation</Typography>
+                                    </div>
+                                    <div className="step3">
+                                        <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 3</Typography>
+                                        <hr style={{border: '4px solid grey', marginRight: 150}} />
+                                        <Typography style={{fontSize: 18}}>Présentez-vous !</Typography>
+                                        <Typography>Renseignez votre profil Alfred, partager vos réalisa- tions, et décrivez vous !</Typography>
+                                    </div>
+                                </div> 
+                            </Card>
+                        </Grid>
+                    </Wizard.Page>
+                    <Wizard.Page>
+                        <Grid container className={classes.cardContainer}>
                             <Card className={classes.card}>
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Vos catégories de service</Typography>
@@ -1013,7 +1052,7 @@ class Form extends React.Component {
                                                             })
                                                             axios.get(`${url}myAlfred/api/service/${service}`)
                                                                 .then(res => {
-                                                                    let servCompObj = { CategoryLabel : res.data.category.label, serviceId: res.data._id, serviceLabel: res.data.label, descService: '', minimumBasket: '', diploma: { label: null, year: null, document: null }, certification: { label : null, year: null, document: null }, perimeter: 50, delayBeforeShop: '', delayBeforeShopDWM: null, city: this.state.userCity, experienceYears: null, option: null, increases: { label: res.data.majoration, price: 0, checked: false }, prestationsCount: 0, cancelChoice: false, equipments: [], filters: [] }
+                                                                    let servCompObj = { CategoryLabel : res.data.category.label, serviceId: res.data._id, serviceLabel: res.data.label, descService: '', minimumBasket: '', diploma: { label: null, year: null, document: null }, certification: { label : null, year: null, document: null }, perimeter: 50, delayBeforeShop: 1, delayBeforeShopDWM: null, city: this.state.userCity, experienceYears: null, option: null, increases: { label: res.data.majoration, price: 0, checked: false }, prestationsCount: 0, cancelChoice: false, equipments: [], filters: [] }
                                                                     res.data.equipments.map(e => {
                                                                         const equipObj = { id: e._id, label: e.label, logo: e.logo, name_logo: e.name_logo, checked: false }
                                                                         servCompObj.equipments.push(equipObj);
@@ -1082,6 +1121,14 @@ class Form extends React.Component {
                                 <FieldArray
                                     name="submission"
                                     render={(arrayHelpers) => {
+                                        // POUR LES DATES D OBTENTIONS DE DIPLOME ET CERTIFS
+                                        let dates = [];
+                                        const actualDate = new Date().getFullYear();
+                                        for (let i = 1950; i <= actualDate; i++) {
+                                            dates.push(i);
+                                            console.log(dates);
+                                            console.log(arrayHelpers);
+                                        }
                                         return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
                                             <React.Fragment>
                                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
@@ -1093,7 +1140,7 @@ class Form extends React.Component {
                                                 <Tabs>
                                                     <TabList style={{padding: '0 2rem'}}>
                                                         {this.state.allInOneServ.map((data, index) => {
-                                                            return <Tab key={index} style={{backgroundColor: '#2FBCD3', color: 'white', fontSize: '20px', border: '1px solid white', borderTopRightRadius: 20, marginRight: '-40px', position: 'relative', zIndex: 999 - index}}><div style={{padding: '0 2rem 0 2rem'}}>{data.serviceLabel}</div></Tab>
+                                                            return <Tab key={index} /*style={{backgroundColor: '#2FBCD3', color: 'white', fontSize: '20px', border: '1px solid white', borderTopRightRadius: 20, marginRight: '-40px', position: 'relative', zIndex: 999 - index}}*/><div style={{padding: '0 2rem 0 2rem'}}>{data.serviceLabel}</div></Tab>
                                                         })}
                                                     </TabList>
                                                     {this.state.allInOneServ.map((s, index) => {
@@ -1434,14 +1481,25 @@ class Form extends React.Component {
                                                                                     name={`submission.${index}.delayBeforeShop`}
                                                                                     render={({field}) => {
                                                                                         return (
-                                                                                            <TextField
-                                                                                                {...field}
-                                                                                                style={{width: '15%', marginRight: '5%'}}
-                                                                                                label="Délai"
-                                                                                                margin="dense"
-                                                                                                variant="outlined"
-                                                                                                //helperText="Délai de prévenance avant réservation."
-                                                                                            />
+                                                                                            <React.Fragment>
+                                                                                                <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }} onClick={() => {
+                                                                                                    if (arrayHelpers.form.values.submission[index].delayBeforeShop === 0) {
+                                                                                                        return arrayHelpers.form.setFieldValue(`submission.${index}.delayBeforeShop`, 0);
+                                                                                                    }
+                                                                                                    const minusOne = arrayHelpers.form.values.submission[index].delayBeforeShop - 1;
+                                                                                                    arrayHelpers.form.setFieldValue(`submission.${index}.delayBeforeShop`, minusOne);
+                                                                                                }}>
+                                                                                                    -
+                                                                                                </div>
+                                                                                                
+                                                                                                <div style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{arrayHelpers.form.values.submission[index].delayBeforeShop}</div>
+                                                                                                <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginLeft: 25, marginRight: '5%' }} onClick={() => {
+                                                                                                    const plusOne = arrayHelpers.form.values.submission[index].delayBeforeShop + 1;
+                                                                                                    arrayHelpers.form.setFieldValue(`submission.${index}.delayBeforeShop`, plusOne);
+                                                                                                }}>
+                                                                                                    +
+                                                                                                </div>
+                                                                                            </React.Fragment>
                                                                                         )
                                                                                     }}
                                                                                 />
@@ -1549,8 +1607,13 @@ class Form extends React.Component {
                                                                                                     label="Année d'obtention"
                                                                                                     margin="dense"
                                                                                                     variant="outlined"
+                                                                                                    select
                                                                                                     //helperText="Délai de prévenance avant réservation."
-                                                                                                />
+                                                                                                >
+                                                                                                    {dates.map(date => {
+                                                                                                        return <MenuItem value={date}>{date}</MenuItem>
+                                                                                                    })}
+                                                                                                </TextField>
                                                                                             )
                                                                                         }}
                                                                                     />
@@ -2077,7 +2140,7 @@ class Form extends React.Component {
                                                 <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                     Téléchargez une photo de profil
                                                 </h6>
-                                                <Typography style={{fontFamily: 'helveticaNeue'}}>
+                                                <Typography style={{fontFamily: 'helveticaNeue', marginBottom: '1rem'}}>
                                                     Téléchargez une photo de claire et lumineuse, de bonne qualité. Pour un rendu optimal, la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif, avec seulement vous sur la photo.
                                                 </Typography>
                                                 <Grid container style={{ marginBottom: 15 }}>
