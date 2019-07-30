@@ -34,7 +34,7 @@ const styles = theme => ({
 
 });
 
-class myAddresses extends React.Component {
+class profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -296,4 +296,4 @@ class myAddresses extends React.Component {
 
 
 
-export default withStyles(styles)(myAddresses);
+export default withStyles(styles)(profile);
