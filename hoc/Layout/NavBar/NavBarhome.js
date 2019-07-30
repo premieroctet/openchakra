@@ -12,293 +12,425 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import Avatar from '@material-ui/core/Avatar';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
+import Router from "next/router";
+
 const jwt = require('jsonwebtoken');
+
 const styles = theme => ({
-    root: {
-        width: '100%',
+  root: {
+    width: '100%',
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+  title: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
     },
-    grow: {
-        flexGrow: 1,
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
+    marginRight: theme.spacing.unit * 2,
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing.unit * 3,
+      width: 'auto',
     },
-    title: {
-        display: 'none',
-        [theme.breakpoints.up('sm')]: {
-            display: 'block',
-        },
+  },
+  searchIcon: {
+    width: theme.spacing.unit * 9,
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+    width: '100%',
+  },
+  inputInput: {
+    paddingTop: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit * 10,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: 200,
     },
-    search: {
-        position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
-        '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
-        },
-        marginRight: theme.spacing.unit * 2,
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing.unit * 3,
-            width: 'auto',
-        },
+  },
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
     },
-    searchIcon: {
-        width: theme.spacing.unit * 9,
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+  },
+  sectionMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
     },
-    inputRoot: {
-        color: 'inherit',
-        width: '100%',
-    },
-    inputInput: {
-        paddingTop: theme.spacing.unit,
-        paddingRight: theme.spacing.unit,
-        paddingBottom: theme.spacing.unit,
-        paddingLeft: theme.spacing.unit * 10,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: 200,
-        },
-    },
-    sectionDesktop: {
-        display: 'none',
-        [theme.breakpoints.up('md')]: {
-            display: 'flex',
-        },
-    },
-    sectionMobile: {
-        display: 'flex',
-        [theme.breakpoints.up('md')]: {
-            display: 'none',
-        },
-    },
-    inscription: {
-        color: 'primary',
-    },
-    navbarItem: {
-        alignSelf: 'center',
-        color: '#545659',
-        marginRight: '20px',
-        fontSize: '15px'
-    },
-    navbarLink: {
-        textDecoration: 'none',
-        color: '#545659',
-    },
-    navbarLinkMobile: {
-        color: 'black',
-        textDecoration: 'none',
-    },
+  },
+  inscription: {
+    color: 'primary',
+  },
+  navbarItem: {
+    alignSelf: 'center',
+    color: '#545659',
+    marginRight: '20px',
+    fontSize: '15px'
+  },
+  navbarLink: {
+    textDecoration: 'none',
+    color: '#545659',
+  },
+  navbarLinkMobile: {
+    color: 'black',
+    textDecoration: 'none',
+  },
+  navbarLinkAvatar: {
+    color: 'black',
+    textDecoration: 'none',
+    marginTop: '8%!important',
+  },
+  bigAvatar: {
+    width: 30,
+    height: 30,
+    marginTop: -10,
+  },
+  theavatarbutton: {
+    width: 35,
+    height: 35,
+  },
+  lemenuavatar: {
+    marginTop: '2.5%!important',
+    marginLeft: '1%!important',
+  },
 });
 
 class NavBar extends Component {
-    state = {
-        anchorEl: null,
-        mobileMoreAnchorEl: null,
-        logged: false,
-        alfred: false,
-    };
+  state = {
+    anchorEl: null,
+    mobileMoreAnchorEl: null,
+    avatarMoreAnchorEl: null,
+    logged: false,
+    alfred: false,
+  };
 
-    componentDidMount() {
-        const token = localStorage.getItem('token');
-        if (token) {
-            this.setState({logged:true});
-            const token2 = localStorage.getItem('token').split(' ')[1];
-            const decode = jwt.decode(token2);
-            this.setState({alfred: decode.is_alfred});
-        }
+  componentDidMount() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.setState({logged:true});
+      const token2 = localStorage.getItem('token').split(' ')[1];
+      const decode = jwt.decode(token2);
+      this.setState({alfred: decode.is_alfred});
     }
+  }
 
-    logout2() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('path');
-        // Remove auth header for future requests
-        setAuthToken(false);
-        window.location.reload();
-    };
+  logout2() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('path');
+    // Remove auth header for future requests
+    setAuthToken(false);
+    //document.location.href="https://myalfred.hausdivision.com/";
+    window.location.reload();
+  };
 
-    handleProfileMenuOpen = event => {
-        this.setState({ anchorEl: event.currentTarget });
-    };
+  handleProfileMenuOpen = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
 
-    handleMenuClose = () => {
-        this.setState({ anchorEl: null });
-        this.handleMobileMenuClose();
-    };
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null });
+    this.handleMobileMenuClose();
+    this.handleAvatarMenuClose();
+  };
 
-    handleMobileMenuOpen = event => {
-        this.setState({ mobileMoreAnchorEl: event.currentTarget });
-    };
+  handleMobileMenuOpen = event => {
+    this.setState({ mobileMoreAnchorEl: event.currentTarget });
+  };
 
-    handleMobileMenuClose = () => {
-        this.setState({ mobileMoreAnchorEl: null });
-    };
+  handleAvatarMenuOpen = event => {
+    this.setState({ avatarMoreAnchorEl: event.currentTarget });
+  };
 
-    render() {
-        const { anchorEl, mobileMoreAnchorEl } = this.state;
-        const { classes } = this.props;
-        const isMenuOpen = Boolean(anchorEl);
-        const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-        const test = this.state.logged;
-        const alfred = this.state.alfred;
-        const logout = <Button variant="outlined" color='primary' className={classes.buttonSpace} style={{ marginRight: '20px' }}
-                               onClick={this.logout2}>Déconnexion</Button>;
+  handleAvatarMenuClose = event => {
+    this.setState({ avatarMoreAnchorEl: null });
+  };
 
-        const logoutMobile = <MenuItem onClick={this.logout2}>
-            <Typography>
-                <Link>
-                    <a className={classes.navbarLinkMobile}>
-                        Déconnexion
-                    </a>
-                </Link>
-            </Typography>
-        </MenuItem>;
+  handleMobileMenuClose = () => {
+    this.setState({ mobileMoreAnchorEl: null });
+  };
 
-        const renderMenu = (
-            <Menu
-                anchorEl={anchorEl}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                open={isMenuOpen}
-                onClose={this.handleMenuClose}
-            >
-                <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-                <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
-            </Menu>
-        );
+  render() {
+    const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl } = this.state;
+    const { classes } = this.props;
+    const isMenuOpen = Boolean(anchorEl);
+    const isAvatarMenuOpen = Boolean(avatarMoreAnchorEl);
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const test = this.state.logged;
+    const alfred = this.state.alfred;
+    const logout = <Button variant="outlined" color='primary' style={{ marginRight: '20px' }}
+                           onClick={()=>this.logout2()}>Déconnexion</Button>;
 
-        const renderMobileMenu = (
-            <Menu
-                anchorEl={mobileMoreAnchorEl}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                open={isMobileMenuOpen}
-                onClose={this.handleMenuClose}
-            >
-                {alfred ? '' :
-                <MenuItem onClick={this.handleMobileMenuClose}>
-                    <Typography>
-                        <Link href={'/becomeAlfredForm'}>
-                            <a className={classes.navbarLinkMobile}>
-                                Devenir Alfred
-                            </a>
-                        </Link>
-                    </Typography>
-                </MenuItem>}
-                {/*<MenuItem onClick={this.handleMobileMenuClose}>
-                    <Typography>
-                        <Link href='#'>
-                            <a className={classes.navbarLinkMobile}>
-                                Aide
-                            </a>
-                        </Link>
-                    </Typography>
-                </MenuItem>*/}
-                {test ? logoutMobile : <React.Fragment>
-                    <MenuItem onClick={this.handleMobileMenuOpen}>
-                        <Typography>
-                            <Link href={'/login'}>
-                                <a className={classes.navbarLinkMobile}>
-                                    Connexion
-                                </a>
-                            </Link>
-                        </Typography>
-                    </MenuItem>
-                    <MenuItem onClick={this.handleMobileMenuOpen}>
-                        <Typography>
-                            <Link href={'/signup'}>
-                                <a className={classes.navbarLinkMobile}>
-                                    Inscription
-                                </a>
-                            </Link>
-                        </Typography>
-                    </MenuItem></React.Fragment>}
+    const logoutMobile = <MenuItem onClick={()=>this.logout2()}>
+      <Typography>
+        <Link>
+          <a className={classes.navbarLinkMobile}>
+            Déconnexion
+          </a>
+        </Link>
+      </Typography>
+    </MenuItem>;
 
-            </Menu>
-        );
+    const logoutAvatar = 
+    <React.Fragment>
+      <MenuItem onClick={this.handleMenuClose}>
+          <Link href={'#'}>
+                <a className={classes.navbarLinkAvatar}>
+                  Profil
+                </a>
+              </Link>
+          </MenuItem>
+          <MenuItem onClick={this.handleMenuClose}>
+          <Link href={'#'}>
+                <a className={classes.navbarLinkAvatar}>
+                  Mon compte
+                </a>
+              </Link>
+          </MenuItem>
+      <MenuItem onClick={()=>this.logout2()}>
+      <Typography>
+        <Link>
+          <a style={{color: "red",}} className={classes.navbarLinkAvatar}>
+            Déconnexion
+          </a>
+        </Link> 
+      </Typography>
+      </MenuItem>
+    </React.Fragment>;
 
-        return (
-            <div className={classes.root}>
-                <AppBar color="white" position="fixed">
-                    <Toolbar>
-                        <Link href={'/'}>
-                            <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
-                        </Link>
-                        <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
-                            </div>
-                            <InputBase
-                                placeholder="Search…"
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                            />
-                        </div>
-                        <div className={classes.grow} />
-                        <div className={classes.sectionDesktop}>
-                            {alfred ? '' :
-                            <Typography className={classes.navbarItem}>
-                                <Link href={'/becomeAlfredForm'}>
-                                    <a className={classes.navbarLink}>
-                                        Devenir Alfred
-                                    </a>
-                                </Link>
-                            </Typography>}
-                            {/*<Typography className={classes.navbarItem}>
-                                <Link href='#'>
-                                    <a className={classes.navbarLink}>
-                                        Aide
-                                    </a>
-                                </Link>
-                            </Typography>*/}
-                            {test ? logout :
-                                <React.Fragment><Link href={'/login'}>
-                                    <Button variant="outlined" color="primary" style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
-                                        Connexion
-                                    </Button>
-                                </Link>
-                                <Link href={'/signup'}>
-                                <Button
-                                variant="contained"
-                                color="primary"
-                                style={{color: 'white'}}
-                                >
-                                Inscription
-                                </Button>
-                                </Link></React.Fragment>}
+    const renderMenu = (
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isMenuOpen}
+        onClose={this.handleMenuClose}
+      >
+        <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
+        <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
+      </Menu>
+    );
 
-                        </div>
-                        <div className={classes.sectionMobile}>
-                            <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-                                <MoreIcon />
-                            </IconButton>
-                        </div>
-                    </Toolbar>
-                </AppBar>
-                {renderMenu}
-                {renderMobileMenu}
+    const renderAvatarMenu = (
+      <Menu
+        className={classes.lemenuavatar}
+        anchorEl={avatarMoreAnchorEl}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isAvatarMenuOpen}
+        onClose={this.handleMenuClose}
+      >
+        {/*<MenuItem onClick={this.handleAvatarMenuClose}>
+          <Typography>
+            <Link href='#'>
+              <a className={classes.navbarLinkAvatar}>
+                Aide
+              </a>
+            </Link>
+          </Typography>
+        </MenuItem>*/}
+        {test ? logoutAvatar : <React.Fragment>
+        <MenuItem onClick={this.handleAvatarMenuOpen}>
+          <Typography>
+            <Link href={'/login'}>
+              <a className={classes.navbarLinkAvatar}>
+                Connexion
+              </a>
+            </Link>
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={this.handleAvatarMenuOpen}>
+          <Typography>
+            <Link href={'/signup'}>
+              <a className={classes.navbarLinkAvatar}>
+                Inscription
+              </a>
+            </Link>
+          </Typography>
+        </MenuItem>
+        </React.Fragment>}
+      </Menu>
+    );
+
+    const renderMobileMenu = (
+      <Menu
+        anchorEl={mobileMoreAnchorEl}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isMobileMenuOpen}
+        onClose={this.handleMenuClose}
+      >
+        { alfred ? '' :
+        <MenuItem onClick={this.handleMobileMenuClose}>
+          <Typography>
+            <Link href={'/becomeAlfredForm'}>
+              <a className={classes.navbarLinkMobile}>
+                Devenir Alfred
+              </a>
+            </Link>
+          </Typography>
+        </MenuItem>}
+        {/*<MenuItem onClick={this.handleMobileMenuClose}>
+          <Typography>
+            <Link href='#'>
+              <a className={classes.navbarLinkMobile}>
+                Aide
+              </a>
+            </Link>
+          </Typography>
+        </MenuItem>*/}
+        {test ? logoutMobile : <React.Fragment>
+        <MenuItem onClick={this.handleMobileMenuOpen}>
+          <Typography>
+            <Link href={'/login'}>
+              <a className={classes.navbarLinkMobile}>
+                Connexion
+              </a>
+            </Link>
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={this.handleMobileMenuOpen}>
+          <Typography>
+            <Link href={'/signup'}>
+              <a className={classes.navbarLinkMobile}>
+                Inscription
+              </a>
+            </Link>
+          </Typography>
+        </MenuItem></React.Fragment>}
+      </Menu>
+    );
+
+    return (
+      <div className={classes.root}>
+        <AppBar  color="white" position="fixed">
+          <Toolbar>
+            <Link href={'/'}>
+              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
+            </Link>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+              />
             </div>
-        );
-    }
+            <div className={classes.grow} />
+            <div className={classes.sectionDesktop}>
+              {alfred ? '' :
+              <Typography className={classes.navbarItem}>
+                <Link href={'/becomeAlfredForm'}>
+                  <a className={classes.navbarLink}>
+                    Devenir Alfred
+                  </a>
+                </Link>
+              </Typography>}
+
+              {test ?<React.Fragment><Typography className={classes.navbarItem}>
+                <Link href='#'>
+                  <a className={classes.navbarLink}>
+                    Messages
+                  </a>
+                </Link>
+              </Typography></React.Fragment> : null }
+              <Typography className={classes.navbarItem}>
+                <Link href='#'>
+                  <a className={classes.navbarLink}>
+                    Aide
+                  </a>
+                </Link>
+              </Typography>
+              {test ? null : <React.Fragment><Link href={'/login'}>
+                    <Button variant="outlined" color={'primary'} style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
+                      Connexion
+                    </Button>
+                  </Link>
+                  <Link href={'/signup'}>
+                <Button
+                style={{ color: 'white'}}
+                variant="contained"
+                color={'primary'}
+                >
+                Inscription
+                </Button>
+                </Link>
+                </React.Fragment>}
+                {test ?<React.Fragment>
+
+                <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
+                  <Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} />
+                </IconButton>
+                </React.Fragment> : null  }
+            </div>
+            <div className={classes.sectionMobile}>
+              <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+                <MoreIcon />
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+        {renderMenu}
+        {renderMobileMenu}
+        {test ? renderAvatarMenu : null}
+      </div>
+    );
+  }
 }
 
-
+/*<IconButton color="inherit">
+                <Badge badgeContent={4} color="secondary">
+                  <MailIcon />
+                </Badge>
+              </IconButton>
+              <IconButton color="inherit">
+                <Badge badgeContent={17} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              <IconButton
+                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+                aria-haspopup="true"
+                onClick={this.handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>*/
 
 export default withStyles(styles)(NavBar);
