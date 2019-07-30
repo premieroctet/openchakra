@@ -75,29 +75,26 @@ class myAddresses extends React.Component {
     }
 
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+        const state = this.state.user;
+        state[e.target.name] = e.target.value;
+        this.setState({user:state});
     };
 
 
 
     onSubmit = e => {
         e.preventDefault();
-        const address = {
-            address: this.state.address.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
-            city: this.state.city,
-            zip_code: this.state.zip_code,
-            country: this.state.country
-        };
-        axios
-            .put(url+'myAlfred/api/users/profile/billingAddress', address)
+        const {email, name, firstname,birthday,description,gender} = this.state.user;
+
+        axios.put(url+'myAlfred/api/users/profile/editProfile',{email,name,firstname,birthday,description,gender})
             .then(res => {
-                alert('Adresse principale modifiée');
-                Router.push({pathname:'/myAddresses'})
+                alert("Profil modifié avec succès");
+
             })
-            .catch(err =>
-                console.log(err)
-            );
+            .catch(err => console.log(err))
     };
+
+
 
 
 
@@ -191,6 +188,7 @@ class myAddresses extends React.Component {
 
 
                         <Grid item xs={9} style={{paddingLeft: 55}}>
+                            <form>
                             <Grid container style={{maxWidth: '60%'}}>
                                 <Grid item xs={12} style={{marginTop: 20}}>
 
@@ -260,7 +258,7 @@ class myAddresses extends React.Component {
                                         name="birthday"
                                         style={{width: '100%'}}
                                         className={classes.textField}
-                                        value={'2019-07-30'}
+                                        value={moment(user.birthday).format('YYYY-MM-DD')}
                                         onChange={this.onChange}
                                         InputLabelProps={{
                                             shrink: true,
@@ -278,9 +276,17 @@ class myAddresses extends React.Component {
                                     />
                                 </Grid>
                             </Grid>
+                            </form>
                         </Grid>
 
                     </Grid>
+                    <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',position:"absolute",bottom:0,
+                    alignItems:"center",height:60}}>
+                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
+                                style={{color: 'white',maxHeight:40,marginRight:20}}>
+                            Modifier
+                        </Button>
+                    </div>
                 </Layout>
 
             </Fragment>

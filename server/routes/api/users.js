@@ -587,7 +587,8 @@ router.put('/profile/editProfile',passport.authenticate('jwt',{session:false}),(
                 return res.status(400).json({error: "This email already exist"})
             } else {
                 User.findByIdAndUpdate(req.user.id, {
-                    email: req.body.email, phone: req.body.phone, job: req.body.job
+                    email: req.body.email, name: req.body.name, firstname: req.body.firstname, gender: req.body.gender, description:req.body.description,
+                    birthday: req.body.birthday
                 }, {new: true})
                     .then(user => {
                         res.json({success: "Profile updated !"})

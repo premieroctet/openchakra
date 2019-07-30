@@ -88,6 +88,9 @@ const UserSchema = new Schema({
     job: {
         type: String
     },
+    description: {
+      type: String
+    },
     id_card: {
       recto: {
           type: String
