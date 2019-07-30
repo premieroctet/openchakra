@@ -9,12 +9,7 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import {FormLabel} from "@material-ui/core";
+
 
 
 
@@ -34,21 +29,12 @@ const styles = theme => ({
 
 });
 
-class profile extends React.Component {
+class reviews extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             user: {},
-
-
-
-
-
-
         };
-
-
-
     }
 
     componentDidMount() {
@@ -74,35 +60,6 @@ class profile extends React.Component {
             );
     }
 
-    onChange = e => {
-        const state = this.state.user;
-        state[e.target.name] = e.target.value;
-        this.setState({user:state});
-    };
-
-
-
-    onSubmit = e => {
-        e.preventDefault();
-        const {email, name, firstname,birthday,description,gender} = this.state.user;
-
-        axios.put(url+'myAlfred/api/users/profile/editProfile',{email,name,firstname,birthday,description,gender})
-            .then(res => {
-                alert("Profil modifié avec succès");
-
-            })
-            .catch(err => console.log(err))
-    };
-
-
-
-
-
-
-
-
-
-
 
     render() {
         const {classes} = this.props;
@@ -121,7 +78,7 @@ class profile extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 270.25}}>
                                     <Link href={'/profile'}>
                                         <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/user-2.svg'} alt={'user'} width={30} style={{marginRight: 3}}/>
+                                            <img src={'../static/user.svg'} alt={'user'} width={30} style={{marginRight: 3}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Modifier le profil
                                             </a>
@@ -163,7 +120,7 @@ class profile extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
                                     <Link href={'/reviews'}>
                                         <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={30} style={{marginRight: 3}}/>
+                                            <img src={'../static/comment-black-oval-bubble-shape-2.svg'} alt={'comment'} width={30} style={{marginRight: 3}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Commentaires
                                             </a>
@@ -188,105 +145,11 @@ class profile extends React.Component {
 
 
                         <Grid item xs={9} style={{paddingLeft: 55}}>
-                            <form>
-                            <Grid container style={{maxWidth: '60%'}}>
-                                <Grid item xs={12} style={{marginTop: 20}}>
-
-                                    <TextField
-                                        id="standard-name"
-                                        style={{ marginTop: 15,width: '100%'}}
-                                        value={user.firstname}
-                                        onChange={this.onChange}
-                                        margin="normal"
-                                        name={'firstname'}
-
-                                    />
-
-                                </Grid>
-                                <Grid item xs={12}>
-
-                                    <TextField
-                                        id="standard-name"
-                                        style={{ marginTop: 15,width: '100%'}}
-                                        value={user.name}
-                                        onChange={this.onChange}
-                                        margin="normal"
-                                        name={'name'}
-
-                                    />
-
-                                </Grid>
-
-                                <Grid item xs={12} style={{marginTop: 20}}>
-
-                                    <InputLabel style={{color: 'black'}}>A propos de moi</InputLabel>
-                                    <TextField
-                                        id="standard-name"
-                                        style={{ marginTop: 15,width: '100%'}}
-                                        value={user.description}
-                                        multiline
-                                        rows={5}
-                                        variant={'outlined'}
-                                        onChange={this.onChange}
-                                        margin="normal"
-                                        name={'description'}
-
-                                    />
-
-                                </Grid>
+                            <Grid container>
+                                <h1 style={{color: 'dimgray',fontWeight: '100'}}>Commentaires</h1>
                             </Grid>
-                            <Grid container style={{maxWidth: '60%'}}>
-                                <h2 style={{fontWeight: '100'}}>Informations personnelles</h2>
-                                <Grid item xs={12} style={{marginTop: 10}}>
-
-                                    <TextField
-                                        id="standard-name"
-                                        style={{width: '100%'}}
-                                        value={user.gender}
-                                        onChange={this.onChange}
-                                        margin="normal"
-                                        name={'gender'}
-                                        placeholder={'Sexe'}
-
-                                    />
-
-                                </Grid>
-                                <Grid item xs={12} style={{marginTop: 10}}>
-                                    <TextField
-                                        id="date"
-                                        type="date"
-                                        name="birthday"
-                                        style={{width: '100%'}}
-                                        className={classes.textField}
-                                        value={moment(user.birthday).format('YYYY-MM-DD')}
-                                        onChange={this.onChange}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} style={{marginTop: 10}}>
-                                    <TextField
-                                        id="standard-name"
-                                        style={{width: '100%'}}
-                                        value={user.email}
-                                        onChange={this.onChange}
-                                        margin="normal"
-                                        name={'email'}
-                                    />
-                                </Grid>
-                            </Grid>
-                            </form>
                         </Grid>
-
                     </Grid>
-                    <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',position:"absolute",bottom:0,
-                    alignItems:"center",height:60}}>
-                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                style={{color: 'white',maxHeight:40,marginRight:20}}>
-                            Modifier
-                        </Button>
-                    </div>
                 </Layout>
 
             </Fragment>
@@ -296,4 +159,4 @@ class profile extends React.Component {
 
 
 
-export default withStyles(styles)(profile);
+export default withStyles(styles)(reviews);

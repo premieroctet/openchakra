@@ -195,7 +195,7 @@ class myAddresses extends React.Component {
                                 </Grid>
 
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
-                                    <Link href={'/'}>
+                                    <Link href={'/trustAndVerification'}>
                                         <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/success.svg'} alt={'check'} width={30} style={{marginRight: 3}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
@@ -206,7 +206,7 @@ class myAddresses extends React.Component {
                                 </Grid>
 
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
-                                    <Link href={'/'}>
+                                    <Link href={'/reviews'}>
                                         <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={30} style={{marginRight: 3}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
@@ -217,7 +217,7 @@ class myAddresses extends React.Component {
                                 </Grid>
 
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
-                                    <Link href={'/'}>
+                                    <Link href={'/recommandations'}>
                                         <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/megaphone.svg'} alt={'speaker'} width={30} style={{marginRight: 3}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
