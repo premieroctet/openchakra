@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
+import axios from "axios";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -20,6 +21,9 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
 import Router from "next/router";
+
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 
 const jwt = require('jsonwebtoken');
 
@@ -114,13 +118,13 @@ const styles = theme => ({
     marginTop: '8%!important',
   },
   bigAvatar: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
     marginTop: -10,
   },
   theavatarbutton: {
-    width: 35,
-    height: 35,
+    width: 45,
+    height: 45,
   },
   lemenuavatar: {
     marginTop: '2.5%!important',
@@ -145,6 +149,21 @@ class NavBar extends Component {
       const decode = jwt.decode(token2);
       this.setState({alfred: decode.is_alfred});
     }
+
+    localStorage.setItem('path',Router.pathname);
+    axios.defaults.headers.common['Authorization'] = token;
+    axios
+        .get(url+'myAlfred/api/users/current')
+        .then(res => {
+            let user = res.data;
+            this.setState({user:user});
+
+            if(typeof user.picture !="undefined") {
+                this.setState({picture: true})
+            } else {
+                this.setState({picture: false})
+            }
+        })
   }
 
   logout2() {
@@ -189,24 +208,44 @@ class NavBar extends Component {
     const isAvatarMenuOpen = Boolean(avatarMoreAnchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const test = this.state.logged;
+    const user = this.state.user;
+    const becomealfred = test ?<MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/becomeAlfredForm'}><a className={classes.navbarLinkMobile}>Devenir Alfred</a></Link></Typography></MenuItem> : null;
+    const picture = this.state.picture;
+    const mobileavatar = picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>;
     const alfred = this.state.alfred;
     const logout = <Button variant="outlined" color='primary' style={{ marginRight: '20px' }}
                            onClick={()=>this.logout2()}>Déconnexion</Button>;
 
-    const logoutMobile = <MenuItem onClick={()=>this.logout2()}>
-      <Typography>
-        <Link>
-          <a className={classes.navbarLinkMobile}>
-            Déconnexion
-          </a>
-        </Link>
-      </Typography>
-    </MenuItem>;
+    const logoutMobile = <React.Fragment>
+    <MenuItem onClick={this.handleMenuClose}>
+        <Link href={'/profile'}>
+              <a className={classes.navbarLinkAvatar}>
+                Profil
+              </a>
+            </Link>
+        </MenuItem>
+        <MenuItem onClick={this.handleMenuClose}>
+        <Link href={'#'}>
+              <a className={classes.navbarLinkAvatar}>
+                Mon compte
+              </a>
+            </Link>
+        </MenuItem>
+        <MenuItem onClick={()=>this.logout2()}>
+        <Typography>
+          <Link>
+            <a style={{color: "red",}} className={classes.navbarLinkAvatar}>
+              Déconnexion
+            </a>
+          </Link> 
+        </Typography>
+        </MenuItem>
+      </React.Fragment>;
 
     const logoutAvatar = 
     <React.Fragment>
       <MenuItem onClick={this.handleMenuClose}>
-          <Link href={'#'}>
+          <Link href={'/profile'}>
                 <a className={classes.navbarLinkAvatar}>
                   Profil
                 </a>
@@ -293,15 +332,8 @@ class NavBar extends Component {
         onClose={this.handleMenuClose}
       >
         { alfred ? '' :
-        <MenuItem onClick={this.handleMobileMenuClose}>
-          <Typography>
-            <Link href={'/becomeAlfredForm'}>
-              <a className={classes.navbarLinkMobile}>
-                Devenir Alfred
-              </a>
-            </Link>
-          </Typography>
-        </MenuItem>}
+        becomealfred
+        }
         {/*<MenuItem onClick={this.handleMobileMenuClose}>
           <Typography>
             <Link href='#'>
@@ -394,15 +426,15 @@ class NavBar extends Component {
                 </React.Fragment>}
                 {test ?<React.Fragment>
 
-                <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
-                  <Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} />
-                </IconButton>
+                
+                  {picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>}
+                
                 </React.Fragment> : null  }
             </div>
             <div className={classes.sectionMobile}>
-              <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-                <MoreIcon />
-              </IconButton>
+              
+                {test ? mobileavatar : <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}><MoreIcon className={classes.bigIcon} /></IconButton></React.Fragment>}
+              
             </div>
           </Toolbar>
         </AppBar>
