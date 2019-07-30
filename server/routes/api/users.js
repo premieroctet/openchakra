@@ -74,6 +74,7 @@ router.post('/register',(req,res) =>{
                 userFields.billing_address.gps = {};
                 userFields.billing_address.gps.lat = req.body.lat;
                 userFields.billing_address.gps.lng = req.body.lng;
+                userFields.service_address = [];
 
                 const newUser = new User(userFields);
                 bcrypt.genSalt(10, (err, salt) => {
@@ -178,43 +179,23 @@ router.put('/profile/serviceAddress',passport.authenticate('jwt',{session: false
 
     User.findById(req.user.id)
         .then(user => {
-            user.service_address = {};
-            user.service_address.address = req.body.address;
-            user.service_address.zip_code = req.body.zip_code;
-            user.service_address.city = req.body.city;
+            const address = {
+                address: req.body.address,
+                city: req.body.city,
+                zip_code: req.body.zip_code,
+                lat: req.body.lat,
+                lng: req.body.lng,
+                label: req.body.label,
+                floor: req.body.floor,
+                note: req.body.note,
+                phone_address: req.body.phone,
+            };
+            user.service_address.push(address);
 
-            if (req.body.country === 'France') {
-                user.service_address.country = 'France';
-            } else {
-                user.service_address.country = 'Maroc';
-            }
 
-            user.service_address.gps = {};
+            user.save().then(user => res.json(user)).catch(err => console.log(err));
 
-            let address = req.body.address;
-            let city = req.body.city;
-            let zip = req.body.zip_code;
 
-            let newAddress = address.replace(/ /g, '+');
-
-            const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
-
-            axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
-                .then(response => {
-
-                    let result = response.data.features;
-
-                    result.forEach(function (element) {
-                        user.service_address.gps.lat = element.geometry.coordinates[1];
-                        user.service_address.gps.lng = element.geometry.coordinates[0];
-                    });
-
-                    user.save().then(user => res.json(user)).catch(err => console.log(err));
-
-                })
-                .catch(error => {
-                    console.log(error)
-                });
         })
 });
 
@@ -653,3 +634,50 @@ router.put('/profile/editPassword',passport.authenticate('jwt',{session:false}),
 
 
 module.exports = router;
+
+/*
+
+router.put('/profile/serviceAddress',passport.authenticate('jwt',{session: false}), (req,res) => {
+
+    User.findById(req.user.id)
+        .then(user => {
+            user.service_address = {};
+            user.service_address.address = req.body.address;
+            user.service_address.zip_code = req.body.zip_code;
+            user.service_address.city = req.body.city;
+
+            if (req.body.country === 'France') {
+                user.service_address.country = 'France';
+            } else {
+                user.service_address.country = 'Maroc';
+            }
+
+            user.service_address.gps = {};
+
+            let address = req.body.address;
+            let city = req.body.city;
+            let zip = req.body.zip_code;
+
+            let newAddress = address.replace(/ /g, '+');
+
+            const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
+
+            axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
+                .then(response => {
+
+                    let result = response.data.features;
+
+                    result.forEach(function (element) {
+                        user.service_address.gps.lat = element.geometry.coordinates[1];
+                        user.service_address.gps.lng = element.geometry.coordinates[0];
+                    });
+
+                    user.save().then(user => res.json(user)).catch(err => console.log(err));
+
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        })
+});
+ */

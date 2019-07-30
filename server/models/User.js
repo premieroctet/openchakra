@@ -48,7 +48,7 @@ const UserSchema = new Schema({
             lng: Number
         }
     },
-    service_address: {
+    service_address: [{
         address: {
             type: String
         },
@@ -58,14 +58,26 @@ const UserSchema = new Schema({
         zip_code: {
             type: String
         },
-        country: {
+        lat: {
+            type: Number
+
+        },
+        lng: {
+            type: Number
+        },
+        label: {
             type: String
         },
-        gps: {
-            lat: Number,
-            lng: Number
+        floor: {
+            type: String
+        },
+        note: {
+            type: String
+        },
+        phone_address: {
+            type: String
         }
-    },
+    }],
     picture: {
         type: String
     },
