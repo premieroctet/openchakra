@@ -7,19 +7,17 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import Card from "@material-ui/core/Card";
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from "@material-ui/core/Typography";
-import EditInformations from '../components/profile/editInformations';
-import EditPassword from '../components/profile/editPassword';
-import EditAddress from '../components/profile/editAddress';
-import EditOtherAddress from '../components/profile/editOtherAddress';
-import Booking from '../components/profile/booking';
-import Messages from '../components/profile/messages';
-import EditPicture from '../components/profile/editPicture';
-import Modal from "@material-ui/core/Modal";
+import TextField from "@material-ui/core/TextField";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import Input from "@material-ui/core/Input";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import {FormLabel} from "@material-ui/core";
+
+
+
 
 
 moment.locale('fr');
@@ -32,45 +30,25 @@ const styles = theme => ({
         marginTop: 70,
         flexGrow: 1,
     },
-    paper: {
-        position: 'absolute',
-        width: 400,
-        backgroundColor: 'white',
-        border: '1px solid lightgrey',
-        borderRadius: 6,
-        outline: 'none',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
+
 
 });
 
-class profile extends React.Component {
+class myAddresses extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: [],
-            address: false,
-            job: false,
-            phone: false,
-            currentAddress: {},
-            otherAddress: false,
-            currentOtherAddress: {},
-            picture: false,
-            currentPicture: '',
-            is_alfred: false,
-            value: 0,
-            setValue: 0,
-            value2: 0,
-            setValue2: 0,
-            open: false,
+            user: {},
+
+
+
+
+
 
         };
-        this.handleChangeTabs = this.handleChangeTabs.bind(this);
-        this.handleChangeTabs2 = this.handleChangeTabs2.bind(this);
-        this.handleOpen = this.handleOpen.bind(this);
-        this.handleClose = this.handleClose.bind(this);
+
+
+
     }
 
     componentDidMount() {
@@ -84,230 +62,221 @@ class profile extends React.Component {
                 this.setState({user:user});
 
 
-                if(typeof user.billing_address != 'undefined') {
-                    this.setState({address: true, currentAddress: user.billing_address})
-                } else {
-                    this.setState({address:false})
-                }
-                if(typeof user.phone != "undefined") {
-                    this.setState({phone: true})
-                } else {
-                    this.setState({phone: false})
-                }
-                if(typeof user.job != "undefined") {
-                    this.setState({job: true})
-                } else {
-                    this.setState({job: false})
-                }
-                if(typeof user.picture !="undefined") {
-                    this.setState({picture: true})
-                } else {
-                    this.setState({picture: false})
-                }
-                if(typeof user.service_address === "undefined") {
-                    this.setState({otherAddress:false})
-                } else {
-                    this.setState({otherAddress: true, currentOtherAddress: user.service_address})
-                }
-
-                if(user.is_alfred) {
-                    this.setState({is_alfred: true})
-                }
-
-
-
-
 
             })
             .catch(err => {
                     console.log(err);
-                if(err.response.status === 401 || err.response.status === 403) {
-                    localStorage.removeItem('token');
-                    Router.push({pathname: '/login'})
+                    if(err.response.status === 401 || err.response.status === 403) {
+                        localStorage.removeItem('token');
+                        Router.push({pathname: '/login'})
+                    }
                 }
-            }
             );
     }
 
-    handleChangeTabs(event, value) {
-        this.setState({value});
-    }
-
-    handleChangeTabs2(event, value2) {
-        this.setState({value2});
-    }
-
-    handleOpen = () => {
-        this.setState({open: true});
+    onChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
     };
 
-    handleClose = () => {
-        this.setState({open: false});
+
+
+    onSubmit = e => {
+        e.preventDefault();
+        const address = {
+            address: this.state.address.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
+            city: this.state.city,
+            zip_code: this.state.zip_code,
+            country: this.state.country
+        };
+        axios
+            .put(url+'myAlfred/api/users/profile/billingAddress', address)
+            .then(res => {
+                alert('Adresse principale modifiée');
+                Router.push({pathname:'/myAddresses'})
+            })
+            .catch(err =>
+                console.log(err)
+            );
     };
+
+
+
+
+
+
 
 
 
     render() {
         const {classes} = this.props;
         const {user} = this.state;
-        const alfred = this.state.is_alfred;
-        const address = this.state.address;
-        const otherAddress = this.state.otherAddress;
-        const phone = this.state.phone;
-        const job = this.state.job;
-        const picture = this.state.picture;
-        const link = <Link href={"/addAddress"}><a>Ajouter une adresse</a></Link>;
-        const link2 = <Link href={"/addOtherAddress"}><a>Ajouter une seconde adresse</a></Link>;
-        const addPicture = <Link href={"/addPicture"}><a>Ajouter une photo de profile</a></Link>;
-        const {currentAddress} = this.state;
-        const {currentOtherAddress} = this.state;
-        const currentPicture = <img src={`../../${user.picture}`} style={{borderRadius: '50%',cursor:"pointer"}} alt="picture" onClick={this.handleOpen}/>;
 
-        const fullAddress = <React.Fragment><h4>Adresse principale</h4>
-            <p>Adresse : {currentAddress.address}</p>
-            <p>Ville : {currentAddress.city}</p>
-            <p>Code postal : {currentAddress.zip_code}</p>
-            <p>Pays : {currentAddress.country}</p>
-        </React.Fragment>;
-
-        const fullOtherAddress = <React.Fragment><h4>Autre adresse</h4>
-            <p>Adresse : {currentOtherAddress.address}</p>
-            <p>Ville : {currentOtherAddress.city}</p>
-            <p>Code postal : {currentOtherAddress.zip_code}</p>
-            <p>Pays : {currentOtherAddress.country}</p></React.Fragment>
-        ;
-
-        const addPhone = <Link href={"/addPhone"}><a>Ajouter un téléphone</a></Link>;
-        const currentPhone = <p>{user.phone}</p>;
-
-        const addJob = <Link href={"/addJob"}><a>Ajouter un emploi</a></Link>;
-        const currentJob = <p>Métier : {user.job}</p>;
-
-        const {value} = this.state;
-        const {value2} = this.state;
 
         return (
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 
-                        <Grid item xs={4}>
-                            <Grid container style={{width: '90%', borderRight: '0.5px solid lightgrey',height: '90vh'}}>
-                                <Grid container style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
-                                <Grid item>
-                                    {picture ? currentPicture : addPicture}
+                        <Grid item xs={3} style={{borderRight: '1px solid darkgray'}}>
 
-                                </Grid>
-                                    <Grid item style={{marginLeft: 10}}>
-                                        <p>Bonjour,</p>
-                                        <p>{user.name} {user.firstname}</p>
-                                    </Grid>
+                            <Grid container style={{justifyContent: 'center'}}>
 
-                                </Grid>
-
-                                {/*<Button size="small" color={'primary'} type={'button'} onClick={this.handleOpen}>
-                                        Modifier ma photo
-                                    </Button>*/}
-                                    <Modal
-                                        aria-labelledby="simple-modal-title"
-                                        aria-describedby="simple-modal-description"
-                                        open={this.state.open}
-                                        onClose={this.handleClose}
-                                    >
-                                        <div className={classes.paper}>
-                                            <EditPicture/>
+                                <Grid item style={{marginTop: 30,width: 270.25}}>
+                                    <Link href={'/profile'}>
+                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/user-2.svg'} alt={'user'} width={30} style={{marginRight: 3}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                Modifier le profil
+                                            </a>
                                         </div>
-                                    </Modal>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10}}>
+                                    <Link href={'/myAddresses'}>
+                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/sign.svg'} alt={'sign'} width={30} style={{marginRight: 3}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                Mes adresses de prestations
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                    <Link href={'/editPicture'}>
+                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/picture-2.svg'} alt={'picture'} width={30} style={{marginRight: 3}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                Photos
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
 
+                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                    <Link href={'/'}>
+                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/success.svg'} alt={'check'} width={30} style={{marginRight: 3}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                Confiance et vérification
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
 
-                            <Grid container style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
-                                <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-                                    <p>{user.email}</p>
+                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                    <Link href={'/'}>
+                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={30} style={{marginRight: 3}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                Commentaires
+                                            </a>
+                                        </div>
+                                    </Link>
                                 </Grid>
-                                <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-                                    <p>{moment(user.birthday).format('L')}</p>
+
+                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                    <Link href={'/'}>
+                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={30} style={{marginRight: 3}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                Recommandations
+                                            </a>
+                                        </div>
+                                    </Link>
                                 </Grid>
-                                <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-                                    {phone ? currentPhone : addPhone}
-                                </Grid>
-                                <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
-                                    {job ? currentJob : addJob}
-                                </Grid>
-                            </Grid>
-                            <Grid container>
-                                <div style={{position: 'relative',width: '100%'}}>
-                            {alfred ? <Link href={"/dashboardAlfred/home"}>
-                                <Button type="submit" variant="contained" color="primary" style={{ width: '100%', color: 'white',maxHeight:60
-                                ,position: 'absolute',bottom: 0}}>
-                                    Dashboard Alfred
-                                </Button>
-                            </Link> : ''}</div>
+
 
                             </Grid>
                         </Grid>
-                        </Grid>
-                        <Grid item xs={8}>
-                            <Grid container>
 
 
-                            <Grid container>
-                                <Grid item xs={6} style={{maxWidth: '45%'}}>
-                                    <Card style={{height: 380}}>
-                                        <AppBar position="static" color={'inherit'}>
-                                            <Tabs value={value} indicatorColor={'secondary'} onChange={this.handleChangeTabs} variant="scrollable" scrollButtons="auto" >
-                                                <Tab label="Informations"  />
-                                                <Tab label="Sécurité" />
-                                            </Tabs>
-                                        </AppBar>
-                                        {value === 0 && <TabContainer>
-                                            <EditInformations/>
-                                        </TabContainer>}
+                        <Grid item xs={9} style={{paddingLeft: 55}}>
+                            <Grid container style={{maxWidth: '60%'}}>
+                                <Grid item xs={12} style={{marginTop: 20}}>
 
-                                        {value === 1 && <TabContainer>
-                                            <EditPassword/>
-                                        </TabContainer>}
+                                    <TextField
+                                        id="standard-name"
+                                        style={{ marginTop: 15,width: '100%'}}
+                                        value={user.firstname}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'firstname'}
 
+                                    />
 
-                                    </Card>
                                 </Grid>
-                                <Grid item xs={6} style={{marginLeft: 10}}>
-                                    <Card style={{height: 380,overflowY: "auto"}}>
-                                        <AppBar position="sticky" color={'inherit'}>
+                                <Grid item xs={12}>
 
-                                            <Tabs value={value2} indicatorColor={'secondary'} onChange={this.handleChangeTabs2} variant="scrollable" scrollButtons="auto"
-                                                   >
-                                                <Tab label="Adresse principale" />
-                                                <Tab label="Adresse secondaire" />
-                                            </Tabs>
+                                    <TextField
+                                        id="standard-name"
+                                        style={{ marginTop: 15,width: '100%'}}
+                                        value={user.name}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'name'}
 
-                                        </AppBar>
+                                    />
 
-                                        {value2 === 0 && <TabContainer >
-                                            <EditAddress/>
-                                        </TabContainer>}
-
-                                        {value2 === 1 && <TabContainer>
-                                            <EditOtherAddress/>
-                                        </TabContainer>}
-
-                                    </Card>
                                 </Grid>
-                            </Grid>
-                            <Grid container style={{marginTop: 30}}>
-                                <Grid item xs={6} style={{maxWidth: '45%'}}>
-                                    <Card style={{overflowY: "auto",height: 230}}>
-                                        <Booking/>
 
-                                    </Card>
-                                </Grid>
-                                <Grid item xs={6} style={{marginLeft: 10}}>
-                                    <Card style={{overflowY: "auto",height: 230}}>
-                                        <Messages/>
+                                <Grid item xs={12} style={{marginTop: 20}}>
 
+                                    <InputLabel style={{color: 'black'}}>A propos de moi</InputLabel>
+                                    <TextField
+                                        id="standard-name"
+                                        style={{ marginTop: 15,width: '100%'}}
+                                        value={user.description}
+                                        multiline
+                                        rows={5}
+                                        variant={'outlined'}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'description'}
 
-                                    </Card>
+                                    />
+
                                 </Grid>
                             </Grid>
+                            <Grid container style={{maxWidth: '60%'}}>
+                                <h2 style={{fontWeight: '100'}}>Informations personnelles</h2>
+                                <Grid item xs={12} style={{marginTop: 10}}>
+
+                                    <TextField
+                                        id="standard-name"
+                                        style={{width: '100%'}}
+                                        value={user.gender}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'gender'}
+                                        placeholder={'Sexe'}
+
+                                    />
+
+                                </Grid>
+                                <Grid item xs={12} style={{marginTop: 10}}>
+                                    <TextField
+                                        id="date"
+                                        type="date"
+                                        name="birthday"
+                                        style={{width: '100%'}}
+                                        className={classes.textField}
+                                        value={'2019-07-30'}
+                                        onChange={this.onChange}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} style={{marginTop: 10}}>
+                                    <TextField
+                                        id="standard-name"
+                                        style={{width: '100%'}}
+                                        value={user.email}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'email'}
+                                    />
+                                </Grid>
                             </Grid>
                         </Grid>
 
@@ -319,12 +288,6 @@ class profile extends React.Component {
     };
 }
 
-function TabContainer(props) {
-    return (
-        <Typography component="div" style={{ padding: 8 * 3 }}>
-            {props.children}
-        </Typography>
-    );
-}
 
-export default withStyles(styles)(profile);
+
+export default withStyles(styles)(myAddresses);
