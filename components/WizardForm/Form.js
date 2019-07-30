@@ -421,7 +421,6 @@ class Wizard extends React.Component {
           submission: Yup.array().of(Yup.object().shape({
             descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
             minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').required('Le minimum d\'achat est requis'),
-            delayBeforeShop: Yup.number().typeError('Le délai doit être un nombre').required(),
             delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi heures, jours et semaines').required(),
             city: Yup.object().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
             filters: Yup.array().of(Yup.object().shape({
@@ -735,6 +734,8 @@ class Form extends React.Component {
             moderate_cancel: false,
             strict_cancel: false,
             welcome_message: "",
+
+            no_booking: false
         }
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -1484,10 +1485,12 @@ class Form extends React.Component {
                                                                                             <React.Fragment>
                                                                                                 <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }} onClick={() => {
                                                                                                     if (arrayHelpers.form.values.submission[index].delayBeforeShop === 0) {
+                                                                                                        console.log(arrayHelpers.form.values);
                                                                                                         return arrayHelpers.form.setFieldValue(`submission.${index}.delayBeforeShop`, 0);
                                                                                                     }
                                                                                                     const minusOne = arrayHelpers.form.values.submission[index].delayBeforeShop - 1;
                                                                                                     arrayHelpers.form.setFieldValue(`submission.${index}.delayBeforeShop`, minusOne);
+                                                                                                    console.log(arrayHelpers.form.values);
                                                                                                 }}>
                                                                                                     -
                                                                                                 </div>
@@ -1496,6 +1499,7 @@ class Form extends React.Component {
                                                                                                 <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginLeft: 25, marginRight: '5%' }} onClick={() => {
                                                                                                     const plusOne = arrayHelpers.form.values.submission[index].delayBeforeShop + 1;
                                                                                                     arrayHelpers.form.setFieldValue(`submission.${index}.delayBeforeShop`, plusOne);
+                                                                                                    console.log(arrayHelpers.form.values);
                                                                                                 }}>
                                                                                                     +
                                                                                                 </div>
@@ -1523,7 +1527,6 @@ class Form extends React.Component {
                                                                                         )
                                                                                     }}
                                                                                 />
-                                                                                <ErrorMessage name={`submission.${index}.delayBeforeShop`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                 <ErrorMessage name={`submission.${index}.delayBeforeShopDWM`} render={msg => <div style={{color: 'red'}}>{msg}</div>}/>
                                                                             </Grid>
                                                                         </div>
@@ -1769,12 +1772,16 @@ class Form extends React.Component {
                                                                 onChange={() => {
                                                                     form.values.createShop.booking_request = !form.values.createShop.booking_request;
                                                                     form.setFieldValue('createShop.booking_request', form.values.createShop.booking_request);
+                                                                    if (form.values.createShop.booking_request === true) {
+                                                                        form.setFieldValue('createShop.no_booking_request', false);
+                                                                        this.setState({no_booking: false})
+                                                                    }
                                                                 }}
                                                                 value={form.values.createShop.booking_request}
                                                                 color="primary"
                                                                 name={"booking_request"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
 
                                                             />
                                                         }
@@ -1789,21 +1796,25 @@ class Form extends React.Component {
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
-                                                        control={
-                                                            <Checkbox
-                                                                checked={form.values.createShop.no_booking_request}
-                                                                onChange={() => {
-                                                                    form.values.createShop.no_booking_request = !form.values.createShop.no_booking_request;
-                                                                    form.setFieldValue('createShop.no_booking_request', form.values.createShop.no_booking_request);
-                                                                }}
-                                                                value={form.values.createShop.no_booking_request}
-                                                                color="primary"
-                                                                name={"no_booking_request"}
-                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                    control={
+                                                        <Checkbox
+                                                            checked={this.state.no_booking}
+                                                            onChange={() => {
+                                                                form.values.createShop.no_booking_request = !form.values.createShop.no_booking_request;
+                                                                this.setState({no_booking: form.values.createShop.no_booking_request})
+                                                                form.setFieldValue('createShop.no_booking_request', form.values.createShop.no_booking_request);
+                                                                if (form.values.createShop.no_booking_request === true) {
+                                                                    form.setFieldValue('createShop.booking_request', false);
+                                                                }
+                                                            }}
+                                                            value={form.values.createShop.no_booking_request}
+                                                            color="primary"
+                                                            name={"no_booking_request"}
+                                                            icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                            checkedIcon={<FilledButton />}
 
-                                                            />
-                                                        }
+                                                        />
+                                                    }
                                                         label={<Typography style={{fontSize: 18, fontFamily: 'helveticaNeue'}}>Les utilisateurs peuvent réserver mes services directement sans demande de réservation.</Typography>}
 
                                                     />
@@ -1838,7 +1849,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"my_alfred_conditions"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
@@ -1870,7 +1881,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"profile_picture_user"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
@@ -1901,7 +1912,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"identity_card"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -11}}
                                                             />
                                                         }
@@ -1931,7 +1942,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"recommandations"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
@@ -2010,7 +2021,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"flexible_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled color="primary" style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -20}}
                                                             />
                                                         }
@@ -2048,7 +2059,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"moderate_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -20}}
                                                             />
                                                         }
@@ -2085,7 +2096,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"strict_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{ marginTop: -100 }}
                                                             />
                                                         }
@@ -2338,7 +2349,7 @@ class Form extends React.Component {
                                                                                 color="primary"
                                                                                 value={form.values.createShop.is_particular}
                                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                                checkedIcon={<FilledButton />}
                                                                             />
                                                                         }
                                                                     />
@@ -2387,7 +2398,7 @@ class Form extends React.Component {
                                                                                 color="primary"
                                                                                 value={form.values.createShop.is_professional}
                                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                                checkedIcon={<FilledButton />}
                                                                             />
                                                                         }
                                                                     />
@@ -2768,6 +2779,15 @@ const Fill4 = styled.div`
     border-radius: inherit;
     transition: width .2s ease-in;
     width: 15%;
+`;
+
+const FilledButton = styled.div`
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background-color: #2FBCD3;
+    margin-right: 5px;
 `;
 
 export default withStyles(styles)(Form);
