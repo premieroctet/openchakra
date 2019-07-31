@@ -143,6 +143,10 @@ const UserSchema = new Schema({
       type: Boolean,
       default: false
     },
+    phone_confirmed: {
+      type: Boolean,
+      default: false
+    },
     is_alfred: {
         type: Boolean,
         default: false

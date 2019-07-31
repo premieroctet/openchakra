@@ -111,6 +111,34 @@ router.post('/register',(req,res) =>{
         })
 });
 
+// @Route GET /myAlfred/api/users/sendMailVerification
+// Send email
+// @access private
+router.get('/sendMailVerification',passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findById(req.user.id)
+        .then(user => {
+            let transporter = nodemailer.createTransport({
+                host: 'smtp.ethereal.email',
+                port: 587,
+                auth: {
+                    user: 'kirstin85@ethereal.email',
+                    pass: '1D7q6PCENKSX5cj622'
+                }
+            });
+
+            let info = transporter.sendMail({
+                from: 'kirstin85@ethereal.email', // sender address
+                to: `${user.email}`, // list of receivers
+                subject: "Valider votre compte", // Subject line
+                text: `https://myalfred.hausdivision.com/validateAccount?user=${user._id}`, // plain text body
+                html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
+            });
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
 // @Route PUT /myAlfred/api/users/validateAccount
 // Validate account after register
 router.post('/validateAccount',(req,res) => {
