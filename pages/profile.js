@@ -84,9 +84,9 @@ class profile extends React.Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const {email, name, firstname,birthday,description,gender} = this.state.user;
+        const {email, name, firstname,birthday,description,gender,phone} = this.state.user;
 
-        axios.put(url+'myAlfred/api/users/profile/editProfile',{email,name,firstname,birthday,description,gender})
+        axios.put(url+'myAlfred/api/users/profile/editProfile',{email,name,firstname,birthday,description,gender,phone})
             .then(res => {
                 alert("Profil modifié avec succès");
 
@@ -120,8 +120,8 @@ class profile extends React.Component {
 
                                 <Grid item style={{marginTop: 30,width: 270.25}}>
                                     <Link href={'/profile'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/user-2.svg'} alt={'user'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/user-2.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Modifier le profil
                                             </a>
@@ -130,8 +130,8 @@ class profile extends React.Component {
                                 </Grid>
                                 <Grid item style={{marginTop: 10}}>
                                     <Link href={'/myAddresses'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/sign.svg'} alt={'sign'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Mes adresses de prestations
                                             </a>
@@ -140,8 +140,8 @@ class profile extends React.Component {
                                 </Grid>
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
                                     <Link href={'/editPicture'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/picture-2.svg'} alt={'picture'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Photos
                                             </a>
@@ -151,8 +151,8 @@ class profile extends React.Component {
 
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
                                     <Link href={'/trustAndVerification'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/success.svg'} alt={'check'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Confiance et vérification
                                             </a>
@@ -162,8 +162,8 @@ class profile extends React.Component {
 
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
                                     <Link href={'/reviews'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Commentaires
                                             </a>
@@ -173,8 +173,8 @@ class profile extends React.Component {
 
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
                                     <Link href={'/recommandations'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Recommandations
                                             </a>
@@ -275,16 +275,26 @@ class profile extends React.Component {
                                         name={'email'}
                                     />
                                 </Grid>
+                                <Grid item xs={12} style={{marginTop: 10}}>
+                                    <TextField
+                                        id="standard-name"
+                                        style={{width: '100%'}}
+                                        value={user.phone}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'phone'}
+                                    />
+                                </Grid>
                             </Grid>
                             </form>
                         </Grid>
 
                     </Grid>
-                    <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',position:"absolute",bottom:0,
+                    <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
                     alignItems:"center",height:60}}>
                         <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
                                 style={{color: 'white',maxHeight:40,marginRight:20}}>
-                            Modifier
+                            Enregistrer
                         </Button>
                     </div>
                 </Layout>

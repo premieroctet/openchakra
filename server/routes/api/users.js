@@ -644,7 +644,7 @@ router.put('/profile/editProfile',passport.authenticate('jwt',{session:false}),(
             } else {
                 User.findByIdAndUpdate(req.user.id, {
                     email: req.body.email, name: req.body.name, firstname: req.body.firstname, gender: req.body.gender, description:req.body.description,
-                    birthday: req.body.birthday
+                    birthday: req.body.birthday,phone: req.body.phone
                 }, {new: true})
                     .then(user => {
                         res.json({success: "Profile updated !"})
