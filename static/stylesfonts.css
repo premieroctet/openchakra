@@ -15,10 +15,18 @@ h2 {
     font-family: "helveticaNeue", Arial, Helvetica, sans-serif;
 }
 
+h4 {
+    font-family: "helveticaNeue", Arial, Helvetica, sans-serif;
+}
+
 h1 {
     font-family: "helveticaNeue", Arial, Helvetica, sans-serif;
 }
 
 a {
     font-family: "helveticaNeue", Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: white!important;
 }

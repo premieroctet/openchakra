@@ -199,6 +199,62 @@ router.put('/profile/serviceAddress',passport.authenticate('jwt',{session: false
         })
 });
 
+// @Route GET /myAlfred/api/users/profile/address/:id
+// Get service address by id
+// @Access private
+router.get('/profile/address/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    User.findById(req.user.id)
+        .then(user => {
+            const index = req.params.id;
+            const address = user.service_address;
+            const selected = address.map(item => item.id)
+                .indexOf(index);
+            const obj = address[selected];
+            res.json(obj);
+        })
+        .catch(err => console.log(err))
+});
+
+// @Route PUT /myAlfred/api/users/profile/address/:id
+// Edit service address by id
+// @Access private
+router.put('/profile/address/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    User.findById(req.user.id)
+        .then(user => {
+            const index = user.service_address
+                .map(item => item.id)
+                .indexOf(req.params.id);
+            user.service_address[index].label = req.body.label;
+            user.service_address[index].address = req.body.address;
+            user.service_address[index].zip_code = req.body.zip_code;
+            user.service_address[index].city = req.body.city;
+            user.service_address[index].floor = req.body.floor;
+            user.service_address[index].note = req.body.note;
+            user.service_address[index].phone_address = req.body.phone;
+            user.service_address[index].lat = req.body.lat;
+            user.service_address[index].lng = req.body.lng;
+
+            user.save().then(address => res.json(address)).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err))
+});
+
+// @Route DELETE /myAlfred/api/users/profile/address/:id
+// Delete service address by id
+// @Access private
+router.delete('/profile/address/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    User.findById(req.user.id)
+        .then(user => {
+            const index = user.service_address
+                .map(item => item.id)
+                .indexOf(req.params.id);
+            user.service_address.splice(index,1);
+
+            user.save().then(address => res.json(address)).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err))
+});
+
 // @Route PUT /myAlfred/api/users/profile/phone
 // Add phone number in profile
 // @Access private
