@@ -3,6 +3,7 @@ import React from "react";
 import { withStyles } from '@material-ui/core/styles';
 import Router from "next/router";
 import Link from 'next/link';
+import Layout from "../hoc/Layout/LayoutLandingPage";
 import setAuthToken from "../utils/setAuthToken";
 const jwt = require('jsonwebtoken');
 const styles = theme => ({
@@ -102,14 +103,6 @@ class index extends React.Component {
 
     }
 
-    logout2() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('path');
-        // Remove auth header for future requests
-        setAuthToken(false);
-        window.location.reload();
-    };
-
     onScroll(isTop) {
         this.setState({ isTop });
     }
@@ -124,14 +117,6 @@ class index extends React.Component {
         const {navCollapsed} = this.state;
         const logged = this.state.logged;
         const alfred = this.state.alfred;
-        const logout = <li className="nav-item">
-
-                <a className="nav-link   rounded"
-                   style={{backgroundColor: '#2FBCD3', border: 'snow thin solid', marginRight: 10}} onClick={() => this.logout2()}>
-                    Déconnexion
-                </a>
-
-        </li>;
 
 
         return (
@@ -150,7 +135,7 @@ class index extends React.Component {
                 {/* Your custom styles (optional) */}
                 <link href="../static/assets/css/style.min.css" rel="stylesheet"/>
                 <style type="text/css"
-                       dangerouslySetInnerHTML={{__html: "\n    html,\n    body,\n    header\n {\n      height: 100%;\n    }\n\n " +
+                       dangerouslySetInnerHTML={{__html: "\n    html,\n    body,\n    header\n {\n      height: 9%;\n    }\n\n " +
                                "   hr { \n      display: block;\n      margin-top: 0.5em;\n      margin-bottom: 0.5em;\n      margin-left: auto;\n" +
                                "      margin-right: auto;\n  \n      border-width: 3px;\n      border-color:#2FBCD3;\n      width: 10%;\n " +
                                "   }\n    em{font-size: 11px;\n    color:#333}\n    @media (max-width: 740px) {\n      html,\n      body,\n" +
@@ -160,70 +145,11 @@ class index extends React.Component {
                                "             .navbar:not(.top-nav-collapse) {\n                  background: #1C2331!important;\n              }\n          }\n\n          body{overflow-x: hidden}\n  "}}/>
                 {/* Navbar */}
 
-
-                <nav className="navbar fixed-top navbar-dark navbar-expand-lg scrolling-navbar" style={{backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(47, 188, 211)'}}>
-                    <div className="container">
-                        {/* Brand */}
-                        <a className="navbar-brand" href={'/'}>
-                            <img src="../static/assets/img/logo.png" width={100} height="auto" alt={'logo'}/>
-                        </a>
-                        {/* Collapse */}
-                        <button className="navbar-toggler" type="button" data-toggle="collapse"
-                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                                aria-expanded="false" aria-label="Toggle navigation" onClick={this._onToggleNav}>
-                            <span className="navbar-toggler-icon"/>
-                        </button>
-                        {/* Links */}
-                        <div className={(navCollapsed ? 'collapse' : '') + ' navbar-collapse'} id="navbarSupportedContent">
-                            {/* Left */}
-                            <ul className="navbar-nav mr-auto">
-                                <li className="nav-item active">
-                                </li>
-                            </ul>
-                            {/* Right */}
-                            <ul className="navbar-nav nav-flex-icons">
-                                {logged ? logout :<React.Fragment>
-                                <li className="nav-item">
-                                    <Link href={'/signup'}>
-                                    <a className="nav-link   rounded"
-                                       style={{backgroundColor: 'transparent'}}>
-                                        Inscription
-                                    </a>
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link href={'/login'}>
-                                    <a className="nav-link   rounded"
-                                       style={{backgroundColor: 'transparent'}}>
-                                        Connexion
-                                    </a>
-                                    </Link>
-                                </li></React.Fragment>}
-                                {alfred ? '':
-                                <li className="nav-item">
-                                    <Link href={'/signup'}>
-                                    <a className="nav-link   rounded"
-                                       style={{backgroundColor: '#2FBCD3', border: 'snow thin solid'}}>
-                                        Devenir Alfred
-                                    </a>
-                                    </Link>
-                                </li>}
-                                {/*<li className="nav-item">
-                                    <a href="#" className="nav-link" target="_blank">
-                                        <i className="fab fa-facebook-f"/>
-                                    </a>
-                                </li>*/}
-                                <li className="nav-item">
-                                    <a href="https://www.instagram.com/my_alfred_/" className="nav-link"
-                                       target="_blank">
-                                        <i className="fab fa-instagram"/>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
+                <Layout />
+               
                 {/* Navbar */}
+                
+                
                 {/* Full Page Intro */}
                 <div className={classes.headerImg}/>
                 <div className={classes.headerhomevid}>
