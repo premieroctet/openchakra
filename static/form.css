@@ -63,7 +63,7 @@ body {
   color: white;
   border-top-right-radius: 20px;
   margin-right: -40px;
-  z-index: 1;
+  z-index: 9999999999!important;
 }
 
 .react-tabs__tab--disabled {
