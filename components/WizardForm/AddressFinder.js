@@ -34,6 +34,7 @@ class AddressFinder extends React.Component {
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.address`, this.state.address);
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.country`, this.state.country);
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.postal_code`, this.state.zip_code);
+        console.log(this.props.formikCtx.form);
 
     }
 

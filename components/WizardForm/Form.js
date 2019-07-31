@@ -422,7 +422,7 @@ class Wizard extends React.Component {
             descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
             minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').required('Le minimum d\'achat est requis'),
             delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi heures, jours et semaines').required(),
-            city: Yup.object().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
+            city: Yup.string().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
             filters: Yup.array().of(Yup.object().shape({
                 prestations: Yup.array().of(Yup.object().shape({
                     checked: Yup.boolean(),
@@ -447,10 +447,8 @@ class Wizard extends React.Component {
         }),
         createShop: Yup.object().shape({
             is_professional: Yup.boolean(),
-            is_microCompany: Yup.boolean(),
-            isIndividualCompany: Yup.boolean(),
-            id_recto: Yup.mixed().required('Veuillez uploader le recto de votre carte d\'identité'),
-            id_verso: Yup.mixed().required('Veuillez uploader le verso de votre carte d\'identité'),
+            id_recto: Yup.mixed().required('Veuillez uploader le recto de votre carte d\'identité ou bien votre passeport'),
+            id_verso: Yup.mixed(),
             siret: Yup.string()
                 .when('is_professional', {
                     is: true,
@@ -473,6 +471,12 @@ class Wizard extends React.Component {
                 .when('is_professional', {
                     is: true,
                     then: Yup.string().length(5, 'Code APE invalide'),
+                    otherwise: Yup.string().notRequired(),
+                }),
+            nature_juridique: Yup.string()
+                .when('is_professional', {
+                    is: true,
+                    then: Yup.string().required('Veuillez renseigner le statut juridique'),
                     otherwise: Yup.string().notRequired(),
                 }),
             isEngaged: Yup.boolean().oneOf([true], 'Veuillez vous engager'),
@@ -605,9 +609,9 @@ class Wizard extends React.Component {
 
                                                 if (form.values.createShop.is_particular === true) {
                                                     check = false;
-                                                } else if(form.values.createShop.is_professional === true && form.values.createShop.is_microCompany === true) {
+                                                } else if(form.values.createShop.is_professional === true) {
                                                     check = false;
-                                                } else if (form.values.createShop.is_professional === true && form.values.createShop.isIndividualCompany === true) {
+                                                } else if (form.values.createShop.is_professional === true) {
                                                     check = false;
                                                 } else {
                                                     check = true;
@@ -881,6 +885,7 @@ class Form extends React.Component {
                             creationDate: '',
                             denomination: '',
                             nafape: '',
+                            nature_juridique: '',
                             isEngaged: false,
                             isCertified: false,
                         },
@@ -1055,7 +1060,6 @@ class Form extends React.Component {
                                                         let uniqueIdFilters = [];
                                                         let uniqueIdPrestations = [];
                                                         const services = form.values.services;
-                                                        //console.log(services);
                                                         let arrServices = [];
                                                         services.map((service, index) => {
                                                             this.setState({
@@ -2322,23 +2326,14 @@ class Form extends React.Component {
                                                                     <Field render={({field, form}) => {
                                                                         return (
                                                                             <React.Fragment>
-                                                                                <label
-                                                                                    htmlFor="icon-button-file"
-                                                                                    style={{ fontSize: "small" }}
-                                                                                >
-                                                                                    Téléchargez votre pièce d'identité(recto)
-                                                                                </label>
-                                                                                <input
-                                                                                    type="file"
-                                                                                    accept="image/*"
-                                                                                    className="input"
-                                                                                    id="icon-button-file"
-                                                                                    name="myCardR"
-                                                                                    onChange={(event) => {
+                                                                                <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                    Carte identité recto / passeport
+                                                                                    <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
                                                                                         form.setFieldValue("createShop.id_recto", event.currentTarget.files[0])
-                                                                                    }}
-                                                                                />
-                                                                                <Thumb file={form.values.createShop.id_recto} />
+                                                                                    }} className="form-control"
+                                                                                    />
+                                                                                </label>
+                                                                                <span>{form.values.createShop.id_recto !== null ? form.values.createShop.id_recto.name.substr(0, 10) + '...' : null}</span>
                                                                                 <ErrorMessage name="createShop.id_recto" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                             </React.Fragment>
                                                                         )
@@ -2352,20 +2347,14 @@ class Form extends React.Component {
                                                                     <Field render={({field, form}) => {
                                                                         return (
                                                                             <React.Fragment>
-                                                                                <label htmlFor="icon-button-file">
-                                                                                    Téléchargez votre pièce d'identité(verso)
+                                                                                <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                    Carte identité verso
+                                                                                    <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
+                                                                                        form.setFieldValue("createShop.id_verso", event.currentTarget.files[0])
+                                                                                    }} className="form-control"
+                                                                                    />
                                                                                 </label>
-                                                                                <input
-                                                                                    accept="image/*"
-                                                                                    className="input"
-                                                                                    name="myCardV"
-                                                                                    onChange={(event) => {
-                                                                                        form.setFieldValue("createShop.id_verso", event.currentTarget.files[0]);
-                                                                                    }}
-                                                                                    id="icon-button-file"
-                                                                                    type="file"
-                                                                                />
-                                                                                <Thumb file={form.values.createShop.id_verso} />
+                                                                                <span>{form.values.createShop.id_verso !== null ? form.values.createShop.id_verso.name.substr(0, 10) + '...' : null}</span>
                                                                                 <ErrorMessage name="createShop.id_verso" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                             </React.Fragment>
                                                                         )
@@ -2412,6 +2401,7 @@ class Form extends React.Component {
                                                                                         form.setFieldValue('createShop.creationDate', '');
                                                                                         form.setFieldValue('createShop.denomination', '');
                                                                                         form.setFieldValue('createShop.nafape', '');
+                                                                                        form.setFieldValue('createShop.nature_juridique', '');
                                                                                     }
                                                                                 }}
                                                                                 name={"isParticular"}
@@ -2487,149 +2477,45 @@ class Form extends React.Component {
                                                                 statut professionnel est requis dès que votre
                                                                 activité devient régulière
                                                             </Typography>
+                                                            {isProfessional ? (
+                                                                <React.Fragment>
+                                                                    <Field render={({form}) => {
+                                                                        return (
+                                                                            <div style={{}}>
+                                                                                <Siret formikCtx={form}/>
+                                                                            </div>
+                                                                        )
+                                                                    }}
+                                                                    />
+                                                                    <Field render={({form}) => {
+                                                                        return (
+                                                                            <FormControlLabel
+                                                                                control={
+                                                                                    <Checkbox
+                                                                                        checked={form.values.createShop.isCertified}
+                                                                                        onChange={() => {
+                                                                                            form.values.createShop.isCertified = !form.values.createShop.isCertified;
+                                                                                            form.setFieldValue('createShop.isCertified', form.values.createShop.isCertified);
+                                                                                        }}
+                                                                                        color="primary"
+                                                                                        name="isCertified"
+                                                                                        value={form.values.createShop.isCertified}
+                                                                                    />
+                                                                                }
+                                                                                label={
+                                                                                    "Je certifie sur l’honneur qu’il s’agit bien de mon entreprise."
+                                                                                }
+                                                                            />
+                                                                        )
+                                                                    }} />
+                                                                    <ErrorMessage name={`createShop.isCertified`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                </React.Fragment>
+                                                            ) : (
+                                                                ""
+                                                            )}
                                                         </Grid>
                                                     </Grid>
-                                                    {isProfessional ? (
-                                                        <React.Fragment>
-                                                            <Grid container>
-                                                                <Grid item>
-                                                                    <Field render={({form}) => {
-                                                                        return (
-                                                                            <FormControlLabel
-                                                                                control={
-                                                                                    <Checkbox
-                                                                                        checked={form.values.createShop.is_microCompany}
-                                                                                        onChange={() => {
-                                                                                            form.values.createShop.is_microCompany = !form.values.createShop.is_microCompany;
-                                                                                            form.setFieldValue("createShop.is_microCompany", form.values.createShop.is_microCompany);
-
-                                                                                            if (form.values.createShop.isIndividualCompany === true && form.values.createShop.is_microCompany === true) {
-                                                                                                form.setFieldValue('createShop.isIndividualCompany', false)
-                                                                                            }
-                                                                                        }}
-                                                                                        color="primary"
-                                                                                        name="isMicro_company"
-                                                                                        value={form.values.createShop.is_microCompany}
-                                                                                    />
-                                                                                }
-                                                                                label="Micro-entreprise, auto-entrepreneur"
-                                                                            />
-                                                                        )
-                                                                    }} />
-                                                                </Grid>
-                                                            </Grid>
-                                                            <Grid container>
-                                                                <Grid item>
-                                                                    <Field render={({form}) => {
-                                                                        return (
-                                                                            <FormControlLabel
-                                                                                control={
-                                                                                    <Checkbox
-                                                                                        checked={form.values.createShop.isIndividualCompany}
-                                                                                        onChange={() => {
-                                                                                            form.values.createShop.isIndividualCompany = !form.values.createShop.isIndividualCompany;
-                                                                                            form.setFieldValue("createShop.isIndividualCompany", form.values.createShop.isIndividualCompany);
-
-                                                                                            if (form.values.createShop.isIndividualCompany === true && form.values.createShop.is_microCompany === true) {
-                                                                                                form.setFieldValue('createShop.is_microCompany', false)
-                                                                                            }
-                                                                                        }}
-                                                                                        color="primary"
-                                                                                        name="isIndividualCompany"
-                                                                                        value={form.values.createShop.isIndividualCompany}
-                                                                                    />
-                                                                                }
-                                                                                label="Entreprise individuelle, EIRL, MDA, professions libérales..."
-                                                                            />
-                                                                        )
-                                                                    }} />
-                                                                </Grid>
-                                                            </Grid>
-                                                        </React.Fragment>
-                                                    ) : (
-                                                        ""
-                                                    )}
                                                 </Grid>
-
-                                                {isProfessional ? (
-                                                    <Field render={({form}) => {
-                                                        return (
-                                                            <Siret formikCtx={form}/>
-                                                        )
-                                                        }}
-                                                    />
-    
-                                                    /*<Grid container>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.siret" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Siret"
-                                                                        placeholder="Siret"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.siret`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.creationDate" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="date"
-                                                                        label="Date de création"
-                                                                        type="date"
-                                                                        variant="filled"
-                                                                        InputLabelProps={{
-                                                                            shrink: true
-                                                                        }}
-                                                                        style={{ marginTop: 14.5 }}
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.creationDate`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.denomination" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Dénomination"
-                                                                        placeholder="Dénomination"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.denomination`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.nafape" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Code NAF/APE"
-                                                                        placeholder="Code NAF/APE"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.nafape`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        </Grid>*/
-                                                ) : (
-                                                    ""
-                                                )}
 
                                                 <hr style={{margin: '1rem 0'}}></hr>
 
@@ -2675,28 +2561,7 @@ class Form extends React.Component {
                                                         {isProfessional ? (
                                                             <React.Fragment>
                                                                 <Grid item>
-                                                                    <Field render={({form}) => {
-                                                                        return (
-                                                                            <FormControlLabel
-                                                                                control={
-                                                                                    <Checkbox
-                                                                                        checked={form.values.createShop.isCertified}
-                                                                                        onChange={() => {
-                                                                                            form.values.createShop.isCertified = !form.values.createShop.isCertified;
-                                                                                            form.setFieldValue('createShop.isCertified', form.values.createShop.isCertified);
-                                                                                        }}
-                                                                                        color="primary"
-                                                                                        name="isCertified"
-                                                                                        value={form.values.createShop.isCertified}
-                                                                                    />
-                                                                                }
-                                                                                label={
-                                                                                    "Je certifie sur l’honneur qu’il s’agit bien de mon entreprise."
-                                                                                }
-                                                                            />
-                                                                        )
-                                                                    }} />
-                                                                    <ErrorMessage name={`createShop.isCertified`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                    
                                                                 </Grid>
                                                             </React.Fragment>
                                                         ) : (
