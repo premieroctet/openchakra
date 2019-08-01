@@ -50,6 +50,9 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'center',
         padding: '1.5rem 3rem 0 3rem',
+        [theme.breakpoints.down('sm')]: {
+            padding: '0'
+        },
         fontFamily: 'helveticaNeue',
         overflow: 'scroll',
         height: 'auto',
@@ -213,7 +216,28 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             display: 'none',
         },
-    }
+    },
+    delayDivResponsive: {
+        [theme.breakpoints.down('sm')]: {
+            textAlign: 'center',
+        },
+    },
+    selectDelayInputRepsonsive: {
+        [theme.breakpoints.down('sm')]: {
+            width: '100%!important',
+        },
+    },
+    inputDiplomaCertifResp: {
+        [theme.breakpoints.down('sm')]: {
+            width: '100%!important',
+        },
+    },
+    prestationsPres: {
+        padding: '0 2rem',
+        [theme.breakpoints.down('sm')]: {
+            padding: '0!important',
+        }
+    },
 
 });
 
@@ -529,26 +553,8 @@ class Wizard extends React.Component {
                             <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%'}}>
                                 <div style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative'}}>
                                     {activePage}
-                                
-                                    {/* POUR REVENIR EN ARRIERE */}
-                                    {/*page > 0 && (
-                        <button
-                        type="button"
-                        className="secondary"
-                        onClick={this.previous}
-                        >
-                        « Previous
-                        </button>
-                    )*/}
-
-                                    {/*!isLastPage && <button type="submit">Next »</button>*/}
-                                    {/*isLastPage && (
-                                        <button type="submit" disabled={isSubmitting}>
-                                            Submit
-                                        </button>
-                                    )*/}
                                 </div>
-                                <div className="buttons" style={{position: 'absolute', bottom: page === 0 ? 0 : 76, left: 0, width: '100%', padding: '2rem 3rem 3rem 3rem', backgroundColor: 'transparent', zIndex: '9999999'}}>
+                                <div className={page === 2 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : 76, left: 0, width: '100%', padding: page !== 2 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: 'transparent', zIndex: '9999999'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
                                         {page !== 0 && <Button
                                             color="primary"
@@ -594,7 +600,7 @@ class Wizard extends React.Component {
                                                 }
 
                                                 return (
-                                                    <Button type="submit" variant="contained" color="secondary" style={{marginTop: '45px', color: !checkArr.some(check) ? 'white' : null }} disabled={checkArr.some(check) ? true : false}>
+                                                    <Button type="submit" variant="contained" color="secondary" style={{color: !checkArr.some(check) ? 'white' : null }} disabled={checkArr.some(check) ? true : false}>
                                                         Suivant
                                                     </Button>
                                                 )
@@ -604,7 +610,7 @@ class Wizard extends React.Component {
                                             type="submit"
                                             variant="contained"
                                             color="secondary"
-                                            style={{marginTop: '45px', color: 'white'}}
+                                            style={{ color: 'white'}}
                                         >
                                             Suivant
                                         </Button>}
@@ -619,7 +625,7 @@ class Wizard extends React.Component {
                                             }
         
                                             return (
-                                                <Button type="submit" variant="contained" color="secondary" style={{marginTop: '45px', color: !cancel ? 'white' : null }} disabled={cancel}>
+                                                <Button type="submit" variant="contained" color="secondary" style={{color: !cancel ? 'white' : null }} disabled={cancel}>
                                                     Suivant
                                                 </Button>
                                             )
@@ -639,7 +645,7 @@ class Wizard extends React.Component {
                                                 }
 
                                                 return (
-                                                    <Button type="submit" variant="contained" style={{marginTop: '45px', color: !check ? 'white' : null }} color="secondary" disabled={check}>
+                                                    <Button type="submit" variant="contained" style={{color: !check ? 'white' : null }} color="secondary" disabled={check}>
                                                         Envoyer
                                                     </Button>
                                                 )
@@ -908,33 +914,33 @@ class Form extends React.Component {
                     }}
                 >
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card} style={{width: '100%'}}>
-                                <div style={{padding: '0rem 2rem 1rem 2rem'}}>
-                                    <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
-                                    <hr style={{margin: '1rem 0'}} />
+                        <Grid container className={classes.cardContainer} style={{justifyContent: 'start'}}>
+                            
+                            <div style={{padding: '0rem 2rem 1rem 2rem', width: '100%'}}>
+                                <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
+                                <hr style={{margin: '1rem 0'}} />
+                            </div>
+                            <div className="steps">
+                                <div className="step1">
+                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 1</Typography>
+                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                    <Typography style={{fontSize: 18}}>Créez votre boutique de service</Typography>
+                                    <Typography>Sélectionnez les services que vous souhaitez offrir</Typography>
                                 </div>
-                                <div className="steps">
-                                    <div className="step1">
-                                        <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 1</Typography>
-                                        <hr style={{border: '4px solid grey', marginRight: 150}} />
-                                        <Typography style={{fontSize: 18}}>Créez votre boutique de service</Typography>
-                                        <Typography>Sélectionnez les services que vous souhaitez offrir</Typography>
-                                    </div>
-                                    <div className="step2">
-                                        <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 2</Typography>
-                                        <hr style={{border: '4px solid grey', marginRight: 150}} />
-                                        <Typography style={{fontSize: 18}}>Indiquez vos disponiblités & conditions</Typography>
-                                        <Typography>Indiquez vos disponibilités ,paramètres de réservation et vos conditions d’annulation</Typography>
-                                    </div>
-                                    <div className="step3">
-                                        <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 3</Typography>
-                                        <hr style={{border: '4px solid grey', marginRight: 150}} />
-                                        <Typography style={{fontSize: 18}}>Présentez-vous !</Typography>
-                                        <Typography>Renseignez votre profil Alfred, partager vos réalisa- tions, et décrivez vous !</Typography>
-                                    </div>
-                                </div> 
-                            </Card>
+                                <div className="step2">
+                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 2</Typography>
+                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                    <Typography style={{fontSize: 18}}>Indiquez vos disponiblités & conditions</Typography>
+                                    <Typography>Indiquez vos disponibilités ,paramètres de réservation et vos conditions d’annulation</Typography>
+                                </div>
+                                <div className="step3">
+                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 3</Typography>
+                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                    <Typography style={{fontSize: 18}}>Présentez-vous !</Typography>
+                                    <Typography>Renseignez votre profil Alfred, partager vos réalisa- tions, et décrivez vous !</Typography>
+                                </div>
+                            </div> 
+                            
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
@@ -997,13 +1003,13 @@ class Form extends React.Component {
                                                                         id={`panel${index + 1}a-header`}
                                                                     >
                                                                         <Typography>{categorie.label}</Typography>
-                                                                        <Typography align="center" style={{marginLeft: 80, color: "grey"}}>Choisissez vos services pour {categorie.label}</Typography>
+                                                                        {/*<Typography align="center" style={{marginLeft: 80, color: "grey"}}>Choisissez vos services pour {categorie.label}</Typography>*/}
                                                                     </ExpansionPanelSummary>
                                                                     <ExpansionPanelDetails>
                                                                         <Grid container>
                                                                             {categorie[categorie.label.replace(/\s/g, '') + 'Services'].map((service, index) => {
                                                                                 return (
-                                                                                    <Grid item xs={3}>
+                                                                                    <Grid item xs={6} sm={6}>
                                                                                         <FormControlLabel
                                                                                             key={index}
                                                                                             control={
@@ -1146,7 +1152,7 @@ class Form extends React.Component {
                                                 <Tabs>
                                                     <TabList>
                                                         {this.state.allInOneServ.map((data, index) => {
-                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div style={{padding: '0 2rem 0 2rem'}}>{data.serviceLabel}</div></Tab>
+                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{data.serviceLabel}</div></Tab>
                                                         })}
                                                     </TabList>
                                                     {this.state.allInOneServ.map((s, index) => {
@@ -1167,13 +1173,13 @@ class Form extends React.Component {
                                                                                         item
                                                                                         xs={12}
                                                                                         key={indexf}
-                                                                                        style={{padding: '0 2rem'}}
+                                                                                        className={classes.prestationsPres}
                                                                                     >
                                                                                         <p>{f.label}</p>
                                                                                         <Grid container>
                                                                                         {f.prestations.map((p, indexp) => {
                                                                                             return(
-                                                                                                <Grid item xs={3} key={indexp}>
+                                                                                                <Grid item xs={6} sm={6} md={3} key={indexp}>
                                                                                                     <FormControlLabel
                                                                                                         control={
                                                                                                             <Switch
@@ -1419,7 +1425,7 @@ class Form extends React.Component {
                                                                             <Typography>
                                                                                 Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service. Si vous indiquez un montant de 10€, les clients ne pourront pas réserver vos services si la somme des prestations n’atteint pas ce montant.
                                                                             </Typography>
-                                                                            <div style={{marginTop: '1rem', width: '30%'}}>
+                                                                            <div style={{marginTop: '1rem', width: '200px'}}>
                                                                                 <Field
                                                                                     name={`submission.${index}.minimumBasket`}
                                                                                     render={({field, form}) => {
@@ -1494,7 +1500,7 @@ class Form extends React.Component {
                                                                             <Typography>
                                                                                 Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du service. Par exemple, si vous indiquez un délai de 24 heures, un client pourra réserver votre service 24 heures avant votre intervantion.
                                                                             </Typography>
-                                                                            <Grid item xs={12}>
+                                                                            <Grid item xs={12} className={classes.delayDivResponsive}>
                                                                                 <Field
                                                                                     name={`submission.${index}.delayBeforeShop`}
                                                                                     render={({field}) => {
@@ -1528,6 +1534,7 @@ class Form extends React.Component {
                                                                                             <TextField
                                                                                                 {...field}
                                                                                                 style={{width: '30%'}}
+                                                                                                className={classes.selectDelayInputRepsonsive}
                                                                                                 select
                                                                                                 margin="dense"
                                                                                                 variant="outlined"
@@ -1624,6 +1631,7 @@ class Form extends React.Component {
                                                                                                             <TextField
                                                                                                                 {...field}
                                                                                                                 style={{width: '50%', marginRight: '5%'}}
+                                                                                                                className={classes.inputDiplomaCertifResp}
                                                                                                                 label="Nom du diplôme"
                                                                                                                 margin="dense"
                                                                                                                 variant="outlined"
@@ -1641,6 +1649,7 @@ class Form extends React.Component {
                                                                                                                 <TextField
                                                                                                                     {...field}
                                                                                                                     style={{width: '50%', marginRight: '5%'}}
+                                                                                                                    className={classes.inputDiplomaCertifResp}
                                                                                                                     label="Année d'obtention"
                                                                                                                     margin="dense"
                                                                                                                     variant="outlined"
@@ -1697,6 +1706,7 @@ class Form extends React.Component {
                                                                                                                 <TextField
                                                                                                                     {...field}
                                                                                                                     style={{width: '50%', marginRight: '5%'}}
+                                                                                                                    className={classes.inputDiplomaCertifResp}
                                                                                                                     label="Nom du certificat"
                                                                                                                     margin="dense"
                                                                                                                     variant="outlined"
@@ -1714,6 +1724,7 @@ class Form extends React.Component {
                                                                                                                 <TextField
                                                                                                                     {...field}
                                                                                                                     style={{width: '50%', marginRight: '5%'}}
+                                                                                                                    className={classes.inputDiplomaCertifResp}
                                                                                                                     label="Année d'obtention"
                                                                                                                     margin="dense"
                                                                                                                     variant="outlined"
@@ -2243,7 +2254,7 @@ class Form extends React.Component {
                                                         <ErrorMessage name="alfredUpdate.phone" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                     </Grid>
                                                     <Grid item xs={1} />
-                                                    <Grid item xs={5}>
+                                                    <Grid item xs={12} sm={12} md={5}>
                                                         <Grid container>
                                                             <div
                                                                 style={{

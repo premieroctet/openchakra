@@ -131,7 +131,7 @@ class siret extends React.Component {
 
 
                 <Grid container>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={12} md={6}>
                         <Field name="createShop.siret" render={({form,field}) => {
                             return (
                                 <Typography>Siret : {form.values.createShop.siret}</Typography>
@@ -139,7 +139,7 @@ class siret extends React.Component {
                         }} />
                         <ErrorMessage name={`createShop.creationDate`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                     </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={12} md={6}>
                     <Field name="createShop.creationDate" render={({form,field}) => {
                         return (
                             <Typography>Date de création : {form.values.createShop.creationDate}</Typography>
@@ -147,7 +147,7 @@ class siret extends React.Component {
                     }} />
                     <ErrorMessage name={`createShop.creationDate`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={12} md={6}>
                     <Field name="createShop.denomination" render={({form, field}) => {
                         return (
                             <Typography>Dénomination : {form.values.createShop.denomination}</Typography>
@@ -155,7 +155,7 @@ class siret extends React.Component {
                     }} />
                     <ErrorMessage name={`createShop.denomination`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={12} md={6}>
                     <Field name="createShop.nafape" render={({form,field}) => {
                         return (
                             <Typography>Code NAF/APE : {form.values.createShop.nafape}</Typography>
@@ -163,7 +163,7 @@ class siret extends React.Component {
                     }} />
                     <ErrorMessage name={`createShop.nafape`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={12} md={6}>
                     <Field name="createShop.nature_juridique" render={({form,field}) => {
                         return (
                             <Typography>Statut juridique : {form.values.createShop.nature_juridique}</Typography>
