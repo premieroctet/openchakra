@@ -7,18 +7,8 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import {FormLabel} from "@material-ui/core";
-
-
-
-
+import DeleteIcon from '@material-ui/icons/Delete';
+import Fab from '@material-ui/core/Fab';
 
 moment.locale('fr');
 
@@ -30,26 +20,62 @@ const styles = theme => ({
         marginTop: 70,
         flexGrow: 1,
     },
+    deleteicon: {
+        '&:hover' : {
+            color: '#F8727F!important',
+        },
+        '&:active' : {
+            color: '#df6874!important'
+        },
+    },
 
 
 });
+
+class Thumb extends React.Component {
+    state = {
+        loading: false,
+        thumb: undefined,
+    };
+
+    componentWillReceiveProps(nextProps) {
+        if (!nextProps.file) { return; }
+
+        this.setState({ loading: true }, () => {
+            let reader = new FileReader();
+
+            reader.onloadend = () => {
+                this.setState({ loading: false, thumb: reader.result });
+            };
+
+            reader.readAsDataURL(nextProps.file);
+        });
+    }
+
+    render() {
+        const { file } = this.props;
+        const { loading, thumb } = this.state;
+
+        if (!file) { return null; }
+
+        if (loading) { return <p>loading...</p>; }
+
+        return (<img src={thumb}
+                     alt={file.name}
+                     height={150}
+                     width={150}
+                     style={{borderRadius: '50%'}}/>);
+    }
+}
 
 class editPicture extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             user: {},
-            picture: '',
-
-
-
-
-
+            haveapicture: '',
 
         };
-
-
-
     }
 
     componentDidMount() {
@@ -62,8 +88,11 @@ class editPicture extends React.Component {
                 let user = res.data;
                 this.setState({user:user});
 
-
-
+                if(typeof user.picture !="undefined" || user.picture != null) {
+                    this.setState({picture: true})
+                } else {
+                    this.setState({picture: false})
+                }
             })
             .catch(err => {
                     console.log(err);
@@ -76,7 +105,7 @@ class editPicture extends React.Component {
     }
 
     onChange = e => {
-        this.setState({picture:e.target.files[0]});
+        this.setState({haveapicture:e.target.files[0]});
     };
 
 
@@ -85,7 +114,7 @@ class editPicture extends React.Component {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append('myImage',this.state.picture);
+        formData.append('myImage',this.state.haveapicture);
         const config = {
             headers: {
                 'content-type': 'multipart/form-data'
@@ -100,20 +129,20 @@ class editPicture extends React.Component {
         });
     };
 
-
-
-
-
-
-
-
-
+    deletePicture = () => {
+      axios.delete(url+'myAlfred/api/users/profile/picture/delete')
+          .then(() => {
+              alert('Photo supprimée');
+              this.componentDidMount();
+          })
+          .catch(err => console.log(err));
+    };
 
 
     render() {
         const {classes} = this.props;
-        const {user} = this.state;
-
+        const user = this.state.user;
+        const picture = this.state.picture;
 
         return (
             <Fragment>
@@ -126,8 +155,8 @@ class editPicture extends React.Component {
 
                                 <Grid item style={{marginTop: 30,width: 270.25}}>
                                     <Link href={'/profile'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Modifier le profil
                                             </a>
@@ -136,8 +165,8 @@ class editPicture extends React.Component {
                                 </Grid>
                                 <Grid item style={{marginTop: 10}}>
                                     <Link href={'/myAddresses'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/sign.svg'} alt={'sign'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Mes adresses de prestations
                                             </a>
@@ -146,8 +175,8 @@ class editPicture extends React.Component {
                                 </Grid>
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
                                     <Link href={'/editPicture'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/picture.svg'} alt={'picture'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/picture.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Photos
                                             </a>
@@ -157,8 +186,8 @@ class editPicture extends React.Component {
 
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
                                     <Link href={'/trustAndVerification'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/success.svg'} alt={'check'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Confiance et vérification
                                             </a>
@@ -168,8 +197,8 @@ class editPicture extends React.Component {
 
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
                                     <Link href={'/reviews'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Commentaires
                                             </a>
@@ -179,8 +208,8 @@ class editPicture extends React.Component {
 
                                 <Grid item style={{marginTop: 10,width: 270.25}}>
                                     <Link href={'/recommandations'}>
-                                        <div style={{border: '0.5px solid darkgray',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={30} style={{marginRight: 3}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Recommandations
                                             </a>
@@ -198,28 +227,39 @@ class editPicture extends React.Component {
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Photo</h1>
                             </Grid>
                             <Grid container style={{marginTop: 20,alignItems:"center"}}>
-                                <Grid item>
-                            <img src={`../../${user.picture}`} width={170} style={{borderRadius:'50%'}} alt="picture"/>
-                                </Grid>
-                                <Grid item style={{marginLeft: 30}}>
-                            <form onSubmit={this.onSubmit}>
-                                <Grid item>
-                                    <label style={{display: 'inline-block', marginTop: 15,color:'#2FBCD3'}} className="forminputs">
-                                        <p style={{cursor:"pointer",fontSize:'1.3rem'}}>Télécharger une photo de profil</p>
-                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myImage" type="file"
-                                               onChange={this.onChange}
-                                         className="form-control"
-                                        />
-                                    </label>
-                                    <span>{this.state.picture.name !== null ? this.state.picture.name : null}</span>
+                                <Grid item style={{width: 150, height: 150}}>
+                                    <DeleteIcon onClick={()=>this.deletePicture()} className={classes.deleteicon} style={{marginLeft: '90%',padding: '2%', marginBottom: '-10%', color: '#616060',  cursor: 'pointer' }}/>
 
+                                    <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img height={150} width={150} style={{borderRadius: '50%'}} src={`../${user.picture}`}></img>}
                                 </Grid>
-                                <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
-                                        Valider
-                                    </Button>
-                                </Grid>
-                            </form>
+
+                                <Grid item style={{marginLeft: '5%'}}>
+
+                                    <form onSubmit={this.onSubmit}>
+
+                                        <Grid item>
+                                            <p style={{display: 'inline-block', marginTop: 15,color:'black', width: 600}}>La photo de votre profil sera
+                                                visible des utilisateurs du site et leur permettra de déjà vous connaitre !
+                                                Téléchargez une photo de vous claire et lumineuse, de bonne qualité. Pour un rendu optimal,
+                                                la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif,
+                                                avec seulement vous sur la photo. </p><br />
+
+                                            <label style={{display: 'inline-block', marginTop: 15,color:'#2FBCD3'}} className="forminputs">
+                                                <p style={{cursor:"pointer",fontSize:'1.3rem'}}>Télécharger une photo de profil</p>
+                                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myImage" type="file"
+                                                       onChange={this.onChange}
+                                                       className="form-control"
+                                                />
+                                            </label>
+
+
+                                        </Grid>
+                                        <Grid item style={{ display: 'flex', justifyContent: 'left', marginTop: 30 }}>
+                                            <Button type="submit" variant="contained" color="primary" style={{ width: '50%',color: 'white' }}>
+                                                Valider
+                                            </Button>
+                                        </Grid>
+                                    </form>
                                 </Grid>
                             </Grid>
                         </Grid>

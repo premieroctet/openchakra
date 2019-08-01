@@ -717,6 +717,19 @@ router.put('/profile/editPassword',passport.authenticate('jwt',{session:false}),
     }
 });
 
+// @Route DELETE /myAlfred/api/users/profile/picture/delete
+// Delete the picture profile
+// @Access private
+router.delete('/profile/picture/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    User.findByIdAndUpdate(req.user.id,{
+        picture: undefined
+    },{new:true})
+        .then(user => {
+            res.json(user)
+        })
+        .catch(err => console.log(err));
+});
+
 
 module.exports = router;
 
