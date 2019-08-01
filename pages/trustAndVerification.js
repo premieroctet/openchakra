@@ -130,6 +130,10 @@ class trustAndVerification extends React.Component {
           .catch(err => console.log(err));
     };
 
+    sendSms = () => {
+      //function sms
+    };
+
     render() {
         const {classes} = this.props;
         const {user} = this.state;
@@ -268,6 +272,16 @@ class trustAndVerification extends React.Component {
 
 
                                 </Grid>
+                                <Grid container>
+                                <Grid item xs={6}>
+                                    {user.phone_confirmed ?
+                                        null
+                                        : <Button type="submit" onClick={()=>this.sendSms()} variant="contained" color="primary" style={{width:'100%',color:'white',marginTop:15 }}>
+                                            Envoyer sms de vérification
+                                        </Button>}
+                                </Grid>
+                                </Grid>
+
                                 <Grid item xs={6}>
                                     <h2 style={{fontWeight:'100'}}>Pièce d'identité</h2>
                                     <p style={{color:'#2FBCD3'}}>Ajouter ou modifier une pièce d'identité</p>
