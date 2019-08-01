@@ -88,6 +88,18 @@ const UserSchema = new Schema({
     job: {
         type: String
     },
+    diplomes: {
+      type: String
+    },
+    school: {
+      type: String
+    },
+    languages: [{
+        type: String
+    }],
+    emergency_phone: {
+      type: String
+    },
     description: {
       type: String
     },

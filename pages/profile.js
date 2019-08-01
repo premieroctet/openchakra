@@ -15,6 +15,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import {FormLabel} from "@material-ui/core";
+import Select2 from 'react-select';
 
 
 
@@ -34,11 +35,25 @@ const styles = theme => ({
 
 });
 
+const options = [
+    { value: 'Français', label: 'Français' },
+    { value: 'Anglais', label: 'Anglais' },
+    { value: 'Allemand', label: 'Allemand' },
+    { value: 'Espagnol', label: 'Espagnol' },
+    { value: 'Chinois', label: 'Chinois' },
+    { value: 'Arabe', label: 'Arabe' },
+    { value: 'Portugais', label: 'Portugais' },
+    { value: 'Russe', label: 'Russe' },
+    { value: 'Japonais', label: 'Japonais' },
+];
+
 class profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             user: {},
+            languages: [],
+            selectedLanguages: null,
 
 
 
@@ -46,6 +61,7 @@ class profile extends React.Component {
 
 
         };
+        this.handleChangeLanguages = this.handleChangeLanguages.bind(this);
 
 
 
@@ -60,6 +76,10 @@ class profile extends React.Component {
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
+                this.setState({selectedLanguages :user.languages.map(b => ({
+                        label: b,
+                        value: b
+                    })) });
 
 
 
@@ -80,15 +100,31 @@ class profile extends React.Component {
         this.setState({user:state});
     };
 
+    handleChangeLanguages = selectedLanguages => {
+        this.setState({ selectedLanguages });
+
+    };
+
 
 
     onSubmit = e => {
         e.preventDefault();
-        const {email, name, firstname,birthday,description,gender,phone} = this.state.user;
+        let arrayLanguages = [];
+        if(this.state.selectedLanguages != null){
+            this.state.selectedLanguages.forEach(w => {
 
-        axios.put(url+'myAlfred/api/users/profile/editProfile',{email,name,firstname,birthday,description,gender,phone})
+                arrayLanguages.push(w.value);
+
+            });
+        }
+        const languages = arrayLanguages;
+        const {email, name, firstname,birthday,description,gender,phone,job,diplomes,school,emergency_phone} = this.state.user;
+
+        axios.put(url+'myAlfred/api/users/profile/editProfile',{email,name,firstname,birthday,description,gender,phone,job,diplomes,school,
+        emergency_phone,languages})
             .then(res => {
                 alert("Profil modifié avec succès");
+                this.componentDidMount();
 
             })
             .catch(err => console.log(err))
@@ -286,6 +322,75 @@ class profile extends React.Component {
                                     />
                                 </Grid>
                             </Grid>
+                                <Grid container style={{maxWidth: '60%'}}>
+                                    <h2 style={{fontWeight: '100'}}>Informations facultatives</h2>
+                                    <Grid item xs={12} style={{marginTop: 10}}>
+
+                                        <TextField
+                                            id="standard-name"
+                                            style={{width: '100%'}}
+                                            value={user.diplomes}
+                                            onChange={this.onChange}
+                                            margin="normal"
+                                            name={'diplomes'}
+                                            placeholder={'Diplomes'}
+
+                                        />
+
+                                    </Grid>
+                                    <Grid item xs={12} style={{marginTop: 10}}>
+                                        <TextField
+                                            id="standard-name"
+                                            style={{width: '100%'}}
+                                            value={user.school}
+                                            onChange={this.onChange}
+                                            margin="normal"
+                                            name={'school'}
+                                            placeholder={'Ecoles'}
+
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} style={{marginTop: 10}}>
+                                        <TextField
+                                            id="standard-name"
+                                            style={{width: '100%'}}
+                                            value={user.job}
+                                            onChange={this.onChange}
+                                            margin="normal"
+                                            name={'job'}
+                                            placeholder={'Emploi'}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} style={{marginTop: 10}}>
+                                        <Grid container>
+                                            <Grid item xs={2} style={{lineHeight:'1px'}}>
+                                                <p>Langues</p>
+                                            </Grid>
+                                            <Grid item xs={10}>
+                                    <Select2
+                                        value={this.state.selectedLanguages}
+                                        onChange={this.handleChangeLanguages}
+                                        options={options}
+                                        isMulti
+                                        isSearchable
+                                        closeMenuOnSelect={false}
+
+                                    />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid item xs={12} style={{marginTop: 10}}>
+                                        <TextField
+                                            id="standard-name"
+                                            style={{width: '100%'}}
+                                            value={user.emergency_phone}
+                                            onChange={this.onChange}
+                                            margin="normal"
+                                            name={'emergency_phone'}
+                                            placeholder={'Numéro d\'urgence'}
+                                        />
+                                    </Grid>
+                                </Grid>
                             </form>
                         </Grid>
 
