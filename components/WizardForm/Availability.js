@@ -115,194 +115,232 @@ class Availability extends React.Component{
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
-        this.setState({
+        /*this.setState({
             [name]: value
-        });
+        });*/
+        this.props.formikCtx.setFieldValue(`servicesAvailability.${name}`, value);
+        console.log(this.props.formikCtx);
 
     }
 
     handleChangeSelectMonday = monday_service => {
-        this.setState({monday_service})
+        //this.setState({monday_service})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.monday_service`, monday_service);
     };
 
     handleChangeSelectTuesday = tuesday_service => {
-        this.setState({tuesday_service})
+        //this.setState({tuesday_service})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.tuesday_service`, tuesday_service);
     };
 
     handleChangeSelectWednesday = wednesday_service => {
-        this.setState({wednesday_service})
+        //this.setState({wednesday_service})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.wednesday_service`, wednesday_service);
     };
 
     handleChangeSelectThursday = thursday_service => {
-        this.setState({thursday_service})
+        //this.setState({thursday_service})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.thursday_service`, thursday_service);
     };
 
     handleChangeSelectFriday = friday_service => {
-        this.setState({friday_service})
+        //this.setState({friday_service})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.friday_service`, friday_service);
     };
 
     handleChangeSelectSaturday = saturday_service => {
-        this.setState({saturday_service})
+        //this.setState({saturday_service})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.saturday_service`, saturday_service);
     };
 
     handleChangeSelectSunday = sunday_service => {
-        this.setState({sunday_service})
+        //this.setState({sunday_service})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.sunday_service`, sunday_service);
     };
 
     handleClickMonday() {
         let arrayService = [];
-        if(this.state.monday_service != null) {
-            this.state.monday_service.forEach(w => {
+        if(this.props.formikCtx.values.servicesAvailability.monday_service != null) {
+            this.props.formikCtx.values.servicesAvailability.monday_service.forEach(w => {
 
                 arrayService.push(w.value);
 
             });
         }
         const obj = {
-            begin: this.state.monday_begin,
-            end: this.state.monday_end,
+            begin: this.props.formikCtx.values.servicesAvailability.monday_begin,
+            end: this.props.formikCtx.values.servicesAvailability.monday_end,
             services: arrayService,
-            all_services: this.state.monday_all_service
+            all_services: this.props.formikCtx.values.servicesAvailability.monday_all_service
 
         };
-        this.state.monday_event.push(obj);
+        this.props.formikCtx.values.servicesAvailability.monday_event.push(obj);
         alert("Créneau lundi ajouté, vous pouvez en ajouter d'autre");
 
-        this.setState({monday_begin: '',monday_end: '',monday_service: null,monday_all_service: false})
+        //this.setState({monday_begin: '',monday_end: '',monday_service: null,monday_all_service: false})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.monday_begin`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.monday_end`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.monday_service`, null);
+        this.props.formikCtx.setFieldValue(`servicesAvailability.monday_all_service`, false);
     }
 
     handleClickTuesday() {
         let arrayService = [];
-        if(this.state.tuesday_service != null) {
-            this.state.tuesday_service.forEach(w => {
+        if(this.props.formikCtx.values.servicesAvailability.tuesday_service != null) {
+            this.props.formikCtx.values.servicesAvailability.tuesday_service.forEach(w => {
 
                 arrayService.push(w.value);
 
             });
         }
         const obj = {
-            begin: this.state.tuesday_begin,
-            end: this.state.tuesday_end,
+            begin: this.props.formikCtx.values.servicesAvailability.tuesday_begin,
+            end: this.props.formikCtx.values.servicesAvailability.tuesday_end,
             services: arrayService,
-            all_services: this.state.tuesday_all_service
+            all_services: this.props.formikCtx.values.servicesAvailability.tuesday_all_service
 
         };
-        this.state.tuesday_event.push(obj);
+        this.props.formikCtx.values.servicesAvailability.tuesday_event.push(obj);
         alert("Créneau mardi ajouté, vous pouvez en ajouter d'autre");
 
-        this.setState({tuesday_begin: '',tuesday_end: '',tuesday_service: null,tuesday_all_service: false})
+        //this.setState({tuesday_begin: '',tuesday_end: '',tuesday_service: null,tuesday_all_service: false})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.tuesday_begin`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.tuesday_end`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.tuesday_service`, null);
+        this.props.formikCtx.setFieldValue(`servicesAvailability.tuesday_all_service`, false);
     }
 
     handleClickWednesday() {
         let arrayService = [];
-        if(this.state.wednesday_service != null) {
-            this.state.wednesday_service.forEach(w => {
+        if(this.props.formikCtx.values.servicesAvailability.wednesday_service != null) {
+            this.props.formikCtx.values.servicesAvailability.wednesday_service.forEach(w => {
 
                 arrayService.push(w.value);
 
             });
         }
         const obj = {
-            begin: this.state.wednesday_begin,
-            end: this.state.wednesday_end,
+            begin: this.props.formikCtx.values.servicesAvailability.wednesday_begin,
+            end: this.props.formikCtx.values.servicesAvailability.wednesday_end,
             services: arrayService,
-            all_services: this.state.wednesday_all_service
+            all_services: this.props.formikCtx.values.servicesAvailability.wednesday_all_service
 
         };
-        this.state.wednesday_event.push(obj);
+        this.props.formikCtx.values.servicesAvailability.wednesday_event.push(obj);
 
         alert("Créneau mercredi ajouté, vous pouvez en ajouter d'autre");
 
-        this.setState({wednesday_begin: '',wednesday_end: '',wednesday_service: null,wednesday_all_service: false})
+        //this.setState({wednesday_begin: '',wednesday_end: '',wednesday_service: null,wednesday_all_service: false})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.wednesday_begin`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.wednesday_end`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.wednesday_service`, null);
+        this.props.formikCtx.setFieldValue(`servicesAvailability.wednesday_all_service`, false);
     }
 
     handleClickThursday() {
         let arrayService = [];
-        if(this.state.thursday_service != null) {
-            this.state.thursday_service.forEach(w => {
+        if(this.props.formikCtx.values.servicesAvailability.thursday_service != null) {
+            this.props.formikCtx.values.servicesAvailability.thursday_service.forEach(w => {
 
                 arrayService.push(w.value);
 
             });
         }
         const obj = {
-            begin: this.state.thursday_begin,
-            end: this.state.thursday_end,
+            begin: this.props.formikCtx.values.servicesAvailability.thursday_begin,
+            end: this.props.formikCtx.values.servicesAvailability.thursday_end,
             services: arrayService,
-            all_services: this.state.thursday_all_service
+            all_services: this.props.formikCtx.values.servicesAvailability.thursday_all_service
 
         };
-        this.state.thursday_event.push(obj);
+        this.props.formikCtx.values.servicesAvailability.thursday_event.push(obj);
         alert("Créneau jeudi ajouté, vous pouvez en ajouter d'autre");
 
-        this.setState({thursday_begin: '',thursday_end: '',thursday_service: null,thursday_all_service: false})
+        //this.setState({thursday_begin: '',thursday_end: '',thursday_service: null,thursday_all_service: false})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.thursday_begin`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.thursday_end`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.thursday_service`, null);
+        this.props.formikCtx.setFieldValue(`servicesAvailability.thursday_all_service`, false);
     }
 
     handleClickFriday() {
         let arrayService = [];
-        if(this.state.friday_service != null) {
-            this.state.friday_service.forEach(w => {
+        if(this.props.formikCtx.values.servicesAvailability.friday_service != null) {
+            this.props.formikCtx.values.servicesAvailability.friday_service.forEach(w => {
 
                 arrayService.push(w.value);
 
             });
         }
         const obj = {
-            begin: this.state.friday_begin,
-            end: this.state.friday_end,
+            begin: this.props.formikCtx.values.servicesAvailability.friday_begin,
+            end: this.props.formikCtx.values.servicesAvailability.friday_end,
             services: arrayService,
-            all_services: this.state.friday_all_service
+            all_services: this.props.formikCtx.values.servicesAvailability.friday_all_service
         };
-        this.state.friday_event.push(obj);
+        this.props.formikCtx.values.servicesAvailability.friday_event.push(obj);
         alert("Créneau vendredi ajouté, vous pouvez en ajouter d'autre");
 
-        this.setState({friday_begin: '',friday_end: '',friday_service: null,friday_all_service: false})
+        //this.setState({friday_begin: '',friday_end: '',friday_service: null,friday_all_service: false})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.friday_begin`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.friday_end`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.friday_service`, null);
+        this.props.formikCtx.setFieldValue(`servicesAvailability.friday_all_service`, false);
     }
 
     handleClickSaturday() {
         let arrayService = [];
-        if(this.state.saturday_service != null) {
-            this.state.saturday_service.forEach(w => {
+        if(this.props.formikCtx.values.servicesAvailability.saturday_service != null) {
+            this.props.formikCtx.values.servicesAvailability.saturday_service.forEach(w => {
 
                 arrayService.push(w.value);
 
             });
         }
         const obj = {
-            begin: this.state.saturday_begin,
-            end: this.state.saturday_end,
+            begin: this.props.formikCtx.values.servicesAvailability.saturday_begin,
+            end: this.props.formikCtx.values.servicesAvailability.saturday_end,
             services: arrayService,
-            all_services: this.state.saturday_all_service
+            all_services: this.props.formikCtx.values.servicesAvailability.saturday_all_service
         };
-        this.state.saturday_event.push(obj);
+        this.props.formikCtx.values.servicesAvailability.saturday_event.push(obj);
         alert("Créneau samedi ajouté, vous pouvez en ajouter d'autre");
 
-        this.setState({saturday_begin: '',saturday_end: '',saturday_service: null,saturday_all_service: false})
+        //this.setState({saturday_begin: '',saturday_end: '',saturday_service: null,saturday_all_service: false})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.saturday_begin`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.saturday_end`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.saturday_service`, null);
+        this.props.formikCtx.setFieldValue(`servicesAvailability.saturday_all_service`, false);
     }
 
     handleClickSunday() {
         let arrayService = [];
-        if(this.state.sunday_service != null) {
-            this.state.sunday_service.forEach(w => {
+        if(this.props.formikCtx.values.servicesAvailability.sunday_service != null) {
+            this.props.formikCtx.values.servicesAvailability.sunday_service.forEach(w => {
 
                 arrayService.push(w.value);
 
             });
         }
         const obj = {
-            begin: this.state.sunday_begin,
-            end: this.state.sunday_end,
+            begin: this.props.formikCtx.values.servicesAvailability.sunday_begin,
+            end: this.props.formikCtx.values.servicesAvailability.sunday_end,
             services: arrayService,
-            all_services: this.state.sunday_all_service
+            all_services: this.props.formikCtx.values.servicesAvailability.sunday_all_service
         };
-        this.state.sunday_event.push(obj);
+        this.props.formikCtx.values.servicesAvailability.sunday_event.push(obj);
         alert("Créneau dimanche ajouté, vous pouvez en ajouter d'autre");
 
-        this.setState({sunday_begin: '',sunday_end: '',sunday_service: null,sunday_all_service: false})
+        //this.setState({sunday_begin: '',sunday_end: '',sunday_service: null,sunday_all_service: false})
+        this.props.formikCtx.setFieldValue(`servicesAvailability.sunday_begin`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.sunday_end`, '');
+        this.props.formikCtx.setFieldValue(`servicesAvailability.sunday_service`, null);
+        this.props.formikCtx.setFieldValue(`servicesAvailability.sunday_all_service`, false);
     }
 
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+        //this.setState({ [e.target.name]: e.target.value });
+        this.props.formikCtx.setFieldValue(`servicesAvailability.${e.target.name}`, e.target.value);
     };
 
     onSubmit = e => {
@@ -344,6 +382,8 @@ class Availability extends React.Component{
         const {sunday} = this.state;
         const {active} = this.state;
         const {all_service} = this.state;
+        const formik = this.props.formikCtx.values;
+
 
         const services = this.props.formikCtx.values.submission;
         console.log(services);
@@ -362,9 +402,9 @@ class Availability extends React.Component{
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={this.state.monday}
+                                    checked={formik.servicesAvailability.monday}
                                     onChange={this.handleChecked}
-                                    value={this.state.monday}
+                                    value={formik.servicesAvailability.monday}
                                     color="primary"
                                     name={'monday'}
                                 />
@@ -372,7 +412,7 @@ class Availability extends React.Component{
                             label="Lundi"
                         />
                     </Grid>
-                    {monday ?
+                    {formik.servicesAvailability.monday ?
                         <React.Fragment>
                             <Grid item>
                                 <TextField
@@ -388,7 +428,7 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.monday_begin}
+                                    value={formik.servicesAvailability.monday_begin}
                                     onChange={this.onChange}
                                 />
                             </Grid>
@@ -406,29 +446,29 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.monday_end}
+                                    value={formik.servicesAvailability.monday_end}
                                     onChange={this.onChange}
                                 />
                             </Grid>
                             <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
                             <FormControl  style={{ width: '100%' }}>
                                 <Select2
-                                    value={this.state.monday_service}
+                                    value={formik.servicesAvailability.monday_service}
                                     onChange={this.handleChangeSelectMonday}
                                     options={optionsService}
                                     isMulti
                                     isSearchable
                                     closeMenuOnSelect={false}
-                                    isDisabled={this.state.monday_all_service}
+                                    isDisabled={formik.servicesAvailability.monday_all_service}
 
                                 />
                             </FormControl>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={this.state.monday_all_service}
+                                        checked={formik.servicesAvailability.monday_all_service}
                                         onChange={this.handleChecked}
-                                        value={this.state.monday_all_service}
+                                        value={formik.servicesAvailability.monday_all_service}
                                         color="primary"
                                         name={'monday_all_service'}
                                     />
@@ -450,9 +490,9 @@ class Availability extends React.Component{
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={this.state.tuesday}
+                                    checked={formik.servicesAvailability.tuesday}
                                     onChange={this.handleChecked}
-                                    value={this.state.tuesday}
+                                    value={formik.servicesAvailability.tuesday}
                                     color="primary"
                                     name={'tuesday'}
                                 />
@@ -460,7 +500,7 @@ class Availability extends React.Component{
                             label="Mardi"
                         />
                     </Grid>
-                    {tuesday ?
+                    {formik.servicesAvailability.tuesday ?
                         <React.Fragment>
                             <Grid item>
                                 <TextField
@@ -476,7 +516,7 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.tuesday_begin}
+                                    value={formik.servicesAvailability.tuesday_begin}
                                     onChange={this.onChange}
                                 />
                             </Grid>
@@ -494,29 +534,29 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.tuesday_end}
+                                    value={formik.servicesAvailability.tuesday_end}
                                     onChange={this.onChange}
                                 />
                             </Grid>
                             <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
                             <FormControl  style={{ width: '100%' }}>
                                 <Select2
-                                    value={this.state.tuesday_service}
+                                    value={formik.servicesAvailability.tuesday_service}
                                     onChange={this.handleChangeSelectTuesday}
                                     options={optionsService}
                                     isMulti
                                     isSearchable
                                     closeMenuOnSelect={false}
-                                    isDisabled={this.state.tuesday_all_service}
+                                    isDisabled={formik.servicesAvailability.tuesday_all_service}
 
                                 />
                             </FormControl>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={this.state.tuesday_all_service}
+                                        checked={formik.servicesAvailability.tuesday_all_service}
                                         onChange={this.handleChecked}
-                                        value={this.state.tuesday_all_service}
+                                        value={formik.servicesAvailability.tuesday_all_service}
                                         color="primary"
                                         name={'tuesday_all_service'}
                                     />
@@ -535,9 +575,9 @@ class Availability extends React.Component{
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={this.state.wednesday}
+                                    checked={formik.servicesAvailability.wednesday}
                                     onChange={this.handleChecked}
-                                    value={this.state.wednesday}
+                                    value={formik.servicesAvailability.wednesday}
                                     color="primary"
                                     name={'wednesday'}
                                 />
@@ -546,7 +586,7 @@ class Availability extends React.Component{
                         />
                     </Grid>
 
-                    {wednesday ?
+                    {formik.servicesAvailability.wednesday ?
                         <React.Fragment>
                             <Grid item>
                                 <TextField
@@ -562,7 +602,7 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.wednesday_begin}
+                                    value={formik.servicesAvailability.wednesday_begin}
                                     onChange={this.onChange}
                                 />
                             </Grid>
@@ -580,29 +620,29 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.wednesday_end}
+                                    value={formik.servicesAvailability.wednesday_end}
                                     onChange={this.onChange}
                                 />
                             </Grid>
                             <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
                             <FormControl  style={{ width: '100%' }}>
                                 <Select2
-                                    value={this.state.wednesday_service}
+                                    value={formik.servicesAvailability.wednesday_service}
                                     onChange={this.handleChangeSelectWednesday}
                                     options={optionsService}
                                     isMulti
                                     isSearchable
                                     closeMenuOnSelect={false}
-                                    isDisabled={this.state.wednesday_all_service}
+                                    isDisabled={formik.servicesAvailability.wednesday_all_service}
 
                                 />
                             </FormControl>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={this.state.wednesday_all_service}
+                                        checked={formik.servicesAvailability.wednesday_all_service}
                                         onChange={this.handleChecked}
-                                        value={this.state.wednesday_all_service}
+                                        value={formik.servicesAvailability.wednesday_all_service}
                                         color="primary"
                                         name={'wednesday_all_service'}
                                     />
@@ -621,9 +661,9 @@ class Availability extends React.Component{
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={this.state.thursday}
+                                    checked={formik.servicesAvailability.thursday}
                                     onChange={this.handleChecked}
-                                    value={this.state.thursday}
+                                    value={formik.servicesAvailability.thursday}
                                     color="primary"
                                     name={'thursday'}
                                 />
@@ -632,7 +672,7 @@ class Availability extends React.Component{
                         />
                     </Grid>
 
-                    {thursday ?
+                    {formik.servicesAvailability.thursday ?
                         <React.Fragment>
                             <Grid item>
                                 <TextField
@@ -648,7 +688,7 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.thursday_begin}
+                                    value={formik.servicesAvailability.thursday_begin}
                                     onChange={this.onChange}
                                 />
                             </Grid>
@@ -666,29 +706,29 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.thursday_end}
+                                    value={formik.servicesAvailability.thursday_end}
                                     onChange={this.onChange}
                                 />
                             </Grid>
                             <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
                             <FormControl  style={{ width: '100%' }}>
                                 <Select2
-                                    value={this.state.thursday_service}
+                                    value={formik.servicesAvailability.thursday_service}
                                     onChange={this.handleChangeSelectThursday}
                                     options={optionsService}
                                     isMulti
                                     isSearchable
                                     closeMenuOnSelect={false}
-                                    isDisabled={this.state.thursday_all_service}
+                                    isDisabled={formik.servicesAvailability.thursday_all_service}
 
                                 />
                             </FormControl>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={this.state.thursday_all_service}
+                                        checked={formik.servicesAvailability.thursday_all_service}
                                         onChange={this.handleChecked}
-                                        value={this.state.thursday_all_service}
+                                        value={formik.servicesAvailability.thursday_all_service}
                                         color="primary"
                                         name={'thursday_all_service'}
                                     />
@@ -707,9 +747,9 @@ class Availability extends React.Component{
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={this.state.friday}
+                                    checked={formik.servicesAvailability.friday}
                                     onChange={this.handleChecked}
-                                    value={this.state.friday}
+                                    value={formik.servicesAvailability.friday}
                                     color="primary"
                                     name={'friday'}
                                 />
@@ -718,7 +758,7 @@ class Availability extends React.Component{
                         />
                     </Grid>
 
-                    {friday ?
+                    {formik.servicesAvailability.friday ?
                         <React.Fragment>
                             <Grid item>
                                 <TextField
@@ -734,7 +774,7 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.friday_begin}
+                                    value={formik.servicesAvailability.friday_begin}
                                     onChange={this.onChange}
                                 />
                             </Grid>
@@ -752,29 +792,29 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.friday_end}
+                                    value={formik.servicesAvailability.friday_end}
                                     onChange={this.onChange}
                                 />
                             </Grid>
                             <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
                             <FormControl  style={{ width: '100%' }}>
                                 <Select2
-                                    value={this.state.friday_service}
+                                    value={formik.servicesAvailability.friday_service}
                                     onChange={this.handleChangeSelectFriday}
                                     options={optionsService}
                                     isMulti
                                     isSearchable
                                     closeMenuOnSelect={false}
-                                    isDisabled={this.state.friday_all_service}
+                                    isDisabled={formik.servicesAvailability.friday_all_service}
 
                                 />
                             </FormControl>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={this.state.friday_all_service}
+                                        checked={formik.servicesAvailability.friday_all_service}
                                         onChange={this.handleChecked}
-                                        value={this.state.friday_all_service}
+                                        value={formik.servicesAvailability.friday_all_service}
                                         color="primary"
                                         name={'friday_all_service'}
                                     />
@@ -793,9 +833,9 @@ class Availability extends React.Component{
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={this.state.saturday}
+                                    checked={formik.servicesAvailability.saturday}
                                     onChange={this.handleChecked}
-                                    value={this.state.saturday}
+                                    value={formik.servicesAvailability.saturday}
                                     color="primary"
                                     name={'saturday'}
                                 />
@@ -803,7 +843,7 @@ class Availability extends React.Component{
                             label="Samedi"
                         />
                     </Grid>
-                    {saturday ?
+                    {formik.servicesAvailability.saturday ?
                         <React.Fragment>
                             <Grid item>
                                 <TextField
@@ -819,7 +859,7 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.saturday_begin}
+                                    value={formik.servicesAvailability.saturday_begin}
                                     onChange={this.onChange}
                                 />
                             </Grid>
@@ -837,29 +877,29 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.saturday_end}
+                                    value={formik.servicesAvailability.saturday_end}
                                     onChange={this.onChange}
                                 />
                             </Grid>
                             <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
                             <FormControl  style={{ width: '100%' }}>
                                 <Select2
-                                    value={this.state.saturday_service}
+                                    value={formik.servicesAvailability.saturday_service}
                                     onChange={this.handleChangeSelectSaturday}
                                     options={optionsService}
                                     isMulti
                                     isSearchable
                                     closeMenuOnSelect={false}
-                                    isDisabled={this.state.saturday_all_service}
+                                    isDisabled={formik.servicesAvailability.saturday_all_service}
 
                                 />
                             </FormControl>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={this.state.saturday_all_service}
+                                        checked={formik.servicesAvailability.saturday_all_service}
                                         onChange={this.handleChecked}
-                                        value={this.state.saturday_all_service}
+                                        value={formik.servicesAvailability.saturday_all_service}
                                         color="primary"
                                         name={'saturday_all_service'}
                                     />
@@ -878,9 +918,9 @@ class Availability extends React.Component{
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={this.state.sunday}
+                                    checked={formik.servicesAvailability.sunday}
                                     onChange={this.handleChecked}
-                                    value={this.state.sunday}
+                                    value={formik.servicesAvailability.sunday}
                                     color="primary"
                                     name={'sunday'}
                                 />
@@ -888,7 +928,7 @@ class Availability extends React.Component{
                             label="Dimanche"
                         />
                     </Grid>
-                    {sunday ?
+                    {formik.servicesAvailability.sunday ?
                         <React.Fragment>
                             <Grid item>
                                 <TextField
@@ -904,7 +944,7 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.sunday_begin}
+                                    value={formik.servicesAvailability.sunday_begin}
                                     onChange={this.onChange}
                                 />
                             </Grid>
@@ -922,29 +962,29 @@ class Availability extends React.Component{
                                     inputProps={{
                                         step: 300, // 5 min
                                     }}
-                                    value={this.state.sunday_end}
+                                    value={formik.servicesAvailability.sunday_end}
                                     onChange={this.onChange}
                                 />
                             </Grid>
                             <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
                             <FormControl  style={{ width: '100%' }}>
                                 <Select2
-                                    value={this.state.sunday_service}
+                                    value={formik.servicesAvailability.sunday_service}
                                     onChange={this.handleChangeSelectSunday}
                                     options={optionsService}
                                     isMulti
                                     isSearchable
                                     closeMenuOnSelect={false}
-                                    isDisabled={this.state.sunday_all_service}
+                                    isDisabled={formik.servicesAvailability.sunday_all_service}
 
                                 />
                             </FormControl>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={this.state.sunday_all_service}
+                                        checked={formik.servicesAvailability.sunday_all_service}
                                         onChange={this.handleChecked}
-                                        value={this.state.sunday_all_service}
+                                        value={formik.servicesAvailability.sunday_all_service}
                                         color="primary"
                                         name={'sunday_all_service'}
                                     />
@@ -962,21 +1002,21 @@ class Availability extends React.Component{
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={this.state.active}
+                                checked={formik.servicesAvailability.active}
                                 onChange={this.handleChecked}
-                                value={this.state.active}
+                                value={formik.servicesAvailability.active}
                                 color="primary"
                                 name={'active'}
                             />
                         }
                         label="Répéter pour une période ?"
                     />
-                    {active ?
+                    {formik.servicesAvailability.active ?
                         <React.Fragment>
                             <FormControl style={{width: '100%'}}>
                                 <InputLabel htmlFor="age-simple">A partir de</InputLabel>
                                 <Select
-                                    value={this.state.month_begin}
+                                    value={formik.servicesAvailability.month_begin}
                                     onChange={this.onChange}
                                     inputProps={{
                                         name: 'month_begin',
@@ -1005,7 +1045,7 @@ class Availability extends React.Component{
                             <FormControl style={{width: '100%'}}>
                                 <InputLabel htmlFor="age-simple">Jusqu'à</InputLabel>
                                 <Select
-                                    value={this.state.month_end}
+                                    value={formik.servicesAvailability.month_end}
                                     onChange={this.onChange}
                                     inputProps={{
                                         name: 'month_end',

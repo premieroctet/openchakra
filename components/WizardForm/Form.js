@@ -905,6 +905,61 @@ class Form extends React.Component {
                             phone: '',
                             profile_picture_user: null,
                         },
+                        servicesAvailability: {
+                            monday_event: [],
+                            tuesday_event: [],
+                            wednesday_event: [],
+                            thursday_event: [],
+                            friday_event: [],
+                            saturday_event: [],
+                            sunday_event: [],
+                
+                            active: false,
+                            month_begin: '',
+                            month_end: '',
+                
+                            monday_begin: '',
+                            tuesday_begin: '',
+                            wednesday_begin: '',
+                            thursday_begin: '',
+                            friday_begin: '',
+                            saturday_begin: '',
+                            sunday_begin: '',
+                
+                            monday_end: '',
+                            tuesday_end: '',
+                            wednesday_end: '',
+                            thursday_end: '',
+                            friday_end: '',
+                            saturday_end: '',
+                            sunday_end: '',
+                
+                            monday_service: null,
+                            tuesday_service: null,
+                            wednesday_service: null,
+                            thursday_service: null,
+                            friday_service: null,
+                            saturday_service: null,
+                            sunday_service: null,
+                
+                            monday_all_service: false,
+                            tuesday_all_service: false,
+                            wednesday_all_service: false,
+                            thursday_all_service: false,
+                            friday_all_service: false,
+                            saturday_all_service: false,
+                            sunday_all_service: false,
+                
+                
+                            monday: false,
+                            tuesday: false,
+                            wednesday: false,
+                            thursday: false,
+                            friday: false,
+                            saturday: false,
+                            sunday: false,
+                            all_service: []
+                        }, 
                         checkArr: []
                     }}
                     onSubmit={(values, actions) => {
@@ -1079,7 +1134,38 @@ class Form extends React.Component {
                                                             })
                                                             axios.get(`${url}myAlfred/api/service/${service}`)
                                                                 .then(res => {
-                                                                    let servCompObj = { CategoryLabel : res.data.category.label, serviceId: res.data._id, serviceLabel: res.data.label, descService: '', minimumBasket: '', diploma: { label: null, year: null, document: null }, certification: { label : null, year: null, document: null }, perimeter: 50, delayBeforeShop: 1, delayBeforeShopDWM: null, city: this.state.userCity, address: this.state.userAddress, postal_code: this.state.userZipCode, country: this.state.userCountry, experienceYears: null, option: null, increases: { label: res.data.majoration, price: 0, checked: false }, prestationsCount: 0, cancelChoice: false, equipments: [], filters: [] }
+                                                                    let servCompObj = { 
+                                                                        CategoryLabel : res.data.category.label, 
+                                                                        serviceId: res.data._id, 
+                                                                        serviceLabel: res.data.label,
+                                                                        descService: '', 
+                                                                        minimumBasket: '', 
+                                                                        diploma: { 
+                                                                            label: null, 
+                                                                            year: null, 
+                                                                            document: null 
+                                                                        }, certification: { 
+                                                                            label : null, 
+                                                                            year: null, 
+                                                                            document: null 
+                                                                        }, perimeter: 50, 
+                                                                        delayBeforeShop: 1, 
+                                                                        delayBeforeShopDWM: null, 
+                                                                        city: this.state.userCity, 
+                                                                        address: this.state.userAddress, 
+                                                                        postal_code: this.state.userZipCode, 
+                                                                        country: this.state.userCountry, 
+                                                                        experienceYears: null, 
+                                                                        option: null, 
+                                                                        increases: { 
+                                                                            label: res.data.majoration, 
+                                                                            price: 0, checked: false 
+                                                                        }, 
+                                                                        prestationsCount: 0, 
+                                                                        cancelChoice: false, 
+                                                                        equipments: [], 
+                                                                        filters: [] 
+                                                                    }
                                                                     res.data.equipments.map(e => {
                                                                         const equipObj = { id: e._id, label: e.label, logo: e.logo, name_logo: e.name_logo, checked: false }
                                                                         servCompObj.equipments.push(equipObj);
@@ -1777,7 +1863,7 @@ class Form extends React.Component {
                         
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Field render={({form}) => {
+                        <FieldArray render={({form}) => {
                             return (
                                 <Availability formikCtx={form} />
                             )
