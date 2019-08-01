@@ -49,7 +49,10 @@ const styles = theme => ({
     cardContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1.5rem 3rem 0 3rem'
+        padding: '1.5rem 3rem 0 3rem',
+        fontFamily: 'helveticaNeue',
+        overflow: 'scroll',
+        height: 'auto',
     },
     card: {
         minHeight: '400px !important',
@@ -522,12 +525,30 @@ class Wizard extends React.Component {
                                 </Bar>
                             </div>
                         </div>}
-                        <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row'}}>
-                            <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none'}}>
-                                <div style={{height: page !== 0 ? '85%' : '94vh', overflowY: 'scroll'}}>
+                        <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh'}}>
+                            <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%'}}>
+                                <div style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative'}}>
                                     {activePage}
+                                
+                                    {/* POUR REVENIR EN ARRIERE */}
+                                    {/*page > 0 && (
+                        <button
+                        type="button"
+                        className="secondary"
+                        onClick={this.previous}
+                        >
+                        « Previous
+                        </button>
+                    )*/}
+
+                                    {/*!isLastPage && <button type="submit">Next »</button>*/}
+                                    {/*isLastPage && (
+                                        <button type="submit" disabled={isSubmitting}>
+                                            Submit
+                                        </button>
+                                    )*/}
                                 </div>
-                                <div className="buttons" style={{position: 'absolute', bottom: 0, left: 0, top: page === 2 ? '726px' : 'none', width: '100%', padding: '0 3rem 3rem 3rem', backgroundColor: 'transparent', zIndex: '9999999'}}>
+                                <div className="buttons" style={{position: 'absolute', bottom: page === 0 ? 0 : 76, left: 0, width: '100%', padding: '2rem 3rem 3rem 3rem', backgroundColor: 'transparent', zIndex: '9999999'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
                                         {page !== 0 && <Button
                                             color="primary"
@@ -624,23 +645,6 @@ class Wizard extends React.Component {
                                                 )
                                             }} />}
                                     </div>
-                                    {/* POUR REVENIR EN ARRIERE */}
-                                    {/*page > 0 && (
-                        <button
-                        type="button"
-                        className="secondary"
-                        onClick={this.previous}
-                        >
-                        « Previous
-                        </button>
-                    )*/}
-
-                                    {/*!isLastPage && <button type="submit">Next »</button>*/}
-                                    {/*isLastPage && (
-                                        <button type="submit" disabled={isSubmitting}>
-                                            Submit
-                                        </button>
-                                    )*/}
                                 </div>
                             </div>
                             <div className="imgDiv" style={{width: '40%', overflow: 'hidden'}}>
@@ -685,8 +689,9 @@ class Thumb extends React.Component {
 
         return (<img src={thumb}
                      alt={file.name}
-                     height={50}
-                     width={50} />);
+                     height={100}
+                     width={100}
+                     style={{borderRadius: '50%'}} />);
     }
 }
 
@@ -933,8 +938,7 @@ class Form extends React.Component {
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card}>
+                        <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start'}}>
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Vos catégories de service</Typography>
                                     <Typography>
@@ -1049,7 +1053,7 @@ class Form extends React.Component {
                                 <Field>
                                     {({form}) => {
                                         return form.values.services && form.values.services.length > 0 ?
-                                            <div style={{padding: '0 2rem'}}>
+                                            <div style={{padding: '0 2rem 1rem 2rem'}}>
                                                 <Button
                                                     color="primary"
                                                     style={{marginTop: '.5rem', color: 'white', borderRadius: 8}}
@@ -1113,26 +1117,19 @@ class Form extends React.Component {
                                                                         })
                                                                 })
                                                         });
-                                                        //console.log(this.state.arrServices);
-                                                        //console.log(this.state.arrServicesLabel);
                                                     }}
                                                 >
                                                     Je valide mes services
                                                 </Button>
-                                                {/*form.values.submission.length > 0 ?
-                        <Button type="submit" variant="contained" color="primary" className={classes.button}>
-                          Étape suivante
-                        </Button> : null*/
-                                                }
                                             </div> : null;
                                     }}
-                                </Field>
-                            </Card>
+                                </Field>    
+                                              
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card}>
+                            
                                 <FieldArray
                                     name="submission"
                                     render={(arrayHelpers) => {
@@ -1140,14 +1137,14 @@ class Form extends React.Component {
                                         
                                         return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
                                             <React.Fragment>
-                                                <div style={{padding: '0rem 2rem 1rem 2rem'}}>
+                                                <div style={{padding: '2rem 2rem 1rem 2rem'}}>
                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Paramétrez vos services & prestations</Typography>
                                                     <Typography>
                                                         Indiquez les prestations que vous souhaitez réaliser dans chacun de vos services. Indiquez vos tarifs et vos éventuelles majoration sur les services éligibles.
                                                     </Typography>
                                                 </div>
                                                 <Tabs>
-                                                    <TabList style={{padding: '0 2rem'}}>
+                                                    <TabList>
                                                         {this.state.allInOneServ.map((data, index) => {
                                                             return <Tab key={index} style={{zIndex: 999999999 - index}}><div style={{padding: '0 2rem 0 2rem'}}>{data.serviceLabel}</div></Tab>
                                                         })}
@@ -1394,7 +1391,7 @@ class Form extends React.Component {
                                                                                 };
                                                                                 return (
                                                                                     <Grid item xs={3}>
-                                                                                    <label key={indexe} onClick={() => {
+                                                                                    <label style={{cursor: 'pointer'}} key={indexe} onClick={() => {
                                                                                         e.checked = !e.checked;
                                                                                         arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
                                                                                     }}>
@@ -1526,7 +1523,7 @@ class Form extends React.Component {
                                                                                 />
                                                                                 <Field
                                                                                     name={`submission.${index}.delayBeforeShopDWM`}
-                                                                                    render={({field}) => {
+                                                                                    render={({field, form}) => {
                                                                                         return (
                                                                                             <TextField
                                                                                                 {...field}
@@ -1535,6 +1532,7 @@ class Form extends React.Component {
                                                                                                 margin="dense"
                                                                                                 variant="outlined"
                                                                                                 label="Heures / jours / semaines"
+                                                                                                InputLabelProps={{shrink: form.values.submission[index].delayBeforeShopDWM !== null ? true : false}}
                                                                                             >
                                                                                                 <MenuItem value="heures">heure(s)</MenuItem>
                                                                                                 <MenuItem value="jours">jour(s)</MenuItem>
@@ -1647,6 +1645,7 @@ class Form extends React.Component {
                                                                                                                     margin="dense"
                                                                                                                     variant="outlined"
                                                                                                                     select
+                                                                                                                    InputLabelProps={{shrink: arrayHelpers.form.values.submission[index].diploma.year !== null ? true : false}}
                                                                                                                     //helperText="Délai de prévenance avant réservation."
                                                                                                                 >
                                                                                                                     {dates.map(date => {
@@ -1719,6 +1718,7 @@ class Form extends React.Component {
                                                                                                                     margin="dense"
                                                                                                                     variant="outlined"
                                                                                                                     select
+                                                                                                                    InputLabelProps={{shrink: arrayHelpers.form.values.submission[index].certification.year !== null ? true : false}}
                                                                                                                     //helperText="Délai de prévenance avant réservation."
                                                                                                                 >
                                                                                                                     {dates.map(date => {
@@ -1748,66 +1748,8 @@ class Form extends React.Component {
                                                                             </Grid>
                                                                             
                                                                         </div>
-                                                                        <hr style={{margin: '1rem 0'}}></hr>
+                                                                        
                                                                     </div>
-                                                                </div>
-                                                                <div style={{padding: '2rem'}}>
-                                                            
-
-                                                                    {/*<Grid container>
-                                                                        {s.increases.label !== undefined ? (
-                                                                            <React.Fragment>
-                                                                                <Grid item xs={12}>
-                                                                                    <p>Option</p>
-                                                                                    <FormControlLabel
-                                                                                        control={
-                                                                                            <Checkbox
-                                                                                                color="primary"
-                                                                                                type="checkbox"
-                                                                                                checked={s.increases.checked}
-                                                                                                onChange={() => {
-                                                                                                    s.increases.checked = !s.increases.checked;
-
-                                                                                                    arrayHelpers.form.setFieldValue(`submission[${index}].increases.checked`, s.increases.checked)
-                                                                                                }}
-                                                                                            />
-                                                                                        }
-                                                                                        label={s.increases.label}
-                                                                                    />
-                                                                                </Grid>
-                                                                                <Grid xs={12}>
-                                                                                    {s.increases.checked === true ?
-                                                                                        <Field
-                                                                                            name={`submission.${index}.increases.price`}
-                                                                                            placeholder="prix"
-                                                                                            render={({field, form}) => {
-                                                                                                return (
-                                                                                                    <React.Fragment>
-                                                                                                        <TextField
-                                                                                                            {...field}
-                                                                                                            style={{width: '15%'}}
-                                                                                                            label="Prix"
-                                                                                                            type="number"
-                                                                                                            disabled={!s.increases.checked}
-                                                                                                            margin="none"
-                                                                                                            InputProps={{
-                                                                                                                startAdornment: <InputAdornment position="start">€</InputAdornment>,
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </React.Fragment>
-                                                                                                )
-                                                                                            }}
-                                                                                        /> : null
-                                                                                    }
-                                                                                </Grid>
-                                                                            </React.Fragment>
-                                                                        ) : null}
-                                                                        <label htmlFor="raised-button-file">
-                                    <Button variant="contained" component="span">
-                                        Ajouter un diplôme
-                                    </Button>
-                                        </label>
-                                                                                </Grid>*/}
                                                                 </div>
                                                             </TabPanel>
                                                         )
@@ -1819,7 +1761,6 @@ class Form extends React.Component {
                                 {/*<div>*/}
                                 
                                 {/*</div>*/}
-                            </Card>
                         </Grid>
                         
                     </Wizard.Page>
@@ -1828,7 +1769,7 @@ class Form extends React.Component {
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card}>
+                            
                             <div className={classes.newContainer}>
                                     <Grid container>
 
@@ -2212,7 +2153,7 @@ class Form extends React.Component {
                                         </Button>
                                     )
                                 }} />*/}
-                            </Card>
+                            
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
@@ -2220,7 +2161,7 @@ class Form extends React.Component {
                             {({ form, field }) => (
                                 <React.Fragment>
                                     <Grid container className={classes.cardContainer}>
-                                        <Card className={classes.card}>
+                                        
                                             <div className={classes.newContainer}>
                                                 <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                     Téléchargez une photo de profil
@@ -2258,7 +2199,7 @@ class Form extends React.Component {
                                                                                     }}
                                                                                     component="span"
                                                                                 >
-                                                                                    <PhotoCamera />
+                                                                                    {form.values.alfredUpdate.profile_picture_user === null ? <PhotoCamera /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
                                                                                 </IconButton>
                                                                             </label>
                                                                         </React.Fragment>
@@ -2570,7 +2511,7 @@ class Form extends React.Component {
                                                     </Grid>
                                                 </Grid>
                                             </div>
-                                        </Card>
+                                        
                                     </Grid>
                                 </React.Fragment>
                             )}

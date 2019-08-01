@@ -33,13 +33,14 @@ body {
 }
 
 .react-tabs__tab-list {
-  position: sticky;
-  top: 0px;
+  position: fixed;
+  top: 140px;
   background-color: white;
   z-index: 99999999999999;
-  border-bottom: 1px solid #aaa;
+  border-bottom: none;
   margin: 0 0 10px;
-  padding: 0;
+  padding: 0 2rem;
+  width: 63%
 }
 
 .react-tabs__tab {
