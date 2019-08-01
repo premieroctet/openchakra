@@ -37,6 +37,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CityFinder from './CityFinder';
 import AddressFinder from './AddressFinder';
 import Siret from './Siret';
+import Availability from './Availability';
 import '../../static/form.css';
 import '../../static/forminputs.css';
 
@@ -554,7 +555,7 @@ class Wizard extends React.Component {
                                 <div style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative'}}>
                                     {activePage}
                                 </div>
-                                <div className={page === 2 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : 76, left: 0, width: '100%', padding: page !== 2 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: 'transparent', zIndex: '9999999'}}>
+                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : 76, left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '9999999'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
                                         {page !== 0 && <Button
                                             color="primary"
@@ -1776,7 +1777,11 @@ class Form extends React.Component {
                         
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Calendar />
+                        <Field render={({form}) => {
+                            return (
+                                <Availability formikCtx={form} />
+                            )
+                        }} />
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
