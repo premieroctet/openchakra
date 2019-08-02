@@ -60,9 +60,11 @@ class AddressFinder extends React.Component {
             onChange={(suggestion) =>this.onChange(suggestion)}
         />
 
-               <form onSubmit={this.onSubmit}>
                    <Grid item>
                        <TextField
+                            inputProps={{
+                                readOnly: true
+                            }}
                            id="standard-with-placeholder"
                            color="primary"
                            variant="outlined"
@@ -78,6 +80,9 @@ class AddressFinder extends React.Component {
                    </Grid>
                    <Grid item>
                        <TextField
+                            inputProps={{
+                                readOnly: true
+                            }}
                            id="standard-with-placeholder"
                            color="primary"
                            variant="outlined"
@@ -93,6 +98,9 @@ class AddressFinder extends React.Component {
                    </Grid>
                    <Grid item>
                        <TextField
+                            inputProps={{
+                                readOnly: true
+                            }}
                            id="standard-with-placeholder"
                            color="primary"
                            variant="outlined"
@@ -108,6 +116,9 @@ class AddressFinder extends React.Component {
                    </Grid>
                    <Grid item>
                        <TextField
+                            inputProps={{
+                                readOnly: true
+                            }}
                            id="standard-with-placeholder"
                            color="primary"
                            variant="outlined"
@@ -128,7 +139,6 @@ class AddressFinder extends React.Component {
                            Ajouter
                        </Button>
         </Grid>*/}
-               </form>
            </React.Fragment>
 
         );

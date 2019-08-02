@@ -1062,10 +1062,10 @@ class Form extends React.Component {
                                                                         {/*<Typography align="center" style={{marginLeft: 80, color: "grey"}}>Choisissez vos services pour {categorie.label}</Typography>*/}
                                                                     </ExpansionPanelSummary>
                                                                     <ExpansionPanelDetails>
-                                                                        <Grid container>
+                                                                        <Grid container spacing={2}>
                                                                             {categorie[categorie.label.replace(/\s/g, '') + 'Services'].map((service, index) => {
                                                                                 return (
-                                                                                    <Grid item xs={6} sm={6}>
+                                                                                    <Grid item xs={6} sm={6} md={3}>
                                                                                         <FormControlLabel
                                                                                             key={index}
                                                                                             control={
@@ -1301,7 +1301,11 @@ class Form extends React.Component {
                                                                                                                             disabled={!p.checked}
                                                                                                                             margin="none"
                                                                                                                             InputProps={{
+                                                                                                                                inputProps: {
+                                                                                                                                    min: 0
+                                                                                                                                },
                                                                                                                                 startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                        
                                                                                                                             }}
                                                                                                                         />
                                                                                                                         <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
