@@ -8,6 +8,9 @@ import getPageContext from '../lib/getPageContext';
 import "react-input-range/lib/css/index.css";
 import '../static/stylesfonts.css'
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import '../static/form.css';
+import '../static/forminputs.css';
+import "../static/inputRange.css";
 
 class MyApp extends App {
   constructor() {

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import "react-tabs/style/react-tabs.css";
 import InputRange from 'react-input-range';
-import "../../static/inputRange.css";
+
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -24,17 +24,21 @@ import * as Yup from 'yup';
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import Switch from "@material-ui/core/Switch";
 import CircleCheckedFilled from '@material-ui/icons/CheckCircle';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
+import FiberManualRecord from '@material-ui/icons/FiberManualRecord';
+import Select from 'react-select';
 
 import { Debug } from './Debug';
 import MultipleSelect from './MultipleSelect';
 import Calendar from '../Calendar/calendar';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CityFinder from './CityFinder';
-import '../../static/forminputs.css';
-import '../../static/stylesfonts.css';
+import AddressFinder from './AddressFinder';
 import Siret from './Siret';
+import Availability from './Availability';
+
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -45,15 +49,25 @@ const styles = theme => ({
     cardContainer: {
         alignItems: 'center',
         justifyContent: 'center',
+        padding: '1.5rem 3rem 0 3rem',
+        [theme.breakpoints.down('sm')]: {
+            padding: '0'
+        },
+        fontFamily: 'helveticaNeue',
+        overflow: 'scroll',
+        height: 'auto',
     },
     card: {
+        minHeight: '400px !important',
+        boxShadow: 'none',
         //padding: '1.5rem 2rem',
         display: 'flex',
         flexDirection: 'column',
-        height: 'auto',
+        height: '86vh',
         //maxHeight: 700,
         overflow: 'auto',
-        width: 800,
+        maxWidth: 1000,
+        fontFamily: 'helveticaNeue',
 
     },
     cardHeader: {
@@ -168,7 +182,7 @@ const styles = theme => ({
         margin: theme.spacing,
     },
     title1: {
-        backgroundColor: '#F8727F',
+        backgroundColor: '#6d7892',
         paddingTop: 5,
         paddingBottom: 5,
         paddingLeft: 20,
@@ -177,7 +191,7 @@ const styles = theme => ({
         marginBottom: 10,
     },
     title2: {
-        backgroundColor: '#F8727F',
+        backgroundColor: '#6d7892',
         paddingTop: 5,
         paddingBottom: 5,
         paddingLeft: 20,
@@ -187,15 +201,42 @@ const styles = theme => ({
     text1: {
         marginTop: 5,
         marginBottom: 5,
+        fontFamily: 'helveticaNeue',
         letterSpacing: 1,
         fontWeight: '100',
     },
     banner: {
-
+        marginBottom: 25,
         backgroundColor: '#2FBCD3',
     },
     newContainer: {
         padding: 20,
+    },
+    imgDiv: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
+    },
+    delayDivResponsive: {
+        [theme.breakpoints.down('sm')]: {
+            textAlign: 'center',
+        },
+    },
+    selectDelayInputRepsonsive: {
+        [theme.breakpoints.down('sm')]: {
+            width: '100%!important',
+        },
+    },
+    inputDiplomaCertifResp: {
+        [theme.breakpoints.down('sm')]: {
+            width: '100%!important',
+        },
+    },
+    prestationsPres: {
+        padding: '0 2rem',
+        [theme.breakpoints.down('sm')]: {
+            padding: '0!important',
+        }
     },
 
 });
@@ -221,7 +262,7 @@ class Wizard extends React.Component {
         this.setState(state => ({
             page: Math.max(state.page - 1, 0),
         }));
-
+        
     validate = values => {
         const activePage = React.Children.toArray(this.props.children)[
             this.state.page
@@ -242,7 +283,7 @@ class Wizard extends React.Component {
                     a.prestations.forEach(b => {
 
                         if(b.checked === true) {
-                            const newObj = {prestation: b.id, price: b.price, billing: b.billing};
+                            const newObj = {prestation: b.id, price: b.price, billing:b.billing};
                             arrayPrestations.push(newObj);
 
                         }
@@ -303,7 +344,6 @@ class Wizard extends React.Component {
                         alert("Service ajouté");
 
                             const booking_request = values.createShop.booking_request;
-                            const no_booking_request = values.createShop.no_booking_request;
                             const my_alfred_conditions = values.createShop.my_alfred_conditions;
                             const profile_picture = values.createShop.profile_picture_user;
                             const identity_card = values.createShop.identity_card;
@@ -335,7 +375,7 @@ class Wizard extends React.Component {
 
                                     });
 
-                                    axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
+                                    axios.post(url+'myAlfred/api/shop/add',{booking_request,my_alfred_conditions,profile_picture,identity_card
                                     , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
                                     self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
                                         .then(result => {
@@ -398,19 +438,18 @@ class Wizard extends React.Component {
             bag.setTouched({});
             bag.setSubmitting(false);
             this.next(values);
-            console.log(this.state);
         }
     };
 
     phoneRegEx = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
+    Step0Schema = null;
     Step1Schema = null;
     Step2Schema = Yup.object().shape({
           submission: Yup.array().of(Yup.object().shape({
             descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
             minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').required('Le minimum d\'achat est requis'),
-            delayBeforeShop: Yup.number().typeError('Le délais doit être un nombre').required(),
-            delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi jours, semaines et mois').required(),
-            city: Yup.object().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
+            delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi heures, jours et semaines').required(),
+            city: Yup.string().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
             filters: Yup.array().of(Yup.object().shape({
                 prestations: Yup.array().of(Yup.object().shape({
                     checked: Yup.boolean(),
@@ -435,10 +474,8 @@ class Wizard extends React.Component {
         }),
         createShop: Yup.object().shape({
             is_professional: Yup.boolean(),
-            is_microCompany: Yup.boolean(),
-            isIndividualCompany: Yup.boolean(),
-            id_recto: Yup.mixed().required('Veuillez uploader le recto de votre carte d\'identité'),
-            id_verso: Yup.mixed().required('Veuillez uploader le verso de votre carte d\'identité'),
+            id_recto: Yup.mixed().required('Veuillez uploader le recto de votre carte d\'identité ou bien votre passeport'),
+            id_verso: Yup.mixed(),
             siret: Yup.string()
                 .when('is_professional', {
                     is: true,
@@ -463,6 +500,12 @@ class Wizard extends React.Component {
                     then: Yup.string().length(5, 'Code APE invalide'),
                     otherwise: Yup.string().notRequired(),
                 }),
+            nature_juridique: Yup.string()
+                .when('is_professional', {
+                    is: true,
+                    then: Yup.string().required('Veuillez renseigner le statut juridique'),
+                    otherwise: Yup.string().notRequired(),
+                }),
             isEngaged: Yup.boolean().oneOf([true], 'Veuillez vous engager'),
             isCertified: Yup.boolean()
                 .when('is_professional', {
@@ -473,7 +516,7 @@ class Wizard extends React.Component {
         })
     })
 
-    schemaArray =[this.Step1Schema, this.Step2Schema, this.Step3Schema, this.Step4Schema, this.Step5Schema]
+    schemaArray =[this.Step0Schema, this.Step1Schema, this.Step2Schema, this.Step3Schema, this.Step4Schema, this.Step5Schema]
 
     render() {
         const { schemaArray } = this;
@@ -489,29 +532,133 @@ class Wizard extends React.Component {
                 validate={this.validate}
                 onSubmit={this.handleSubmit}
                 render={({ values, handleSubmit, isSubmitting, setFieldValue, handleReset }) => (
-                    <form onSubmit={handleSubmit}>
-                        {activePage}
-                        <div className="buttons">
-                            {/* POUR REVENIR EN ARRIERE */}
-                            {/*page > 0 && (
-                <button
-                  type="button"
-                  className="secondary"
-                  onClick={this.previous}
-                >
-                  « Previous
-                </button>
-              )*/}
+                    <React.Fragment>
+                        {page !== 0 && <div style={{backgroundColor: 'white'}}>
+                            {page === 1 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez vos catégories et services</h3> : null}
+                            {page === 2 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de vos services</h3> : null}
+                            {page === 3 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+                            {page === 4 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+                            {page === 5 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
+                            <div>
+                                <Bar style={{backgroundColor: '#cacfe4'}}>
+                                    {page === 1 ? <Fill width={'20%'} /> : null}
+                                    {page === 2 ? <Fill width={'40%'} /> : null}
+                                    {page === 3 ? <Fill width={'60%'} /> : null}
+                                    {page === 4 ? <Fill width={'80%'} /> : null}
+                                    {page === 5 ? <Fill width={'100%'} /> : null}
+                                </Bar>
+                            </div>
+                        </div>}
+                        <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh'}}>
+                            <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%'}}>
+                                <div style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative'}}>
+                                    {activePage}
+                                </div>
+                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '9999999'}}>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
+                                        {page !== 0 && <Button
+                                            color="primary"
+                                            type="button"
+                                            onClick={this.previous}
+                                            disabled={page === 0 ? true : false}
+                                        >
+                                            Retour
+                                        </Button>}
+                                        {page === 0 && <Button
+                                            type="submit"
+                                            variant="contained"
+                                            color="secondary"
+                                            style={{color: 'white'}}
+                                        >
+                                            Suivant
+                                        </Button>}
+                                        {page === 1 && <Button
+                                            type="submit"
+                                            variant="contained"
+                                            color="secondary"
+                                            style={{color: 'white'}}
+                                            disabled={values.submission.length > 0 ? false : true}
+                                        >
+                                            Suivant
+                                        </Button>}
+                                        {page === 2 && 
+                                            <Field render={({form}) => {
+                                                const checkArr = [];
 
-                            {!isLastPage && <button type="submit">Next »</button>}
-                            {isLastPage && (
-                                <button type="submit" disabled={isSubmitting}>
-                                    Submit
-                                </button>
-                            )}
-                        </div>
+                                                form.values.submission.map(pc => {
+                                                    if (pc.prestationsCount > 0) {
+                                                        return checkArr.push(true);
+                                                        //return form.values.checkArr.push(true);
+                                                    } else {
+                                                        return checkArr.push(false);
+                                                        //return form.values.checkArr.push(false);
+                                                    }
+                                                })
 
-                    </form>
+                                                const check = el => {
+                                                    return el === false;
+                                                }
+
+                                                return (
+                                                    <Button type="submit" variant="contained" color="secondary" style={{color: !checkArr.some(check) ? 'white' : null }} disabled={checkArr.some(check) ? true : false}>
+                                                        Suivant
+                                                    </Button>
+                                                )
+                                            }} 
+                                        />}
+                                        {page === 3 && <Button
+                                            type="submit"
+                                            variant="contained"
+                                            color="secondary"
+                                            style={{ color: 'white'}}
+                                        >
+                                            Suivant
+                                        </Button>}
+                                        {page === 4 && 
+                                        <Field render={({form}) => {
+                                            let cancel = true;
+        
+                                            if (form.values.createShop.flexible_cancel === true || form.values.createShop.moderate_cancel === true || form.values.createShop.strict_cancel === true) {
+                                                cancel = false;
+                                            } else {
+                                                cancel = true;
+                                            }
+        
+                                            return (
+                                                <Button type="submit" variant="contained" color="secondary" style={{color: !cancel ? 'white' : null }} disabled={cancel}>
+                                                    Suivant
+                                                </Button>
+                                            )
+                                        }} />}
+                                        {page === 5 &&
+                                            <Field render={({form}) => {
+                                                let check = true;
+
+                                                if (form.values.createShop.is_particular === true) {
+                                                    check = false;
+                                                } else if(form.values.createShop.is_professional === true) {
+                                                    check = false;
+                                                } else if (form.values.createShop.is_professional === true) {
+                                                    check = false;
+                                                } else {
+                                                    check = true;
+                                                }
+
+                                                return (
+                                                    <Button type="submit" variant="contained" style={{color: !check ? 'white' : null }} color="secondary" disabled={check}>
+                                                        Envoyer
+                                                    </Button>
+                                                )
+                                            }} />}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="imgDiv" style={{width: '40%', overflow: 'hidden'}}>
+                                <img src='../../static/backgrounds-blank-blue-953214.jpg' height='100%'  width='100%'/>
+                            </div>
+                        </form>
+                    </React.Fragment>
+                    
                 )}
             />
         );
@@ -548,8 +695,9 @@ class Thumb extends React.Component {
 
         return (<img src={thumb}
                      alt={file.name}
-                     height={50}
-                     width={50} />);
+                     height={100}
+                     width={100}
+                     style={{borderRadius: '50%'}} />);
     }
 }
 
@@ -597,7 +745,6 @@ class Form extends React.Component {
             isEngaged: false,
             isCertified: false,
             booking_request: false,
-            no_booking_request: false,
             my_alfred_conditions: false,
             profile_picture_user: false,
             identity_card: false,
@@ -605,7 +752,10 @@ class Form extends React.Component {
             flexible_cancel: false,
             moderate_cancel: false,
             strict_cancel: false,
-            welcome_message: ""
+            welcome_message: "",
+
+            no_booking: false,
+            all_options: [],
         }
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -616,6 +766,17 @@ class Form extends React.Component {
     }
 
     componentDidMount() {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.get(url+'myAlfred/api/users/current')
+            .then(res => {
+                this.state.userCity = {label: res.data.billing_address.city, value: res.data.billing_address.city};
+                this.state.userAddress = {label: res.data.billing_address.address, value: res.data.billing_address.address};
+                this.state.userZipCode = {label: res.data.billing_address.zip_code, value: res.data.billing_address.zip_code};
+                this.state.userCountry = {label: res.data.billing_address.country, value: res.data.billing_address.country};
+            })
+            .catch(error => {
+                console.log(error);
+            })
         axios.get(url+'myAlfred/api/category/all')
             .then(response => {
                 let categories = response.data;
@@ -624,12 +785,18 @@ class Form extends React.Component {
                 }
                 const options = categories.map(categorie => {
                     return { value: categorie._id, label: categorie.label, [categorie.label.replace(/\s/g, '') + 'Services']: [] };
-                })
+                });
                 this.setState({ categories: options });
             })
             .catch(error => {
                 console.log(error);
+            });
+        axios.get(url+'myAlfred/api/options/all')
+            .then(res => {
+                let options = res.data;
+                this.setState({all_options: options});
             })
+            .catch(err => console.log(err));
     }
 
     handleCategorieChange(categorie, formikCtx) {
@@ -702,10 +869,14 @@ class Form extends React.Component {
         const {classes} = this.props;
         // Ca va dégager
         const { isChecked, isProfessional } = this.state;
+        let dates = [];
+        const actualDate = new Date().getFullYear();
+            for (let i = 1950; i <= actualDate; i++) {
+                dates.push(i);
+            }
 
         return (
-            <div className="App" style={{marginTop: 100}}>
-                <div className="fonts">
+            <div className="App" style={{marginTop: 64}}>
 
                 <Wizard
                     initialValues={{
@@ -714,7 +885,6 @@ class Form extends React.Component {
                         submission: [],
                         createShop: {
                             booking_request: false,
-                            no_booking_request: false,
                             my_alfred_conditions: false,
                             profile_picture_user: false,
                             identity_card: false,
@@ -733,13 +903,70 @@ class Form extends React.Component {
                             creationDate: '',
                             denomination: '',
                             nafape: '',
+                            nature_juridique: '',
                             isEngaged: false,
                             isCertified: false,
                         },
                         alfredUpdate: {
                             phone: '',
                             profile_picture_user: null,
-                        }
+                        },
+                        servicesAvailability: {
+                            monday_event: [],
+                            tuesday_event: [],
+                            wednesday_event: [],
+                            thursday_event: [],
+                            friday_event: [],
+                            saturday_event: [],
+                            sunday_event: [],
+                
+                            active: false,
+                            month_begin: '',
+                            month_end: '',
+                
+                            monday_begin: '',
+                            tuesday_begin: '',
+                            wednesday_begin: '',
+                            thursday_begin: '',
+                            friday_begin: '',
+                            saturday_begin: '',
+                            sunday_begin: '',
+                
+                            monday_end: '',
+                            tuesday_end: '',
+                            wednesday_end: '',
+                            thursday_end: '',
+                            friday_end: '',
+                            saturday_end: '',
+                            sunday_end: '',
+                
+                            monday_service: null,
+                            tuesday_service: null,
+                            wednesday_service: null,
+                            thursday_service: null,
+                            friday_service: null,
+                            saturday_service: null,
+                            sunday_service: null,
+                
+                            monday_all_service: false,
+                            tuesday_all_service: false,
+                            wednesday_all_service: false,
+                            thursday_all_service: false,
+                            friday_all_service: false,
+                            saturday_all_service: false,
+                            sunday_all_service: false,
+                
+                
+                            monday: false,
+                            tuesday: false,
+                            wednesday: false,
+                            thursday: false,
+                            friday: false,
+                            saturday: false,
+                            sunday: false,
+                            all_service: []
+                        }, 
+                        checkArr: []
                     }}
                     onSubmit={(values, actions) => {
                         sleep(300).then(() => {
@@ -749,23 +976,51 @@ class Form extends React.Component {
                     }}
                 >
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card} style={{minHeight: '400px !important'}}>
-                                <div className={classes.banner}>
-                                    <h3 style={{ marginLeft: 10, color: 'white'}}>Etape 1 - Choisissez vos catégories et services</h3>
-                                    <div>
-                                        <Bar>
-                                            <Fill4 />
-                                        </Bar>
-                                    </div>
+                        <Grid container className={classes.cardContainer} style={{justifyContent: 'start'}}>
+                            
+                            <div style={{padding: '0rem 2rem 1rem 2rem', width: '100%'}}>
+                                <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
+                                <hr style={{margin: '1rem 0'}} />
+                            </div>
+                            <div className="steps">
+                                <div className="step1">
+                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 1</Typography>
+                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                    <Typography style={{fontSize: 18}}>Créez votre boutique de service</Typography>
+                                    <Typography>Sélectionnez les services que vous souhaitez offrir</Typography>
                                 </div>
-                                <label style={{padding: '0 2rem'}}>Vos catégories</label>
+                                <div className="step2">
+                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 2</Typography>
+                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                    <Typography style={{fontSize: 18}}>Indiquez vos disponiblités & conditions</Typography>
+                                    <Typography>Indiquez vos disponibilités ,paramètres de réservation et vos conditions d’annulation</Typography>
+                                </div>
+                                <div className="step3">
+                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 3</Typography>
+                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                    <Typography style={{fontSize: 18}}>Présentez-vous !</Typography>
+                                    <Typography>Renseignez votre profil Alfred, partager vos réalisa- tions, et décrivez vous !</Typography>
+                                </div>
+                            </div> 
+                            
+                        </Grid>
+                    </Wizard.Page>
+                    <Wizard.Page>
+                        <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start'}}>
+                                <div style={{padding: '0rem 2rem 1rem 2rem'}}>
+                                    <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Vos catégories de service</Typography>
+                                    <Typography>
+                                        Commencez par sélectionner vos catégories de services. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être».
+                                        Ne vous limitez pas ! Vous pouvez selectionner plusieurs catégories.
+                                    </Typography>
+                                </div>
                                 <FieldArray
                                     name="categories"
                                     render={(arrayHelpers) => (
                                         this.state.categories && this.state.categories.length > 0 ? (
-                                            <div style={{padding: '2rem'}}>
+                                            <div style={{padding: '.5rem 2rem'}}>
                                                 <MultipleSelect
+                                                    placeholder="Sélectionnez vos catégories..."
                                                     option={this.state.categories}
                                                     value={arrayHelpers.form.values.categories}
                                                     disabled={this.state.isDisabledCategoryInput}
@@ -775,7 +1030,9 @@ class Form extends React.Component {
                                                 />
                                                 <Button
                                                     color="primary"
+                                                    style={{marginTop: '1rem', marginBottom: '2rem', color: 'white', borderRadius: 8}}
                                                     type="button"
+                                                    variant="contained"
                                                     disabled={this.state.isDisabledCategoryInput}
                                                     onClick={() => {
                                                         if (arrayHelpers.form.values.categories != '' && arrayHelpers.form.values.categories != null) {
@@ -786,10 +1043,15 @@ class Form extends React.Component {
                                                             })
                                                         }
                                                     }}>
-                                                    Valider vos catégories
+                                                    Je valide mes catégories
                                                 </Button>
-                                                <p>Vos services</p>
                                                 <div>
+                                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>Vos services</Typography>
+                                                    <Typography>
+                                                        Identifiez maintenant les services que vous souhaitez réaliser dans chacune des catégories sélectionnées. Ne vous limitez pas ! Plusieurs services peuvent être sélectionnés. Vous pourrez choisir le type de prestation que vous souhaitez réaliser dans chacun de vos services dès la prochaine étape !
+                                                    </Typography>
+                                                </div>
+                                                <div style={{marginTop: '1rem'}}>
                                                     {arrayHelpers.form.values.categories && arrayHelpers.form.values.categories.length > 0 ? (
                                                         arrayHelpers.form.values.categories.map((categorie, index) => {
                                                             return (
@@ -803,49 +1065,54 @@ class Form extends React.Component {
                                                                         id={`panel${index + 1}a-header`}
                                                                     >
                                                                         <Typography>{categorie.label}</Typography>
+                                                                        {/*<Typography align="center" style={{marginLeft: 80, color: "grey"}}>Choisissez vos services pour {categorie.label}</Typography>*/}
                                                                     </ExpansionPanelSummary>
                                                                     <ExpansionPanelDetails>
-                                                                        {categorie[categorie.label.replace(/\s/g, '') + 'Services'].map((service, index) => {
-                                                                            return (
-                                                                                <FormControlLabel
-                                                                                    key={index}
-                                                                                    control={
-                                                                                        <Checkbox
-                                                                                            color="primary"
-                                                                                            type="checkbox"
-                                                                                            checked={service.checked}
-                                                                                            onChange={() => {
-                                                                                                service.checked = !service.checked
-                                                                                                if(service.checked === true) {
-                                                                                                    arrayHelpers.form.values.services.push(service.value);
-                                                                                                    const servicesLength = arrayHelpers.form.values.services.length;
-                                                                                                    this.setState({
-                                                                                                        servicesLength,
-                                                                                                        servicesValues: arrayHelpers.form.values.services
-                                                                                                    })
+                                                                        <Grid container spacing={2}>
+                                                                            {categorie[categorie.label.replace(/\s/g, '') + 'Services'].map((service, index) => {
+                                                                                return (
+                                                                                    <Grid item xs={6} sm={6} md={3}>
+                                                                                        <FormControlLabel
+                                                                                            key={index}
+                                                                                            control={
+                                                                                                <Switch
+                                                                                                    color="primary"
+                                                                                                    type="checkbox"
+                                                                                                    checked={service.checked}
+                                                                                                    onChange={() => {
+                                                                                                        service.checked = !service.checked
+                                                                                                        if(service.checked === true) {
+                                                                                                            arrayHelpers.form.values.services.push(service.value);
+                                                                                                            const servicesLength = arrayHelpers.form.values.services.length;
+                                                                                                            this.setState({
+                                                                                                                servicesLength,
+                                                                                                                servicesValues: arrayHelpers.form.values.services
+                                                                                                            })
 
-                                                                                                } else if (service.checked === false) {
-                                                                                                    const index = arrayHelpers.form.values.services.indexOf(service.value);
-                                                                                                    arrayHelpers.form.values.services.splice(index, 1);
-                                                                                                    const servicesLength = arrayHelpers.form.values.services.length;
-                                                                                                    this.setState({
-                                                                                                        servicesLength,
-                                                                                                        servicesValues: arrayHelpers.form.values.services
-                                                                                                    })
-                                                                                                }
-                                                                                                arrayHelpers.form.setFieldValue(`categories[${categorie.label.replace(/\s/g, '') + 'Services'}].checked`, service.checked)
-                                                                                            }}
+                                                                                                        } else if (service.checked === false) {
+                                                                                                            const index = arrayHelpers.form.values.services.indexOf(service.value);
+                                                                                                            arrayHelpers.form.values.services.splice(index, 1);
+                                                                                                            const servicesLength = arrayHelpers.form.values.services.length;
+                                                                                                            this.setState({
+                                                                                                                servicesLength,
+                                                                                                                servicesValues: arrayHelpers.form.values.services
+                                                                                                            })
+                                                                                                        }
+                                                                                                        arrayHelpers.form.setFieldValue(`categories[${categorie.label.replace(/\s/g, '') + 'Services'}].checked`, service.checked)
+                                                                                                    }}
+                                                                                                />
+                                                                                            }
+                                                                                            label={service.label}
                                                                                         />
-                                                                                    }
-                                                                                    label={service.label}
-                                                                                />
-                                                                            )
-                                                                        })}
+                                                                                    </Grid>
+                                                                                )
+                                                                            })}
+                                                                        </Grid>
                                                                     </ExpansionPanelDetails>
                                                                 </ExpansionPanel>
                                                             )
                                                         })
-                                                    ):(<p>Veuillez choisir vos catégories</p>)}
+                                                    ):(<Typography align="center" style={{fontSize: 15, marginTop: '2rem'}}>Afin d'afficher la sélection des services, veuillez sélectionner vos catégories...</Typography>)}
                                                 </div>
                                             </div>
                                         ): (<p style={{padding: '0 2rem'}}>Chargement...</p>)
@@ -854,21 +1121,57 @@ class Form extends React.Component {
                                 <Field>
                                     {({form}) => {
                                         return form.values.services && form.values.services.length > 0 ?
-                                            <div style={{padding: '0 2rem'}}>
+                                            <div style={{padding: '0 2rem 1rem 2rem'}}>
                                                 <Button
                                                     color="primary"
+                                                    style={{marginTop: '.5rem', color: 'white', borderRadius: 8}}
+                                                    variant="contained"
                                                     type="button"
                                                     onClick={() => {
                                                         let servCompObjArr = [];
                                                         let uniqueIdFilters = [];
                                                         let uniqueIdPrestations = [];
                                                         const services = form.values.services;
-                                                        //console.log(services);
                                                         let arrServices = [];
                                                         services.map((service, index) => {
+                                                            this.setState({
+                                                                [`userCityClicked${index}`]: false,
+                                                                [`otherOptionChecked${index}`]: false
+                                                            })
                                                             axios.get(`${url}myAlfred/api/service/${service}`)
                                                                 .then(res => {
-                                                                    let servCompObj = { CategoryLabel : res.data.category.label, serviceId: res.data._id, serviceLabel: res.data.label, descService: '', minimumBasket: '', diploma: null,certification: null, perimeter: 50, delayBeforeShop: '', delayBeforeShopDWM: null, city: null, increases: { label: res.data.majoration, price: 0, checked: false }, prestationsCount: 0, cancelChoice: false, equipments: [], filters: [] }
+                                                                    let servCompObj = { 
+                                                                        CategoryLabel : res.data.category.label, 
+                                                                        serviceId: res.data._id, 
+                                                                        serviceLabel: res.data.label,
+                                                                        descService: '', 
+                                                                        minimumBasket: '', 
+                                                                        diploma: { 
+                                                                            label: null, 
+                                                                            year: null, 
+                                                                            document: null 
+                                                                        }, certification: { 
+                                                                            label : null, 
+                                                                            year: null, 
+                                                                            document: null 
+                                                                        }, perimeter: 50, 
+                                                                        delayBeforeShop: 1, 
+                                                                        delayBeforeShopDWM: null, 
+                                                                        city: this.state.userCity, 
+                                                                        address: this.state.userAddress, 
+                                                                        postal_code: this.state.userZipCode, 
+                                                                        country: this.state.userCountry, 
+                                                                        experienceYears: null, 
+                                                                        option: null, 
+                                                                        increases: { 
+                                                                            label: res.data.majoration, 
+                                                                            price: 0, checked: false 
+                                                                        }, 
+                                                                        prestationsCount: 0, 
+                                                                        cancelChoice: false, 
+                                                                        equipments: [], 
+                                                                        filters: [] 
+                                                                    }
                                                                     res.data.equipments.map(e => {
                                                                         const equipObj = { id: e._id, label: e.label, logo: e.logo, name_logo: e.name_logo, checked: false }
                                                                         servCompObj.equipments.push(equipObj);
@@ -889,7 +1192,6 @@ class Form extends React.Component {
                                                                                 axios.get(`${url}myAlfred/api/prestation/${service}/${filterObj.id}`)
                                                                                     .then(res => {
                                                                                         res.data.map(prestation => {
-                                                                                            console.log(prestation)
                                                                                             const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: 0, billing: prestation.billing, checked: false };
                                                                                             servCompObj.filters.map(p => {
                                                                                                 if (p.id === prestationObj.filterId) {
@@ -914,438 +1216,705 @@ class Form extends React.Component {
                                                                         })
                                                                 })
                                                         });
-                                                        //console.log(this.state.arrServices);
-                                                        //console.log(this.state.arrServicesLabel);
                                                     }}
                                                 >
-                                                    Valider vos services
+                                                    Je valide mes services
                                                 </Button>
-                                                {/*form.values.submission.length > 0 ?
-                        <Button type="submit" variant="contained" color="primary" className={classes.button}>
-                          Étape suivante
-                        </Button> : null*/
-                                                }
                                             </div> : null;
                                     }}
-                                </Field>
-                                <Field
-                                    render={({form}) => (
-                                        <Button type="submit" variant="contained" color="primary" style={{marginTop: '45px', color: form.values.submission.length > 0 ? 'white' : null }} disabled={form.values.submission.length > 0 ? false : true}>
-                                            Étape suivante
-                                        </Button>
-                                    )}
-                                />
-                            </Card>
+                                </Field>    
+                                              
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card}>
-                                <div className={classes.banner}>
-                                    <h3 style={{marginLeft: 10, color: 'white'}}>Etape 1 - Configuration de vos services</h3>
-                                    <div>
-                                        <Bar style={{width: '40%!important'}}>
-                                            <Fill />
-                                        </Bar>
-                                    </div>
-                                </div>
+                            
                                 <FieldArray
                                     name="submission"
                                     render={(arrayHelpers) => {
+                                        // POUR LES DATES D OBTENTIONS DE DIPLOME ET CERTIFS
+                                        
                                         return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
-                                            <Tabs>
-                                                <TabList>
-                                                    {this.state.allInOneServ.map((data, index) => {
-                                                        return <Tab key={index} style={{backgroundColor: '#2FBCD3', color: 'white', fontSize: '25px', border: '1px solid white'}}>{data.serviceLabel}</Tab>
-                                                    })}
-                                                </TabList>
-                                                {this.state.allInOneServ.map((s, index) => {
-                                                    return(
-                                                        <TabPanel key={index}>
-                                                            <div style={{padding: '0 2rem'}}>
-                                                                <h2 className={classes.text1} style={{margin: '15px 0'}}>{s.CategoryLabel}</h2>
-                                                                <div className={classes.title2} style={{marginBottom: '0 !important'}}>
-                                                                    <h4 style={{color: 'white'}} className={classes.text1}>{s.serviceLabel}</h4>
-                                                                </div>
-                                                            </div>
-                                                            <div style={{padding: '0 2rem'}}>
-                                                                <div style={{backgroundColor: '#f5f2f2', paddingBottom: '1rem'}}>
-                                                                    <Grid container spacing={8}>
-                                                                        {s.filters.map((f, indexf) => {
-                                                                            return (
-                                                                                <Grid
-                                                                                    item
-                                                                                    xs={6}
-                                                                                    key={indexf}
-                                                                                    style={{padding: '0 2rem'}}
-                                                                                >
-                                                                                    <p>{f.label}</p>
-                                                                                    {f.prestations.map((p, indexp) => {
-                                                                                        return(
-                                                                                            <div key={indexp}>
-                                                                                                <FormControlLabel
-                                                                                                    control={
-                                                                                                        <Checkbox
-                                                                                                            color="primary"
-                                                                                                            type="checkbox"
-                                                                                                            checked={p.checked}
-                                                                                                            onChange={() => {
-                                                                                                                p.checked = !p.checked;
-                                                                                                                if (p.checked === true) {
-                                                                                                                    arrayHelpers.form.setFieldValue(`submission[${index}].prestationsCount`, arrayHelpers.form.values.submission[index].prestationsCount + 1);
-                                                                                                                } else {
-                                                                                                                    arrayHelpers.form.setFieldValue(`submission[${index}].prestationsCount`, arrayHelpers.form.values.submission[index].prestationsCount - 1);
-                                                                                                                }
-                                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].filters[${indexf}].prestations[${indexp}].checked`, p.checked);
+                                            <React.Fragment>
+                                                <div style={{padding: '2rem 2rem 1rem 2rem'}}>
+                                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>Paramétrez vos services & prestations</Typography>
+                                                    <Typography>
+                                                        Indiquez les prestations que vous souhaitez réaliser dans chacun de vos services. Indiquez vos tarifs et vos éventuelles majoration sur les services éligibles.
+                                                    </Typography>
+                                                </div>
+                                                <Tabs>
+                                                    <TabList>
+                                                        {this.state.allInOneServ.map((data, index) => {
+                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{data.serviceLabel}</div></Tab>
+                                                        })}
+                                                    </TabList>
+                                                    {this.state.allInOneServ.map((s, index) => {
+                                                        return(
+                                                            <TabPanel key={index}>
+                                                                {/*<div style={{padding: '0 2rem'}}>
+                                                                    <h2 className={classes.text1} style={{margin: '15px 0'}}>{s.CategoryLabel}</h2>
+                                                                    <div className={classes.title2} style={{marginBottom: '0 !important'}}>
+                                                                        <h4 style={{color: 'white'}} className={classes.text1}>{s.serviceLabel}</h4>
+                                                                    </div>
+                                                        </div>*/}
+                                                                <div style={{padding: '0 2rem'}}>
+                                                                    <div style={{paddingBottom: '1rem'}}>
+                                                                        <Grid container spacing={8}>
+                                                                            {s.filters.map((f, indexf) => {
+                                                                                return (
+                                                                                    <Grid
+                                                                                        item
+                                                                                        xs={12}
+                                                                                        key={indexf}
+                                                                                        className={classes.prestationsPres}
+                                                                                    >
+                                                                                        <p>{f.label}</p>
+                                                                                        <Grid container>
+                                                                                        {f.prestations.map((p, indexp) => {
+                                                                                            return(
+                                                                                                <Grid item xs={6} sm={6} md={3} key={indexp}>
+                                                                                                    <FormControlLabel
+                                                                                                        control={
+                                                                                                            <Switch
+                                                                                                                color="primary"
+                                                                                                                type="checkbox"
+                                                                                                                checked={p.checked}
+                                                                                                                onChange={() => {
+                                                                                                                    p.checked = !p.checked;
+                                                                                                                    if (p.checked === true) {
+                                                                                                                        arrayHelpers.form.setFieldValue(`submission[${index}].prestationsCount`, arrayHelpers.form.values.submission[index].prestationsCount + 1);
+                                                                                                                    } else {
+                                                                                                                        arrayHelpers.form.setFieldValue(`submission[${index}].prestationsCount`, arrayHelpers.form.values.submission[index].prestationsCount - 1);
+                                                                                                                    }
+                                                                                                                    arrayHelpers.form.setFieldValue(`submission[${index}].filters[${indexf}].prestations[${indexp}].checked`, p.checked);
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        }
+                                                                                                        label={p.label}
+                                                                                                    />
+                                                                                                    {p.checked === true ?
+                                                                                                        <React.Fragment><Field
+                                                                                                            name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`}
+                                                                                                            placeholder="prix"
+                                                                                                            render={({field, form}) => {
+                                                                                                                return (
+                                                                                                                    <React.Fragment>
+                                                                                                                        <TextField
+                                                                                                                            {...field}
+                                                                                                                            style={{width: 125}}
+                                                                                                                            label={`Prix`}
+                                                                                                                            type="number"
+                                                                                                                            disabled={!p.checked}
+                                                                                                                            margin="none"
+                                                                                                                            InputProps={{
+                                                                                                                                inputProps: {
+                                                                                                                                    min: 0
+                                                                                                                                },
+                                                                                                                                startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                        
+                                                                                                                            }}
+                                                                                                                        />
+                                                                                                                        <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                                                    </React.Fragment>
+                                                                                                                )
                                                                                                             }}
                                                                                                         />
-                                                                                                    }
-                                                                                                    label={p.label}
-                                                                                                />
-                                                                                                {p.checked === true ?
-                                                                                                    <React.Fragment>
-                                                                                                        <Field
-                                                                                                        name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`}
-                                                                                                        placeholder="prix"
-                                                                                                        render={({field, form}) => {
-                                                                                                            return (
-                                                                                                                <React.Fragment>
-                                                                                                                    <TextField
-                                                                                                                        {...field}
-                                                                                                                        label={`Prix/`}
-                                                                                                                        type="number"
-                                                                                                                        disabled={!p.checked}
-                                                                                                                        margin="none"
-                                                                                                                        InputProps={{
-                                                                                                                            startAdornment: <InputAdornment position="start">€</InputAdornment>,
-                                                                                                                        }}
-                                                                                                                    />
-                                                                                                                    <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                                                                                </React.Fragment>
-                                                                                                            )
-                                                                                                        }}
-                                                                                                    />
-                                                                                                    <Field
-                                                                                                    name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`}
-                                                                                                    placeholder="méthode de facturation"
-                                                                                                    render={({field, form}) => {
-                                                                                                        return (
-                                                                                                            <React.Fragment>
-                                                                                                                <TextField
-                                                                                                                    {...field}
-                                                                                                                    helperText={`Méthode de facturation`}
-                                                                                                                    disabled={!p.checked}
-                                                                                                                    select
-                                                                                                                    margin="none"
+                                                                                                            <Field
+                                                                                                                name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`}
+                                                                                                                placeholder="méthode de facturation"
+                                                                                                                render={({field, form}) => {
+                                                                                                                    return (
+                                                                                                                        <React.Fragment>
+                                                                                                                            <TextField
+                                                                                                                                {...field}
+                                                                                                                                helperText={`Méthode de facturation`}
+                                                                                                                                disabled={!p.checked}
+                                                                                                                                select
+                                                                                                                                margin="none"
 
-                                                                                                                >
-                                                                                                                    {p.billing.map(option => (
-                                                                                                                        <MenuItem key={option.value} value={option.label}>
-                                                                                                                            {option.label}
-                                                                                                                        </MenuItem>
-                                                                                                                    ))}
-                                                                                                                </TextField>
-                                                                                                                <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                                                                            </React.Fragment>
-                                                                                                        )
-                                                                                                    }}
-                                                                                                    />
-                                                                                                    </React.Fragment>: null}
-                                                                                            </div>
+                                                                                                                            >
+                                                                                                                                {p.billing.map(option => (
+                                                                                                                                    <MenuItem key={option.value} value={option.label}>
+                                                                                                                                        {option.label}
+                                                                                                                                    </MenuItem>
+                                                                                                                                ))}
+                                                                                                                            </TextField>
+                                                                                                                            <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                                                        </React.Fragment>
+                                                                                                                    )
+                                                                                                                }}
+                                                                                                            />
+
+
+                                                                                                        </React.Fragment> : null}
+                                                                                                </Grid>
+                                                                                            )
+                                                                                        })}
+                                                                                        </Grid>
+                                                                                    </Grid>
+                                                                                )
+                                                                            })}
+                                                                        </Grid>
+                                                                        <hr style={{margin: '1rem 0'}}></hr>
+                                                                        <div>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Options</Typography>
+                                                                            <Field render={({form}) => {
+                                                                                const array_option = this.state.all_options.map(e =>(
+                                                                                    {
+                                                                                        label: e.label,
+                                                                                        value: e._id,
+                                                                                        billing: e.billing
+                                                                                    }
+                                                                                ));
+                                                                                return (
+                                                                                    <Select 
+                                                                                        placeholder="Options disponibles"
+                                                                                        isDisabled={this.state[`otherOptionChecked${index}`]}
+                                                                                        options={
+                                                                                            array_option
+                                                                                        }
+                                                                                        onChange={async opt => {
+                                                                                            const optObj = { label: opt.label, price: null, unity: opt.billing, type: null }
+                                                                                            await form.setFieldValue(`submission[${index}].option`, optObj);
+                                                                                        }}
+                                                                                        theme={theme => ({
+                                                                                            ...theme,
+                                                                                            colors: {
+                                                                                                ...theme.colors,
+                                                                                                primary: '#2FBCD3',
+                                                                                            }
+                                                                                        })}
+                                                                                    />
+                                                                                )
+                                                                            }} />
+                                                                            {arrayHelpers.form.values.submission[index].option !== null ? 
+                                                                                <Field 
+                                                                                    name={`submission.${index}.option.price`}
+                                                                                    render={({form, field}) => {
+                                                                                        return (
+                                                                                            <TextField 
+                                                                                                {...field}
+                                                                                                type="number"
+                                                                                                InputProps={{
+                                                                                                    startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                }}
+                                                                                            />
                                                                                         )
-                                                                                    })}
-                                                                                </Grid>
-                                                                            )
-                                                                        })}
-                                                                    </Grid>
-                                                                    <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
-
-
-                                                                    <div style={{padding: '0 2rem'}}>
-                                                                        <Typography>Je fournis</Typography>
-                                                                        {s.equipments.map((e, indexe) => {
-                                                                            return (
-                                                                                <label key={indexe}>
-                                                                                    {e.label}
-                                                                                    <input
-                                                                                        type="checkbox"
-                                                                                        value={e.checked}
-                                                                                        onChange={() => {
-                                                                                            e.checked = !e.checked;
-                                                                                            arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
-                                                                                        }}
-                                                                                    />
-                                                                                </label>
-                                                                            )
-                                                                        })}
-                                                                    </div>
-
-                                                                    <div style={{padding: '1rem 2rem 1rem 2rem'}}>
-                                                                        <Typography style={{marginBottom: '1rem'}}>Localisation : définissez le périmètre que vous souhaitez couvrir</Typography>
-                                                                        <InputRange
-                                                                            maxValue={100}
-                                                                            minValue={5}
-                                                                            value={arrayHelpers.form.values.submission[index].perimeter}
-                                                                            onChange={inputRangeValue => arrayHelpers.form.setFieldValue(`submission[${index}].perimeter`, inputRangeValue)}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div style={{padding: '1.5rem 2rem'}}>
-                                                            <Grid container>
-                                                    <div className={classes.title1}>
-                                                        <h4
-                                                            style={{ color: "white" }}
-                                                            className={classes.text1}
-                                                        >
-                                                            Décrivez brievement vos services et votre
-                                                            expertise.
-                                                        </h4>
-                                                    </div>
-                                                    <Typography>
-                                                        Rédigez un résumé rapide de vos services. Mettez en
-                                                        évidence vos savoir faire, vos expériences et ce qui
-                                                        vous démarque des autres Alfred !
-                                                    </Typography>
-                                                    <Grid item xs={1} />
-                                                    <Grid item xs={2} />
-                                                        <Grid
-                                                            item
-                                                            key={index}
-                                                            style={{ width: "100%", marginBottom: 15 }}
-                                                        >
-                                                            <Field
-                                                                name={`submission[${index}].descService`}
-                                                                render={({field}) => {
-                                                                    return (
-                                                                        <TextField
-                                                                            {...field}
-                                                                            id="outlined-multiline-static"
-                                                                            label="Description du service"
-                                                                            multiline
-                                                                            rows="6"
-                                                                            margin="normal"
-                                                                            variant="outlined"
-                                                                            style={{ width: "100%" }}
-                                                                            //name={s.serviceLabel}
-                                                                            //value={this.state[s.serviceLabel]}
-                                                                            //onChange={this.handleInputChange}
-                                                                        />
-                                                                    )
-                                                                }}
-                                                            />
-                                                            <ErrorMessage name={`submission[${index}].descService`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-
-                                                    <Grid item xs={2} />
-                                                </Grid>
-
-                                                <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
-                                                                <Grid container>
-                                                                    <Grid item xs={12}>
-                                                                        <CityFinder formikCtx={arrayHelpers} index={index} />
-                                                                    </Grid>
-                                                                    <div style={{width: '100%'}}>
-                                                                        <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
-                                                                    </div>
-                                                                    <Grid item xs={12}>
-                                                                        <Field
-                                                                            name={`submission.${index}.minimumBasket`}
-                                                                            render={({field, form}) => {
-                                                                                return(
-                                                                                    <TextField
-                                                                                        {...field}
-                                                                                        fullWidth
-                                                                                        label="Panier minimum"
-                                                                                        margin="dense"
-                                                                                        variant="outlined"
-                                                                                        helperText="Choisissez le montant minimum du panier afin de passer une commande pour ce service"
-                                                                                        InputProps={{
-                                                                                            startAdornment: <InputAdornment position="start">€</InputAdornment>,
-                                                                                        }}
-                                                                                    />
-                                                                                )
-                                                                            }}
-                                                                        />
-                                                                        <ErrorMessage name={`submission.${index}.minimumBasket`} render={msg => <div style={{color: 'red'}}>{msg}</div>}/>
-                                                                    </Grid>
-                                                                    <div style={{width: '100%'}}>
-                                                                        <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
-                                                                    </div>
-                                                                    <Grid item xs={12}>
-                                                                        <Field
-                                                                            name={`submission.${index}.delayBeforeShop`}
-                                                                            render={({field}) => {
-                                                                                return (
-                                                                                    <TextField
-                                                                                        {...field}
-                                                                                        style={{width: '55%', marginRight: '5%'}}
-                                                                                        label="Délais"
-                                                                                        margin="dense"
-                                                                                        variant="outlined"
-                                                                                        helperText="Délais de prévenance avant réservation."
-                                                                                    />
-                                                                                )
-                                                                            }}
-                                                                        />
-                                                                        <Field
-                                                                            name={`submission.${index}.delayBeforeShopDWM`}
-                                                                            render={({field}) => {
-                                                                                console.log(field)
-                                                                                return (
-                                                                                    <TextField
-                                                                                        {...field}
-                                                                                        style={{width: '40%'}}
-                                                                                        select
-                                                                                        margin="dense"
-                                                                                        variant="outlined"
-                                                                                        label="Jours / semaines / mois"
-                                                                                    >
-                                                                                        <MenuItem value="jours">Jour(s)</MenuItem>
-                                                                                        <MenuItem value="semaines">semaine(s)</MenuItem>
-                                                                                        <MenuItem value="mois">mois</MenuItem>
-                                                                                    </TextField>
-                                                                                )
-                                                                            }}
-                                                                        />
-                                                                        <ErrorMessage name={`submission.${index}.delayBeforeShop`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                                        <ErrorMessage name={`submission.${index}.delayBeforeShopDWM`} render={msg => <div style={{color: 'red'}}>{msg}</div>}/>
-                                                                    </Grid>
-                                                                    <div style={{width: '100%'}}>
-                                                                        <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
-                                                                    </div>
-                                                                    <Grid item xs={12}>
-                                                                        <label style={{display: 'inline-block', marginTop: 5}} className="forminputs">
-                                                                            <span className="fonts">Diplôme</span> {/* :<img class="diploma" style={{width: 22, height: 22, marginBottom: -7}} src="../static/diploma.svg" alt="diploma" />*/}
-                                                                            <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden', position: 'absolute', zIndex: -1}} name="diploma" type="file" onChange={(event) => {
-                                                                                arrayHelpers.form.setFieldValue(`submission.${index}.diploma`, event.currentTarget.files[0]);
-                                                                            }} className="form-control"
-                                                                            />
-                                                                        </label>
-                                                                        <Thumb file={arrayHelpers.form.values.submission[index].diploma} />
-                                                                    </Grid>
-                                                                    <Grid item xs={12}>
-                                                                        <label style={{display: 'inline-block', marginTop: 5}} className="forminputs">
-                                                                            <span className="fonts">Certification </span> {/*: <img class="certification" style={{width: 22, height: 22, marginBottom: -7}} src="../static/diploma.svg" alt="certification" />*/}
-                                                                            <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden', position: 'absolute', zIndex: -1}} name="certification" type="file" onChange={(event) => {
-                                                                                arrayHelpers.form.setFieldValue(`submission.${index}.certification`, event.currentTarget.files[0]);
-                                                                            }} className="form-control"
-                                                                            />
-                                                                        </label>
-                                                                        <Thumb file={arrayHelpers.form.values.submission[index].certification} />
-                                                                    </Grid>
-                                                                    <div style={{width: '100%'}}>
-                                                                        <hr style={{margin: '1rem 2rem 1rem 2rem'}}></hr>
-                                                                    </div>
-                                                                    {s.increases.label !== undefined ? (
-                                                                        <React.Fragment>
-                                                                            <Grid item xs={12}>
-                                                                                <p>Option</p>
-                                                                                <FormControlLabel
+                                                                                    }} 
+                                                                                />
+                                                                                : null
+                                                                            }
+                                                                            <div>
+                                                                                <FormControlLabel 
                                                                                     control={
-                                                                                        <Checkbox
+                                                                                        <Checkbox 
                                                                                             color="primary"
                                                                                             type="checkbox"
-                                                                                            checked={s.increases.checked}
+                                                                                            checked={this.state[`otherOptionChecked${index}`]}
                                                                                             onChange={() => {
-                                                                                                s.increases.checked = !s.increases.checked;
-
-                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].increases.checked`, s.increases.checked)
+                                                                                                this.setState({
+                                                                                                    [`otherOptionChecked${index}`]: !this.state[`otherOptionChecked${index}`]
+                                                                                                });
+                                                                                                const optObj = { label: null, price: null, unity: null, type: null } 
+                                                                                                arrayHelpers.form.setFieldValue(`submission.${index}.option`, optObj)
                                                                                             }}
                                                                                         />
                                                                                     }
-                                                                                    label={s.increases.label}
+                                                                                    label="Entrer une autre option"
                                                                                 />
+                                                                                {this.state[`otherOptionChecked${index}`] === true ?
+                                                                                    <Grid container spacing={3}>
+                                                                                        <Grid item xs={3}>
+                                                                                            <Field 
+                                                                                                name={`submission.${index}.option.label`}
+                                                                                                render={({form, field}) => {
+                                                                                                    return (
+                                                                                                        <TextField 
+                                                                                                            {...field}
+                                                                                                            type="text"
+                                                                                                        />
+                                                                                                    )
+                                                                                                }} 
+                                                                                            />
+                                                                                        </Grid>
+                                                                                        <Grid item xs={3}>
+                                                                                            <Field 
+                                                                                                name={`submission.${index}.option.price`}
+                                                                                                render={({form, field}) => {
+                                                                                                    return (
+                                                                                                        <TextField 
+                                                                                                            {...field}
+                                                                                                            type="number"
+                                                                                                            InputProps={{
+                                                                                                                startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                            }}
+                                                                                                        />
+                                                                                                    )
+                                                                                                }} 
+                                                                                            />
+                                                                                        </Grid>
+                                                                                        <Grid item xs={3}>
+                                                                                            <Field 
+                                                                                                name={`submission.${index}.option.unity`}
+                                                                                                render={({form, field}) => {
+                                                                                                    return (
+                                                                                                        <Select 
+                                                                                                            placeholder="Unité"
+                                                                                                            options={[
+                                                                                                                {value: 'm2', label: 'm2'},
+                                                                                                                {value: 'cm2', label: 'cm2'},
+                                                                                                                {value: 'mm2', label: 'mm2'},
+                                                                                                            ]}
+                                                                                                            onChange={async unity => {
+                                                                                                                await form.setFieldValue(`submission[${index}].option.unity`, unity);
+                                                                                                            }}
+                                                                                                            theme={theme => ({
+                                                                                                                ...theme,
+                                                                                                                colors: {
+                                                                                                                    ...theme.colors,
+                                                                                                                    primary: '#2FBCD3',
+                                                                                                                }
+                                                                                                            })}
+                                                                                                        />
+                                                                                                    )
+                                                                                                }} 
+                                                                                            />
+                                                                                        </Grid>
+                                                                                        <Grid item xs={3}>
+                                                                                            <Field 
+                                                                                                name={`submission.${index}.option.type`}
+                                                                                                render={({form, field}) => {
+                                                                                                    return (
+                                                                                                        <Select 
+                                                                                                            placeholder="Type"
+                                                                                                            options={[
+                                                                                                                {value: 'option', label: 'Option'},
+                                                                                                                {value: 'supplement', label: 'Supplément'},
+                                                                                                            ]}
+                                                                                                            onChange={async type => {
+                                                                                                                await form.setFieldValue(`submission[${index}].option.type`, type);
+                                                                                                            }}
+                                                                                                            theme={theme => ({
+                                                                                                                ...theme,
+                                                                                                                colors: {
+                                                                                                                    ...theme.colors,
+                                                                                                                    primary: '#2FBCD3',
+                                                                                                                }
+                                                                                                            })}
+                                                                                                        />
+                                                                                                    )
+                                                                                                }} 
+                                                                                            />
+                                                                                        </Grid>
+                                                                                    </Grid>
+                                                                                    : null
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                        <hr style={{margin: '1rem 0'}}></hr>
+                                                                        <div>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez ce que vous fournissez</Typography>
+                                                                            <Typography style={{marginBottom: '1rem'}}>
+                                                                            Sélectionnez les produits et le matériel que vous fournissez dans le cadre de vos prestations de service. 
+                                                                            </Typography>
+                                                                        </div>
+                                                                        <div>
+                                                                            <Grid container>
+                                                                            {s.equipments.map((e, indexe) => {
+                                                                                if (e.label.includes('Selected')) {
+                                                                                    return null;
+                                                                                };
+                                                                                return (
+                                                                                    <Grid item xs={3}>
+                                                                                    <label style={{cursor: 'pointer'}} key={indexe} onClick={() => {
+                                                                                        e.checked = !e.checked;
+                                                                                        arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
+                                                                                    }}>
+                                                                                        
+                                                                                        {e.checked === true ? <img src={`../../${e.logo.slice(0, -4)}Selected.svg`} height={100} width={100} alt={`${e.name_logo.slice(0, -4)}Selected.svg`} /> : <img src={`../../${e.logo}`} height={100} width={100} alt={e.name_logo} />}
+                                                                                        <Checkbox
+                                                                                            style={{display: 'none'}}
+                                                                                            color="primary"
+                                                                                            type="checkbox"
+                                                                                            checked={e.checked}
+                                                                                            onChange={() => {
+                                                                                                e.checked = !e.checked;
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
+                                                                                            }}
+                                                                                        />
+                                                                                    </label>
+                                                                                    </Grid>
+                                                                                )
+                                                                            })}
                                                                             </Grid>
-                                                                            <Grid xs={12}>
-                                                                                {s.increases.checked === true ?
-                                                                                    <Field
-                                                                                        name={`submission.${index}.increases.price`}
-                                                                                        placeholder="prix"
-                                                                                        render={({field, form}) => {
-                                                                                            return (
-                                                                                                <React.Fragment>
-                                                                                                    <TextField
-                                                                                                        {...field}
-                                                                                                        style={{width: '15%'}}
-                                                                                                        label="Prix"
-                                                                                                        type="number"
-                                                                                                        disabled={!s.increases.checked}
-                                                                                                        margin="none"
-                                                                                                        InputProps={{
-                                                                                                            startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                        </div>
+                                                                        <hr style={{margin: '1rem 0'}}></hr>
+                                                                        <div>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Définissez votre montant minimum de réservation</Typography>
+                                                                            <Typography>
+                                                                                Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service. Si vous indiquez un montant de 10€, les clients ne pourront pas réserver vos services si la somme des prestations n’atteint pas ce montant.
+                                                                            </Typography>
+                                                                            <div style={{marginTop: '1rem', width: '200px'}}>
+                                                                                <Field
+                                                                                    name={`submission.${index}.minimumBasket`}
+                                                                                    render={({field, form}) => {
+                                                                                        return(
+                                                                                            <TextField
+                                                                                                {...field}
+                                                                                                fullWidth
+                                                                                                label="Panier minimum"
+                                                                                                margin="dense"
+                                                                                                variant="outlined"
+                                                                                                //helperText="Choisissez le montant minimum du panier afin de passer une commande pour ce service"
+                                                                                                InputProps={{
+                                                                                                    startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                }}
+                                                                                            />
+                                                                                        )
+                                                                                    }}
+                                                                                />
+                                                                                <ErrorMessage name={`submission.${index}.minimumBasket`} render={msg => <div style={{color: 'red'}}>{msg}</div>}/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <hr style={{margin: '1rem 0'}}></hr>
+                                                                        <div>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Renseignez votre périmètre d’intervention</Typography>
+                                                                            <Typography>
+                                                                                Votre périmètre d’intervention est la zone dans laquelle vous souhaitez réaliser vos services. Par défaut, nous utiliserons la ville de l’adresse renseignée dans votre profil comme base de référence. Cette adresse ne vous convient pas ? Vous pouvez changer votre ville de référence à tout moment !
+                                                                            </Typography>
+                                                                            <FormControlLabel
+                                                                                control={
+                                                                                    <Checkbox
+                                                                                        checked={this.state[`userCityClicked${index}`]}
+                                                                                        color="primary"
+                                                                                        type="checkbox"
+                                                                                        onChange={async () => {
+                                                                                            let userCityChecked = !this.state[`userCityClicked${index}`];
+                                                                                            this.setState({[`userCityClicked${index}`]: userCityChecked})
+
+                                                                                            if (userCityChecked === true) {
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].city`, null)
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].address`, null)
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].postal_code`, null)
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].country`, null)
+                                                                                            } else {
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].city`, this.state.userCity);
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].address`, this.state.userAddress);
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].postal_code`, this.state.userZipCode);
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].country`, this.state.country);
+                                                                                            }
+                                                                                        }}
+                                                                                    />
+                                                                                }
+                                                                                label={`Sélectionner une autre ville`}
+                                                                            />
+                                                                            {this.state[`userCityClicked${index}`] === true ?
+                                                                                <AddressFinder formikCtx={arrayHelpers} index={index}/>
+                                                                            : null}
+                                                                            <div style={{padding: '1rem 0'}}>
+                                                                                <Typography style={{marginBottom: '1.5rem', fontSize: 17}}>Définissez à présent le périmètre que vous souhaitez couvrir :</Typography>
+                                                                                <InputRange
+                                                                                    formatLabel={value => `${value}km`}
+                                                                                    step={5}
+                                                                                    maxValue={500}
+                                                                                    minValue={5}
+                                                                                    value={arrayHelpers.form.values.submission[index].perimeter}
+                                                                                    onChange={inputRangeValue => arrayHelpers.form.setFieldValue(`submission[${index}].perimeter`, inputRangeValue)}
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                        <hr style={{margin: '1rem 0'}}></hr>
+                                                                        <div>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez votre délai de prévenance</Typography>
+                                                                            <Typography>
+                                                                                Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du service. Par exemple, si vous indiquez un délai de 24 heures, un client pourra réserver votre service 24 heures avant votre intervantion.
+                                                                            </Typography>
+                                                                            <Grid item xs={12} className={classes.delayDivResponsive}>
+                                                                                <Field
+                                                                                    name={`submission.${index}.delayBeforeShop`}
+                                                                                    render={({field}) => {
+                                                                                        return (
+                                                                                            <React.Fragment>
+                                                                                                <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }} onClick={() => {
+                                                                                                    if (arrayHelpers.form.values.submission[index].delayBeforeShop === 0) {
+                                                                                                        return arrayHelpers.form.setFieldValue(`submission.${index}.delayBeforeShop`, 0);
+                                                                                                    }
+                                                                                                    const minusOne = arrayHelpers.form.values.submission[index].delayBeforeShop - 1;
+                                                                                                    arrayHelpers.form.setFieldValue(`submission.${index}.delayBeforeShop`, minusOne);
+                                                                                                }}>
+                                                                                                    -
+                                                                                                </div>
+                                                                                                
+                                                                                                <div style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{arrayHelpers.form.values.submission[index].delayBeforeShop}</div>
+                                                                                                <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginLeft: 25, marginRight: '5%' }} onClick={() => {
+                                                                                                    const plusOne = arrayHelpers.form.values.submission[index].delayBeforeShop + 1;
+                                                                                                    arrayHelpers.form.setFieldValue(`submission.${index}.delayBeforeShop`, plusOne);
+                                                                                                }}>
+                                                                                                    +
+                                                                                                </div>
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    }}
+                                                                                />
+                                                                                <Field
+                                                                                    name={`submission.${index}.delayBeforeShopDWM`}
+                                                                                    render={({field, form}) => {
+                                                                                        return (
+                                                                                            <TextField
+                                                                                                {...field}
+                                                                                                style={{width: '30%'}}
+                                                                                                className={classes.selectDelayInputRepsonsive}
+                                                                                                select
+                                                                                                margin="dense"
+                                                                                                variant="outlined"
+                                                                                                label="Heures / jours / semaines"
+                                                                                                InputLabelProps={{shrink: form.values.submission[index].delayBeforeShopDWM !== null ? true : false}}
+                                                                                            >
+                                                                                                <MenuItem value="heures">heure(s)</MenuItem>
+                                                                                                <MenuItem value="jours">jour(s)</MenuItem>
+                                                                                                <MenuItem value="semaines">semaine(s)</MenuItem>
+                                                                                            </TextField>
+                                                                                        )
+                                                                                    }}
+                                                                                />
+                                                                                <ErrorMessage name={`submission.${index}.delayBeforeShopDWM`} render={msg => <div style={{color: 'red'}}>{msg}</div>}/>
+                                                                            </Grid>
+                                                                        </div>
+                                                                        <hr style={{margin: '1rem 0'}}></hr>
+                                                                        <div>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Décrivez brievement votre expertise !</Typography>
+                                                                            <Typography>
+                                                                                Mettez en évidence vos compétences et votre expertise dans ce service. Les utilisateurs auront accès à ces informations, n’hésitez pas à valoriser votre expérience, vos réalisations et vos atouts pour ce service !
+                                                                            </Typography>
+                                                                            <Field
+                                                                                name={`submission[${index}].descService`}
+                                                                                render={({field}) => {
+                                                                                    return (
+                                                                                        <TextField
+                                                                                            {...field}
+                                                                                            id="outlined-multiline-static"
+                                                                                            label="Description du service"
+                                                                                            multiline
+                                                                                            rows="6"
+                                                                                            margin="normal"
+                                                                                            variant="outlined"
+                                                                                            style={{ width: "100%" }}
+                                                                                        />
+                                                                                    )
+                                                                                }}
+                                                                            />
+                                                                            <ErrorMessage name={`submission[${index}].descService`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                        </div>
+                                                                        <hr style={{margin: '1rem 0'}}></hr>
+                                                                        <div>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Votre expérience, vos certifications & diplômes</Typography>
+                                                                            <Typography>
+                                                                                Si vous possédez des certifications et/ou diplômes pour ce service, mettez les en avant ! Après vérification par My-Alfred, vous aurez le statut d’Alfred certifié et/ou diplômé sur ce service.
+                                                                            </Typography>
+                                                                            <Grid container style={{marginTop: '.5rem'}}>
+                                                                                <Grid item xs={12}>
+                                                                                    <Typography>Nombre d'années d'expériences</Typography>
+                                                                                    <Select 
+                                                                                        placeholder="Vos années d'expériences"
+                                                                                        options={[
+                                                                                            {value: 'ZeroOrOne', label: 'Entre 0 et 1 an'},
+                                                                                            {value: 'OneToFive', label: 'Entre 1 et 5 ans'},
+                                                                                            {value: 'FiveToTen', label: 'Entre 5 et 10 ans'},
+                                                                                            {value: 'MoreThanTen', label: 'Plus de 10 ans'},
+                                                                                        ]}
+                                                                                        onChange={async exp => {
+                                                                                            await arrayHelpers.form.setFieldValue(`submission[${index}].experienceYears`, exp);
+                                                                                        }}
+                                                                                        theme={theme => ({
+                                                                                            ...theme,
+                                                                                            colors: {
+                                                                                                ...theme.colors,
+                                                                                                primary: '#2FBCD3',
+                                                                                            }
+                                                                                        })}
+                                                                                    />
+                                                                                </Grid>
+                                                                                <Grid item xs={12}>
+                                                                                    <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre diplôme</Typography>
+                                                                                    {arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.year !== null && arrayHelpers.form.values.submission[index].diploma.document !== null ?
+                                                                                        <React.Fragment>
+                                                                                            <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
+                                                                                                <p>{arrayHelpers.form.values.submission[index].diploma.label} | {arrayHelpers.form.values.submission[index].diploma.year}</p>
+                                                                                            </div>
+                                                                                        </React.Fragment>
+                                                                                        : null
+                                                                                    }
+                                                                                    <ExpansionPanel>
+                                                                                        <ExpansionPanelSummary
+                                                                                            expandIcon={<ExpandMoreIcon />}
+                                                                                        >
+                                                                                            <Typography>Ajouter / modifier votre diplôme</Typography>
+                                                                                        </ExpansionPanelSummary>
+                                                                                        <ExpansionPanelDetails>
+                                                                                            <Grid container>
+                                                                                                <Grid item xs={12}>
+                                                                                                <Field
+                                                                                                    name={`submission.${index}.diploma.label`}
+                                                                                                    render={({field}) => {
+                                                                                                        return (
+                                                                                                            <TextField
+                                                                                                                {...field}
+                                                                                                                style={{width: '50%', marginRight: '5%'}}
+                                                                                                                className={classes.inputDiplomaCertifResp}
+                                                                                                                label="Nom du diplôme"
+                                                                                                                margin="dense"
+                                                                                                                variant="outlined"
+                                                                                                                //helperText="Délai de prévenance avant réservation."
+                                                                                                            />
+                                                                                                        )
+                                                                                                    }}
+                                                                                                />
+                                                                                                </Grid>
+                                                                                                <Grid item xs={12}>
+                                                                                                    <Field
+                                                                                                        name={`submission.${index}.diploma.year`}
+                                                                                                        render={({field}) => {
+                                                                                                            return (
+                                                                                                                <TextField
+                                                                                                                    {...field}
+                                                                                                                    style={{width: '50%', marginRight: '5%'}}
+                                                                                                                    className={classes.inputDiplomaCertifResp}
+                                                                                                                    label="Année d'obtention"
+                                                                                                                    margin="dense"
+                                                                                                                    variant="outlined"
+                                                                                                                    select
+                                                                                                                    InputLabelProps={{shrink: arrayHelpers.form.values.submission[index].diploma.year !== null ? true : false}}
+                                                                                                                    //helperText="Délai de prévenance avant réservation."
+                                                                                                                >
+                                                                                                                    {dates.map(date => {
+                                                                                                                        return <MenuItem value={date}>{date}</MenuItem>
+                                                                                                                    })}
+                                                                                                                </TextField>
+                                                                                                            )
                                                                                                         }}
                                                                                                     />
-                                                                                                </React.Fragment>
-                                                                                            )
-                                                                                        }}
-                                                                                    /> : null
-                                                                                }
+                                                                                                </Grid>
+                                                                                                <Grid item xs={12}>
+                                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                                        Joindre mon diplôme
+                                                                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" onChange={(event) => {
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma.document`, event.currentTarget.files[0]);
+                                                                                                        }} className="form-control"
+                                                                                                        />
+                                                                                                    </label>
+                                                                                                    <span>{arrayHelpers.form.values.submission[index].diploma.document !== null ? arrayHelpers.form.values.submission[index].diploma.document.name : null}</span>
+                                                                                                    <p>En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ses derniers</p>
+                                                                                                </Grid>
+                                                                                            </Grid>
+                                                                                        </ExpansionPanelDetails>
+                                                                                    </ExpansionPanel>
+                                                                                </Grid>
+                                                                                <Grid item xs={12}>
+                                                                                <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre certification</Typography>
+                                                                                    {arrayHelpers.form.values.submission[index].certification.label !== null && arrayHelpers.form.values.submission[index].certification.year !== null && arrayHelpers.form.values.submission[index].certification.document !== null ?
+                                                                                        <React.Fragment>
+                                                                                            <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
+                                                                                                <p>{arrayHelpers.form.values.submission[index].certification.label} | {arrayHelpers.form.values.submission[index].certification.year}</p>
+                                                                                            </div>
+                                                                                        </React.Fragment>
+                                                                                        : null
+                                                                                    }
+                                                                                    <ExpansionPanel>
+                                                                                        <ExpansionPanelSummary
+                                                                                            expandIcon={<ExpandMoreIcon />}
+                                                                                        >
+                                                                                            <Typography>Ajouter / modifier votre certification</Typography>
+                                                                                        </ExpansionPanelSummary>
+                                                                                        <ExpansionPanelDetails>
+                                                                                            <Grid container>
+                                                                                                <Grid item xs={12}>
+                                                                                                    <Field
+                                                                                                        name={`submission.${index}.certification.label`}
+                                                                                                        render={({field}) => {
+                                                                                                            return (
+                                                                                                                <TextField
+                                                                                                                    {...field}
+                                                                                                                    style={{width: '50%', marginRight: '5%'}}
+                                                                                                                    className={classes.inputDiplomaCertifResp}
+                                                                                                                    label="Nom du certificat"
+                                                                                                                    margin="dense"
+                                                                                                                    variant="outlined"
+                                                                                                                    //helperText="Délai de prévenance avant réservation."
+                                                                                                                />
+                                                                                                            )
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </Grid>
+                                                                                                <Grid item xs={12}>
+                                                                                                <Field
+                                                                                                        name={`submission.${index}.certification.year`}
+                                                                                                        render={({field}) => {
+                                                                                                            return (
+                                                                                                                <TextField
+                                                                                                                    {...field}
+                                                                                                                    style={{width: '50%', marginRight: '5%'}}
+                                                                                                                    className={classes.inputDiplomaCertifResp}
+                                                                                                                    label="Année d'obtention"
+                                                                                                                    margin="dense"
+                                                                                                                    variant="outlined"
+                                                                                                                    select
+                                                                                                                    InputLabelProps={{shrink: arrayHelpers.form.values.submission[index].certification.year !== null ? true : false}}
+                                                                                                                    //helperText="Délai de prévenance avant réservation."
+                                                                                                                >
+                                                                                                                    {dates.map(date => {
+                                                                                                                        return <MenuItem value={date}>{date}</MenuItem>
+                                                                                                                    })}
+                                                                                                                </TextField>
+                                                                                                            )
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </Grid>
+                                                                                                <Grid item xs={12}>
+                                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                                        Joindre ma certification
+                                                                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certification" type="file" onChange={(event) => {
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification.document`, event.currentTarget.files[0]);
+                                                                                                        }} className="form-control"
+                                                                                                        />
+                                                                                                    </label>
+                                                                                                    <span>{arrayHelpers.form.values.submission[index].certification.document !== null ? arrayHelpers.form.values.submission[index].certification.document.name : null}</span>
+                                                                                                    <p>En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ses derniers</p>
+                                                                                                </Grid>
+                                                                                            </Grid>
+                                                                                        </ExpansionPanelDetails>
+                                                                                    </ExpansionPanel>
+                                            
+                                                                                </Grid>
                                                                             </Grid>
-                                                                        </React.Fragment>
-                                                                    ) : null}
-                                                                    {/*<label htmlFor="raised-button-file">
-                                  <Button variant="contained" component="span">
-                                    Ajouter un diplôme
-                                  </Button>
-                                    </label> */}
-                                                                </Grid>
-                                                            </div>
-                                                        </TabPanel>
-                                                    )
-                                                })}
-                                            </Tabs> : null
+                                                                            
+                                                                        </div>
+                                                                        
+                                                                    </div>
+                                                                </div>
+                                                            </TabPanel>
+                                                        )
+                                                    })}
+                                                </Tabs>
+                                            </React.Fragment> : null
                                     }}
                                 />
                                 {/*<div>*/}
-                                <Field render={({form}) => {
-                                    const checkArr = [];
-
-                                    form.values.submission.map(pc => {
-                                        if (pc.prestationsCount > 0) {
-                                            return checkArr.push(true);
-                                        } else {
-                                            return checkArr.push(false);
-                                        }
-                                    })
-
-                                    const check = el => {
-                                        return el === false;
-                                    }
-
-                                    return (
-                                        <Button type="submit" variant="contained" color="primary" style={{marginTop: '45px', color: !checkArr.some(check) ? 'white' : null }} disabled={checkArr.some(check) ? true : false}>
-                                            Étape suivante
-                                        </Button>
-                                    )
-                                }} />
+                                
                                 {/*</div>*/}
-                            </Card>
                         </Grid>
+                        
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Calendar />
+                        <FieldArray render={({form}) => {
+                            return (
+                                <Availability formikCtx={form} />
+                            )
+                        }} />
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card}>
-                                <div className={classes.banner}>
-                                    <h3
-                                        style={{
-                                            marginLeft: 10,
-                                            color: "white"
-                                        }}
-                                    >
-                                        Etape 2 - Indiquez vos disponibilités et conditions
-                                    </h3>
-
-                                    <div>
-                                        <Bar>
-                                            <Fill />
-                                        </Bar>
-                                    </div>
-                                </div>
-                                <div className={classes.newContainer}>
+                            
+                            <div className={classes.newContainer}>
                                     <Grid container>
 
                                             <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
@@ -1362,12 +1931,16 @@ class Form extends React.Component {
                                                                 onChange={() => {
                                                                     form.values.createShop.booking_request = !form.values.createShop.booking_request;
                                                                     form.setFieldValue('createShop.booking_request', form.values.createShop.booking_request);
+                                                                    if (form.values.createShop.booking_request === true) {
+                                                                        form.setFieldValue('createShop.no_booking_request', false);
+                                                                        this.setState({no_booking: false})
+                                                                    }
                                                                 }}
                                                                 value={form.values.createShop.booking_request}
                                                                 color="primary"
                                                                 name={"booking_request"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
 
                                                             />
                                                         }
@@ -1382,21 +1955,25 @@ class Form extends React.Component {
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
-                                                        control={
-                                                            <Checkbox
-                                                                checked={form.values.createShop.no_booking_request}
-                                                                onChange={() => {
-                                                                    form.values.createShop.no_booking_request = !form.values.createShop.no_booking_request;
-                                                                    form.setFieldValue('createShop.no_booking_request', form.values.createShop.no_booking_request);
-                                                                }}
-                                                                value={form.values.createShop.no_booking_request}
-                                                                color="primary"
-                                                                name={"no_booking_request"}
-                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                    control={
+                                                        <Checkbox
+                                                            checked={this.state.no_booking}
+                                                            onChange={() => {
+                                                                form.values.createShop.no_booking_request = !form.values.createShop.no_booking_request;
+                                                                this.setState({no_booking: form.values.createShop.no_booking_request})
+                                                                form.setFieldValue('createShop.no_booking_request', form.values.createShop.no_booking_request);
+                                                                if (form.values.createShop.no_booking_request === true) {
+                                                                    form.setFieldValue('createShop.booking_request', false);
+                                                                }
+                                                            }}
+                                                            value={form.values.createShop.no_booking_request}
+                                                            color="primary"
+                                                            name={"no_booking_request"}
+                                                            icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                            checkedIcon={<FilledButton />}
 
-                                                            />
-                                                        }
+                                                        />
+                                                    }
                                                         label={<Typography style={{fontSize: 18, fontFamily: 'helveticaNeue'}}>Les utilisateurs peuvent réserver mes services directement sans demande de réservation.</Typography>}
 
                                                     />
@@ -1431,7 +2008,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"my_alfred_conditions"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
@@ -1463,7 +2040,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"profile_picture_user"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
@@ -1494,7 +2071,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"identity_card"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -11}}
                                                             />
                                                         }
@@ -1524,7 +2101,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"recommandations"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
@@ -1576,7 +2153,7 @@ class Form extends React.Component {
                                            Vos conditions d'annulation
                                         </h6>
 
-                                        <Typography style={{fontFamily: 'helveticaNeue'}}>
+                                        <Typography style={{fontFamily: 'helveticaNeue', width: '100%'}}>
                                             Choisissez vos conditions en cas d'annulation de la part
                                             des utilisateurs.
                                         </Typography>
@@ -1603,7 +2180,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"flexible_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -20}}
                                                             />
                                                         }
@@ -1641,7 +2218,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"moderate_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -20}}
                                                             />
                                                         }
@@ -1678,7 +2255,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"strict_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{ marginTop: -100 }}
                                                             />
                                                         }
@@ -1704,7 +2281,8 @@ class Form extends React.Component {
                                         </Grid>
                                     </Grid>
                                 </div>
-                                <Field render={({form}) => {
+
+                                {/*<Field render={({form}) => {
                                     let cancel = true;
 
                                     if (form.values.createShop.flexible_cancel === true || form.values.createShop.moderate_cancel === true || form.values.createShop.strict_cancel === true) {
@@ -1718,8 +2296,8 @@ class Form extends React.Component {
                                             Étape suivante
                                         </Button>
                                     )
-                                }} />
-                            </Card>
+                                }} />*/}
+                            
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
@@ -1727,26 +2305,13 @@ class Form extends React.Component {
                             {({ form, field }) => (
                                 <React.Fragment>
                                     <Grid container className={classes.cardContainer}>
-                                        <Card className={classes.card}>
-                                            <div className={classes.banner}>
-                                                <h3
-                                                    style={{
-                                                        marginLeft: 10,
-                                                        color: "white"
-                                                    }}
-                                                >
-                                                    Etape 3
-                                                </h3>
-
-                                                <div>
-                                                    <Bar>
-                                                        <Fill2 />
-                                                    </Bar>
-                                                </div>
-                                            </div>
+                                        
                                             <div className={classes.newContainer}>
-                                                <Typography style={{ paddingBottom: 20 }}>
-                                                    Présentez vous !
+                                                <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                    Téléchargez une photo de profil
+                                                </h6>
+                                                <Typography style={{fontFamily: 'helveticaNeue', marginBottom: '1rem'}}>
+                                                    Téléchargez une photo de claire et lumineuse, de bonne qualité. Pour un rendu optimal, la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif, avec seulement vous sur la photo.
                                                 </Typography>
                                                 <Grid container style={{ marginBottom: 15 }}>
                                                     <Grid item xs={1} />
@@ -1778,7 +2343,7 @@ class Form extends React.Component {
                                                                                     }}
                                                                                     component="span"
                                                                                 >
-                                                                                    <PhotoCamera />
+                                                                                    {form.values.alfredUpdate.profile_picture_user === null ? <PhotoCamera /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
                                                                                 </IconButton>
                                                                             </label>
                                                                         </React.Fragment>
@@ -1789,23 +2354,16 @@ class Form extends React.Component {
                                                     </Grid>
                                                     <Grid item xs={1} />
                                                     <Grid item xs={7}>
-                                                        <Typography>
-                                                            Téléchargez votre photo de profil
-                                                        </Typography>
                                                     </Grid>
                                                 </Grid>
-                                                
+                                                <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                                 <Grid container>
-                                                    <Grid item xs={12} className={classes.vridentite}>
-                                                        <div className={classes.title1}>
-                                                            <h4
-                                                                style={{ color: "white" }}
-                                                                className={classes.text1}
-                                                            >
-                                                                Vérifiez votre identité
-                                                            </h4>
-                                                        </div>
-                                                    </Grid>
+                                                    <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                        Vérifiez votre identité
+                                                    </h6>
+                                                    <Typography style={{fontFamily: 'helveticaNeue'}}>
+                                                        Ces informations ne seront pas visibles par les utilisateurs. Un profil vérifié est plus engageant pour les utilisateurs !
+                                                    </Typography>
                                                     <Grid item xs={12}>
                                                         <Typography>
                                                             Vos informations ne seront pas visibles par les
@@ -1829,7 +2387,7 @@ class Form extends React.Component {
                                                         <ErrorMessage name="alfredUpdate.phone" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                     </Grid>
                                                     <Grid item xs={1} />
-                                                    <Grid item xs={5}>
+                                                    <Grid item xs={12} sm={12} md={5}>
                                                         <Grid container>
                                                             <div
                                                                 style={{
@@ -1853,23 +2411,14 @@ class Form extends React.Component {
                                                                     <Field render={({field, form}) => {
                                                                         return (
                                                                             <React.Fragment>
-                                                                                <label
-                                                                                    htmlFor="icon-button-file"
-                                                                                    style={{ fontSize: "small" }}
-                                                                                >
-                                                                                    Téléchargez votre pièce d'identité(recto)
-                                                                                </label>
-                                                                                <input
-                                                                                    type="file"
-                                                                                    accept="image/*"
-                                                                                    className="input"
-                                                                                    id="icon-button-file"
-                                                                                    name="myCardR"
-                                                                                    onChange={(event) => {
+                                                                                <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                    Carte identité recto / passeport
+                                                                                    <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
                                                                                         form.setFieldValue("createShop.id_recto", event.currentTarget.files[0])
-                                                                                    }}
-                                                                                />
-                                                                                <Thumb file={form.values.createShop.id_recto} />
+                                                                                    }} className="form-control"
+                                                                                    />
+                                                                                </label>
+                                                                                <span>{form.values.createShop.id_recto !== null ? form.values.createShop.id_recto.name.substr(0, 10) + '...' : null}</span>
                                                                                 <ErrorMessage name="createShop.id_recto" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                             </React.Fragment>
                                                                         )
@@ -1883,21 +2432,14 @@ class Form extends React.Component {
                                                                     <Field render={({field, form}) => {
                                                                         return (
                                                                             <React.Fragment>
-                                                                                <label htmlFor="icon-button-file">
-                                                                                    Téléchargez votre pièce d'identité(verso)
+                                                                                <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                    Carte identité verso
+                                                                                    <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
+                                                                                        form.setFieldValue("createShop.id_verso", event.currentTarget.files[0])
+                                                                                    }} className="form-control"
+                                                                                    />
                                                                                 </label>
-                                                                                <input
-                                                                                    accept="image/*"
-                                                                                    className="input"
-                                                                                    name="myCardV"
-                                                                                    onChange={(event) => {
-                                                                                        form.setFieldValue("createShop.id_verso", event.currentTarget.files[0]);
-                                                                                        console.log(form)
-                                                                                    }}
-                                                                                    id="icon-button-file"
-                                                                                    type="file"
-                                                                                />
-                                                                                <Thumb file={form.values.createShop.id_verso} />
+                                                                                <span>{form.values.createShop.id_verso !== null ? form.values.createShop.id_verso.name.substr(0, 10) + '...' : null}</span>
                                                                                 <ErrorMessage name="createShop.id_verso" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                             </React.Fragment>
                                                                         )
@@ -1922,17 +2464,6 @@ class Form extends React.Component {
                                                 </Grid>
 
                                                 <Grid container className={classes.checkboxespart}>
-                                                    <div
-                                                        className={classes.title1}
-                                                        style={{ marginBottom: 15 }}
-                                                    >
-                                                        <h4
-                                                            style={{ color: "white" }}
-                                                            className={classes.text1}
-                                                        >
-                                                            Votre statut
-                                                        </h4>
-                                                    </div>
                                                     <Grid container>
                                                         <Grid item xs={1}>
                                                             <Field render={({form}) => {
@@ -1955,11 +2486,14 @@ class Form extends React.Component {
                                                                                         form.setFieldValue('createShop.creationDate', '');
                                                                                         form.setFieldValue('createShop.denomination', '');
                                                                                         form.setFieldValue('createShop.nafape', '');
+                                                                                        form.setFieldValue('createShop.nature_juridique', '');
                                                                                     }
                                                                                 }}
                                                                                 name={"isParticular"}
                                                                                 color="primary"
                                                                                 value={form.values.createShop.is_particular}
+                                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                                checkedIcon={<FilledButton />}
                                                                             />
                                                                         }
                                                                     />
@@ -1967,9 +2501,9 @@ class Form extends React.Component {
                                                             }} />
                                                         </Grid>
                                                         <Grid item xs={11}>
-                                                            <Typography className={classes.titre1}>
-                                                                Je suis un Particulier
-                                                            </Typography>
+                                                            <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                Je suis un particulier
+                                                            </h6>
                                                             <Typography>
                                                                 En tant que particulier, vous pouvez rendre des
                                                                 services occasionnels sur My-Alfred. Si votre
@@ -2007,6 +2541,8 @@ class Form extends React.Component {
                                                                                 name={"isProfessional"}
                                                                                 color="primary"
                                                                                 value={form.values.createShop.is_professional}
+                                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                                                checkedIcon={<FilledButton />}
                                                                             />
                                                                         }
                                                                     />
@@ -2014,9 +2550,9 @@ class Form extends React.Component {
                                                             }} />
                                                         </Grid>
                                                         <Grid item xs={11}>
-                                                            <Typography className={classes.titre2}>
-                                                                Je suis un Professionnel
-                                                            </Typography>
+                                                            <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                Je suis un professionnel
+                                                            </h6>
                                                             <Typography>
                                                                 Un statut professionnel est nécessaire pour les
                                                                 métiers réglementés et permet une activité
@@ -2026,100 +2562,57 @@ class Form extends React.Component {
                                                                 statut professionnel est requis dès que votre
                                                                 activité devient régulière
                                                             </Typography>
+                                                            {isProfessional ? (
+                                                                <React.Fragment>
+                                                                    <Field render={({form}) => {
+                                                                        return (
+                                                                            <div style={{}}>
+                                                                                <Siret formikCtx={form}/>
+                                                                            </div>
+                                                                        )
+                                                                    }}
+                                                                    />
+                                                                    <Field render={({form}) => {
+                                                                        return (
+                                                                            <FormControlLabel
+                                                                                control={
+                                                                                    <Checkbox
+                                                                                        checked={form.values.createShop.isCertified}
+                                                                                        onChange={() => {
+                                                                                            form.values.createShop.isCertified = !form.values.createShop.isCertified;
+                                                                                            form.setFieldValue('createShop.isCertified', form.values.createShop.isCertified);
+                                                                                        }}
+                                                                                        color="primary"
+                                                                                        name="isCertified"
+                                                                                        value={form.values.createShop.isCertified}
+                                                                                    />
+                                                                                }
+                                                                                label={
+                                                                                    "Je certifie sur l’honneur qu’il s’agit bien de mon entreprise."
+                                                                                }
+                                                                            />
+                                                                        )
+                                                                    }} />
+                                                                    <ErrorMessage name={`createShop.isCertified`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                </React.Fragment>
+                                                            ) : (
+                                                                ""
+                                                            )}
                                                         </Grid>
                                                     </Grid>
-                                                    {isProfessional ? (
-                                                        <React.Fragment>
-                                                            <Grid container>
-                                                                <Grid item>
-                                                                    <Field render={({form}) => {
-                                                                        return (
-                                                                            <FormControlLabel
-                                                                                control={
-                                                                                    <Checkbox
-                                                                                        checked={form.values.createShop.is_microCompany}
-                                                                                        onChange={() => {
-                                                                                            form.values.createShop.is_microCompany = !form.values.createShop.is_microCompany;
-                                                                                            form.setFieldValue("createShop.is_microCompany", form.values.createShop.is_microCompany);
-
-                                                                                            if (form.values.createShop.isIndividualCompany === true && form.values.createShop.is_microCompany === true) {
-                                                                                                form.setFieldValue('createShop.isIndividualCompany', false)
-                                                                                            }
-                                                                                        }}
-                                                                                        color="primary"
-                                                                                        name="isMicro_company"
-                                                                                        value={form.values.createShop.is_microCompany}
-                                                                                    />
-                                                                                }
-                                                                                label="Micro-entreprise, auto-entrepreneur"
-                                                                            />
-                                                                        )
-                                                                    }} />
-                                                                </Grid>
-                                                            </Grid>
-                                                            <Grid container>
-                                                                <Grid item>
-                                                                    <Field render={({form}) => {
-                                                                        return (
-                                                                            <FormControlLabel
-                                                                                control={
-                                                                                    <Checkbox
-                                                                                        checked={form.values.createShop.isIndividualCompany}
-                                                                                        onChange={() => {
-                                                                                            form.values.createShop.isIndividualCompany = !form.values.createShop.isIndividualCompany;
-                                                                                            form.setFieldValue("createShop.isIndividualCompany", form.values.createShop.isIndividualCompany);
-
-                                                                                            if (form.values.createShop.isIndividualCompany === true && form.values.createShop.is_microCompany === true) {
-                                                                                                form.setFieldValue('createShop.is_microCompany', false)
-                                                                                            }
-                                                                                        }}
-                                                                                        color="primary"
-                                                                                        name="isIndividualCompany"
-                                                                                        value={form.values.createShop.isIndividualCompany}
-                                                                                    />
-                                                                                }
-                                                                                label="Entreprise individuelle, EIRL, MDA, professions libérales..."
-                                                                            />
-                                                                        )
-                                                                    }} />
-                                                                </Grid>
-                                                            </Grid>
-                                                        </React.Fragment>
-                                                    ) : (
-                                                        ""
-                                                    )}
                                                 </Grid>
 
-                                                {isProfessional ? (<Field render={({form}) => {
-                                                    return (
-                                                    <Siret formikCtx={form}/>
-                                                    )}}/>
-
-                                                ) : (
-                                                    ""
-                                                )}
+                                                <hr style={{margin: '1rem 0'}}></hr>
 
                                                 <Grid container>
                                                     <Grid item xs={12}>
-                                                        <div
-                                                            className={classes.title1}
-                                                            style={{ marginBottom: 15 }}
-                                                        >
-                                                            <h4
-                                                                style={{ color: "white" }}
-                                                                className={classes.text1}
-                                                            >
-                                                                Vos obligations légales
-                                                            </h4>
-                                                        </div>
+                                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                            Vos obligations légales
+                                                        </h6>
                                                     </Grid>
 
                                                     <Typography>
-                                                        Dans le cadre des prestations effectuées via
-                                                        MyAlfred, vous devez respecter toutes les
-                                                        obligations légales et réglementaires (fiscales,
-                                                        sociales, comptables, administratives, etc...)
-                                                        correspondant à votre statut.
+                                                        Dans le cadre des prestations effectuées via My-Alfred, vous devez respecter toutes les obligations légales et réglementaires (fiscales, sociales, comptables, administratives etc...) liées à votre statut.
                                                     </Typography>
 
                                                     <Grid container>
@@ -2153,28 +2646,7 @@ class Form extends React.Component {
                                                         {isProfessional ? (
                                                             <React.Fragment>
                                                                 <Grid item>
-                                                                    <Field render={({form}) => {
-                                                                        return (
-                                                                            <FormControlLabel
-                                                                                control={
-                                                                                    <Checkbox
-                                                                                        checked={form.values.createShop.isCertified}
-                                                                                        onChange={() => {
-                                                                                            form.values.createShop.isCertified = !form.values.createShop.isCertified;
-                                                                                            form.setFieldValue('createShop.isCertified', form.values.createShop.isCertified);
-                                                                                        }}
-                                                                                        color="primary"
-                                                                                        name="isCertified"
-                                                                                        value={form.values.createShop.isCertified}
-                                                                                    />
-                                                                                }
-                                                                                label={
-                                                                                    "Je certifie sur l’honneur qu’il s’agit bien de mon entreprise."
-                                                                                }
-                                                                            />
-                                                                        )
-                                                                    }} />
-                                                                    <ErrorMessage name={`createShop.isCertified`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                    
                                                                 </Grid>
                                                             </React.Fragment>
                                                         ) : (
@@ -2183,33 +2655,13 @@ class Form extends React.Component {
                                                     </Grid>
                                                 </Grid>
                                             </div>
-                                            <Field render={({form}) => {
-                                                let check = true;
-
-                                                if (form.values.createShop.is_particular === true) {
-                                                    check = false;
-                                                } else if(form.values.createShop.is_professional === true && form.values.createShop.is_microCompany === true) {
-                                                    check = false;
-                                                } else if (form.values.createShop.is_professional === true && form.values.createShop.isIndividualCompany === true) {
-                                                    check = false;
-                                                } else {
-                                                    check = true;
-                                                }
-
-                                                return (
-                                                    <Button type="submit" variant="contained" style={{marginTop: '45px', color: !check ? 'white' : null }} color="primary" disabled={check}>
-                                                        Envoyer
-                                                    </Button>
-                                                )
-                                            }} />
-                                        </Card>
+                                        
                                     </Grid>
                                 </React.Fragment>
                             )}
                         </Field>
                     </Wizard.Page>
                 </Wizard>
-                </div>
             </div>
         )
     }
@@ -2325,27 +2777,20 @@ const Bar = styled.div`
 `;
 
 const Fill = styled.div`
-  background: #cacfe4;
+  background: #2FBCD3;
   height: 100%;
   border-radius: inherit;
   transition: width .2s ease-in;
-  width: 80%;
+  width: ${props => props.width};
 `;
 
-const Fill2 = styled.div`
-    background: #cacfe4;
-    height: 100%;
-    border-radius: inherit;
-    transition: width .2s ease-in;
-    width: 95%;
-`;
-
-const Fill4 = styled.div`
-    background: #cacfe4;
-    height: 100%;
-    border-radius: inherit;
-    transition: width .2s ease-in;
-    width: 15%;
+const FilledButton = styled.div`
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background-color: #2FBCD3;
+    margin-right: 5px;
 `;
 
 export default withStyles(styles)(Form);

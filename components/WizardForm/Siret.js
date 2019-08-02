@@ -48,6 +48,7 @@ class siret extends React.Component {
             nafape: '',
             creationDate: '',
             denomination: '',
+            nature_juridique: '',
 
 
         };
@@ -74,7 +75,7 @@ class siret extends React.Component {
         axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siret/${code}`)
             .then(res => {
                 const data = res.data;
-                this.setState({denomination: data.etablissement.l1_normalisee, nafape: data.etablissement.activite_principale});
+                this.setState({denomination: data.etablissement.l1_normalisee, nafape: data.etablissement.activite_principale, nature_juridique: data.etablissement.libelle_nature_juridique_entreprise});
                 const date = data.etablissement.date_creation;
                 const year = date.substring(0,4);
                 const month = date.substring(4,6);
@@ -87,9 +88,9 @@ class siret extends React.Component {
                 this.props.formikCtx.setFieldValue(`createShop.denomination`, this.state.denomination);
                 this.props.formikCtx.setFieldValue(`createShop.creationDate`, this.state.creationDate);
                 this.props.formikCtx.setFieldValue(`createShop.nafape`, this.state.nafape);
+                this.props.formikCtx.setFieldValue(`createShop.nature_juridique`, this.state.nature_juridique);
 
-
-
+                console.log(this.props.formikCtx);
             })
             .catch(err => {
                 console.log(err);
@@ -130,7 +131,7 @@ class siret extends React.Component {
 
 
                 <Grid container>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={12} md={6}>
                         <Field name="createShop.siret" render={({form,field}) => {
                             return (
                                 <Typography>Siret : {form.values.createShop.siret}</Typography>
@@ -138,7 +139,7 @@ class siret extends React.Component {
                         }} />
                         <ErrorMessage name={`createShop.creationDate`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                     </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={12} md={6}>
                     <Field name="createShop.creationDate" render={({form,field}) => {
                         return (
                             <Typography>Date de création : {form.values.createShop.creationDate}</Typography>
@@ -146,7 +147,7 @@ class siret extends React.Component {
                     }} />
                     <ErrorMessage name={`createShop.creationDate`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={12} md={6}>
                     <Field name="createShop.denomination" render={({form, field}) => {
                         return (
                             <Typography>Dénomination : {form.values.createShop.denomination}</Typography>
@@ -154,13 +155,21 @@ class siret extends React.Component {
                     }} />
                     <ErrorMessage name={`createShop.denomination`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={12} md={6}>
                     <Field name="createShop.nafape" render={({form,field}) => {
                         return (
                             <Typography>Code NAF/APE : {form.values.createShop.nafape}</Typography>
                         )
                     }} />
                     <ErrorMessage name={`createShop.nafape`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                    <Field name="createShop.nature_juridique" render={({form,field}) => {
+                        return (
+                            <Typography>Statut juridique : {form.values.createShop.nature_juridique}</Typography>
+                        )
+                    }} />
+                    <ErrorMessage name={`createShop.nature_juridique`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                 </Grid>
                 </Grid>
             </Grid>

@@ -9,18 +9,23 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import '../../static/stylecalendar.css'
 const styles = theme => ({
   cardContainer: {
+    padding: '2rem 1rem',
     height: '120vh',
     alignItems: 'center',
     justifyContent: 'center',
   },
   card: {
-    padding: '1.5rem 2rem',
-    display: 'flex',
-    flexDirection: 'column',
-    height: 'auto',
-    maxHeight: 700,
-    overflow: 'auto',
-    width: '70%',
+    minHeight: '400px !important',
+        boxShadow: 'none',
+        //padding: '1.5rem 2rem',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '86vh',
+        //maxHeight: 700,
+        overflow: 'auto',
+        maxWidth: 1000,
+        fontFamily: 'helveticaNeue',
+
   },
   calendar: {
     minHeight: '400px',
@@ -142,7 +147,6 @@ class MyCalendar extends React.Component {
 
     return (
       <Grid container className={classes.cardContainer}>
-        <Card className={classes.card}>
           <Grid container>
             <Grid item xs={12}>
               <BigCalendar
@@ -313,7 +317,6 @@ class MyCalendar extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-        </Card>
       </Grid>
     )
   }
