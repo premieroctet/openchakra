@@ -755,6 +755,26 @@ router.put('/account/notifications',passport.authenticate('jwt',{session:false})
             .catch(err => console.log(err));
 });
 
+// @Route PUT /myAlfred/api/users/account/rib
+// Edit rib
+// @Access private
+router.put('/account/rib',passport.authenticate('jwt',{session:false}),(req,res) => {
+
+    User.findById(req.user.id)
+        .then(user => {
+            user.account= {};
+            user.account.name = req.body.name;
+            user.account.bank = req.body.bank;
+            user.account.bic = req.body.bic;
+            user.account.iban = req.body.iban;
+
+
+
+            user.save().then(result => res.json(result)).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+});
+
 // @Route DELETE /myAlfred/api/users/profile/picture/delete
 // Delete the picture profile
 // @Access private

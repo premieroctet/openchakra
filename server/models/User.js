@@ -112,16 +112,10 @@ const UserSchema = new Schema({
       }
     },
     account: {
-        bank_code: {
+        bank: {
             type: String
         },
-        guichet_code: {
-            type: String
-        },
-        account_number: {
-            type: String
-        },
-        rib_key: {
+        name: {
             type: String
         },
         iban: {
