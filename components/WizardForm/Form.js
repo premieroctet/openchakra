@@ -766,6 +766,7 @@ class Form extends React.Component {
     }
 
     componentDidMount() {
+        document.body.style.overflow = 'hidden';
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
