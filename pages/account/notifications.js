@@ -74,6 +74,25 @@ class notifications extends React.Component {
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
+                this.setState({messages_email: user.notifications_message.email,
+                                    messages_push: user.notifications_message.push,
+                                    messages_sms: user.notifications_message.sms});
+                this.setState({rappel_email: user.notifications_rappel.email,
+                                     rappel_push: user.notifications_rappel.push,
+                                     rappel_sms: user.notifications_rappel.sms});
+
+                this.setState({promotions_email: user.notifications_promotions.email,
+                    promotions_push: user.notifications_promotions.push,
+                    promotions_sms: user.notifications_promotions.sms,
+                    promotions_phone: user.notifications_promotions.phone});
+
+                this.setState({community_email: user.notifications_community.email,
+                    community_push: user.notifications_community.push,
+                    community_sms: user.notifications_community.sms});
+
+                this.setState({assistance_email: user.notifications_assistance.email,
+                    assistance_push: user.notifications_assistance.push,
+                    assistance_sms: user.notifications_assistance.sms});
 
 
 
@@ -90,6 +109,34 @@ class notifications extends React.Component {
 
     handleChange = name => event => {
         this.setState({[name]: event.target.checked });
+    };
+
+    onSubmit = () => {
+        const data = {
+          messages_email: this.state.messages_email,
+          messages_push: this.state.messages_push,
+          messages_sms: this.state.messages_sms,
+          rappel_sms: this.state.rappel_sms,
+          rappel_email: this.state.rappel_email,
+          rappel_push: this.state.rappel_push,
+          promotions_email: this.state.promotions_email,
+          promotions_push: this.state.promotions_push,
+          promotions_sms: this.state.promotions_sms,
+          promotions_phone: this.state.promotions_phone,
+          community_email: this.state.community_email,
+          community_push: this.state.community_push,
+          community_sms: this.state.community_sms,
+          assistance_push: this.state.assistance_push,
+          assistance_sms: this.state.assistance_sms,
+        };
+
+        axios.put(url+'myAlfred/api/users/account/notifications',data)
+            .then(() => {
+                alert('Compte mis à jour');
+            })
+            .catch(err => {
+                console.log(err);
+            });
     };
 
 
@@ -518,6 +565,13 @@ class notifications extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
+                    <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
+                        alignItems:"center",height:60}}>
+                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
+                                style={{color: 'white',maxHeight:40,marginRight:20}}>
+                            Enregistrer
+                        </Button>
+                    </div>
                 </Layout>
 
             </Fragment>

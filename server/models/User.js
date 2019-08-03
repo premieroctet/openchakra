@@ -131,6 +131,80 @@ const UserSchema = new Schema({
             type: String
         }
     },
+    notifications_message: {
+      email: {
+          type: Boolean,
+          default: true
+      },
+      push: {
+            type: Boolean,
+            default: false
+      },
+      sms: {
+          type: Boolean,
+          default: false
+      },
+    },
+    notifications_rappel: {
+        email: {
+            type: Boolean,
+            default: true
+        },
+        push: {
+            type: Boolean,
+            default: false
+        },
+        sms: {
+            type: Boolean,
+            default: false
+        },
+    },
+    notifications_promotions: {
+        email: {
+            type: Boolean,
+            default: true
+        },
+        push: {
+            type: Boolean,
+            default: false
+        },
+        phone: {
+          type: Boolean,
+          default: false
+        },
+        sms: {
+            type: Boolean,
+            default: false
+        },
+    },
+    notifications_community: {
+        email: {
+            type: Boolean,
+            default: true
+        },
+        push: {
+            type: Boolean,
+            default: false
+        },
+        sms: {
+            type: Boolean,
+            default: false
+        },
+    },
+    notifications_assistance: {
+        email: {
+            type: Boolean,
+            default: true
+        },
+        push: {
+            type: Boolean,
+            default: false
+        },
+        sms: {
+            type: Boolean,
+            default: false
+        },
+    },
     score: {
         type: Number,
         default: 0

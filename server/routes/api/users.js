@@ -718,6 +718,43 @@ router.put('/profile/editPassword',passport.authenticate('jwt',{session:false}),
     }
 });
 
+// @Route PUT /myAlfred/api/users/account/notifications
+// Edit notifications preferences
+// @Access private
+router.put('/account/notifications',passport.authenticate('jwt',{session:false}),(req,res) => {
+
+        User.findById(req.user.id)
+            .then(user => {
+                //user.notifications_message = {};
+                user.notifications_message.email = req.body.messages_email;
+                user.notifications_message.push = req.body.messages_push;
+                user.notifications_message.sms = req.body.messages_sms;
+
+                //user.notifications_rappel = {};
+                user.notifications_rappel.email = req.body.rappel_email;
+                user.notifications_rappel.push = req.body.rappel_push;
+                user.notifications_rappel.sms = req.body.rappel_sms;
+
+                //user.notifications_promotions = {};
+                user.notifications_promotions.email = req.body.promotions_email;
+                user.notifications_promotions.push = req.body.promotions_push;
+                user.notifications_promotions.sms = req.body.promotions_sms;
+                user.notifications_promotions.phone = req.body.promotions_phone;
+
+                //user.notifications_community = {};
+                user.notifications_community.email = req.body.community_email;
+                user.notifications_community.push = req.body.community_push;
+                user.notifications_community.sms = req.body.community_sms;
+
+                //user.notifications_assistance = {};
+                user.notifications_assistance.push = req.body.assistance_push;
+                user.notifications_assistance.sms = req.body.assistance_sms;
+
+                user.save().then(result => res.json(result)).catch(err => console.log(err));
+            })
+            .catch(err => console.log(err));
+});
+
 // @Route DELETE /myAlfred/api/users/profile/picture/delete
 // Delete the picture profile
 // @Access private
