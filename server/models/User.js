@@ -227,9 +227,16 @@ const UserSchema = new Schema({
       type: Boolean,
       default: false
     },
+    last_login: [{
+        type: Date,
+    }],
     is_alfred: {
         type: Boolean,
         default: false
+    },
+    index_google: {
+      type: Boolean,
+      default: true
     },
     super_alfred: {
         type: Boolean,

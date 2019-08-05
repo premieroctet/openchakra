@@ -75,6 +75,7 @@ router.post('/register',(req,res) =>{
                 userFields.billing_address.gps.lat = req.body.lat;
                 userFields.billing_address.gps.lng = req.body.lng;
                 userFields.service_address = [];
+                userFields.last_login = [];
 
                 const newUser = new User(userFields);
                 bcrypt.genSalt(10, (err, salt) => {
@@ -775,6 +776,36 @@ router.put('/account/rib',passport.authenticate('jwt',{session:false}),(req,res)
         .catch(err => console.log(err));
 });
 
+// @Route PUT /myAlfred/api/users/account/lastLogin
+// Push current datetime in array last_login for the user
+// @Access private
+router.put('/account/lastLogin',passport.authenticate('jwt',{session: false}),(req,res) => {
+    User.findById(req.user.id)
+        .then(user => {
+            const arrayLogin = user.last_login;
+            if(arrayLogin.length === 2) {
+                arrayLogin.unshift(Date.now());
+                arrayLogin.pop();
+            } else {
+                arrayLogin.unshift(Date.now());
+            }
+
+            user.save().then(result => res.json(result)).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+});
+
+// @Route PUT /myAlfred/api/users/account/indexGoogle
+// Define preference for indexing account
+// @Access private
+router.put('/account/indexGoogle',passport.authenticate('jwt',{session: false}),(req,res) => {
+    User.findByIdAndUpdate(req.user.id,{index_google: req.body.index_google})
+        .then(user => {
+            res.json(user);
+        })
+        .catch(err => console.log(err));
+});
+
 // @Route DELETE /myAlfred/api/users/profile/picture/delete
 // Delete the picture profile
 // @Access private
@@ -784,6 +815,17 @@ router.delete('/profile/picture/delete',passport.authenticate('jwt',{session:fal
     },{new:true})
         .then(user => {
             res.json(user)
+        })
+        .catch(err => console.log(err));
+});
+
+// @Route DELETE /myAlfred/api/users/current/delete
+// Delete the current user
+// @Access private
+router.delete('/current/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    User.findById(req.user.id)
+        .then(user => {
+            user.remove().then(data => console.log('User deleted')).catch(err => console.log(err));
         })
         .catch(err => console.log(err));
 });

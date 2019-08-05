@@ -155,6 +155,17 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
 
 });
 
+// @Route DELETE /myAlfred/api/shop/current/delete
+// Delete one shop
+// @Access private
+router.delete('/current/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    Shop.findOne({alfred: req.user.id})
+        .then(shop => {
+            shop.remove().then(() => res.json({success: true}));
+        })
+        .catch(err => res.status(404).json({shopnotfound: 'No shop found'}));
+});
+
 // @Route DELETE /myAlfred/api/shop/:id
 // Delete one shop
 // @Access private

@@ -364,6 +364,18 @@ router.put('/deletePrestation/:id', passport.authenticate('jwt', { session: fals
     }
 );
 
+// @Route DELETE /myAlfred/api/serviceUser/current/allServices
+// Delete all the service for an alfred
+// @Access private
+router.delete('/current/allServices', passport.authenticate('jwt', { session: false }), (req, res) => {
+    ServiceUser.find({user: req.user.id})
+        .then(services => {
+            services.remove().then(() => res.json({success: true}));
+
+        })
+        .catch(err => res.status(404).json({servicenotfound: 'No service found'}));
+});
+
 // @Route DELETE /myAlfred/api/serviceUser/:id
 // Delete a service for an alfred
 // @Access private

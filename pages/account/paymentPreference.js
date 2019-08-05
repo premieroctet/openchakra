@@ -99,10 +99,13 @@ class paymentPreference extends React.Component {
       };
 
       axios.put(url+'myAlfred/api/users/account/rib',data)
-          .then(() => {
+          .then(res => {
               alert('RIB ajouté');
+              this.setState({user: res.data});
+              this.setState({haveAccount: true,account: res.data.account});
+
               this.setState({clickAdd: false});
-              this.componentDidMount();
+
           })
           .catch(err => {
               console.log(err);
