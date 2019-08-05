@@ -30,6 +30,7 @@ const jwt = require('jsonwebtoken');
 const styles = theme => ({
   root: {
     width: '100%',
+    backgroundColor: 'red',
   },
   grow: {
     flexGrow: 1,
@@ -88,7 +89,7 @@ const styles = theme => ({
     display: 'none',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
-    },
+    },  
   },
   sectionMobile: {
     display: 'flex',
@@ -101,13 +102,13 @@ const styles = theme => ({
   },
   navbarItem: {
     alignSelf: 'center',
-    color: '#545659',
+    color:"white",
     marginRight: '20px',
     fontSize: '15px'
   },
   navbarLink: {
     textDecoration: 'none',
-    color: '#545659',
+    color:"white",
   },
   navbarLinkMobile: {
     color: 'black',
@@ -140,6 +141,7 @@ class NavBar extends Component {
     avatarMoreAnchorEl: null,
     logged: false,
     alfred: false,
+    isTop: true,
   };
 
   componentDidMount() {
@@ -150,6 +152,13 @@ class NavBar extends Component {
       const decode = jwt.decode(token2);
       this.setState({alfred: decode.is_alfred});
     }
+
+    document.addEventListener('scroll', () => {
+      const isTop = window.scrollY < 720 || window.scrollY > 2300;
+      if (isTop !== this.state.isTop) {
+          this.onScroll(isTop);
+      }
+  });
 
     localStorage.setItem('path',Router.pathname);
     axios.defaults.headers.common['Authorization'] = token;
@@ -185,6 +194,10 @@ class NavBar extends Component {
     this.handleMobileMenuClose();
     this.handleAvatarMenuClose();
   };
+
+  onScroll(isTop) {
+    this.setState({ isTop });
+}
 
   handleMobileMenuOpen = event => {
     this.setState({ mobileMoreAnchorEl: event.currentTarget });
@@ -396,10 +409,10 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  color="white" position="fixed">
+        <AppBar  style={{backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(47, 188, 211)'}} position="fixed">
           <Toolbar>
             <Link href={'/'}>
-              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
+              <img src={'../../../static/assets/img/logo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
             </Link>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
