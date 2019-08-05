@@ -245,7 +245,7 @@ class editPicture extends React.Component {
                                                 avec seulement vous sur la photo. </p><br />
 
                                             <label style={{display: 'inline-block', marginTop: 15,color:'#2FBCD3'}} className="forminputs">
-                                                <p style={{cursor:"pointer",fontSize:'1.3rem'}}>Télécharger une photo depuis votre ordinateur</p>
+                                                <p style={{cursor:"pointer"}}>Télécharger une photo depuis votre ordinateur</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myImage" type="file"
                                                        onChange={this.onChange}
                                                        className="form-control"

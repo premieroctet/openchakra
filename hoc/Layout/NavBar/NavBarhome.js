@@ -150,7 +150,6 @@ class NavBar extends Component {
       this.setState({alfred: decode.is_alfred});
     }
 
-    localStorage.setItem('path',Router.pathname);
     axios.defaults.headers.common['Authorization'] = token;
     axios
         .get(url+'myAlfred/api/users/current')

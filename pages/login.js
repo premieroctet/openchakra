@@ -66,14 +66,13 @@ class login extends React.Component {
           localStorage.setItem('token',token);
           setAuthToken(token);
           axios.put(url+'myAlfred/api/users/account/lastLogin')
-              .then(() => {
-                console.log('Login updated');
+              .then(data => {
                 let path = localStorage.getItem('path');
-
-
-                Router.push({pathname:path})
+                Router.push({pathname:path});
               })
               .catch(err=> console.log(err));
+
+
 
 
 

@@ -160,7 +160,6 @@ class NavBar extends Component {
       }
   });
 
-    localStorage.setItem('path',Router.pathname);
     axios.defaults.headers.common['Authorization'] = token;
     axios
         .get(url+'myAlfred/api/users/current')
@@ -182,7 +181,7 @@ class NavBar extends Component {
     // Remove auth header for future requests
     setAuthToken(false);
     //document.location.href="https://myalfred.hausdivision.com/";
-    Router.push('/');
+    window.location.reload();
   };
 
   handleProfileMenuOpen = event => {
@@ -242,7 +241,7 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'#'}>
+        <Link href={'/account/notifications'}>
           <a className={classes.navbarLinkMobile}>
             Mon compte
           </a>
@@ -273,7 +272,7 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'#'}>
+        <Link href={'/account/notifications'}>
           <a className={classes.navbarLinkMobile}>
             Mon compte
           </a>
