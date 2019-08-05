@@ -67,74 +67,76 @@ router.post('/register',(req,res) =>{
                 userFields.billing_address.address = req.body.address;
                 userFields.billing_address.zip_code = req.body.zip_code;
                 userFields.billing_address.city = req.body.city;
+                userFields.billing_address.country = req.body.country;
 
-                if (req.body.country === 'France') {
-                    userFields.billing_address.country = 'France';
-                } else {
-                    userFields.billing_address.country = 'Maroc';
-                }
+
 
                 userFields.billing_address.gps = {};
+                userFields.billing_address.gps.lat = req.body.lat;
+                userFields.billing_address.gps.lng = req.body.lng;
+                userFields.service_address = [];
+                userFields.last_login = [];
 
-                let address = req.body.address;
-                let city = req.body.city;
-                let zip = req.body.zip_code;
+                const newUser = new User(userFields);
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(newUser.password, salt, (err, hash) => {
+                        if (err) throw err;
+                        newUser.password = hash;
+                        newUser.save()
+                            .then(user => {
+                                res.json(user);
+                                let transporter = nodemailer.createTransport({
+                                    host: 'smtp.ethereal.email',
+                                    port: 587,
+                                    auth: {
+                                        user: 'kirstin85@ethereal.email',
+                                        pass: '1D7q6PCENKSX5cj622'
+                                    }
+                                });
 
-                let newAddress = address.replace(/ /g, '+');
-
-                const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
-
-                axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
-                    .then(response => {
-
-                        let result = response.data.features;
-
-                        result.forEach(function (element) {
-                            userFields.billing_address.gps.lat = element.geometry.coordinates[1];
-                            userFields.billing_address.gps.lng = element.geometry.coordinates[0];
-                        });
-
-                        const newUser = new User(userFields);
-                        bcrypt.genSalt(10, (err, salt) => {
-                            bcrypt.hash(newUser.password, salt, (err, hash) => {
-                                if (err) throw err;
-                                newUser.password = hash;
-                                newUser.save()
-                                    .then(user => {
-                                        res.json(user);
-                                        let transporter = nodemailer.createTransport({
-                                            host: 'smtp.ethereal.email',
-                                            port: 587,
-                                            auth: {
-                                                user: 'kirstin85@ethereal.email',
-                                                pass: '1D7q6PCENKSX5cj622'
-                                            }
-                                        });
-
-                                        let info = transporter.sendMail({
-                                            from: 'kirstin85@ethereal.email', // sender address
-                                            to: `${user.email}`, // list of receivers
-                                            subject: "Valider votre compte", // Subject line
-                                            text: `https://myalfred.hausdivision.com/validateAccount?user=${user._id}`, // plain text body
-                                            html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
-                                        });
-                                    })
-                                    .catch(err => console.log(err));
+                                let info = transporter.sendMail({
+                                    from: 'kirstin85@ethereal.email', // sender address
+                                    to: `${user.email}`, // list of receivers
+                                    subject: "Valider votre compte", // Subject line
+                                    text: `https://myalfred.hausdivision.com/validateAccount?user=${user._id}`, // plain text body
+                                    html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
+                                });
                             })
-                        })
-
-
-
+                            .catch(err => console.log(err));
                     })
-                    .catch(error => {
-                        console.log(error)
-                    });
-
-
+                })
 
 
 
             }
+        })
+});
+
+// @Route GET /myAlfred/api/users/sendMailVerification
+// Send email
+// @access private
+router.get('/sendMailVerification',passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findById(req.user.id)
+        .then(user => {
+            let transporter = nodemailer.createTransport({
+                host: 'smtp.ethereal.email',
+                port: 587,
+                auth: {
+                    user: 'kirstin85@ethereal.email',
+                    pass: '1D7q6PCENKSX5cj622'
+                }
+            });
+
+            let info = transporter.sendMail({
+                from: 'kirstin85@ethereal.email', // sender address
+                to: `${user.email}`, // list of receivers
+                subject: "Valider votre compte", // Subject line
+                text: `https://myalfred.hausdivision.com/validateAccount?user=${user._id}`, // plain text body
+                html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
+            });
+        })
+        .catch(err => {
+            console.log(err)
         })
 });
 
@@ -206,44 +208,80 @@ router.put('/profile/serviceAddress',passport.authenticate('jwt',{session: false
 
     User.findById(req.user.id)
         .then(user => {
-            user.service_address = {};
-            user.service_address.address = req.body.address;
-            user.service_address.zip_code = req.body.zip_code;
-            user.service_address.city = req.body.city;
+            const address = {
+                address: req.body.address,
+                city: req.body.city,
+                zip_code: req.body.zip_code,
+                lat: req.body.lat,
+                lng: req.body.lng,
+                label: req.body.label,
+                floor: req.body.floor,
+                note: req.body.note,
+                phone_address: req.body.phone,
+            };
+            user.service_address.push(address);
 
-            if (req.body.country === 'France') {
-                user.service_address.country = 'France';
-            } else {
-                user.service_address.country = 'Maroc';
-            }
 
-            user.service_address.gps = {};
+            user.save().then(user => res.json(user)).catch(err => console.log(err));
 
-            let address = req.body.address;
-            let city = req.body.city;
-            let zip = req.body.zip_code;
 
-            let newAddress = address.replace(/ /g, '+');
-
-            const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
-
-            axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
-                .then(response => {
-
-                    let result = response.data.features;
-
-                    result.forEach(function (element) {
-                        user.service_address.gps.lat = element.geometry.coordinates[1];
-                        user.service_address.gps.lng = element.geometry.coordinates[0];
-                    });
-
-                    user.save().then(user => res.json(user)).catch(err => console.log(err));
-
-                })
-                .catch(error => {
-                    console.log(error)
-                });
         })
+});
+
+// @Route GET /myAlfred/api/users/profile/address/:id
+// Get service address by id
+// @Access private
+router.get('/profile/address/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    User.findById(req.user.id)
+        .then(user => {
+            const index = req.params.id;
+            const address = user.service_address;
+            const selected = address.map(item => item.id)
+                .indexOf(index);
+            const obj = address[selected];
+            res.json(obj);
+        })
+        .catch(err => console.log(err))
+});
+
+// @Route PUT /myAlfred/api/users/profile/address/:id
+// Edit service address by id
+// @Access private
+router.put('/profile/address/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    User.findById(req.user.id)
+        .then(user => {
+            const index = user.service_address
+                .map(item => item.id)
+                .indexOf(req.params.id);
+            user.service_address[index].label = req.body.label;
+            user.service_address[index].address = req.body.address;
+            user.service_address[index].zip_code = req.body.zip_code;
+            user.service_address[index].city = req.body.city;
+            user.service_address[index].floor = req.body.floor;
+            user.service_address[index].note = req.body.note;
+            user.service_address[index].phone_address = req.body.phone;
+            user.service_address[index].lat = req.body.lat;
+            user.service_address[index].lng = req.body.lng;
+
+            user.save().then(address => res.json(address)).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err))
+});
+
+// @Route DELETE /myAlfred/api/users/profile/address/:id
+// Delete service address by id
+// @Access private
+router.delete('/profile/address/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    User.findById(req.user.id)
+        .then(user => {
+            const index = user.service_address
+                .map(item => item.id)
+                .indexOf(req.params.id);
+            user.service_address.splice(index,1);
+
+            user.save().then(address => res.json(address)).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err))
 });
 
 // @Route PUT /myAlfred/api/users/profile/phone
@@ -403,7 +441,7 @@ router.post('/login',(req, res)=> {
                         const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
 
                         // Sign token
-                        jwt.sign(payload, keys.secretOrKey, {expiresIn: 3600}, (err, token) => {
+                        jwt.sign(payload, keys.secretOrKey, {expiresIn: 14400}, (err, token) => {
                             res.json({success: true, token: 'Bearer ' + token});
                         });
                     } else {
@@ -634,7 +672,9 @@ router.put('/profile/editProfile',passport.authenticate('jwt',{session:false}),(
                 return res.status(400).json({error: "This email already exist"})
             } else {
                 User.findByIdAndUpdate(req.user.id, {
-                    email: req.body.email, phone: req.body.phone, job: req.body.job
+                    email: req.body.email, name: req.body.name, firstname: req.body.firstname, gender: req.body.gender, description:req.body.description,
+                    birthday: req.body.birthday,phone: req.body.phone,diplomes: req.body.diplomes,school: req.body.school,job: req.body.job,languages:req.body.languages,
+                    emergency_phone: req.body.emergency_phone
                 }, {new: true})
                     .then(user => {
                         res.json({success: "Profile updated !"})
@@ -679,5 +719,163 @@ router.put('/profile/editPassword',passport.authenticate('jwt',{session:false}),
     }
 });
 
+// @Route PUT /myAlfred/api/users/account/notifications
+// Edit notifications preferences
+// @Access private
+router.put('/account/notifications',passport.authenticate('jwt',{session:false}),(req,res) => {
+
+        User.findById(req.user.id)
+            .then(user => {
+                //user.notifications_message = {};
+                user.notifications_message.email = req.body.messages_email;
+                user.notifications_message.push = req.body.messages_push;
+                user.notifications_message.sms = req.body.messages_sms;
+
+                //user.notifications_rappel = {};
+                user.notifications_rappel.email = req.body.rappel_email;
+                user.notifications_rappel.push = req.body.rappel_push;
+                user.notifications_rappel.sms = req.body.rappel_sms;
+
+                //user.notifications_promotions = {};
+                user.notifications_promotions.email = req.body.promotions_email;
+                user.notifications_promotions.push = req.body.promotions_push;
+                user.notifications_promotions.sms = req.body.promotions_sms;
+                user.notifications_promotions.phone = req.body.promotions_phone;
+
+                //user.notifications_community = {};
+                user.notifications_community.email = req.body.community_email;
+                user.notifications_community.push = req.body.community_push;
+                user.notifications_community.sms = req.body.community_sms;
+
+                //user.notifications_assistance = {};
+                user.notifications_assistance.push = req.body.assistance_push;
+                user.notifications_assistance.sms = req.body.assistance_sms;
+
+                user.save().then(result => res.json(result)).catch(err => console.log(err));
+            })
+            .catch(err => console.log(err));
+});
+
+// @Route PUT /myAlfred/api/users/account/rib
+// Edit rib
+// @Access private
+router.put('/account/rib',passport.authenticate('jwt',{session:false}),(req,res) => {
+
+    User.findById(req.user.id)
+        .then(user => {
+            user.account= {};
+            user.account.name = req.body.name;
+            user.account.bank = req.body.bank;
+            user.account.bic = req.body.bic;
+            user.account.iban = req.body.iban;
+
+
+
+            user.save().then(result => res.json(result)).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+});
+
+// @Route PUT /myAlfred/api/users/account/lastLogin
+// Push current datetime in array last_login for the user
+// @Access private
+router.put('/account/lastLogin',passport.authenticate('jwt',{session: false}),(req,res) => {
+    User.findById(req.user.id)
+        .then(user => {
+            const arrayLogin = user.last_login;
+            if(arrayLogin.length === 2) {
+                arrayLogin.unshift(Date.now());
+                arrayLogin.pop();
+            } else {
+                arrayLogin.unshift(Date.now());
+            }
+
+            user.save().then(result => res.json(result)).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+});
+
+// @Route PUT /myAlfred/api/users/account/indexGoogle
+// Define preference for indexing account
+// @Access private
+router.put('/account/indexGoogle',passport.authenticate('jwt',{session: false}),(req,res) => {
+    User.findByIdAndUpdate(req.user.id,{index_google: req.body.index_google})
+        .then(user => {
+            res.json(user);
+        })
+        .catch(err => console.log(err));
+});
+
+// @Route DELETE /myAlfred/api/users/profile/picture/delete
+// Delete the picture profile
+// @Access private
+router.delete('/profile/picture/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    User.findByIdAndUpdate(req.user.id,{
+        picture: undefined
+    },{new:true})
+        .then(user => {
+            res.json(user)
+        })
+        .catch(err => console.log(err));
+});
+
+// @Route DELETE /myAlfred/api/users/current/delete
+// Delete the current user
+// @Access private
+router.delete('/current/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    User.findById(req.user.id)
+        .then(user => {
+            user.remove().then(data => console.log('User deleted')).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+});
+
 
 module.exports = router;
+
+/*
+
+router.put('/profile/serviceAddress',passport.authenticate('jwt',{session: false}), (req,res) => {
+
+    User.findById(req.user.id)
+        .then(user => {
+            user.service_address = {};
+            user.service_address.address = req.body.address;
+            user.service_address.zip_code = req.body.zip_code;
+            user.service_address.city = req.body.city;
+
+            if (req.body.country === 'France') {
+                user.service_address.country = 'France';
+            } else {
+                user.service_address.country = 'Maroc';
+            }
+
+            user.service_address.gps = {};
+
+            let address = req.body.address;
+            let city = req.body.city;
+            let zip = req.body.zip_code;
+
+            let newAddress = address.replace(/ /g, '+');
+
+            const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
+
+            axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
+                .then(response => {
+
+                    let result = response.data.features;
+
+                    result.forEach(function (element) {
+                        user.service_address.gps.lat = element.geometry.coordinates[1];
+                        user.service_address.gps.lng = element.geometry.coordinates[0];
+                    });
+
+                    user.save().then(user => res.json(user)).catch(err => console.log(err));
+
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        })
+});
+ */

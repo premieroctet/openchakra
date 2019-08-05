@@ -18,20 +18,19 @@ import FormControl from "@material-ui/core/FormControl";
 import Chip from '@material-ui/core/Chip';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import Select2 from 'react-select';
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '170vh',
         justifyContent: 'top',
         flexDirection: 'column',
 
     },
     card: {
         padding: '1.5rem 3rem',
-        width: 400,
         marginTop: '100px',
     },
     cardContant: {
@@ -77,10 +76,14 @@ class add extends React.Component {
             all_category: [],
             all_tags: [],
             all_equipments: [],
+            selectedOption: null,
+            selectedTags: null,
             errors: {},
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeFile = this.onChangeFile.bind(this);
+        this.handleChangeSelect = this.handleChangeSelect.bind(this);
+        this.handleChangeTags = this.handleChangeTags.bind(this);
     }
 
     componentDidMount() {
@@ -127,6 +130,15 @@ class add extends React.Component {
 
 
     };
+    handleChangeSelect = selectedOption => {
+        this.setState({ selectedOption });
+
+    };
+
+    handleChangeTags = selectedTags => {
+        this.setState({ selectedTags });
+
+    };
 
     onChangeFile(e){
         this.setState({picture:e.target.files[0]})
@@ -139,13 +151,30 @@ class add extends React.Component {
 
     onSubmit = e => {
         e.preventDefault();
+        let arrayEquipments = [];
+        let arrayTags = [];
+        if(this.state.selectedOption != null){
+            this.state.selectedOption.forEach(c => {
+
+                arrayEquipments.push(c.value);
+
+            });
+        }
+
+        if(this.state.selectedTags != null){
+            this.state.selectedTags.forEach(w => {
+
+                arrayTags.push(w.value);
+
+            });
+        }
 
         const formData = new FormData();
         formData.append('label',this.state.label);
         formData.append('picture',this.state.picture);
         formData.append('category',this.state.category);
-        formData.append('tags',this.state.tags);
-        formData.append('equipments',this.state.equipments);
+        formData.append('tags',JSON.stringify(arrayTags));
+        formData.append('equipments',JSON.stringify(arrayEquipments));
         formData.append('description',this.state.description);
         formData.append('majoration',this.state.majoration);
 
@@ -181,6 +210,16 @@ class add extends React.Component {
 
         ));
         const {isChecked} = this.state;
+
+        const options = all_equipments.map(equipment => ({
+            label: equipment.label,
+            value: equipment._id
+        }));
+
+        const optionsTags = all_tags.map(tag => ({
+            label: tag.label,
+            value: tag._id
+        }));
 
 
         return (
@@ -229,55 +268,34 @@ class add extends React.Component {
                                     </FormControl>
                                     <em>{errors.category}</em>
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%', marginTop: 20}}>
+                                    <Typography style={{ fontSize: 20 }}>Tags</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
-                                        <Select
-                                            multiple
-                                            value={this.state.tags}
-                                            onChange={this.handleChange}
-                                            input={<Input id="select-multiple-chip" />}
-                                            renderValue={selected => (
-                                                <div className={classes.chips}>
-                                                    {selected.map(value => (
-                                                        <Chip key={value} label={value} className={classes.chip} />
-                                                    ))}
-                                                </div>
-                                            )}
-                                            MenuProps={MenuProps}
-                                        >
-                                            {all_tags.map(name => (
-                                                <MenuItem key={name._id} value={name._id} >
-                                                    {name.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
+                                        <Select2
+                                            value={this.state.selectedTags}
+                                            onChange={this.handleChangeTags}
+                                            options={optionsTags}
+                                            isMulti
+                                            isSearchable
+                                            closeMenuOnSelect={false}
+
+                                        />
                                     </FormControl>
                                     <em>{errors.tags}</em>
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
+                                    <Typography style={{ fontSize: 20 }}>Equipements</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel htmlFor="select-multiple-chip">Equipements</InputLabel>
-                                        <Select
-                                            multiple
-                                            value={this.state.equipments}
-                                            onChange={this.handleChange2}
-                                            input={<Input id="select-multiple-chip" />}
-                                            renderValue={selected => (
-                                                <div className={classes.chips}>
-                                                    {selected.map(value => (
-                                                        <Chip key={value} label={value} className={classes.chip} />
-                                                    ))}
-                                                </div>
-                                            )}
-                                            MenuProps={MenuProps}
-                                        >
-                                            {all_equipments.map(name => (
-                                                <MenuItem key={name._id} value={name._id} >
-                                                    {name.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
+
+                                        <Select2
+                                            value={this.state.selectedOption}
+                                            onChange={this.handleChangeSelect}
+                                            options={options}
+                                            isMulti
+                                            isSearchable
+                                            closeMenuOnSelect={false}
+
+                                        />
                                     </FormControl>
                                     <em>{errors.equipments}</em>
                                 </Grid>

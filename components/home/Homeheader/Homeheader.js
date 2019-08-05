@@ -179,7 +179,6 @@ const styles = theme => ({
   },
   button: {
     width:'100%',
-    backgroundColor:'#23c1ed',
     color: 'white',
     padding:15,
     borderRadius:10,
@@ -238,7 +237,7 @@ const Homeheader = (props) => {
           </div>
         
         <Pickerhome />
-        <Button variant="outlined" className={classes.button}>
+        <Button variant="contained" color={'primary'} className={classes.button}>
         Rechercher
       </Button>
         </form>

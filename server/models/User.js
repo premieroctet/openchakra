@@ -48,7 +48,7 @@ const UserSchema = new Schema({
             lng: Number
         }
     },
-    service_address: {
+    service_address: [{
         address: {
             type: String
         },
@@ -58,14 +58,26 @@ const UserSchema = new Schema({
         zip_code: {
             type: String
         },
-        country: {
+        lat: {
+            type: Number
+
+        },
+        lng: {
+            type: Number
+        },
+        label: {
             type: String
         },
-        gps: {
-            lat: Number,
-            lng: Number
+        floor: {
+            type: String
+        },
+        note: {
+            type: String
+        },
+        phone_address: {
+            type: String
         }
-    },
+    }],
     picture: {
         type: String
     },
@@ -76,6 +88,21 @@ const UserSchema = new Schema({
     job: {
         type: String
     },
+    diplomes: {
+      type: String
+    },
+    school: {
+      type: String
+    },
+    languages: [{
+        type: String
+    }],
+    emergency_phone: {
+      type: String
+    },
+    description: {
+      type: String
+    },
     id_card: {
       recto: {
           type: String
@@ -85,16 +112,10 @@ const UserSchema = new Schema({
       }
     },
     account: {
-        bank_code: {
+        bank: {
             type: String
         },
-        guichet_code: {
-            type: String
-        },
-        account_number: {
-            type: String
-        },
-        rib_key: {
+        name: {
             type: String
         },
         iban: {
@@ -103,6 +124,80 @@ const UserSchema = new Schema({
         bic: {
             type: String
         }
+    },
+    notifications_message: {
+      email: {
+          type: Boolean,
+          default: true
+      },
+      push: {
+            type: Boolean,
+            default: false
+      },
+      sms: {
+          type: Boolean,
+          default: false
+      },
+    },
+    notifications_rappel: {
+        email: {
+            type: Boolean,
+            default: true
+        },
+        push: {
+            type: Boolean,
+            default: false
+        },
+        sms: {
+            type: Boolean,
+            default: false
+        },
+    },
+    notifications_promotions: {
+        email: {
+            type: Boolean,
+            default: true
+        },
+        push: {
+            type: Boolean,
+            default: false
+        },
+        phone: {
+          type: Boolean,
+          default: false
+        },
+        sms: {
+            type: Boolean,
+            default: false
+        },
+    },
+    notifications_community: {
+        email: {
+            type: Boolean,
+            default: true
+        },
+        push: {
+            type: Boolean,
+            default: false
+        },
+        sms: {
+            type: Boolean,
+            default: false
+        },
+    },
+    notifications_assistance: {
+        email: {
+            type: Boolean,
+            default: true
+        },
+        push: {
+            type: Boolean,
+            default: false
+        },
+        sms: {
+            type: Boolean,
+            default: false
+        },
     },
     score: {
         type: Number,
@@ -128,9 +223,20 @@ const UserSchema = new Schema({
       type: Boolean,
       default: false
     },
+    phone_confirmed: {
+      type: Boolean,
+      default: false
+    },
+    last_login: [{
+        type: Date,
+    }],
     is_alfred: {
         type: Boolean,
         default: false
+    },
+    index_google: {
+      type: Boolean,
+      default: true
     },
     super_alfred: {
         type: Boolean,

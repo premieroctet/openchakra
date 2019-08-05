@@ -6,6 +6,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 import getPageContext from '../lib/getPageContext';
 import "react-input-range/lib/css/index.css";
+import '../static/stylesfonts.css'
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import '../static/form.css';
+import '../static/forminputs.css';
+import "../static/inputRange.css";
 
 class MyApp extends App {
   constructor() {

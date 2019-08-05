@@ -66,18 +66,6 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
             } else {
                 console.log('No file uploaded');
             }
-            fields.gps = {};
-
-            const url = req.body.city +'&format=geojson&limit=1';
-            axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
-                .then(response => {
-
-                    let result = response.data.features;
-
-                    result.forEach(function (element) {
-                        fields.gps.lat = element.geometry.coordinates[1];
-                        fields.gps.lng = element.geometry.coordinates[0];
-                    });
 
                     fields.description = req.body.description;
                     fields.equipments = JSON.parse(req.body.equipments);
@@ -88,14 +76,26 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
                         fields.majoration.active = false;
                     }
 
+            fields.service_address = {};
+            fields.service_address.address = req.body.address;
+            fields.service_address.zip_code = req.body.zip_code;
+            fields.service_address.city = req.body.city;
+            fields.service_address.country = req.body.country;
+
+
+
+            fields.service_address.gps = {};
+            fields.service_address.gps.lat = req.body.lat;
+            fields.service_address.gps.lng = req.body.lng;
+
                     fields.majoration.price = parseInt(req.body.price);
                     const newService = new ServiceUser(fields);
                     newService.save().then(service => res.json(service)).catch(err => console.log(err));
 
                 })
-                .catch(error => {
-                    console.log(error)
-                });
+        .catch(error => {
+            console.log(error)
+        });
 
 
 
@@ -106,7 +106,7 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
 
 
 
-        })
+
 });
 
 // @Route PUT /myAlfred/api/serviceUser/edit/:id
@@ -117,7 +117,12 @@ router.put('/edit/:id',passport.authenticate('jwt',{session:false}),(req,res) =>
         .then(serviceUser => {
 
 
-            serviceUser.city=req.body.city;
+            serviceUser.service_address.address = req.body.address;
+            serviceUser.service_address.zip_code = req.body.zip_code;
+            serviceUser.service_address.city = req.body.city;
+            serviceUser.service_address.country = req.body.country;
+            serviceUser.service_address.gps.lat = req.body.lat;
+            serviceUser.service_address.gps.lng = req.body.lng;
             serviceUser.perimeter= req.body.perimeter;
             serviceUser.minimum_basket= req.body.minimum_basket;
             serviceUser.deadline_before_booking= req.body.deadline_before_booking;
@@ -358,6 +363,18 @@ router.put('/deletePrestation/:id', passport.authenticate('jwt', { session: fals
             .catch(err => res.status(404).json(err));
     }
 );
+
+// @Route DELETE /myAlfred/api/serviceUser/current/allServices
+// Delete all the service for an alfred
+// @Access private
+router.delete('/current/allServices', passport.authenticate('jwt', { session: false }), (req, res) => {
+    ServiceUser.find({user: req.user.id})
+        .then(services => {
+            services.remove().then(() => res.json({success: true}));
+
+        })
+        .catch(err => res.status(404).json({servicenotfound: 'No service found'}));
+});
 
 // @Route DELETE /myAlfred/api/serviceUser/:id
 // Delete a service for an alfred

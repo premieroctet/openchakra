@@ -121,7 +121,7 @@ class editWelcomeMessage extends React.Component {
                                         style={{ width: '100%' }}
                                         type="text"
                                         multiline
-                                        rowsMax="4"
+                                        rows={4}
                                         name="welcome_message"
                                         value={this.state.welcome_message}
                                         onChange={this.onChange}
@@ -131,7 +131,7 @@ class editWelcomeMessage extends React.Component {
 
 
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color:'white' }}>
                                         Valider
                                     </Button>
                                 </Grid>

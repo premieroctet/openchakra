@@ -11,11 +11,13 @@ const ServiceUserSchema = new Schema({
         ref: 'service'
     },
     prestations:[{
-        prestation:{type: Schema.Types.ObjectId,
-            ref: 'prestation'}
-
-
-        ,
+        prestation:{
+            type: Schema.Types.ObjectId,
+            ref: 'prestation'
+        },
+        billing: {
+            type: String
+        },
         price: Number
     }],
     equipments: [{
@@ -24,16 +26,23 @@ const ServiceUserSchema = new Schema({
             ref: 'equipment'
 
     }],
-    city: {
-        type: String,
-    },
-    gps : {
-      lat: {
-          type: Number
-      },
-      lng: {
-          type: Number
-      }
+    service_address: {
+        address: {
+            type: String
+        },
+        city: {
+            type: String
+        },
+        zip_code: {
+            type: String
+        },
+        country: {
+            type: String
+        },
+        gps : {
+            lat: Number,
+            lng: Number
+        }
     },
     perimeter: {
         type: Number
@@ -49,14 +58,30 @@ const ServiceUserSchema = new Schema({
         default: false
     },
     diploma: {
-        type: String
+        name: {
+            type: String
+        },
+        year: {
+            type: Date
+        },
+        file: {
+            type: String
+        }
     },
     is_certified: {
         type: Boolean,
         default: false
     },
     certification: {
-        type: String
+        name: {
+            type: String
+        },
+        year: {
+            type: Date
+        },
+        file: {
+            type: String
+        }
     },
     majoration: {
         active: {
@@ -67,7 +92,24 @@ const ServiceUserSchema = new Schema({
             type: Number
         }
     },
+    option: {
+      label: {
+          type: String
+      },
+      unity: {
+          type: String
+      },
+      price: {
+          type: Number
+      },
+      option_extra: {
+          type: String
+      }
+    },
     description: {
+        type: String
+    },
+    level: {
         type: String
     }
 });

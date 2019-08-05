@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import "react-tabs/style/react-tabs.css";
 import InputRange from 'react-input-range';
-import "../../static/inputRange.css";
+
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -35,9 +35,10 @@ import MultipleSelect from './MultipleSelect';
 import Calendar from '../Calendar/calendar';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CityFinder from './CityFinder';
+import AddressFinder from './AddressFinder';
 import Siret from './Siret';
-import '../../static/form.css';
-import '../../static/forminputs.css';
+import Availability from './Availability';
+
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -48,7 +49,13 @@ const styles = theme => ({
     cardContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1.5rem 3rem 0 3rem'
+        padding: '1.5rem 3rem 0 3rem',
+        [theme.breakpoints.down('sm')]: {
+            padding: '0'
+        },
+        fontFamily: 'helveticaNeue',
+        overflow: 'scroll',
+        height: 'auto',
     },
     card: {
         minHeight: '400px !important',
@@ -209,7 +216,28 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             display: 'none',
         },
-    }
+    },
+    delayDivResponsive: {
+        [theme.breakpoints.down('sm')]: {
+            textAlign: 'center',
+        },
+    },
+    selectDelayInputRepsonsive: {
+        [theme.breakpoints.down('sm')]: {
+            width: '100%!important',
+        },
+    },
+    inputDiplomaCertifResp: {
+        [theme.breakpoints.down('sm')]: {
+            width: '100%!important',
+        },
+    },
+    prestationsPres: {
+        padding: '0 2rem',
+        [theme.breakpoints.down('sm')]: {
+            padding: '0!important',
+        }
+    },
 
 });
 
@@ -255,7 +283,7 @@ class Wizard extends React.Component {
                     a.prestations.forEach(b => {
 
                         if(b.checked === true) {
-                            const newObj = {prestation: b.id, price: b.price};
+                            const newObj = {prestation: b.id, price: b.price, billing:b.billing};
                             arrayPrestations.push(newObj);
 
                         }
@@ -410,7 +438,6 @@ class Wizard extends React.Component {
             bag.setTouched({});
             bag.setSubmitting(false);
             this.next(values);
-            console.log(this.state);
         }
     };
 
@@ -421,9 +448,8 @@ class Wizard extends React.Component {
           submission: Yup.array().of(Yup.object().shape({
             descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
             minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').required('Le minimum d\'achat est requis'),
-            delayBeforeShop: Yup.number().typeError('Le délai doit être un nombre').required(),
             delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi heures, jours et semaines').required(),
-            city: Yup.object().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
+            city: Yup.string().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
             filters: Yup.array().of(Yup.object().shape({
                 prestations: Yup.array().of(Yup.object().shape({
                     checked: Yup.boolean(),
@@ -448,10 +474,8 @@ class Wizard extends React.Component {
         }),
         createShop: Yup.object().shape({
             is_professional: Yup.boolean(),
-            is_microCompany: Yup.boolean(),
-            isIndividualCompany: Yup.boolean(),
-            id_recto: Yup.mixed().required('Veuillez uploader le recto de votre carte d\'identité'),
-            id_verso: Yup.mixed().required('Veuillez uploader le verso de votre carte d\'identité'),
+            id_recto: Yup.mixed().required('Veuillez uploader le recto de votre carte d\'identité ou bien votre passeport'),
+            id_verso: Yup.mixed(),
             siret: Yup.string()
                 .when('is_professional', {
                     is: true,
@@ -474,6 +498,12 @@ class Wizard extends React.Component {
                 .when('is_professional', {
                     is: true,
                     then: Yup.string().length(5, 'Code APE invalide'),
+                    otherwise: Yup.string().notRequired(),
+                }),
+            nature_juridique: Yup.string()
+                .when('is_professional', {
+                    is: true,
+                    then: Yup.string().required('Veuillez renseigner le statut juridique'),
                     otherwise: Yup.string().notRequired(),
                 }),
             isEngaged: Yup.boolean().oneOf([true], 'Veuillez vous engager'),
@@ -511,16 +541,20 @@ class Wizard extends React.Component {
                             {page === 5 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
                             <div>
                                 <Bar style={{backgroundColor: '#cacfe4'}}>
-                                    <Fill4 />
+                                    {page === 1 ? <Fill width={'20%'} /> : null}
+                                    {page === 2 ? <Fill width={'40%'} /> : null}
+                                    {page === 3 ? <Fill width={'60%'} /> : null}
+                                    {page === 4 ? <Fill width={'80%'} /> : null}
+                                    {page === 5 ? <Fill width={'100%'} /> : null}
                                 </Bar>
                             </div>
                         </div>}
-                        <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row'}}>
-                            <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none'}}>
-                                <div style={{height: page !== 0 ? '85%' : '94vh', overflowY: 'scroll'}}>
+                        <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh'}}>
+                            <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%'}}>
+                                <div style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative'}}>
                                     {activePage}
                                 </div>
-                                <div className="buttons" style={{position: 'absolute', bottom: 0, left: 0, top: page === 2 ? '726px' : 'none', width: '100%', padding: '0 3rem 3rem 3rem', backgroundColor: 'transparent', zIndex: '9999999'}}>
+                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '9999999'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
                                         {page !== 0 && <Button
                                             color="primary"
@@ -566,7 +600,7 @@ class Wizard extends React.Component {
                                                 }
 
                                                 return (
-                                                    <Button type="submit" variant="contained" color="secondary" style={{marginTop: '45px', color: !checkArr.some(check) ? 'white' : null }} disabled={checkArr.some(check) ? true : false}>
+                                                    <Button type="submit" variant="contained" color="secondary" style={{color: !checkArr.some(check) ? 'white' : null }} disabled={checkArr.some(check) ? true : false}>
                                                         Suivant
                                                     </Button>
                                                 )
@@ -576,7 +610,7 @@ class Wizard extends React.Component {
                                             type="submit"
                                             variant="contained"
                                             color="secondary"
-                                            style={{marginTop: '45px', color: 'white'}}
+                                            style={{ color: 'white'}}
                                         >
                                             Suivant
                                         </Button>}
@@ -591,7 +625,7 @@ class Wizard extends React.Component {
                                             }
         
                                             return (
-                                                <Button type="submit" variant="contained" color="secondary" style={{marginTop: '45px', color: !cancel ? 'white' : null }} disabled={cancel}>
+                                                <Button type="submit" variant="contained" color="secondary" style={{color: !cancel ? 'white' : null }} disabled={cancel}>
                                                     Suivant
                                                 </Button>
                                             )
@@ -602,38 +636,21 @@ class Wizard extends React.Component {
 
                                                 if (form.values.createShop.is_particular === true) {
                                                     check = false;
-                                                } else if(form.values.createShop.is_professional === true && form.values.createShop.is_microCompany === true) {
+                                                } else if(form.values.createShop.is_professional === true) {
                                                     check = false;
-                                                } else if (form.values.createShop.is_professional === true && form.values.createShop.isIndividualCompany === true) {
+                                                } else if (form.values.createShop.is_professional === true) {
                                                     check = false;
                                                 } else {
                                                     check = true;
                                                 }
 
                                                 return (
-                                                    <Button type="submit" variant="contained" style={{marginTop: '45px', color: !check ? 'white' : null }} color="secondary" disabled={check}>
+                                                    <Button type="submit" variant="contained" style={{color: !check ? 'white' : null }} color="secondary" disabled={check}>
                                                         Envoyer
                                                     </Button>
                                                 )
                                             }} />}
                                     </div>
-                                    {/* POUR REVENIR EN ARRIERE */}
-                                    {/*page > 0 && (
-                        <button
-                        type="button"
-                        className="secondary"
-                        onClick={this.previous}
-                        >
-                        « Previous
-                        </button>
-                    )*/}
-
-                                    {/*!isLastPage && <button type="submit">Next »</button>*/}
-                                    {/*isLastPage && (
-                                        <button type="submit" disabled={isSubmitting}>
-                                            Submit
-                                        </button>
-                                    )*/}
                                 </div>
                             </div>
                             <div className="imgDiv" style={{width: '40%', overflow: 'hidden'}}>
@@ -678,8 +695,9 @@ class Thumb extends React.Component {
 
         return (<img src={thumb}
                      alt={file.name}
-                     height={50}
-                     width={50} />);
+                     height={100}
+                     width={100}
+                     style={{borderRadius: '50%'}} />);
     }
 }
 
@@ -735,6 +753,9 @@ class Form extends React.Component {
             moderate_cancel: false,
             strict_cancel: false,
             welcome_message: "",
+
+            no_booking: false,
+            all_options: [],
         }
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -745,11 +766,14 @@ class Form extends React.Component {
     }
 
     componentDidMount() {
+        document.body.style.overflow = 'hidden';
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
-                console.log(res.data.billing_address.city);
                 this.state.userCity = {label: res.data.billing_address.city, value: res.data.billing_address.city};
+                this.state.userAddress = {label: res.data.billing_address.address, value: res.data.billing_address.address};
+                this.state.userZipCode = {label: res.data.billing_address.zip_code, value: res.data.billing_address.zip_code};
+                this.state.userCountry = {label: res.data.billing_address.country, value: res.data.billing_address.country};
             })
             .catch(error => {
                 console.log(error);
@@ -762,12 +786,18 @@ class Form extends React.Component {
                 }
                 const options = categories.map(categorie => {
                     return { value: categorie._id, label: categorie.label, [categorie.label.replace(/\s/g, '') + 'Services']: [] };
-                })
+                });
                 this.setState({ categories: options });
             })
             .catch(error => {
                 console.log(error);
+            });
+        axios.get(url+'myAlfred/api/options/all')
+            .then(res => {
+                let options = res.data;
+                this.setState({all_options: options});
             })
+            .catch(err => console.log(err));
     }
 
     handleCategorieChange(categorie, formikCtx) {
@@ -840,6 +870,11 @@ class Form extends React.Component {
         const {classes} = this.props;
         // Ca va dégager
         const { isChecked, isProfessional } = this.state;
+        let dates = [];
+        const actualDate = new Date().getFullYear();
+            for (let i = 1950; i <= actualDate; i++) {
+                dates.push(i);
+            }
 
         return (
             <div className="App" style={{marginTop: 64}}>
@@ -869,6 +904,7 @@ class Form extends React.Component {
                             creationDate: '',
                             denomination: '',
                             nafape: '',
+                            nature_juridique: '',
                             isEngaged: false,
                             isCertified: false,
                         },
@@ -876,6 +912,61 @@ class Form extends React.Component {
                             phone: '',
                             profile_picture_user: null,
                         },
+                        servicesAvailability: {
+                            monday_event: [],
+                            tuesday_event: [],
+                            wednesday_event: [],
+                            thursday_event: [],
+                            friday_event: [],
+                            saturday_event: [],
+                            sunday_event: [],
+                
+                            active: false,
+                            month_begin: '',
+                            month_end: '',
+                
+                            monday_begin: '',
+                            tuesday_begin: '',
+                            wednesday_begin: '',
+                            thursday_begin: '',
+                            friday_begin: '',
+                            saturday_begin: '',
+                            sunday_begin: '',
+                
+                            monday_end: '',
+                            tuesday_end: '',
+                            wednesday_end: '',
+                            thursday_end: '',
+                            friday_end: '',
+                            saturday_end: '',
+                            sunday_end: '',
+                
+                            monday_service: null,
+                            tuesday_service: null,
+                            wednesday_service: null,
+                            thursday_service: null,
+                            friday_service: null,
+                            saturday_service: null,
+                            sunday_service: null,
+                
+                            monday_all_service: false,
+                            tuesday_all_service: false,
+                            wednesday_all_service: false,
+                            thursday_all_service: false,
+                            friday_all_service: false,
+                            saturday_all_service: false,
+                            sunday_all_service: false,
+                
+                
+                            monday: false,
+                            tuesday: false,
+                            wednesday: false,
+                            thursday: false,
+                            friday: false,
+                            saturday: false,
+                            sunday: false,
+                            all_service: []
+                        }, 
                         checkArr: []
                     }}
                     onSubmit={(values, actions) => {
@@ -886,38 +977,37 @@ class Form extends React.Component {
                     }}
                 >
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card} style={{width: '100%'}}>
-                                <div style={{padding: '0rem 2rem 1rem 2rem'}}>
-                                    <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
-                                    <hr style={{margin: '1rem 0'}} />
+                        <Grid container className={classes.cardContainer} style={{justifyContent: 'start'}}>
+                            
+                            <div style={{padding: '0rem 2rem 1rem 2rem', width: '100%'}}>
+                                <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
+                                <hr style={{margin: '1rem 0'}} />
+                            </div>
+                            <div className="steps">
+                                <div className="step1">
+                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 1</Typography>
+                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                    <Typography style={{fontSize: 18}}>Créez votre boutique de service</Typography>
+                                    <Typography>Sélectionnez les services que vous souhaitez offrir</Typography>
                                 </div>
-                                <div className="steps">
-                                    <div className="step1">
-                                        <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 1</Typography>
-                                        <hr style={{border: '4px solid grey', marginRight: 150}} />
-                                        <Typography style={{fontSize: 18}}>Créez votre boutique de service</Typography>
-                                        <Typography>Sélectionnez les services que vous souhaitez offrir</Typography>
-                                    </div>
-                                    <div className="step2">
-                                        <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 2</Typography>
-                                        <hr style={{border: '4px solid grey', marginRight: 150}} />
-                                        <Typography style={{fontSize: 18}}>Indiquez vos disponiblités & conditions</Typography>
-                                        <Typography>Indiquez vos disponibilités ,paramètres de réservation et vos conditions d’annulation</Typography>
-                                    </div>
-                                    <div className="step3">
-                                        <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 3</Typography>
-                                        <hr style={{border: '4px solid grey', marginRight: 150}} />
-                                        <Typography style={{fontSize: 18}}>Présentez-vous !</Typography>
-                                        <Typography>Renseignez votre profil Alfred, partager vos réalisa- tions, et décrivez vous !</Typography>
-                                    </div>
-                                </div> 
-                            </Card>
+                                <div className="step2">
+                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 2</Typography>
+                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                    <Typography style={{fontSize: 18}}>Indiquez vos disponiblités & conditions</Typography>
+                                    <Typography>Indiquez vos disponibilités ,paramètres de réservation et vos conditions d’annulation</Typography>
+                                </div>
+                                <div className="step3">
+                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 3</Typography>
+                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                    <Typography style={{fontSize: 18}}>Présentez-vous !</Typography>
+                                    <Typography>Renseignez votre profil Alfred, partager vos réalisa- tions, et décrivez vous !</Typography>
+                                </div>
+                            </div> 
+                            
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card}>
+                        <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start'}}>
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Vos catégories de service</Typography>
                                     <Typography>
@@ -976,13 +1066,13 @@ class Form extends React.Component {
                                                                         id={`panel${index + 1}a-header`}
                                                                     >
                                                                         <Typography>{categorie.label}</Typography>
-                                                                        <Typography align="center" style={{marginLeft: 80, color: "grey"}}>Choisissez vos services pour {categorie.label}</Typography>
+                                                                        {/*<Typography align="center" style={{marginLeft: 80, color: "grey"}}>Choisissez vos services pour {categorie.label}</Typography>*/}
                                                                     </ExpansionPanelSummary>
                                                                     <ExpansionPanelDetails>
-                                                                        <Grid container>
+                                                                        <Grid container spacing={2}>
                                                                             {categorie[categorie.label.replace(/\s/g, '') + 'Services'].map((service, index) => {
                                                                                 return (
-                                                                                    <Grid item xs={3}>
+                                                                                    <Grid item xs={6} sm={6} md={3}>
                                                                                         <FormControlLabel
                                                                                             key={index}
                                                                                             control={
@@ -1032,7 +1122,7 @@ class Form extends React.Component {
                                 <Field>
                                     {({form}) => {
                                         return form.values.services && form.values.services.length > 0 ?
-                                            <div style={{padding: '0 2rem'}}>
+                                            <div style={{padding: '0 2rem 1rem 2rem'}}>
                                                 <Button
                                                     color="primary"
                                                     style={{marginTop: '.5rem', color: 'white', borderRadius: 8}}
@@ -1043,7 +1133,6 @@ class Form extends React.Component {
                                                         let uniqueIdFilters = [];
                                                         let uniqueIdPrestations = [];
                                                         const services = form.values.services;
-                                                        //console.log(services);
                                                         let arrServices = [];
                                                         services.map((service, index) => {
                                                             this.setState({
@@ -1052,7 +1141,38 @@ class Form extends React.Component {
                                                             })
                                                             axios.get(`${url}myAlfred/api/service/${service}`)
                                                                 .then(res => {
-                                                                    let servCompObj = { CategoryLabel : res.data.category.label, serviceId: res.data._id, serviceLabel: res.data.label, descService: '', minimumBasket: '', diploma: { label: null, year: null, document: null }, certification: { label : null, year: null, document: null }, perimeter: 50, delayBeforeShop: 1, delayBeforeShopDWM: null, city: this.state.userCity, experienceYears: null, option: null, increases: { label: res.data.majoration, price: 0, checked: false }, prestationsCount: 0, cancelChoice: false, equipments: [], filters: [] }
+                                                                    let servCompObj = { 
+                                                                        CategoryLabel : res.data.category.label, 
+                                                                        serviceId: res.data._id, 
+                                                                        serviceLabel: res.data.label,
+                                                                        descService: '', 
+                                                                        minimumBasket: '', 
+                                                                        diploma: { 
+                                                                            label: null, 
+                                                                            year: null, 
+                                                                            document: null 
+                                                                        }, certification: { 
+                                                                            label : null, 
+                                                                            year: null, 
+                                                                            document: null 
+                                                                        }, perimeter: 50, 
+                                                                        delayBeforeShop: 1, 
+                                                                        delayBeforeShopDWM: null, 
+                                                                        city: this.state.userCity, 
+                                                                        address: this.state.userAddress, 
+                                                                        postal_code: this.state.userZipCode, 
+                                                                        country: this.state.userCountry, 
+                                                                        experienceYears: null, 
+                                                                        option: null, 
+                                                                        increases: { 
+                                                                            label: res.data.majoration, 
+                                                                            price: 0, checked: false 
+                                                                        }, 
+                                                                        prestationsCount: 0, 
+                                                                        cancelChoice: false, 
+                                                                        equipments: [], 
+                                                                        filters: [] 
+                                                                    }
                                                                     res.data.equipments.map(e => {
                                                                         const equipObj = { id: e._id, label: e.label, logo: e.logo, name_logo: e.name_logo, checked: false }
                                                                         servCompObj.equipments.push(equipObj);
@@ -1073,8 +1193,7 @@ class Form extends React.Component {
                                                                                 axios.get(`${url}myAlfred/api/prestation/${service}/${filterObj.id}`)
                                                                                     .then(res => {
                                                                                         res.data.map(prestation => {
-                                                                                            console.log(prestation)
-                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: 0, billing: prestation.billing.label, checked: false };
+                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: 0, billing: prestation.billing, checked: false };
                                                                                             servCompObj.filters.map(p => {
                                                                                                 if (p.id === prestationObj.filterId) {
                                                                                                     p.prestations.push(prestationObj);
@@ -1098,49 +1217,36 @@ class Form extends React.Component {
                                                                         })
                                                                 })
                                                         });
-                                                        //console.log(this.state.arrServices);
-                                                        //console.log(this.state.arrServicesLabel);
                                                     }}
                                                 >
                                                     Je valide mes services
                                                 </Button>
-                                                {/*form.values.submission.length > 0 ?
-                        <Button type="submit" variant="contained" color="primary" className={classes.button}>
-                          Étape suivante
-                        </Button> : null*/
-                                                }
                                             </div> : null;
                                     }}
-                                </Field>
-                            </Card>
+                                </Field>    
+                                              
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card}>
+                            
                                 <FieldArray
                                     name="submission"
                                     render={(arrayHelpers) => {
                                         // POUR LES DATES D OBTENTIONS DE DIPLOME ET CERTIFS
-                                        let dates = [];
-                                        const actualDate = new Date().getFullYear();
-                                        for (let i = 1950; i <= actualDate; i++) {
-                                            dates.push(i);
-                                            console.log(dates);
-                                            console.log(arrayHelpers);
-                                        }
+                                        
                                         return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
                                             <React.Fragment>
-                                                <div style={{padding: '0rem 2rem 1rem 2rem'}}>
+                                                <div style={{padding: '2rem 2rem 1rem 2rem'}}>
                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Paramétrez vos services & prestations</Typography>
                                                     <Typography>
                                                         Indiquez les prestations que vous souhaitez réaliser dans chacun de vos services. Indiquez vos tarifs et vos éventuelles majoration sur les services éligibles.
                                                     </Typography>
                                                 </div>
                                                 <Tabs>
-                                                    <TabList style={{padding: '0 2rem'}}>
+                                                    <TabList>
                                                         {this.state.allInOneServ.map((data, index) => {
-                                                            return <Tab key={index} /*style={{backgroundColor: '#2FBCD3', color: 'white', fontSize: '20px', border: '1px solid white', borderTopRightRadius: 20, marginRight: '-40px', position: 'relative', zIndex: 999 - index}}*/><div style={{padding: '0 2rem 0 2rem'}}>{data.serviceLabel}</div></Tab>
+                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{data.serviceLabel}</div></Tab>
                                                         })}
                                                     </TabList>
                                                     {this.state.allInOneServ.map((s, index) => {
@@ -1161,13 +1267,13 @@ class Form extends React.Component {
                                                                                         item
                                                                                         xs={12}
                                                                                         key={indexf}
-                                                                                        style={{padding: '0 2rem'}}
+                                                                                        className={classes.prestationsPres}
                                                                                     >
                                                                                         <p>{f.label}</p>
                                                                                         <Grid container>
                                                                                         {f.prestations.map((p, indexp) => {
                                                                                             return(
-                                                                                                <Grid item xs={3} key={indexp}>
+                                                                                                <Grid item xs={6} sm={6} md={3} key={indexp}>
                                                                                                     <FormControlLabel
                                                                                                         control={
                                                                                                             <Switch
@@ -1188,7 +1294,7 @@ class Form extends React.Component {
                                                                                                         label={p.label}
                                                                                                     />
                                                                                                     {p.checked === true ?
-                                                                                                        <Field
+                                                                                                        <React.Fragment><Field
                                                                                                             name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`}
                                                                                                             placeholder="prix"
                                                                                                             render={({field, form}) => {
@@ -1196,20 +1302,52 @@ class Form extends React.Component {
                                                                                                                     <React.Fragment>
                                                                                                                         <TextField
                                                                                                                             {...field}
-                                                                                                                            style={{width: 90}}
-                                                                                                                            label={`Prix/${p.billing}`}
+                                                                                                                            style={{width: 125}}
+                                                                                                                            label={`Prix`}
                                                                                                                             type="number"
                                                                                                                             disabled={!p.checked}
                                                                                                                             margin="none"
                                                                                                                             InputProps={{
+                                                                                                                                inputProps: {
+                                                                                                                                    min: 0
+                                                                                                                                },
                                                                                                                                 startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                        
                                                                                                                             }}
                                                                                                                         />
                                                                                                                         <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                                                     </React.Fragment>
                                                                                                                 )
                                                                                                             }}
-                                                                                                        /> : null}
+                                                                                                        />
+                                                                                                            <Field
+                                                                                                                name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`}
+                                                                                                                placeholder="méthode de facturation"
+                                                                                                                render={({field, form}) => {
+                                                                                                                    return (
+                                                                                                                        <React.Fragment>
+                                                                                                                            <TextField
+                                                                                                                                {...field}
+                                                                                                                                helperText={`Méthode de facturation`}
+                                                                                                                                disabled={!p.checked}
+                                                                                                                                select
+                                                                                                                                margin="none"
+
+                                                                                                                            >
+                                                                                                                                {p.billing.map(option => (
+                                                                                                                                    <MenuItem key={option.value} value={option.label}>
+                                                                                                                                        {option.label}
+                                                                                                                                    </MenuItem>
+                                                                                                                                ))}
+                                                                                                                            </TextField>
+                                                                                                                            <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                                                        </React.Fragment>
+                                                                                                                    )
+                                                                                                                }}
+                                                                                                            />
+
+
+                                                                                                        </React.Fragment> : null}
                                                                                                 </Grid>
                                                                                             )
                                                                                         })}
@@ -1222,18 +1360,22 @@ class Form extends React.Component {
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Options</Typography>
                                                                             <Field render={({form}) => {
+                                                                                const array_option = this.state.all_options.map(e =>(
+                                                                                    {
+                                                                                        label: e.label,
+                                                                                        value: e._id,
+                                                                                        billing: e.billing
+                                                                                    }
+                                                                                ));
                                                                                 return (
                                                                                     <Select 
                                                                                         placeholder="Options disponibles"
                                                                                         isDisabled={this.state[`otherOptionChecked${index}`]}
-                                                                                        options={[
-                                                                                            {value: 'Option1', label: 'Option1', unity: 'm2'},
-                                                                                            {value: 'Option2', label: 'Option2', unity: 'prestation'},
-                                                                                            {value: 'Option3', label: 'Option3', unity: 'mm2'},
-                                                                                            {value: 'Option4', label: 'Option4', unity: 'mm2'},
-                                                                                        ]}
+                                                                                        options={
+                                                                                            array_option
+                                                                                        }
                                                                                         onChange={async opt => {
-                                                                                            const optObj = { label: opt.value, price: null, unity: null, type: null }
+                                                                                            const optObj = { label: opt.label, price: null, unity: opt.billing, type: null }
                                                                                             await form.setFieldValue(`submission[${index}].option`, optObj);
                                                                                         }}
                                                                                         theme={theme => ({
@@ -1250,7 +1392,6 @@ class Form extends React.Component {
                                                                                 <Field 
                                                                                     name={`submission.${index}.option.price`}
                                                                                     render={({form, field}) => {
-                                                                                        console.log(form)
                                                                                         return (
                                                                                             <TextField 
                                                                                                 {...field}
@@ -1288,7 +1429,6 @@ class Form extends React.Component {
                                                                                             <Field 
                                                                                                 name={`submission.${index}.option.label`}
                                                                                                 render={({form, field}) => {
-                                                                                                    console.log(form)
                                                                                                     return (
                                                                                                         <TextField 
                                                                                                             {...field}
@@ -1302,7 +1442,6 @@ class Form extends React.Component {
                                                                                             <Field 
                                                                                                 name={`submission.${index}.option.price`}
                                                                                                 render={({form, field}) => {
-                                                                                                    console.log(form)
                                                                                                     return (
                                                                                                         <TextField 
                                                                                                             {...field}
@@ -1319,7 +1458,6 @@ class Form extends React.Component {
                                                                                             <Field 
                                                                                                 name={`submission.${index}.option.unity`}
                                                                                                 render={({form, field}) => {
-                                                                                                    console.log(form)
                                                                                                     return (
                                                                                                         <Select 
                                                                                                             placeholder="Unité"
@@ -1347,7 +1485,6 @@ class Form extends React.Component {
                                                                                             <Field 
                                                                                                 name={`submission.${index}.option.type`}
                                                                                                 render={({form, field}) => {
-                                                                                                    console.log(form)
                                                                                                     return (
                                                                                                         <Select 
                                                                                                             placeholder="Type"
@@ -1378,17 +1515,26 @@ class Form extends React.Component {
                                                                         <hr style={{margin: '1rem 0'}}></hr>
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez ce que vous fournissez</Typography>
-                                                                            <Typography>
+                                                                            <Typography style={{marginBottom: '1rem'}}>
                                                                             Sélectionnez les produits et le matériel que vous fournissez dans le cadre de vos prestations de service. 
                                                                             </Typography>
                                                                         </div>
                                                                         <div>
-                                                                            
+                                                                            <Grid container>
                                                                             {s.equipments.map((e, indexe) => {
+                                                                                if (e.label.includes('Selected')) {
+                                                                                    return null;
+                                                                                };
                                                                                 return (
-                                                                                    <label key={indexe}>
-                                                                                        {e.label}
+                                                                                    <Grid item xs={3}>
+                                                                                    <label style={{cursor: 'pointer'}} key={indexe} onClick={() => {
+                                                                                        e.checked = !e.checked;
+                                                                                        arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
+                                                                                    }}>
+                                                                                        
+                                                                                        {e.checked === true ? <img src={`../../${e.logo.slice(0, -4)}Selected.svg`} height={100} width={100} alt={`${e.name_logo.slice(0, -4)}Selected.svg`} /> : <img src={`../../${e.logo}`} height={100} width={100} alt={e.name_logo} />}
                                                                                         <Checkbox
+                                                                                            style={{display: 'none'}}
                                                                                             color="primary"
                                                                                             type="checkbox"
                                                                                             checked={e.checked}
@@ -1398,8 +1544,10 @@ class Form extends React.Component {
                                                                                             }}
                                                                                         />
                                                                                     </label>
+                                                                                    </Grid>
                                                                                 )
                                                                             })}
+                                                                            </Grid>
                                                                         </div>
                                                                         <hr style={{margin: '1rem 0'}}></hr>
                                                                         <div>
@@ -1407,7 +1555,7 @@ class Form extends React.Component {
                                                                             <Typography>
                                                                                 Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service. Si vous indiquez un montant de 10€, les clients ne pourront pas réserver vos services si la somme des prestations n’atteint pas ce montant.
                                                                             </Typography>
-                                                                            <div style={{marginTop: '1rem', width: '30%'}}>
+                                                                            <div style={{marginTop: '1rem', width: '200px'}}>
                                                                                 <Field
                                                                                     name={`submission.${index}.minimumBasket`}
                                                                                     render={({field, form}) => {
@@ -1447,8 +1595,14 @@ class Form extends React.Component {
 
                                                                                             if (userCityChecked === true) {
                                                                                                 arrayHelpers.form.setFieldValue(`submission[${index}].city`, null)
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].address`, null)
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].postal_code`, null)
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].country`, null)
                                                                                             } else {
-                                                                                                    arrayHelpers.form.setFieldValue(`submission[${index}].city`, this.state.userCity);
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].city`, this.state.userCity);
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].address`, this.state.userAddress);
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].postal_code`, this.state.userZipCode);
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].country`, this.state.country);
                                                                                             }
                                                                                         }}
                                                                                     />
@@ -1456,7 +1610,7 @@ class Form extends React.Component {
                                                                                 label={`Sélectionner une autre ville`}
                                                                             />
                                                                             {this.state[`userCityClicked${index}`] === true ?
-                                                                                <CityFinder formikCtx={arrayHelpers} index={index}/>
+                                                                                <AddressFinder formikCtx={arrayHelpers} index={index}/>
                                                                             : null}
                                                                             <div style={{padding: '1rem 0'}}>
                                                                                 <Typography style={{marginBottom: '1.5rem', fontSize: 17}}>Définissez à présent le périmètre que vous souhaitez couvrir :</Typography>
@@ -1476,7 +1630,7 @@ class Form extends React.Component {
                                                                             <Typography>
                                                                                 Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du service. Par exemple, si vous indiquez un délai de 24 heures, un client pourra réserver votre service 24 heures avant votre intervantion.
                                                                             </Typography>
-                                                                            <Grid item xs={12}>
+                                                                            <Grid item xs={12} className={classes.delayDivResponsive}>
                                                                                 <Field
                                                                                     name={`submission.${index}.delayBeforeShop`}
                                                                                     render={({field}) => {
@@ -1505,16 +1659,17 @@ class Form extends React.Component {
                                                                                 />
                                                                                 <Field
                                                                                     name={`submission.${index}.delayBeforeShopDWM`}
-                                                                                    render={({field}) => {
-                                                                                        console.log(field)
+                                                                                    render={({field, form}) => {
                                                                                         return (
                                                                                             <TextField
                                                                                                 {...field}
                                                                                                 style={{width: '30%'}}
+                                                                                                className={classes.selectDelayInputRepsonsive}
                                                                                                 select
                                                                                                 margin="dense"
                                                                                                 variant="outlined"
                                                                                                 label="Heures / jours / semaines"
+                                                                                                InputLabelProps={{shrink: form.values.submission[index].delayBeforeShopDWM !== null ? true : false}}
                                                                                             >
                                                                                                 <MenuItem value="heures">heure(s)</MenuItem>
                                                                                                 <MenuItem value="jours">jour(s)</MenuItem>
@@ -1523,7 +1678,6 @@ class Form extends React.Component {
                                                                                         )
                                                                                     }}
                                                                                 />
-                                                                                <ErrorMessage name={`submission.${index}.delayBeforeShop`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                 <ErrorMessage name={`submission.${index}.delayBeforeShopDWM`} render={msg => <div style={{color: 'red'}}>{msg}</div>}/>
                                                                             </Grid>
                                                                         </div>
@@ -1582,155 +1736,161 @@ class Form extends React.Component {
                                                                                     />
                                                                                 </Grid>
                                                                                 <Grid item xs={12}>
-                                                                                    <Field
-                                                                                        name={`submission.${index}.diploma.label`}
-                                                                                        render={({field}) => {
-                                                                                            return (
-                                                                                                <TextField
-                                                                                                    {...field}
-                                                                                                    style={{width: '30%', marginRight: '5%'}}
-                                                                                                    label="Nom du diplôme"
-                                                                                                    margin="dense"
-                                                                                                    variant="outlined"
-                                                                                                    //helperText="Délai de prévenance avant réservation."
+                                                                                    <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre diplôme</Typography>
+                                                                                    {arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.year !== null && arrayHelpers.form.values.submission[index].diploma.document !== null ?
+                                                                                        <React.Fragment>
+                                                                                            <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
+                                                                                                <p>{arrayHelpers.form.values.submission[index].diploma.label} | {arrayHelpers.form.values.submission[index].diploma.year}</p>
+                                                                                            </div>
+                                                                                        </React.Fragment>
+                                                                                        : null
+                                                                                    }
+                                                                                    <ExpansionPanel>
+                                                                                        <ExpansionPanelSummary
+                                                                                            expandIcon={<ExpandMoreIcon />}
+                                                                                        >
+                                                                                            <Typography>Ajouter / modifier votre diplôme</Typography>
+                                                                                        </ExpansionPanelSummary>
+                                                                                        <ExpansionPanelDetails>
+                                                                                            <Grid container>
+                                                                                                <Grid item xs={12}>
+                                                                                                <Field
+                                                                                                    name={`submission.${index}.diploma.label`}
+                                                                                                    render={({field}) => {
+                                                                                                        return (
+                                                                                                            <TextField
+                                                                                                                {...field}
+                                                                                                                style={{width: '50%', marginRight: '5%'}}
+                                                                                                                className={classes.inputDiplomaCertifResp}
+                                                                                                                label="Nom du diplôme"
+                                                                                                                margin="dense"
+                                                                                                                variant="outlined"
+                                                                                                                //helperText="Délai de prévenance avant réservation."
+                                                                                                            />
+                                                                                                        )
+                                                                                                    }}
                                                                                                 />
-                                                                                            )
-                                                                                        }}
-                                                                                    />
-                                                                                    <Field
-                                                                                        name={`submission.${index}.diploma.year`}
-                                                                                        render={({field}) => {
-                                                                                            return (
-                                                                                                <TextField
-                                                                                                    {...field}
-                                                                                                    style={{width: '30%', marginRight: '5%'}}
-                                                                                                    label="Année d'obtention"
-                                                                                                    margin="dense"
-                                                                                                    variant="outlined"
-                                                                                                    select
-                                                                                                    //helperText="Délai de prévenance avant réservation."
-                                                                                                >
-                                                                                                    {dates.map(date => {
-                                                                                                        return <MenuItem value={date}>{date}</MenuItem>
-                                                                                                    })}
-                                                                                                </TextField>
-                                                                                            )
-                                                                                        }}
-                                                                                    />
-                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
-                                                                                        Joindre mon diplôme
-                                                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" onChange={(event) => {
-                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma.document`, event.currentTarget.files[0]);
-                                                                                        }} className="form-control"
-                                                                                        />
-                                                                                    </label>
-                                                                                    <span>{arrayHelpers.form.values.submission[index].diploma.document !== null ? arrayHelpers.form.values.submission[index].diploma.document.name : null}</span>
-                                                                                    {/*<Thumb file={arrayHelpers.form.values.submission[index].diploma} />*/}
+                                                                                                </Grid>
+                                                                                                <Grid item xs={12}>
+                                                                                                    <Field
+                                                                                                        name={`submission.${index}.diploma.year`}
+                                                                                                        render={({field}) => {
+                                                                                                            return (
+                                                                                                                <TextField
+                                                                                                                    {...field}
+                                                                                                                    style={{width: '50%', marginRight: '5%'}}
+                                                                                                                    className={classes.inputDiplomaCertifResp}
+                                                                                                                    label="Année d'obtention"
+                                                                                                                    margin="dense"
+                                                                                                                    variant="outlined"
+                                                                                                                    select
+                                                                                                                    InputLabelProps={{shrink: arrayHelpers.form.values.submission[index].diploma.year !== null ? true : false}}
+                                                                                                                    //helperText="Délai de prévenance avant réservation."
+                                                                                                                >
+                                                                                                                    {dates.map(date => {
+                                                                                                                        return <MenuItem value={date}>{date}</MenuItem>
+                                                                                                                    })}
+                                                                                                                </TextField>
+                                                                                                            )
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </Grid>
+                                                                                                <Grid item xs={12}>
+                                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                                        Joindre mon diplôme
+                                                                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" onChange={(event) => {
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma.document`, event.currentTarget.files[0]);
+                                                                                                        }} className="form-control"
+                                                                                                        />
+                                                                                                    </label>
+                                                                                                    <span>{arrayHelpers.form.values.submission[index].diploma.document !== null ? arrayHelpers.form.values.submission[index].diploma.document.name : null}</span>
+                                                                                                    <p>En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ses derniers</p>
+                                                                                                </Grid>
+                                                                                            </Grid>
+                                                                                        </ExpansionPanelDetails>
+                                                                                    </ExpansionPanel>
                                                                                 </Grid>
                                                                                 <Grid item xs={12}>
-                                                                                    <Field
-                                                                                        name={`submission.${index}.certification.label`}
-                                                                                        render={({field}) => {
-                                                                                            return (
-                                                                                                <TextField
-                                                                                                    {...field}
-                                                                                                    style={{width: '30%', marginRight: '5%'}}
-                                                                                                    label="Nom du certificat"
-                                                                                                    margin="dense"
-                                                                                                    variant="outlined"
-                                                                                                    //helperText="Délai de prévenance avant réservation."
-                                                                                                />
-                                                                                            )
-                                                                                        }}
-                                                                                    />
-                                                                                    <Field
-                                                                                        name={`submission.${index}.certification.year`}
-                                                                                        render={({field}) => {
-                                                                                            return (
-                                                                                                <TextField
-                                                                                                    {...field}
-                                                                                                    style={{width: '30%', marginRight: '5%'}}
-                                                                                                    label="Année d'obtention"
-                                                                                                    margin="dense"
-                                                                                                    variant="outlined"
-                                                                                                    //helperText="Délai de prévenance avant réservation."
-                                                                                                />
-                                                                                            )
-                                                                                        }}
-                                                                                    />
-                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
-                                                                                        Joindre ma certification
-                                                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certification" type="file" onChange={(event) => {
-                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification.document`, event.currentTarget.files[0]);
-                                                                                        }} className="form-control"
-                                                                                        />
-                                                                                    </label>
-                                                                                    <span>{arrayHelpers.form.values.submission[index].certification.document !== null ? arrayHelpers.form.values.submission[index].certification.document.name : null}</span>
-                                                                                    {/*<Thumb file={arrayHelpers.form.values.submission[index].certification} />*/}
+                                                                                <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre certification</Typography>
+                                                                                    {arrayHelpers.form.values.submission[index].certification.label !== null && arrayHelpers.form.values.submission[index].certification.year !== null && arrayHelpers.form.values.submission[index].certification.document !== null ?
+                                                                                        <React.Fragment>
+                                                                                            <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
+                                                                                                <p>{arrayHelpers.form.values.submission[index].certification.label} | {arrayHelpers.form.values.submission[index].certification.year}</p>
+                                                                                            </div>
+                                                                                        </React.Fragment>
+                                                                                        : null
+                                                                                    }
+                                                                                    <ExpansionPanel>
+                                                                                        <ExpansionPanelSummary
+                                                                                            expandIcon={<ExpandMoreIcon />}
+                                                                                        >
+                                                                                            <Typography>Ajouter / modifier votre certification</Typography>
+                                                                                        </ExpansionPanelSummary>
+                                                                                        <ExpansionPanelDetails>
+                                                                                            <Grid container>
+                                                                                                <Grid item xs={12}>
+                                                                                                    <Field
+                                                                                                        name={`submission.${index}.certification.label`}
+                                                                                                        render={({field}) => {
+                                                                                                            return (
+                                                                                                                <TextField
+                                                                                                                    {...field}
+                                                                                                                    style={{width: '50%', marginRight: '5%'}}
+                                                                                                                    className={classes.inputDiplomaCertifResp}
+                                                                                                                    label="Nom du certificat"
+                                                                                                                    margin="dense"
+                                                                                                                    variant="outlined"
+                                                                                                                    //helperText="Délai de prévenance avant réservation."
+                                                                                                                />
+                                                                                                            )
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </Grid>
+                                                                                                <Grid item xs={12}>
+                                                                                                <Field
+                                                                                                        name={`submission.${index}.certification.year`}
+                                                                                                        render={({field}) => {
+                                                                                                            return (
+                                                                                                                <TextField
+                                                                                                                    {...field}
+                                                                                                                    style={{width: '50%', marginRight: '5%'}}
+                                                                                                                    className={classes.inputDiplomaCertifResp}
+                                                                                                                    label="Année d'obtention"
+                                                                                                                    margin="dense"
+                                                                                                                    variant="outlined"
+                                                                                                                    select
+                                                                                                                    InputLabelProps={{shrink: arrayHelpers.form.values.submission[index].certification.year !== null ? true : false}}
+                                                                                                                    //helperText="Délai de prévenance avant réservation."
+                                                                                                                >
+                                                                                                                    {dates.map(date => {
+                                                                                                                        return <MenuItem value={date}>{date}</MenuItem>
+                                                                                                                    })}
+                                                                                                                </TextField>
+                                                                                                            )
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </Grid>
+                                                                                                <Grid item xs={12}>
+                                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                                        Joindre ma certification
+                                                                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certification" type="file" onChange={(event) => {
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification.document`, event.currentTarget.files[0]);
+                                                                                                        }} className="form-control"
+                                                                                                        />
+                                                                                                    </label>
+                                                                                                    <span>{arrayHelpers.form.values.submission[index].certification.document !== null ? arrayHelpers.form.values.submission[index].certification.document.name : null}</span>
+                                                                                                    <p>En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ses derniers</p>
+                                                                                                </Grid>
+                                                                                            </Grid>
+                                                                                        </ExpansionPanelDetails>
+                                                                                    </ExpansionPanel>
+                                            
                                                                                 </Grid>
                                                                             </Grid>
                                                                             
                                                                         </div>
-                                                                        <hr style={{margin: '1rem 0'}}></hr>
+                                                                        
                                                                     </div>
-                                                                </div>
-                                                                <div style={{padding: '2rem'}}>
-                                                            
-
-                                                                    {/*<Grid container>
-                                                                        {s.increases.label !== undefined ? (
-                                                                            <React.Fragment>
-                                                                                <Grid item xs={12}>
-                                                                                    <p>Option</p>
-                                                                                    <FormControlLabel
-                                                                                        control={
-                                                                                            <Checkbox
-                                                                                                color="primary"
-                                                                                                type="checkbox"
-                                                                                                checked={s.increases.checked}
-                                                                                                onChange={() => {
-                                                                                                    s.increases.checked = !s.increases.checked;
-
-                                                                                                    arrayHelpers.form.setFieldValue(`submission[${index}].increases.checked`, s.increases.checked)
-                                                                                                }}
-                                                                                            />
-                                                                                        }
-                                                                                        label={s.increases.label}
-                                                                                    />
-                                                                                </Grid>
-                                                                                <Grid xs={12}>
-                                                                                    {s.increases.checked === true ?
-                                                                                        <Field
-                                                                                            name={`submission.${index}.increases.price`}
-                                                                                            placeholder="prix"
-                                                                                            render={({field, form}) => {
-                                                                                                return (
-                                                                                                    <React.Fragment>
-                                                                                                        <TextField
-                                                                                                            {...field}
-                                                                                                            style={{width: '15%'}}
-                                                                                                            label="Prix"
-                                                                                                            type="number"
-                                                                                                            disabled={!s.increases.checked}
-                                                                                                            margin="none"
-                                                                                                            InputProps={{
-                                                                                                                startAdornment: <InputAdornment position="start">€</InputAdornment>,
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </React.Fragment>
-                                                                                                )
-                                                                                            }}
-                                                                                        /> : null
-                                                                                    }
-                                                                                </Grid>
-                                                                            </React.Fragment>
-                                                                        ) : null}
-                                                                        <label htmlFor="raised-button-file">
-                                    <Button variant="contained" component="span">
-                                        Ajouter un diplôme
-                                    </Button>
-                                        </label>
-                                                                                </Grid>*/}
                                                                 </div>
                                                             </TabPanel>
                                                         )
@@ -1742,16 +1902,19 @@ class Form extends React.Component {
                                 {/*<div>*/}
                                 
                                 {/*</div>*/}
-                            </Card>
                         </Grid>
                         
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Calendar />
+                        <FieldArray render={({form}) => {
+                            return (
+                                <Availability formikCtx={form} />
+                            )
+                        }} />
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer}>
-                            <Card className={classes.card}>
+                            
                             <div className={classes.newContainer}>
                                     <Grid container>
 
@@ -1769,12 +1932,16 @@ class Form extends React.Component {
                                                                 onChange={() => {
                                                                     form.values.createShop.booking_request = !form.values.createShop.booking_request;
                                                                     form.setFieldValue('createShop.booking_request', form.values.createShop.booking_request);
+                                                                    if (form.values.createShop.booking_request === true) {
+                                                                        form.setFieldValue('createShop.no_booking_request', false);
+                                                                        this.setState({no_booking: false})
+                                                                    }
                                                                 }}
                                                                 value={form.values.createShop.booking_request}
                                                                 color="primary"
                                                                 name={"booking_request"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
 
                                                             />
                                                         }
@@ -1789,21 +1956,25 @@ class Form extends React.Component {
                                             <Field render={({form}) => {
                                                 return (
                                                     <FormControlLabel
-                                                        control={
-                                                            <Checkbox
-                                                                checked={form.values.createShop.no_booking_request}
-                                                                onChange={() => {
-                                                                    form.values.createShop.no_booking_request = !form.values.createShop.no_booking_request;
-                                                                    form.setFieldValue('createShop.no_booking_request', form.values.createShop.no_booking_request);
-                                                                }}
-                                                                value={form.values.createShop.no_booking_request}
-                                                                color="primary"
-                                                                name={"no_booking_request"}
-                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                    control={
+                                                        <Checkbox
+                                                            checked={this.state.no_booking}
+                                                            onChange={() => {
+                                                                form.values.createShop.no_booking_request = !form.values.createShop.no_booking_request;
+                                                                this.setState({no_booking: form.values.createShop.no_booking_request})
+                                                                form.setFieldValue('createShop.no_booking_request', form.values.createShop.no_booking_request);
+                                                                if (form.values.createShop.no_booking_request === true) {
+                                                                    form.setFieldValue('createShop.booking_request', false);
+                                                                }
+                                                            }}
+                                                            value={form.values.createShop.no_booking_request}
+                                                            color="primary"
+                                                            name={"no_booking_request"}
+                                                            icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                            checkedIcon={<FilledButton />}
 
-                                                            />
-                                                        }
+                                                        />
+                                                    }
                                                         label={<Typography style={{fontSize: 18, fontFamily: 'helveticaNeue'}}>Les utilisateurs peuvent réserver mes services directement sans demande de réservation.</Typography>}
 
                                                     />
@@ -1838,7 +2009,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"my_alfred_conditions"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
@@ -1870,7 +2041,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"profile_picture_user"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
@@ -1901,7 +2072,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"identity_card"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -11}}
                                                             />
                                                         }
@@ -1931,7 +2102,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"recommandations"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
@@ -2010,7 +2181,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"flexible_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled color="primary" style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -20}}
                                                             />
                                                         }
@@ -2048,7 +2219,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"moderate_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{marginTop: -20}}
                                                             />
                                                         }
@@ -2085,7 +2256,7 @@ class Form extends React.Component {
                                                                 color="primary"
                                                                 name={"strict_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                checkedIcon={<FilledButton />}
                                                                 style={{ marginTop: -100 }}
                                                             />
                                                         }
@@ -2127,7 +2298,7 @@ class Form extends React.Component {
                                         </Button>
                                     )
                                 }} />*/}
-                            </Card>
+                            
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
@@ -2135,7 +2306,7 @@ class Form extends React.Component {
                             {({ form, field }) => (
                                 <React.Fragment>
                                     <Grid container className={classes.cardContainer}>
-                                        <Card className={classes.card}>
+                                        
                                             <div className={classes.newContainer}>
                                                 <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                     Téléchargez une photo de profil
@@ -2173,7 +2344,7 @@ class Form extends React.Component {
                                                                                     }}
                                                                                     component="span"
                                                                                 >
-                                                                                    <PhotoCamera />
+                                                                                    {form.values.alfredUpdate.profile_picture_user === null ? <PhotoCamera /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
                                                                                 </IconButton>
                                                                             </label>
                                                                         </React.Fragment>
@@ -2217,7 +2388,7 @@ class Form extends React.Component {
                                                         <ErrorMessage name="alfredUpdate.phone" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                     </Grid>
                                                     <Grid item xs={1} />
-                                                    <Grid item xs={5}>
+                                                    <Grid item xs={12} sm={12} md={5}>
                                                         <Grid container>
                                                             <div
                                                                 style={{
@@ -2241,23 +2412,14 @@ class Form extends React.Component {
                                                                     <Field render={({field, form}) => {
                                                                         return (
                                                                             <React.Fragment>
-                                                                                <label
-                                                                                    htmlFor="icon-button-file"
-                                                                                    style={{ fontSize: "small" }}
-                                                                                >
-                                                                                    Téléchargez votre pièce d'identité(recto)
-                                                                                </label>
-                                                                                <input
-                                                                                    type="file"
-                                                                                    accept="image/*"
-                                                                                    className="input"
-                                                                                    id="icon-button-file"
-                                                                                    name="myCardR"
-                                                                                    onChange={(event) => {
+                                                                                <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                    Carte identité recto / passeport
+                                                                                    <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
                                                                                         form.setFieldValue("createShop.id_recto", event.currentTarget.files[0])
-                                                                                    }}
-                                                                                />
-                                                                                <Thumb file={form.values.createShop.id_recto} />
+                                                                                    }} className="form-control"
+                                                                                    />
+                                                                                </label>
+                                                                                <span>{form.values.createShop.id_recto !== null ? form.values.createShop.id_recto.name.substr(0, 10) + '...' : null}</span>
                                                                                 <ErrorMessage name="createShop.id_recto" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                             </React.Fragment>
                                                                         )
@@ -2271,21 +2433,14 @@ class Form extends React.Component {
                                                                     <Field render={({field, form}) => {
                                                                         return (
                                                                             <React.Fragment>
-                                                                                <label htmlFor="icon-button-file">
-                                                                                    Téléchargez votre pièce d'identité(verso)
+                                                                                <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                    Carte identité verso
+                                                                                    <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
+                                                                                        form.setFieldValue("createShop.id_verso", event.currentTarget.files[0])
+                                                                                    }} className="form-control"
+                                                                                    />
                                                                                 </label>
-                                                                                <input
-                                                                                    accept="image/*"
-                                                                                    className="input"
-                                                                                    name="myCardV"
-                                                                                    onChange={(event) => {
-                                                                                        form.setFieldValue("createShop.id_verso", event.currentTarget.files[0]);
-                                                                                        console.log(form)
-                                                                                    }}
-                                                                                    id="icon-button-file"
-                                                                                    type="file"
-                                                                                />
-                                                                                <Thumb file={form.values.createShop.id_verso} />
+                                                                                <span>{form.values.createShop.id_verso !== null ? form.values.createShop.id_verso.name.substr(0, 10) + '...' : null}</span>
                                                                                 <ErrorMessage name="createShop.id_verso" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                             </React.Fragment>
                                                                         )
@@ -2332,13 +2487,14 @@ class Form extends React.Component {
                                                                                         form.setFieldValue('createShop.creationDate', '');
                                                                                         form.setFieldValue('createShop.denomination', '');
                                                                                         form.setFieldValue('createShop.nafape', '');
+                                                                                        form.setFieldValue('createShop.nature_juridique', '');
                                                                                     }
                                                                                 }}
                                                                                 name={"isParticular"}
                                                                                 color="primary"
                                                                                 value={form.values.createShop.is_particular}
                                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                                checkedIcon={<FilledButton />}
                                                                             />
                                                                         }
                                                                     />
@@ -2387,7 +2543,7 @@ class Form extends React.Component {
                                                                                 color="primary"
                                                                                 value={form.values.createShop.is_professional}
                                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                                checkedIcon={<CircleCheckedFilled style={{fontSize: 30}} />}
+                                                                                checkedIcon={<FilledButton />}
                                                                             />
                                                                         }
                                                                     />
@@ -2407,149 +2563,45 @@ class Form extends React.Component {
                                                                 statut professionnel est requis dès que votre
                                                                 activité devient régulière
                                                             </Typography>
+                                                            {isProfessional ? (
+                                                                <React.Fragment>
+                                                                    <Field render={({form}) => {
+                                                                        return (
+                                                                            <div style={{}}>
+                                                                                <Siret formikCtx={form}/>
+                                                                            </div>
+                                                                        )
+                                                                    }}
+                                                                    />
+                                                                    <Field render={({form}) => {
+                                                                        return (
+                                                                            <FormControlLabel
+                                                                                control={
+                                                                                    <Checkbox
+                                                                                        checked={form.values.createShop.isCertified}
+                                                                                        onChange={() => {
+                                                                                            form.values.createShop.isCertified = !form.values.createShop.isCertified;
+                                                                                            form.setFieldValue('createShop.isCertified', form.values.createShop.isCertified);
+                                                                                        }}
+                                                                                        color="primary"
+                                                                                        name="isCertified"
+                                                                                        value={form.values.createShop.isCertified}
+                                                                                    />
+                                                                                }
+                                                                                label={
+                                                                                    "Je certifie sur l’honneur qu’il s’agit bien de mon entreprise."
+                                                                                }
+                                                                            />
+                                                                        )
+                                                                    }} />
+                                                                    <ErrorMessage name={`createShop.isCertified`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                </React.Fragment>
+                                                            ) : (
+                                                                ""
+                                                            )}
                                                         </Grid>
                                                     </Grid>
-                                                    {isProfessional ? (
-                                                        <React.Fragment>
-                                                            <Grid container>
-                                                                <Grid item>
-                                                                    <Field render={({form}) => {
-                                                                        return (
-                                                                            <FormControlLabel
-                                                                                control={
-                                                                                    <Checkbox
-                                                                                        checked={form.values.createShop.is_microCompany}
-                                                                                        onChange={() => {
-                                                                                            form.values.createShop.is_microCompany = !form.values.createShop.is_microCompany;
-                                                                                            form.setFieldValue("createShop.is_microCompany", form.values.createShop.is_microCompany);
-
-                                                                                            if (form.values.createShop.isIndividualCompany === true && form.values.createShop.is_microCompany === true) {
-                                                                                                form.setFieldValue('createShop.isIndividualCompany', false)
-                                                                                            }
-                                                                                        }}
-                                                                                        color="primary"
-                                                                                        name="isMicro_company"
-                                                                                        value={form.values.createShop.is_microCompany}
-                                                                                    />
-                                                                                }
-                                                                                label="Micro-entreprise, auto-entrepreneur"
-                                                                            />
-                                                                        )
-                                                                    }} />
-                                                                </Grid>
-                                                            </Grid>
-                                                            <Grid container>
-                                                                <Grid item>
-                                                                    <Field render={({form}) => {
-                                                                        return (
-                                                                            <FormControlLabel
-                                                                                control={
-                                                                                    <Checkbox
-                                                                                        checked={form.values.createShop.isIndividualCompany}
-                                                                                        onChange={() => {
-                                                                                            form.values.createShop.isIndividualCompany = !form.values.createShop.isIndividualCompany;
-                                                                                            form.setFieldValue("createShop.isIndividualCompany", form.values.createShop.isIndividualCompany);
-
-                                                                                            if (form.values.createShop.isIndividualCompany === true && form.values.createShop.is_microCompany === true) {
-                                                                                                form.setFieldValue('createShop.is_microCompany', false)
-                                                                                            }
-                                                                                        }}
-                                                                                        color="primary"
-                                                                                        name="isIndividualCompany"
-                                                                                        value={form.values.createShop.isIndividualCompany}
-                                                                                    />
-                                                                                }
-                                                                                label="Entreprise individuelle, EIRL, MDA, professions libérales..."
-                                                                            />
-                                                                        )
-                                                                    }} />
-                                                                </Grid>
-                                                            </Grid>
-                                                        </React.Fragment>
-                                                    ) : (
-                                                        ""
-                                                    )}
                                                 </Grid>
-
-                                                {isProfessional ? (
-                                                    <Field render={({form}) => {
-                                                        return (
-                                                            <Siret formikCtx={form}/>
-                                                        )
-                                                        }}
-                                                    />
-    
-                                                    /*<Grid container>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.siret" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Siret"
-                                                                        placeholder="Siret"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.siret`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.creationDate" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="date"
-                                                                        label="Date de création"
-                                                                        type="date"
-                                                                        variant="filled"
-                                                                        InputLabelProps={{
-                                                                            shrink: true
-                                                                        }}
-                                                                        style={{ marginTop: 14.5 }}
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.creationDate`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.denomination" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Dénomination"
-                                                                        placeholder="Dénomination"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.denomination`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        <Grid item xs={12} md={6}>
-                                                            <Field name="createShop.nafape" render={({field}) => {
-                                                                return (
-                                                                    <TextField
-                                                                        {...field}
-                                                                        id="filled-with-placeholder"
-                                                                        label="Code NAF/APE"
-                                                                        placeholder="Code NAF/APE"
-                                                                        margin="normal"
-                                                                        variant="filled"
-                                                                        type="text"
-                                                                    />
-                                                                )
-                                                            }} />
-                                                            <ErrorMessage name={`createShop.nafape`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                        </Grid>
-                                                        </Grid>*/
-                                                ) : (
-                                                    ""
-                                                )}
 
                                                 <hr style={{margin: '1rem 0'}}></hr>
 
@@ -2595,28 +2647,7 @@ class Form extends React.Component {
                                                         {isProfessional ? (
                                                             <React.Fragment>
                                                                 <Grid item>
-                                                                    <Field render={({form}) => {
-                                                                        return (
-                                                                            <FormControlLabel
-                                                                                control={
-                                                                                    <Checkbox
-                                                                                        checked={form.values.createShop.isCertified}
-                                                                                        onChange={() => {
-                                                                                            form.values.createShop.isCertified = !form.values.createShop.isCertified;
-                                                                                            form.setFieldValue('createShop.isCertified', form.values.createShop.isCertified);
-                                                                                        }}
-                                                                                        color="primary"
-                                                                                        name="isCertified"
-                                                                                        value={form.values.createShop.isCertified}
-                                                                                    />
-                                                                                }
-                                                                                label={
-                                                                                    "Je certifie sur l’honneur qu’il s’agit bien de mon entreprise."
-                                                                                }
-                                                                            />
-                                                                        )
-                                                                    }} />
-                                                                    <ErrorMessage name={`createShop.isCertified`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                    
                                                                 </Grid>
                                                             </React.Fragment>
                                                         ) : (
@@ -2625,7 +2656,7 @@ class Form extends React.Component {
                                                     </Grid>
                                                 </Grid>
                                             </div>
-                                        </Card>
+                                        
                                     </Grid>
                                 </React.Fragment>
                             )}
@@ -2751,23 +2782,16 @@ const Fill = styled.div`
   height: 100%;
   border-radius: inherit;
   transition: width .2s ease-in;
-  width: 80%;
+  width: ${props => props.width};
 `;
 
-const Fill2 = styled.div`
-    background: #2FBCD3;
-    height: 100%;
-    border-radius: inherit;
-    transition: width .2s ease-in;
-    width: 95%;
-`;
-
-const Fill4 = styled.div`
-    background: #2FBCD3;
-    height: 100%;
-    border-radius: inherit;
-    transition: width .2s ease-in;
-    width: 15%;
+const FilledButton = styled.div`
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background-color: #2FBCD3;
+    margin-right: 5px;
 `;
 
 export default withStyles(styles)(Form);

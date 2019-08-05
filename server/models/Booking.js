@@ -36,6 +36,10 @@ const BookingSchema = new Schema({
     prestation: {
         type: Schema.Types.ObjectId,
         ref: 'prestation'
+    },
+    status: {
+        type: String,
+        enum: ['Acceptée','Refusée','En attente']
     }
 
 

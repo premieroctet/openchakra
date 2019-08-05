@@ -16,6 +16,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Chip from '@material-ui/core/Chip';
+import Select2 from 'react-select';
 
 const {config} = require('../../../config/config');
 const url = config.apiUrl;
@@ -23,14 +24,12 @@ const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '170vh',
         justifyContent: 'top',
         flexDirection: 'column',
 
     },
     card: {
         padding: '1.5rem 3rem',
-        width: 400,
         marginTop: '100px',
     },
     cardContant: {
@@ -85,9 +84,15 @@ class add extends React.Component {
             all_job: [],
             all_search_filter: [],
             all_filter_presentation: [],
+            selectedOption: null,
+            selectedTags: null,
+            selectedBilling: null,
             errors: {},
         };
         this.onChangeFile = this.onChangeFile.bind(this);
+        this.handleChangeSelect = this.handleChangeSelect.bind(this);
+        this.handleChangeTags = this.handleChangeTags.bind(this);
+        this.handleChangeBilling = this.handleChangeBilling.bind(this);
     }
 
     componentDidMount() {
@@ -170,6 +175,21 @@ class add extends React.Component {
 
     };
 
+    handleChangeSelect = selectedOption => {
+        this.setState({ selectedOption });
+
+    };
+
+    handleChangeTags = selectedTags => {
+        this.setState({ selectedTags });
+
+    };
+
+    handleChangeBilling = selectedBilling => {
+        this.setState({ selectedBilling });
+
+    };
+
     handleChange2 = e => {
         this.setState({tags: e.target.value})
 
@@ -181,20 +201,46 @@ class add extends React.Component {
     }
 
     onSubmit = e => {
+        let arrayFilter = [];
+        let arrayTags = [];
+        let arrayBilling = [];
+        if(this.state.selectedOption != null){
+            this.state.selectedOption.forEach(c => {
+
+                arrayFilter.push(c.value);
+
+            });
+        }
+
+        if(this.state.selectedTags != null){
+            this.state.selectedTags.forEach(w => {
+
+                arrayTags.push(w.value);
+
+            });
+        }
+
+        if(this.state.selectedBilling != null){
+            this.state.selectedBilling.forEach(t => {
+
+                arrayBilling.push(t.value);
+
+            });
+        }
         e.preventDefault();
         const formData = new FormData();
         formData.append('label',this.state.label);
         formData.append('price',this.state.price);
         formData.append('category',this.state.category);
         formData.append('service',this.state.service);
-        formData.append('billing',this.state.billing);
+        formData.append('billing',JSON.stringify(arrayBilling));
         formData.append('calculating',this.state.calculating);
         formData.append('job',this.state.job);
-        formData.append('search_filter',this.state.search_filter);
+        formData.append('search_filter',JSON.stringify(arrayFilter));
         formData.append('filter_presentation',this.state.filter_presentation);
         formData.append('description',this.state.description);
         formData.append('picture',this.state.picture);
-        formData.append('tags',this.state.tags);
+        formData.append('tags',JSON.stringify(arrayTags));
 
         axios
             .post(url+'myAlfred/api/admin/prestation/all', formData)
@@ -234,6 +280,21 @@ class add extends React.Component {
 
         ));
 
+        const options = all_search_filter.map(filter => ({
+            label: filter.label,
+            value: filter._id
+        }));
+
+        const optionsTags = all_tags.map(tag => ({
+            label: tag.label,
+            value: tag._id
+        }));
+
+        const optionsBilling = all_billing.map(billing => ({
+            label: billing.label,
+            value: billing._id
+        }));
+
 
 
 
@@ -261,7 +322,7 @@ class add extends React.Component {
                                     />
                                     <em>{errors.label}</em>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{marginTop: 20}}>
                                     <TextField
                                         id="standard-with-placeholder"
                                         label="Prix moyen"
@@ -274,7 +335,7 @@ class add extends React.Component {
                                         onChange={this.onChange}
                                     />
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Catégorie
@@ -296,7 +357,7 @@ class add extends React.Component {
                                     </FormControl>
                                     <em>{errors.category}</em>
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Service
@@ -322,33 +383,23 @@ class add extends React.Component {
                                     </FormControl>
                                     <em>{errors.service}</em>
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
+                                    <Typography style={{ fontSize: 17 }}>Méthodes de facturation</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Méthode de facturation
-                                        </InputLabel>
-                                        <Select
-                                            input={<Input name="billing" id="genre-label-placeholder" />}
-                                            displayEmpty
-                                            name="billing"
-                                            value={this.state.billing}
-                                            onChange={this.onChange}
-                                            className={classes.selectEmpty}
-                                        >
-                                            <MenuItem value="">
-                                                <em>...</em>
-                                            </MenuItem>
-                                            {all_billing.map(e => (
-                                                <MenuItem key={e._id} value={e._id} >
-                                                    {e.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                        <FormHelperText>Sélectionner une méthode de facturation</FormHelperText>
+
+                                        <Select2
+                                            value={this.state.selectedBilling}
+                                            onChange={this.handleChangeBilling}
+                                            options={optionsBilling}
+                                            isMulti
+                                            isSearchable
+                                            closeMenuOnSelect={false}
+
+                                        />
                                     </FormControl>
                                     <em>{errors.billing}</em>
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Méthode de calcul
@@ -374,7 +425,7 @@ class add extends React.Component {
                                     </FormControl>
                                     <em>{errors.calculating}</em>
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Filtre de présentation
@@ -400,33 +451,23 @@ class add extends React.Component {
                                     </FormControl>
                                     <em>{errors.filter_presentation}</em>
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
+                                    <Typography style={{ fontSize: 17 }}>Filtres de recherche</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel htmlFor="select-multiple-chip">Filtres de recherche</InputLabel>
-                                        <Select
-                                            multiple
-                                            value={this.state.search_filter}
-                                            onChange={this.handleChange}
-                                            input={<Input id="select-multiple-chip" />}
-                                            renderValue={selected => (
-                                                <div className={classes.chips}>
-                                                    {selected.map(value => (
-                                                        <Chip key={value} label={value} className={classes.chip} />
-                                                    ))}
-                                                </div>
-                                            )}
-                                            MenuProps={MenuProps}
-                                        >
-                                            {all_search_filter.map(name => (
-                                                <MenuItem key={name._id} value={name._id} >
-                                                    {name.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
+
+                                        <Select2
+                                            value={this.state.selectedOption}
+                                            onChange={this.handleChangeSelect}
+                                            options={options}
+                                            isMulti
+                                            isSearchable
+                                            closeMenuOnSelect={false}
+
+                                        />
                                     </FormControl>
                                     <em>{errors.search_filter}</em>
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop:20}}>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Métier
@@ -452,14 +493,14 @@ class add extends React.Component {
                                     </FormControl>
                                     <em>{errors.job}</em>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{marginTop: 20}}>
                                     <TextField
                                         id="standard-with-placeholder"
                                         margin="normal"
                                         style={{ width: '100%' }}
                                         type="text"
                                         multiline
-                                        rowsMax="4"
+                                        rows={4}
                                         name="description"
                                         value={this.state.description}
                                         onChange={this.onChange}
@@ -469,33 +510,24 @@ class add extends React.Component {
                                     />
                                     <em>{errors.description}</em>
                                 </Grid>
-                                <Grid item style={{width: '100%'}}>
+                                <Grid item style={{width: '100%',marginTop:20}}>
+                                    <Typography style={{ fontSize: 17 }}>Tags</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
-                                        <Select
-                                            multiple
-                                            value={this.state.tags}
-                                            onChange={this.handleChange2}
-                                            input={<Input id="select-multiple-chip" />}
-                                            renderValue={selected => (
-                                                <div className={classes.chips}>
-                                                    {selected.map(value => (
-                                                        <Chip key={value} label={value} className={classes.chip} />
-                                                    ))}
-                                                </div>
-                                            )}
-                                            MenuProps={MenuProps}
-                                        >
-                                            {all_tags.map(name => (
-                                                <MenuItem key={name._id} value={name._id} >
-                                                    {name.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
+
+                                        <Select2
+                                            value={this.state.selectedTags}
+                                            onChange={this.handleChangeTags}
+                                            options={optionsTags}
+                                            isMulti
+                                            isSearchable
+                                            closeMenuOnSelect={false}
+
+                                        />
                                     </FormControl>
                                     <em>{errors.tags}</em>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{marginTop:20}}>
+                                    <Typography style={{ fontSize: 17 }}>Image</Typography>
                                     <input type="file" name="picture" onChange= {this.onChangeFile} accept="image/*" />
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>

@@ -42,7 +42,9 @@ class view extends React.Component {
 
         this.state = {
             tags: {},
-            label: ''
+            label: '',
+            title: '',
+            description: '',
 
         };
 
@@ -82,9 +84,9 @@ class view extends React.Component {
     onSubmit = e => {
         e.preventDefault();
 
-        const { label } = this.state.tags;
+        const { label,title,description } = this.state.tags;
         const id = this.props.tags_id;
-        axios.put(`${url}myAlfred/api/admin/tags/all/${id}`,{label})
+        axios.put(`${url}myAlfred/api/admin/tags/all/${id}`,{label,title,description})
             .then(res => {
 
                 alert('Tag modifié avec succès');
@@ -135,6 +137,32 @@ class view extends React.Component {
                                         type="text"
                                         name="label"
                                         value={tags.label}
+                                        onChange={this.onChange}
+
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        name="title"
+                                        value={tags.title}
+                                        onChange={this.onChange}
+
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        multiline
+                                        rows={4}
+                                        name="description"
+                                        value={tags.description}
                                         onChange={this.onChange}
 
                                     />

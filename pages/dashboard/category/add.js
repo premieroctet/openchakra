@@ -15,6 +15,7 @@ import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
 import Chip from "@material-ui/core/Chip";
 import MenuItem from "@material-ui/core/MenuItem";
+import Select2 from 'react-select';
 
 const {config} = require('../../../config/config');
 const url = config.apiUrl;
@@ -70,9 +71,11 @@ class add extends React.Component {
             description: '',
             all_tags: [],
             tags: [],
+            selectedTags: null,
             errors: {},
         };
         this.onChangeFile = this.onChangeFile.bind(this);
+        this.handleChangeTags = this.handleChangeTags.bind(this);
     }
 
     componentDidMount() {
@@ -92,9 +95,10 @@ class add extends React.Component {
         this.setState({ [e.target.name]: e.target.value });
     };
 
-    handleChange = e => {
-        this.setState({tags: e.target.value})
 
+
+    handleChangeTags = selectedTags => {
+        this.setState({ selectedTags });
 
     };
     onChangeFile(e){
@@ -103,11 +107,19 @@ class add extends React.Component {
 
     onSubmit = e => {
         e.preventDefault();
+        let arrayTags = [];
+        if(this.state.selectedTags != null){
+            this.state.selectedTags.forEach(w => {
+
+                arrayTags.push(w.value);
+
+            });
+        }
 
         const formData = new FormData();
         formData.append('picture',this.state.picture);
         formData.append('label',this.state.label);
-        formData.append('tags',this.state.tags);
+        formData.append('tags',JSON.stringify(arrayTags));
         formData.append('description',this.state.description);
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
@@ -134,6 +146,11 @@ class add extends React.Component {
         const { classes } = this.props;
         const {all_tags} = this.state;
         const {errors} = this.state;
+
+        const optionsTags = all_tags.map(tag => ({
+            label: tag.label,
+            value: tag._id
+        }));
 
 
         return (
@@ -165,31 +182,18 @@ class add extends React.Component {
                                     <input type="file" name="picture" onChange= {this.onChangeFile} accept="image/*" />
                                     <em>{errors.picture}</em>
                                 </Grid>
-                                <Grid item style={{ width: '100%' }}>
+                                <Grid item style={{ width: '100%',marginTop:20 }}>
+                                    <Typography style={{ fontSize: 20 }}>Tags</Typography>
                                     <FormControl className={classes.formControl} style={{ width: '100%' }}>
-                                        <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
-                                        <Select
-                                            multiple
-                                            style={{ width: '100%' }}
-                                            value={this.state.tags}
-                                            onChange={this.handleChange}
-                                            input={<Input id="select-multiple-chip" style={{ width: '100%' }} />}
-                                            renderValue={selected => (
-                                                <div className={classes.chips}>
-                                                    {selected.map(value => (
-                                                        <Chip key={value} label={value} className={classes.chip} />
-                                                    ))}
-                                                </div>
-                                            )}
-                                            MenuProps={MenuProps}
+                                        <Select2
+                                            value={this.state.selectedTags}
+                                            onChange={this.handleChangeTags}
+                                            options={optionsTags}
+                                            isMulti
+                                            isSearchable
+                                            closeMenuOnSelect={false}
 
-                                        >
-                                            {all_tags.map(name => (
-                                                <MenuItem key={name._id} value={name._id} >
-                                                    {name.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
+                                        />
                                     </FormControl>
                                     <em>{errors.tags}</em>
                                 </Grid>

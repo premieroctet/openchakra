@@ -81,11 +81,33 @@ router.get('/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
 });
 
-// @Route GET /myAlfred/booking/user
+// @Route GET /myAlfred/booking/myBooking
 // View all the booking for the current user
 // @Access private
 router.get('/myBooking',passport.authenticate('jwt',{session:false}),(req,res) => {
     Booking.find( {$or: [{alfred: req.user.id}, {user: req.user.id}]})
+        .populate('alfred')
+        .populate('user')
+        .populate('prestation')
+        .then(booking => {
+            if(booking){
+                res.json(booking);
+            } else {
+                return res.status(400).json({msg: 'No booking found'});
+            }
+
+
+
+        })
+        .catch(err => console.log(err));
+
+});
+
+// @Route GET /myAlfred/api/booking/currentAlfred
+// View all the booking for the current alfred
+// @Access private
+router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,res) => {
+    Booking.find( {alfred: req.user.id})
         .populate('alfred')
         .populate('user')
         .populate('prestation')

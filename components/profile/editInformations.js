@@ -129,7 +129,7 @@ class editInformations extends React.Component {
                                     />
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    <Button type="submit" variant="outlined" color="primary" style={{ width: '100%' }}>
                                         Valider
                                     </Button>
                                 </Grid>
