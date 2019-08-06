@@ -308,6 +308,7 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
 
     ServiceUser.find({user: req.user.id})
         .populate('service')
+        .populate({path: 'service', populate: { path: 'category' }})
         .populate('prestations.prestation')
         .populate('equipments')
         .then(service => {
