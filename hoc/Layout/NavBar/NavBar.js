@@ -395,7 +395,7 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  color="white" position="fixed">
+        <AppBar  color="inherit" position="fixed">
           <Toolbar>
             <Link href={'/'}>
               <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>

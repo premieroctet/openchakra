@@ -1,22 +1,20 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
-import Layout from '../hoc/Layout/Layout';
+import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+
 
 
 
 
 moment.locale('fr');
 
-const { config } = require('../config/config');
+const { config } = require('../../config/config');
 const url = config.apiUrl;
 
 const styles = theme => ({
@@ -28,7 +26,7 @@ const styles = theme => ({
 
 });
 
-class myShop extends React.Component {
+class services extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -180,7 +178,7 @@ class myShop extends React.Component {
                                                 <p>{e.prestations.length} Prestation(s) proposée(s)</p>
                                             </Grid>
                                             <Grid item xs={3} style={{display:"flex", justifyContent:"flex-end"}}>
-                                                <h3 style={{color:'#F8727F',fontWeight: '100',marginTop:0}}>Modifier</h3>
+                                                <Link href={'/myShop/editService?id='+e._id}><a style={{textDecoration:'none',height:'fit-content'}}><h3 style={{color:'#F8727F',fontWeight: '100',marginTop:0,cursor:"pointer"}}>Modifier</h3></a></Link>
                                             </Grid>
 
                                         </Grid>
@@ -232,4 +230,4 @@ class myShop extends React.Component {
 
 
 
-export default withStyles(styles)(myShop);
+export default withStyles(styles)(services);
