@@ -188,18 +188,6 @@ class editService extends React.Component {
         const {serviceUser} = this.state;
         const {service} = this.state;
         const {all_prestations} = this.state;
-        const {prestations_filter} = this.state;
-
-        const data = all_prestations.forEach(e => {
-            axios.get(url+`myAlfred/api/prestation/${serviceUser.service._id}/${e.filter_presentation._id}`)
-                .then(prestation_result => {
-                    let prestations_data = prestation_result.data;
-                    this.setState({prestations_filter: prestations_data})
-                } )
-                .catch(err => console.log(err));
-        })
-
-
 
 
 
@@ -213,20 +201,9 @@ class editService extends React.Component {
                             {all_prestations.map(f=> (
                                 <p key={f._id}>{f.filter_presentation.label}</p>
                             ))}
-                            <ul>
-                                {prestations_filter.map((e,index)=> (
-                                    <li key={index}>{e.label}</li>
-                                ))}
-                            </ul>
+
                         </Grid>
-                        {all_prestations.forEach(e => {
-                        axios.get(url+`myAlfred/api/prestation/${service._id}/${e.filter_presentation._id}`)
-                            .then(prestation_result => {
-                                let prestations_data = prestation_result.data;
-                                this.setState({prestations_filter: prestations_data})
-                            } )
-                            .catch(err => console.log(err));
-                    })}
+
 
                     </Grid>
 
