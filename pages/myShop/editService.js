@@ -9,28 +9,13 @@ import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import InputRange from 'react-input-range';
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import Chip from "@material-ui/core/Chip";
-import MenuItem from "@material-ui/core/MenuItem";
-import Link from 'next/link';
-import {ErrorMessage, Field, FieldArray} from "formik";
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import Switch from "@material-ui/core/Switch";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import AddressFinder from "../../components/WizardForm/AddressFinder";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpandMoreIcon from "@material-ui/core/SvgIcon/SvgIcon";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 
 
 
+
+
+
+const _ = require('lodash');
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
@@ -43,6 +28,8 @@ const styles = theme => ({
 
 
 });
+
+
 
 class editService extends React.Component {
     constructor(props) {
@@ -58,6 +45,7 @@ class editService extends React.Component {
             all_options: [],
             current_equipments: [],
             prestations_filter: [],
+            uniqFilter: [],
 
 
 
@@ -97,13 +85,35 @@ class editService extends React.Component {
                     .then(result => {
                         let prestations = result.data;
                         this.setState({all_prestations: prestations});
+                        let arrayFilter =  [];
+
+                        prestations.forEach(e => {
+                            arrayFilter.push(e.filter_presentation);
+                            let uniqFilter = _.uniqBy(arrayFilter,'label');
+
+                           this.setState({uniqFilter: uniqFilter});
+                        })
+
+                        this.state.uniqFilter.forEach(f=> {
+
+                            axios.get(url+`myAlfred/api/prestation/${serviceUser.service._id}/${f._id}`)
+                                .then(data => {
+                                    this.setState({[f._id]:data.data});
+                                })
+
+
+                        })
+
 
                     })
                     .catch(error => {
                         console.log(error);
                     });
 
-                axios.get(url+`myAlfred/api/options/all`)
+
+
+
+                        axios.get(url+`myAlfred/api/options/all`)
                     .then(result => {
                         let options = result.data;
                         this.setState({all_options: options});
@@ -188,6 +198,21 @@ class editService extends React.Component {
         const {serviceUser} = this.state;
         const {service} = this.state;
         const {all_prestations} = this.state;
+        const {uniqFilter} = this.state;
+
+        /*uniqFilter.forEach((q) => {
+           console.log(this.state[q._id]);
+        });*/
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -198,8 +223,22 @@ class editService extends React.Component {
                     <Grid item xs={7} style={{paddingLeft:20}}>
                         <h2 style={{fontWeight: '100'}}>Paramétrez votre service {service.label}</h2>
                         <Grid container>
-                            {all_prestations.map(f=> (
-                                <p key={f._id}>{f.filter_presentation.label}</p>
+
+                            {uniqFilter.map(f=> (
+                                console.log(this.state[f._id])
+                                /*this.state[f._id].forEach(s => (
+                                    <React.Fragment><p key={f._id}>{f.label}</p>
+                                        <p>{s.label}</p>
+                                    </React.Fragment>
+                                ))*/
+
+
+
+
+
+
+
+
                             ))}
 
                         </Grid>
@@ -219,4 +258,8 @@ class editService extends React.Component {
     };
 }
 
+
+
 export default withStyles(styles)(editService);
+
+

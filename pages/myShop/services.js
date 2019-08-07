@@ -188,17 +188,17 @@ class services extends React.Component {
                                     </React.Fragment>
                                 ))}
 
-                                <Grid container style={{marginLeft:90,border: '1px solid #707070',maxWidth:'90%',marginTop:30,height:70,justifyContent:"center"}}>
+                                <Grid container style={{marginLeft:90,border: '1px solid lightgrey',maxWidth:'90%',marginTop:30,height:70,justifyContent:"center"}}>
 
-                                    <Grid item xs={4} style={{display:"flex",justifyContent:"center"}}>
-                                        <img src={'../static/plus.svg'} width={'18%'} alt={'plus'}/>
-                                    </Grid>
-
-                                    <Grid item xs={8}>
-                                        <h2 style={{color:'#2FBCD3',fontWeight: '100'}}>Ajouter un nouveau service</h2>
-                                    </Grid>
-
+                                <Grid item xs={4} style={{display:"flex",justifyContent:"center"}}>
+                                    <img src={'../static/plus-2.svg'} width={'11%'} alt={'plus'}/>
                                 </Grid>
+
+                                <Grid item xs={8}>
+                                    <h2 style={{color:'#2FBCD3',fontWeight: '100'}}>Ajouter un nouveau service</h2>
+                                </Grid>
+
+                            </Grid>
 
 
                             </Grid>
