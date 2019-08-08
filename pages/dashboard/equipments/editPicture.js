@@ -57,6 +57,7 @@ class editPicture extends React.Component {
             logo2: null,
 
         };
+        this.onChange2 = this.onChange2.bind(this);
 
 
     }
@@ -100,13 +101,13 @@ class editPicture extends React.Component {
         e.preventDefault();
         const formData = new FormData();
         formData.append('logo',this.state.logo);
-        formData.append('logo2',this.state.file2);
+        formData.append('logo2',this.state.logo2);
         const id = this.props.equipment_id;
         axios.post(`${url}myAlfred/api/admin/equipment/editPicture/${id}`,formData)
             .then(res => {
 
                 alert('Logos modifiés avec succès');
-                Router.push({pathname:'/dashboard/equipment/all'})
+                Router.push({pathname:'/dashboard/equipments/all'})
             })
             .catch(err => {
                 console.log(err);
