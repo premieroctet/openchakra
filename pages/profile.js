@@ -380,6 +380,7 @@ class profile extends React.Component {
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={12} style={{marginTop: 10}}>
+                                        <InputLabel>Numéro d'urgence</InputLabel>
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
