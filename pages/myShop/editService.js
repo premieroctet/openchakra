@@ -47,6 +47,8 @@ class editService extends React.Component {
             prestations: [],
             equipments: [],
             perimeter: '',
+            deadline_before_booking_number: '',
+            deadline_before_booking_string: '',
             service_address: {},
             all_equipments: [],
             all_prestations: [],
@@ -107,6 +109,11 @@ class editService extends React.Component {
 
                 this.setState({current_options: serviceUser.option,haveOption: true});
                 }
+                const deadline = serviceUser.deadline_before_booking.substring(0,3);
+                const deadline_number = parseInt(deadline);
+                this.setState({deadline_before_booking_number: deadline_number});
+                this.setState({deadline_before_booking_string:serviceUser.deadline_before_booking.substring(3)});
+
 
                 axios.get(url+`myAlfred/api/service/${serviceUser.service._id}`)
                     .then(response => {
@@ -762,14 +769,34 @@ class editService extends React.Component {
                                 </p>
                             </Grid>
                             <Grid item xs={4}>
-                                <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }}>
+                                <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center",
+                                    lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }}
+                                onClick={()=> this.setState({deadline_before_booking_number: this.state.deadline_before_booking_number -1})}>
                                     -
                                 </div>
 
-                                <div style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>chiffre</div>
-                                <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginLeft: 25, marginRight: '5%' }} >
+                                <div style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{this.state.deadline_before_booking_number}</div>
+                                <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center",
+                                    lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginLeft: 25, marginRight: '5%' }}
+                                onClick={()=> this.setState({deadline_before_booking_number: this.state.deadline_before_booking_number +1})}>
                                     +
                                 </div>
+
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    style={{width: '30%'}}
+                                    select
+                                    margin="dense"
+                                    variant="outlined"
+                                    label="Heures / jours / semaines"
+                                    value={this.state.deadline_before_booking_string}
+                                    onChange={this.onChange2}
+                                >
+                                    <MenuItem value="heures">heure(s)</MenuItem>
+                                    <MenuItem value="jours">jour(s)</MenuItem>
+                                    <MenuItem value="semaines">semaine(s)</MenuItem>
+                                </TextField>
 
                             </Grid>
                         </Grid>
