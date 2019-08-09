@@ -16,10 +16,17 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import AlgoliaPlaces from 'algolia-places-react';
 import InputRange from 'react-input-range';
+import moment from "moment";
+import EditIcon from '@material-ui/icons/EditOutlined';
+import DeleteIcon from '@material-ui/icons/DeleteOutlined';
+import { Document,Page } from 'react-pdf'
+import { pdfjs } from 'react-pdf';
+import Switch from "@material-ui/core/Switch";
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
 
-
+moment.locale('fr');
 
 
 const _ = require('lodash');
@@ -63,12 +70,33 @@ class editService extends React.Component {
             priceOptions2: '',
             descOptions: '',
             unityOptions: '',
+            exp: '',
+
+            diploma: {},
+            haveDiploma: false,
+            editDiploma: false,
+            name_diploma: '',
+            year_diploma: '',
+            file_diploma: null,
+            name_newDiploma: '',
+            year_newDiploma: '',
+
+            certification: {},
+            haveCertification: false,
+            editCertification: false,
+            name_certification: '',
+            year_certification: '',
+            file_certification: null,
+            name_newCertification: '',
+            year_newCertification: '',
+
             typeOptions: null,
             typeOptions2: null,
             otherOptions: false,
             optionsSelected: false,
             haveOption: false,
             clickAddress: false,
+            dates: [],
 
             city: '',
             zip_code: '',
@@ -76,6 +104,11 @@ class editService extends React.Component {
             country: '',
             lat: '',
             lng: '',
+
+            pageNumber: 1,
+            numPages: null,
+            extDiploma: '',
+            extCertification: '',
 
 
 
@@ -98,7 +131,12 @@ class editService extends React.Component {
     componentDidMount() {
         const id = this.props.service_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-
+        let dates = [];
+        const actualDate = new Date().getFullYear();
+        for (let i = 1950; i <= actualDate; i++) {
+            dates.push(i);
+        }
+        this.setState({dates: dates});
         axios
             .get(url+`myAlfred/api/serviceUser/${id}`)
             .then(res => {
@@ -108,6 +146,16 @@ class editService extends React.Component {
                 if(typeof serviceUser.option != 'undefined'){
 
                 this.setState({current_options: serviceUser.option,haveOption: true});
+                }
+                if(typeof serviceUser.diploma != 'undefined'){
+
+                    this.setState({diploma: serviceUser.diploma,name_diploma:serviceUser.diploma.name,year_diploma:serviceUser.diploma.year,
+                        haveDiploma: true,extDiploma: serviceUser.diploma.file.split('.').pop()});
+                }
+                if(typeof serviceUser.certification != 'undefined'){
+
+                    this.setState({certification: serviceUser.certification,name_certification:serviceUser.certification.name,year_certification:serviceUser.certification.year,
+                        haveCertification: true,extCertification: serviceUser.certification.file.split('.').pop()});
                 }
                 const deadline = serviceUser.deadline_before_booking.substring(0,3);
                 const deadline_number = parseInt(deadline);
@@ -131,7 +179,8 @@ class editService extends React.Component {
                                 }
                             });
 
-                        })
+                        });
+
                     })
                     .catch(error => {
                         console.log(error);
@@ -148,6 +197,19 @@ class editService extends React.Component {
                             let uniqFilter = _.uniqBy(arrayFilter,'label');
 
                            this.setState({uniqFilter: uniqFilter});
+                        });
+                        prestations.forEach(r => {
+                            this.state.prestations.forEach(t => {
+                                if(t.prestation._id === r._id){
+                                    this.setState({[r.label]: true});
+                                    this.setState({[r.label+'price']: t.price});
+                                    this.setState({[r.label+'billing']: t.billing});
+                                } else {
+                                    this.setState({[r.label]:false});
+                                    this.setState({[r.label+'price']: ''});
+                                    this.setState({[r.label+'billing']: ''});
+                                }
+                            })
                         });
 
                         this.state.uniqFilter.forEach(f=> {
@@ -207,7 +269,19 @@ class editService extends React.Component {
             lat: suggestion.latlng.lat, lng: suggestion.latlng.lng});
 
 
-    }
+    };
+
+    onChangeDiploma = e => {
+        this.setState({file_diploma: e.target.files[0]});
+
+
+    };
+
+    onChangeCertification = e => {
+        this.setState({file_certification: e.target.files[0]});
+
+
+    };
 
 
     validateOptions = () => {
@@ -235,6 +309,10 @@ class editService extends React.Component {
 
     };
 
+    onDocumentLoadSuccess = ({ numPages }) => {
+        this.setState({ numPages });
+    };
+
 
 
     handleChecked () {
@@ -248,6 +326,10 @@ class editService extends React.Component {
         });
 
     }
+
+    handleChange = name => event => {
+        this.setState({[name]: event.target.checked });
+    };
 
 
     onSubmit = e => {
@@ -282,14 +364,20 @@ class editService extends React.Component {
         const {service} = this.state;
         const {all_prestations} = this.state;
         const {uniqFilter} = this.state;
-        const {loaded} = this.state;
         const {service_address} = this.state;
         const {all_options} = this.state;
         const {all_equipments} = this.state;
         const {current_options} = this.state;
         const {optionsSelected} = this.state;
+        const {diploma} = this.state;
+        const {certification} = this.state;
         const {haveOption} = this.state;
+        const {haveDiploma} = this.state;
+        const {editDiploma} = this.state;
+        const {haveCertification} = this.state;
+        const {editCertification} = this.state;
         const {clickAddress} = this.state;
+        const {dates} = this.state;
         const array_option = all_options.map(e =>(
             {
                 label: e.label,
@@ -297,6 +385,11 @@ class editService extends React.Component {
                 billing: e.billing
             }
         ));
+        const{ extDiploma} = this.state;
+        const{ extCertification} = this.state;
+
+
+
 
 
 
@@ -325,6 +418,93 @@ class editService extends React.Component {
                     <Grid item xs={7} style={{paddingLeft:20}}>
                         <h2 style={{fontWeight: '100'}}>Paramétrez votre service {service.label}</h2>
 
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <h2>{service.label}</h2>
+                            </Grid>
+                            <Grid item xs={12}>
+
+                                {uniqFilter.map(a => {
+                                    return (
+                                        <Grid container>
+                                            <Grid item xs={12}>
+                                            <h4>{a.label}</h4>
+                                            </Grid>
+
+                                                {all_prestations.map((z,index) => {
+                                                    if(z.filter_presentation.label !== a.label){
+                                                        return null
+
+                                                    } else {
+                                                        return (
+                                                            <Grid item xs={4} key={index}>
+                                                                <FormControlLabel
+                                                                    control={
+                                                                        <Switch
+                                                                            type="checkbox"
+                                                                            checked={this.state[z.label] ? true : false}
+                                                                            onChange={()=>
+                                                                                this.setState({[z.label]: !this.state[z.label]})
+                                                                            }
+                                                                            color="primary"
+                                                                        />
+                                                                    }
+                                                                    label={z.label}
+                                                                />
+                                                                {this.state[z.label] ?
+                                                                    <React.Fragment><TextField
+                                                                        id="standard-name"
+                                                                        value={this.state[z.label+'price']}
+                                                                        name={z.label+'price'}
+                                                                        onChange={this.onChange2}
+                                                                        style={{width: 125}}
+                                                                        label={`Prix`}
+                                                                        type="number"
+                                                                        disabled={!this.state[z.label]}
+                                                                        margin="none"
+                                                                        InputProps={{
+                                                                            inputProps: {
+                                                                                min: 0
+                                                                            },
+                                                                            startAdornment: <InputAdornment position="start">€</InputAdornment>,
+
+                                                                        }}
+
+                                                                    />
+                                                                        <TextField
+                                                                            style={{width: '100%'}}
+                                                                            select
+                                                                            margin="normal"
+                                                                            variant="outlined"
+                                                                            helperText={`Méthode de facturation`}
+                                                                            value={this.state[z.label+'billing']}
+                                                                            name={z.label+'billing'}
+                                                                            onChange={this.onChange2}
+                                                                        >
+                                                                            <MenuItem value="">...</MenuItem>
+                                                                            {z.billing.map(y => (
+                                                                                <MenuItem key={y.value} value={y.label}>{y.label}</MenuItem>
+                                                                            ))}
+                                                                        </TextField>
+
+
+                                                                    </React.Fragment>
+
+                                                                    : null}
+
+                                                            </Grid>
+
+                                                        )
+                                                    }
+                                                })}
+
+
+                                        </Grid>
+                                    )
+                                })}
+                            </Grid>
+                        </Grid>
+                        <hr/>
                         <Grid container>
                             <Grid item xs={12}>
                                 <h2>Option / Supplément</h2>
@@ -791,6 +971,7 @@ class editService extends React.Component {
                                     variant="outlined"
                                     label="Heures / jours / semaines"
                                     value={this.state.deadline_before_booking_string}
+                                    name={'deadline_before_booking_string'}
                                     onChange={this.onChange2}
                                 >
                                     <MenuItem value="heures">heure(s)</MenuItem>
@@ -799,6 +980,382 @@ class editService extends React.Component {
                                 </TextField>
 
                             </Grid>
+                        </Grid>
+                        <hr/>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <h2>Décrivez brievement votre expertise !</h2>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <p>
+
+                                        Mettez en évidence vos compétences et votre expertise dans ce service. Les utilisateurs auront accès à
+                                    ces informations, n’hésitez pas à valoriser votre expérience, vos réalisations et vos atouts pour ce service !
+
+
+                                </p>
+                            </Grid>
+                            <Grid item xs={11}>
+                                <TextField
+                                    style={{width:'100%'}}
+                                    multiline
+                                    rows={6}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={serviceUser.description}
+                                    name={'description'}
+                                    onChange={this.onChange}
+                                />
+                            </Grid>
+                        </Grid>
+                        <hr/>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <h2>Votre expérience, vos certifications & diplômes</h2>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <p>
+                                    Si vous possédez des certifications et/ou diplômes pour ce service, mettez les en avant ! Après vérification
+                                    par My-Alfred, vous aurez le statut d’Alfred certifié et/ou diplômé sur ce service.
+                                </p>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <h3 style={{color:'#757575'}}>Nombre d'années d'expérience</h3>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <TextField
+                                    style={{width: '100%'}}
+                                    select
+                                    margin="normal"
+                                    variant="outlined"
+                                    placeholder={'Vos années d\'expériences'}
+                                    value={serviceUser.level}
+                                    name={'level'}
+                                    onChange={this.onChange}
+                                >
+                                    <MenuItem value="">...</MenuItem>
+                                    <MenuItem value="ZeroOrOne">Entre 0 et 1 an</MenuItem>
+                                    <MenuItem value="OneToFive">Entre 1 et 5 ans</MenuItem>
+                                    <MenuItem value="FiveToTen">Entre 5 et 10 ans</MenuItem>
+                                    <MenuItem value="MoreThanTen">Plus de 10 ans</MenuItem>
+                                </TextField>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <h3 style={{color:'#757575'}}>Diplômes</h3>
+                            </Grid>
+                            {haveDiploma ?
+                                <React.Fragment>
+                                    <Grid container style={{border: '1px solid #BABABA',width:'60%'}}>
+                                        <Grid item xs={7} style={{paddingLeft:15}}>
+                                             <p style={{fontWeight:'bold'}}>{diploma.name}</p>
+                                        </Grid>
+                                        <hr style={{marginLeft:0,marginRight:0}}/>
+                                        <Grid item xs={1} style={{paddingLeft:15}}>
+                                            <p>{diploma.year}</p>
+                                        </Grid>
+                                        <Grid item xs={3} style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
+                                            <EditIcon onClick={()=>this.setState({editDiploma: true})} color={"primary"} style={{marginRight:20,cursor:"pointer"}}/>
+                                            <DeleteIcon color={"secondary"} style={{cursor:"pointer"}}/>
+                                        </Grid>
+                                    </Grid>
+                                </React.Fragment>
+                                :
+                                <React.Fragment>
+                                    <Grid container>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                style={{width: '100%'}}
+                                                type={'text'}
+                                                margin="normal"
+                                                variant="outlined"
+                                                placeholder={'Nom du diplôme'}
+                                                value={this.state.name_newDiploma}
+                                                name={'name_newDiploma'}
+                                                onChange={this.onChange2}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                style={{width: '100%'}}
+                                                label="Année d'obtention"
+                                                margin="normal"
+                                                variant="outlined"
+                                                select
+                                                value={this.state.year_newDiploma}
+                                                name={'year_newDiploma'}
+                                                onChange={this.onChange2}
+                                            >
+                                                {dates.map(e => (
+                                                    <MenuItem value={e}>{e}</MenuItem>
+                                                ))}
+                                            </TextField>
+
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={4}>
+                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
+                                                <p style={{cursor:"pointer",color:'black'}}>Joindre mon diplôme</p>
+                                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
+                                                       onChange={this.onChangeDiploma}
+                                                       className="form-control"
+                                                />
+                                            </label>
+                                            <span>{this.state.file_diploma !== null ? this.state.file_diploma.name : null}</span>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <p>
+                                                En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des
+                                                utilisateurs mais il ne sera jamais visible par ses derniers.
+                                            </p>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Button color={"primary"} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
+                                        </Grid>
+                                    </Grid>
+                                </React.Fragment>
+                            }
+                            {editDiploma ?
+
+                                <React.Fragment>
+                                    <Grid container>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                style={{width: '100%'}}
+                                                type={'text'}
+                                                margin="normal"
+                                                variant="outlined"
+                                                placeholder={'Nom du diplôme'}
+                                                value={this.state.name_diploma}
+                                                name={'name_diploma'}
+                                                onChange={this.onChange2}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                style={{width: '100%'}}
+                                                label="Année d'obtention"
+                                                margin="normal"
+                                                variant="outlined"
+                                                select
+                                                value={this.state.year_diploma}
+                                                name={'year_diploma'}
+                                                onChange={this.onChange2}
+                                            >
+                                                {dates.map(e => (
+                                                     <MenuItem value={e}>{e}</MenuItem>
+                                                    ))}
+                                            </TextField>
+
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={4}>
+                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
+                                                <p style={{cursor:"pointer",color:'black'}}>Joindre mon diplôme</p>
+                                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
+                                                       onChange={this.onChangeDiploma}
+                                                       className="form-control"
+                                                />
+                                            </label>
+                                            <span>{this.state.file_diploma !== null ? this.state.file_diploma.name : null}</span>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            {extDiploma !== 'pdf' ?
+                                                <img src={`../../${diploma.file}`} alt={'file'} width={'80%'}/>
+                                                :
+                                                <Document
+                                                    file={`../../${this.state.diploma.file}`}
+                                                    onLoadSuccess={this.onDocumentLoadSuccess}
+                                                >
+                                                    <Page pageNumber={this.state.pageNumber} width='250' />
+                                                </Document>
+                                            }
+
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <p>
+                                                En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des
+                                                utilisateurs mais il ne sera jamais visible par ses derniers.
+                                            </p>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Button color={"primary"} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
+                                        </Grid>
+                                    </Grid>
+                                </React.Fragment>
+                                : null}
+
+                            <Grid item xs={12}>
+                                <h3 style={{color:'#757575'}}>Certifications</h3>
+                            </Grid>
+                            {haveCertification ?
+                                <React.Fragment>
+                                    <Grid container style={{border: '1px solid #BABABA',width:'60%'}}>
+                                        <Grid item xs={7} style={{paddingLeft:15}}>
+                                            <p style={{fontWeight:'bold'}}>{certification.name}</p>
+                                        </Grid>
+                                        <hr style={{marginLeft:0,marginRight:0}}/>
+                                        <Grid item xs={1} style={{paddingLeft:15}}>
+                                            <p>{certification.year}</p>
+                                        </Grid>
+                                        <Grid item xs={3} style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
+                                            <EditIcon onClick={()=>this.setState({editCertification: true})} color={"primary"} style={{marginRight:20,cursor:"pointer"}}/>
+                                            <DeleteIcon color={"secondary"} style={{cursor:"pointer"}}/>
+                                        </Grid>
+                                    </Grid>
+                                </React.Fragment>
+                                :
+                                <React.Fragment>
+                                    <Grid container>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                style={{width: '100%'}}
+                                                type={'text'}
+                                                margin="normal"
+                                                variant="outlined"
+                                                placeholder={'Nom de la certification'}
+                                                value={this.state.name_newCertification}
+                                                name={'name_newCertification'}
+                                                onChange={this.onChange2}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                style={{width: '100%'}}
+                                                label="Année d'obtention"
+                                                margin="normal"
+                                                variant="outlined"
+                                                select
+                                                value={this.state.year_newCertification}
+                                                name={'year_newCertification'}
+                                                onChange={this.onChange2}
+                                            >
+                                                {dates.map(e => (
+                                                    <MenuItem value={e}>{e}</MenuItem>
+                                                ))}
+                                            </TextField>
+
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={4}>
+                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
+                                                <p style={{cursor:"pointer",color:'black'}}>Joindre ma certification</p>
+                                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
+                                                       onChange={this.onChangeCertification}
+                                                       className="form-control"
+                                                />
+                                            </label>
+                                            <span>{this.state.file_certification !== null ? this.state.file_certification.name : null}</span>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <p>
+                                                En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des
+                                                utilisateurs mais elle ne sera jamais visible par ces derniers.
+                                            </p>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Button color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
+                                        </Grid>
+                                    </Grid>
+                                </React.Fragment>
+                            }
+                            {editCertification ?
+
+                                <React.Fragment>
+                                    <Grid container>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                style={{width: '100%'}}
+                                                type={'text'}
+                                                margin="normal"
+                                                variant="outlined"
+                                                placeholder={'Nom de la certification'}
+                                                value={this.state.name_certification}
+                                                name={'name_certification'}
+                                                onChange={this.onChange2}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                style={{width: '100%'}}
+                                                label="Année d'obtention"
+                                                margin="normal"
+                                                variant="outlined"
+                                                select
+                                                value={this.state.year_certification}
+                                                name={'year_certification'}
+                                                onChange={this.onChange2}
+                                            >
+                                                {dates.map(e => (
+                                                    <MenuItem value={e}>{e}</MenuItem>
+                                                ))}
+                                            </TextField>
+
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={4}>
+                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
+                                                <p style={{cursor:"pointer",color:'black'}}>Joindre ma certification</p>
+                                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
+                                                       onChange={this.onChangeDiploma}
+                                                       className="form-control"
+                                                />
+                                            </label>
+                                            <span>{this.state.file_certification !== null ? this.state.file_certification.name : null}</span>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            {extCertification !== 'pdf' ?
+                                                <img src={`../../${certification.file}`} alt={'file'} width={'80%'}/>
+                                                :
+                                                <Document
+                                                    file={`../../${this.state.certification.file}`}
+                                                    onLoadSuccess={this.onDocumentLoadSuccess}
+                                                >
+                                                    <Page pageNumber={this.state.pageNumber} width='250' />
+                                                </Document>
+                                            }
+
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <p>
+                                                En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des
+                                                utilisateurs mais elle ne sera jamais visible par ces derniers.
+                                            </p>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Button color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
+                                        </Grid>
+                                    </Grid>
+                                </React.Fragment>
+                                : null}
+
+
+                        </Grid>
+                        <hr/>
+                        <Grid container style={{display:"flex",justifyContent:"flex-end",width:'90%'}}>
+                            <Button variant={"contained"} color={"secondary"} style={{color:"white"}}>Enregistrer</Button>
                         </Grid>
 
 

@@ -61,6 +61,7 @@ router.get('/:service',(req,res)=> {
         .populate('category')
         .populate('service')
         .populate('filter_presentation')
+        .populate('billing')
         .then(prestation => {
             if(typeof prestation !== 'undefined' && prestation.length > 0){
                 res.json(prestation);

@@ -62,7 +62,7 @@ const ServiceUserSchema = new Schema({
             type: String
         },
         year: {
-            type: Date
+            type: String
         },
         file: {
             type: String
@@ -77,7 +77,7 @@ const ServiceUserSchema = new Schema({
             type: String
         },
         year: {
-            type: Date
+            type: String
         },
         file: {
             type: String
