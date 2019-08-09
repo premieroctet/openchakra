@@ -52,6 +52,7 @@ class editService extends React.Component {
             serviceUser: {},
             service: {},
             prestations: [],
+            new_prestations: [],
             equipments: [],
             perimeter: '',
             deadline_before_booking_number: '',
@@ -445,6 +446,8 @@ class editService extends React.Component {
                                                                             checked={this.state[z.label] ? true : false}
                                                                             onChange={()=>
                                                                                 this.setState({[z.label]: !this.state[z.label]})
+
+
                                                                             }
                                                                             color="primary"
                                                                         />
