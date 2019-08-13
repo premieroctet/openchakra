@@ -157,21 +157,21 @@ class services extends React.Component {
 
                                         </Grid>
                                         <Grid item xs={3} style={{height: '150px',minWidth: '190px!important',borderLeft: '2px solid #018489', borderTop: '4px solid #018489', borderRight: '2px solid #B2DADB', position:'relative'}}>
-                                            <img style={{position:"absolute",left:'-5.9%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checked.png" width={'11%'}/>
-                                            <img style={{position:"absolute",left:'95.1%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checkedskyblue.png" width={'11%'}/>
+                                            <img style={{position:"absolute",left:'-5.9%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checkboxes/roundBlue.png" width={'11%'}/>
+                                            <img style={{position:"absolute",left:'95.1%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checkboxes/roundSkyblue.png" width={'11%'}/>
                                             <Typography style={{textAlign: 'center', fontSize: '1rem',padding: '5%'}}>
                                                 Remboursement intégral
                                             </Typography>
 
                                         </Grid>
                                         <Grid item xs={3} style={{height: '150px',minWidth: '190px!important', borderTop: '4px solid #B2DADB',borderRight: '2px solid #FFB400', position:'relative' }}>
-                                            <img style={{position:"absolute",left:'95.1%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checkedyellow.png" width={'11%'}/>
+                                            <img style={{position:"absolute",left:'95.1%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checkboxes/roundYellow.png" width={'11%'}/>
                                             <Typography style={{textAlign: 'center', fontSize: '1rem',padding: '5%'}}>
                                                 Remboursement intégral, moins les frais de dossier
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={3} style={{height: '150px',minWidth: '190px!important', borderTop: '4px solid #FFB400',borderRight: '2px solid #FF5B5E', position:'relative' }}>
-                                            <img style={{position:"absolute",left:'94.9%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checkedred.png" width={'11%'}/>
+                                            <img style={{position:"absolute",left:'94.9%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checkboxes/roundRedFull.png" width={'11%'}/>
                                             <Typography style={{textAlign: 'center', fontSize: '1rem',padding: '5%'}}>
                                                 Remboursement à hauteur de 50%
                                             </Typography>
