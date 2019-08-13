@@ -14,7 +14,8 @@ import axios from 'axios';
 import moment from 'moment';
 
 moment.locale('fr');
-const url = "https://myalfred.hausdivision.com/";
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
@@ -36,7 +37,7 @@ const styles = theme => ({
     },
   },
   title: {
-    fontSize: '2.5em',
+    fontSize: '1.5em',
     marginTop: '2rem',
     marginBottom: '2rem',
   },

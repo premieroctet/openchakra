@@ -5,7 +5,8 @@ import { Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import { Share, FavoriteBorderOutlined, PermContactCalendar } from '@material-ui/icons';
 import axios from 'axios';
-const url = "https://myalfred.hausdivision.com/";
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 
 const style = theme => ({
   bannerContainer: {
@@ -38,7 +39,7 @@ const style = theme => ({
   textAvatar: {
     textAlign: 'center',
     color: 'white',
-    fontSize: 35,
+    fontSize: 30,
   },
   textBio: {
     color: 'white',
@@ -135,13 +136,13 @@ class alfredBanner extends React.Component{
                             <Grid item className={classes.itemShare}>
                                 <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
                                     <Share style={{ color: 'white' }} />
-                                    <Typography variant="body1" style={{ color: 'white', fontSize: 20 }}>
+                                    <Typography variant="body1" style={{ color: 'white', fontSize: 15 }}>
                                         Share
                                     </Typography>
                                 </Grid>
                                 <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
                                     <FavoriteBorderOutlined style={{ color: 'white' }} onClick={this.addFavoris} />
-                                    <Typography variant="body1" style={{ color: 'white', fontSize: 20 }}>
+                                    <Typography variant="body1" style={{ color: 'white', fontSize: 15 }}>
                                         Add to wishlist
                                     </Typography>
                                 </Grid>
@@ -153,7 +154,7 @@ class alfredBanner extends React.Component{
                             <Grid item className={classes.itemDispo}>
                                 <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
                                     <PermContactCalendar style={{ color: 'white' }} />
-                                    <Typography style={{ fontSize: 20 }} variant="body1" className={classes.textDispo}>Disponibilité</Typography>
+                                    <Typography style={{ fontSize: 15 }} variant="body1" className={classes.textDispo}>Disponibilité</Typography>
                                 </Grid>
                             </Grid>
                         </Grid>

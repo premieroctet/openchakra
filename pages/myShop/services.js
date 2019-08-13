@@ -112,7 +112,7 @@ class services extends React.Component {
                             </Grid>
 
                         </Grid>
-                        <Grid container style={{backgroundImage: "url('../static/shopBanner/maldives-1993704_1920.jpg')",height:'84vh',
+                        <Grid container style={{backgroundImage: "url('../static/shopBanner/sky-690293_1920.jpg')",height:'84vh',
                             backgroundSize:"cover",justifyContent:"center",alignItems:"center"}}>
 
 
@@ -129,7 +129,7 @@ class services extends React.Component {
                             <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}}>Modifier</p>
                         </Grid>
                         <Grid item style={{position:"absolute",right:'3%',top:'18%',zIndex:502}}>
-                            <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}}>Aperçu de ma boutique</p>
+                            <p>{serviceUser.map((e,index)=> (<a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}} href={'/shopPreview?id_alfred=' + e.user}>Aperçu de ma boutique</a>))}</p>
                         </Grid>
 
                         <Grid container style={{backgroundColor: '#E5E5E5', height:40,marginTop:4}}>

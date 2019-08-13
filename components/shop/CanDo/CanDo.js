@@ -32,7 +32,7 @@ const styles = theme => ({
     },
   },
   title: {
-    fontSize: '2.5em',
+    fontSize: '1.5em',
     marginTop: '2rem',
     marginBottom: '2rem',
   },
