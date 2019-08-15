@@ -181,7 +181,7 @@ class NavBar extends Component {
     // Remove auth header for future requests
     setAuthToken(false);
     //document.location.href="https://myalfred.hausdivision.com/";
-    window.location.reload();
+    Router.push('/');
   };
 
   handleProfileMenuOpen = event => {
@@ -241,7 +241,7 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'/account/notifications'}>
+        <Link href={'#'}>
           <a className={classes.navbarLinkMobile}>
             Mon compte
           </a>
@@ -272,7 +272,7 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'/account/notifications'}>
+        <Link href={'#'}>
           <a className={classes.navbarLinkMobile}>
             Mon compte
           </a>
@@ -451,7 +451,7 @@ class NavBar extends Component {
                 </Link>
               </Typography>
               {test ? null : <React.Fragment><Link href={'/login'}>
-                    <Button variant="outlined" color={'primary'} style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
+                    <Button variant="outlined" color={'primary'} style={{color:this.state.isTop ? '' : 'white' , marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
                       Connexion
                     </Button>
                   </Link>

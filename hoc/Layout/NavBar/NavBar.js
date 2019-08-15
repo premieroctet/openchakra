@@ -150,7 +150,6 @@ class NavBar extends Component {
       const decode = jwt.decode(token2);
       this.setState({alfred: decode.is_alfred});
     }
-
     axios.defaults.headers.common['Authorization'] = token;
     axios
         .get(url+'myAlfred/api/users/current')
@@ -160,10 +159,12 @@ class NavBar extends Component {
 
             if(typeof user.picture !="undefined") {
                 this.setState({picture: true})
+
             } else {
-                this.setState({picture: false})
+              this.setState({picture: false})
             }
         })
+
   }
 
   logout2() {
@@ -228,7 +229,7 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'/account/notifications'}>
+        <Link href={'#'}>
           <a className={classes.navbarLinkMobile}>
             Mon compte
           </a>
@@ -259,7 +260,7 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'/account/notifications'}>
+        <Link href={'#'}>
           <a className={classes.navbarLinkMobile}>
             Mon compte
           </a>
@@ -395,7 +396,7 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  color="inherit" position="fixed">
+        <AppBar  color="white" position="fixed">
           <Toolbar>
             <Link href={'/'}>
               <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>

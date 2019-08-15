@@ -104,7 +104,7 @@ class services extends React.Component {
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'20%',left:'46.5%',zIndex:501}} width={'9%'} alt={'picture'}/>
+                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'20%',left:'46.5%',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',}} alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'46.2%',top:'38%',zIndex:502,textAlign: 'center'}}>
                             <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.35rem'}}>Plomberie</p>
@@ -113,6 +113,10 @@ class services extends React.Component {
 
                         {/*Le Contenu */}
                         <Grid container>
+                        
+                        {/*Contenu à Gauche*/}
+
+                            {/*Petite Description*/}
                             <Grid item xs={6} style={{textAlign: 'left',margin: '0 auto',}}>
                                 <div style={{margin: '20px 11%', marginTop: '5%',width: '75%'}}></div>
                                 <Typography style={{padding: '0 90px',fontSize: '1rem' }}>
@@ -121,22 +125,23 @@ class services extends React.Component {
                                     J’ai également suivi une formation de soudure, me permettant de vous conseiller au mieux !
                                 </Typography>
 
-                                <div style={{marginTop: '7%'}}>
+                                {/*Mes équipements*/}
+                                <div style={{marginTop: '8%'}}>
                                     <h3 style={{padding: '0 90px',color: '#07BCE5' }}>
                                         Je fournis :
                                     </h3>
                                     <Grid container>
                                         <Grid item xs={1} style={{}}></Grid>
                                         <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '3.5%'}}><img src="../../static/equipments/RaccordsJoints.svg"/></Grid>
-                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '3.5%'}}><img src="../../static/equipments/RaccordsJointsSelected.svg"/></Grid>
-                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '3.5%'}}><img src="../../static/equipments/RaccordsJoints.svg"/></Grid>
-                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '3.5%'}}><img src="../../static/equipments/RaccordsJointsSelected.svg"/></Grid>
-                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '3.5%'}}><img src="../../static/equipments/RaccordsJoints.svg"/></Grid>
+                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '1.5%'}}><img src="../../static/equipments/RaccordsJointsSelected.svg"/></Grid>
+                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '1.5%'}}><img src="../../static/equipments/RaccordsJoints.svg"/></Grid>
+                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '1.5%'}}><img src="../../static/equipments/RaccordsJointsSelected.svg"/></Grid>
+                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '1.5%'}}><img src="../../static/equipments/RaccordsJoints.svg"/></Grid>
                                         <Grid item xs={1}></Grid>
                                     </Grid>
                                 </div>
 
-                                <div style={{marginTop: '7%'}}>
+                                <div style={{marginTop: '8%'}}>
                                     <h3 style={{padding: '0 90px',color: '#07BCE5' }}>
                                         Disponibilité :
                                     </h3>
@@ -147,7 +152,8 @@ class services extends React.Component {
                                     </Grid>
                                 </div>
 
-                                <div style={{marginTop: '7%', marginBottom: '7%'}}>
+                                {/*cadre avec couleur et checkbox*/}
+                                <div style={{marginTop: '8%', marginBottom: '8%'}}>
                                     <h3 style={{padding: '0 90px',color: '#07BCE5' }}>
                                         Conditions d'annulation :
                                     </h3>
@@ -177,14 +183,26 @@ class services extends React.Component {
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={1} style={{height: '150px',maxWidth: '30px!important',borderTop: '4px solid #FF5B5E',}}></Grid>
-                                        <Grid item xs={1} style={{height: '150px'}}></Grid>
-                                        
-                                        <img style={{position:"absolute",left:'65%',top:'-3%',zIndex:502,textAlign: 'center'}} src="../../static/checkedyellow.png" width={'3%'}/>
+                                    </Grid>
+                                </div>
 
-                                        
+                                {/*Map Perimeters*/}
+                                <div style={{marginTop: '8%', marginBottom: '8%'}}>
+                                    <h3 style={{padding: '0 90px',color: '#07BCE5' }}>
+                                        Mon périmètre d'intervention :
+                                    </h3>
+                                    <Grid container>
+                                        <Grid item xs={2}></Grid>
+                                        <Grid item xs={6}>
+                                            <img width="450" height="325" src="../../static/perimetersfalse.png" />
+                                            <Typography>15 Kms à partir de l'adresse principale</Typography>
+                                        </Grid>
+                                        <Grid item xs={4}></Grid>
                                     </Grid>
                                 </div>
                             </Grid>
+
+                            {/*Contenu à droite*/}
                             <Grid item xs={6} style={{textAlign: 'center'}}>
                                 Contenu Droit
                             </Grid>

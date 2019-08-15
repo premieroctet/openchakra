@@ -149,7 +149,7 @@ class NavBar extends Component {
       const decode = jwt.decode(token2);
       this.setState({alfred: decode.is_alfred});
     }
-
+    
     axios.defaults.headers.common['Authorization'] = token;
     axios
         .get(url+'myAlfred/api/users/current')

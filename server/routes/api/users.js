@@ -811,7 +811,7 @@ router.put('/account/indexGoogle',passport.authenticate('jwt',{session: false}),
 // @Access private
 router.delete('/profile/picture/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
     User.findByIdAndUpdate(req.user.id,{
-        picture: undefined
+        picture: 'static/basicavatar.png'
     },{new:true})
         .then(user => {
             res.json(user)
