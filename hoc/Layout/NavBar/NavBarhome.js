@@ -227,13 +227,24 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'#'}>
+        <Link href={'/account/notifications'}>
           <a className={classes.navbarLinkMobile}>
             Mon compte
           </a>
         </Link>
       </Typography>
     </MenuItem>
+    {alfred ? 
+    <MenuItem onClick={this.handleMenuClose}>
+      <Typography>
+        <Link href={'/myShop/services'}>
+          <a className={classes.navbarLinkMobile}>
+            Ma boutique
+          </a>
+        </Link>
+      </Typography>
+    </MenuItem> 
+    : null}
     <MenuItem onClick={()=>this.logout2()}>
       <Typography>
         <Link>
@@ -258,13 +269,24 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'#'}>
+        <Link href={'/account/notifications'}>
           <a className={classes.navbarLinkMobile}>
             Mon compte
           </a>
         </Link>
       </Typography>
     </MenuItem>
+    {alfred ? 
+    <MenuItem onClick={this.handleMenuClose}>
+      <Typography>
+        <Link href={'/myShop/services'}>
+          <a className={classes.navbarLinkMobile}>
+            Ma boutique
+          </a>
+        </Link>
+      </Typography>
+    </MenuItem> 
+    : null}
     <MenuItem onClick={()=>this.logout2()}>
       <Typography>
         <Link>
