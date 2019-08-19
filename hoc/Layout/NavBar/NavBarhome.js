@@ -155,7 +155,7 @@ class NavBar extends Component {
         .get(url+'myAlfred/api/users/current')
         .then(res => {
             let user = res.data;
-            this.setState({user:user});
+            this.setState({user:user, alfred:user.is_alfred});
 
             if(typeof user.picture !="undefined") {
                 this.setState({picture: true})
@@ -218,7 +218,7 @@ class NavBar extends Component {
     const logoutMobile = <React.Fragment>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'/profile'}>
+        <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
             Profil
           </a>
@@ -260,7 +260,7 @@ class NavBar extends Component {
     <React.Fragment>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'/profile'}>
+        <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
             Profil  
           </a>

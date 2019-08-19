@@ -17,7 +17,7 @@ import { TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/EditOutlined';
 import SearchIcon from '@material-ui/icons/SearchOutlined';
-
+const jwt = require('jsonwebtoken');
 
 moment.locale('fr');
 
@@ -119,6 +119,15 @@ class services extends React.Component {
     }
 
     componentDidMount() {
+
+        
+        localStorage.setItem('path',Router.pathname);
+        const token = localStorage.getItem('token').split(' ')[1];
+        const decode = jwt.decode(token);
+        if (decode.is_alfred === false) {
+            Router.push('/becomeAlfredForm');
+
+        }
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
@@ -309,7 +318,7 @@ class services extends React.Component {
                             <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1rem'}}>{/*<EditIcon  style={{cursor: 'pointer',width:15, height:15, marginRight: 3,}}/>*/}Modifier</p>
                         </Grid>
                         <Grid item style={{position:"absolute",right:'3%',top:'18%',zIndex:502}}>
-                            <p>{serviceUser.map((e,index)=> (<a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}} href={'/shopPreview?id_alfred=' + e.user}>Aperçu de ma boutique</a>))}</p>
+                            <p>{serviceUser.map((e,index)=> (<a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}} href={'/myShop/shopPreview?id_alfred=' + e.user}>Aperçu de ma boutique</a>))}</p>
                         </Grid>
 
                         <Grid container style={{marginTop: 20}}>
@@ -598,7 +607,7 @@ class services extends React.Component {
                                             </Grid>
                                             <Grid container style={{marginLeft:110, border: '1px solid lightgray',padding: '15px 15px 15px 15px',}}>
                                                 <Grid item xs={3} style={{ borderBottom : '150px', borderLeft : '150px', cursor: 'pointer'}}>
-                                                    <Link href='#'><img src={e.service.picture} alt={'picture'} width={'85%'}/></Link>
+                                                    <Link href='/myShop/previewService'><img src={e.service.picture} alt={'picture'} width={'85%'}/></Link>
                                                 </Grid>
                                                 <Grid item xs={6}>
                                                     <h4 style={{fontWeight: 'bolder',fontSize: 18,color: '#737373'}}>{e.service.label}</h4>

@@ -12,7 +12,7 @@ import Wellbeing from '../components/home/Wellbeing/Wellbeing';
 import Proposeservice from '../components/home/proposeservice/Proposeservice';
 import Verypractical from '../components/home/Verypractical/Verypractical';
 import Assureback from '../components/home/AssureBack/Assureback';
-import TopService from '../components/home/TopService/Topservice';
+import TopService from '../components/home/Topservice/Topservice';
 import setAuthToken from '../utils/setAuthToken';
 import Router from "next/router";
 import '../static/stylebg.css'
