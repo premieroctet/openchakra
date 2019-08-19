@@ -165,7 +165,7 @@ class NavBar extends Component {
         .get(url+'myAlfred/api/users/current')
         .then(res => {
             let user = res.data;
-            this.setState({user:user});
+            this.setState({user:user, alfred:user.is_alfred});
 
             if(typeof user.picture !="undefined") {
                 this.setState({picture: true})
@@ -232,7 +232,7 @@ class NavBar extends Component {
     const logoutMobile = <React.Fragment>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'/profile'}>
+        <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
             Profil
           </a>
@@ -274,7 +274,7 @@ class NavBar extends Component {
     <React.Fragment>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'/profile'}>
+        <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
             Profil  
           </a>
@@ -430,7 +430,7 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  style={{backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(47, 188, 211)'}} position="fixed">
+        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(47, 188, 211)'}} position="fixed">
           <Toolbar>
             <Link href={'/'}>
               <img src={'../../../static/assets/img/logo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>

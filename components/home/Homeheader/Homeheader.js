@@ -163,7 +163,7 @@ const styles = theme => ({
     color: '#505050!important',
     textAlign: 'left',
     width:'100%',
-    fontSize: '33px!important',
+    fontSize: '30px!important',
     fontFamily: 'Helvetica',
     letterSpacing: '-1px',
     lineHeight: '39px!important',
@@ -195,23 +195,16 @@ const Homeheader = (props) => {
       <div className={classes.headerimg}></div>
       <div className={classes.headerhomevid}>
         <video id="background-video" loop autoPlay muted playsinline style={{width: '100%'}}>
-          <source src="../../../static/assets/img/videoLight.mp4" type="video/mp4" />
-          <source src="../../../static/assets/img/videoLight.mp4" type="video/ogg" />
+          <source src="../../../static/bgmyalfred.mp4" type="video/mp4" />
+          <source src="../../../static/bgmyalfred.ogg" type="video/ogg" />
           Your browser does not support the video tag.
         </video>
       </div>
       <div className={classes.headeroverlay}></div>
-      <div className={classes.headerhome2}>
-        <Grid container>
-          <Grid item xs={12}>
-          <Typography><h1 className={classes.homepunchline}>Find amazing services provided by great people</h1></Typography>
-          </Grid>
-        </Grid>
-      </div>
       <div className={classes.headerhome}>
         <Grid container>
           <Grid item xs={12}>
-          <Typography><h2 className={classes.homeform}>Et si vous pouviez réserver n'importe quel service immediatement ?</h2></Typography>
+          <Typography><h3 className={classes.homeform}>Et si vous pouviez réserver n'importe quel service immediatement ?</h3></Typography>
           </Grid>
         <Grid item xs={12}  style={{ width:'100%',}}>
         <form className={classes.formlabel} style={{ width:'100%',}} >
