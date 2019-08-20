@@ -1,6 +1,10 @@
 const appName = 'myalfred'
 const databaseName = 'test-myAlfred'
 const serverPort = process.env.PORT || 3122;
+<<<<<<< HEAD
+=======
+
+>>>>>>> e93b1834d50cb6c642932f9be7be23ee90107fdb
 const apiUrl = "http://myalfred.hausdivision.com/";
 
 const completeConfig = {
