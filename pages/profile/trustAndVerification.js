@@ -27,7 +27,8 @@ const url = config.apiUrl;
 
 const styles = theme => ({
     bigContainer: {
-        marginTop: 70,
+        marginTop: 20,
+        marginBottom: 70,
         flexGrow: 1,
     },
     hidesm: {
@@ -68,7 +69,7 @@ const styles = theme => ({
         transition: 'margin-left 0.7s',
        
         '&:hover': {
-            marginLeft:'0px',
+            marginLeft:'0px',   
             transition: 'margin-left 0.7s',
             boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
 
@@ -87,7 +88,7 @@ class trustAndVerification extends React.Component {
             type: '',
             id_recto: '',
             id_verso: '',
-            card:{},
+            cardrecto:{},
             pageNumber: 1,
             numPages: null,
             ext: '',
@@ -104,8 +105,8 @@ class trustAndVerification extends React.Component {
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
-                this.setState({user:user,card:user.id_card});
-                const ext = this.state.card.recto.split('.').pop();
+                this.setState({user:user,cardrecto:user.id_card.recto});
+                const ext = this.state.cardrecto.split('.').pop();
                 this.setState({ext:ext });
 
                 if(user.is_alfred) {
@@ -115,18 +116,9 @@ class trustAndVerification extends React.Component {
                             this.setState({professionnal: result.is_professional,company: result.company});
                         })
                 }
-
-
-
-
-
             })
             .catch(err => {
                     console.log(err);
-                    if(err.response.status === 401 || err.response.status === 403) {
-                        localStorage.removeItem('token');
-                        Router.push({pathname: '/login'})
-                    }
                 }
             );
     }
@@ -185,6 +177,7 @@ class trustAndVerification extends React.Component {
         const {ext} = this.state;
         const {professionnal} = this.state;
         const {company} = this.state;
+        
 
 
         return (
@@ -415,9 +408,9 @@ class trustAndVerification extends React.Component {
 
                                     </TextField>
                                     <form onSubmit={this.onSubmit}>
-                                    <div style={{marginTop: 20,border:'0.2px solid lightgrey',width:'80%'}}>
+                                    <div style={{marginTop: 20,padding: '2% 13%',border:'0.2px solid lightgrey',width:'80%'}}>
                                         <label style={{display: 'inline-block', marginTop: 15,paddingLeft: 50}} className="forminputs">
-                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '1.1rem'}}>Télécharger recto</p>
+                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger recto</p>
                                             <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
                                                    onChange={this.onChangeRecto}
                                                    className="form-control"
@@ -425,9 +418,9 @@ class trustAndVerification extends React.Component {
                                         </label>
                                         <span>{this.state.id_recto.name !== null ? this.state.id_recto.name : null}</span>
                                     </div>
-                                    <div style={{marginTop: 20,border:'0.2px solid lightgrey',width:'80%'}}>
-                                        <label style={{display: 'inline-block', marginTop: 15,paddingLeft: 50}} className="forminputs">
-                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '1.1rem'}}>Télécharger verso (sauf passeport)</p>
+                                    <div style={{marginTop: 20,padding: '3% 8%',paddingTop: '5%',border:'0.2px solid lightgrey',width:'80%'}}>
+                                        <label style={{display: 'inline-block', }} className="forminputs">
+                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
                                             <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
                                                    onChange={this.onChangeVerso}
                                                    className="form-control"
@@ -447,13 +440,13 @@ class trustAndVerification extends React.Component {
                                     <div style={{marginTop: 20,width:'80%',display:'flex'}}>
                                         {ext ==='pdf' ?
                                             <Document
-                                                file={`../${this.state.card.recto}`}
+                                                file={`../${this.state.cardrecto}`}
                                                 onLoadSuccess={this.onDocumentLoadSuccess}
                                             >
                                                 <Page pageNumber={this.state.pageNumber} width='250' />
                                             </Document>
                                             :
-                                            <img src={'../'+this.state.card.recto} alt={'recto'} width={200}/>
+                                            <img src={`../${this.state.cardrecto}`} alt={'recto'} width={200}/>
 
                                         }
                                         {user.id_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :

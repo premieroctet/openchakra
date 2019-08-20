@@ -154,8 +154,8 @@ class index extends React.Component {
                 <div className={classes.headerImg}/>
                 <div className={classes.headerhomevid}>
                 <video id="background-video" loop autoPlay muted playsinline style={{width: '100%'}}>
-                    <source src="../static/assets/img/bgdark.webm" type="video/webm" />
-                    <source src="../static/assets/img/bgdarklight.mp4" type="video/mp4" />
+                    <source src="../../../static/bgmyalfred.mp4" type="video/mp4" />
+                    <source src="../../../static/bgmyalfred.ogg" type="video/ogg" />
                     Your browser does not support the video tag.
                 </video>
                 </div>
@@ -332,8 +332,8 @@ class index extends React.Component {
                         <div style={{height: '112.5vh'}} className={classes.footerVideo}>
                             <div className={classes.footerImg}/>
                         <video id="background-video" loop autoPlay muted playsinline style={{width: '100%',marginTop: 23}} className={classes.video}>
-                            <source src="../static/assets/img/bgdark.webm" type="video/webm" />
-                            <source src="../static/assets/img/bgdarklight.mp4" type="video/mp4" />
+                            <source src="../../../static/bgmyalfred.mp4" type="video/mp4" />
+                            <source src="../../../static/bgmyalfred.ogg" type="video/ogg" />
                             Your browser does not support the video tag.
                         </video>
                         </div>
