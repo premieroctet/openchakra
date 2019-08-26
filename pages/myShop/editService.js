@@ -99,12 +99,12 @@ class editService extends React.Component {
             clickAddress: false,
             dates: [],
 
-            city: '',
-            zip_code: '',
-            address: '',
-            country: '',
-            lat: '',
-            lng: '',
+            city: null,
+            zip_code: null,
+            address: null,
+            country: null,
+            lat: null,
+            lng: null,
 
             pageNumber: 1,
             numPages: null,
@@ -162,6 +162,11 @@ class editService extends React.Component {
                 const deadline_number = parseInt(deadline);
                 this.setState({deadline_before_booking_number: deadline_number});
                 this.setState({deadline_before_booking_string:serviceUser.deadline_before_booking.substring(3)});
+                //this.setState({new_prestations: serviceUser.prestations});
+                serviceUser.prestations.forEach(q => {
+                   let obj = {prestation: q.prestation.label,billing:q.billing,price: q.price};
+                   this.setState({new_prestations: [...this.state.new_prestations,obj]})
+                });
 
 
                 axios.get(url+`myAlfred/api/service/${serviceUser.service._id}`)
@@ -332,17 +337,63 @@ class editService extends React.Component {
         this.setState({[name]: event.target.checked });
     };
 
+    onChangePrestation(label) {
+        const arrayPrestations = [];
+        let array = [...this.state.new_prestations];
+        let index = _.findIndex(array,['prestation',label]);
+        if (index !== -1) {
+            array.splice(index, 1);
+            this.setState({new_prestations: array});
+            this.setState({[label+'price']:null});
+            this.setState({[label+'billing']:null});
+        } else {
+            const obj = {prestation: label,billing:null,price:null};
+            arrayPrestations.push(obj);
+            this.setState({new_prestations: [...this.state.new_prestations, obj]});
+        }
+
+
+    };
+
+    onChangePrice(label,e) {
+        let array = this.state.new_prestations;
+        let index = _.findIndex(array,['prestation',label]);
+        array[index].price = e.target.value;
+        this.setState({new_prestations:  array});
+    };
+
+    onChangeBilling(label,e) {
+        let array = this.state.new_prestations;
+        let index = _.findIndex(array,['prestation',label]);
+        array[index].billing = e.target.value;
+        this.setState({new_prestations:  array});
+    }
+
 
     onSubmit = e => {
         e.preventDefault();
+        const prestations = this.state.new_prestations;
+        if(_.isEmpty(this.state.options)){
+            const options = this.state.current_options
+        } else {
+            const options = this.state.options
+        }
+        if(this.state.city !== null){
+            const city = this.state.city;
+            const address = this.state.address;
+            const zip_code = this.state.zip_code;
+            const country = this.state.country;
+            const lat = this.state.lat;
+            const lng = this.state.lng;
+        }
+        const deadline_before_booking = this.state.deadline_before_booking_number + ''+this.state.deadline_before_booking_string;
         const equipments = this.state.equipments;
         const perimeter = this.state.perimeter;
-        const active = this.state.active;
-        const { city,minimum_basket,deadline_before_booking,price } = this.state.serviceUser;
+        const {minimum_basket,description,level } = this.state.serviceUser;
         const id = this.props.service_id;
 
 
-        axios.put(`${url}myAlfred/api/serviceUser/edit/${id}`,{city,minimum_basket,deadline_before_booking,price,equipments,perimeter
+        axios.put(`${url}myAlfred/api/serviceUser/edit/${id}`,{minimum_basket,deadline_before_booking,equipments,perimeter
             ,active})
             .then(res => {
 
@@ -444,8 +495,10 @@ class editService extends React.Component {
                                                                         <Switch
                                                                             type="checkbox"
                                                                             checked={this.state[z.label] ? true : false}
-                                                                            onChange={()=>
-                                                                                this.setState({[z.label]: !this.state[z.label]})
+                                                                            onChange={()=> {
+                                                                                this.setState({[z.label]: !this.state[z.label]});
+                                                                                this.onChangePrestation(z.label)
+                                                                            }
 
 
                                                                             }
@@ -459,7 +512,10 @@ class editService extends React.Component {
                                                                         id="standard-name"
                                                                         value={this.state[z.label+'price']}
                                                                         name={z.label+'price'}
-                                                                        onChange={this.onChange2}
+                                                                        onChange={(event)=>{
+                                                                            this.onChange2(event);
+                                                                            this.onChangePrice(z.label,event);
+                                                                        }}
                                                                         style={{width: 125}}
                                                                         label={`Prix`}
                                                                         type="number"
@@ -482,7 +538,8 @@ class editService extends React.Component {
                                                                             helperText={`Méthode de facturation`}
                                                                             value={this.state[z.label+'billing']}
                                                                             name={z.label+'billing'}
-                                                                            onChange={this.onChange2}
+                                                                            onChange={(event)=>{this.onChange2(event);
+                                                                            this.onChangeBilling(z.label,event)}}
                                                                         >
                                                                             <MenuItem value="">...</MenuItem>
                                                                             {z.billing.map(y => (
