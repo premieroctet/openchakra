@@ -1518,43 +1518,48 @@ class Form extends React.Component {
                                                                             </div>
                                                                         </div>
                                                                         <hr style={{margin: '1rem 0'}}></hr>
-                                                                        <div>
-                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez ce que vous fournissez</Typography>
-                                                                            <Typography style={{marginBottom: '1rem'}}>
-                                                                            Sélectionnez les produits et le matériel que vous fournissez dans le cadre de vos prestations de service. 
-                                                                            </Typography>
-                                                                        </div>
-                                                                        <div>
-                                                                            <Grid container>
-                                                                            {s.equipments.map((e, indexe) => {
-                                                                                if (e.label.includes('Selected')) {
-                                                                                    return null;
-                                                                                };
-                                                                                return (
-                                                                                    <Grid item xs={3}>
-                                                                                    <label style={{cursor: 'pointer'}} key={indexe} onClick={() => {
-                                                                                        e.checked = !e.checked;
-                                                                                        arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
-                                                                                    }}>
-                                                                                        
-                                                                                        {e.checked === true ? <img src={`../../static/equipment/${e.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${e.name_logo.slice(0, -4)}_Selected.svg`} /> : <img src={`../../static/equipment/${e.logo}`} height={100} width={100} alt={e.name_logo} />}
-                                                                                        <Checkbox
-                                                                                            style={{display: 'none'}}
-                                                                                            color="primary"
-                                                                                            type="checkbox"
-                                                                                            checked={e.checked}
-                                                                                            onChange={() => {
+                                                                        {s.equipments.length === 0 ? null :
+                                                                            <React.Fragment>
+                                                                                <div>
+                                                                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez ce que vous fournissez</Typography>
+                                                                                    <Typography style={{marginBottom: '1rem'}}>
+                                                                                    Sélectionnez les produits et le matériel que vous fournissez dans le cadre de vos prestations de service. 
+                                                                                    </Typography>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <Grid container>
+                                                                                    {s.equipments.map((e, indexe) => {
+                                                                                        if (e.label.includes('Selected')) {
+                                                                                            return null;
+                                                                                        };
+                                                                                        return (
+                                                                                            <Grid item xs={3}>
+                                                                                            <label style={{cursor: 'pointer'}} key={indexe} onClick={() => {
                                                                                                 e.checked = !e.checked;
                                                                                                 arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
-                                                                                            }}
-                                                                                        />
-                                                                                    </label>
+                                                                                            }}>
+                                                                                                
+                                                                                                {e.checked === true ? <img src={`../../static/equipment/${e.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${e.name_logo.slice(0, -4)}_Selected.svg`} /> : <img src={`../../static/equipment/${e.logo}`} height={100} width={100} alt={e.name_logo} />}
+                                                                                                <Checkbox
+                                                                                                    style={{display: 'none'}}
+                                                                                                    color="primary"
+                                                                                                    type="checkbox"
+                                                                                                    checked={e.checked}
+                                                                                                    onChange={() => {
+                                                                                                        e.checked = !e.checked;
+                                                                                                        arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
+                                                                                                    }}
+                                                                                                />
+                                                                                            </label>
+                                                                                            </Grid>
+                                                                                        )
+                                                                                    })}
                                                                                     </Grid>
-                                                                                )
-                                                                            })}
-                                                                            </Grid>
-                                                                        </div>
-                                                                        <hr style={{margin: '1rem 0'}}></hr>
+                                                                                </div>
+                                                                                <hr style={{margin: '1rem 0'}}></hr>
+                                                                            </React.Fragment>
+                                                                        }
+
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Définissez votre montant minimum de réservation</Typography>
                                                                             <Typography>
