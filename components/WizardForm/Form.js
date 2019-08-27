@@ -995,13 +995,13 @@ class Form extends React.Component {
                                     <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 2</Typography>
                                     <hr style={{border: '4px solid grey', marginRight: '10%'}} />
                                     <Typography style={{fontSize: 18}}>Indiquez vos disponiblités & conditions</Typography>
-                                    <Typography>Indiquez vos disponibilités ,paramètres de réservation et vos conditions d’annulation</Typography>
+                                    <Typography>Indiquez vos disponibilités, paramètres de réservation et vos conditions d’annulation</Typography>
                                 </div>
                                 <div className="step3">
                                     <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 3</Typography>
                                     <hr style={{border: '4px solid grey', marginRight: '10%'}} />
                                     <Typography style={{fontSize: 18}}>Présentez-vous !</Typography>
-                                    <Typography>Renseignez votre profil Alfred, partager vos réalisa- tions, et décrivez vous !</Typography>
+                                    <Typography>Renseignez votre profil Alfred, partagez vos réalisations, et décrivez vous !</Typography>
                                 </div>
                             </div> 
                             
@@ -1012,8 +1012,7 @@ class Form extends React.Component {
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Vos catégories de service</Typography>
                                     <Typography>
-                                        Commencez par sélectionner vos catégories de services. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être».
-                                        Ne vous limitez pas ! Vous pouvez selectionner plusieurs catégories.
+                                        Commencez par sélectionner vos catégories de services. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être». Ne vous limitez pas ! Vous pouvez sélectionner plusieurs catégories.
                                     </Typography>
                                 </div>
                                 <FieldArray
@@ -1051,6 +1050,7 @@ class Form extends React.Component {
                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Vos services</Typography>
                                                     <Typography>
                                                         Identifiez maintenant les services que vous souhaitez réaliser dans chacune des catégories sélectionnées. Ne vous limitez pas ! Plusieurs services peuvent être sélectionnés. Vous pourrez choisir le type de prestation que vous souhaitez réaliser dans chacun de vos services dès la prochaine étape !
+                                                        Afin d'afficher la sélection des services, veuillez sélectionner vos catégories…
                                                     </Typography>
                                                 </div>
                                                 <div style={{marginTop: '1rem'}}>
@@ -1241,7 +1241,7 @@ class Form extends React.Component {
                                                 <div style={{padding: '2rem 2rem 1rem 2rem'}}>
                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Paramétrez vos services & prestations</Typography>
                                                     <Typography>
-                                                        Indiquez les prestations que vous souhaitez réaliser dans chacun de vos services. Indiquez vos tarifs et vos éventuelles majoration sur les services éligibles.
+                                                        Indiquez les prestations que vous souhaitez réaliser dans chacun de vos services. Indiquez vos tarifs et vos éventuelles majorations sur les services éligibles.
                                                     </Typography>
                                                 </div>
                                                 <Tabs>
@@ -1270,7 +1270,7 @@ class Form extends React.Component {
                                                                                         key={indexf}
                                                                                         className={classes.prestationsPres}
                                                                                     >
-                                                                                        <p>{f.label}</p>
+                                                                                        <p>{f.label === "Aucun" ? null : f.label}</p>
                                                                                         <Grid container>
                                                                                         {f.prestations.map((p, indexp) => {
                                                                                             return(
@@ -1360,6 +1360,10 @@ class Form extends React.Component {
                                                                         <hr style={{margin: '1rem 0'}}></hr>
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Options</Typography>
+                                                                            <Typography style={{marginBottom: '1rem'}}>
+                                                                                Les options permettent de proposer des services complémentaires à vos prestations. 
+                                                                                Une liste d’option possible pour vos services vous est proposée par My-Alfred. Si vous souhaitez utiliser votre propre option, vous pouvez en ajouter une à tout moment. 
+                                                                            </Typography>
                                                                             <Field render={({form}) => {
                                                                                 const array_option = this.state.all_options.map(e =>(
                                                                                     {
@@ -1629,7 +1633,7 @@ class Form extends React.Component {
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez votre délai de prévenance</Typography>
                                                                             <Typography>
-                                                                                Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du service. Par exemple, si vous indiquez un délai de 24 heures, un client pourra réserver votre service 24 heures avant votre intervantion.
+                                                                                Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du service. Par exemple, si vous indiquez un délai de 24 heures, un client pourra réserver votre service 24 heures avant votre intervention.
                                                                             </Typography>
                                                                             <Grid item xs={12} className={classes.delayDivResponsive}>
                                                                                 <Field
@@ -1990,9 +1994,7 @@ class Form extends React.Component {
                                         </h6>
 
                                         <Typography style={{marginBottom: 20,fontFamily: 'helveticaNeue'}}>
-                                            Il se peut que vous ayez moins de réservation si vous
-                                            ajoutez des conditions. Les personnes qui ne répondent pas
-                                            à vos critères peuvent quand même envoyer une demande
+                                        Il se peut que vous ayez moins de réservations si vous ajoutez des conditions. Les personnes qui ne répondent pas à vos critères peuvent quand même envoyer une demande.
                                         </Typography>
 
                                         <Grid item style={{ marginLeft: 20 }}>
@@ -2017,8 +2019,7 @@ class Form extends React.Component {
                                                         label={<React.Fragment>
                                                             <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Conditions My-Alfred</p>
                                                     <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                        Numéro de téléphone confirmé, adresse e-mail, informations de paiements et acceptation
-                                                        du règlement intérieur.
+                                                        Numéro de téléphone confirmé, adresse e-mail, informations de paiement et acceptation du règlement intérieur.
                                                 </p>
                                             </React.Fragment>}
 
@@ -2049,8 +2050,7 @@ class Form extends React.Component {
                                                         label={<React.Fragment>
                                                         <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Photo de profil</p>
                                                         <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                            Si vous activez cette condition, vous ne pourrez voir les photos de profil des
-                                                            voyageurs qu'une fois la réservation confirmée. En savoir plus
+                                                            Si vous activez cette condition, vous ne pourrez voir les photos de profil des utilisateurs qu'une fois la réservation confirmée. 
                                                         </p>
                                                     </React.Fragment>}
 
@@ -2080,7 +2080,7 @@ class Form extends React.Component {
                                                         label={<React.Fragment>
                                                         <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Pièce d'identité officielle</p>
                                                         <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                            Ces voyageurs ont vérifié leur identité.
+                                                            Ces utilisateurs ont vérifié leur identité.
                                                         </p>
                                                     </React.Fragment>}
 
@@ -2110,7 +2110,7 @@ class Form extends React.Component {
                                                         label={<React.Fragment>
                                                             <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Recommandations d'autres Alfred</p>
                                                             <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                                Ces utilisateurs ont déjà utilisés des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commen- taires négatifs.
+                                                                Ces utilisateurs ont déjà utilisé des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commentaires négatifs.
                                                             </p>
                                                         </React.Fragment>}
 
@@ -2152,7 +2152,7 @@ class Form extends React.Component {
                                     <Grid container>
 
                                         <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
-                                           Vos conditions d'annulation
+                                            Conditions d’annulation
                                         </h6>
 
                                         <Typography style={{fontFamily: 'helveticaNeue', width: '100%'}}>
@@ -2191,8 +2191,7 @@ class Form extends React.Component {
                                                                 <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Flexibles</p>
 
                                                                 <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                                    Remboursement intégral jusqu'à 1 jour avant la
-                                                                    prestation
+                                                                    Remboursement intégral jusqu’à un jour avant la prestation
                                                                 </p>
                                                             </React.Fragment>
                                                         }
@@ -2228,8 +2227,7 @@ class Form extends React.Component {
                                                             <React.Fragment>
                                                                 <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Modérées</p>
                                                                 <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                                    Remboursement intégral jusqu'à 5 jours avant la
-                                                                    prestation
+                                                                    Remboursement intégral jusqu’à 5 jours avant la prestation
                                                                 </p>
                                                             </React.Fragment>
                                                         }
@@ -2258,22 +2256,14 @@ class Form extends React.Component {
                                                                 name={"strict_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                                 checkedIcon={<FilledButton />}
-                                                                style={{ marginTop: -100 }}
+                                                                style={{ marginTop: -20 }}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
                                                                 <p style={{ marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue' }}>Strictes</p>
                                                                 <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                                    Remboursement intégral pour les annulations
-                                                                    effectuées dans les 48 heures suivant la
-                                                                    réservation, si la date de ma prestation
-                                                                    intervient dans 14 jours ou plus. Remboursement à
-                                                                    hauteur de 50 % pour les annulations effectuées au
-                                                                    moins 7 jours avant la date de la prestation.
-                                                                    Aucun remboursement pour les annulations
-                                                                    effectuées dans les 7 jours précédant la date de
-                                                                    la prestation.
+                                                                    Remboursement intégral jusqu’à 10 jours avant la prestation
                                                                 </p>
                                                             </React.Fragment>
                                                         }
@@ -2360,7 +2350,7 @@ class Form extends React.Component {
                                                 </Grid>
                                                 <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                                 <Grid container>
-                                                    <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                    <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10, width: '100%'}}>
                                                         Vérifiez votre identité
                                                     </h6>
                                                     <Typography style={{fontFamily: 'helveticaNeue'}}>
@@ -2507,13 +2497,7 @@ class Form extends React.Component {
                                                                 Je suis un particulier
                                                             </h6>
                                                             <Typography>
-                                                                En tant que particulier, vous pouvez rendre des
-                                                                services occasionnels sur My-Alfred. Si votre
-                                                                activité devient régulière, un statut
-                                                                professionnel (mi-cro-entrepreuneur,...)
-                                                                s’impose. Il est également requis pour certains
-                                                                sec-teurs d’activité réglementés (travaux de
-                                                                plomberie, peinture, électricité...)
+                                                                En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés. 
                                                             </Typography>
                                                         </Grid>
                                                     </Grid>
@@ -2556,13 +2540,7 @@ class Form extends React.Component {
                                                                 Je suis un professionnel
                                                             </h6>
                                                             <Typography>
-                                                                Un statut professionnel est nécessaire pour les
-                                                                métiers réglementés et permet une activité
-                                                                régulière sur My-Alfred. Seuls les
-                                                                professionnels peuvent proposer leurs services
-                                                                aux entreprises qui ont besoin d’une facture.Un
-                                                                statut professionnel est requis dès que votre
-                                                                activité devient régulière
+                                                                Un statut professionnel est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière. 
                                                             </Typography>
                                                             {isProfessional ? (
                                                                 <React.Fragment>
