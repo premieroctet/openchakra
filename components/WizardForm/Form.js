@@ -428,6 +428,7 @@ class Wizard extends React.Component {
             axios.put(url+'myAlfred/api/users/users/becomeAlfred')
                 .then(res => {
                     alert('Vous êtes maintenant un Alfred');
+                    
                 })
                 .catch(err => {
                     console.log(err);
@@ -1532,7 +1533,7 @@ class Form extends React.Component {
                                                                                         arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
                                                                                     }}>
                                                                                         
-                                                                                        {e.checked === true ? <img src={`../../${e.logo.slice(0, -4)}Selected.svg`} height={100} width={100} alt={`${e.name_logo.slice(0, -4)}Selected.svg`} /> : <img src={`../../${e.logo}`} height={100} width={100} alt={e.name_logo} />}
+                                                                                        {e.checked === true ? <img src={`../../static/equipment/${e.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${e.name_logo.slice(0, -4)}_Selected.svg`} /> : <img src={`../../static/equipment/${e.logo}`} height={100} width={100} alt={e.name_logo} />}
                                                                                         <Checkbox
                                                                                             style={{display: 'none'}}
                                                                                             color="primary"

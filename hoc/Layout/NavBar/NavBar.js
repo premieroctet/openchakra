@@ -155,7 +155,7 @@ class NavBar extends Component {
         .get(url+'myAlfred/api/users/current')
         .then(res => {
             let user = res.data;
-            this.setState({user:user});
+            this.setState({user:user, alfred: user.is_alfred});
 
             if(typeof user.picture !="undefined") {
                 this.setState({picture: true})
