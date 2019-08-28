@@ -319,6 +319,7 @@ class profile extends React.Component {
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'phone'}
+                                        placeholder={'Téléphone'}
                                     />
                                 </Grid>
                             </Grid>

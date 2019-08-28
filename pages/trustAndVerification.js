@@ -13,6 +13,10 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Document,Page } from 'react-pdf'
 import { pdfjs } from 'react-pdf';
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
+import styled from "styled-components";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
@@ -24,7 +28,16 @@ moment.locale('fr');
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
-
+const FilledButton = styled.div`
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background-color: #2FBCD3;
+    margin-right: 5px;
+    margin-top: 3px;
+    margin-left: 3px;
+`;
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
@@ -46,9 +59,17 @@ class trustAndVerification extends React.Component {
             pageNumber: 1,
             numPages: null,
             ext: '',
-            professionnal: false,
+            professional: false,
+            particular: false,
+            alfred: false,
             company: {},
+            siret: '',
+            name: '',
+            naf_ape: '',
+            creation_date: '',
+            status: '',
         };
+        this.editSiret = this.editSiret.bind(this);
     }
 
     componentDidMount() {
@@ -64,10 +85,13 @@ class trustAndVerification extends React.Component {
                 this.setState({ext:ext });
 
                 if(user.is_alfred) {
+                    this.setState({alfred: true});
                     axios.get(url+'myAlfred/api/shop/currentAlfred')
                         .then(response => {
                             let result = response.data;
-                            this.setState({professionnal: result.is_professional,company: result.company});
+                            this.setState({professional: result.is_professional,particular:result.is_particular,company: result.company});
+                            this.setState({siret: result.company.siret,name: result.company.name,naf_ape: result.company.naf_ape,
+                                                creation_date: result.company.creation_date, status: result.company.status})
                         })
                 }
 
@@ -90,6 +114,18 @@ class trustAndVerification extends React.Component {
         this.setState({ [e.target.name]: e.target.value });
     };
 
+    onChange2 = event => {
+
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+
+    };
+
     onChangeRecto = e => {
         this.setState({id_recto:e.target.files[0]});
     };
@@ -97,6 +133,40 @@ class trustAndVerification extends React.Component {
     onChangeVerso = e => {
         this.setState({id_verso:e.target.files[0]});
     };
+
+    handleChecked () {
+        this.setState({particular: false})
+    }
+
+    handleChecked2 () {
+        this.setState({professional: false});
+        this.setState({name: ''});
+        this.setState({siret: ''});
+        this.setState({naf_ape: ''});
+        this.setState({creation_date: ''});
+        this.setState({status: ''});
+    }
+
+    handleSiret() {
+        const code = this.state.siret;
+
+        axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siret/${code}`)
+            .then(res => {
+                const data = res.data;
+                this.setState({name: data.etablissement.l1_normalisee, naf_ape: data.etablissement.activite_principale, status: data.etablissement.libelle_nature_juridique_entreprise});
+                const date = data.etablissement.date_creation;
+                const year = date.substring(0,4);
+                const month = date.substring(4,6);
+                const day = date.substring(6,8);
+                const result = day+'/'+month+'/'+year;
+                this.setState({creation_date: result});
+
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+    }
 
     onSubmit = e => {
         e.preventDefault();
@@ -134,11 +204,35 @@ class trustAndVerification extends React.Component {
       //function sms
     };
 
+    editSiret() {
+        const newStatus = {
+            is_particular: this.state.particular,
+            is_professional: this.state.professional,
+            status: this.state.status,
+            name: this.state.name,
+            creation_date: this.state.creation_date,
+            siret: this.state.siret,
+            naf_ape: this.state.naf_ape,
+
+
+        };
+        axios
+            .put(url+'myAlfred/api/shop/editStatus', newStatus)
+            .then(res => {
+                alert('Statut modifié');
+                Router.push('/dashboardAlfred/editShop')
+            })
+            .catch(err =>
+                console.log(err)
+            );
+    }
+
     render() {
         const {classes} = this.props;
         const {user} = this.state;
         const {ext} = this.state;
-        const {professionnal} = this.state;
+        const {professional} = this.state;
+        const {alfred} = this.state;
         const {company} = this.state;
 
 
@@ -354,53 +448,103 @@ class trustAndVerification extends React.Component {
 
                                 </Grid>
                             </Grid>
-                            {professionnal ?
+                            {alfred ?
                                 <React.Fragment><Grid container>
-                                    <h2 style={{fontWeight:'100'}}>Siret</h2>
+                                    <h2 style={{fontWeight:'100'}}>Votre statut</h2>
                                 </Grid>
-                                <Grid container>
-                                    <Grid item xs={12} style={{display:"contents",justifyContent:"center"}}>
-                                        <TextField
-                                            id="standard-name"
-                                            style={{ marginTop: 15,width:'50%'}}
-                                            value={company.siret}
-                                            margin="normal"
-                                            name={'email'}
-                                            variant={'outlined'}
-                                            disabled={true}
-                                        />
-                                        <img src={'../static/success-2.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
-                                    </Grid>
-
-                                </Grid>
-                                <Grid container style={{width:'70%',marginTop:20,backgroundColor:'whitesmoke',paddingLeft:10}}>
-
-                                    <Grid item xs={6}>
-                                        <p style={{marginBottom:0}}>Siret : {company.siret}</p>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <p style={{marginBottom:0}}>Date de creation : {company.creation_date}</p>
-                                    </Grid>
-
-                                </Grid>
-                                    <Grid container style={{width:'70%',backgroundColor:'whitesmoke',paddingLeft:10}}>
-
-                                        <Grid item xs={6}>
-                                            <p style={{marginBottom:0,marginTop: 10}}>Dénomination : {company.name}</p>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <p style={{marginBottom:0,marginTop: 10}}>NAF/APE : {company.naf_ape}</p>
-                                        </Grid>
-
-                                </Grid>
-                                    <Grid container style={{width:'70%',backgroundColor:'whitesmoke',paddingLeft:10}}>
-
+                                    <Grid container>
                                         <Grid item xs={12}>
-                                            <p style={{marginTop: 10}}>Status juridique : {company.status}</p>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.state.particular}
+                                                        onChange={(e)=>{this.onChange2(e);this.handleChecked2()}}
+                                                        value={this.state.particular}
+                                                        name="particular"
+                                                        color="primary"
+                                                        icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                        checkedIcon={<FilledButton />}
+                                                    />
+                                                }
+                                                label="Je suis un particulier"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.state.professional}
+                                                        onChange={(e)=>{this.onChange2(e);this.handleChecked()}}
+                                                        value={this.state.professional}
+                                                        name="professional"
+                                                        color="primary"
+                                                        icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                                        checkedIcon={<FilledButton />}
+                                                    />
+                                                }
+                                                label="Je suis un professionnel"
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    {professional ?
+                                        <React.Fragment>
+                                            <Grid container>
+                                                <Grid item xs={12} style={{display:"contents",justifyContent:"center"}}>
+                                                    <TextField
+                                                        id="standard-name"
+                                                        style={{ marginTop: 15,width:'50%'}}
+                                                        value={this.state.siret}
+                                                        onChange={this.onChange}
+                                                        margin="normal"
+                                                        name={'siret'}
+                                                        variant={'outlined'}
+
+                                                    />
+                                                    <Grid item xs={3} style={{marginTop:8,marginLeft:5}}>
+                                                    <Button onClick={()=>this.handleSiret()} type="submit" variant="contained" color="primary" style={{ width: '80%',color:'white',marginTop:15 }}>
+                                                        Vérifier
+                                                    </Button>
+                                                    </Grid>
+                                                </Grid>
+
+                                            </Grid>
+                                            <Grid container style={{width:'70%',marginTop:20,backgroundColor:'whitesmoke',paddingLeft:10}}>
+
+                                                <Grid item xs={6}>
+                                                    <p style={{marginBottom:0}}>Siret : {this.state.siret}</p>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <p style={{marginBottom:0}}>Date de creation : {this.state.creation_date}</p>
+                                                </Grid>
+
+                                            </Grid>
+                                            <Grid container style={{width:'70%',backgroundColor:'whitesmoke',paddingLeft:10}}>
+
+                                                <Grid item xs={6}>
+                                                    <p style={{marginBottom:0,marginTop: 10}}>Dénomination : {this.state.name}</p>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <p style={{marginBottom:0,marginTop: 10}}>NAF/APE : {this.state.naf_ape}</p>
+                                                </Grid>
+
+                                            </Grid>
+                                            <Grid container style={{width:'70%',backgroundColor:'whitesmoke',paddingLeft:10}}>
+
+                                                <Grid item xs={12}>
+                                                    <p style={{marginTop: 10}}>Status juridique : {this.state.status}</p>
+                                                </Grid>
+
+
+                                            </Grid>
+                                        </React.Fragment>
+                                        : null}
+                                        <Grid item xs={5}>
+                                    <Button onClick={this.editSiret} type="submit" variant="contained" color="primary" style={{ width: '80%',color:'white',marginTop:15 }}>
+                                        Valider
+                                    </Button>
                                         </Grid>
 
 
-                                    </Grid>
                                 </React.Fragment>
                             : null
                             }
