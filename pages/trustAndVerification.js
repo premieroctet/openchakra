@@ -220,7 +220,7 @@ class trustAndVerification extends React.Component {
             .put(url+'myAlfred/api/shop/editStatus', newStatus)
             .then(res => {
                 alert('Statut modifié');
-                Router.push('/dashboardAlfred/editShop')
+
             })
             .catch(err =>
                 console.log(err)

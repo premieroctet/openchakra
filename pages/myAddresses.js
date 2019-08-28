@@ -42,7 +42,10 @@ class myAddresses extends React.Component {
             city: '',
             country: '',
             zip_code: '',
-            currentAddress: {},
+            currentAddress: '',
+            currentCity: '',
+            currentZip_code: '',
+            currentCountry: '',
             label_address: '',
             new_address: '',
             new_city: '',
@@ -89,7 +92,8 @@ class myAddresses extends React.Component {
 
 
                 if(typeof user.billing_address != 'undefined') {
-                    this.setState({address: true, currentAddress: user.billing_address})
+                    this.setState({address: true, currentAddress: user.billing_address.address,currentCity: user.billing_address.city,
+                        currentZip_code: user.billing_address.zip_code,currentCountry: user.billing_address.country})
                 } else {
                     this.setState({address:false})
                 }
@@ -137,10 +141,10 @@ class myAddresses extends React.Component {
     onSubmit = e => {
       e.preventDefault();
       const address = {
-          address: this.state.address.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
-          city: this.state.city,
-          zip_code: this.state.zip_code,
-          country: this.state.country
+          address: this.state.currentAddress.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
+          city: this.state.currentCity,
+          zip_code: this.state.currentZip_code,
+          country: this.state.currentCountry
       };
         axios
             .put(url+'myAlfred/api/users/profile/billingAddress', address)
@@ -315,8 +319,8 @@ class myAddresses extends React.Component {
                                                 <TextField
                                                     id="outlined-name"
                                                     style={{width: '100%'}}
-                                                    value={currentAddress.address}
-                                                    name={'address'}
+                                                    value={this.state.currentAddress}
+                                                    name={'currentAddress'}
                                                     onChange={this.onChange}
                                                     margin="normal"
                                                     variant="outlined"
@@ -326,8 +330,8 @@ class myAddresses extends React.Component {
                                                 <TextField
                                                     id="outlined-name"
                                                     className={classes.textField}
-                                                    value={currentAddress.zip_code}
-                                                    name={'zip_code'}
+                                                    value={this.state.currentZip_code}
+                                                    name={'currentZip_code'}
                                                     onChange={this.onChange}
                                                     margin="normal"
                                                     variant="outlined"
@@ -337,8 +341,8 @@ class myAddresses extends React.Component {
                                                     <TextField
                                                         id="outlined-name"
                                                         style={{width: '100%'}}
-                                                        value={currentAddress.city}
-                                                        name={'city'}
+                                                        value={this.state.currentCity}
+                                                        name={'currentCity'}
                                                         onChange={this.onChange}
                                                         margin="normal"
                                                         variant="outlined"
@@ -349,7 +353,7 @@ class myAddresses extends React.Component {
                                                     id="outlined-select-currency"
                                                     select
                                                     style={{width: '100%'}}
-                                                    value={currentAddress.country}
+                                                    value={this.state.currentCountry}
                                                     onChange={this.onChange}
                                                     SelectProps={{
                                                         MenuProps: {
@@ -358,6 +362,7 @@ class myAddresses extends React.Component {
                                                     }}
                                                     margin="normal"
                                                     variant="outlined"
+                                                    name={'currentCountry'}
                                                 >
                                                     <MenuItem value="">
                                                         <em>...</em>
