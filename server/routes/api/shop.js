@@ -209,11 +209,11 @@ router.put('/editWelcomeMessage',passport.authenticate('jwt',{session:false}),(r
 // @Access private
 router.put('/editParameters',passport.authenticate('jwt',{session:false}),(req,res) => {
     Shop.findOneAndUpdate({alfred: req.user.id},{
-        booking_request: req.body.booking_request, my_alfred_conditions: req.body.my_alfred_conditions,
+        booking_request: req.body.booking_request,no_booking_request: req.body.no_booking_request ,my_alfred_conditions: req.body.my_alfred_conditions,
         profile_picture: req.body.profile_picture, identity_card: req.body.identity_card,
         recommandations: req.body.recommandations,
         flexible_cancel: req.body.flexible_cancel, moderate_cancel: req.body.moderate_cancel,
-        strict_cancel: req.body.strict_cancel
+        strict_cancel: req.body.strict_cancel,welcome_message: req.body.welcome_message
     }, {new: true})
         .then(shop => {
             res.json(shop)

@@ -903,7 +903,7 @@ class editService extends React.Component {
                                         }>
 
 
-                                                <img src={`../../${e.logo2}`} height={100} width={100}
+                                                <img src={`../../${e.logo2}`} height={80} width={80}
                                                      alt={`logo2`}/>
                                         </label>
                                             <Checkbox

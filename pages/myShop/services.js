@@ -102,15 +102,6 @@ class services extends React.Component {
             user: {},
             shop: {},
             serviceUser: [],
-            checkedA: false,
-            checkedB: false,
-            checkedC: false,
-            checkedD: false,
-            checkedE: false,
-            checkedF: false,
-            checkedG: false,
-            checkedH: false,
-            checkedI: false,
             tabs: false,
             booking_request: false,
             my_alfred_conditions: false,
@@ -185,76 +176,48 @@ class services extends React.Component {
         this.setState({ [name]: event.target.checked });
     };
 
-    handleChangeA = () => {
-        this.setState({ checkedA: true, checkedB: false });
+    handleChange2 = e => {
+        this.setState({ [e.target.name]: e.target.value });
     };
 
-    handleChangeB = () => {
-        this.setState({ checkedA: false, checkedB: true });
+    handleChangeBr = () => {
+        this.setState({no_booking_request: false, booking_request: true})
     };
 
-    handleChangeI = () => {
-        this.setState({ checkedG: true, checkedH: false, checkedI: false });
+    handleChangeNbr = () => {
+        this.setState({ no_booking_request: true, booking_request: false });
     };
 
-    handleChangeJ = () => {
-        this.setState({ checkedG: false, checkedH: true, checkedI: false });
+    handleChangeF = () => {
+        this.setState({ flexible_cancel: true, moderate_cancel: false,strict_cancel: false });
     };
 
-    handleChangeK = () => {
-        this.setState({ checkedG: false, checkedH: false, checkedI: true });
+    handleChangeM = () => {
+        this.setState({ flexible_cancel: false, moderate_cancel: true,strict_cancel: false });
     };
 
-    handleClick = name => () => {
-        this.setState({[name] : true});
-    }
-
-    handleClick2 = name => () => {
-        this.setState({ [name] : false });
-    }
-
-    handleClickA = () => {
-        this.setState({ checkedA: true, checkedB: false });
-    }
-
-    handleClickA2 = () => {
-        this.setState({ checkedA: false });
-    }
-
-    handleClickB = () => {
-        this.setState({ checkedA: false, checkedB: true });
-    }
-
-    handleClickB2 = () => {
-        this.setState({ checkedB: false });
-    }
-
-    handleClickI = () => {
-        this.setState({ checkedG: true, checkedH: false, checkedI: false });
-    }
-
-    handleClickI2 = () => {
-        this.setState({ checkedG: false });
-    }
-
-    handleClickJ = () => {
-        this.setState({ checkedG: false, checkedH: true, checkedI: false });
-    }
-
-    handleClickJ2 = () => {
-        this.setState({ checkedH : false });
-    }
-
-    handleClickK = () => {
-        this.setState({ checkedG: false, checkedH: false, checkedI: true });
-    }
-
-    handleClickK2 = () => {
-        this.setState({ checkedI : false });
-    }
+    handleChangeS = () => {
+        this.setState({ flexible_cancel: false, moderate_cancel: false,strict_cancel: true });
+    };
 
     onSubmit =() => {
-        this.setState({ checkedA: false, checkedB: false, checkedC: false, checkedD: false, checkedE: false, checkedF: false, checkedG: false, checkedH: false, checkedI: false  })
+        const booking_request = this.state.booking_request;
+        const no_booking_request = this.state.no_booking_request;
+        const my_alfred_conditions = this.state.my_alfred_conditions;
+        const profile_picture = this.state.profile_picture;
+        const identity_card = this.state.identity_card;
+        const recommandations = this.state.recommandations;
+        const welcome_message = this.state.welcome_message;
+        const flexible_cancel = this.state.flexible_cancel;
+        const moderate_cancel = this.state.moderate_cancel;
+        const strict_cancel = this.state.strict_cancel;
+
+        axios.put(url+'myAlfred/api/shop/editParameters',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card,
+        recommandations,welcome_message,flexible_cancel,moderate_cancel,strict_cancel})
+            .then(() => {
+                alert('Pramètres modifiés')
+            })
+            .catch(err => console.log(err))
     }
 
     handleClicktabs2 =() => {
@@ -271,24 +234,7 @@ class services extends React.Component {
         const {shop} = this.state;
         const {serviceUser} = this.state;
         const tabs = this.state.tabs;
-        const checkedB = this.state.checkedB;
-        const checkedA = this.state.checkedA;
-        const checkedC = this.state.checkedC;
-        const checkedD = this.state.checkedD;
-        const checkedE = this.state.checkedE;
-        const checkedF = this.state.checkedF;
-        const checkedG = this.state.checkedG;
-        const checkedH = this.state.checkedH;
-        const checkedI = this.state.checkedI;
-        const conditionclick = checkedA ? this.handleClickA2: this.handleClickA;
-        const conditionclick2 = checkedB ? this.handleClickB2: this.handleClickB;
-        const conditionclick3 = checkedC ? this.handleClick2('checkedC'): this.handleClick('checkedC');
-        const conditionclick4 = checkedD ? this.handleClick2('checkedD'): this.handleClick('checkedD');
-        const conditionclick5 = checkedE ? this.handleClick2('checkedE'): this.handleClick('checkedE');
-        const conditionclick6 = checkedF ? this.handleClick2('checkedF'): this.handleClick('checkedF');
-        const conditionclick7 = checkedG ? this.handleClickI2 : this.handleClickI;
-        const conditionclick8 = checkedH ? this.handleClickJ2 : this.handleClickJ;
-        const conditionclick9 = checkedI ? this.handleClickK2 : this.handleClickK;
+
 
         return (
             <Fragment>
@@ -378,11 +324,11 @@ class services extends React.Component {
                                         <Grid container>
 
 
-                                            <Grid container className={classes.marginbot} onClick={conditionclick}>
+                                            <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
                                                         checked={this.state.booking_request}
-                                                        onChange={this.handleChange('booking_request')}
+                                                        onChange={this.handleChangeBr}
                                                         value={this.state.booking_request}
                                                         color="primary"
                                                         inputProps={{
@@ -390,6 +336,7 @@ class services extends React.Component {
                                                         }}
                                                         icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                         checkedIcon={<FilledButton />}
+
                                                     />
                                                 </Grid>
 
@@ -400,11 +347,11 @@ class services extends React.Component {
 
                                             </Grid>
 
-                                            <Grid container className={classes.marginbot} onClick={conditionclick2}>
+                                            <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
                                                         checked={this.state.no_booking_request}
-                                                        onChange={this.handleChange('no_booking_request')}
+                                                        onChange={this.handleChangeNbr}
                                                         value={this.state.no_booking_request}
                                                         color="primary"
                                                         inputProps={{
@@ -428,12 +375,12 @@ class services extends React.Component {
                                         <p style={{fontWeight: '100',marginTop: '-1%',}}>Il se peut que vous ayez moins de réservation si vous ajoutez des conditions. Les personnes qui ne répondent pas à vos critères peuvent quand même vous envoyer une demande. </p>
 
                                         <Grid container style={{marginTop: '2%'}}>
-                                            <Grid container className={classes.marginbot} onClick={conditionclick3}>
+                                            <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
-                                                        checked={checkedC}
-                                                        onChange={this.handleChange('checkedC')}
-                                                        value="checkedC"
+                                                        checked={this.state.my_alfred_conditions}
+                                                        onChange={this.handleChange('my_alfred_conditions')}
+                                                        value={this.state.my_alfred_conditions}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -449,12 +396,12 @@ class services extends React.Component {
                                             </Grid>
 
 
-                                            <Grid container className={classes.marginbot} onClick={conditionclick4}>
+                                            <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
-                                                        checked={checkedD}
-                                                        onChange={this.handleChange('checkedD')}
-                                                        value="checkedD"
+                                                        checked={this.state.profile_picture}
+                                                        onChange={this.handleChange('profile_picture')}
+                                                        value={this.state.profile_picture}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -469,12 +416,12 @@ class services extends React.Component {
                                                 </Grid>
                                             </Grid>
 
-                                            <Grid container className={classes.marginbot} onClick={conditionclick5}>
+                                            <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
-                                                        checked={checkedE}
-                                                        onChange={this.handleChange('checkedE')}
-                                                        value="checkedE"
+                                                        checked={this.state.identity_card}
+                                                        onChange={this.handleChange('identity_card')}
+                                                        value={this.state.identity_card}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -489,12 +436,12 @@ class services extends React.Component {
                                                 </Grid>
                                             </Grid>
 
-                                            <Grid container className={classes.marginbot} onClick={conditionclick6}>
+                                            <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
-                                                        checked={checkedF}
-                                                        onChange={this.handleChange('checkedF')}
-                                                        value="checkedF"
+                                                        checked={this.state.recommandations}
+                                                        onChange={this.handleChange('recommandations')}
+                                                        value={this.state.recommandations}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -522,7 +469,9 @@ class services extends React.Component {
                                             <TextField
                                                 id="outlined-multiline-static"
                                                 multiline
-                                                defaultValue="Merci pour votre Reservation !"
+                                                value={this.state.welcome_message}
+                                                name={'welcome_message'}
+                                                onChange={this.handleChange2}
                                                 rows="6"
                                                 margin="normal"
                                                 variant="outlined"
@@ -538,12 +487,12 @@ class services extends React.Component {
                                         <p style={{fontWeight: '100',marginTop: '-1%',}}>Choisissez vos conditions en cas d'annulation de la part des utilisateurs.</p>
 
                                         <Grid container style={{marginTop: '2%'}}>
-                                            <Grid container className={classes.marginbot} onClick={conditionclick7}>
+                                            <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
-                                                        checked={checkedG}
-                                                        onChange={this.handleChangeI}
-                                                        value="checkedG"
+                                                        checked={this.state.flexible_cancel}
+                                                        onChange={this.handleChangeF}
+                                                        value={this.state.flexible_cancel}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -559,12 +508,12 @@ class services extends React.Component {
                                             </Grid>
 
 
-                                            <Grid container className={classes.marginbot} onClick={conditionclick8}>
+                                            <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
-                                                        checked={checkedH}
-                                                        onChange={this.handleChangeJ}
-                                                        value="checkedH"
+                                                        checked={this.state.moderate_cancel}
+                                                        onChange={this.handleChangeM}
+                                                        value={this.state.moderate_cancel}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -579,12 +528,12 @@ class services extends React.Component {
                                                 </Grid>
                                             </Grid>
 
-                                            <Grid container className={classes.marginbot} onClick={conditionclick9}>
+                                            <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
-                                                        checked={checkedI}
-                                                        onChange={this.handleChangeK}
-                                                        value="checkedI"
+                                                        checked={this.state.strict_cancel}
+                                                        onChange={this.handleChangeS}
+                                                        value={this.state.strict_cancel}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -596,11 +545,7 @@ class services extends React.Component {
                                                 <Grid item xs={9} sm={10} md={11}>
                                                     <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Strictes </h4>
                                                     <p>
-                                                        Remboursement intégral pour les annulations effectuées dans les 48 heures
-                                                        suivant  la réservation, si la date de prestation intervient dans 14 jours ou plus.
-                                                        Remboursement à hauteur de 50 % pour les annulations effectuées au moins 7
-                                                        jours avant la date de prestation. Aucun remboursement pour les
-                                                        annulations effectuées dans les 7 jours précédant la date de prestation.
+                                                        Remboursement intégral jusqu'à 10 jours avant la prestation.
                                                     </p>
                                                 </Grid>
                                             </Grid>
@@ -668,20 +613,7 @@ class services extends React.Component {
                                 }
                             </Grid>
                             <Grid item xs={1} style={{zIndex: -999}}></Grid>
-                            <Grid item xs={4} style={{backgroundColor: '#FAFAFA',maxWidth:'28%',marginTop: '-20px', marginLeft: 81}}>
-                                {/*<Grid container style={{alignItems:"center"}}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 37.418 35.979">
-                                    <g id="Groupe_936" data-name="Groupe 936" transform="translate(0 24.999)">
-                                        <path id="Tracé_10757" data-name="Tracé 10757" d="M27.626-19.5l.412.049.464.1.414.148.361.2.412.2.361.248.361.3.308.345.26.347.2.4.207.347.154.4.1.446.053.4v.844l-.053.4-.1.446-.154.4-.207.347-.2.4-.26.347-.308.347-2.062,1.934-.257.2-.257.148-.31.1-.361.049-.308-.049-.31-.1-.257-.148-.257-.2-4.071-3.916-.207-.248-.154-.248-.1-.3-.053-.3.053-.347.1-.3.154-.248.207-.25,2.009-1.98.361-.3.361-.248L25.1-19l.361-.2.414-.148.464-.1.412-.049ZM17.678-7.009l.207.049.154.049.207.1.154.1.1.148.1.2.051.148.053.2-.053.2-.051.2-.1.15-.1.148L13.04-.171l-.154.148-.154.1-.207.049h-.412L11.907.077l-.154-.1L11.6-.171l-.156-.148-.1-.15-.051-.2v-.4l.051-.2.1-.15.156-.148,5.36-5.154.154-.1.154-.1.207-.049ZM31.286-25l-1.133.049-1.133.051-1.135.148-1.133.248-1.083.248-1.03.347-.929.446-.464.2-.361.3-.412.248-.31.3L11.7-12.362H.825l-.308.049-.207.051-.207.1-.1.148v.148l.053.2.1.2.2.25,5.1,4.856-.669.645-2.784.5-.31.1-.257.1-.154.2-.1.148v.2l.051.248.1.2.207.248L15.359,9.491l.26.2.2.1.257.049h.207l.154-.1.207-.15.1-.248.1-.3.515-2.676.669-.645,5.052,4.906.257.2.207.1.2.049h.156l.154-.1.1-.2.051-.2.053-.3V-.27l10.461-10.06.31-.3.257-.4.31-.4.2-.4.464-.893.361-.992L36.9-14.74l.257-1.092.156-1.09.051-1.09.051-1.092v-.99l-.051-.941-.1-.893-.154-.743-.154-.645-.207-.5-.154-.2-.1-.1-.1-.1-.207-.15-.515-.2L35-24.7l-.775-.15-.926-.1L32.318-25Z" fill="#7e7e7e" fill-rule="evenodd"/>
-                                        <path id="Tracé_10758" data-name="Tracé 10758" d="M5.977-5l-.42.047-.42.1-.42.143-.358.24L4-4.04l-.54.672L2.381-1.594,1.421.036,1,.756H1L1.9.421,3.94-.347l2.216-.864L7-1.643l.54-.287.3-.289.179-.336.12-.336L8.2-3.226l-.061-.336L8.014-3.9l-.179-.287-.3-.289-.358-.24-.361-.143-.42-.1Z" transform="translate(0.44 8.785)" fill="#7e7e7e" fill-rule="evenodd"/>
-                                        <path id="Tracé_10759" data-name="Tracé 10759" d="M6.72-3,6.5-2.943l-.223.112-.187.168L5.9-2.438,5.71-2.1,5.562-1.6l-.15.617-.15.673L5.075.87,5,1.318H5l.337-.055L6.122.925,6.533.758l.41-.225.375-.28L7.542.028l.15-.28L7.8-.587,7.879-.87v-.673L7.8-1.878l-.112-.28-.15-.28-.187-.225L7.168-2.83l-.225-.112Z" transform="translate(2.196 9.663)" fill="#7e7e7e" fill-rule="evenodd"/>
-                                        <path id="Tracé_10760" data-name="Tracé 10760" d="M2.186-7l-.28.11-.337.17-.28.223-.223.337L.784-5.6l-.223.617-.17.615L.057-3.19,0-2.685.449-2.8l1.177-.28L2.3-3.3l.617-.225.5-.225.337-.28.225-.28.167-.28.112-.337.055-.335L4.26-5.6l-.112-.335-.167-.28L3.755-6.5l-.28-.223-.28-.17L2.858-7Z" transform="translate(0.001 7.907)" fill="#7e7e7e" fill-rule="evenodd"/>
-                                    </g>
-                                </svg>
-                                <h2 style={{color: '#585858',fontWeight:'100',marginLeft:10}}>Conseils</h2>
 
-                                </Grid>*/}
-                            </Grid>
                             {tabs ?
                                 <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
                                     alignItems:"center",height:60}}>
