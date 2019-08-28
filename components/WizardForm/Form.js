@@ -757,6 +757,8 @@ class Form extends React.Component {
 
             no_booking: false,
             all_options: [],
+
+            currentUser: null,
         }
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -771,6 +773,8 @@ class Form extends React.Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
+                console.log(res);
+                this.state.currentUser = res.data;
                 this.state.userCity = {label: res.data.billing_address.city, value: res.data.billing_address.city};
                 this.state.userAddress = {label: res.data.billing_address.address, value: res.data.billing_address.address};
                 this.state.userZipCode = {label: res.data.billing_address.zip_code, value: res.data.billing_address.zip_code};
@@ -2340,7 +2344,7 @@ class Form extends React.Component {
                                                                                     }}
                                                                                     component="span"
                                                                                 >
-                                                                                    {form.values.alfredUpdate.profile_picture_user === null ? <PhotoCamera /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
+                                                                                    {form.values.alfredUpdate.profile_picture_user === null ? <img src={this.state.currentUser.picture} height="100" width="100" style={{borderRadius: '50%'}} /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
                                                                                 </IconButton>
                                                                             </label>
                                                                         </React.Fragment>

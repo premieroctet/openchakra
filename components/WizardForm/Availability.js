@@ -553,19 +553,31 @@ class Availability extends React.Component {
                                           padding: "2rem",
                                           display: "flex",
                                           flexFlow: "column",
-                                          marginRight: '1rem'
+                                          marginRight: '1rem',
+                                          minHeight: 205
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -578,7 +590,7 @@ class Availability extends React.Component {
                                           <Typography>-</Typography>
                                           <Typography>{event.end}</Typography>
                                         </div>
-                                        <div>
+                                        <div style={{display: 'flex', justifyContent: "center"}}>
                                           <Button
                                             variant="contained"
                                             color="secondary"
