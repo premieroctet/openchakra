@@ -270,7 +270,7 @@ class trustAndVerification extends React.Component {
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Photos
+                                                Photo
                                             </a>
                                         </div>
                                     </Link>
