@@ -295,6 +295,11 @@ class Wizard extends React.Component {
                         arrayEquipments.push(c.id);
                     }
                 })
+                let option = null;
+                if (e.option !== null) {
+                    option = {label: e.option.label, price: e.option.price, unity: e.option.unity.value, type: e.option.type.value};
+                }
+                const experienceYears = e.experienceYears.value;
                 const city = e.city.value;
                 const perimeter = e.perimeter;
                 const minimum_basket = e.minimumBasket;
@@ -303,17 +308,24 @@ class Wizard extends React.Component {
 
                 let graduated = false;
                 let diploma = null;
+                let diplomaLabel = null;
+                let diplomaYear = null;
                 if(e.diploma !== null) {
                     graduated = true;
-                    diploma = e.diploma;
+                    diploma = e.diploma.diploma;
+                    diplomaLabel = e.diploma.name;
+                    diplomaYear = e.diploma.year;
 
                 }
                 let is_certified = false;
                 let certification = null;
+                let certificationYear = null;
+                let certificationLabel = null;
                 if(e.certification !== null) {
                      is_certified = true;
-                     certification = e.certification;
-
+                     certification = e.certification.certification;
+                     certificationLabel = e.certification.name;
+                     certificationYear = e.certification.year;
                 }
 
                 let active = false;
@@ -324,6 +336,8 @@ class Wizard extends React.Component {
                 }
                 const formData = new FormData();
                 formData.append('service',service);
+                formData.append('option', JSON.stringify(option));
+                formData.append('experience_years', experienceYears);
                 formData.append('prestations',JSON.stringify(arrayPrestations));
                 formData.append('equipments',JSON.stringify(arrayEquipments));
                 formData.append('city',city);
@@ -332,8 +346,12 @@ class Wizard extends React.Component {
                 formData.append('deadline_before_booking',deadline_before_booking);
                 formData.append('graduated',graduated.toString());
                 formData.append('diploma',diploma);
+                formData.append('diplomaLabel', diplomaLabel);
+                formData.append('diplomaYear', diplomaYear);
                 formData.append('is_certified',is_certified.toString());
                 formData.append('certification',certification);
+                formData.append('certificationLabel', certificationLabel);
+                formData.append('certificationYear', certificationYear);
                 formData.append('active',active.toString());
                 formData.append('price',price.toString());
                 formData.append('description',description);
@@ -397,7 +415,9 @@ class Wizard extends React.Component {
             });
             const formDataIdProfile = new FormData();
             formDataIdProfile.append('myCardR',values.createShop.id_recto);
-            formDataIdProfile.append('myCardV',values.createShop.id_verso);
+            if (values.createShop.id_verso !== null) {
+                formDataIdProfile.append('myCardV',values.createShop.id_verso);
+            }
             axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
                 .then(res => {
                     alert('Profil mis à jours')
@@ -1155,11 +1175,11 @@ class Form extends React.Component {
                                                                         diploma: { 
                                                                             label: null, 
                                                                             year: null, 
-                                                                            document: null 
+                                                                            diploma: null 
                                                                         }, certification: { 
                                                                             label : null, 
                                                                             year: null, 
-                                                                            document: null 
+                                                                            certification: null 
                                                                         }, perimeter: 50, 
                                                                         delayBeforeShop: 1, 
                                                                         delayBeforeShopDWM: null, 
@@ -1543,7 +1563,7 @@ class Form extends React.Component {
                                                                                                 arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
                                                                                             }}>
                                                                                                 
-                                                                                                {e.checked === true ? <img src={`../../static/equipment/${e.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${e.name_logo.slice(0, -4)}_Selected.svg`} /> : <img src={`../../static/equipment/${e.logo}`} height={100} width={100} alt={e.name_logo} />}
+                                                                                                {e.checked === true ? <img src={`../../static/equipments/${e.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${e.name_logo.slice(0, -4)}_Selected.svg`} /> : <img src={`../../static/equipments/${e.logo}`} height={100} width={100} alt={e.name_logo} />}
                                                                                                 <Checkbox
                                                                                                     style={{display: 'none'}}
                                                                                                     color="primary"
@@ -1751,7 +1771,7 @@ class Form extends React.Component {
                                                                                 </Grid>
                                                                                 <Grid item xs={12}>
                                                                                     <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre diplôme</Typography>
-                                                                                    {arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.year !== null && arrayHelpers.form.values.submission[index].diploma.document !== null ?
+                                                                                    {arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.year !== null && arrayHelpers.form.values.submission[index].diploma.diploma !== null ?
                                                                                         <React.Fragment>
                                                                                             <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
                                                                                                 <p>{arrayHelpers.form.values.submission[index].diploma.label} | {arrayHelpers.form.values.submission[index].diploma.year}</p>
@@ -1813,11 +1833,11 @@ class Form extends React.Component {
                                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                                         Joindre mon diplôme
                                                                                                         <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" onChange={(event) => {
-                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma.document`, event.currentTarget.files[0]);
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, event.currentTarget.files[0]);
                                                                                                         }} className="form-control"
                                                                                                         />
                                                                                                     </label>
-                                                                                                    <span>{arrayHelpers.form.values.submission[index].diploma.document !== null ? arrayHelpers.form.values.submission[index].diploma.document.name : null}</span>
+                                                                                                    <span>{arrayHelpers.form.values.submission[index].diploma.diploma !== null ? arrayHelpers.form.values.submission[index].diploma.diploma.name : null}</span>
                                                                                                     <p>En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ses derniers</p>
                                                                                                 </Grid>
                                                                                             </Grid>
@@ -1826,7 +1846,7 @@ class Form extends React.Component {
                                                                                 </Grid>
                                                                                 <Grid item xs={12}>
                                                                                 <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre certification</Typography>
-                                                                                    {arrayHelpers.form.values.submission[index].certification.label !== null && arrayHelpers.form.values.submission[index].certification.year !== null && arrayHelpers.form.values.submission[index].certification.document !== null ?
+                                                                                    {arrayHelpers.form.values.submission[index].certification.label !== null && arrayHelpers.form.values.submission[index].certification.year !== null && arrayHelpers.form.values.submission[index].certification.certification !== null ?
                                                                                         <React.Fragment>
                                                                                             <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
                                                                                                 <p>{arrayHelpers.form.values.submission[index].certification.label} | {arrayHelpers.form.values.submission[index].certification.year}</p>
@@ -1888,11 +1908,11 @@ class Form extends React.Component {
                                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                                         Joindre ma certification
                                                                                                         <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certification" type="file" onChange={(event) => {
-                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification.document`, event.currentTarget.files[0]);
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, event.currentTarget.files[0]);
                                                                                                         }} className="form-control"
                                                                                                         />
                                                                                                     </label>
-                                                                                                    <span>{arrayHelpers.form.values.submission[index].certification.document !== null ? arrayHelpers.form.values.submission[index].certification.document.name : null}</span>
+                                                                                                    <span>{arrayHelpers.form.values.submission[index].certification.certification !== null ? arrayHelpers.form.values.submission[index].certification.certification.name : null}</span>
                                                                                                     <p>En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ses derniers</p>
                                                                                                 </Grid>
                                                                                             </Grid>

@@ -337,7 +337,10 @@ router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {na
         .then(user => {
             user.id_card = {};
             user.id_card.recto = req.files['myCardR'][0].path;
-            user.id_card.verso = req.files['myCardV'][0].path;
+            let verso = 'myCardV';
+            if (verso in req.files) {
+                user.id_card.verso = req.files['myCardV'][0].path;
+            }
 
             user.save().then(user => res.json(user)).catch(err => console.log(err));
         })

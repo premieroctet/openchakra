@@ -41,6 +41,8 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
                 fields.minimum_basket = req.body.minimum_basket;
                 fields.deadline_before_booking = req.body.deadline_before_booking;
                 fields.prestations = JSON.parse(req.body.prestations);
+                fields.option = JSON.parse(req.body.option);
+                fields.experience_years = req.body.experience_years;
                 if(req.body.graduated === 'true') {
                     fields.graduated = true;
                 } else {
@@ -50,9 +52,12 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
                 const diploma = 'diploma';
                 const certification = 'certification';
                 if(diploma in req.files) {
-
-                    fields.diploma = req.files['diploma'][0].path;
+                    fields.diploma = {};
+                    fields.diploma.name = req.body.diplomaLabel;
+                    fields.diploma.year = req.body.diplomaYear;
+                    fields.diploma.file = req.files['diploma'][0].path;
                 } else {
+                    console.log(req.files)
                     console.log('No file uploaded');
                 }
             if(req.body.is_certified === 'true') {
@@ -61,8 +66,10 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
                 fields.is_certified = false;
             }
             if(certification in req.files) {
-
-                fields.certification = req.files['certification'][0].path;
+                fields.certification = {};
+                fields.certification.name = req.body.certificationLabel;
+                fields.certification.year = req.body.certificationYear;
+                fields.certification.file = req.files['certification'][0].path;
             } else {
                 console.log('No file uploaded');
             }
@@ -90,6 +97,7 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
 
                     fields.majoration.price = parseInt(req.body.price);
                     const newService = new ServiceUser(fields);
+                    console.log(newService);
                     newService.save().then(service => res.json(service)).catch(err => console.log(err));
 
                 })

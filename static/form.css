@@ -87,9 +87,9 @@
 }
 
 .react-tabs__tab--selected {
-  background: #2FBCD3;
+  background: #2FBCD3 !important;
   border-color: #aaa;
-  color: white;
+  color: white !important;
   border-top-right-radius: 20px;
   margin-right: -40px;
   z-index: 9999999999!important;
