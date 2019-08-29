@@ -40,7 +40,7 @@ const FilledButton = styled.div`
 `;
 const styles = theme => ({
     bigContainer: {
-        marginTop: 20,
+        marginTop: 70,
         marginBottom: 70,
         flexGrow: 1,
     },
@@ -542,13 +542,13 @@ class trustAndVerification extends React.Component {
                                     <div style={{marginTop: 20,width:'80%',display:'flex'}}>
                                         {ext ==='pdf' ?
                                             <Document
-                                                file={`../${this.state.cardrecto}`}
+                                                file={`../${this.state.card.recto}`}
                                                 onLoadSuccess={this.onDocumentLoadSuccess}
                                             >
                                                 <Page pageNumber={this.state.pageNumber} width='250' />
                                             </Document>
                                             :
-                                            <img src={`../${this.state.cardrecto}`} alt={'recto'} width={200}/>
+                                            <img src={`../${this.state.card.recto}`} alt={'recto'} width={200}/>
 
                                         }
                                         {user.id_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :

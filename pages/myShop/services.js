@@ -564,7 +564,7 @@ class services extends React.Component {
                                                 </Grid>
                                                 <Grid container style={{marginLeft:110, border: '1px solid lightgray',padding: '15px 15px 15px 15px',}}>
                                                     <Grid item xs={3} style={{ borderBottom : '150px', borderLeft : '150px', cursor: 'pointer'}}>
-                                                        <Link href='/myShop/previewService'><img src={e.service.picture} alt={'picture'} width={'85%'}/></Link>
+                                                        <Link href={'/myShop/previewService?id='+e._id}><img src={e.service.picture} alt={'picture'} width={'85%'}/></Link>
                                                     </Grid>
                                                     <Grid item xs={6}>
                                                         <h4 style={{fontWeight: 'bolder',fontSize: 18,color: '#737373'}}>{e.service.label}</h4>

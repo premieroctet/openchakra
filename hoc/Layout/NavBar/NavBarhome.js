@@ -171,7 +171,7 @@ class NavBar extends Component {
     // Remove auth header for future requests
     setAuthToken(false);
     //document.location.href="https://myalfred.hausdivision.com/";
-    Router.push('/disconnected');
+    window.location.reload();
   };
 
   handleProfileMenuOpen = event => {
