@@ -122,12 +122,18 @@ class services extends React.Component {
 
         
         localStorage.setItem('path',Router.pathname);
+        const letype = localStorage.getItem('token');
+        if (letype === null){
+            Router.push('/login');
+        } else{
         const token = localStorage.getItem('token').split(' ')[1];
         const decode = jwt.decode(token);
+       
+        
         if (decode.is_alfred === false) {
             Router.push('/becomeAlfredForm');
 
-        }
+        } }
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
@@ -285,7 +291,7 @@ class services extends React.Component {
                         <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
                             <Grid item xs={1}></Grid>
                             <Grid item xs={2}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
+                                <p style={{color: "white",cursor: 'pointer'}}><a style={{textDecoration: 'none',color: "#828181",cursor: 'pointer'}} href='/myShop/services'>ma boutique</a></p>
                             </Grid>
                             <Grid item xs={2}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Message</p>
@@ -312,13 +318,13 @@ class services extends React.Component {
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'45%',zIndex:501}} width={'9%'} alt={'picture'}/>
+                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'45%',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px' }} alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'3%',top:'18%',zIndex:502}}>
                             <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1rem'}}>{/*<EditIcon  style={{cursor: 'pointer',width:15, height:15, marginRight: 3,}}/>*/}Modifier</p>
                         </Grid>
                         <Grid item style={{position:"absolute",right:'3%',top:'18%',zIndex:502}}>
-                            <p>{serviceUser.map((e,index)=> (<a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}} href={'/myShop/shopPreview?id_alfred=' + e.user}>Aperçu de ma boutique</a>))}</p>
+                            <p><a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}} href={'/myShop/shopPreview?id_alfred=' + user._id}>Aperçu de ma boutique</a></p>
                         </Grid>
 
                         <Grid container style={{marginTop: 20}}>
@@ -607,7 +613,7 @@ class services extends React.Component {
                                             </Grid>
                                             <Grid container style={{marginLeft:110, border: '1px solid lightgray',padding: '15px 15px 15px 15px',}}>
                                                 <Grid item xs={3} style={{ borderBottom : '150px', borderLeft : '150px', cursor: 'pointer'}}>
-                                                    <Link href='/myShop/previewService'><img src={e.service.picture} alt={'picture'} width={'85%'}/></Link>
+                                                    <Link href={'/myShop/previewService?id='+e._id}><img src={e.service.picture} alt={'picture'} width={'85%'}/></Link>
                                                 </Grid>
                                                 <Grid item xs={6}>
                                                     <h4 style={{fontWeight: 'bolder',fontSize: 18,color: '#737373'}}>{e.service.label}</h4>

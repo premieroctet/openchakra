@@ -14,7 +14,7 @@ import { Typography } from '@material-ui/core';
 
 
 moment.locale('fr');
-
+const _ = require('lodash');
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 
@@ -33,15 +33,47 @@ class services extends React.Component {
             user: {},
             shop: {},
             serviceUser: [],
-
+            uniqFilter: [],
+            drops: false,
+            dropsoption: false,
+            service: {},
+            equipments: [],
+            prestations: [],
+            flexible2: false,
+            moderate2: false,
+            strict2: false,
+            options: {},
+            availability: [],
+            monday: {},
+            tuesday: {},
+            wednesday: {},
+            thursday: {},
+            friday: {},
+            saturday: {},
+            sunday: {},
+            monday_event: [],
+            tuesday_event: [],
+            wednesday_event: [],
+            thursday_event: [],
+            friday_event: [],
+            saturday_event: [],
+            sunday_event: [],
         };
+
+        this.handleclick1 = this.handleclick1.bind(this);
+        this.handleclick2 = this.handleclick2.bind(this);
 
 
 
     }
 
-    componentDidMount() {
+    static getInitialProps ({ query: { id } }) {
+        return { service_id: id }
 
+    }
+
+    componentDidMount() {
+        const id = this.props.service_id;
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
@@ -64,20 +96,173 @@ class services extends React.Component {
             .then(res => {
                 let shop = res.data;
                 this.setState({shop:shop});
+                this.setState({flexible2:shop.flexible_cancel});
+                this.setState({moderate2:shop.moderate_cancel});
+                this.setState({strict2:shop.strict_cancel});
             })
             .catch(err =>
                 console.log(err)
             );
 
         axios
-            .get(url+'myAlfred/api/serviceUser/currentAlfred')
+            .get(url+`myAlfred/api/availability/currentAlfred`)
             .then(res => {
-                let serviceUser = res.data;
-                this.setState({serviceUser: serviceUser});
+                let availability = res.data;
+                this.setState({availability: availability});
+                
+                availability.forEach(d => {
+                    this.setState({monday: d.monday});
+                    this.setState({tuesday: d.tuesday});
+                    this.setState({wednesday: d.wednesday});
+                    this.setState({thursday: d.thursday});
+                    this.setState({friday: d.friday});
+                    this.setState({saturday: d.saturday});
+                    this.setState({sunday: d.sunday});
+                })
+                
+                /*Lundi*/
+                this.state.monday.event.forEach(i  => {
+                        i.services.forEach(d =>{
+                            if(d === id){
+                                this.setState({monday_event: [...this.state.monday_event, i]})  
+                            }
+                        })
+                })
+                this.state.monday.event.forEach(e => {
+                    if(e.all_services === true){
+                       this.setState({monday_event: [...this.state.monday_event, e]}) 
+                    }
+                })
+
+                /*mardi*/
+                this.state.tuesday.event.forEach(i  => {
+                    i.services.forEach(d =>{
+                        if(d === id){
+                            this.setState({tuesday_event: [...this.state.tuesday_event, i]})  
+                        }
+                    })
+                })
+                this.state.tuesday.event.forEach(e => {
+                    if(e.all_services === true){
+                    this.setState({tuesday_event: [...this.state.tuesday_event, e]}) 
+                    }
+                })
+
+                /*Mercredi*/
+                this.state.wednesday.event.forEach(i  => {
+                    i.services.forEach(d =>{
+                        if(d === id){
+                            this.setState({wednesday_event: [...this.state.wednesday_event, i]})  
+                        }
+                    })
+                })
+                this.state.wednesday.event.forEach(e => {
+                    if(e.all_services === true){
+                    this.setState({wednesday_event: [...this.state.wednesday_event, e]}) 
+                    }
+                })
+
+                /*Jeudi*/
+                this.state.thursday.event.forEach(i  => {
+                    i.services.forEach(d =>{
+                        if(d === id){
+                            this.setState({thursday_event: [...this.state.thursday_event, i]})  
+                        }
+                    })
+                })
+                this.state.thursday.event.forEach(e => {
+                    if(e.all_services === true){
+                    this.setState({thursday_event: [...this.state.thursday_event, e]}) 
+                    }
+                })
+
+                /*Vendredi*/
+                this.state.friday.event.forEach(i  => {
+                    i.services.forEach(d =>{
+                        if(d === id){
+                            this.setState({friday_event: [...this.state.friday_event, i]})  
+                        }
+                    })
+                })
+                this.state.friday.event.forEach(e => {
+                    if(e.all_services === true){
+                    this.setState({friday_event: [...this.state.friday_event, e]}) 
+                    }
+                })
+
+                /*Samedi*/
+                this.state.saturday.event.forEach(i  => {
+                    i.services.forEach(d =>{
+                        if(d === id){
+                            this.setState({saturday_event: [...this.state.saturday_event, i]})  
+                        }
+                    })
+                })
+                this.state.saturday.event.forEach(e => {
+                    if(e.all_services === true){
+                    this.setState({saturday_event: [...this.sundaye.saturday_event, e]}) 
+                    }
+                })
+
+                /*Dimanche*/
+                this.state.sunday.event.forEach(i  => {
+                    i.services.forEach(d =>{
+                        if(d === id){
+                            this.setState({sunday_event: [...this.state.sunday_event, i]})  
+                        }
+                    })
+                })
+                this.state.sunday.event.forEach(e => {
+                    if(e.all_services === true){
+                    this.setState({sunday_event: [...this.state.sunday_event, e]}) 
+                    }
+                })
+                
+                console.log(this.state.monday_event);
             })
             .catch(err =>
                 console.log(err)
             );
+
+        axios
+            .get(url+`myAlfred/api/serviceUser/${id}`)
+            .then(res => {
+                let serviceUser = res.data;
+                this.setState({serviceUser: serviceUser});
+                let prestations = serviceUser.prestations;
+                let arrayFilter =  [];
+                prestations.forEach(e => {
+                    arrayFilter.push(e.prestation.filter_presentation);
+                    let uniqFilter = _.uniqBy(arrayFilter,'label');
+                    this.setState({uniqFilter: uniqFilter});
+                });
+                this.setState({options:serviceUser.option})
+                this.setState({service: serviceUser.service})
+                this.setState({equipments: serviceUser.equipments});
+                this.setState({prestations: serviceUser.prestations})
+                this.state.uniqFilter.forEach(e =>{
+                    this.setState({[e.label]:false})
+                })
+            })
+            .catch(err =>
+                console.log(err)
+            );
+    }
+
+    handleclick1(label) {
+        this.setState({[label]: false });
+    }
+
+    handleclick2 (label) {
+        this.setState({[label]: true });
+    }
+
+    handleclickoption1 =() => {
+        this.setState({ dropsoption: false });
+    }
+
+    handleclickoption2 =() => {
+        this.setState({ dropsoption: true });
     }
 
 
@@ -87,6 +272,20 @@ class services extends React.Component {
         const {user} = this.state;
         const {shop} = this.state;
         const {serviceUser} = this.state;
+        const {service} = this.state;
+        const drop = this.state.drops;
+        const dropoption = this.state.dropsoption;
+        const {uniqFilter} = this.state;
+        const {equipments} = this.state;
+        const {prestations} = this.state;
+        const {options} = this.state;
+        const {monday_event} = this.state;
+        const {tuesday_event} = this.state;
+        const {wednesday_event} = this.state;
+        const {thursday_event} = this.state;
+        const {friday_event} = this.state;
+        const {saturday_event} = this.state;
+        const {sunday_event} = this.state;
 
 
         return (
@@ -107,8 +306,8 @@ class services extends React.Component {
                             <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'20%',left:'46.5%',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',}} alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'46.2%',top:'38%',zIndex:502,textAlign: 'center'}}>
-                            <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.35rem'}}>Plomberie</p>
-                            <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.1rem'}}>par Maelys (4kms)</p>
+                        <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.35rem'}}>{service.label}</p>
+                            <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.1rem'}}>par {user.firstname} ({serviceUser.perimeter} kms)</p>
                         </Grid>
 
                         {/*Le Contenu */}
@@ -117,414 +316,299 @@ class services extends React.Component {
                         {/*Contenu à Gauche*/}
 
                             {/*Petite Description*/}
-                            <Grid item xs={6} style={{textAlign: 'left',margin: '0 auto',}}>
+                            <Grid item md={6} xs={12} style={{textAlign: 'left',margin: '0 auto',}}>
                                 <div style={{margin: '20px 11%', marginTop: '5%',width: '75%'}}></div>
-                                <Typography style={{padding: '0 90px',fontSize: '1rem' }}>
-                                    Plombière depuis plus de 10 ans, je vous propose mes services de plomberie à domicile pour 
-                                    partager ma passion pour la plomberie . 
-                                    J’ai également suivi une formation de soudure, me permettant de vous conseiller au mieux !
-                                </Typography>
-
+                                    <Typography style={{fontSize: '1rem' }}>
+                                       {serviceUser.description}
+                                    </Typography>
                                 {/*Mes équipements*/}
                                 <div style={{marginTop: '8%'}}>
-                                    <h3 style={{padding: '0 90px',color: '#07BCE5' }}>
+                                    <h3 style={{color: '#07BCE5' }}>
                                         Je fournis :
                                     </h3>
                                     <Grid container>
-                                        <Grid item xs={1} style={{}}></Grid>
-                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '3.5%'}}><img src="../../static/equipments/RaccordsJoints.svg"/></Grid>
-                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '1.5%'}}><img src="../../static/equipments/RaccordsJointsSelected.svg"/></Grid>
-                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '1.5%'}}><img src="../../static/equipments/RaccordsJoints.svg"/></Grid>
-                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '1.5%'}}><img src="../../static/equipments/RaccordsJointsSelected.svg"/></Grid>
-                                        <Grid item xs={1} style={{cursor: 'pointer', marginLeft: '1.5%'}}><img src="../../static/equipments/RaccordsJoints.svg"/></Grid>
+                                        {equipments.map((e)=>(<React.Fragment>
+                                            <Grid item xs={1} style={{ marginLeft: '1.5%'}}><img src={'../'+ equipments.logo}/></Grid>
+                                        </React.Fragment>))}
                                         <Grid item xs={1}></Grid>
                                     </Grid>
                                 </div>
 
                                 <div style={{marginTop: '8%'}}>
-                                    <h3 style={{padding: '0 90px',color: '#07BCE5' }}>
+                                    <h3 style={{color: '#07BCE5' }}>
                                         Disponibilité :
                                     </h3>
                                     <Grid container>
-                                        <Grid item xs={1} style={{}}></Grid>
-                                        <Grid item xs={6} style={{ marginLeft: '3.5%'}}><img src="../../static/falsecalendar.png"/></Grid>
+                                        {/*<Grid item xs={1} style={{}}></Grid>*/}
+                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
+                                         <Typography>
+                                             Lundi :  <br/>
+                                        {monday_event.map((e)=>(
+                                            <React.Fragment>
+                                                
+                                                 {e.begin} {e.end}<br/>
+                                                
+                                            </React.Fragment>
+                                        ))}
+                                        </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
+                                         <Typography>
+                                             Mardi :  <br/>
+                                        {tuesday_event.map((e)=>(
+                                            <React.Fragment>
+                                                
+                                                 {e.begin} {e.end}<br/>
+                                                
+                                            </React.Fragment>
+                                        ))}
+                                        </Typography>
+                                        </Grid>
                                         
+                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
+                                         <Typography>
+                                             Mercredi :  <br/>
+                                        {wednesday_event.map((e)=>(
+                                            <React.Fragment>
+                                                
+                                                 {e.begin} {e.end}<br/>
+                                                
+                                            </React.Fragment>
+                                        ))}
+                                        </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
+                                         <Typography>
+                                             Jeudi :  <br/>
+                                        {thursday_event.map((e)=>(
+                                            <React.Fragment>
+                                                
+                                                 {e.begin} {e.end}<br/>
+                                                
+                                            </React.Fragment>
+                                        ))}
+                                        </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
+                                         <Typography>
+                                             Vendredi :  <br/>
+                                        {friday_event.map((e)=>(
+                                            <React.Fragment>
+                                                
+                                                 {e.begin} {e.end}<br/>
+                                                
+                                            </React.Fragment>
+                                        ))}
+                                        </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
+                                         <Typography>
+                                             Samedi :  <br/>
+                                        {saturday_event.map((e)=>(
+                                            <React.Fragment>
+                                                
+                                                 {e.begin} {e.end}<br/>
+                                                
+                                            </React.Fragment>
+                                        ))}
+                                        </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
+                                         <Typography>
+                                             Dimanche :  <br/>
+                                        {sunday_event.map((e)=>(
+                                            <React.Fragment>
+                                                
+                                                 {e.begin} {e.end}<br/>
+                                                
+                                            </React.Fragment>
+                                        ))}
+                                        </Typography>
+                                        </Grid>
                                     </Grid>
                                 </div>
 
                                 {/*cadre avec couleur et checkbox*/}
                                 <div style={{marginTop: '8%', marginBottom: '8%'}}>
-                                    <h3 style={{padding: '0 90px',color: '#07BCE5' }}>
+                                    <h3 style={{color: '#07BCE5' }}>
                                         Conditions d'annulation :
                                     </h3>
                                     <Grid container>
-                                        <Grid item xs={1}></Grid>
-                                        <Grid item xs={1} style={{height: '150px',maxWidth: '30px!important',borderTop: '4px solid #018489', position:'relative'}}>
-
+                                        <Grid item xs={12} style={{margin: '4% 0'}}>
+                                            <Grid container>
+                                                <Grid item xs={1}>
+                                                    {this.state.flexible2 ? <img src="../../static/checkboxes/roundBlueFull.png" width={'35%'}/> : <img src="../../static/checkboxes/roundBlue.png" width={'35%'}/>}
+                                                </Grid>
+                                                <Grid item xs={9}>
+                                                    <Typography style={{ fontSize: '1rem',}}>
+                                                        <span style={{fontWeight:'bolder'}}>Flexibles</span> - Remboursement intégral jusqu’à un jour avant la prestation
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={3} style={{height: '150px',minWidth: '190px!important',borderLeft: '2px solid #018489', borderTop: '4px solid #018489', borderRight: '2px solid #B2DADB', position:'relative'}}>
-                                            <img style={{position:"absolute",left:'-5.9%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checkboxes/roundBlueChecked.png" width={'11%'}/>
-                                            <img style={{position:"absolute",left:'95.1%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checkboxes/roundSkyblue.png" width={'11%'}/>
-                                            <Typography style={{textAlign: 'center', fontSize: '1rem',padding: '5%'}}>
-                                                Remboursement intégral
-                                            </Typography>
-
+                                        <Grid item xs={12} style={{margin: '4% 0'}}>
+                                            <Grid container>
+                                                <Grid item xs={1}>
+                                                    {this.state.moderate2 ? <img src="../../static/checkboxes/roundSkyblueFull.png" width={'35%'}/> : <img src="../../static/checkboxes/roundSkyblue.png" width={'35%'}/>}
+                                                </Grid>
+                                                <Grid item xs={9}>
+                                                    <Typography style={{ fontSize: '1rem',}}>
+                                                        <span style={{fontWeight:'bolder'}}>Modérées</span> - Remboursement intégral jusqu’à 5 jours avant la prestations
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={3} style={{height: '150px',minWidth: '190px!important', borderTop: '4px solid #B2DADB',borderRight: '2px solid #FFB400', position:'relative' }}>
-                                            <img style={{position:"absolute",left:'95.1%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checkboxes/roundYellow.png" width={'11%'}/>
-                                            <Typography style={{textAlign: 'center', fontSize: '1rem',padding: '5%'}}>
-                                                Remboursement intégral, moins les frais de dossier
-                                            </Typography>
+                                        <Grid item xs={12} style={{margin: '4% 0'}}>
+                                            <Grid container>
+                                                <Grid item xs={1}>
+                                                    {this.state.strict2 ? <img src="../../static/checkboxes/roundRedFull.png" width={'35%'}/> : <img src="../../static/checkboxes/roundRed.png" width={'35%'}/> }
+                                                </Grid>
+                                                <Grid item xs={9}>
+                                                    <Typography style={{ fontSize: '1rem',}}>
+                                                        <span style={{fontWeight:'bolder'}}>Strictes</span> - Remboursement intégral jusqu’à 10 jours avant la prestation
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={3} style={{height: '150px',minWidth: '190px!important', borderTop: '4px solid #FFB400',borderRight: '2px solid #FF5B5E', position:'relative' }}>
-                                            <img style={{position:"absolute",left:'94.9%',top:'-8%',zIndex:502,textAlign: 'center'}} src="../../static/checkboxes/roundRedFull.png" width={'11%'}/>
-                                            <Typography style={{textAlign: 'center', fontSize: '1rem',padding: '5%'}}>
-                                                Remboursement à hauteur de 50%
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={1} style={{height: '150px',maxWidth: '30px!important',borderTop: '4px solid #FF5B5E',}}></Grid>
+                                        
                                     </Grid>
                                 </div>
 
                                 {/*Map Perimeters*/}
                                 <div style={{marginTop: '8%', marginBottom: '8%'}}>
-                                    <h3 style={{padding: '0 90px',color: '#07BCE5' }}>
+                                    <h3 style={{color: '#07BCE5' }}>
                                         Mon périmètre d'intervention :
                                     </h3>
                                     <Grid container>
-                                        <Grid item xs={2}></Grid>
+                                        {/*<Grid item xs={2}></Grid>*/}
                                         <Grid item xs={6}>
-                                            <img width="450" height="325" src="../../static/perimetersfalse.png" />
-                                            <Typography>15 Kms à partir de l'adresse principale</Typography>
+                                            <Typography>{serviceUser.perimeter} km à partir de l'adresse principale</Typography>
                                         </Grid>
                                         <Grid item xs={4}></Grid>
                                     </Grid>
                                 </div>
 
-                                {/*Commentaires*/}
-                                <div style={{marginTop: '8%', marginBottom: '8%'}}>
-                                    <h3 style={{padding: '0 90px',color: '#07BCE5' }}>
-                                        77 Commentaires 
-                                        <span style={{marginLeft: '2%'}}>
-                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                            <img width="12px" src="../../static/stars/starhalf.svg"/>
-                                        </span>
-                                    </h3>
-                                    <Grid container>
-                                        <Grid item xs={1}></Grid>
-                                        <Grid item xs={4} style={{textAlign: 'left!important'}}>
-                                            <hr style={{marginLeft: '6.5%',}}/>
-                                            <h4 style={{padding: '0 20px' }}>
-                                                <Grid container>
-                                                    <Grid item xs={8}>
-                                                        Accueil 
-                                                    </Grid>
-                                                    <Grid item xs={4}>
-                                                        <span style={{marginLeft: '2%'}}>
-                                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                                            <img width="12px" src="../../static/stars/starhalf.svg"/>
-                                                        </span>
-                                                    </Grid>
-                                                </Grid>
-                                            </h4>
-                                            <h4 style={{padding: '0 20px'}}>
-                                                <Grid container>
-                                                    <Grid item xs={8}>
-                                                        Qualité / Prix 
-                                                    </Grid>
-                                                    <Grid item xs={4}>
-                                                        <span style={{marginLeft: '2%'}}>
-                                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                                            <img width="12px" src="../../static/stars/starhalf.svg"/>
-                                                        </span>
-                                                    </Grid>
-                                                </Grid>
-                                            </h4>
-                                            <h4 style={{padding: '0 20px' }}>
-                                                <Grid container>
-                                                    <Grid item xs={8}>
-                                                        Communication 
-                                                    </Grid>
-                                                    <Grid item xs={4}>
-                                                        <span style={{marginLeft: '2%'}}>
-                                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                                            <img width="13px" src="../../static/stars/starfull.svg"/>
-                                                            <img width="12px" src="../../static/stars/starhalf.svg"/>
-                                                        </span>
-                                                    </Grid>
-                                                </Grid>
-                                            </h4>
-                                            <hr style={{marginLeft: '6.5%',}}/>
-
-                                        </Grid>
-                                            <Grid container style={{marginLeft:'3%',marginTop: '2%'}}>
-                                                <Grid item xs={1}></Grid>
-                                                <Grid item xs={2}>
-                                                    <Typography style={{fontWeight: 'bold', fontSize:'1rem'}}>Jean-Pierre</Typography>
-                                                    <img style={{borderRadius: '50%',}} width="70px" height="70px" src="../../static/proposeservice.jpg"/>
-                                                </Grid>
-                                                <Grid item xs={8} style={{padding:'4.5% 2%',marginLeft: '-6%'}}>
-                                                    <Typography style={{fontStyle: 'italic'}}>Commentaire qui est assez incroyable en réalité car il est très complexe pour absolument aucune raison</Typography>
-                                                </Grid>
-                                            </Grid>
-
-                                            <Grid container style={{marginLeft:'3%',marginTop: '2%'}}>
-                                                <Grid item xs={1}></Grid>
-                                                <Grid item xs={2}>
-                                                    <Typography style={{fontWeight: 'bold', fontSize:'1rem'}}>Romain</Typography>
-                                                    <img style={{borderRadius: '50%',}} width="70px" height="70px" src="../../static/monika-grabkowska-759473-unsplash.jpg"/>
-                                                </Grid>
-                                                <Grid item xs={8} style={{padding:'4.5% 2%',marginLeft: '-6%'}}>
-                                                    <Typography style={{fontStyle: 'italic'}}>Commentaire incroyable pour la deuxième fois consécutive</Typography>
-                                                </Grid>
-                                            </Grid>
-
+                               
                                         
-                                        <Grid item xs={7}></Grid>
-                                    </Grid>
-                                </div>
+                                            
+
+                                   
                             </Grid>
 
                             {/*Contenu à droite*/}
-                            <Grid item xs={5} style={{marginTop: '2%'}}>
+                            <Grid item xs={12} md={5} style={{marginTop: '2%', marginBottom: '5%'}}>
                                 <Grid container style={{border: 'thin solid #dedede',maxWidth: '80%',marginLeft:'14%'}}>
                                     <Grid item xs={12}><Typography style={{marginTop: '4%' ,marginBottom: '1%' ,marginLeft: '4%' ,color: 'gray', fontSize:'0.9rem'}}>Type de prestation</Typography></Grid>
                                     
-                                    
-                                    {/*FEMME*/}
+                                    {uniqFilter.map(z =>{
+                                    return (
+                                    <React.Fragment>
                                     <Grid item xs={12} style={{marginBottom: '2%'}}>
                                         <Typography style={{marginLeft: '3%' , fontSize:'1.1rem', fontWeight: '5e00'}}>
-                                            <span style={{marginRight: '2%'}}>
-                                                <img width="13px" src="../../static/stars/arrowDown.png"/>
-                                            </span>                                            
-                                            Coiffure Femme
+                                        {this.state[z.label] ?
+                                        <React.Fragment> 
+                                            <span onClick={()=>{this.handleclick1(z.label)}} style={{cursor:'pointer'}}>
+                                                <img style={{marginRight: '2%'}} width="13px" src="../../static/stars/arrowUp.png"/>
+                                                {z.label}
+                                            </span>
+                                        </React.Fragment> : 
+                                        <React.Fragment> 
+                                            <span onClick={()=>{this.handleclick2(z.label)}} style={{cursor:'pointer'}}>
+                                                <img style={{marginRight: '2%'}} width="13px" src="../../static/stars/arrowDown.png"/>
+                                                {z.label}
+                                            </span>
+                                        </React.Fragment>}                                         
                                         </Typography>
                                     </Grid>
+
+                                   {this.state[z.label] ?<React.Fragment>
+                                    <Grid item xs={1}></Grid>
+                                    {prestations.map(d=>{
+                                    if(d.prestation.filter_presentation.label !== z.label){return null}
+                                    else{
+                                        return(
+
+                                        
+                                    <React.Fragment>
+                                    <Grid item xs={4} style={{marginTop: '6%'}}>
+                                        <Grid container>
+                                            
+                                            <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
+                                                <Typography>
+                                                    <Grid container>
+                                                        <Grid item xs={12}>
+                                                        {d.price}€
+                                                        </Grid>
+                                                        <Grid item xs={12} style={{fontSize:"0.6rem"}}>
+                                                            /{d.billing}
+                                                        </Grid>
+                                                    </Grid>
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={10}>
+                                                <Typography>{d.prestation.label}</Typography>     
+                                            </Grid>
+                                            
+                                        </Grid>
+                                    </Grid>
+                                    </React.Fragment>)}})}
+                                    <Grid item xs={1}></Grid>
 
                                     
-                                    <Grid item xs={6} style={{marginTop: '6%'}}>
-                                        <Grid container>
-                                            <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
-                                                <Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={12}>
-                                                            5€
-                                                        </Grid>
-                                                        <Grid item xs={12} style={{fontSize:"0.5rem"}}>
-                                                            / prestation
-                                                        </Grid>
-                                                    </Grid>
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={10}>
-                                            <Typography>Shampoing</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
+                                    <Grid item xs={12}></Grid>   
+                                    <Grid item xs={2}></Grid><Grid item xs={8}><hr style={{marginTop:'8%', backgroundColor:'#dedede', border: '1px solid transparent'}} ></hr></Grid><Grid item xs={2}></Grid></React.Fragment> : null} </React.Fragment>)})}
 
-                                    <Grid item xs={6} style={{marginTop: '6%'}}>
-                                        <Grid container>
-                                            <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
-                                                <Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={12}>
-                                                            5€
-                                                        </Grid>
-                                                        <Grid item xs={12} style={{fontSize:"0.5rem"}}>
-                                                            / prestation
-                                                        </Grid>
-                                                    </Grid>
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={10}>
-                                            <Typography>Soin Profond</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
 
-                                    <Grid item xs={6} style={{marginTop: '6%'}}>
-                                        <Grid container>
-                                            <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
-                                                <Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={12}>
-                                                            
-                                                        </Grid>
-                                                        <Grid item xs={12} style={{fontSize:"0.5rem"}}>
-                                                            
-                                                        </Grid>
-                                                    </Grid>
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={10}>
-                                            <Typography>Couleur (racines)</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-
-                                    <Grid item xs={6} style={{marginTop: '6%'}}>
-                                        <Grid container>
-                                            <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
-                                                <Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={12}>
-                                                           
-                                                        </Grid>
-                                                        <Grid item xs={12} style={{fontSize:"0.5rem"}}>
-                                                           
-                                                        </Grid>
-                                                    </Grid>
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={10}>
-                                            <Typography>Couleur complète</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-
-                                    <Grid item xs={6} style={{marginTop: '6%'}}>
-                                        <Grid container>
-                                            <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
-                                                <Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={12}>
-                                                           
-                                                        </Grid>
-                                                        <Grid item xs={12} style={{fontSize:"0.5rem"}}>
-                                                           
-                                                        </Grid>
-                                                    </Grid>
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={10}>
-                                            <Typography>Tie and dye</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-
-                                    <Grid item xs={6} style={{marginTop: '6%'}}>
-                                        <Grid container>
-                                            <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
-                                                <Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={12}>
-                                                           
-                                                        </Grid>
-                                                        <Grid item xs={12} style={{fontSize:"0.5rem"}}>
-                                                           
-                                                        </Grid>
-                                                    </Grid>
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={10}>
-                                            <Typography>Coupe Classique</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-
-                                    <Grid item xs={2}></Grid><Grid item xs={8}><hr style={{marginTop:'8%', backgroundColor:'#dedede', border: '1px solid transparent'}} ></hr></Grid><Grid item xs={2}></Grid>
-
-                                    {/*HOMME*/}
-                                    <Grid item xs={12} style={{marginBottom: '2%', marginTop:'7%'}}>
+                                    <Grid item xs={12} style={{marginBottom: '2%'}}>
                                         <Typography style={{marginLeft: '3%' , fontSize:'1.1rem', fontWeight: '5e00'}}>
-                                            <span style={{marginRight: '2%'}}>
-                                                <img width="13px" src="../../static/stars/arrowDown.png"/>
-                                            </span>                                            
-                                            Coiffure Homme
+                                        {dropoption ?
+                                        <React.Fragment> 
+                                            <span onClick={this.handleclickoption1} style={{cursor:'pointer'}}>
+                                                <img width="13px" style={{marginRight: '2%'}} src="../../static/stars/arrowUp.png"/>
+                                                Option/Supplément
+                                            </span>
+                                        </React.Fragment> : 
+                                        <React.Fragment> 
+                                            <span onClick={this.handleclickoption2} style={{cursor:'pointer'}}>
+                                                <img style={{marginRight: '2%'}} width="13px" src="../../static/stars/arrowDown.png"/>
+                                                Option/Supplément
+                                            </span>
+                                        </React.Fragment>}                                         
+                                            
                                         </Typography>
                                     </Grid>
 
-                                    <Grid item xs={6} style={{marginTop: '6%'}}>
+                                    {dropoption ?
+                                    <React.Fragment>
+                                    <Grid item xs={1}></Grid>
+                                    <Grid item xs={4} style={{marginTop: '6%'}}>
                                         <Grid container>
+                                            
                                             <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
                                                 <Typography>
                                                     <Grid container>
                                                         <Grid item xs={12}>
-                                                            
+                                                        {options.price}€
                                                         </Grid>
-                                                        <Grid item xs={12} style={{fontSize:"0.5rem"}}>
-                                                            
+                                                        <Grid item xs={12} style={{fontSize:"0.6rem"}}>
+                                                            /{options.unity}({options.option_extra})
                                                         </Grid>
                                                     </Grid>
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={10}>
-                                            <Typography>Shampoing</Typography>
+                                                <Typography>{options.label}</Typography>     
                                             </Grid>
+                                            
                                         </Grid>
                                     </Grid>
-
-                                    <Grid item xs={6} style={{marginTop: '6%'}}>
-                                        <Grid container>
-                                            <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
-                                                <Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={12}>
-                                                            
-                                                        </Grid>
-                                                        <Grid item xs={12} style={{fontSize:"0.5rem"}}>
-                                                            
-                                                        </Grid>
-                                                    </Grid>
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={10}>
-                                            <Typography>Soin Profond</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-
-                                    <Grid item xs={6} style={{marginTop: '6%'}}>
-                                        <Grid container>
-                                            <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
-                                                <Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={12}>
-                                                            5€
-                                                        </Grid>
-                                                        <Grid item xs={12} style={{fontSize:"0.5rem"}}>
-                                                            / prestation
-                                                        </Grid>
-                                                    </Grid>
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={10}>
-                                            <Typography>Shampoing</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-
-                                    <Grid item xs={6} style={{marginTop: '6%'}}>
-                                        <Grid container>
-                                            <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
-                                                <Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={12}>
-                                                            5€
-                                                        </Grid>
-                                                        <Grid item xs={12} style={{fontSize:"0.5rem"}}>
-                                                           / prestation
-                                                        </Grid>
-                                                    </Grid>
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={10}>
-                                            <Typography>Shampoing</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-
-                                    <Grid item xs={12} style={{height:'30px', marginTop: '10%', backgroundColor:'#4FBDD7', cursor: 'pointer', textAlign: 'center',}}>
-                                        <Typography style={{color:'white',marginTop:'4px'}}>options</Typography>
-                                        
-                                    </Grid>
+                                    </React.Fragment>
+                                    : null}
 
                                     <Grid item xs={2}></Grid><Grid item xs={8}><hr style={{marginTop:'8%', backgroundColor:'#dedede', border: '1px solid transparent'}} ></hr></Grid><Grid item xs={2}></Grid>
 
@@ -541,7 +625,8 @@ class services extends React.Component {
                                                 </g>
                                             </svg>
                                         </Grid>
-                                        <Grid item xs={10}><Typography>Panier minimum : 50€</Typography></Grid>
+                                        
+                                            <Grid item xs={10}><Typography>Panier minimum : {serviceUser.minimum_basket}€</Typography></Grid>
 
                                         <Grid item xs={1}></Grid>
                                         <Grid item xs={1}>
@@ -570,7 +655,7 @@ class services extends React.Component {
                                                 </g>
                                             </svg>
                                         </Grid>
-                                        <Grid item xs={8}><Typography>3 Jours de délai de prévenance</Typography></Grid>
+                                        <Grid item xs={8}><Typography>{serviceUser.deadline_before_booking} de délai de prévenance</Typography></Grid>
                                         </Grid>
                                     </Grid>
 
