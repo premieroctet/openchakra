@@ -598,10 +598,16 @@ class services extends React.Component {
                                             <Grid item xs={5}>
                                                 <Grid container>
                                                     <Grid item xs={2}>
+                                                        <Link href={'/myShop/selectCategory'}><a style={{textDecoration:'none'}}>
                                                         <img src={'../../static/plus-4.svg'} style={{marginTop: '27%'}} width={'42%'} alt={'plus'}/>
+                                                        </a>
+                                                        </Link>
                                                     </Grid>
                                                     <Grid item xs={10}>
+                                                        <Link href={'/myShop/selectCategory'}><a style={{textDecoration:'none'}}>
                                                         <h3 style={{color:'white',fontWeight: '100'}}>Ajouter un nouveau service</h3>
+                                                        </a>
+                                                        </Link>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
