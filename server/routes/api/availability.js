@@ -55,5 +55,21 @@ router.get('/all',(req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/availability/currentAlfred
+// Get all availability for one service
+router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,res)=> {
+
+    Availability.find({user: req.user.id})
+        .populate('services')
+        .then(availability => {
+            res.json(availability);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
+
+});
+
 
 module.exports = router;

@@ -341,6 +341,7 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
 
     ServiceUser.find({user: req.user.id})
         .populate('service')
+        .populate('user')
         .populate({path: 'service', populate: { path: 'category' }})
         .populate('prestations.prestation')
         .populate('equipments')
@@ -365,7 +366,7 @@ router.get('/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
     ServiceUser.findById(req.params.id)
         .populate('user')
         .populate('service')
-        .populate('prestations.prestation')
+        .populate({path: 'prestations.prestation', populate: { path: 'filter_presentation' }})
         .populate('equipments')
         .populate('service.equipments')
         .then(service => {

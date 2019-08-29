@@ -9,6 +9,12 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import Input from "@material-ui/core/Input";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import {FormLabel} from "@material-ui/core";
 import Select2 from 'react-select';
 
 
@@ -25,6 +31,52 @@ const styles = theme => ({
         marginTop: 70,
         flexGrow: 1,
     },
+    hidesm: {
+        minWidth: '271px',
+        [theme.breakpoints.down('sm')]: {
+            display:'none'
+        }
+    }
+
+   ,hidelg: {
+        [theme.breakpoints.up('md')]: {
+            display:'none',
+        }
+        
+    },
+    trigger:{ 
+    [theme.breakpoints.down('sm')]: {
+    marginTop: -10,
+    width: '100%', 
+    marginLeft:'0px',
+    height:'30px', 
+    backgroundColor:'#2FBCD3',
+    
+    display:'block',
+    transition: 'display 0.7s',
+    borderRadius:'5px',
+    '&:focus': {
+    display:'none',
+    transition: 'display 0.7s',
+
+       }
+     }
+
+}
+
+    ,toggle: {
+        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
+        transition: 'margin-left 0.7s',
+       
+        '&:hover': {
+            marginLeft:'0px',
+            transition: 'margin-left 0.7s',
+            boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
+
+             }
+      }  
+    }
+
 
 
 });
@@ -115,7 +167,7 @@ class editProfile extends React.Component {
         const {email, name, firstname,birthday,description,gender,phone,job,diplomes,school,emergency_phone} = this.state.user;
 
         axios.put(url+'myAlfred/api/users/profile/editProfile',{email,name,firstname,birthday,description,gender,phone,job,diplomes,school,
-            emergency_phone,languages})
+        emergency_phone,languages})
             .then(res => {
                 alert("Profil modifié avec succès");
                 this.componentDidMount();
@@ -144,31 +196,62 @@ class editProfile extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 
-                        <Grid item xs={3} style={{borderRight: '1px solid darkgray'}}>
-
-                            <Grid container style={{justifyContent: 'center'}}>
-
-                                <Grid item style={{marginTop: 30,width: 270.25}}>
+                    <Grid className={classes.toggle}  item xs={3} style={{}}>
+                         
+                         <div className={classes.trigger}></div>
+                            <Grid container style={{justifyContent: 'center',}}>
+                                <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/user-2.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            <img src={'../static/user-2.svg'} alt={'user'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <a s style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Modifier le profil
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10}}>
+
+                                <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/editProfile'}>
+                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/user-2.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
+                                            <a s style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                               
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10}}className={classes.hidesm}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Mes adresses de prestations
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+
+                                <Grid item style={{marginTop: 10}}className={classes.hidelg}>
+                                    <Link href={'/profile/myAddresses'}>
+                                        <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginleft: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                               
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/editPicture'}>
+                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/editPicture'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
@@ -179,7 +262,18 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/trustAndVerification'}>
+                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
@@ -190,7 +284,19 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/reviews'}>
+                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+
+
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
@@ -201,10 +307,21 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/recommandations'}>
+                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                               
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/recommandations'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Recommandations
                                             </a>
@@ -217,108 +334,110 @@ class editProfile extends React.Component {
                         </Grid>
 
 
+
+
                         <Grid item xs={9} style={{paddingLeft: 55}}>
                             <h1 style={{color: 'dimgray',fontWeight: '100'}}>Modifier le profil</h1>
                             <form>
 
-                                <Grid container style={{maxWidth: '60%'}}>
-                                    <Grid item xs={12} style={{marginTop: 20}}>
+                            <Grid container style={{maxWidth: '60%'}}>
+                                <Grid item xs={12} style={{marginTop: 20}}>
 
-                                        <TextField
-                                            id="standard-name"
-                                            style={{ marginTop: 15,width: '100%'}}
-                                            value={user.firstname}
-                                            onChange={this.onChange}
-                                            margin="normal"
-                                            name={'firstname'}
+                                    <TextField
+                                        id="standard-name"
+                                        style={{ marginTop: 15,width: '100%'}}
+                                        value={user.firstname}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'firstname'}
 
-                                        />
+                                    />
 
-                                    </Grid>
-                                    <Grid item xs={12}>
-
-                                        <TextField
-                                            id="standard-name"
-                                            style={{ marginTop: 15,width: '100%'}}
-                                            value={user.name}
-                                            onChange={this.onChange}
-                                            margin="normal"
-                                            name={'name'}
-
-                                        />
-
-                                    </Grid>
-
-                                    <Grid item xs={12} style={{marginTop: 20}}>
-
-                                        <InputLabel style={{color: 'black'}}>A propos de moi</InputLabel>
-                                        <TextField
-                                            id="standard-name"
-                                            style={{ marginTop: 15,width: '100%'}}
-                                            value={user.description}
-                                            multiline
-                                            rows={5}
-                                            variant={'outlined'}
-                                            onChange={this.onChange}
-                                            margin="normal"
-                                            name={'description'}
-
-                                        />
-
-                                    </Grid>
                                 </Grid>
-                                <Grid container style={{maxWidth: '60%'}}>
-                                    <h2 style={{fontWeight: '100'}}>Informations personnelles</h2>
-                                    <Grid item xs={12} style={{marginTop: 10}}>
+                                <Grid item xs={12}>
 
-                                        <TextField
-                                            id="standard-name"
-                                            style={{width: '100%'}}
-                                            value={user.gender}
-                                            onChange={this.onChange}
-                                            margin="normal"
-                                            name={'gender'}
-                                            placeholder={'Sexe'}
+                                    <TextField
+                                        id="standard-name"
+                                        style={{ marginTop: 15,width: '100%'}}
+                                        value={user.name}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'name'}
 
-                                        />
+                                    />
 
-                                    </Grid>
-                                    <Grid item xs={12} style={{marginTop: 10}}>
-                                        <TextField
-                                            id="date"
-                                            type="date"
-                                            name="birthday"
-                                            style={{width: '100%'}}
-                                            className={classes.textField}
-                                            value={moment(user.birthday).format('YYYY-MM-DD')}
-                                            onChange={this.onChange}
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} style={{marginTop: 10}}>
-                                        <TextField
-                                            id="standard-name"
-                                            style={{width: '100%'}}
-                                            value={user.email}
-                                            onChange={this.onChange}
-                                            margin="normal"
-                                            name={'email'}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} style={{marginTop: 10}}>
-                                        <TextField
-                                            id="standard-name"
-                                            style={{width: '100%'}}
-                                            value={user.phone}
-                                            onChange={this.onChange}
-                                            margin="normal"
-                                            name={'phone'}
-                                            placeholder={'Téléphone'}
-                                        />
-                                    </Grid>
                                 </Grid>
+
+                                <Grid item xs={12} style={{marginTop: 20}}>
+
+                                    <InputLabel style={{color: 'black'}}>A propos de moi</InputLabel>
+                                    <TextField
+                                        id="standard-name"
+                                        style={{ marginTop: 15,width: '100%'}}
+                                        value={user.description}
+                                        multiline
+                                        rows={5}
+                                        variant={'outlined'}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'description'}
+
+                                    />
+
+                                </Grid>
+                            </Grid>
+                            <Grid container style={{maxWidth: '60%'}}>
+                                <h2 style={{fontWeight: '100'}}>Informations personnelles</h2>
+                                <Grid item xs={12} style={{marginTop: 10}}>
+
+                                    <TextField
+                                        id="standard-name"
+                                        style={{width: '100%'}}
+                                        value={user.gender}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'gender'}
+                                        placeholder={'Sexe'}
+
+                                    />
+
+                                </Grid>
+                                <Grid item xs={12} style={{marginTop: 10}}>
+                                    <TextField
+                                        id="date"
+                                        type="date"
+                                        name="birthday"
+                                        style={{width: '100%'}}
+                                        className={classes.textField}
+                                        value={moment(user.birthday).format('YYYY-MM-DD')}
+                                        onChange={this.onChange}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} style={{marginTop: 10}}>
+                                    <TextField
+                                        id="standard-name"
+                                        style={{width: '100%'}}
+                                        value={user.email}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'email'}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} style={{marginTop: 10}}>
+                                    <TextField
+                                        id="standard-name"
+                                        style={{width: '100%'}}
+                                        value={user.phone}
+                                        onChange={this.onChange}
+                                        margin="normal"
+                                        name={'phone'}
+                                        placeholder={'Téléphone'}
+                                    />
+                                </Grid>
+                            </Grid>
                                 <Grid container style={{maxWidth: '60%'}}>
                                     <h2 style={{fontWeight: '100'}}>Informations facultatives</h2>
                                     <Grid item xs={12} style={{marginTop: 10}}>
@@ -364,15 +483,15 @@ class editProfile extends React.Component {
                                                 <p>Langues</p>
                                             </Grid>
                                             <Grid item xs={10}>
-                                                <Select2
-                                                    value={this.state.selectedLanguages}
-                                                    onChange={this.handleChangeLanguages}
-                                                    options={options}
-                                                    isMulti
-                                                    isSearchable
-                                                    closeMenuOnSelect={false}
+                                    <Select2
+                                        value={this.state.selectedLanguages}
+                                        onChange={this.handleChangeLanguages}
+                                        options={options}
+                                        isMulti
+                                        isSearchable
+                                        closeMenuOnSelect={false}
 
-                                                />
+                                    />
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -394,7 +513,7 @@ class editProfile extends React.Component {
 
                     </Grid>
                     <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
-                        alignItems:"center",height:60}}>
+                    alignItems:"center",height:60}}>
                         <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
                                 style={{color: 'white',maxHeight:40,marginRight:20}}>
                             Enregistrer

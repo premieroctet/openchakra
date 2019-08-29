@@ -20,14 +20,51 @@ const styles = theme => ({
         marginTop: 70,
         flexGrow: 1,
     },
-    deleteicon: {
-        '&:hover' : {
-            color: '#F8727F!important',
-        },
-        '&:active' : {
-            color: '#df6874!important'
-        },
+    hidesm: {
+        minWidth: '271px',
+        [theme.breakpoints.down('sm')]: {
+            display:'none'
+        }
+    }
+
+   ,hidelg: {
+        [theme.breakpoints.up('md')]: {
+            display:'none',
+        }
+        
     },
+    trigger:{ 
+    [theme.breakpoints.down('sm')]: {
+    marginTop: -10,
+    width: '100%', 
+    marginLeft:'0px',
+    height:'30px', 
+    backgroundColor:'#2FBCD3',
+    
+    display:'block',
+    transition: 'display 0.7s',
+    borderRadius:'5px',
+    '&:focus': {
+    display:'none',
+    transition: 'display 0.7s',
+
+       }
+     }
+
+}
+
+    ,toggle: {
+        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
+        transition: 'margin-left 0.7s',
+       
+        '&:hover': {
+            marginLeft:'0px',
+            transition: 'margin-left 0.7s',
+            boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
+
+             }
+      }  
+    }
 
 
 });
@@ -149,42 +186,84 @@ class editPicture extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 
-                        <Grid item xs={3} style={{borderRight: '1px solid darkgray'}}>
-
-                            <Grid container style={{justifyContent: 'center'}}>
-
-                                <Grid item style={{marginTop: 30,width: 270.25}}>
+                    <Grid className={classes.toggle}  item xs={3} style={{}}>
+                         
+                         <div className={classes.trigger}></div>
+                            <Grid container style={{justifyContent: 'center',}}>
+                                <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <a s style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Modifier le profil
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10}}>
+
+                                <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/editProfile'}>
+                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
+                                            <a s style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                               
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10}}className={classes.hidesm}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Mes adresses de prestations
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+
+                                <Grid item style={{marginTop: 10}}className={classes.hidelg}>
+                                    <Link href={'/profile/myAddresses'}>
+                                        <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginleft: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                               
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/editPicture'}>
+                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/picture.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/editPicture'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/picture.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Photo
+                                                Photos
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/trustAndVerification'}>
+                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
@@ -195,7 +274,19 @@ class editPicture extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/reviews'}>
+                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+
+
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
@@ -206,10 +297,21 @@ class editPicture extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/recommandations'}>
+                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                               
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/recommandations'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Recommandations
                                             </a>
@@ -245,8 +347,8 @@ class editPicture extends React.Component {
                                                 avec seulement vous sur la photo. </p><br />
 
                                             <label style={{display: 'inline-block', marginTop: 15,color:'#2FBCD3'}} className="forminputs">
-                                                <p style={{cursor:"pointer"}}>Télécharger une photo depuis votre ordinateur</p>
-                                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myImage" type="file"
+                                                <p style={{cursor:"pointer",fontSize:'0.8rem'}}>Télécharger une photo depuis votre ordinateur</p>
+                                                <input id="file" style={{display: 'none'}} name="myImage" type="file"
                                                        onChange={this.onChange}
                                                        className="form-control"
                                                 />

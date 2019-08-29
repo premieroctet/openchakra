@@ -40,9 +40,55 @@ const FilledButton = styled.div`
 `;
 const styles = theme => ({
     bigContainer: {
-        marginTop: 70,
+        marginTop: 20,
+        marginBottom: 70,
         flexGrow: 1,
     },
+    hidesm: {
+        minWidth: '271px',
+        [theme.breakpoints.down('sm')]: {
+            display:'none'
+        }
+    }
+
+   ,hidelg: {
+        [theme.breakpoints.up('md')]: {
+            display:'none',
+        }
+
+    },
+    trigger:{
+    [theme.breakpoints.down('sm')]: {
+    marginTop: -10,
+    width: '100%',
+    marginLeft:'0px',
+    height:'30px',
+    backgroundColor:'#2FBCD3',
+
+    display:'block',
+    transition: 'display 0.7s',
+    borderRadius:'5px',
+    '&:focus': {
+    display:'none',
+    transition: 'display 0.7s',
+
+       }
+     }
+
+}
+
+    ,toggle: {
+        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
+        transition: 'margin-left 0.7s',
+
+        '&:hover': {
+            marginLeft:'0px',
+            transition: 'margin-left 0.7s',
+            boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
+
+             }
+      }
+    }
 
 
 });
@@ -241,31 +287,62 @@ class trustAndVerification extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 
-                        <Grid item xs={3} style={{borderRight: '1px solid darkgray'}}>
+                    <Grid className={classes.toggle}  item xs={3} style={{}}>
 
-                            <Grid container style={{justifyContent: 'center'}}>
-
-                                <Grid item style={{marginTop: 30,width: 270.25}}>
+                         <div className={classes.trigger}></div>
+                            <Grid container style={{justifyContent: 'center',}}>
+                                <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <a s style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Modifier le profil
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10}}>
+
+                                <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/editProfile'}>
+                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
+                                            <a s style={{fontSize: '1.1rem',cursor:"pointer"}}>
+
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10}}className={classes.hidesm}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Mes adresses de prestations
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+
+                                <Grid item style={{marginTop: 10}}className={classes.hidelg}>
+                                    <Link href={'/profile/myAddresses'}>
+                                        <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginleft: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/editPicture'}>
+                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/editPicture'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
@@ -276,7 +353,18 @@ class trustAndVerification extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/trustAndVerification'}>
+                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/success-2.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/success-2.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
@@ -287,7 +375,19 @@ class trustAndVerification extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/reviews'}>
+                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+
+
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
@@ -298,10 +398,21 @@ class trustAndVerification extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}}>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/profile/recommandations'}>
+                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/profile/recommandations'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Recommandations
                                             </a>
@@ -399,9 +510,9 @@ class trustAndVerification extends React.Component {
 
                                     </TextField>
                                     <form onSubmit={this.onSubmit}>
-                                    <div style={{marginTop: 20,border:'0.2px solid lightgrey',width:'80%'}}>
+                                    <div style={{marginTop: 20,padding: '2% 13%',border:'0.2px solid lightgrey',width:'80%'}}>
                                         <label style={{display: 'inline-block', marginTop: 15,paddingLeft: 50}} className="forminputs">
-                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '1.1rem'}}>Télécharger recto</p>
+                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger recto</p>
                                             <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
                                                    onChange={this.onChangeRecto}
                                                    className="form-control"
@@ -409,9 +520,9 @@ class trustAndVerification extends React.Component {
                                         </label>
                                         <span>{this.state.id_recto.name !== null ? this.state.id_recto.name : null}</span>
                                     </div>
-                                    <div style={{marginTop: 20,border:'0.2px solid lightgrey',width:'80%'}}>
-                                        <label style={{display: 'inline-block', marginTop: 15,paddingLeft: 50}} className="forminputs">
-                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '1.1rem'}}>Télécharger verso (sauf passeport)</p>
+                                    <div style={{marginTop: 20,padding: '3% 8%',paddingTop: '5%',border:'0.2px solid lightgrey',width:'80%'}}>
+                                        <label style={{display: 'inline-block', }} className="forminputs">
+                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
                                             <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
                                                    onChange={this.onChangeVerso}
                                                    className="form-control"
@@ -431,13 +542,13 @@ class trustAndVerification extends React.Component {
                                     <div style={{marginTop: 20,width:'80%',display:'flex'}}>
                                         {ext ==='pdf' ?
                                             <Document
-                                                file={`../${this.state.card.recto}`}
+                                                file={`../${this.state.cardrecto}`}
                                                 onLoadSuccess={this.onDocumentLoadSuccess}
                                             >
                                                 <Page pageNumber={this.state.pageNumber} width='250' />
                                             </Document>
                                             :
-                                            <img src={'../'+this.state.card.recto} alt={'recto'} width={200}/>
+                                            <img src={`../${this.state.cardrecto}`} alt={'recto'} width={200}/>
 
                                         }
                                         {user.id_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :

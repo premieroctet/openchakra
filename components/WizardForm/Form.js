@@ -38,6 +38,7 @@ import CityFinder from './CityFinder';
 import AddressFinder from './AddressFinder';
 import Siret from './Siret';
 import Availability from './Availability';
+import '../../static/noscrollbar.css';
 
 
 const { config } = require('../../config/config');
@@ -50,6 +51,7 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'center',
         padding: '1.5rem 3rem 0 3rem',
+        overflow:'hidden    ',
         [theme.breakpoints.down('sm')]: {
             padding: '0'
         },
@@ -238,6 +240,7 @@ const styles = theme => ({
             padding: '0!important',
         }
     },
+
 
 });
 
@@ -977,8 +980,9 @@ class Form extends React.Component {
                     }}
                 >
                     <Wizard.Page>
+                        
                         <Grid container className={classes.cardContainer} style={{justifyContent: 'start'}}>
-                            
+                            <div>
                             <div style={{padding: '0rem 2rem 1rem 2rem', width: '100%'}}>
                                 <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
                                 <hr style={{margin: '1rem 0'}} />
@@ -1003,8 +1007,9 @@ class Form extends React.Component {
                                     <Typography>Renseignez votre profil Alfred, partager vos réalisa- tions, et décrivez vous !</Typography>
                                 </div>
                             </div> 
-                            
+                            </div>
                         </Grid>
+                        
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start'}}>

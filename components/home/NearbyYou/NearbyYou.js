@@ -8,8 +8,9 @@ import NearbyYouCard from './NearbyYou/NearbyYouCard';
 import axios from 'axios';
 import "../../../static/stylesfonts.css"
 
-const url = "https://myalfred.hausdivision.com/";
 
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
   container: {

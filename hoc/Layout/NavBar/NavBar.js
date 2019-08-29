@@ -150,20 +150,21 @@ class NavBar extends Component {
       const decode = jwt.decode(token2);
       this.setState({alfred: decode.is_alfred});
     }
-
     axios.defaults.headers.common['Authorization'] = token;
     axios
         .get(url+'myAlfred/api/users/current')
         .then(res => {
             let user = res.data;
-            this.setState({user:user});
+            this.setState({user:user, alfred:user.is_alfred});
 
             if(typeof user.picture !="undefined") {
                 this.setState({picture: true})
+
             } else {
-                this.setState({picture: false})
+              this.setState({picture: false})
             }
         })
+
   }
 
   logout2() {
@@ -172,7 +173,7 @@ class NavBar extends Component {
     // Remove auth header for future requests
     setAuthToken(false);
     //document.location.href="https://myalfred.hausdivision.com/";
-    Router.push('/');
+    Router.push('/disconnected');
   };
 
   handleProfileMenuOpen = event => {
@@ -209,7 +210,8 @@ class NavBar extends Component {
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const test = this.state.logged;
     const user = this.state.user;
-    const becomealfred = test ?<MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/becomeAlfredForm'}><a className={classes.navbarLinkMobile}>Devenir Alfred</a></Link></Typography></MenuItem> : null;
+    const becomealfred = <MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/becomeAlfredForm'}><a className={classes.navbarLinkMobile}>Devenir Alfred</a></Link></Typography></MenuItem>;
+    const maboutique = <MenuItem onClick={this.handleMenuClose}><Typography><Link href={'/myShop/services'}><a className={classes.navbarLinkMobile}>Ma boutique</a></Link></Typography></MenuItem>;
     const picture = this.state.picture;
     const mobileavatar = picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>;
     const alfred = this.state.alfred;
@@ -219,7 +221,7 @@ class NavBar extends Component {
     const logoutMobile = <React.Fragment>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'/profile'}>
+        <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
             Profil
           </a>
@@ -250,7 +252,7 @@ class NavBar extends Component {
     <React.Fragment>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
-        <Link href={'/profile'}>
+        <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
             Profil  
           </a>
@@ -339,7 +341,9 @@ class NavBar extends Component {
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
-        { alfred ? '' :
+        { alfred ? 
+        maboutique
+     :
         becomealfred
         }
         {test ?<React.Fragment>
@@ -395,7 +399,7 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  color="inherit" position="fixed">
+        <AppBar  color="white" position="fixed">
           <Toolbar>
             <Link href={'/'}>
               <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
@@ -414,7 +418,15 @@ class NavBar extends Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              {alfred ? '' :
+              {alfred ?  
+              <Typography className={classes.navbarItem}>
+                <Link href={'/myShop/services'}>
+                  <a className={classes.navbarLink}>
+                    Ma boutique
+                  </a>
+                </Link>
+              </Typography>
+              :
               <Typography className={classes.navbarItem}>
                 <Link href={'/becomeAlfredForm'}>
                   <a className={classes.navbarLink}>
