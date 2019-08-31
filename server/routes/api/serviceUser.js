@@ -157,7 +157,7 @@ router.post('/myShop/add',upload.fields([{name: 'file_diploma',maxCount: 1}, {na
             fields.service_address.gps.lat = req.body.lat;
             fields.service_address.gps.lng = req.body.lng;
 
-            fields.option = req.body.options;
+            fields.option = JSON.parse(req.body.options);
             const newService = new ServiceUser(fields);
             newService.save().then(service => res.json(service)).catch(err => console.log(err));
 

@@ -226,6 +226,19 @@ class services extends React.Component {
 
     handleClicktabs =() => {
         this.setState({ tabs: false });
+    };
+
+    deleteService(id) {
+        if(confirm('Etes vous sûr de vouloir supprimé ce service da votre boutique ?')) {
+
+
+            axios.delete(url + 'myAlfred/api/serviceUser/' + id)
+                .then(() => {
+                    alert('Service supprimé');
+                    this.componentDidMount();
+                })
+                .catch(err => console.log(err))
+        }
     }
 
     render() {
@@ -276,7 +289,7 @@ class services extends React.Component {
                             <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1rem'}}>{/*<EditIcon  style={{cursor: 'pointer',width:15, height:15, marginRight: 3,}}/>*/}Modifier</p>
                         </Grid>
                         <Grid item style={{position:"absolute",right:'3%',top:'18%',zIndex:502}}>
-                            <p>{serviceUser.map((e,index)=> (<a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}} href={'/myShop/shopPreview?id_alfred=' + e.user}>Aperçu de ma boutique</a>))}</p>
+                            <Link href={'/myShop/shopPreview?id_alfred=' + this.state.user._id}><a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}}><p>Aperçu de ma boutique</p></a></Link>
                         </Grid>
 
                         <Grid container style={{marginTop: 20}}>
@@ -578,7 +591,7 @@ class services extends React.Component {
                                                         </Link>
                                                         <Link>
                                                             <a style={{cursor: 'pointer',textDecoration:'none',height:'fit-content'}}>
-                                                                <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}><DeleteIcon  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
+                                                                <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}><DeleteIcon onClick={()=>this.deleteService(e._id)}  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
                                                             </a>
                                                         </Link>
                                                     </Grid>

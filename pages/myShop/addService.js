@@ -343,7 +343,7 @@ class addService extends React.Component {
         const formData = new FormData();
         formData.append('service',service);
         formData.append('prestations',JSON.stringify(prestations));
-        formData.append('options',options);
+        formData.append('options',JSON.stringify(options));
         formData.append('city',city);
         formData.append('address',address);
         formData.append('zip_code',zip_code);
