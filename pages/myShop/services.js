@@ -16,8 +16,11 @@ import Typography from "@material-ui/core/Typography";
 import { TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/EditOutlined';
+import Modal from '@material-ui/core/Modal';
+import { Carousel } from 'react-responsive-carousel';
 import SearchIcon from '@material-ui/icons/SearchOutlined';
 const jwt = require('jsonwebtoken');
+
 
 moment.locale('fr');
 
@@ -33,6 +36,7 @@ const FilledButton = styled.div`
     margin-top: 3px;
     margin-left: 3px;
 `;
+
 const styles = theme => ({
     bigContainer: {
         marginTop: 68,
@@ -90,6 +94,13 @@ const styles = theme => ({
         backgroundColor: 'rgb(47, 188, 211)',
         borderColor: 'transparent'
     },
+    paper: {
+        position: 'absolute',
+        width: 800,
+        backgroundColor: 'white',
+        border: '2px solid #000',
+
+    },
 
 
 
@@ -113,6 +124,8 @@ class services extends React.Component {
             strict_cancel: false,
             no_booking_request: false,
             welcome_message: '',
+            open: false,
+            banner: [],
         };
 
 
@@ -131,6 +144,14 @@ class services extends React.Component {
         }
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
+        axios.get(url+'myAlfred/api/shopBanner/all')
+            .then(response => {
+                let banner = response.data;
+
+                this.setState({banner: banner})
+            })
+            .catch(err =>{console.log(err)});
         axios
             .get(url+'myAlfred/api/users/current')
             .then(res => {
@@ -169,6 +190,14 @@ class services extends React.Component {
                 console.log(err)
             );
     }
+
+    handleOpen = () => {
+        this.setState({open:true});
+    };
+
+    handleClose = () => {
+        this.setState({open:false});
+    };
 
 
 
@@ -241,12 +270,40 @@ class services extends React.Component {
         }
     }
 
+    onSubmitBanner = e =>{
+        e.preventDefault();
+        const data = {picture: e.target.label.value};
+
+        axios.put(url+'myAlfred/api/shop/editBanner',data)
+            .then(res => {
+                alert('Photo modifiée');
+                this.setState({open:false});
+                this.componentDidMount();
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+    }
+
     render() {
         const {classes} = this.props;
         const {user} = this.state;
         const {shop} = this.state;
         const {serviceUser} = this.state;
         const tabs = this.state.tabs;
+
+        const {banner} = this.state;
+
+        const image = banner.map(e => (
+            <div key={e._id}>
+                <img src={`../../../${e.picture}`} alt={e.label} />
+                <div className="legend">
+                    <p>{e.label}</p>
+                    <form onSubmit={(event)=>this.onSubmitBanner(event)}><input type='hidden' value={e.picture} name='label'/><button type='submit'>Choisir</button></form>
+                </div>
+            </div>
+        ));
 
 
         return (
@@ -272,7 +329,7 @@ class services extends React.Component {
                             </Grid>
 
                         </Grid>
-                        <Grid container style={{backgroundImage: "url('../../static/shopBanner/sky-690293_1920.jpg')",backgroundPosition: "center", height:'42vh',
+                        <Grid container style={{backgroundImage: `url('../../${this.state.shop.picture}')`,backgroundPosition: "center", height:'42vh',
                             backgroundSize:"cover", backgroundRepeat:"no-repeat",justifyContent:"center",alignItems:"center"}}>
 
 
@@ -286,7 +343,7 @@ class services extends React.Component {
                             <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'45%',zIndex:501}} width={'9%'} alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'3%',top:'18%',zIndex:502}}>
-                            <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1rem'}}>{/*<EditIcon  style={{cursor: 'pointer',width:15, height:15, marginRight: 3,}}/>*/}Modifier</p>
+                            <p onClick={()=>this.handleOpen()} style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1rem'}}>{/*<EditIcon  style={{cursor: 'pointer',width:15, height:15, marginRight: 3,}}/>*/}Modifier</p>
                         </Grid>
                         <Grid item style={{position:"absolute",right:'3%',top:'18%',zIndex:502}}>
                             <Link href={'/myShop/shopPreview?id_alfred=' + this.state.user._id}><a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}}><p>Aperçu de ma boutique</p></a></Link>
@@ -644,6 +701,23 @@ class services extends React.Component {
                         </Grid>
 
                     </Grid>
+                    <Modal
+                        aria-labelledby="simple-modal-title"
+                        aria-describedby="simple-modal-description"
+                        open={this.state.open}
+                        onClose={this.handleClose}
+                    >
+                        <div style={{top: `50%`,
+                            left: `50%`,
+                            transform: `translate(-50%, -50%)`,}} className={classes.paper}>
+                            <Carousel>
+
+                                {image}
+
+                            </Carousel>
+
+                        </div>
+                    </Modal>
                 </Layout>
 
             </Fragment>
