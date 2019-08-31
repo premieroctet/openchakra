@@ -158,7 +158,7 @@ class addService extends React.Component {
                 const data = response.data;
                 this.setState({all_equipments: data.equipments,service: data});
 
-                data.forEach(h => {
+                data.equipments.forEach(h => {
                     this.setState({[h.label]:false})
 
                 });
@@ -317,6 +317,8 @@ class addService extends React.Component {
 
     onSubmit = e => {
         e.preventDefault();
+
+        const service = this.props.service_id;
         const prestations = this.state.prestations;
         const options = this.state.options;
         const city = this.state.city;
@@ -339,6 +341,7 @@ class addService extends React.Component {
         let certification = this.state.file_certification;
 
         const formData = new FormData();
+        formData.append('service',service);
         formData.append('prestations',JSON.stringify(prestations));
         formData.append('options',options);
         formData.append('city',city);
@@ -355,14 +358,14 @@ class addService extends React.Component {
         formData.append('level',level);
         formData.append('name_diploma',name_diploma);
         formData.append('year_diploma',year_diploma);
-        formData.append('diploma',diploma);
+        formData.append('file_diploma',diploma);
         formData.append('name_certification',name_certification);
         formData.append('year_certification',year_certification);
-        formData.append('certification',certification);
+        formData.append('file_certification',certification);
 
 
 
-        axios.post(`${url}myAlfred/api/serviceUser/myShop/add`,{formData})
+        axios.post(`${url}myAlfred/api/serviceUser/myShop/add`,formData)
             .then(res => {
 
                 alert('Service ajouté avec succès');

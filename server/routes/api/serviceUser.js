@@ -96,6 +96,75 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
         .catch(error => {
             console.log(error)
         });
+});
+
+// @Route POST /myAlfred/api/serviceUser/myShop/add
+// Add service in the shop
+// @Access private
+router.post('/myShop/add',upload.fields([{name: 'file_diploma',maxCount: 1}, {name:'file_certification',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req,res)=>{
+    ServiceUser.findOne({user: req.user.id, service: req.body.service})
+        .then(service => {
+
+            if(service) {
+                return res.status(400).json({msg: "Ce service existe déjà"});
+            }
+            const fields = {};
+            fields.user= req.user.id;
+            fields.service = req.body.service;
+            fields.perimeter = req.body.perimeter;
+            fields.minimum_basket = req.body.minimum_basket;
+            fields.deadline_before_booking = req.body.deadline_before_booking;
+            fields.prestations = JSON.parse(req.body.prestations);
+            fields.level = req.body.level;
+
+            fields.diploma = {};
+            fields.certification = {};
+            const diploma = 'file_diploma';
+            const certification = 'file_certification';
+            if(req.files !== undefined) {
+                if (diploma in req.files) {
+                    fields.diploma.name = req.body.name_diploma;
+                    fields.diploma.year = req.body.year_diploma;
+                    fields.diploma.file = req.files['file_diploma'][0].path;
+                    fields.graduated = true;
+                } else {
+                    console.log('No file uploaded');
+                }
+
+                if (certification in req.files) {
+                    fields.certification.name = req.body.name_certification;
+                    fields.certification.year = req.body.year_certification;
+                    fields.certification.file = req.files['file_certification'][0].path;
+                    fields.is_certified = true;
+                } else {
+                    console.log('No file uploaded');
+                }
+            }
+
+            fields.description = req.body.description;
+            fields.equipments = JSON.parse(req.body.equipments);
+
+
+            fields.service_address = {};
+            fields.service_address.address = req.body.address;
+            fields.service_address.zip_code = req.body.zip_code;
+            fields.service_address.city = req.body.city;
+            fields.service_address.country = req.body.country;
+
+
+
+            fields.service_address.gps = {};
+            fields.service_address.gps.lat = req.body.lat;
+            fields.service_address.gps.lng = req.body.lng;
+
+            fields.option = req.body.options;
+            const newService = new ServiceUser(fields);
+            newService.save().then(service => res.json(service)).catch(err => console.log(err));
+
+        })
+        .catch(error => {
+            console.log(error)
+        });
 
 
 
