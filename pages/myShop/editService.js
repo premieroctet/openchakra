@@ -1499,7 +1499,7 @@ class editService extends React.Component {
                                             <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
                                                 <p style={{cursor:"pointer",color:'black'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
-                                                       onChange={this.onChangeDiploma}
+                                                       onChange={this.onChangeCertification}
                                                        className="form-control"
                                                 />
                                             </label>

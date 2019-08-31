@@ -230,9 +230,11 @@ class selectCategory extends React.Component {
                                 </Grid>
                                 <Grid item xs={6}>
                                     {serviceOk ?
-                            <Button onClick={()=>this.handleService()} type="submit" variant="contained" color="secondary" style={{ color:"white" }}>
+                                        <Link href={'/myShop/addService?id='+this.state.selectedService.value}>
+                            <Button type="submit" variant="contained" color="secondary" style={{ color:"white" }}>
                                 Suivant
                             </Button>
+                                        </Link>
                                         : null}
                                 </Grid>
                             </Grid>
