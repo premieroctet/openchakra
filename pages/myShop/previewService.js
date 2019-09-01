@@ -8,6 +8,8 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
+import dynamic from 'next/dynamic';
+
 
 
 
@@ -17,7 +19,9 @@ moment.locale('fr');
 const _ = require('lodash');
 const { config } = require('../../config/config');
 const url = config.apiUrl;
-
+const MapComponent = dynamic(() => import('../../components/map'), {
+    ssr: false
+});
 const styles = theme => ({
     bigContainer: {
         flexGrow: 1,
@@ -25,6 +29,7 @@ const styles = theme => ({
 
 
 });
+
 
 class services extends React.Component {
     constructor(props) {
@@ -58,6 +63,7 @@ class services extends React.Component {
             friday_event: [],
             saturday_event: [],
             sunday_event: [],
+            position: '',
         };
 
         this.handleclick1 = this.handleclick1.bind(this);
@@ -73,6 +79,9 @@ class services extends React.Component {
     }
 
     componentDidMount() {
+
+
+
         const id = this.props.service_id;
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
@@ -242,7 +251,10 @@ class services extends React.Component {
                 this.setState({prestations: serviceUser.prestations})
                 this.state.uniqFilter.forEach(e =>{
                     this.setState({[e.label]:false})
-                })
+                });
+                const lat = serviceUser.service_address.gps.lat;
+                const lng = serviceUser.service_address.gps.lng;
+                this.setState({position: [lat,lng]})
             })
             .catch(err =>
                 console.log(err)
@@ -294,7 +306,7 @@ class services extends React.Component {
                     <Grid container className={classes.bigContainer}>
 
                         {/*Le Header */}
-                        <Grid container style={{backgroundImage: "url('../static/shopBanner/sky-690293_1920.jpg')",height:'54vh',
+                        <Grid container style={{backgroundImage: `url('../../${this.state.shop.picture}')`,height:'54vh',
                             backgroundSize:"cover",justifyContent:"center",alignItems:"center",marginRight: "1%",marginLeft: "1%",}}>
 
                         </Grid>
@@ -328,7 +340,7 @@ class services extends React.Component {
                                     </h3>
                                     <Grid container>
                                         {equipments.map((e)=>(<React.Fragment>
-                                            <Grid item xs={1} style={{ marginLeft: '1.5%'}}><img src={'../'+ equipments.logo}/></Grid>
+                                            <Grid item xs={1} style={{ marginLeft: '1.5%'}}><img src={'../'+ e.logo2}/></Grid>
                                         </React.Fragment>))}
                                         <Grid item xs={1}></Grid>
                                     </Grid>
@@ -488,6 +500,10 @@ class services extends React.Component {
                                         {/*<Grid item xs={2}></Grid>*/}
                                         <Grid item xs={6}>
                                             <Typography>{serviceUser.perimeter} km à partir de l'adresse principale</Typography>
+
+                                            <MapComponent position={this.state.position}/>
+
+
                                         </Grid>
                                         <Grid item xs={4}></Grid>
                                     </Grid>

@@ -362,6 +362,9 @@ class notifications extends React.Component {
 
                         <Grid item xs={9} style={{paddingLeft: 55}}>
                             <Grid container>
+                                <Grid container>
+                                    <h1 style={{color: 'dimgray',fontWeight: '100'}}>Notifications</h1>
+                                </Grid>
                                 <Grid item xs={12}>
                                 <h2 style={{fontWeight: '100',marginBotto:0}}>Messages</h2>
                                 </Grid>

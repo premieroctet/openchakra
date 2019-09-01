@@ -316,7 +316,7 @@ class services extends React.Component {
                                 <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
                             </Grid>
                             <Grid item xs={2}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Message</p>
+                                <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
                             </Grid>
                             <Grid item xs={2}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
