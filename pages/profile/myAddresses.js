@@ -283,28 +283,28 @@ class myAddresses extends React.Component {
 
                             <Grid container style={{justifyContent: 'center'}}>
 
-                                <Grid item style={{marginTop: 30,width: 270.25}}>
+                                <Grid item style={{marginTop: 30,width: 281}}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a s style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Modifier le profil
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
-                                            <a s style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
 
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10}}className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/sign-2.svg'} alt={'sign'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -315,7 +315,7 @@ class myAddresses extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10}}className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/sign-2.svg'} alt={'sign'} width={27} style={{marginleft: 4}}/>
@@ -325,7 +325,7 @@ class myAddresses extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/editPicture'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
@@ -334,10 +334,10 @@ class myAddresses extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editPicture'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 10,marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Photo
                                             </a>
@@ -345,7 +345,7 @@ class myAddresses extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
@@ -356,10 +356,10 @@ class myAddresses extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 10,marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Confiance et vérification
                                             </a>
@@ -367,7 +367,7 @@ class myAddresses extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
@@ -379,10 +379,10 @@ class myAddresses extends React.Component {
                                 </Grid>
 
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 10,marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Commentaires
                                             </a>
@@ -390,7 +390,7 @@ class myAddresses extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/recommandations'}>
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
@@ -401,10 +401,10 @@ class myAddresses extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/recommandations'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 10,marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Recommandations
                                             </a>
@@ -434,6 +434,7 @@ class myAddresses extends React.Component {
                                                     onChange={this.onChange}
                                                     margin="normal"
                                                     variant="outlined"
+                                                    placeholder={'Adresse'}
                                                 />
                                             </Grid>
                                             <Grid item xs={4}>
@@ -445,6 +446,7 @@ class myAddresses extends React.Component {
                                                     onChange={this.onChange}
                                                     margin="normal"
                                                     variant="outlined"
+                                                    placeholder={'Code postal'}
                                                 />
                                             </Grid>
                                                 <Grid item xs={6}>
@@ -456,6 +458,7 @@ class myAddresses extends React.Component {
                                                         onChange={this.onChange}
                                                         margin="normal"
                                                         variant="outlined"
+                                                        placeholder={'Ville'}
                                                     />
                                                 </Grid>
                                             <Grid item xs={7}>
@@ -473,6 +476,7 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     variant="outlined"
                                                     name={'currentCountry'}
+                                                    helperText={'Pays'}
                                                 >
                                                     <MenuItem value="">
                                                         <em>...</em>
@@ -483,9 +487,9 @@ class myAddresses extends React.Component {
                                             </Grid>
 
                                             </Grid>
-                                            <Button size={'large'} type={'submit'} variant="contained" color="primary"
+                                            <Button size={'large'} type={'submit'} variant="contained" color="secondary"
                                                     style={{color: 'white',marginTop: 15}}>
-                                                Modifier
+                                                Enregistrer
                                             </Button>
                                         </form>
                                     </Grid>

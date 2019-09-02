@@ -132,11 +132,11 @@ const UserSchema = new Schema({
       },
       push: {
             type: Boolean,
-            default: false
+            default: true
       },
       sms: {
           type: Boolean,
-          default: false
+          default: true
       },
     },
     notifications_rappel: {
@@ -146,11 +146,11 @@ const UserSchema = new Schema({
         },
         push: {
             type: Boolean,
-            default: false
+            default: true
         },
         sms: {
             type: Boolean,
-            default: false
+            default: true
         },
     },
     notifications_promotions: {
@@ -160,15 +160,15 @@ const UserSchema = new Schema({
         },
         push: {
             type: Boolean,
-            default: false
+            default: true
         },
         phone: {
           type: Boolean,
-          default: false
+          default: true
         },
         sms: {
             type: Boolean,
-            default: false
+            default: true
         },
     },
     notifications_community: {
@@ -178,11 +178,11 @@ const UserSchema = new Schema({
         },
         push: {
             type: Boolean,
-            default: false
+            default: true
         },
         sms: {
             type: Boolean,
-            default: false
+            default: true
         },
     },
     notifications_assistance: {
@@ -192,11 +192,11 @@ const UserSchema = new Schema({
         },
         push: {
             type: Boolean,
-            default: false
+            default: true
         },
         sms: {
             type: Boolean,
-            default: false
+            default: true
         },
     },
     score: {

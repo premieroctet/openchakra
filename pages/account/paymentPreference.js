@@ -82,6 +82,7 @@ class paymentPreference extends React.Component {
         this.state = {
             user: {},
             clickAdd: false,
+            clickEdit: false,
             name: '',
             bank: '',
             bic: '',
@@ -104,6 +105,8 @@ class paymentPreference extends React.Component {
                     this.setState({user: res.data});
                     if(typeof res.data.account != "undefined") {
                         this.setState({haveAccount: true,account: res.data.account});
+                        this.setState({name: res.data.account.name,bank: res.data.account.bank,bic: res.data.account.bic,
+                                            iban: res.data.account.iban});
                     }
                 })
                 .catch(err => {
@@ -119,6 +122,10 @@ class paymentPreference extends React.Component {
         handleClick = () => {
             this.setState({clickAdd: !this.state.clickAdd});
         };
+
+    handleClick2 = () => {
+        this.setState({clickEdit: !this.state.clickEdit});
+    };
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
@@ -154,6 +161,7 @@ class paymentPreference extends React.Component {
             const {user} = this.state;
             const {account} = this.state;
             const {clickAdd} = this.state;
+            const {clickEdit} = this.state;
             const {haveAccount} = this.state;
 
 
@@ -315,7 +323,7 @@ class paymentPreference extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/sponsors'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Parrainage
                                             </a>
@@ -353,8 +361,12 @@ class paymentPreference extends React.Component {
                                 </Grid>
                                 <Grid container>
                                     <Grid item xs={12}>
+                                        {haveAccount ?
+                                            <h2 style={{color: '#2FBCD3', fontWeight: '100', cursor: 'pointer'}}
+                                                onClick={this.handleClick2}>Modifier le RIB</h2>
+                                            :
                                         <h2 style={{color: '#2FBCD3', fontWeight: '100', cursor: 'pointer'}}
-                                            onClick={this.handleClick}>Ajouter un RIB</h2>
+                                            onClick={this.handleClick}>Ajouter un RIB</h2>}
                                     </Grid>
                                     {clickAdd ?
                                         <Grid item xs={9}>
@@ -411,6 +423,66 @@ class paymentPreference extends React.Component {
                                                     <Button size={'large'} type={'submit'} variant="contained" color="primary"
                                                             style={{color: 'white',marginTop: 15}}>
                                                         Ajouter un rib
+                                                    </Button>
+                                                </Grid>
+                                            </form>
+                                        </Grid>
+                                        : null}
+                                    {clickEdit ?
+                                        <Grid item xs={9}>
+                                            <form onSubmit={this.onSubmit}>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="outlined-name"
+                                                        style={{width: '100%'}}
+                                                        value={this.state.name}
+                                                        name={'name'}
+                                                        onChange={this.onChange}
+                                                        margin="normal"
+                                                        variant="outlined"
+                                                        placeholder={'Nom et prénom du titulaire du compte'}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="outlined-name"
+                                                        style={{width: '100%'}}
+                                                        value={this.state.bank}
+                                                        name={'bank'}
+                                                        onChange={this.onChange}
+                                                        margin="normal"
+                                                        variant="outlined"
+                                                        placeholder={'Nom de la banque'}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="outlined-name"
+                                                        style={{width: '100%'}}
+                                                        value={this.state.bic}
+                                                        name={'bic'}
+                                                        onChange={this.onChange}
+                                                        margin="normal"
+                                                        variant="outlined"
+                                                        placeholder={'Code SWIFT / BIC'}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        id="outlined-name"
+                                                        style={{width: '100%'}}
+                                                        value={this.state.iban}
+                                                        name={'iban'}
+                                                        onChange={this.onChange}
+                                                        margin="normal"
+                                                        variant="outlined"
+                                                        placeholder={'IBAN'}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} style={{display: "flex", justifyContent: "flex-end"}}>
+                                                    <Button size={'large'} type={'submit'} variant="contained" color="primary"
+                                                            style={{color: 'white',marginTop: 15}}>
+                                                        Modifier
                                                     </Button>
                                                 </Grid>
                                             </form>

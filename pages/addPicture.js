@@ -20,7 +20,6 @@ const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '100vh',
         justifyContent: 'top',
         flexDirection: 'column',
 
@@ -94,11 +93,8 @@ class addPicture extends React.Component {
         axios.post(url+"myAlfred/api/users/profile/picture",formData,config)
             .then((response) => {
                 alert("Photo ajouté");
-                if(localStorage.getItem('path') === '/signup') {
-                    Router.push({pathname: '/addPhone'})
-                } else {
-                    Router.push({pathname:'/profile'})
-                }
+                Router.push({pathname: '/addPhone'})
+
 
             }).catch((error) => {
                 console.log(error)
@@ -128,20 +124,21 @@ class addPicture extends React.Component {
 
                                     <input accept="image/*" className="input" style={{display:'none'}} id="icon-button-file" type="file" onChange={(event) =>{this.handleChange(event);this.onChange(event)}} name={"myImage"} />
                                     <label htmlFor="icon-button-file">
-                                        <IconButton color="primary" className={classes.button}  style={{width:150, height:150,backgroundColor:'lightgrey'}} component="span">
-                                            <PhotoCamera style={{fontSize: '2rem'}} />
+                                        <IconButton color="primary" className={classes.button}  style={{width:150, height:150,backgroundColor:'lightgray',backgroundImage:`url('${this.state.file}')`,
+                                        backgroundSize:"cover",backgroundPosition:"center"}} component="span">
+                                            {this.state.file === null ? <PhotoCamera style={{fontSize: '2rem'}} /> : null}
+
                                         </IconButton>
                                     </label>
 
                                 </Grid>
-                                <img src={this.state.file}/>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
                                         Ajouter
                                     </Button>
                                 </Grid>
                                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
-                                    <Link href={'/'}><a style={{textDecoration: 'none', color: 'black'}}>Je le ferai plus tard</a></Link>
+                                    <Link href={'/addPhone'}><a style={{textDecoration: 'none', color: 'black'}}>Je le ferai plus tard</a></Link>
                                 </Grid>
                             </form>
                             </div>

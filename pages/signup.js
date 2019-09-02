@@ -11,10 +11,6 @@ import Checkboxes from '../components/Checkboxes/checkboxes';
 //import Selectgenre from '../components/Select/select';
 //import Datenaissance from '../components/Datenaissance/datepicker';
 import Router from 'next/router';
-
-
-
-
 import Layout from '../hoc/Layout/Layout';
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -26,6 +22,11 @@ import axios from "axios";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AlgoliaPlaces from "algolia-places-react";
+import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import fr from 'date-fns/locale/fr';
+registerLocale('fr', fr);
+
 
 
 const { config } = require('../config/config');
@@ -103,13 +104,19 @@ const styles = theme => ({
 
 });
 
+const Input2 = ({ value, onClick }) => (
+    <Button color={'primary'} variant={"contained"} style={{color:"white"}} className="example-custom-input" onClick={onClick}>
+      {value}
+    </Button>
+);
+
 class signup extends React.Component {
       constructor(props) {
         super(props);
         this.state = {
           firstname:'',
           name: '',
-          birthday: '',
+          birthday: new Date(),
           email: '',
           password: '',
           address: '',
@@ -121,14 +128,12 @@ class signup extends React.Component {
           lat: '',
           lng: '',
 
+
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeAddress = this.onChangeAddress.bind(this);
       }
 
-      componentDidMount() {
-        localStorage.setItem('path',Router.pathname);
-      }
 
 
   onChange = e => {
@@ -140,6 +145,10 @@ class signup extends React.Component {
             lat: suggestion.latlng.lat, lng: suggestion.latlng.lng});
 
     }
+
+  onChangeBirthday = date => {
+      this.setState({birthday: date})
+  };
 
   handleChecked () {
     this.setState({checked: !this.state.checked});
@@ -365,7 +374,7 @@ class signup extends React.Component {
                         utilisateurs ne verront pas votre date de naissance.
                       </p>
                       <Grid item className={classes.datenaissance}>
-                        <TextField
+                        {/*<TextField
                             id="date"
                             label="Date de naissance"
                             type="date"
@@ -377,6 +386,17 @@ class signup extends React.Component {
                             InputLabelProps={{
                               shrink: true,
                             }}
+                        />*/}
+                        <DatePicker
+                          selected={this.state.birthday}
+                          onChange={(date)=>this.onChangeBirthday(date)}
+                          customInput={<Input2 />}
+                          locale='fr'
+                          placeholderText="Sélectionnez votre date de naissance"
+                          showYearDropdown
+                          showMonthDropdown
+                          dateFormat="dd/MM/yyyy"
+
                         />
 
                       </Grid>
@@ -398,7 +418,7 @@ class signup extends React.Component {
                       </Grid>
 
                       <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                        {this.state.checked ? <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                        {this.state.checked ? <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color:"white" }}>
                           Inscription
                         </Button> : <Button disabled type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                           Inscription

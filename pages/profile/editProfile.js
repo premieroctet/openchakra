@@ -16,7 +16,11 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import {FormLabel} from "@material-ui/core";
 import Select2 from 'react-select';
-
+import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import fr from 'date-fns/locale/fr';
+import Birthday from '@material-ui/icons/CakeOutlined'
+registerLocale('fr', fr);
 
 
 
@@ -25,6 +29,12 @@ moment.locale('fr');
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
+
+const ExampleCustomInput = ({ value,onClick }) => (
+    <Button variant={"outlined"} className="example-custom-input" onClick={onClick}>
+        {value}
+    </Button>
+);
 
 const styles = theme => ({
     bigContainer: {
@@ -39,6 +49,7 @@ const styles = theme => ({
     }
 
    ,hidelg: {
+
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
@@ -100,6 +111,7 @@ class editProfile extends React.Component {
             user: {},
             languages: [],
             selectedLanguages: null,
+            birthday: null,
 
 
 
@@ -122,6 +134,7 @@ class editProfile extends React.Component {
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
+                this.setState({birthday:user.birthday});
                 this.setState({selectedLanguages :user.languages.map(b => ({
                         label: b,
                         value: b
@@ -144,6 +157,10 @@ class editProfile extends React.Component {
         const state = this.state.user;
         state[e.target.name] = e.target.value;
         this.setState({user:state});
+    };
+
+    onChangeBirthday = date => {
+        this.setState({birthday: date})
     };
 
     handleChangeLanguages = selectedLanguages => {
@@ -189,6 +206,7 @@ class editProfile extends React.Component {
     render() {
         const {classes} = this.props;
         const {user} = this.state;
+        const {birthday} = this.state;
 
 
         return (
@@ -200,28 +218,28 @@ class editProfile extends React.Component {
                          
                          <div className={classes.trigger}></div>
                             <Grid container style={{justifyContent: 'center',}}>
-                                <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/user-2.svg'} alt={'user'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a s style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Modifier le profil
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/user-2.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
-                                            <a s style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10}}className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -232,7 +250,7 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10}}className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginleft: 4}}/>
@@ -242,7 +260,7 @@ class editProfile extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/editPicture'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
@@ -251,10 +269,10 @@ class editProfile extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editPicture'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Photo
                                             </a>
@@ -262,7 +280,7 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
@@ -273,10 +291,10 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Confiance et vérification
                                             </a>
@@ -284,7 +302,7 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
@@ -296,10 +314,10 @@ class editProfile extends React.Component {
                                 </Grid>
 
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Commentaires
                                             </a>
@@ -307,7 +325,7 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/recommandations'}>
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
@@ -318,10 +336,10 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/recommandations'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Recommandations
                                             </a>
@@ -414,8 +432,8 @@ class editProfile extends React.Component {
                                     </TextField>
 
                                 </Grid>
-                                <Grid item xs={12} style={{marginTop: 10}}>
-                                    <TextField
+                                <Grid item xs={12} style={{marginTop: 10,display:"flex",alignItems:"center"}}>
+                                    {/*<TextField
                                         id="date"
                                         type="date"
                                         name="birthday"
@@ -426,7 +444,20 @@ class editProfile extends React.Component {
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
+                                    />*/}
+                                    <Birthday style={{marginRight:20}}/>
+                                    <DatePicker
+                                        selected={Date.parse(birthday)}
+                                        onChange={(date)=>this.onChangeBirthday(date)}
+                                        customInput={<ExampleCustomInput />}
+                                        locale='fr'
+                                        placeholderText="Sélectionnez votre date de naissance"
+                                        showYearDropdown
+                                        showMonthDropdown
+                                        dateFormat="dd/MM/yyyy"
+                                        style={{padding:10,fontSize: '0.9rem'}}
                                     />
+
                                 </Grid>
                                 <Grid item xs={12} style={{marginTop: 10}}>
                                     <TextField

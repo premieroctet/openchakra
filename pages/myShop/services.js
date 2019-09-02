@@ -312,19 +312,19 @@ class services extends React.Component {
                     <Grid container className={classes.bigContainer}>
                         <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
                             <Grid item xs={1}></Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
                             </Grid>
 
