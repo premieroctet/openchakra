@@ -350,6 +350,7 @@ class editProfile extends React.Component {
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'firstname'}
+                                        placeholder={'Prénom'}
 
                                     />
 
@@ -363,6 +364,7 @@ class editProfile extends React.Component {
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'name'}
+                                        placeholder={'Nom'}
 
                                     />
 
@@ -394,12 +396,22 @@ class editProfile extends React.Component {
                                         id="standard-name"
                                         style={{width: '100%'}}
                                         value={user.gender}
+                                        select
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'gender'}
                                         placeholder={'Sexe'}
+                                        helperText={'Sexe'}
 
-                                    />
+                                    >
+
+                                        <MenuItem  value={'Masculin'}>
+                                            Masculin
+                                        </MenuItem>
+                                        <MenuItem  value={'Féminin'}>
+                                            Féminin
+                                        </MenuItem>
+                                    </TextField>
 
                                 </Grid>
                                 <Grid item xs={12} style={{marginTop: 10}}>
@@ -424,6 +436,7 @@ class editProfile extends React.Component {
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'email'}
+                                        placeholder={'Email'}
                                     />
                                 </Grid>
                                 <Grid item xs={12} style={{marginTop: 10}}>
@@ -496,7 +509,7 @@ class editProfile extends React.Component {
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={12} style={{marginTop: 10}}>
-                                        <InputLabel>Numéro d'urgence</InputLabel>
+
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
