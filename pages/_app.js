@@ -16,7 +16,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 toast.configure({
   position: 'top-center',
-  
 });
 
 class MyApp extends App {

@@ -138,10 +138,10 @@ const AvailabilitySchema = new Schema({
             default: false
         },
         month_begin: {
-            type: String
+            type: Date
         },
         month_end: {
-            type: String
+            type: Date
         }
     }
 

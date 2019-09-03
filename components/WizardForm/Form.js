@@ -1311,7 +1311,7 @@ class Form extends React.Component {
                                                 <Tabs>
                                                     <TabList>
                                                         {this.state.allInOneServ.map((data, index) => {
-                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{typeof arrayHelpers.form.errors.submission === 'undefined' ? <span style={{height: 10, width: 10, borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? <span style={{height: 10, width: 10, backgroundColor: 'red', borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : null) }{data.serviceLabel}</div></Tab>
+                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{typeof arrayHelpers.form.errors.submission === 'undefined' ? <span style={{height: 10, width: 10, borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? <span style={{height: 10, width: 10, backgroundColor: '#F8727F', borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : null) }{data.serviceLabel}</div></Tab>
                                                         })}
                                                     </TabList>
                                                     {this.state.allInOneServ.map((s, index) => {
@@ -1597,7 +1597,7 @@ class Form extends React.Component {
                                                                                             return null;
                                                                                         };
                                                                                         return (
-                                                                                            <Grid item xs={3}>
+                                                                                            <Grid item xs={2}>
                                                                                             <label style={{cursor: 'pointer'}} key={indexe} onClick={() => {
                                                                                                 e.checked = !e.checked;
                                                                                                 arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
@@ -2581,7 +2581,7 @@ class Form extends React.Component {
 
                                                 <Grid container className={classes.checkboxespart}>
                                                     <Grid container>
-                                                        <Grid item xs={1}>
+                                                        <Grid item xs={12}>
                                                             <Field render={({form}) => {
                                                                 return (
                                                                     <FormControlLabel
@@ -2612,22 +2612,25 @@ class Form extends React.Component {
                                                                                 checkedIcon={<FilledButton />}
                                                                             />
                                                                         }
+                                                                        label={<h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                        Je suis un particulier
+                                                                </h6>}
                                                                     />
                                                                 )
                                                             }} />
                                                         </Grid>
                                                         <Grid item xs={11}>
-                                                            <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                            {/*<h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                                 Je suis un particulier
-                                                            </h6>
-                                                            <Typography>
+                                                        </h6>*/}
+                                                            <Typography style={{marginLeft: '2.5rem'}}>
                                                                 En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés. 
                                                             </Typography>
                                                         </Grid>
                                                     </Grid>
 
                                                     <Grid container style={{ marginTop: 10 }}>
-                                                        <Grid item xs={1}>
+                                                        <Grid item xs={12}>
                                                             <Field render={({form}) => {
                                                                 return (
                                                                     <FormControlLabel
@@ -2655,15 +2658,18 @@ class Form extends React.Component {
                                                                                 checkedIcon={<FilledButton />}
                                                                             />
                                                                         }
+                                                                        label={<h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                        Je suis un professionnel
+                                                                </h6>}
                                                                     />
                                                                 )
                                                             }} />
                                                         </Grid>
                                                         <Grid item xs={11}>
-                                                            <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                            {/*<h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                                 Je suis un professionnel
-                                                            </h6>
-                                                            <Typography>
+                                                        </h6>*/}
+                                                            <Typography style={{marginLeft: '2.5rem'}}>
                                                                 Un statut professionnel est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière. 
                                                             </Typography>
                                                             {isProfessional ? (
