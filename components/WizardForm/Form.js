@@ -38,6 +38,9 @@ import CityFinder from './CityFinder';
 import AddressFinder from './AddressFinder';
 import Siret from './Siret';
 import Availability from './Availability';
+import { FormControl, RadioGroup, Radio } from '@material-ui/core';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const { config } = require('../../config/config');
@@ -437,8 +440,9 @@ class Wizard extends React.Component {
                     console.log(err);
                 })
 
-            const phoneUser = values.alfredUpdate.phone;
-            axios.post(url+'myAlfred/api/users/profile/phone',phoneUser)
+            const phone = values.alfredUpdate.phone;
+            console.log(phone)
+            axios.put(url+'myAlfred/api/users/profile/phone', {phone})
                 .then(res => {
                     alert('Téléphone ajouté');
                 })
@@ -467,7 +471,7 @@ class Wizard extends React.Component {
     Step1Schema = null;
     Step2Schema = Yup.object().shape({
           submission: Yup.array().of(Yup.object().shape({
-            descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
+            //descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
             minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').required('Le minimum d\'achat est requis'),
             delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi heures, jours et semaines').required(),
             city: Yup.string().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
@@ -575,7 +579,7 @@ class Wizard extends React.Component {
                                 <div style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative'}}>
                                     {activePage}
                                 </div>
-                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '9999999'}}>
+                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '9999'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
                                         {page !== 0 && <Button
                                             color="primary"
@@ -621,9 +625,30 @@ class Wizard extends React.Component {
                                                 }
 
                                                 return (
-                                                    <Button type="submit" variant="contained" color="secondary" style={{color: !checkArr.some(check) ? 'white' : null }} disabled={checkArr.some(check) ? true : false}>
-                                                        Suivant
-                                                    </Button>
+                                                    <React.Fragment>
+                                                        <Button 
+                                                            type="submit" 
+                                                            variant="contained" 
+                                                            color="secondary" 
+                                                            style={{color: !checkArr.some(check) ? 'white' : null }} 
+                                                            disabled={checkArr.some(check) ? true : false} 
+                                                            onClick={() => {
+                                                                if (typeof form.errors.submission === 'undefined') {
+                                                                    return null;
+                                                                } else {
+                                                                    toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
+                                                                        if (typeof service === 'undefined') {
+                                                                            return null
+                                                                        } else {
+                                                                            return <p>{form.values.submission[i].serviceLabel}</p>
+                                                                        }
+                                                                    })}</div>)
+                                                                }
+                                                            }}
+                                                        >
+                                                            Suivant
+                                                        </Button>
+                                                    </React.Fragment>
                                                 )
                                             }} 
                                         />}
@@ -674,8 +699,8 @@ class Wizard extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="imgDiv" style={{width: '40%', overflow: 'hidden'}}>
-                                <img src='../../static/backgrounds-blank-blue-953214.jpg' height='100%'  width='100%'/>
+                            <div className="imgDiv" style={{width: /*40 inital value*/ '70%', overflow: 'hidden'}}>
+                                <img src='../../static/01_illustration_my_alfred_Plan de travail 1 copie 2.svg' height='100%'  width='100%'/>
                             </div>
                         </form>
                     </React.Fragment>
@@ -779,6 +804,7 @@ class Form extends React.Component {
             all_options: [],
 
             currentUser: null,
+            passportid: 'passport',
         }
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -794,6 +820,7 @@ class Form extends React.Component {
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
                 console.log(res);
+                this.state.phone = res.data.phone;
                 this.state.currentUser = res.data;
                 this.state.userCity = {label: res.data.billing_address.city, value: res.data.billing_address.city};
                 this.state.userAddress = {label: res.data.billing_address.address, value: res.data.billing_address.address};
@@ -823,6 +850,10 @@ class Form extends React.Component {
                 this.setState({all_options: options});
             })
             .catch(err => console.log(err));
+    }
+
+    notify() {
+        toast.error('erreur');
     }
 
     handleCategorieChange(categorie, formikCtx) {
@@ -915,7 +946,7 @@ class Form extends React.Component {
                             profile_picture_user: false,
                             identity_card: false,
                             recommandations: false,
-                            welcome_message: '',
+                            welcome_message: 'Je vous remercie pour votre réservation.',
                             id_recto: null,
                             id_verso: null,
                             is_particular: false,
@@ -934,7 +965,7 @@ class Form extends React.Component {
                             isCertified: false,
                         },
                         alfredUpdate: {
-                            phone: '',
+                            phone: this.state.phone,
                             profile_picture_user: null,
                         },
                         servicesAvailability: {
@@ -1074,7 +1105,6 @@ class Form extends React.Component {
                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Vos services</Typography>
                                                     <Typography>
                                                         Identifiez maintenant les services que vous souhaitez réaliser dans chacune des catégories sélectionnées. Ne vous limitez pas ! Plusieurs services peuvent être sélectionnés. Vous pourrez choisir le type de prestation que vous souhaitez réaliser dans chacun de vos services dès la prochaine étape !
-                                                        Afin d'afficher la sélection des services, veuillez sélectionner vos catégories…
                                                     </Typography>
                                                 </div>
                                                 <div style={{marginTop: '1rem'}}>
@@ -1138,7 +1168,7 @@ class Form extends React.Component {
                                                                 </ExpansionPanel>
                                                             )
                                                         })
-                                                    ):(<Typography align="center" style={{fontSize: 15, marginTop: '2rem'}}>Afin d'afficher la sélection des services, veuillez sélectionner vos catégories...</Typography>)}
+                                                    ):(<Typography align="center" style={{fontSize: 15, marginTop: '2rem', color: '#F8727F'}}>Afin d'afficher la sélection des services, veuillez sélectionner vos catégories...</Typography>)}
                                                 </div>
                                             </div>
                                         ): (<p style={{padding: '0 2rem'}}>Chargement...</p>)
@@ -1150,7 +1180,7 @@ class Form extends React.Component {
                                             <div style={{padding: '0 2rem 1rem 2rem'}}>
                                                 <Button
                                                     color="primary"
-                                                    style={{marginTop: '.5rem', color: 'white', borderRadius: 8}}
+                                                    style={{marginTop: '3rem', color: 'white', borderRadius: 8}}
                                                     variant="contained"
                                                     type="button"
                                                     onClick={() => {
@@ -1187,7 +1217,7 @@ class Form extends React.Component {
                                                                         address: this.state.userAddress, 
                                                                         postal_code: this.state.userZipCode, 
                                                                         country: this.state.userCountry, 
-                                                                        experienceYears: null, 
+                                                                        experienceYears: '', 
                                                                         option: null, 
                                                                         increases: { 
                                                                             label: res.data.majoration, 
@@ -1246,7 +1276,19 @@ class Form extends React.Component {
                                                 >
                                                     Je valide mes services
                                                 </Button>
-                                            </div> : null;
+                                            </div> 
+                                                : 
+                                            <div style={{padding: '0 2rem 1rem 2rem'}}>
+                                                <Button 
+                                                    color="primary"
+                                                    style={{marginTop: '3rem', color: 'white', borderRadius: 8}}
+                                                    variant="contained"
+                                                    type="button"
+                                                    disabled="true"
+                                                >
+                                                    Je valide mes services
+                                                </Button>
+                                            </div>
                                     }}
                                 </Field>    
                                               
@@ -1257,9 +1299,7 @@ class Form extends React.Component {
                             
                                 <FieldArray
                                     name="submission"
-                                    render={(arrayHelpers) => {
-                                        // POUR LES DATES D OBTENTIONS DE DIPLOME ET CERTIFS
-                                        
+                                    render={(arrayHelpers) => {                           
                                         return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
                                             <React.Fragment>
                                                 <div style={{padding: '2rem 2rem 1rem 2rem'}}>
@@ -1271,7 +1311,7 @@ class Form extends React.Component {
                                                 <Tabs>
                                                     <TabList>
                                                         {this.state.allInOneServ.map((data, index) => {
-                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{data.serviceLabel}</div></Tab>
+                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{typeof arrayHelpers.form.errors.submission === 'undefined' ? <span style={{height: 10, width: 10, borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? <span style={{height: 10, width: 10, backgroundColor: 'red', borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : null) }{data.serviceLabel}</div></Tab>
                                                         })}
                                                     </TabList>
                                                     {this.state.allInOneServ.map((s, index) => {
@@ -1822,7 +1862,7 @@ class Form extends React.Component {
                                                                                                                     //helperText="Délai de prévenance avant réservation."
                                                                                                                 >
                                                                                                                     {dates.map(date => {
-                                                                                                                        return <MenuItem value={date}>{date}</MenuItem>
+                                                                                                                        return <MenuItem style={{zIndex: 9999}} value={date}>{date}</MenuItem>
                                                                                                                     })}
                                                                                                                 </TextField>
                                                                                                             )
@@ -1937,6 +1977,7 @@ class Form extends React.Component {
                                 
                                 {/*</div>*/}
                         </Grid>
+                        <Debug />
                         
                     </Wizard.Page>
                     <Wizard.Page>
@@ -2170,6 +2211,7 @@ class Form extends React.Component {
                                                         margin="normal"
                                                         variant="outlined"
                                                         style={{ width: "100%" }}
+                                                        value={form.values.createShop.welcome_message}
                                                         //name={"welcome_message"}
                                                     />
                                                 )
@@ -2393,7 +2435,7 @@ class Form extends React.Component {
                                                     </Grid>
                                                     <Grid item xs={1} />
                                                     <Grid item xs={12} md={4}>
-                                                        <Field name={"alfredUpdate.phone"} render={({field}) => {
+                                                        <Field name={"alfredUpdate.phone"} render={({field, form}) => {
                                                             return (
                                                                 <TextField
                                                                     {...field}
@@ -2402,6 +2444,11 @@ class Form extends React.Component {
                                                                     margin="normal"
                                                                     variant="outlined"
                                                                     type="tel"
+                                                                    value={this.state.phone}
+                                                                    onChange={() => {
+                                                                        this.setState({phone: event.target.value});
+                                                                        form.setFieldValue('alfredUpdate.phone', this.state.phone);
+                                                                    }}
                                                                 />
                                                             )
                                                         }} />
@@ -2428,12 +2475,80 @@ class Form extends React.Component {
                                   </label>
                                     <Thumb file={arrayHelpers.form.values.submission[index].diploma} />*/}
 
+                                                                <FormControl component="fieldset">
+                                                                    <RadioGroup
+                                                                        aria-label="passport/ID"
+                                                                        name="passportID"
+                                                                        style={{flexDirection: 'row'}}
+                                                                        value={this.state.passportid}
+                                                                        onChange={() => {
+                                                                            this.setState({passportid: event.target.value});
+                                                                            form.setFieldValue("createShop.id_recto", null);
+                                                                            form.setFieldValue("createShop.id_verso", null);
+                                                                        }}
+                                                                    >
+                                                                        <FormControlLabel
+                                                                            value="passport"
+                                                                            control={<Radio color="primary" />}
+                                                                            label="Passeport"
+                                                                            labelPlacement="start"
+                                                                        />
+                                                                        <FormControlLabel
+                                                                            value="id"
+                                                                            control={<Radio color="primary" />}
+                                                                            label="Carte d'identité"
+                                                                            labelPlacement="start"
+                                                                        />
+                                                                    </RadioGroup>
+                                                                </FormControl>
+                                                                {this.state.passportid === 'id' ? 
+                                                                <React.Fragment>
+                                                                    <Grid item xs={12} style={{ marginBottom: 10 }}>
+                                                                        <Field render={({field, form}) => {
+                                                                            return (
+                                                                                <React.Fragment>
+                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                        Carte identité recto
+                                                                                        <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
+                                                                                            form.setFieldValue("createShop.id_recto", event.currentTarget.files[0])
+                                                                                        }} className="form-control"
+                                                                                        />
+                                                                                    </label>
+                                                                                    <span>{form.values.createShop.id_recto !== null ? form.values.createShop.id_recto.name.substr(0, 10) + '...' : null}</span>
+                                                                                    <ErrorMessage name="createShop.id_recto" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                </React.Fragment>
+                                                                            )
+                                                                        }} />
+                                                                    </Grid>
+                                                                    <Grid
+                                                                        item
+                                                                        xs={12}
+                                                                        style={{ fontSize: "small" }}
+                                                                    >
+                                                                        <Field render={({field, form}) => {
+                                                                            return (
+                                                                                <React.Fragment>
+                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                        Carte identité verso
+                                                                                        <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
+                                                                                            form.setFieldValue("createShop.id_verso", event.currentTarget.files[0])
+                                                                                        }} className="form-control"
+                                                                                        />
+                                                                                    </label>
+                                                                                    <span>{form.values.createShop.id_verso !== null ? form.values.createShop.id_verso.name.substr(0, 10) + '...' : null}</span>
+                                                                                    <ErrorMessage name="createShop.id_verso" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                </React.Fragment>
+                                                                            )
+                                                                        }} />
+                                                                    </Grid>
+                                                                </React.Fragment>
+                                                                :
                                                                 <Grid item xs={12} style={{ marginBottom: 10 }}>
                                                                     <Field render={({field, form}) => {
                                                                         return (
                                                                             <React.Fragment>
                                                                                 <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
-                                                                                    Carte identité recto / passeport
+                                                                                    Passeport
                                                                                     <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
                                                                                         form.setFieldValue("createShop.id_recto", event.currentTarget.files[0])
                                                                                     }} className="form-control"
@@ -2445,27 +2560,7 @@ class Form extends React.Component {
                                                                         )
                                                                     }} />
                                                                 </Grid>
-                                                                <Grid
-                                                                    item
-                                                                    xs={12}
-                                                                    style={{ fontSize: "small" }}
-                                                                >
-                                                                    <Field render={({field, form}) => {
-                                                                        return (
-                                                                            <React.Fragment>
-                                                                                <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
-                                                                                    Carte identité verso
-                                                                                    <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
-                                                                                        form.setFieldValue("createShop.id_verso", event.currentTarget.files[0])
-                                                                                    }} className="form-control"
-                                                                                    />
-                                                                                </label>
-                                                                                <span>{form.values.createShop.id_verso !== null ? form.values.createShop.id_verso.name.substr(0, 10) + '...' : null}</span>
-                                                                                <ErrorMessage name="createShop.id_verso" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    }} />
-                                                                </Grid>
+                                                                }
                                                                 {/*<Button
                                   type="button"
                                   variant="contained"

@@ -614,7 +614,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4} style={{marginRight: 15}}>
                     <TextField
                       id="standard-with-placeholder"
                       label="De"
@@ -632,7 +632,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4}>
                     <TextField
                       id="standard-with-placeholder"
                       label="A"
@@ -650,7 +650,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.monday_service}
@@ -665,6 +665,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={formik.servicesAvailability.monday_all_service}
@@ -690,9 +691,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickMonday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ width: "100%", color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -783,7 +784,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4} style={{marginRight: 15}}>
                     <TextField
                       id="standard-with-placeholder"
                       label="De"
@@ -801,7 +802,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4}>
                     <TextField
                       id="standard-with-placeholder"
                       label="A"
@@ -819,7 +820,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.tuesday_service}
@@ -834,6 +835,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={
@@ -853,7 +855,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -862,9 +863,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickTuesday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -956,7 +957,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4} style={{marginRight: 15}}>
                     <TextField
                       id="standard-with-placeholder"
                       label="De"
@@ -974,7 +975,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4}>
                     <TextField
                       id="standard-with-placeholder"
                       label="A"
@@ -992,7 +993,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.wednesday_service}
@@ -1007,6 +1008,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={
@@ -1028,7 +1030,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -1037,9 +1038,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickWednesday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -1130,7 +1131,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4} style={{marginRight: 15}}>
                     <TextField
                       id="standard-with-placeholder"
                       label="De"
@@ -1148,7 +1149,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4}>
                     <TextField
                       id="standard-with-placeholder"
                       label="A"
@@ -1166,7 +1167,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.thursday_service}
@@ -1181,6 +1182,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={
@@ -1200,7 +1202,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -1209,9 +1210,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickThursday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -1302,7 +1303,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4} style={{marginRight: 15}}>
                     <TextField
                       id="standard-with-placeholder"
                       label="De"
@@ -1320,7 +1321,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4}>
                     <TextField
                       id="standard-with-placeholder"
                       label="A"
@@ -1338,7 +1339,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.friday_service}
@@ -1353,6 +1354,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={formik.servicesAvailability.friday_all_service}
@@ -1370,7 +1372,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -1379,9 +1380,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickFriday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -1472,7 +1473,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4} style={{marginRight: 15}}>
                     <TextField
                       id="standard-with-placeholder"
                       label="De"
@@ -1490,7 +1491,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4}>
                     <TextField
                       id="standard-with-placeholder"
                       label="A"
@@ -1508,7 +1509,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.saturday_service}
@@ -1523,6 +1524,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={
@@ -1542,7 +1544,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -1551,9 +1552,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickSaturday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -1644,7 +1645,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4} style={{marginRight: 15}}>
                     <TextField
                       id="standard-with-placeholder"
                       label="De"
@@ -1662,7 +1663,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={4}>
                     <TextField
                       id="standard-with-placeholder"
                       label="A"
@@ -1680,7 +1681,7 @@ class Availability extends React.Component {
                       onChange={this.onChange}
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.sunday_service}
@@ -1695,6 +1696,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={formik.servicesAvailability.sunday_all_service}
@@ -1712,7 +1714,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -1721,9 +1722,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickSunday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -1799,7 +1800,7 @@ class Availability extends React.Component {
             </React.Fragment>
           ) : null}
         </Grid>
-        <Debug />
+        {/*<Debug />*/}
       </React.Fragment>
     );
   }
