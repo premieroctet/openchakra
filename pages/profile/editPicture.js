@@ -351,7 +351,7 @@ class editPicture extends React.Component {
                                                 <p style={{cursor:"pointer",fontSize:'0.8rem'}}>Télécharger une photo depuis votre ordinateur</p>
                                                 <input id="file" style={{display: 'none'}} name="myImage" type="file"
                                                        onChange={this.onChange}
-                                                       className="form-control"
+                                                       className="form-control" accept={'image/*'}
                                                 />
                                             </label>
 

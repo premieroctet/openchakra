@@ -23,8 +23,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AlgoliaPlaces from "algolia-places-react";
 import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import fr from 'date-fns/locale/fr';
+import Birthday from '@material-ui/icons/CakeOutlined'
 registerLocale('fr', fr);
 
 import Footer from '../hoc/Layout/Footer/Footer';
@@ -103,13 +103,15 @@ const styles = theme => ({
   },
 
 
+
 });
 
-const Input2 = ({ value, onClick }) => (
-    <Button color={'primary'} variant={"contained"} style={{color:"white"}} className="example-custom-input" onClick={onClick}>
+/*const Input2 = ({value,  onClick }) => (
+    <Button value={value} color={"primary"} variant={"contained"} style={{color:"white"}} className="example-custom-input" onClick={onClick}>
       {value}
     </Button>
-);
+
+);*/
 
 class signup extends React.Component {
       constructor(props) {
@@ -117,7 +119,7 @@ class signup extends React.Component {
         this.state = {
           firstname:'',
           name: '',
-          birthday: new Date(),
+          birthday: '',
           email: '',
           password: '',
           address: '',
@@ -373,7 +375,7 @@ class signup extends React.Component {
                       <p>Pour vous inscrire, vous devez être agé d’au moins 16 ans. Les autres<br/>
                         utilisateurs ne verront pas votre date de naissance.
                       </p>
-                      <Grid item className={classes.datenaissance}>
+                      <Grid item className={classes.datenaissance} style={{display:"flex",alignItems:"center"}}>
                         {/*<TextField
                             id="date"
                             label="Date de naissance"
@@ -387,15 +389,17 @@ class signup extends React.Component {
                               shrink: true,
                             }}
                         />*/}
+                        <Birthday style={{marginRight:20}}/>
                         <DatePicker
                           selected={this.state.birthday}
                           onChange={(date)=>this.onChangeBirthday(date)}
-                          customInput={<Input2 />}
+                          //customInput={<Input2 />}
                           locale='fr'
-                          placeholderText="Sélectionnez votre date de naissance"
+                          placeholderText="jj/mm/aaaa"
                           showYearDropdown
                           showMonthDropdown
                           dateFormat="dd/MM/yyyy"
+
 
                         />
 

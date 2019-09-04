@@ -21,6 +21,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import fr from 'date-fns/locale/fr';
 import Birthday from '@material-ui/icons/CakeOutlined'
 import Footer from '../../hoc/Layout/Footer/Footer';
+import { toast } from 'react-toastify';
 registerLocale('fr', fr);
 
 
@@ -187,7 +188,7 @@ class editProfile extends React.Component {
         axios.put(url+'myAlfred/api/users/profile/editProfile',{email,name,firstname,birthday,description,gender,phone,job,diplomes,school,
         emergency_phone,languages})
             .then(res => {
-                alert("Profil modifié avec succès");
+                toast.info('Profil modifié avec succès');
                 this.componentDidMount();
 
             })
@@ -424,11 +425,11 @@ class editProfile extends React.Component {
 
                                     >
 
-                                        <MenuItem  value={'Masculin'}>
-                                            Masculin
+                                        <MenuItem  value={'Homme'}>
+                                            Homme
                                         </MenuItem>
-                                        <MenuItem  value={'Féminin'}>
-                                            Féminin
+                                        <MenuItem  value={'Femme'}>
+                                            Femme
                                         </MenuItem>
                                     </TextField>
 

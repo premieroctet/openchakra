@@ -436,6 +436,7 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     variant="outlined"
                                                     placeholder={'Adresse'}
+                                                    label={'Adresse'}
                                                 />
                                             </Grid>
                                             <Grid item xs={4}>
@@ -448,6 +449,7 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     variant="outlined"
                                                     placeholder={'Code postal'}
+                                                    label={'Code postal'}
                                                 />
                                             </Grid>
                                                 <Grid item xs={6}>
@@ -460,6 +462,7 @@ class myAddresses extends React.Component {
                                                         margin="normal"
                                                         variant="outlined"
                                                         placeholder={'Ville'}
+                                                        label={'Ville'}
                                                     />
                                                 </Grid>
                                             <Grid item xs={7}>
@@ -477,7 +480,7 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     variant="outlined"
                                                     name={'currentCountry'}
-                                                    helperText={'Pays'}
+                                                    label={'Pays'}
                                                 >
                                                     <MenuItem value="">
                                                         <em>...</em>

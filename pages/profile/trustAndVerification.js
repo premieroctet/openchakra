@@ -544,7 +544,7 @@ class trustAndVerification extends React.Component {
                                 </Grid>
 
                                 <Grid item xs={6} style={{borderLeft:'0.2px solid lightgrey',height:"max-content",paddingLeft:20}}>
-                                    <h2 style={{fontWeight:'100'}}>Pièce d'identité</h2>
+
                                     {this.state.haveCard ?
                                         <div style={{marginTop: 20,width:'80%',display:'flex'}}>
                                             {ext ==='pdf' ?

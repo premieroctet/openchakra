@@ -125,6 +125,11 @@ class addAvailability extends React.Component {
             sunday: false,
             all_service: [],
 
+            all_begin: '',
+            all_end: '',
+            recurrent_service: null,
+            recurrent_all_service: false,
+
         };
         this.handleChecked=this.handleChecked.bind(this);
         this.handleChecked2=this.handleChecked2.bind(this);
@@ -141,6 +146,7 @@ class addAvailability extends React.Component {
         this.handleClickSaturday=this.handleClickSaturday.bind(this);
         this.deleteSaturday=this.deleteSaturday.bind(this);
         this.handleClickSunday=this.handleClickSunday.bind(this);
+        this.handleClickAll=this.handleClickAll.bind(this);
         this.deleteSunday=this.deleteSunday.bind(this);
 
 
@@ -212,8 +218,14 @@ class addAvailability extends React.Component {
         this.setState({ [name]: event.target.checked });
     };
 
+    handleChangeSelectRecurrent = recurrent_service => {
+        this.setState({recurrent_service});
+
+    };
+
     handleChangeSelectMonday = monday_service => {
-        this.setState({monday_service})
+        this.setState({monday_service});
+
     };
 
     handleChangeSelectTuesday = tuesday_service => {
@@ -270,6 +282,56 @@ class addAvailability extends React.Component {
         this.setState({ [e.target.name]: e.target.value });
     };
 
+    handleClickAll() {
+        if(moment(this.state.all_end).isBefore(moment(this.state.all_begin))){
+            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        } else {
+            let arrayService = [];
+            if (this.state.recurrent_service != null) {
+                this.state.recurrent_service.forEach(w => {
+                    const servObj = { label: w.label, value: w.value };
+                    arrayService.push(servObj);
+
+                });
+            }
+            const obj = {
+                begin: this.state.all_begin,
+                end: this.state.all_end,
+                services: arrayService,
+                all_services: this.state.recurrent_all_service
+
+            };
+
+
+            if(this.state.monday) {
+                this.state.monday_event.push(obj);
+            }
+            if(this.state.tuesday) {
+                this.state.tuesday_event.push(obj);
+            }
+            if(this.state.wednesday) {
+                this.state.wednesday_event.push(obj);
+            }
+            if(this.state.thursday) {
+                this.state.thursday_event.push(obj);
+            }
+            if(this.state.friday) {
+                this.state.friday_event.push(obj);
+            }
+            if(this.state.saturday) {
+                this.state.saturday_event.push(obj);
+            }
+            if(this.state.sunday) {
+                this.state.sunday_event.push(obj);
+            }
+
+            toast.success('Créneau ajouté');
+
+            this.setState({monday:false, tuesday:false, wednesday:false, thursday:false, friday:false, saturday:false, sunday:false,
+                                all_begin: '', all_end: '', recurrent_service: null, recurrent_all_service: false})
+        }
+    };
+
     handleClickMonday() {
         if(moment(this.state.monday_end).isBefore(moment(this.state.monday_begin))){
             toast.error('Erreur, heure de fin antérieure à l\'heure de début');
@@ -279,8 +341,8 @@ class addAvailability extends React.Component {
             let arrayService = [];
             if (this.state.monday_service != null) {
                 this.state.monday_service.forEach(w => {
-
-                    arrayService.push(w.value);
+                    const servObj = { label: w.label, value: w.value };
+                    arrayService.push(servObj);
 
                 });
             }
@@ -315,8 +377,8 @@ class addAvailability extends React.Component {
             let arrayService = [];
             if (this.state.tuesday_service != null) {
                 this.state.tuesday_service.forEach(w => {
-
-                    arrayService.push(w.value);
+                    const servObj = { label: w.label, value: w.value };
+                    arrayService.push(servObj);
 
                 });
             }
@@ -351,8 +413,8 @@ class addAvailability extends React.Component {
             let arrayService = [];
             if (this.state.wednesday_service != null) {
                 this.state.wednesday_service.forEach(w => {
-
-                    arrayService.push(w.value);
+                    const servObj = { label: w.label, value: w.value };
+                    arrayService.push(servObj);
 
                 });
             }
@@ -387,8 +449,8 @@ class addAvailability extends React.Component {
             let arrayService = [];
             if (this.state.thursday_service != null) {
                 this.state.thursday_service.forEach(w => {
-
-                    arrayService.push(w.value);
+                    const servObj = { label: w.label, value: w.value };
+                    arrayService.push(servObj);
 
                 });
             }
@@ -423,8 +485,8 @@ class addAvailability extends React.Component {
             let arrayService = [];
             if (this.state.friday_service != null) {
                 this.state.friday_service.forEach(w => {
-
-                    arrayService.push(w.value);
+                    const servObj = { label: w.label, value: w.value };
+                    arrayService.push(servObj);
 
                 });
             }
@@ -459,8 +521,8 @@ class addAvailability extends React.Component {
             let arrayService = [];
             if (this.state.saturday_service != null) {
                 this.state.saturday_service.forEach(w => {
-
-                    arrayService.push(w.value);
+                    const servObj = { label: w.label, value: w.value };
+                    arrayService.push(servObj);
 
                 });
             }
@@ -495,8 +557,8 @@ class addAvailability extends React.Component {
             let arrayService = [];
             if (this.state.sunday_service != null) {
                 this.state.sunday_service.forEach(w => {
-
-                    arrayService.push(w.value);
+                    const servObj = { label: w.label, value: w.value };
+                    arrayService.push(servObj);
 
                 });
             }
@@ -622,6 +684,212 @@ class addAvailability extends React.Component {
 
                     <Grid container style={{marginTop: 20,marginLeft:30}}>
                         <Grid item xs={8}>
+
+                            <Grid item xs={12}>
+                                <ExpansionPanel
+                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                >
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    >
+                                        <Typography
+                                            style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
+                                        >
+                                            Récurrent
+                                        </Typography>
+                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
+                                            Vos disponibilités récurrentes
+                                        </Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+
+                                            <Grid container>
+                                                <Card style={{width:'100%',marginTop:15}}>
+                                                    <Grid container style={{paddingLeft:20}}>
+                                                        <h4>Ajouter une disponibilité</h4>
+                                                    </Grid>
+                                                    <Grid container>
+                                                        <Grid item xs={3} style={{paddingLeft:20}}>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={this.state.monday}
+                                                                        onChange={this.handleChecked}
+                                                                        value={this.state.monday}
+                                                                        color="primary"
+                                                                        name={'monday'}
+                                                                    />
+                                                                }
+                                                                label="Lundi"
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={this.state.tuesday}
+                                                                        onChange={this.handleChecked}
+                                                                        value={this.state.tuesday}
+                                                                        color="primary"
+                                                                        name={'tuesday'}
+                                                                    />
+                                                                }
+                                                                label="Mardi"
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={this.state.wednesday}
+                                                                        onChange={this.handleChecked}
+                                                                        value={this.state.wednesday}
+                                                                        color="primary"
+                                                                        name={'wednesday'}
+                                                                    />
+                                                                }
+                                                                label="Mercredi"
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={this.state.thursday}
+                                                                        onChange={this.handleChecked}
+                                                                        value={this.state.thursday}
+                                                                        color="primary"
+                                                                        name={'thursday'}
+                                                                    />
+                                                                }
+                                                                label="Jeudi"
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={3} style={{paddingLeft:20}}>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={this.state.friday}
+                                                                        onChange={this.handleChecked}
+                                                                        value={this.state.friday}
+                                                                        color="primary"
+                                                                        name={'friday'}
+                                                                    />
+                                                                }
+                                                                label="Vendredi"
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={this.state.saturday}
+                                                                        onChange={this.handleChecked}
+                                                                        value={this.state.saturday}
+                                                                        color="primary"
+                                                                        name={'saturday'}
+                                                                    />
+                                                                }
+                                                                label="Samedi"
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={this.state.sunday}
+                                                                        onChange={this.handleChecked}
+                                                                        value={this.state.sunday}
+                                                                        color="primary"
+                                                                        name={'sunday'}
+                                                                    />
+                                                                }
+                                                                label="Dimanche"
+                                                            />
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid container style={{paddingLeft:20}}>
+                                                        <Grid item xs={6}>
+                                                            <Grid container style={{alignItems:"center"}}>
+                                                                <Grid item xs={3}>
+                                                                    <p>De :</p>
+                                                                </Grid>
+                                                                <Grid item xs={9}>
+                                                                    <DatePicker
+                                                                        selected={this.state.all_begin}
+                                                                        onChange={date => this.setState({all_begin:date})}
+                                                                        locale='fr'
+                                                                        showTimeSelect
+                                                                        showTimeSelectOnly
+                                                                        timeIntervals={15}
+                                                                        timeCaption="Début"
+                                                                        dateFormat="HH:mm"
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <Grid container style={{alignItems:"center"}}>
+                                                                <Grid item xs={3}>
+                                                                    <p>A :</p>
+                                                                </Grid>
+                                                                <Grid item xs={9}>
+                                                                    <DatePicker
+                                                                        selected={this.state.all_end}
+                                                                        onChange={date => this.setState({all_end:date})}
+                                                                        locale='fr'
+                                                                        showTimeSelect
+                                                                        showTimeSelectOnly
+                                                                        timeIntervals={15}
+                                                                        timeCaption="Fin"
+                                                                        dateFormat="HH:mm"
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid item xs={10} style={{marginTop:20,paddingLeft:20}}>
+                                                        <FormControl  style={{ width: '100%' }}>
+                                                            <Select2
+                                                                value={this.state.recurrent_service}
+                                                                onChange={this.handleChangeSelectRecurrent}
+                                                                options={optionsService}
+                                                                isMulti
+                                                                isSearchable
+                                                                closeMenuOnSelect={false}
+                                                                isDisabled={this.state.recurrent_all_service}
+
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid item style={{marginTop:20,paddingLeft:20}}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={this.state.recurrent_all_service}
+                                                                    onChange={this.handleChecked}
+                                                                    value={this.state.recurrent_all_service}
+                                                                    color="primary"
+                                                                    name={'recurrent_all_service'}
+                                                                />
+                                                            }
+                                                            label="Tous les services"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                                                        <Button type="button" onClick={() => this.handleClickAll()} variant="contained"
+                                                                color="primary" style={{ width: '100%',color:"white" }}>
+                                                            Ajouter le créneau horaire
+                                                        </Button>
+                                                    </Grid>
+                                                </Card>
+                                            </Grid>
+
+
+
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+                            </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
                                     style={{ border: "none", boxShadow: "none", width: "70%" }}
@@ -653,8 +921,8 @@ class addAvailability extends React.Component {
                                                             minHeight: 205
                                                         }}
                                                     >
-                                                        {this.state.monday_service !== null ?
-                                                            this.state.monday_service.map(service =>
+                                                        {e.services.length !== 0 ?
+                                                            e.services.map(service =>
                                                                 (
                                                                     <Typography
                                                                         style={{
@@ -827,7 +1095,7 @@ class addAvailability extends React.Component {
                                                                             marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {service.service.label}
+                                                                        {service.label}
                                                                     </Typography>
                                                                 )) :
                                                             <Typography
@@ -992,7 +1260,7 @@ class addAvailability extends React.Component {
                                                                             marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {service.service.label}
+                                                                        {service.label}
                                                                     </Typography>
                                                                 )) :
                                                             <Typography
@@ -1155,7 +1423,7 @@ class addAvailability extends React.Component {
                                                                             marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {service.service.label}
+                                                                        {service.label}
                                                                     </Typography>
                                                                 )) :
                                                             <Typography
@@ -1320,7 +1588,7 @@ class addAvailability extends React.Component {
                                                                             marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {service.service.label}
+                                                                        {service.label}
                                                                     </Typography>
                                                                 )) :
                                                             <Typography
@@ -1485,7 +1753,7 @@ class addAvailability extends React.Component {
                                                                             marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {service.service.label}
+                                                                        {service.label}
                                                                     </Typography>
                                                                 )) :
                                                             <Typography
@@ -1651,7 +1919,7 @@ class addAvailability extends React.Component {
                                                                             marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {service.service.label}
+                                                                        {service.label}
                                                                     </Typography>
                                                                 )) :
                                                             <Typography

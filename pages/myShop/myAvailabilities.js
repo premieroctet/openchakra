@@ -209,7 +209,7 @@ class myAvailabilities extends React.Component {
                         </Grid>
                     <Grid container>
                         <Link href={'/myShop/addAvailability'}>
-                        <a style={{textDecoration:'none'}}><Button color={"primary"} style={{color:"white"}} variant={"contained"}>Ajouté une disponibilité</Button></a>
+                        <a style={{textDecoration:'none'}}><Button color={"primary"} style={{color:"white"}} variant={"contained"}>Ajouter une disponibilité</Button></a>
                         </Link>
                     </Grid>
 
