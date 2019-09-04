@@ -5,6 +5,7 @@ import MyBestSellers from '../../components/shop/MyBestSellers/myBestSellers';
 import Bio from '../../components/shop/Bio/Bio';
 import Review from '../../components/shop/Review/Review';
 import Layout from '../../hoc/Layout/Layout';
+import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 
@@ -39,6 +40,7 @@ class shopPreview extends React.Component {
                     <Bio shop={this.state.id}/>
                     <Review shop={this.state.id}/>
                 </Layout>
+                <Footer/>
             </Fragment>
         )
     };

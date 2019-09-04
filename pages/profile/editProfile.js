@@ -20,7 +20,9 @@ import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import fr from 'date-fns/locale/fr';
 import Birthday from '@material-ui/icons/CakeOutlined'
+import Footer from '../../hoc/Layout/Footer/Footer';
 registerLocale('fr', fr);
+
 
 
 
@@ -49,7 +51,6 @@ const styles = theme => ({
     }
 
    ,hidelg: {
-
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
@@ -564,6 +565,7 @@ class editProfile extends React.Component {
                         </Button>
                     </div>
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

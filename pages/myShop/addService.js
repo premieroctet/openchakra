@@ -22,6 +22,7 @@ import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import { Document,Page } from 'react-pdf'
 import { pdfjs } from 'react-pdf';
 import Switch from "@material-ui/core/Switch";
+import Footer from '../../hoc/Layout/Footer/Footer';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
@@ -1184,9 +1185,10 @@ class addService extends React.Component {
 
                 </Grid>
 
-
+            <Footer/>
             </Layout>
-
+            
+            
         );
     };
 }

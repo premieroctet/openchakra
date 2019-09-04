@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import dynamic from 'next/dynamic';
 
 
@@ -330,6 +331,7 @@ class services extends React.Component {
                             {/*Petite Description*/}
                             <Grid item md={6} xs={12} style={{textAlign: 'left',margin: '0 auto',}}>
                                 <div style={{margin: '20px 11%', marginTop: '5%',width: '75%'}}></div>
+                                    <p style={{color: '#07BCE5',cursor:'pointer',fontWeight: '600',fontSize: '1.35rem'}}>{service.label}</p>
                                     <Typography style={{fontSize: '1rem' }}>
                                        {serviceUser.description}
                                     </Typography>
@@ -680,6 +682,7 @@ class services extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

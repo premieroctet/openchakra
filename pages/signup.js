@@ -27,6 +27,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import fr from 'date-fns/locale/fr';
 registerLocale('fr', fr);
 
+import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 const { config } = require('../config/config');
@@ -127,7 +128,6 @@ class signup extends React.Component {
           errors: {},
           lat: '',
           lng: '',
-
 
         };
         this.handleChecked = this.handleChecked.bind(this);
@@ -439,6 +439,7 @@ class signup extends React.Component {
                 </Card>
                 </div>
               </Grid>
+              <Footer/>
             </Layout>
         );
       };

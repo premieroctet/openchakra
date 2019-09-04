@@ -10,7 +10,9 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import { FavoriteBorderOutlined, More } from '@material-ui/icons';
 
-const url = "https://myalfred.hausdivision.com/";
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
+
 
 const styles = theme => ({
   container: {
@@ -127,17 +129,9 @@ class canDo extends React.Component{
         .then(function (response) {
 
           let shop = response.data;
-          //console.log(shop.services);
+          console.log(shop.services);
 
-
-
-          self.setState({
-            service: shop.services,
-          })
-
-
-
-
+          self.setState({service: shop.services})
         })
         .catch(function (error) {
           console.log(error);
@@ -155,7 +149,7 @@ class canDo extends React.Component{
 
         <Card className={classes.card}>
           <CardActionArea>
-            <CardMedia className={classes.media} image={e.label.service.picture} title="Coiffure">
+            <CardMedia className={classes.media} image={e.service.picture} title={e.service.label}>
               <div className={classes.darkOverlay}>
                 <Grid container style={{
                   display: 'flex',
@@ -165,7 +159,7 @@ class canDo extends React.Component{
                 }}>
                   <Grid item/>
                   <Grid item style={{alignSelf: 'center'}}>
-                    <Typography style={{color: 'white', fontSize: 25}}>{e.label.service.label}</Typography>
+                    <Typography style={{color: 'white', fontSize: 25}}>{e.service.label}</Typography>
                   </Grid>
                   <Grid container style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Grid item style={{paddingLeft: 15}}>

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import Layout from "../hoc/Layout/Layouthome";
+import Footer from "../hoc/Layout/Footer/Footer";
 import PopularCategories from '../components/home/PopularCategories/PopularCategories';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import Profiteandlearn from '../components/home/profite&learn/profite&learn'
@@ -60,6 +61,7 @@ class Home extends React.Component {
                 <Verypractical />
                 <Assureback />
                 <TopService />
+                <Footer />
             </Fragment>
         )
     }
