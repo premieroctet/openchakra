@@ -13,6 +13,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../static/form.css';
 import '../static/forminputs.css';
 import "../static/inputRange.css";
+import "react-datepicker/dist/react-datepicker.css";
 
 toast.configure({
   position: 'top-center',

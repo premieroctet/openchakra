@@ -15,7 +15,6 @@ import Typography from "@material-ui/core/Typography";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Card from "@material-ui/core/Card";
 import DatePicker,{registerLocale,setDefaultLocale} from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import fr from 'date-fns/locale/fr';
 import Select2 from "react-select";
 import FormControl from "@material-ui/core/FormControl";
@@ -654,8 +653,8 @@ class addAvailability extends React.Component {
                                                             minHeight: 205
                                                         }}
                                                     >
-                                                        {e.services.length !== 0 ?
-                                                            e.services.map(service =>
+                                                        {this.state.monday_service !== null ?
+                                                            this.state.monday_service.map(service =>
                                                                 (
                                                                     <Typography
                                                                         style={{
@@ -663,7 +662,7 @@ class addAvailability extends React.Component {
                                                                             marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {service.service.label}
+                                                                        {service.label}
                                                                     </Typography>
                                                                 )) :
                                                             <Typography
@@ -703,7 +702,7 @@ class addAvailability extends React.Component {
                                             <Grid container>
                                                 <Card style={{width:'100%',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <Grid item xs={6}>
@@ -868,7 +867,7 @@ class addAvailability extends React.Component {
                                             <Grid container>
                                                 <Card style={{width:'100%',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <Grid item xs={6}>
@@ -1033,7 +1032,7 @@ class addAvailability extends React.Component {
                                             <Grid container>
                                                 <Card style={{width:'100%',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <Grid item xs={6}>
@@ -1196,7 +1195,7 @@ class addAvailability extends React.Component {
                                             <Grid container>
                                                 <Card style={{width:'100%',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <Grid item xs={6}>
@@ -1361,7 +1360,7 @@ class addAvailability extends React.Component {
                                             <Grid container>
                                                 <Card style={{width:'100%',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <Grid item xs={6}>
@@ -1526,7 +1525,7 @@ class addAvailability extends React.Component {
                                             <Grid container>
                                                 <Card style={{width:'100%',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <Grid item xs={6}>
@@ -1692,7 +1691,7 @@ class addAvailability extends React.Component {
                                             <Grid container>
                                                 <Card style={{width:'100%',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <Grid item xs={6}>
@@ -1819,13 +1818,13 @@ class addAvailability extends React.Component {
                                                 </Grid>
                                                 <Grid item xs={9}>
                                                     <DatePicker
-                                                        selected={Date.parse(this.state.month_end)}
-                                                        onChange={date => this.setState({month_end:date})}
-                                                        locale='fr'
-                                                        showYearDropdown
-                                                        showMonthDropdown
-                                                        dateFormat="dd/MM/yyyy"
-                                                    />
+                                                    selected={Date.parse(this.state.month_end)}
+                                                    onChange={date => this.setState({month_end:date})}
+                                                    locale='fr'
+                                                    showYearDropdown
+                                                    showMonthDropdown
+                                                    dateFormat="dd/MM/yyyy"
+                                                />
                                                 </Grid>
                                             </Grid>
                                         </Grid>
