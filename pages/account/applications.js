@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
@@ -292,6 +293,7 @@ class applications extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

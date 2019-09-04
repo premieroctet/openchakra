@@ -14,6 +14,7 @@ import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import styled from 'styled-components';
 import Typography from "@material-ui/core/Typography";
 import { TextField } from '@material-ui/core';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/EditOutlined';
 import Modal from '@material-ui/core/Modal';
@@ -312,19 +313,19 @@ class services extends React.Component {
                     <Grid container className={classes.bigContainer}>
                         <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
                             <Grid item xs={1}></Grid>
-                            <Grid item xs={2}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
+                            <Grid item xs={2} style={{zIndex:"999",borderBottom:"2px solid white", textAlign: "center"}}>   
+                                <p style={{color: "white",cursor: 'pointer',}}>Ma boutique</p>
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} style={{zIndex:"999", textAlign: "center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} style={{zIndex:"999", textAlign: "center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} style={{zIndex:"999", textAlign: "center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} style={{zIndex:"999", textAlign: "center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
                             </Grid>
 
@@ -719,6 +720,7 @@ class services extends React.Component {
                         </div>
                     </Modal>
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

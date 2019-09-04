@@ -5,6 +5,7 @@ import axios from "axios";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
+import Footer from '../../hoc/Layout/Footer/Footer';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -396,6 +397,7 @@ class parameters extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
+import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 
@@ -297,6 +298,7 @@ class sponsors extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

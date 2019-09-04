@@ -15,6 +15,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import {FormLabel} from "@material-ui/core";
+import Footer from '../../hoc/Layout/Footer/Footer';
 import AlgoliaPlaces from 'algolia-places-react';
 
 
@@ -795,6 +796,7 @@ class myAddresses extends React.Component {
 
                     </Grid>
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

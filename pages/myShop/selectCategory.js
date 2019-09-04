@@ -10,6 +10,7 @@ import Router from 'next/router';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
+import Footer from '../../hoc/Layout/Footer/Footer';
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "react-select";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -255,8 +256,9 @@ class selectCategory extends React.Component {
 
                 </Grid>
 
-
+            <Footer/>
             </Layout>
+            
 
         );
     };

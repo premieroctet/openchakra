@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 
@@ -297,6 +298,7 @@ class transactions extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

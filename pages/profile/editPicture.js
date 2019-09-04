@@ -9,6 +9,7 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Fab from '@material-ui/core/Fab';
+import Footer from '../../hoc/Layout/Footer/Footer';
 
 moment.locale('fr');
 
@@ -369,6 +370,7 @@ class editPicture extends React.Component {
                     </Grid>
 
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

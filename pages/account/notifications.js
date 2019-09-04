@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 
@@ -693,6 +694,7 @@ class notifications extends React.Component {
                         </Button>
                     </div>
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

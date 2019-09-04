@@ -21,6 +21,7 @@ import EditIcon from '@material-ui/icons/EditOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import { Document,Page } from 'react-pdf'
 import { pdfjs } from 'react-pdf';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import Switch from "@material-ui/core/Switch";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -1558,8 +1559,9 @@ class editService extends React.Component {
 
                     </Grid>
 
-
+            <Footer/>
             </Layout>
+            
 
         );
     };

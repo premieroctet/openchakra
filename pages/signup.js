@@ -26,6 +26,7 @@ import axios from "axios";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AlgoliaPlaces from "algolia-places-react";
+import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 const { config } = require('../config/config');
@@ -419,6 +420,7 @@ class signup extends React.Component {
                 </Card>
                 </div>
               </Grid>
+              <Footer/>
             </Layout>
         );
       };

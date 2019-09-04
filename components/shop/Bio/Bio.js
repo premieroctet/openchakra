@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import axios from "axios";
+import Router from "next/router";
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
 
@@ -48,8 +49,11 @@ const styles = theme => ({
     },
   },
   avatar: {
-    height: 150,
-    width: 150,
+    height: 100,
+    width: 100,
+    marginRight: 'auto',
+    marginLeft: 'auto',
+    display: 'block'
   },
   biography: {
     padding: '2rem',
@@ -75,7 +79,11 @@ class bio extends React.Component {
     super(props);
     this.state ={
       shop: [],
-      alfred: []
+      alfred: [],
+      currentAddress: '',
+      currentCity: '',
+      currentZip_code: '',
+      currentCountry: '',
     };
   }
 
@@ -102,6 +110,34 @@ class bio extends React.Component {
         .catch(function (error) {
           console.log(error);
         });
+
+        localStorage.setItem('path',Router.pathname);
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios
+            .get(url+'myAlfred/api/users/current')
+            .then(res => {
+                let user = res.data;
+                this.setState({user:user});
+
+
+                if(typeof user.billing_address != 'undefined') {
+                    this.setState({address: true, currentAddress: user.billing_address.address,currentCity: user.billing_address.city,
+                        currentZip_code: user.billing_address.zip_code,currentCountry: user.billing_address.country})
+                } else {
+                    this.setState({address:false})
+                }
+                this.setState({service_address: user.service_address});
+
+            })
+            .catch(err => {
+                    console.log(err);
+                    if(err.response.status === 401 || err.response.status === 403) {
+                        localStorage.removeItem('token');
+                        Router.push({pathname: '/login'})
+                    }
+                }
+            );
+
   }
 
   render() {
@@ -118,7 +154,7 @@ class bio extends React.Component {
               <Grid item xs={4} className={classes.avatarContainer}>
                 <Avatar alt="John Doe" src={`../../../../${alfred.picture}`} className={classes.avatar} />
                 <Typography className={classes.text}>{alfred.name} {alfred.firstname}</Typography>
-                <Typography>Rouen, France</Typography>
+                <Typography>{this.state.currentAddress}, {this.state.currentCity} </Typography>
               </Grid>
               <Grid item xs={8} className={classes.biographyContainer}>
                 <Card className={classes.biography}>

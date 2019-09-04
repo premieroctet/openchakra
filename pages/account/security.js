@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
+import Footer from '../../hoc/Layout/Footer/Footer';
 
 moment.locale('fr');
 
@@ -415,6 +416,7 @@ class security extends React.Component {
 
                     </Grid>
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

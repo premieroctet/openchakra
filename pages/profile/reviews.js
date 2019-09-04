@@ -9,6 +9,7 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
+import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 
@@ -151,7 +152,7 @@ class reviews extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-
+                <Footer/>
             </Fragment>
         );
     };

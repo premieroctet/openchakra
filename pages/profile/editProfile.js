@@ -16,6 +16,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import {FormLabel} from "@material-ui/core";
 import Select2 from 'react-select';
+import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 
@@ -533,6 +534,7 @@ class editProfile extends React.Component {
                         </Button>
                     </div>
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );
