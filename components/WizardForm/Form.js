@@ -38,7 +38,9 @@ import CityFinder from './CityFinder';
 import AddressFinder from './AddressFinder';
 import Siret from './Siret';
 import Availability from './Availability';
-import '../../static/noscrollbar.css';
+import { FormControl, RadioGroup, Radio } from '@material-ui/core';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const { config } = require('../../config/config');
@@ -51,7 +53,6 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'center',
         padding: '1.5rem 3rem 0 3rem',
-        overflow:'hidden    ',
         [theme.breakpoints.down('sm')]: {
             padding: '0'
         },
@@ -241,7 +242,6 @@ const styles = theme => ({
         }
     },
 
-
 });
 
 class Wizard extends React.Component {
@@ -298,6 +298,11 @@ class Wizard extends React.Component {
                         arrayEquipments.push(c.id);
                     }
                 })
+                let option = null;
+                if (e.option !== null) {
+                    option = {label: e.option.label, price: e.option.price, unity: e.option.unity.value, type: e.option.type.value};
+                }
+                const experienceYears = e.experienceYears.value;
                 const city = e.city.value;
                 const perimeter = e.perimeter;
                 const minimum_basket = e.minimumBasket;
@@ -306,17 +311,24 @@ class Wizard extends React.Component {
 
                 let graduated = false;
                 let diploma = null;
+                let diplomaLabel = null;
+                let diplomaYear = null;
                 if(e.diploma !== null) {
                     graduated = true;
-                    diploma = e.diploma;
+                    diploma = e.diploma.diploma;
+                    diplomaLabel = e.diploma.name;
+                    diplomaYear = e.diploma.year;
 
                 }
                 let is_certified = false;
                 let certification = null;
+                let certificationYear = null;
+                let certificationLabel = null;
                 if(e.certification !== null) {
                      is_certified = true;
-                     certification = e.certification;
-
+                     certification = e.certification.certification;
+                     certificationLabel = e.certification.name;
+                     certificationYear = e.certification.year;
                 }
 
                 let active = false;
@@ -327,6 +339,8 @@ class Wizard extends React.Component {
                 }
                 const formData = new FormData();
                 formData.append('service',service);
+                formData.append('option', JSON.stringify(option));
+                formData.append('experience_years', experienceYears);
                 formData.append('prestations',JSON.stringify(arrayPrestations));
                 formData.append('equipments',JSON.stringify(arrayEquipments));
                 formData.append('city',city);
@@ -335,8 +349,12 @@ class Wizard extends React.Component {
                 formData.append('deadline_before_booking',deadline_before_booking);
                 formData.append('graduated',graduated.toString());
                 formData.append('diploma',diploma);
+                formData.append('diplomaLabel', diplomaLabel);
+                formData.append('diplomaYear', diplomaYear);
                 formData.append('is_certified',is_certified.toString());
                 formData.append('certification',certification);
+                formData.append('certificationLabel', certificationLabel);
+                formData.append('certificationYear', certificationYear);
                 formData.append('active',active.toString());
                 formData.append('price',price.toString());
                 formData.append('description',description);
@@ -400,7 +418,9 @@ class Wizard extends React.Component {
             });
             const formDataIdProfile = new FormData();
             formDataIdProfile.append('myCardR',values.createShop.id_recto);
-            formDataIdProfile.append('myCardV',values.createShop.id_verso);
+            if (values.createShop.id_verso !== null) {
+                formDataIdProfile.append('myCardV',values.createShop.id_verso);
+            }
             axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
                 .then(res => {
                     alert('Profil mis à jours')
@@ -420,8 +440,9 @@ class Wizard extends React.Component {
                     console.log(err);
                 })
 
-            const phoneUser = values.alfredUpdate.phone;
-            axios.post(url+'myAlfred/api/users/profile/phone',phoneUser)
+            const phone = values.alfredUpdate.phone;
+            console.log(phone)
+            axios.put(url+'myAlfred/api/users/profile/phone', {phone})
                 .then(res => {
                     alert('Téléphone ajouté');
                 })
@@ -431,6 +452,7 @@ class Wizard extends React.Component {
             axios.put(url+'myAlfred/api/users/users/becomeAlfred')
                 .then(res => {
                     alert('Vous êtes maintenant un Alfred');
+                    
                 })
                 .catch(err => {
                     console.log(err);
@@ -449,7 +471,7 @@ class Wizard extends React.Component {
     Step1Schema = null;
     Step2Schema = Yup.object().shape({
           submission: Yup.array().of(Yup.object().shape({
-            descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
+            //descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
             minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').required('Le minimum d\'achat est requis'),
             delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi heures, jours et semaines').required(),
             city: Yup.string().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
@@ -557,7 +579,7 @@ class Wizard extends React.Component {
                                 <div style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative'}}>
                                     {activePage}
                                 </div>
-                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '9999999'}}>
+                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '9999'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
                                         {page !== 0 && <Button
                                             color="primary"
@@ -603,9 +625,30 @@ class Wizard extends React.Component {
                                                 }
 
                                                 return (
-                                                    <Button type="submit" variant="contained" color="secondary" style={{color: !checkArr.some(check) ? 'white' : null }} disabled={checkArr.some(check) ? true : false}>
-                                                        Suivant
-                                                    </Button>
+                                                    <React.Fragment>
+                                                        <Button 
+                                                            type="submit" 
+                                                            variant="contained" 
+                                                            color="secondary" 
+                                                            style={{color: !checkArr.some(check) ? 'white' : null }} 
+                                                            disabled={checkArr.some(check) ? true : false} 
+                                                            onClick={() => {
+                                                                if (typeof form.errors.submission === 'undefined') {
+                                                                    return null;
+                                                                } else {
+                                                                    toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
+                                                                        if (typeof service === 'undefined') {
+                                                                            return null
+                                                                        } else {
+                                                                            return <p>{form.values.submission[i].serviceLabel}</p>
+                                                                        }
+                                                                    })}</div>)
+                                                                }
+                                                            }}
+                                                        >
+                                                            Suivant
+                                                        </Button>
+                                                    </React.Fragment>
                                                 )
                                             }} 
                                         />}
@@ -656,8 +699,8 @@ class Wizard extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="imgDiv" style={{width: '40%', overflow: 'hidden'}}>
-                                <img src='../../static/backgrounds-blank-blue-953214.jpg' height='100%'  width='100%'/>
+                            <div className="imgDiv" style={{width: /*40 inital value*/ '70%', overflow: 'hidden'}}>
+                                <img src='../../static/01_illustration_my_alfred_Plan de travail 1 copie 2.svg' height='100%'  width='100%'/>
                             </div>
                         </form>
                     </React.Fragment>
@@ -759,6 +802,9 @@ class Form extends React.Component {
 
             no_booking: false,
             all_options: [],
+
+            currentUser: null,
+            passportid: 'passport',
         }
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -773,6 +819,9 @@ class Form extends React.Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
+                console.log(res);
+                this.state.phone = res.data.phone;
+                this.state.currentUser = res.data;
                 this.state.userCity = {label: res.data.billing_address.city, value: res.data.billing_address.city};
                 this.state.userAddress = {label: res.data.billing_address.address, value: res.data.billing_address.address};
                 this.state.userZipCode = {label: res.data.billing_address.zip_code, value: res.data.billing_address.zip_code};
@@ -801,6 +850,10 @@ class Form extends React.Component {
                 this.setState({all_options: options});
             })
             .catch(err => console.log(err));
+    }
+
+    notify() {
+        toast.error('erreur');
     }
 
     handleCategorieChange(categorie, formikCtx) {
@@ -893,7 +946,7 @@ class Form extends React.Component {
                             profile_picture_user: false,
                             identity_card: false,
                             recommandations: false,
-                            welcome_message: '',
+                            welcome_message: 'Je vous remercie pour votre réservation.',
                             id_recto: null,
                             id_verso: null,
                             is_particular: false,
@@ -912,7 +965,7 @@ class Form extends React.Component {
                             isCertified: false,
                         },
                         alfredUpdate: {
-                            phone: '',
+                            phone: this.state.phone,
                             profile_picture_user: null,
                         },
                         servicesAvailability: {
@@ -980,9 +1033,8 @@ class Form extends React.Component {
                     }}
                 >
                     <Wizard.Page>
-                        
                         <Grid container className={classes.cardContainer} style={{justifyContent: 'start'}}>
-                            <div>
+                            
                             <div style={{padding: '0rem 2rem 1rem 2rem', width: '100%'}}>
                                 <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
                                 <hr style={{margin: '1rem 0'}} />
@@ -998,26 +1050,24 @@ class Form extends React.Component {
                                     <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 2</Typography>
                                     <hr style={{border: '4px solid grey', marginRight: '10%'}} />
                                     <Typography style={{fontSize: 18}}>Indiquez vos disponiblités & conditions</Typography>
-                                    <Typography>Indiquez vos disponibilités ,paramètres de réservation et vos conditions d’annulation</Typography>
+                                    <Typography>Indiquez vos disponibilités, paramètres de réservation et vos conditions d’annulation</Typography>
                                 </div>
                                 <div className="step3">
                                     <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 3</Typography>
                                     <hr style={{border: '4px solid grey', marginRight: '10%'}} />
                                     <Typography style={{fontSize: 18}}>Présentez-vous !</Typography>
-                                    <Typography>Renseignez votre profil Alfred, partager vos réalisa- tions, et décrivez vous !</Typography>
+                                    <Typography>Renseignez votre profil Alfred, partagez vos réalisations, et décrivez vous !</Typography>
                                 </div>
                             </div> 
-                            </div>
+                            
                         </Grid>
-                        
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start'}}>
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Vos catégories de service</Typography>
                                     <Typography>
-                                        Commencez par sélectionner vos catégories de services. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être».
-                                        Ne vous limitez pas ! Vous pouvez selectionner plusieurs catégories.
+                                        Commencez par sélectionner vos catégories de services. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être». Ne vous limitez pas ! Vous pouvez sélectionner plusieurs catégories.
                                     </Typography>
                                 </div>
                                 <FieldArray
@@ -1118,7 +1168,7 @@ class Form extends React.Component {
                                                                 </ExpansionPanel>
                                                             )
                                                         })
-                                                    ):(<Typography align="center" style={{fontSize: 15, marginTop: '2rem'}}>Afin d'afficher la sélection des services, veuillez sélectionner vos catégories...</Typography>)}
+                                                    ):(<Typography align="center" style={{fontSize: 15, marginTop: '2rem', color: '#F8727F'}}>Afin d'afficher la sélection des services, veuillez sélectionner vos catégories...</Typography>)}
                                                 </div>
                                             </div>
                                         ): (<p style={{padding: '0 2rem'}}>Chargement...</p>)
@@ -1130,7 +1180,7 @@ class Form extends React.Component {
                                             <div style={{padding: '0 2rem 1rem 2rem'}}>
                                                 <Button
                                                     color="primary"
-                                                    style={{marginTop: '.5rem', color: 'white', borderRadius: 8}}
+                                                    style={{marginTop: '3rem', color: 'white', borderRadius: 8}}
                                                     variant="contained"
                                                     type="button"
                                                     onClick={() => {
@@ -1155,11 +1205,11 @@ class Form extends React.Component {
                                                                         diploma: { 
                                                                             label: null, 
                                                                             year: null, 
-                                                                            document: null 
+                                                                            diploma: null 
                                                                         }, certification: { 
                                                                             label : null, 
                                                                             year: null, 
-                                                                            document: null 
+                                                                            certification: null 
                                                                         }, perimeter: 50, 
                                                                         delayBeforeShop: 1, 
                                                                         delayBeforeShopDWM: null, 
@@ -1167,7 +1217,7 @@ class Form extends React.Component {
                                                                         address: this.state.userAddress, 
                                                                         postal_code: this.state.userZipCode, 
                                                                         country: this.state.userCountry, 
-                                                                        experienceYears: null, 
+                                                                        experienceYears: '', 
                                                                         option: null, 
                                                                         increases: { 
                                                                             label: res.data.majoration, 
@@ -1226,7 +1276,19 @@ class Form extends React.Component {
                                                 >
                                                     Je valide mes services
                                                 </Button>
-                                            </div> : null;
+                                            </div> 
+                                                : 
+                                            <div style={{padding: '0 2rem 1rem 2rem'}}>
+                                                <Button 
+                                                    color="primary"
+                                                    style={{marginTop: '3rem', color: 'white', borderRadius: 8}}
+                                                    variant="contained"
+                                                    type="button"
+                                                    disabled="true"
+                                                >
+                                                    Je valide mes services
+                                                </Button>
+                                            </div>
                                     }}
                                 </Field>    
                                               
@@ -1237,21 +1299,19 @@ class Form extends React.Component {
                             
                                 <FieldArray
                                     name="submission"
-                                    render={(arrayHelpers) => {
-                                        // POUR LES DATES D OBTENTIONS DE DIPLOME ET CERTIFS
-                                        
+                                    render={(arrayHelpers) => {                           
                                         return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
                                             <React.Fragment>
                                                 <div style={{padding: '2rem 2rem 1rem 2rem'}}>
                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Paramétrez vos services & prestations</Typography>
                                                     <Typography>
-                                                        Indiquez les prestations que vous souhaitez réaliser dans chacun de vos services. Indiquez vos tarifs et vos éventuelles majoration sur les services éligibles.
+                                                        Indiquez les prestations que vous souhaitez réaliser dans chacun de vos services. Indiquez vos tarifs et vos éventuelles majorations sur les services éligibles.
                                                     </Typography>
                                                 </div>
                                                 <Tabs>
                                                     <TabList>
                                                         {this.state.allInOneServ.map((data, index) => {
-                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{data.serviceLabel}</div></Tab>
+                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{typeof arrayHelpers.form.errors.submission === 'undefined' ? <span style={{height: 10, width: 10, borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? <span style={{height: 10, width: 10, backgroundColor: '#F8727F', borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : null) }{data.serviceLabel}</div></Tab>
                                                         })}
                                                     </TabList>
                                                     {this.state.allInOneServ.map((s, index) => {
@@ -1274,7 +1334,7 @@ class Form extends React.Component {
                                                                                         key={indexf}
                                                                                         className={classes.prestationsPres}
                                                                                     >
-                                                                                        <p>{f.label}</p>
+                                                                                        <p>{f.label === "Aucun" ? null : f.label}</p>
                                                                                         <Grid container>
                                                                                         {f.prestations.map((p, indexp) => {
                                                                                             return(
@@ -1364,6 +1424,10 @@ class Form extends React.Component {
                                                                         <hr style={{margin: '1rem 0'}}></hr>
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Options</Typography>
+                                                                            <Typography style={{marginBottom: '1rem'}}>
+                                                                                Les options permettent de proposer des services complémentaires à vos prestations. 
+                                                                                Une liste d’option possible pour vos services vous est proposée par My-Alfred. Si vous souhaitez utiliser votre propre option, vous pouvez en ajouter une à tout moment. 
+                                                                            </Typography>
                                                                             <Field render={({form}) => {
                                                                                 const array_option = this.state.all_options.map(e =>(
                                                                                     {
@@ -1518,43 +1582,48 @@ class Form extends React.Component {
                                                                             </div>
                                                                         </div>
                                                                         <hr style={{margin: '1rem 0'}}></hr>
-                                                                        <div>
-                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez ce que vous fournissez</Typography>
-                                                                            <Typography style={{marginBottom: '1rem'}}>
-                                                                            Sélectionnez les produits et le matériel que vous fournissez dans le cadre de vos prestations de service. 
-                                                                            </Typography>
-                                                                        </div>
-                                                                        <div>
-                                                                            <Grid container>
-                                                                            {s.equipments.map((e, indexe) => {
-                                                                                if (e.label.includes('Selected')) {
-                                                                                    return null;
-                                                                                };
-                                                                                return (
-                                                                                    <Grid item xs={3}>
-                                                                                    <label style={{cursor: 'pointer'}} key={indexe} onClick={() => {
-                                                                                        e.checked = !e.checked;
-                                                                                        arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
-                                                                                    }}>
-                                                                                        
-                                                                                        {e.checked === true ? <img src={`../../${e.logo.slice(0, -4)}Selected.svg`} height={100} width={100} alt={`${e.name_logo.slice(0, -4)}Selected.svg`} /> : <img src={`../../${e.logo}`} height={100} width={100} alt={e.name_logo} />}
-                                                                                        <Checkbox
-                                                                                            style={{display: 'none'}}
-                                                                                            color="primary"
-                                                                                            type="checkbox"
-                                                                                            checked={e.checked}
-                                                                                            onChange={() => {
+                                                                        {s.equipments.length === 0 ? null :
+                                                                            <React.Fragment>
+                                                                                <div>
+                                                                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez ce que vous fournissez</Typography>
+                                                                                    <Typography style={{marginBottom: '1rem'}}>
+                                                                                    Sélectionnez les produits et le matériel que vous fournissez dans le cadre de vos prestations de service. 
+                                                                                    </Typography>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <Grid container>
+                                                                                    {s.equipments.map((e, indexe) => {
+                                                                                        if (e.label.includes('Selected')) {
+                                                                                            return null;
+                                                                                        };
+                                                                                        return (
+                                                                                            <Grid item xs={2}>
+                                                                                            <label style={{cursor: 'pointer'}} key={indexe} onClick={() => {
                                                                                                 e.checked = !e.checked;
                                                                                                 arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
-                                                                                            }}
-                                                                                        />
-                                                                                    </label>
+                                                                                            }}>
+                                                                                                
+                                                                                                {e.checked === true ? <img src={`../../static/equipments/${e.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${e.name_logo.slice(0, -4)}_Selected.svg`} /> : <img src={`../../static/equipments/${e.logo}`} height={100} width={100} alt={e.name_logo} />}
+                                                                                                <Checkbox
+                                                                                                    style={{display: 'none'}}
+                                                                                                    color="primary"
+                                                                                                    type="checkbox"
+                                                                                                    checked={e.checked}
+                                                                                                    onChange={() => {
+                                                                                                        e.checked = !e.checked;
+                                                                                                        arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
+                                                                                                    }}
+                                                                                                />
+                                                                                            </label>
+                                                                                            </Grid>
+                                                                                        )
+                                                                                    })}
                                                                                     </Grid>
-                                                                                )
-                                                                            })}
-                                                                            </Grid>
-                                                                        </div>
-                                                                        <hr style={{margin: '1rem 0'}}></hr>
+                                                                                </div>
+                                                                                <hr style={{margin: '1rem 0'}}></hr>
+                                                                            </React.Fragment>
+                                                                        }
+
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Définissez votre montant minimum de réservation</Typography>
                                                                             <Typography>
@@ -1633,7 +1702,7 @@ class Form extends React.Component {
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez votre délai de prévenance</Typography>
                                                                             <Typography>
-                                                                                Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du service. Par exemple, si vous indiquez un délai de 24 heures, un client pourra réserver votre service 24 heures avant votre intervantion.
+                                                                                Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du service. Par exemple, si vous indiquez un délai de 24 heures, un client pourra réserver votre service 24 heures avant votre intervention.
                                                                             </Typography>
                                                                             <Grid item xs={12} className={classes.delayDivResponsive}>
                                                                                 <Field
@@ -1742,7 +1811,7 @@ class Form extends React.Component {
                                                                                 </Grid>
                                                                                 <Grid item xs={12}>
                                                                                     <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre diplôme</Typography>
-                                                                                    {arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.year !== null && arrayHelpers.form.values.submission[index].diploma.document !== null ?
+                                                                                    {arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.year !== null && arrayHelpers.form.values.submission[index].diploma.diploma !== null ?
                                                                                         <React.Fragment>
                                                                                             <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
                                                                                                 <p>{arrayHelpers.form.values.submission[index].diploma.label} | {arrayHelpers.form.values.submission[index].diploma.year}</p>
@@ -1793,7 +1862,7 @@ class Form extends React.Component {
                                                                                                                     //helperText="Délai de prévenance avant réservation."
                                                                                                                 >
                                                                                                                     {dates.map(date => {
-                                                                                                                        return <MenuItem value={date}>{date}</MenuItem>
+                                                                                                                        return <MenuItem style={{zIndex: 9999}} value={date}>{date}</MenuItem>
                                                                                                                     })}
                                                                                                                 </TextField>
                                                                                                             )
@@ -1804,11 +1873,11 @@ class Form extends React.Component {
                                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                                         Joindre mon diplôme
                                                                                                         <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" onChange={(event) => {
-                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma.document`, event.currentTarget.files[0]);
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, event.currentTarget.files[0]);
                                                                                                         }} className="form-control"
                                                                                                         />
                                                                                                     </label>
-                                                                                                    <span>{arrayHelpers.form.values.submission[index].diploma.document !== null ? arrayHelpers.form.values.submission[index].diploma.document.name : null}</span>
+                                                                                                    <span>{arrayHelpers.form.values.submission[index].diploma.diploma !== null ? arrayHelpers.form.values.submission[index].diploma.diploma.name : null}</span>
                                                                                                     <p>En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ses derniers</p>
                                                                                                 </Grid>
                                                                                             </Grid>
@@ -1817,7 +1886,7 @@ class Form extends React.Component {
                                                                                 </Grid>
                                                                                 <Grid item xs={12}>
                                                                                 <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre certification</Typography>
-                                                                                    {arrayHelpers.form.values.submission[index].certification.label !== null && arrayHelpers.form.values.submission[index].certification.year !== null && arrayHelpers.form.values.submission[index].certification.document !== null ?
+                                                                                    {arrayHelpers.form.values.submission[index].certification.label !== null && arrayHelpers.form.values.submission[index].certification.year !== null && arrayHelpers.form.values.submission[index].certification.certification !== null ?
                                                                                         <React.Fragment>
                                                                                             <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
                                                                                                 <p>{arrayHelpers.form.values.submission[index].certification.label} | {arrayHelpers.form.values.submission[index].certification.year}</p>
@@ -1879,11 +1948,11 @@ class Form extends React.Component {
                                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                                         Joindre ma certification
                                                                                                         <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certification" type="file" onChange={(event) => {
-                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification.document`, event.currentTarget.files[0]);
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, event.currentTarget.files[0]);
                                                                                                         }} className="form-control"
                                                                                                         />
                                                                                                     </label>
-                                                                                                    <span>{arrayHelpers.form.values.submission[index].certification.document !== null ? arrayHelpers.form.values.submission[index].certification.document.name : null}</span>
+                                                                                                    <span>{arrayHelpers.form.values.submission[index].certification.certification !== null ? arrayHelpers.form.values.submission[index].certification.certification.name : null}</span>
                                                                                                     <p>En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ses derniers</p>
                                                                                                 </Grid>
                                                                                             </Grid>
@@ -1908,6 +1977,7 @@ class Form extends React.Component {
                                 
                                 {/*</div>*/}
                         </Grid>
+                        <Debug />
                         
                     </Wizard.Page>
                     <Wizard.Page>
@@ -1994,9 +2064,7 @@ class Form extends React.Component {
                                         </h6>
 
                                         <Typography style={{marginBottom: 20,fontFamily: 'helveticaNeue'}}>
-                                            Il se peut que vous ayez moins de réservation si vous
-                                            ajoutez des conditions. Les personnes qui ne répondent pas
-                                            à vos critères peuvent quand même envoyer une demande
+                                        Il se peut que vous ayez moins de réservations si vous ajoutez des conditions. Les personnes qui ne répondent pas à vos critères peuvent quand même envoyer une demande.
                                         </Typography>
 
                                         <Grid item style={{ marginLeft: 20 }}>
@@ -2021,8 +2089,7 @@ class Form extends React.Component {
                                                         label={<React.Fragment>
                                                             <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Conditions My-Alfred</p>
                                                     <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                        Numéro de téléphone confirmé, adresse e-mail, informations de paiements et acceptation
-                                                        du règlement intérieur.
+                                                        Numéro de téléphone confirmé, adresse e-mail, informations de paiement et acceptation du règlement intérieur.
                                                 </p>
                                             </React.Fragment>}
 
@@ -2053,8 +2120,7 @@ class Form extends React.Component {
                                                         label={<React.Fragment>
                                                         <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Photo de profil</p>
                                                         <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                            Si vous activez cette condition, vous ne pourrez voir les photos de profil des
-                                                            voyageurs qu'une fois la réservation confirmée. En savoir plus
+                                                            Si vous activez cette condition, vous ne pourrez voir les photos de profil des utilisateurs qu'une fois la réservation confirmée. 
                                                         </p>
                                                     </React.Fragment>}
 
@@ -2084,7 +2150,7 @@ class Form extends React.Component {
                                                         label={<React.Fragment>
                                                         <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Pièce d'identité officielle</p>
                                                         <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                            Ces voyageurs ont vérifié leur identité.
+                                                            Ces utilisateurs ont vérifié leur identité.
                                                         </p>
                                                     </React.Fragment>}
 
@@ -2114,7 +2180,7 @@ class Form extends React.Component {
                                                         label={<React.Fragment>
                                                             <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Recommandations d'autres Alfred</p>
                                                             <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                                Ces utilisateurs ont déjà utilisés des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commen- taires négatifs.
+                                                                Ces utilisateurs ont déjà utilisé des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commentaires négatifs.
                                                             </p>
                                                         </React.Fragment>}
 
@@ -2145,6 +2211,7 @@ class Form extends React.Component {
                                                         margin="normal"
                                                         variant="outlined"
                                                         style={{ width: "100%" }}
+                                                        value={form.values.createShop.welcome_message}
                                                         //name={"welcome_message"}
                                                     />
                                                 )
@@ -2156,7 +2223,7 @@ class Form extends React.Component {
                                     <Grid container>
 
                                         <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
-                                           Vos conditions d'annulation
+                                            Conditions d’annulation
                                         </h6>
 
                                         <Typography style={{fontFamily: 'helveticaNeue', width: '100%'}}>
@@ -2195,8 +2262,7 @@ class Form extends React.Component {
                                                                 <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Flexibles</p>
 
                                                                 <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                                    Remboursement intégral jusqu'à 1 jour avant la
-                                                                    prestation
+                                                                    Remboursement intégral jusqu’à un jour avant la prestation
                                                                 </p>
                                                             </React.Fragment>
                                                         }
@@ -2232,8 +2298,7 @@ class Form extends React.Component {
                                                             <React.Fragment>
                                                                 <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Modérées</p>
                                                                 <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                                    Remboursement intégral jusqu'à 5 jours avant la
-                                                                    prestation
+                                                                    Remboursement intégral jusqu’à 5 jours avant la prestation
                                                                 </p>
                                                             </React.Fragment>
                                                         }
@@ -2262,22 +2327,14 @@ class Form extends React.Component {
                                                                 name={"strict_cancel"}
                                                                 icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                                 checkedIcon={<FilledButton />}
-                                                                style={{ marginTop: -100 }}
+                                                                style={{ marginTop: -20 }}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
                                                                 <p style={{ marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue' }}>Strictes</p>
                                                                 <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
-                                                                    Remboursement intégral pour les annulations
-                                                                    effectuées dans les 48 heures suivant la
-                                                                    réservation, si la date de ma prestation
-                                                                    intervient dans 14 jours ou plus. Remboursement à
-                                                                    hauteur de 50 % pour les annulations effectuées au
-                                                                    moins 7 jours avant la date de la prestation.
-                                                                    Aucun remboursement pour les annulations
-                                                                    effectuées dans les 7 jours précédant la date de
-                                                                    la prestation.
+                                                                    Remboursement intégral jusqu’à 10 jours avant la prestation
                                                                 </p>
                                                             </React.Fragment>
                                                         }
@@ -2349,7 +2406,7 @@ class Form extends React.Component {
                                                                                     }}
                                                                                     component="span"
                                                                                 >
-                                                                                    {form.values.alfredUpdate.profile_picture_user === null ? <PhotoCamera /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
+                                                                                    {form.values.alfredUpdate.profile_picture_user === null ? <img src={this.state.currentUser.picture} height="100" width="100" style={{borderRadius: '50%'}} /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
                                                                                 </IconButton>
                                                                             </label>
                                                                         </React.Fragment>
@@ -2364,7 +2421,7 @@ class Form extends React.Component {
                                                 </Grid>
                                                 <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                                 <Grid container>
-                                                    <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                    <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10, width: '100%'}}>
                                                         Vérifiez votre identité
                                                     </h6>
                                                     <Typography style={{fontFamily: 'helveticaNeue'}}>
@@ -2378,7 +2435,7 @@ class Form extends React.Component {
                                                     </Grid>
                                                     <Grid item xs={1} />
                                                     <Grid item xs={12} md={4}>
-                                                        <Field name={"alfredUpdate.phone"} render={({field}) => {
+                                                        <Field name={"alfredUpdate.phone"} render={({field, form}) => {
                                                             return (
                                                                 <TextField
                                                                     {...field}
@@ -2387,6 +2444,11 @@ class Form extends React.Component {
                                                                     margin="normal"
                                                                     variant="outlined"
                                                                     type="tel"
+                                                                    value={this.state.phone}
+                                                                    onChange={() => {
+                                                                        this.setState({phone: event.target.value});
+                                                                        form.setFieldValue('alfredUpdate.phone', this.state.phone);
+                                                                    }}
                                                                 />
                                                             )
                                                         }} />
@@ -2413,12 +2475,80 @@ class Form extends React.Component {
                                   </label>
                                     <Thumb file={arrayHelpers.form.values.submission[index].diploma} />*/}
 
+                                                                <FormControl component="fieldset">
+                                                                    <RadioGroup
+                                                                        aria-label="passport/ID"
+                                                                        name="passportID"
+                                                                        style={{flexDirection: 'row'}}
+                                                                        value={this.state.passportid}
+                                                                        onChange={() => {
+                                                                            this.setState({passportid: event.target.value});
+                                                                            form.setFieldValue("createShop.id_recto", null);
+                                                                            form.setFieldValue("createShop.id_verso", null);
+                                                                        }}
+                                                                    >
+                                                                        <FormControlLabel
+                                                                            value="passport"
+                                                                            control={<Radio color="primary" />}
+                                                                            label="Passeport"
+                                                                            labelPlacement="start"
+                                                                        />
+                                                                        <FormControlLabel
+                                                                            value="id"
+                                                                            control={<Radio color="primary" />}
+                                                                            label="Carte d'identité"
+                                                                            labelPlacement="start"
+                                                                        />
+                                                                    </RadioGroup>
+                                                                </FormControl>
+                                                                {this.state.passportid === 'id' ? 
+                                                                <React.Fragment>
+                                                                    <Grid item xs={12} style={{ marginBottom: 10 }}>
+                                                                        <Field render={({field, form}) => {
+                                                                            return (
+                                                                                <React.Fragment>
+                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                        Carte identité recto
+                                                                                        <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
+                                                                                            form.setFieldValue("createShop.id_recto", event.currentTarget.files[0])
+                                                                                        }} className="form-control"
+                                                                                        />
+                                                                                    </label>
+                                                                                    <span>{form.values.createShop.id_recto !== null ? form.values.createShop.id_recto.name.substr(0, 10) + '...' : null}</span>
+                                                                                    <ErrorMessage name="createShop.id_recto" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                </React.Fragment>
+                                                                            )
+                                                                        }} />
+                                                                    </Grid>
+                                                                    <Grid
+                                                                        item
+                                                                        xs={12}
+                                                                        style={{ fontSize: "small" }}
+                                                                    >
+                                                                        <Field render={({field, form}) => {
+                                                                            return (
+                                                                                <React.Fragment>
+                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                        Carte identité verso
+                                                                                        <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
+                                                                                            form.setFieldValue("createShop.id_verso", event.currentTarget.files[0])
+                                                                                        }} className="form-control"
+                                                                                        />
+                                                                                    </label>
+                                                                                    <span>{form.values.createShop.id_verso !== null ? form.values.createShop.id_verso.name.substr(0, 10) + '...' : null}</span>
+                                                                                    <ErrorMessage name="createShop.id_verso" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                </React.Fragment>
+                                                                            )
+                                                                        }} />
+                                                                    </Grid>
+                                                                </React.Fragment>
+                                                                :
                                                                 <Grid item xs={12} style={{ marginBottom: 10 }}>
                                                                     <Field render={({field, form}) => {
                                                                         return (
                                                                             <React.Fragment>
                                                                                 <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
-                                                                                    Carte identité recto / passeport
+                                                                                    Passeport
                                                                                     <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
                                                                                         form.setFieldValue("createShop.id_recto", event.currentTarget.files[0])
                                                                                     }} className="form-control"
@@ -2430,27 +2560,7 @@ class Form extends React.Component {
                                                                         )
                                                                     }} />
                                                                 </Grid>
-                                                                <Grid
-                                                                    item
-                                                                    xs={12}
-                                                                    style={{ fontSize: "small" }}
-                                                                >
-                                                                    <Field render={({field, form}) => {
-                                                                        return (
-                                                                            <React.Fragment>
-                                                                                <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
-                                                                                    Carte identité verso
-                                                                                    <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
-                                                                                        form.setFieldValue("createShop.id_verso", event.currentTarget.files[0])
-                                                                                    }} className="form-control"
-                                                                                    />
-                                                                                </label>
-                                                                                <span>{form.values.createShop.id_verso !== null ? form.values.createShop.id_verso.name.substr(0, 10) + '...' : null}</span>
-                                                                                <ErrorMessage name="createShop.id_verso" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                                            </React.Fragment>
-                                                                        )
-                                                                    }} />
-                                                                </Grid>
+                                                                }
                                                                 {/*<Button
                                   type="button"
                                   variant="contained"
@@ -2471,7 +2581,7 @@ class Form extends React.Component {
 
                                                 <Grid container className={classes.checkboxespart}>
                                                     <Grid container>
-                                                        <Grid item xs={1}>
+                                                        <Grid item xs={12}>
                                                             <Field render={({form}) => {
                                                                 return (
                                                                     <FormControlLabel
@@ -2502,28 +2612,25 @@ class Form extends React.Component {
                                                                                 checkedIcon={<FilledButton />}
                                                                             />
                                                                         }
+                                                                        label={<h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                        Je suis un particulier
+                                                                </h6>}
                                                                     />
                                                                 )
                                                             }} />
                                                         </Grid>
                                                         <Grid item xs={11}>
-                                                            <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                            {/*<h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                                 Je suis un particulier
-                                                            </h6>
-                                                            <Typography>
-                                                                En tant que particulier, vous pouvez rendre des
-                                                                services occasionnels sur My-Alfred. Si votre
-                                                                activité devient régulière, un statut
-                                                                professionnel (mi-cro-entrepreuneur,...)
-                                                                s’impose. Il est également requis pour certains
-                                                                sec-teurs d’activité réglementés (travaux de
-                                                                plomberie, peinture, électricité...)
+                                                        </h6>*/}
+                                                            <Typography style={{marginLeft: '2.5rem'}}>
+                                                                En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés. 
                                                             </Typography>
                                                         </Grid>
                                                     </Grid>
 
                                                     <Grid container style={{ marginTop: 10 }}>
-                                                        <Grid item xs={1}>
+                                                        <Grid item xs={12}>
                                                             <Field render={({form}) => {
                                                                 return (
                                                                     <FormControlLabel
@@ -2551,22 +2658,19 @@ class Form extends React.Component {
                                                                                 checkedIcon={<FilledButton />}
                                                                             />
                                                                         }
+                                                                        label={<h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                        Je suis un professionnel
+                                                                </h6>}
                                                                     />
                                                                 )
                                                             }} />
                                                         </Grid>
                                                         <Grid item xs={11}>
-                                                            <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                            {/*<h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                                 Je suis un professionnel
-                                                            </h6>
-                                                            <Typography>
-                                                                Un statut professionnel est nécessaire pour les
-                                                                métiers réglementés et permet une activité
-                                                                régulière sur My-Alfred. Seuls les
-                                                                professionnels peuvent proposer leurs services
-                                                                aux entreprises qui ont besoin d’une facture.Un
-                                                                statut professionnel est requis dès que votre
-                                                                activité devient régulière
+                                                        </h6>*/}
+                                                            <Typography style={{marginLeft: '2.5rem'}}>
+                                                                Un statut professionnel est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière. 
                                                             </Typography>
                                                             {isProfessional ? (
                                                                 <React.Fragment>

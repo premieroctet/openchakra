@@ -1,4 +1,5 @@
 import React from "react";
+import moment from 'moment';
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
@@ -20,6 +21,12 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Card from "@material-ui/core/Card";
 import { FieldArray } from "formik";
+import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import fr from 'date-fns/locale/fr';
+import { toast } from 'react-toastify'
+registerLocale('fr', fr);
+moment.locale('fr');
 
 const { config } = require("../../config/config");
 const url = config.apiUrl;
@@ -188,271 +195,299 @@ class Availability extends React.Component {
   };
 
   handleClickMonday() {
-    let arrayService = [];
-    if (
-      this.props.formikCtx.values.servicesAvailability.monday_service != null
-    ) {
-      this.props.formikCtx.values.servicesAvailability.monday_service.forEach(
-        w => {
-          const servObj = { label: w.label, value: w.value };
-          arrayService.push(servObj);
-        }
+    if(moment(this.props.formikCtx.values.servicesAvailability.monday_end).isBefore(moment(this.props.formikCtx.values.servicesAvailability.monday_begin))){
+      toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+    } else {
+      let arrayService = [];
+      if (
+        this.props.formikCtx.values.servicesAvailability.monday_service != null
+      ) {
+        this.props.formikCtx.values.servicesAvailability.monday_service.forEach(
+          w => {
+            const servObj = { label: w.label, value: w.value };
+            arrayService.push(servObj);
+          }
+        );
+      }
+      const obj = {
+        begin: this.props.formikCtx.values.servicesAvailability.monday_begin,
+        end: this.props.formikCtx.values.servicesAvailability.monday_end,
+        services: arrayService,
+        all_services: this.props.formikCtx.values.servicesAvailability
+          .monday_all_service
+      };
+      this.props.formikCtx.values.servicesAvailability.monday_event.push(obj);
+      alert("Créneau lundi ajouté, vous pouvez en ajouter d'autre");
+
+      //this.setState({monday_begin: '',monday_end: '',monday_service: null,monday_all_service: false})
+      this.props.formikCtx.setFieldValue(`servicesAvailability.monday_begin`, "");
+      this.props.formikCtx.setFieldValue(`servicesAvailability.monday_end`, "");
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.monday_service`,
+        null
+      );
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.monday_all_service`,
+        false
       );
     }
-    const obj = {
-      begin: this.props.formikCtx.values.servicesAvailability.monday_begin,
-      end: this.props.formikCtx.values.servicesAvailability.monday_end,
-      services: arrayService,
-      all_services: this.props.formikCtx.values.servicesAvailability
-        .monday_all_service
-    };
-    this.props.formikCtx.values.servicesAvailability.monday_event.push(obj);
-    alert("Créneau lundi ajouté, vous pouvez en ajouter d'autre");
-
-    //this.setState({monday_begin: '',monday_end: '',monday_service: null,monday_all_service: false})
-    this.props.formikCtx.setFieldValue(`servicesAvailability.monday_begin`, "");
-    this.props.formikCtx.setFieldValue(`servicesAvailability.monday_end`, "");
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.monday_service`,
-      null
-    );
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.monday_all_service`,
-      false
-    );
   }
 
   handleClickTuesday() {
-    let arrayService = [];
-    if (
-      this.props.formikCtx.values.servicesAvailability.tuesday_service != null
-    ) {
-      this.props.formikCtx.values.servicesAvailability.tuesday_service.forEach(
-        w => {
-          const servObj = { label: w.label, value: w.value };
-          arrayService.push(servObj);
-        }
+    if(moment(this.props.formikCtx.values.servicesAvailability.tuesday_end).isBefore(moment(this.props.formikCtx.values.servicesAvailability.tuesday_begin))){
+      toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+    } else {
+      let arrayService = [];
+      if (
+        this.props.formikCtx.values.servicesAvailability.tuesday_service != null
+      ) {
+        this.props.formikCtx.values.servicesAvailability.tuesday_service.forEach(
+          w => {
+            const servObj = { label: w.label, value: w.value };
+            arrayService.push(servObj);
+          }
+        );
+      }
+      const obj = {
+        begin: this.props.formikCtx.values.servicesAvailability.tuesday_begin,
+        end: this.props.formikCtx.values.servicesAvailability.tuesday_end,
+        services: arrayService,
+        all_services: this.props.formikCtx.values.servicesAvailability
+          .tuesday_all_service
+      };
+      this.props.formikCtx.values.servicesAvailability.tuesday_event.push(obj);
+      alert("Créneau mardi ajouté, vous pouvez en ajouter d'autre");
+
+      //this.setState({tuesday_begin: '',tuesday_end: '',tuesday_service: null,tuesday_all_service: false})
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.tuesday_begin`,
+        ""
+      );
+      this.props.formikCtx.setFieldValue(`servicesAvailability.tuesday_end`, "");
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.tuesday_service`,
+        null
+      );
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.tuesday_all_service`,
+        false
       );
     }
-    const obj = {
-      begin: this.props.formikCtx.values.servicesAvailability.tuesday_begin,
-      end: this.props.formikCtx.values.servicesAvailability.tuesday_end,
-      services: arrayService,
-      all_services: this.props.formikCtx.values.servicesAvailability
-        .tuesday_all_service
-    };
-    this.props.formikCtx.values.servicesAvailability.tuesday_event.push(obj);
-    alert("Créneau mardi ajouté, vous pouvez en ajouter d'autre");
-
-    //this.setState({tuesday_begin: '',tuesday_end: '',tuesday_service: null,tuesday_all_service: false})
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.tuesday_begin`,
-      ""
-    );
-    this.props.formikCtx.setFieldValue(`servicesAvailability.tuesday_end`, "");
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.tuesday_service`,
-      null
-    );
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.tuesday_all_service`,
-      false
-    );
   }
 
   handleClickWednesday() {
-    let arrayService = [];
-    if (
-      this.props.formikCtx.values.servicesAvailability.wednesday_service != null
-    ) {
-      this.props.formikCtx.values.servicesAvailability.wednesday_service.forEach(
-        w => {
-          const servObj = { label: w.label, value: w.value };
-          arrayService.push(servObj);
-        }
+    if(moment(this.props.formikCtx.values.servicesAvailability.wednesday_end).isBefore(moment(this.props.formikCtx.values.servicesAvailability.wednesday_begin))){
+      toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+    } else {
+      let arrayService = [];
+      if (
+        this.props.formikCtx.values.servicesAvailability.wednesday_service != null
+      ) {
+        this.props.formikCtx.values.servicesAvailability.wednesday_service.forEach(
+          w => {
+            const servObj = { label: w.label, value: w.value };
+            arrayService.push(servObj);
+          }
+        );
+      }
+      const obj = {
+        begin: this.props.formikCtx.values.servicesAvailability.wednesday_begin,
+        end: this.props.formikCtx.values.servicesAvailability.wednesday_end,
+        services: arrayService,
+        all_services: this.props.formikCtx.values.servicesAvailability
+          .wednesday_all_service
+      };
+      this.props.formikCtx.values.servicesAvailability.wednesday_event.push(obj);
+
+      alert("Créneau mercredi ajouté, vous pouvez en ajouter d'autre");
+
+      //this.setState({wednesday_begin: '',wednesday_end: '',wednesday_service: null,wednesday_all_service: false})
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.wednesday_begin`,
+        ""
+      );
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.wednesday_end`,
+        ""
+      );
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.wednesday_service`,
+        null
+      );
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.wednesday_all_service`,
+        false
       );
     }
-    const obj = {
-      begin: this.props.formikCtx.values.servicesAvailability.wednesday_begin,
-      end: this.props.formikCtx.values.servicesAvailability.wednesday_end,
-      services: arrayService,
-      all_services: this.props.formikCtx.values.servicesAvailability
-        .wednesday_all_service
-    };
-    this.props.formikCtx.values.servicesAvailability.wednesday_event.push(obj);
-
-    alert("Créneau mercredi ajouté, vous pouvez en ajouter d'autre");
-
-    //this.setState({wednesday_begin: '',wednesday_end: '',wednesday_service: null,wednesday_all_service: false})
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.wednesday_begin`,
-      ""
-    );
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.wednesday_end`,
-      ""
-    );
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.wednesday_service`,
-      null
-    );
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.wednesday_all_service`,
-      false
-    );
   }
 
   handleClickThursday() {
-    let arrayService = [];
-    if (
-      this.props.formikCtx.values.servicesAvailability.thursday_service != null
-    ) {
-      this.props.formikCtx.values.servicesAvailability.thursday_service.forEach(
-        w => {
-          const servObj = { label: w.label, value: w.value };
-          arrayService.push(servObj);
-        }
+    if(moment(this.props.formikCtx.values.servicesAvailability.thursday_end).isBefore(moment(this.props.formikCtx.values.servicesAvailability.thursday_begin))){
+      toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+    } else {
+      let arrayService = [];
+      if (
+        this.props.formikCtx.values.servicesAvailability.thursday_service != null
+      ) {
+        this.props.formikCtx.values.servicesAvailability.thursday_service.forEach(
+          w => {
+            const servObj = { label: w.label, value: w.value };
+            arrayService.push(servObj);
+          }
+        );
+      }
+      const obj = {
+        begin: this.props.formikCtx.values.servicesAvailability.thursday_begin,
+        end: this.props.formikCtx.values.servicesAvailability.thursday_end,
+        services: arrayService,
+        all_services: this.props.formikCtx.values.servicesAvailability
+          .thursday_all_service
+      };
+      this.props.formikCtx.values.servicesAvailability.thursday_event.push(obj);
+      alert("Créneau jeudi ajouté, vous pouvez en ajouter d'autre");
+
+      //this.setState({thursday_begin: '',thursday_end: '',thursday_service: null,thursday_all_service: false})
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.thursday_begin`,
+        ""
+      );
+      this.props.formikCtx.setFieldValue(`servicesAvailability.thursday_end`, "");
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.thursday_service`,
+        null
+      );
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.thursday_all_service`,
+        false
       );
     }
-    const obj = {
-      begin: this.props.formikCtx.values.servicesAvailability.thursday_begin,
-      end: this.props.formikCtx.values.servicesAvailability.thursday_end,
-      services: arrayService,
-      all_services: this.props.formikCtx.values.servicesAvailability
-        .thursday_all_service
-    };
-    this.props.formikCtx.values.servicesAvailability.thursday_event.push(obj);
-    alert("Créneau jeudi ajouté, vous pouvez en ajouter d'autre");
-
-    //this.setState({thursday_begin: '',thursday_end: '',thursday_service: null,thursday_all_service: false})
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.thursday_begin`,
-      ""
-    );
-    this.props.formikCtx.setFieldValue(`servicesAvailability.thursday_end`, "");
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.thursday_service`,
-      null
-    );
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.thursday_all_service`,
-      false
-    );
   }
 
   handleClickFriday() {
-    let arrayService = [];
-    if (
-      this.props.formikCtx.values.servicesAvailability.friday_service != null
-    ) {
-      this.props.formikCtx.values.servicesAvailability.friday_service.forEach(
-        w => {
-          const servObj = { label: w.label, value: w.value };
-          arrayService.push(servObj);
-        }
+    if(moment(this.props.formikCtx.values.servicesAvailability.friday_end).isBefore(moment(this.props.formikCtx.values.servicesAvailability.friday_begin))){
+      toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+    } else {
+      let arrayService = [];
+      if (
+        this.props.formikCtx.values.servicesAvailability.friday_service != null
+      ) {
+        this.props.formikCtx.values.servicesAvailability.friday_service.forEach(
+          w => {
+            const servObj = { label: w.label, value: w.value };
+            arrayService.push(servObj);
+          }
+        );
+      }
+      const obj = {
+        begin: this.props.formikCtx.values.servicesAvailability.friday_begin,
+        end: this.props.formikCtx.values.servicesAvailability.friday_end,
+        services: arrayService,
+        all_services: this.props.formikCtx.values.servicesAvailability
+          .friday_all_service
+      };
+      this.props.formikCtx.values.servicesAvailability.friday_event.push(obj);
+      alert("Créneau vendredi ajouté, vous pouvez en ajouter d'autre");
+
+      //this.setState({friday_begin: '',friday_end: '',friday_service: null,friday_all_service: false})
+      this.props.formikCtx.setFieldValue(`servicesAvailability.friday_begin`, "");
+      this.props.formikCtx.setFieldValue(`servicesAvailability.friday_end`, "");
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.friday_service`,
+        null
+      );
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.friday_all_service`,
+        false
       );
     }
-    const obj = {
-      begin: this.props.formikCtx.values.servicesAvailability.friday_begin,
-      end: this.props.formikCtx.values.servicesAvailability.friday_end,
-      services: arrayService,
-      all_services: this.props.formikCtx.values.servicesAvailability
-        .friday_all_service
-    };
-    this.props.formikCtx.values.servicesAvailability.friday_event.push(obj);
-    alert("Créneau vendredi ajouté, vous pouvez en ajouter d'autre");
-
-    //this.setState({friday_begin: '',friday_end: '',friday_service: null,friday_all_service: false})
-    this.props.formikCtx.setFieldValue(`servicesAvailability.friday_begin`, "");
-    this.props.formikCtx.setFieldValue(`servicesAvailability.friday_end`, "");
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.friday_service`,
-      null
-    );
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.friday_all_service`,
-      false
-    );
   }
 
   handleClickSaturday() {
-    let arrayService = [];
-    if (
-      this.props.formikCtx.values.servicesAvailability.saturday_service != null
-    ) {
-      this.props.formikCtx.values.servicesAvailability.saturday_service.forEach(
-        w => {
-          const servObj = { label: w.label, value: w.value };
-          arrayService.push(servObj);
-        }
+    if(moment(this.props.formikCtx.values.servicesAvailability.saturday_end).isBefore(moment(this.props.formikCtx.values.servicesAvailability.saturday_begin))){
+      toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+    } else {
+      let arrayService = [];
+      if (
+        this.props.formikCtx.values.servicesAvailability.saturday_service != null
+      ) {
+        this.props.formikCtx.values.servicesAvailability.saturday_service.forEach(
+          w => {
+            const servObj = { label: w.label, value: w.value };
+            arrayService.push(servObj);
+          }
+        );
+      }
+      const obj = {
+        begin: this.props.formikCtx.values.servicesAvailability.saturday_begin,
+        end: this.props.formikCtx.values.servicesAvailability.saturday_end,
+        services: arrayService,
+        all_services: this.props.formikCtx.values.servicesAvailability
+          .saturday_all_service
+      };
+      this.props.formikCtx.values.servicesAvailability.saturday_event.push(obj);
+      alert("Créneau samedi ajouté, vous pouvez en ajouter d'autre");
+
+      //this.setState({saturday_begin: '',saturday_end: '',saturday_service: null,saturday_all_service: false})
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.saturday_begin`,
+        ""
+      );
+      this.props.formikCtx.setFieldValue(`servicesAvailability.saturday_end`, "");
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.saturday_service`,
+        null
+      );
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.saturday_all_service`,
+        false
       );
     }
-    const obj = {
-      begin: this.props.formikCtx.values.servicesAvailability.saturday_begin,
-      end: this.props.formikCtx.values.servicesAvailability.saturday_end,
-      services: arrayService,
-      all_services: this.props.formikCtx.values.servicesAvailability
-        .saturday_all_service
-    };
-    this.props.formikCtx.values.servicesAvailability.saturday_event.push(obj);
-    alert("Créneau samedi ajouté, vous pouvez en ajouter d'autre");
-
-    //this.setState({saturday_begin: '',saturday_end: '',saturday_service: null,saturday_all_service: false})
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.saturday_begin`,
-      ""
-    );
-    this.props.formikCtx.setFieldValue(`servicesAvailability.saturday_end`, "");
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.saturday_service`,
-      null
-    );
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.saturday_all_service`,
-      false
-    );
   }
 
   handleClickSunday() {
-    let arrayService = [];
-    if (
-      this.props.formikCtx.values.servicesAvailability.sunday_service != null
-    ) {
-      this.props.formikCtx.values.servicesAvailability.sunday_service.forEach(
-        w => {
-          const servObj = { label: w.label, value: w.value };
-          arrayService.push(servObj);
-        }
+    if(moment(this.props.formikCtx.values.servicesAvailability.sunday_end).isBefore(moment(this.props.formikCtx.values.servicesAvailability.sunday_begin))){
+      toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+    } else {
+      let arrayService = [];
+      if (
+        this.props.formikCtx.values.servicesAvailability.sunday_service != null
+      ) {
+        this.props.formikCtx.values.servicesAvailability.sunday_service.forEach(
+          w => {
+            const servObj = { label: w.label, value: w.value };
+            arrayService.push(servObj);
+          }
+        );
+      }
+      const obj = {
+        begin: this.props.formikCtx.values.servicesAvailability.sunday_begin,
+        end: this.props.formikCtx.values.servicesAvailability.sunday_end,
+        services: arrayService,
+        all_services: this.props.formikCtx.values.servicesAvailability
+          .sunday_all_service
+      };
+      this.props.formikCtx.values.servicesAvailability.sunday_event.push(obj);
+      alert("Créneau dimanche ajouté, vous pouvez en ajouter d'autre");
+
+      //this.setState({sunday_begin: '',sunday_end: '',sunday_service: null,sunday_all_service: false})
+      this.props.formikCtx.setFieldValue(`servicesAvailability.sunday_begin`, "");
+      this.props.formikCtx.setFieldValue(`servicesAvailability.sunday_end`, "");
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.sunday_service`,
+        null
+      );
+      this.props.formikCtx.setFieldValue(
+        `servicesAvailability.sunday_all_service`,
+        false
       );
     }
-    const obj = {
-      begin: this.props.formikCtx.values.servicesAvailability.sunday_begin,
-      end: this.props.formikCtx.values.servicesAvailability.sunday_end,
-      services: arrayService,
-      all_services: this.props.formikCtx.values.servicesAvailability
-        .sunday_all_service
-    };
-    this.props.formikCtx.values.servicesAvailability.sunday_event.push(obj);
-    alert("Créneau dimanche ajouté, vous pouvez en ajouter d'autre");
-
-    //this.setState({sunday_begin: '',sunday_end: '',sunday_service: null,sunday_all_service: false})
-    this.props.formikCtx.setFieldValue(`servicesAvailability.sunday_begin`, "");
-    this.props.formikCtx.setFieldValue(`servicesAvailability.sunday_end`, "");
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.sunday_service`,
-      null
-    );
-    this.props.formikCtx.setFieldValue(
-      `servicesAvailability.sunday_all_service`,
-      false
-    );
   }
 
-  onChange = e => {
+  onChange = (name, date) => {
     //this.setState({ [e.target.name]: e.target.value });
     this.props.formikCtx.setFieldValue(
-      `servicesAvailability.${e.target.name}`,
-      e.target.value
+      `servicesAvailability.${name}`,
+      date
     );
   };
 
@@ -460,9 +495,9 @@ class Availability extends React.Component {
     e.preventDefault();
 
     const data = {
-      active: this.state.active,
-      month_begin: this.state.month_begin,
-      month_end: this.state.month_end,
+      active: this.props.formikCtx.values.servicesAvailability.active,
+      month_begin: this.props.formikCtx.values.servicesAvailability.month_begin,
+      month_end: this.props.formikCtx.values.servicesAvailability.month_end,
       monday_event: this.state.monday_event,
       tuesday_event: this.state.tuesday_event,
       wednesday_event: this.state.wednesday_event,
@@ -553,19 +588,31 @@ class Availability extends React.Component {
                                           padding: "2rem",
                                           display: "flex",
                                           flexFlow: "column",
-                                          marginRight: '1rem'
+                                          marginRight: '1rem',
+                                          minHeight: 205
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -574,11 +621,11 @@ class Availability extends React.Component {
                                             marginBottom: "1rem"
                                           }}
                                         >
-                                          <Typography>{event.begin}</Typography>
+                                          <Typography>{moment(event.begin).format('LT')}</Typography>
                                           <Typography>-</Typography>
-                                          <Typography>{event.end}</Typography>
+                                          <Typography>{moment(event.end).format('LT')}</Typography>
                                         </div>
-                                        <div>
+                                        <div style={{display: 'flex', justifyContent: "center"}}>
                                           <Button
                                             variant="contained"
                                             color="secondary"
@@ -602,8 +649,8 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
+                  <Grid item xs={4} style={{marginRight: 15}}>
+                    {/*<TextField
                       id="standard-with-placeholder"
                       label="De"
                       margin="normal"
@@ -618,10 +665,21 @@ class Availability extends React.Component {
                       }}
                       value={formik.servicesAvailability.monday_begin}
                       onChange={this.onChange}
+                    />*/}
+                    <DatePicker
+                      selected={formik.servicesAvailability.monday_begin}
+                      onChange={this.onChange.bind(this, 'monday_begin')}
+                      locale='fr'
+                      name="monday_begin"
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
+                  <Grid item xs={4}>
+                    {/*<TextField
                       id="standard-with-placeholder"
                       label="A"
                       margin="normal"
@@ -636,9 +694,20 @@ class Availability extends React.Component {
                       }}
                       value={formik.servicesAvailability.monday_end}
                       onChange={this.onChange}
+                    />*/}
+                    <DatePicker
+                      selected={formik.servicesAvailability.monday_end}
+                      onChange={this.onChange.bind(this, 'monday_end')}
+                      locale='fr'
+                      name="monday_end"
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.monday_service}
@@ -653,6 +722,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={formik.servicesAvailability.monday_all_service}
@@ -678,9 +748,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickMonday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ width: "100%", color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -725,16 +795,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -743,9 +824,9 @@ class Availability extends React.Component {
                                             marginBottom: "1rem"
                                           }}
                                         >
-                                          <Typography>{event.begin}</Typography>
+                                          <Typography>{moment(event.begin).format('LT')}</Typography>
                                           <Typography>-</Typography>
-                                          <Typography>{event.end}</Typography>
+                                          <Typography>{moment(event.end).format('LT')}</Typography>
                                         </div>
                                         <div>
                                           <Button
@@ -771,43 +852,33 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="De"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
+                  <Grid item xs={4} style={{marginRight: 15}}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.tuesday_begin}
+                      onChange={this.onChange.bind(this, 'tuesday_begin')}
+                      locale='fr'
                       name="tuesday_begin"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.tuesday_begin}
-                      onChange={this.onChange}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="A"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
-                      name="tuesday_end"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.tuesday_end}
-                      onChange={this.onChange}
+                  <Grid item xs={4}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.tuesday_end}
+                      onChange={this.onChange.bind(this, 'tuesday_end')}
+                      locale='fr'
+                      name="monday_begin"
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.tuesday_service}
@@ -822,6 +893,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={
@@ -841,7 +913,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -850,9 +921,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickTuesday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -898,16 +969,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -916,9 +998,9 @@ class Availability extends React.Component {
                                             marginBottom: "1rem"
                                           }}
                                         >
-                                          <Typography>{event.begin}</Typography>
+                                          <Typography>{moment(event.begin).format('LT')}</Typography>
                                           <Typography>-</Typography>
-                                          <Typography>{event.end}</Typography>
+                                          <Typography>{moment(event.end).format('LT')}</Typography>
                                         </div>
                                         <div>
                                           <Button
@@ -944,43 +1026,33 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="De"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
+                  <Grid item xs={4} style={{marginRight: 15}}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.wednesday_begin}
+                      onChange={this.onChange.bind(this, 'wednesday_begin')}
+                      locale='fr'
                       name="wednesday_begin"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.wednesday_begin}
-                      onChange={this.onChange}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="A"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
+                  <Grid item xs={4}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.wednesday_end}
+                      onChange={this.onChange.bind(this, 'wednesday_end')}
+                      locale='fr'
                       name="wednesday_end"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.wednesday_end}
-                      onChange={this.onChange}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.wednesday_service}
@@ -995,6 +1067,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={
@@ -1016,7 +1089,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -1025,9 +1097,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickWednesday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -1072,16 +1144,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -1090,9 +1173,9 @@ class Availability extends React.Component {
                                             marginBottom: "1rem"
                                           }}
                                         >
-                                          <Typography>{event.begin}</Typography>
+                                          <Typography>{moment(event.begin).format('LT')}</Typography>
                                           <Typography>-</Typography>
-                                          <Typography>{event.end}</Typography>
+                                          <Typography>{moment(event.end).format('LT')}</Typography>
                                         </div>
                                         <div>
                                           <Button
@@ -1118,43 +1201,33 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="De"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
+                  <Grid item xs={4} style={{marginRight: 15}}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.thursday_begin}
+                      onChange={this.onChange.bind(this, 'thursday_begin')}
+                      locale='fr'
                       name="thursday_begin"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.thursday_begin}
-                      onChange={this.onChange}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="A"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
+                  <Grid item xs={4}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.thursday_end}
+                      onChange={this.onChange.bind(this, 'thursday_end')}
+                      locale='fr'
                       name="thursday_end"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.thursday_end}
-                      onChange={this.onChange}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.thursday_service}
@@ -1169,6 +1242,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={
@@ -1188,7 +1262,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -1197,9 +1270,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickThursday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -1244,16 +1317,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -1262,9 +1346,9 @@ class Availability extends React.Component {
                                             marginBottom: "1rem"
                                           }}
                                         >
-                                          <Typography>{event.begin}</Typography>
+                                          <Typography>{moment(event.begin).format('LT')}</Typography>
                                           <Typography>-</Typography>
-                                          <Typography>{event.end}</Typography>
+                                          <Typography>{moment(event.end).format('LT')}</Typography>
                                         </div>
                                         <div>
                                           <Button
@@ -1290,43 +1374,33 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="De"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
+                  <Grid item xs={4} style={{marginRight: 15}}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.friday_begin}
+                      onChange={this.onChange.bind(this, 'friday_begin')}
+                      locale='fr'
                       name="friday_begin"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.friday_begin}
-                      onChange={this.onChange}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="A"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
+                  <Grid item xs={4}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.friday_end}
+                      onChange={this.onChange.bind(this, 'friday_end')}
+                      locale='fr'
                       name="friday_end"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.friday_end}
-                      onChange={this.onChange}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.friday_service}
@@ -1341,6 +1415,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={formik.servicesAvailability.friday_all_service}
@@ -1358,7 +1433,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -1367,9 +1441,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickFriday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -1414,16 +1488,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -1432,9 +1517,9 @@ class Availability extends React.Component {
                                             marginBottom: "1rem"
                                           }}
                                         >
-                                          <Typography>{event.begin}</Typography>
+                                          <Typography>{moment(event.begin).format('LT')}</Typography>
                                           <Typography>-</Typography>
-                                          <Typography>{event.end}</Typography>
+                                          <Typography>{moment(event.end).format('LT')}</Typography>
                                         </div>
                                         <div>
                                           <Button
@@ -1460,43 +1545,33 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="De"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
+                  <Grid item xs={4} style={{marginRight: 15}}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.saturday_begin}
+                      onChange={this.onChange.bind(this, 'saturday_begin')}
+                      locale='fr'
                       name="saturday_begin"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.saturday_begin}
-                      onChange={this.onChange}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="A"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
+                  <Grid item xs={4}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.saturday_end}
+                      onChange={this.onChange.bind(this, 'saturday_end')}
+                      locale='fr'
                       name="saturday_end"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.saturday_end}
-                      onChange={this.onChange}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.saturday_service}
@@ -1511,6 +1586,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={
@@ -1530,7 +1606,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -1539,9 +1614,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickSaturday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -1586,16 +1661,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -1604,9 +1690,9 @@ class Availability extends React.Component {
                                             marginBottom: "1rem"
                                           }}
                                         >
-                                          <Typography>{event.begin}</Typography>
+                                          <Typography>{moment(event.begin).format('LT')}</Typography>
                                           <Typography>-</Typography>
-                                          <Typography>{event.end}</Typography>
+                                          <Typography>{moment(event.end).format('LT')}</Typography>
                                         </div>
                                         <div>
                                           <Button
@@ -1632,43 +1718,33 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="De"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
+                  <Grid item xs={4} style={{marginRight: 15}}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.sunday_begin}
+                      onChange={this.onChange.bind(this, 'sunday_begin')}
+                      locale='fr'
                       name="sunday_begin"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.sunday_begin}
-                      onChange={this.onChange}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="standard-with-placeholder"
-                      label="A"
-                      margin="normal"
-                      style={{ width: "100%" }}
-                      type="time"
+                  <Grid item xs={4}>
+                    <DatePicker
+                      selected={formik.servicesAvailability.sunday_end}
+                      onChange={this.onChange.bind(this, 'sunday_end')}
+                      locale='fr'
                       name="sunday_end"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      inputProps={{
-                        step: 300 // 5 min
-                      }}
-                      value={formik.servicesAvailability.sunday_end}
-                      onChange={this.onChange}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={15}
+                      timeCaption="Début"
+                      dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17 }}>Service(s)</Typography>
+                  <Typography style={{ fontSize: 17, width: '100%' }}>Service(s)</Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.sunday_service}
@@ -1683,6 +1759,7 @@ class Availability extends React.Component {
                     />
                   </FormControl>
                   <FormControlLabel
+                    style={{width: '100%'}}
                     control={
                       <Checkbox
                         checked={formik.servicesAvailability.sunday_all_service}
@@ -1700,7 +1777,6 @@ class Availability extends React.Component {
                     xs={12}
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       marginTop: 30
                     }}
                   >
@@ -1709,9 +1785,9 @@ class Availability extends React.Component {
                       onClick={() => this.handleClickSunday()}
                       variant="contained"
                       color="primary"
-                      style={{ width: "100%" }}
+                      style={{ color: 'white' }}
                     >
-                      Ajouter un créneau horaire
+                      Ajouter le créneau horaire
                     </Button>
                   </Grid>
                 </Grid>
@@ -1735,7 +1811,7 @@ class Availability extends React.Component {
             <React.Fragment>
               <FormControl style={{ width: "100%" }}>
                 <InputLabel htmlFor="age-simple">A partir de</InputLabel>
-                <Select
+                {/*<Select
                   value={formik.servicesAvailability.month_begin}
                   onChange={this.onChange}
                   inputProps={{
@@ -1756,12 +1832,21 @@ class Availability extends React.Component {
                   <MenuItem value={"Octobre"}>Octobre</MenuItem>
                   <MenuItem value={"Novembre"}>Novembre</MenuItem>
                   <MenuItem value={"Décembre"}>Décembre</MenuItem>
-                </Select>
+                </Select>*/}
+                <DatePicker
+                  selected={Date.parse(formik.servicesAvailability.month_begin)}
+                  onChange={this.onChange.bind(this, 'month_begin')}
+                  name="month_begin"
+                  locale='fr'
+                  showYearDropdown
+                  showMonthDropdown
+                  dateFormat="dd/MM/yyyy"
+                />
               </FormControl>
 
               <FormControl style={{ width: "100%" }}>
                 <InputLabel htmlFor="age-simple">Jusqu'à</InputLabel>
-                <Select
+                {/*<Select
                   value={formik.servicesAvailability.month_end}
                   onChange={this.onChange}
                   inputProps={{
@@ -1782,12 +1867,24 @@ class Availability extends React.Component {
                   <MenuItem value={"Octobre"}>Octobre</MenuItem>
                   <MenuItem value={"Novembre"}>Novembre</MenuItem>
                   <MenuItem value={"Décembre"}>Décembre</MenuItem>
-                </Select>
+                </Select>*/}
+                <DatePicker
+                  selected={Date.parse(formik.servicesAvailability.month_end)}
+                  onChange={this.onChange.bind(this, 'month_end')}
+                  name="month_end"
+                  locale='fr'
+                  showYearDropdown
+                  showMonthDropdown
+                  dateFormat="dd/MM/yyyy"
+                />
               </FormControl>
             </React.Fragment>
           ) : null}
         </Grid>
-        <Debug />
+        <Grid>
+        <Button onClick={()=>this.onSubmit()} variant={"contained"} color={"primary"} style={{color:"white",marginRight:20}}>Enregistrer</Button>
+        </Grid>
+        {<Debug />}
       </React.Fragment>
     );
   }

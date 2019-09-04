@@ -4296,7 +4296,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-context@0.2.2, create-react-context@<=0.2.2:
+create-react-context@<=0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.2.2.tgz#9836542f9aaa22868cd7d4a6f82667df38019dca"
   integrity sha512-KkpaLARMhsTsgp0d2NA/R94F/eDLbhXERdIq3LvX2biCAXcDvHYoOqHfWCHf1+OLj+HKBotLG3KqaOOf+C1C+A==
@@ -8965,7 +8965,7 @@ os-browserify@^0.3.0:
   resolved "https://registry.yarnpkg.com/os-browserify/-/os-browserify-0.3.0.tgz#854373c7f5c2315914fc9bfc6bd8238fdda1ec27"
   integrity sha1-hUNzx/XCMVkU/Jv8a9gjj92h7Cc=
 
-os-homedir@^1.0.0, os-homedir@^1.0.1:
+os-homedir@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/os-homedir/-/os-homedir-1.0.2.tgz#ffbc4988336e0e833de0c168c7ef152121aa7fb3"
   integrity sha1-/7xJiDNuDoM94MFox+8VISGqf7M=
@@ -9879,16 +9879,14 @@ react-context-toolbox@^2.0.2:
   resolved "https://registry.yarnpkg.com/react-context-toolbox/-/react-context-toolbox-2.0.2.tgz#35637287cb23f801e6ed802c2bb7a97e1f04e3fb"
   integrity sha512-tY4j0imkYC3n5ZlYSgFkaw7fmlCp3IoQQ6DxpqeNHzcD0hf+6V+/HeJxviLUZ1Rv1Yn3N3xyO2EhkkZwHn0m1A==
 
-react-datepicker@^2.9.3:
-  version "2.9.3"
-  resolved "https://registry.yarnpkg.com/react-datepicker/-/react-datepicker-2.9.3.tgz#4e49ce855c71a4377bfaea39cd67ea705f8f8ec5"
-  integrity sha512-aDWF/4z5P3WvADfiNiBxYVghDc/eA62RIWP//T54FzadNSBwnM8z2RJwR3wv6d5pxO2AH+sE7vcpPvzW7fKjVA==
+react-datepicker@^2.9.4:
+  version "2.9.4"
+  resolved "https://registry.yarnpkg.com/react-datepicker/-/react-datepicker-2.9.4.tgz#411ce79c145011d76307670adbae5618e52edea4"
+  integrity sha512-HObGbAz/0tTssbkTNJBoVGa2/i9IF/ofkj88W21spVjemCRy11V49pb/01Uu2gmQpfmJECQWuE/29GDIlSVRtA==
   dependencies:
     classnames "^2.2.6"
     date-fns "^2.0.1"
     prop-types "^15.7.2"
-    raw-loader "^3.1.0"
-    react-live "^2.2.0"
     react-onclickoutside "^6.9.0"
     react-popper "^1.3.4"
 
@@ -12376,7 +12374,7 @@ warning@^3.0.0:
   dependencies:
     loose-envify "^1.0.0"
 
-warning@^4.0.1, warning@^4.0.2, warning@^4.0.3:
+warning@^4.0.1, warning@^4.0.2:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/warning/-/warning-4.0.3.tgz#16e9e077eb8a86d6af7d64aa1e05fd85b4678ca3"
   integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==

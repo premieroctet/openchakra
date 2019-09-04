@@ -237,6 +237,7 @@ class NavBar extends Component {
         </Link>
       </Typography>
     </MenuItem>
+
     <MenuItem onClick={()=>this.logout2()}>
       <Typography>
         <Link>
@@ -341,7 +342,7 @@ class NavBar extends Component {
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
-        { alfred ? 
+        { alfred ?
         maboutique
      :
         becomealfred
@@ -418,7 +419,7 @@ class NavBar extends Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              {alfred ?  
+              {alfred ?
               <Typography className={classes.navbarItem}>
                 <Link href={'/myShop/services'}>
                   <a className={classes.navbarLink}>
