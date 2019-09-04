@@ -27,7 +27,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import fr from 'date-fns/locale/fr';
 registerLocale('fr', fr);
 
-import Footer from '../../hoc/Layout/Footer/Footer';
+import Footer from '../hoc/Layout/Footer/Footer';
 
 
 const { config } = require('../config/config');

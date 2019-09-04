@@ -8,7 +8,7 @@ import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import setAuthToken from '../utils/setAuthToken';
 
-import Footer from '../../hoc/Layout/Footer/Footer';
+import Footer from '../hoc/Layout/Footer/Footer';
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
