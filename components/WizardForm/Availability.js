@@ -495,9 +495,9 @@ class Availability extends React.Component {
     e.preventDefault();
 
     const data = {
-      active: this.state.active,
-      month_begin: this.state.month_begin,
-      month_end: this.state.month_end,
+      active: this.props.formikCtx.values.servicesAvailability.active,
+      month_begin: this.props.formikCtx.values.servicesAvailability.month_begin,
+      month_end: this.props.formikCtx.values.servicesAvailability.month_end,
       monday_event: this.state.monday_event,
       tuesday_event: this.state.tuesday_event,
       wednesday_event: this.state.wednesday_event,
@@ -795,16 +795,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -958,16 +969,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -1122,16 +1144,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -1284,16 +1317,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -1444,16 +1488,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -1606,16 +1661,27 @@ class Availability extends React.Component {
                                           flexFlow: "column"
                                         }}
                                       >
-                                        {event.services.map(service => (
-                                          <Typography
-                                            style={{
-                                              textAlign: "center",
-                                              marginBottom: "1rem"
-                                            }}
-                                          >
-                                            {service.label}
-                                          </Typography>
-                                        ))}
+                                        {event.services.length !== 0 ?
+                                          event.services.map(service => 
+                                            (
+                                              <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                              >
+                                                {service.label}
+                                              </Typography>
+                                            )) : 
+                                            <Typography
+                                                style={{
+                                                  textAlign: "center",
+                                                  marginBottom: "1rem"
+                                                }}
+                                            >
+                                              Tous les services
+                                            </Typography>
+                                          }
                                         <div
                                           style={{
                                             display: "flex",
@@ -1745,7 +1811,7 @@ class Availability extends React.Component {
             <React.Fragment>
               <FormControl style={{ width: "100%" }}>
                 <InputLabel htmlFor="age-simple">A partir de</InputLabel>
-                <Select
+                {/*<Select
                   value={formik.servicesAvailability.month_begin}
                   onChange={this.onChange}
                   inputProps={{
@@ -1766,12 +1832,21 @@ class Availability extends React.Component {
                   <MenuItem value={"Octobre"}>Octobre</MenuItem>
                   <MenuItem value={"Novembre"}>Novembre</MenuItem>
                   <MenuItem value={"Décembre"}>Décembre</MenuItem>
-                </Select>
+                </Select>*/}
+                <DatePicker
+                  selected={Date.parse(formik.servicesAvailability.month_begin)}
+                  onChange={this.onChange.bind(this, 'month_begin')}
+                  name="month_begin"
+                  locale='fr'
+                  showYearDropdown
+                  showMonthDropdown
+                  dateFormat="dd/MM/yyyy"
+                />
               </FormControl>
 
               <FormControl style={{ width: "100%" }}>
                 <InputLabel htmlFor="age-simple">Jusqu'à</InputLabel>
-                <Select
+                {/*<Select
                   value={formik.servicesAvailability.month_end}
                   onChange={this.onChange}
                   inputProps={{
@@ -1792,10 +1867,22 @@ class Availability extends React.Component {
                   <MenuItem value={"Octobre"}>Octobre</MenuItem>
                   <MenuItem value={"Novembre"}>Novembre</MenuItem>
                   <MenuItem value={"Décembre"}>Décembre</MenuItem>
-                </Select>
+                </Select>*/}
+                <DatePicker
+                  selected={Date.parse(formik.servicesAvailability.month_end)}
+                  onChange={this.onChange.bind(this, 'month_end')}
+                  name="month_end"
+                  locale='fr'
+                  showYearDropdown
+                  showMonthDropdown
+                  dateFormat="dd/MM/yyyy"
+                />
               </FormControl>
             </React.Fragment>
           ) : null}
+        </Grid>
+        <Grid>
+        <Button onClick={()=>this.onSubmit()} variant={"contained"} color={"primary"} style={{color:"white",marginRight:20}}>Enregistrer</Button>
         </Grid>
         {<Debug />}
       </React.Fragment>
