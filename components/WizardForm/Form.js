@@ -681,16 +681,29 @@ class Wizard extends React.Component {
 
                                                 if (form.values.createShop.is_particular === true) {
                                                     check = false;
-                                                } else if(form.values.createShop.is_professional === true) {
-                                                    check = false;
-                                                } else if (form.values.createShop.is_professional === true) {
+                                                } else if(form.values.createShop.is_professional === true && form.values.createShop.siret === "" && form.values.createShop.denomination === "") {
+                                                    check = true;
+                                                } else if (form.values.createShop.is_professional === true && form.values.createShop.siret !== "" && form.values.createShop.denomination !== "") {
                                                     check = false;
                                                 } else {
                                                     check = true;
                                                 }
 
                                                 return (
-                                                    <Button type="submit" variant="contained" style={{color: !check ? 'white' : null }} color="secondary" disabled={check}>
+                                                    <Button 
+                                                        type="submit" 
+                                                        variant="contained" 
+                                                        style={{color: !check ? 'white' : null }} 
+                                                        color="secondary" 
+                                                        disabled={check}
+                                                        onClick={() => {
+                                                            if (form.values.createShop.siret !== '' && form.values.createShop.siret.length === 14) {
+                                                                return null;
+                                                            } else {
+                                                                toast.error(<div>Veuillez renseigner un numéro siret</div>);
+                                                            }
+                                                        }}
+                                                    >
                                                         Envoyer
                                                     </Button>
                                                 )
@@ -1959,7 +1972,6 @@ class Form extends React.Component {
                                 
                                 {/*</div>*/}
                         </Grid>
-                        <Debug />
                         
                     </Wizard.Page>
                     <Wizard.Page>
@@ -2752,6 +2764,7 @@ class Form extends React.Component {
                                 </React.Fragment>
                             )}
                         </Field>
+                        <Debug />
                     </Wizard.Page>
                 </Wizard>
             </div>
