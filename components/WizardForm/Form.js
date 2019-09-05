@@ -1033,6 +1033,11 @@ class Form extends React.Component {
                             friday: false,
                             saturday: false,
                             sunday: false,
+
+                            all_begin: '',
+                            all_end: '',
+                            recurrent_service: null,
+                            recurrent_all_service: false,
                             all_service: []
                         }, 
                         checkArr: []
