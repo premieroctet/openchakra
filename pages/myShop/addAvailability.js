@@ -22,7 +22,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { toast } from 'react-toastify';
 registerLocale('fr', fr);
-const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 
 moment.locale('fr');
@@ -162,19 +161,6 @@ class addAvailability extends React.Component {
 
 
         localStorage.setItem('path',Router.pathname);
-        const token = localStorage.getItem('token');
-        if(token !== null) {
-            const token2 = localStorage.getItem('token').split(' ')[1];
-            const decode = jwt.decode(token2);
-            if (decode.is_alfred === false) {
-                Router.push('/becomeAlfredForm');
-
-            }
-        } else {
-            Router.push('/login');
-        }
-
-
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
 
@@ -182,7 +168,29 @@ class addAvailability extends React.Component {
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
+                if(user.is_alfred === false) {
+                    Router.push('/becomeAlfredForm');
+                } else {
                 this.setState({user:user});
+                    axios
+                        .get(url+'myAlfred/api/shop/currentAlfred')
+                        .then(res => {
+                            let shop = res.data;
+                            this.setState({shop:shop});
+                        })
+                        .catch(err =>
+                            console.log(err)
+                        );
+
+
+                    axios.get(url+'myAlfred/api/serviceUser/currentAlfred')
+                        .then(res => {
+                            let data = res.data;
+                            this.setState({all_service: data})
+                        })
+                        .catch(err => console.log(err))
+
+                }
             })
             .catch(err => {
                     console.log(err);
@@ -193,23 +201,7 @@ class addAvailability extends React.Component {
                 }
             );
 
-        axios
-            .get(url+'myAlfred/api/shop/currentAlfred')
-            .then(res => {
-                let shop = res.data;
-                this.setState({shop:shop});
-            })
-            .catch(err =>
-                console.log(err)
-            );
 
-
-        axios.get(url+'myAlfred/api/serviceUser/currentAlfred')
-            .then(res => {
-                let data = res.data;
-                this.setState({all_service: data})
-            })
-            .catch(err => console.log(err))
 
     }
 
@@ -608,7 +600,8 @@ class addAvailability extends React.Component {
 
         axios.post(url+'myAlfred/api/availability/add',data)
             .then(() => {
-                toast.success('Disponibilité modifiée avec succès !');
+                toast.success('Disponibilité ajoutée avec succès !');
+                Router.push('/myShop/myAvailabilities');
             })
             .catch(err => console.log(err))
 

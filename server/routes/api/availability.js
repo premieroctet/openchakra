@@ -75,8 +75,8 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
 router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
     Availability.findById(req.params.id)
-        .populate({path:'monday.event.services',populate:{path: 'service'}})
-        .populate({path:'tuesday.event.services',populate:{path: 'service'}})
+        //.populate({path:'monday.event.services',populate:{path: 'value'}})
+        //.populate({path:'tuesday.event.services',populate:{path: 'value'}})
         .then(availability => {
             res.json(availability);
         })

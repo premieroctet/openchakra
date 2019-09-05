@@ -7,24 +7,15 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import styled from 'styled-components';
-const jwt = require('jsonwebtoken');
+
+
 
 
 moment.locale('fr');
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
-const FilledButton = styled.div`
-    display: inline-block;
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    background-color: #2FBCD3;
-    margin-right: 5px;
-    margin-top: 3px;
-    margin-left: 3px;
-`;
+
 
 const styles = theme => ({
     bigContainer: {
@@ -68,12 +59,12 @@ class myAvailabilities extends React.Component {
 
 
         localStorage.setItem('path',Router.pathname);
-        const token = localStorage.getItem('token').split(' ')[1];
-        const decode = jwt.decode(token);
+        //const token = localStorage.getItem('token').split(' ')[1];
+        /*const decode = jwt.decode(token);
         if (decode.is_alfred === false) {
             Router.push('/becomeAlfredForm');
 
-        }
+        }*/
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
@@ -82,7 +73,31 @@ class myAvailabilities extends React.Component {
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
+                if(user.is_alfred === false) {
+                    Router.push('/becomeAlfredForm');
+                } else {
                 this.setState({user:user});
+                    axios
+                        .get(url+'myAlfred/api/shop/currentAlfred')
+                        .then(res => {
+                            let shop = res.data;
+                            this.setState({shop:shop,booking_request: shop.booking_request, no_booking_request:shop.no_booking_request,my_alfred_conditions: shop.my_alfred_conditions,
+                                profile_picture: shop.profile_picture, identity_card: shop.identity_card, recommandations: shop.recommandations,
+                                flexible_cancel: shop.flexible_cancel, moderate_cancel: shop.moderate_cancel, strict_cancel: shop.strict_cancel,
+                                welcome_message: shop.welcome_message});
+                        })
+                        .catch(err =>
+                            console.log(err)
+                        );
+
+                    axios.get(url+'myAlfred/api/availability/currentAlfred')
+                        .then(res => {
+                            let availability = res.data;
+                            this.setState({all_availabilities: availability});
+
+                        })
+                        .catch(err => console.log(err));
+                }
             })
             .catch(err => {
                     console.log(err);
@@ -93,26 +108,7 @@ class myAvailabilities extends React.Component {
                 }
             );
 
-        axios
-            .get(url+'myAlfred/api/shop/currentAlfred')
-            .then(res => {
-                let shop = res.data;
-                this.setState({shop:shop,booking_request: shop.booking_request, no_booking_request:shop.no_booking_request,my_alfred_conditions: shop.my_alfred_conditions,
-                    profile_picture: shop.profile_picture, identity_card: shop.identity_card, recommandations: shop.recommandations,
-                    flexible_cancel: shop.flexible_cancel, moderate_cancel: shop.moderate_cancel, strict_cancel: shop.strict_cancel,
-                    welcome_message: shop.welcome_message});
-            })
-            .catch(err =>
-                console.log(err)
-            );
 
-        axios.get(url+'myAlfred/api/availability/currentAlfred')
-            .then(res => {
-                let availability = res.data;
-                this.setState({all_availabilities: availability});
-
-            })
-            .catch(err => console.log(err));
 
     }
 

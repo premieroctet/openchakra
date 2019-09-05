@@ -15,7 +15,6 @@ import Typography from "@material-ui/core/Typography";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Card from "@material-ui/core/Card";
 import DatePicker,{registerLocale,setDefaultLocale} from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import fr from 'date-fns/locale/fr';
 import Select2 from "react-select";
 import FormControl from "@material-ui/core/FormControl";
@@ -23,7 +22,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { toast } from 'react-toastify';
 registerLocale('fr', fr);
-const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 
 moment.locale('fr');
@@ -160,13 +158,6 @@ class detailsAvailability extends React.Component {
 
 
         localStorage.setItem('path',Router.pathname);
-        const token = localStorage.getItem('token').split(' ')[1];
-        const decode = jwt.decode(token);
-        if (decode.is_alfred === false) {
-            Router.push('/becomeAlfredForm');
-
-        }
-
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
 
@@ -174,7 +165,43 @@ class detailsAvailability extends React.Component {
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
+                if(user.is_alfred === false) {
+                    Router.push('/becomeAlfredForm');
+                } else {
                 this.setState({user:user});
+                    axios
+                        .get(url+'myAlfred/api/shop/currentAlfred')
+                        .then(res => {
+                            let shop = res.data;
+                            this.setState({shop:shop});
+                        })
+                        .catch(err =>
+                            console.log(err)
+                        );
+
+                    axios.get(url+'myAlfred/api/availability/'+id)
+                        .then(res => {
+                            let availability = res.data;
+                            if(availability.user !== user._id){
+                                Router.push('/login')
+                            } else {
+                                this.setState({availability: availability,monday_event: availability.monday.event,tuesday_event: availability.tuesday.event,
+                                    wednesday_event:availability.wednesday.event, thursday_event: availability.thursday.event, friday_event: availability.friday.event,
+                                    saturday_event: availability.saturday.event, sunday_event: availability.sunday.event, active:availability.period.active,
+                                    month_begin: availability.period.month_begin, month_end: availability.period.month_end});
+                            }
+
+
+                        })
+                        .catch(err => console.log(err));
+
+                    axios.get(url+'myAlfred/api/serviceUser/currentAlfred')
+                        .then(res => {
+                            let data = res.data;
+                            this.setState({all_service: data})
+                        })
+                        .catch(err => console.log(err))
+                }
             })
             .catch(err => {
                     console.log(err);
@@ -185,33 +212,7 @@ class detailsAvailability extends React.Component {
                 }
             );
 
-        axios
-            .get(url+'myAlfred/api/shop/currentAlfred')
-            .then(res => {
-                let shop = res.data;
-                this.setState({shop:shop});
-            })
-            .catch(err =>
-                console.log(err)
-            );
 
-        axios.get(url+'myAlfred/api/availability/'+id)
-            .then(res => {
-                let availability = res.data;
-                this.setState({availability: availability,monday_event: availability.monday.event,tuesday_event: availability.tuesday.event,
-                                    wednesday_event:availability.wednesday.event, thursday_event: availability.thursday.event, friday_event: availability.friday.event,
-                                    saturday_event: availability.saturday.event, sunday_event: availability.sunday.event, active:availability.period.active,
-                                    month_begin: availability.period.month_begin, month_end: availability.period.month_end});
-
-            })
-            .catch(err => console.log(err));
-
-        axios.get(url+'myAlfred/api/serviceUser/currentAlfred')
-            .then(res => {
-                let data = res.data;
-                this.setState({all_service: data})
-            })
-            .catch(err => console.log(err))
 
     }
 
@@ -287,8 +288,8 @@ class detailsAvailability extends React.Component {
             let arrayService = [];
             if (this.state.monday_service != null) {
                 this.state.monday_service.forEach(w => {
-
-                    arrayService.push(w.value);
+                    const servObj = { label: w.label, value: w.value };
+                    arrayService.push(servObj);
 
                 });
             }
@@ -555,6 +556,7 @@ class detailsAvailability extends React.Component {
             axios.put(url+'myAlfred/api/availability/'+id,data)
                 .then(() => {
                     toast.success('Disponibilité modifiée avec succès !');
+                    Router.push('/myShop/myAvailabilities')
                 })
                 .catch(err => console.log(err))
 
@@ -564,7 +566,8 @@ class detailsAvailability extends React.Component {
         const id = this.props.availability_id;
         axios.delete(url+'myAlfred/api/availability/'+id)
             .then(() => {
-                toast.error('Disponibilité supprimée')
+                toast.error('Disponibilité supprimée');
+                Router.push('/myShop/myAvailabilities')
             })
             .catch(err => console.log(err))
     }
@@ -677,7 +680,8 @@ class detailsAvailability extends React.Component {
                                                                         marginBottom: "1rem"
                                                                     }}
                                                                 >
-                                                                    {service.service.label}
+                                                                    {service.label}
+
                                                                 </Typography>
                                                             )) :
                                                         <Typography
@@ -842,7 +846,7 @@ class detailsAvailability extends React.Component {
                                                                             marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {service.service.label}
+                                                                        {service.label}
                                                                     </Typography>
                                                                 )) :
                                                             <Typography
@@ -1007,7 +1011,7 @@ class detailsAvailability extends React.Component {
                                                                             marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {service.service.label}
+                                                                        {service.label}
                                                                     </Typography>
                                                                 )) :
                                                             <Typography
@@ -1170,7 +1174,7 @@ class detailsAvailability extends React.Component {
                                                                                             marginBottom: "1rem"
                                                                                         }}
                                                                                     >
-                                                                                        {service.service.label}
+                                                                                        {service.label}
                                                                                     </Typography>
                                                                                 )) :
                                                                             <Typography
@@ -1335,7 +1339,7 @@ class detailsAvailability extends React.Component {
                                                                                                             marginBottom: "1rem"
                                                                                                         }}
                                                                                                     >
-                                                                                                        {service.service.label}
+                                                                                                        {service.label}
                                                                                                     </Typography>
                                                                                                 )) :
                                                                                             <Typography
@@ -1500,7 +1504,7 @@ class detailsAvailability extends React.Component {
                                                                             marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {service.service.label}
+                                                                        {service.label}
                                                                     </Typography>
                                                                 )) :
                                                             <Typography
@@ -1666,7 +1670,7 @@ class detailsAvailability extends React.Component {
                                                                             marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {service.service.label}
+                                                                        {service.label}
                                                                     </Typography>
                                                                 )) :
                                                             <Typography
