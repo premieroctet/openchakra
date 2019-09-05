@@ -492,19 +492,18 @@ class Availability extends React.Component {
   };
 
   onSubmit = e => {
-    e.preventDefault();
 
     const data = {
       active: this.props.formikCtx.values.servicesAvailability.active,
       month_begin: this.props.formikCtx.values.servicesAvailability.month_begin,
       month_end: this.props.formikCtx.values.servicesAvailability.month_end,
-      monday_event: this.state.monday_event,
-      tuesday_event: this.state.tuesday_event,
-      wednesday_event: this.state.wednesday_event,
-      thursday_event: this.state.thursday_event,
-      friday_event: this.state.friday_event,
-      saturday_event: this.state.saturday_event,
-      sunday_event: this.state.sunday_event
+      monday_event: this.props.formikCtx.values.servicesAvailability.monday_event,
+      tuesday_event: this.props.formikCtx.values.servicesAvailability.tuesday_event,
+      wednesday_event: this.props.formikCtx.values.servicesAvailability.wednesday_event,
+      thursday_event: this.props.formikCtx.values.servicesAvailability.thursday_event,
+      friday_event: this.props.formikCtx.values.servicesAvailability.friday_event,
+      saturday_event: this.props.formikCtx.values.servicesAvailability.saturday_event,
+      sunday_event: this.props.formikCtx.values.servicesAvailability.sunday_event
     };
 
     axios.defaults.headers.common["Authorization"] = localStorage.getItem(
@@ -666,9 +665,11 @@ class Availability extends React.Component {
                       value={formik.servicesAvailability.monday_begin}
                       onChange={this.onChange}
                     />*/}
+                    <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.monday_begin}
                       onChange={this.onChange.bind(this, 'monday_begin')}
+                      style={{ padding: '1rem' }}
                       locale='fr'
                       name="monday_begin"
                       showTimeSelect
@@ -695,6 +696,7 @@ class Availability extends React.Component {
                       value={formik.servicesAvailability.monday_end}
                       onChange={this.onChange}
                     />*/}
+                    <Typography>À</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.monday_end}
                       onChange={this.onChange.bind(this, 'monday_end')}
@@ -853,6 +855,7 @@ class Availability extends React.Component {
                     )}
                   </Grid>
                   <Grid item xs={4} style={{marginRight: 15}}>
+                  <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.tuesday_begin}
                       onChange={this.onChange.bind(this, 'tuesday_begin')}
@@ -866,6 +869,7 @@ class Availability extends React.Component {
                     />
                   </Grid>
                   <Grid item xs={4}>
+                    <Typography>À</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.tuesday_end}
                       onChange={this.onChange.bind(this, 'tuesday_end')}
@@ -1027,6 +1031,7 @@ class Availability extends React.Component {
                     )}
                   </Grid>
                   <Grid item xs={4} style={{marginRight: 15}}>
+                    <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.wednesday_begin}
                       onChange={this.onChange.bind(this, 'wednesday_begin')}
@@ -1040,6 +1045,7 @@ class Availability extends React.Component {
                     />
                   </Grid>
                   <Grid item xs={4}>
+                    <Typography>À</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.wednesday_end}
                       onChange={this.onChange.bind(this, 'wednesday_end')}
@@ -1202,6 +1208,7 @@ class Availability extends React.Component {
                     )}
                   </Grid>
                   <Grid item xs={4} style={{marginRight: 15}}>
+                    <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.thursday_begin}
                       onChange={this.onChange.bind(this, 'thursday_begin')}
@@ -1215,6 +1222,7 @@ class Availability extends React.Component {
                     />
                   </Grid>
                   <Grid item xs={4}>
+                    <Typography>À</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.thursday_end}
                       onChange={this.onChange.bind(this, 'thursday_end')}
@@ -1375,6 +1383,7 @@ class Availability extends React.Component {
                     )}
                   </Grid>
                   <Grid item xs={4} style={{marginRight: 15}}>
+                    <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.friday_begin}
                       onChange={this.onChange.bind(this, 'friday_begin')}
@@ -1387,6 +1396,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
+                  <Typography>À</Typography>
                   <Grid item xs={4}>
                     <DatePicker
                       selected={formik.servicesAvailability.friday_end}
@@ -1546,6 +1556,7 @@ class Availability extends React.Component {
                     )}
                   </Grid>
                   <Grid item xs={4} style={{marginRight: 15}}>
+                    <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.saturday_begin}
                       onChange={this.onChange.bind(this, 'saturday_begin')}
@@ -1559,6 +1570,7 @@ class Availability extends React.Component {
                     />
                   </Grid>
                   <Grid item xs={4}>
+                    <Typography>À</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.saturday_end}
                       onChange={this.onChange.bind(this, 'saturday_end')}
@@ -1719,6 +1731,7 @@ class Availability extends React.Component {
                     )}
                   </Grid>
                   <Grid item xs={4} style={{marginRight: 15}}>
+                    <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.sunday_begin}
                       onChange={this.onChange.bind(this, 'sunday_begin')}
@@ -1732,6 +1745,7 @@ class Availability extends React.Component {
                     />
                   </Grid>
                   <Grid item xs={4}>
+                    <Typography>À</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.sunday_end}
                       onChange={this.onChange.bind(this, 'sunday_end')}
@@ -1882,7 +1896,7 @@ class Availability extends React.Component {
           ) : null}
         </Grid>
         <Grid>
-        <Button onClick={()=>this.onSubmit()} variant={"contained"} color={"primary"} style={{color:"white",marginRight:20}}>Enregistrer</Button>
+        <Button type="button" onClick={()=>this.onSubmit()} variant={"contained"} color={"primary"} style={{color:"white",marginRight:20}}>Enregistrer</Button>
         </Grid>
         {<Debug />}
       </React.Fragment>

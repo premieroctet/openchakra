@@ -27,7 +27,6 @@ import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Switch from "@material-ui/core/Switch";
 import CircleCheckedFilled from '@material-ui/icons/CheckCircle';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
-import FiberManualRecord from '@material-ui/icons/FiberManualRecord';
 import Select from 'react-select';
 
 import { Debug } from './Debug';
@@ -579,7 +578,7 @@ class Wizard extends React.Component {
                                 <div style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative'}}>
                                     {activePage}
                                 </div>
-                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '9999'}}>
+                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '999'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
                                         {page !== 0 && <Button
                                             color="primary"
@@ -1376,7 +1375,7 @@ class Form extends React.Component {
                                                                                                                                 inputProps: {
                                                                                                                                     min: 0
                                                                                                                                 },
-                                                                                                                                startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                                                endAdornment: <InputAdornment position="start">€</InputAdornment>,
                                                                                                         
                                                                                                                             }}
                                                                                                                         />
@@ -1457,23 +1456,6 @@ class Form extends React.Component {
                                                                                     />
                                                                                 )
                                                                             }} />
-                                                                            {arrayHelpers.form.values.submission[index].option !== null ? 
-                                                                                <Field 
-                                                                                    name={`submission.${index}.option.price`}
-                                                                                    render={({form, field}) => {
-                                                                                        return (
-                                                                                            <TextField 
-                                                                                                {...field}
-                                                                                                type="number"
-                                                                                                InputProps={{
-                                                                                                    startAdornment: <InputAdornment position="start">€</InputAdornment>,
-                                                                                                }}
-                                                                                            />
-                                                                                        )
-                                                                                    }} 
-                                                                                />
-                                                                                : null
-                                                                            }
                                                                             <div>
                                                                                 <FormControlLabel 
                                                                                     control={
@@ -1516,7 +1498,7 @@ class Form extends React.Component {
                                                                                                             {...field}
                                                                                                             type="number"
                                                                                                             InputProps={{
-                                                                                                                startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                                endAdornment: <InputAdornment position="start">€</InputAdornment>,
                                                                                                             }}
                                                                                                         />
                                                                                                     )
@@ -1587,7 +1569,7 @@ class Form extends React.Component {
                                                                                 <div>
                                                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez ce que vous fournissez</Typography>
                                                                                     <Typography style={{marginBottom: '1rem'}}>
-                                                                                    Sélectionnez les produits et le matériel que vous fournissez dans le cadre de vos prestations de service. 
+                                                                                        Sélectionnez les produits et le matériel que vous fournissez dans le cadre de vos prestations de service. 
                                                                                     </Typography>
                                                                                 </div>
                                                                                 <div>
@@ -1642,7 +1624,7 @@ class Form extends React.Component {
                                                                                                 variant="outlined"
                                                                                                 //helperText="Choisissez le montant minimum du panier afin de passer une commande pour ce service"
                                                                                                 InputProps={{
-                                                                                                    startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                    endAdornment: <InputAdornment position="start">€</InputAdornment>,
                                                                                                 }}
                                                                                             />
                                                                                         )
