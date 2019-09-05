@@ -138,7 +138,7 @@ class login extends React.Component {
                     </Button>
                   </Grid>
                 </form>
-                <Link href="/forgotPassword"><a>Mot de passe oublié ?</a></Link>
+                <Link href="/forgotPassword"><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
               </Grid>
             </Card>
           </Grid>

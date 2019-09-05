@@ -35,6 +35,11 @@ const styles = theme => ({
       width: 1366,
     },
   },
+  hideSM: {
+    [theme.breakpoints.down('md')]: { // medium: 960px or larger
+      display: 'none',
+    },
+  },
   media: {
     height: 0,
     borderRadius: '20px',
@@ -81,9 +86,13 @@ const styles = theme => ({
     paddingRight: 15,
     paddingLeft: 15,
     marginBottom: 15,
-    fontSize: 20,
+    fontSize: 27,
     fontWeight: 570,
     marginTop: 10,
+  },
+  textBox3: {
+    color: 'rgba(84,89,95,0.95)',
+    fontSize: 16,
   },
   grosHR: {
     height: '10px',
@@ -189,10 +198,12 @@ class profiteandlearn extends React.Component {
               </div>
             </Grid>
             <Grid item xs={2}></Grid>
-            <Grid item md={4} xs={12} className={classes.textdesc}>
+            
+            {/*Partie 1*/}
+            <Grid item md={6} xs={12} className={classes.textdesc}>
               <Grid container>
                 <Grid item xs={12}>
-                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/1.svg" title="1" alt="1" scale="0" style={{height:"50px", width:"50px",}}/>
+                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/1.svg" title="1" alt="1" scale="0" style={{height:"40px", width:"40px",}}/>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography className={classes.textBox2}>
@@ -200,16 +211,30 @@ class profiteandlearn extends React.Component {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 10}}>
-                  <Typography className={classes.textBox}>
+                  <Typography className={classes.textBox3}>
                     Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement les prestations que vous souhaitez réaliser en vous appuyant sur une liste de plus de ..... services proposées sur My-Alfred. Un service n'apparait pas ? Proposez-le à nos équipes !
                   </Typography>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item md={4} xs={12} className={classes.textdesc}>
+
+            <Grid className={classes.hideSM} item md={6} xs={12}>
+              <video width="75%" height="75%" style={{float: "right"}} autoPlay muted playsinline loop>
+                <source src="../static/assets/img/Phone1.mp4" type="video/mp4"/>
+              </video>
+            </Grid>
+            
+            {/*Partie 2*/}
+            <Grid className={classes.hideSM} item md={6} xs={12}>
+              <video width="75%" height="75%" style={{float: "left"}} autoPlay muted playsinline loop>
+                <source src="../static/assets/img/Phone2.mp4" type="video/mp4"/>
+              </video>
+            </Grid>
+            
+            <Grid item md={6} xs={12} className={classes.textdesc}>
             <Grid container>
                 <Grid item xs={12}>
-                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/2.svg" title="2" alt="2" scale="0" style={{height:"50px", width:"50px",}}/>
+                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/2.svg" title="2" alt="2" scale="0" style={{height:"40px", width:"40px",}}/>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography className={classes.textBox2}>
@@ -217,15 +242,18 @@ class profiteandlearn extends React.Component {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 10}}>
-                  <Typography className={classes.textBox}>
+                  <Typography className={classes.textBox3}>
                   Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Et si vous avez besoin d'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences !                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item md={4} xs={12} className={classes.textdesc}>
-            <Grid container>
+
+            
+            {/*Partie 3*/}
+            <Grid item md={6} xs={12} className={classes.textdesc}>
+              <Grid container>
                 <Grid item xs={12}>
-                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/3.svg" title="3" alt="3" scale="0" style={{height:"50px", width:"50px",}}/>
+                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/3.svg" title="3" alt="3" scale="0" style={{height:"40px", width:"40px",}}/>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography className={classes.textBox2}>
@@ -233,11 +261,18 @@ class profiteandlearn extends React.Component {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 10}}>
-                  <Typography className={classes.textBox}>
+                  <Typography className={classes.textBox3}>
                     Une fois votre boutique en ligne, les personnes intéressées par vos prestations pourront réserver en ligne vos services. Si vous avez des questions avant la prestation, vous pourrez les contacter !                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
+
+            <Grid className={classes.hideSM} item md={6} xs={12}>
+              <video width="75%" height="75%" style={{float: "right"}} autoPlay muted playsinline loop>
+                <source src="../static/assets/img/Phone3.mp4" type="video/mp4"/>
+              </video>
+            </Grid>
+
           </Grid>
         </Fragment>
     );

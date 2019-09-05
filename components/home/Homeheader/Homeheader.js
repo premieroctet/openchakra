@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
+import Link from 'next/link';
 import '../../../static/stylebg.css'
 
    
@@ -23,7 +24,6 @@ const styles = theme => ({
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
-  marginTop: 64,
   top: '0%',
   left: '0%',
   zIndex: '2',
@@ -36,7 +36,6 @@ const styles = theme => ({
       backgroundAttachment: "fixed",
      display: 'none',
     },
-    marginTop: 64,
   /* Full height */
   height: '100vh!important',
   width: '100%!important',
@@ -53,7 +52,6 @@ const styles = theme => ({
       backgroundAttachment: "fixed",
      display: 'none',
     },
-    marginTop: 112,
     position: 'absolute',
     top: '0%',
     left: '0%',
@@ -131,12 +129,12 @@ const styles = theme => ({
       top: '50%',
     },
     [theme.breakpoints.up('lg')]: { // large: 1280px or larger
-      width: '30%',
+      width: '40%',
       top: '50%',
       left: '75%',
     },
     [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
-      width: '30%',
+      width: '40%',
       top: '50%',
       left: '75%',
     },
@@ -229,6 +227,9 @@ const Homeheader = (props) => {
             </Grid>
           </div>
         
+          
+          
+
         <Pickerhome />
         <Button variant="contained" color={'primary'} className={classes.button}>
         Rechercher
@@ -236,7 +237,23 @@ const Homeheader = (props) => {
         </form>
         </Grid>
         </Grid>
-        
+      
+      </div>
+      
+      <div style={{textAlign: 'right'}} className={classes.headerhome2}>
+        <br/>
+        <h2 style={{fontWeight: 'bold',textAlign: 'right', fontSize: '2rem', textShadow: '0px 0.5px 2px #696969'}}>Vous connaissez Airbnb pour les logements ?
+          Découvrez My-Alfred pour les services ! </h2>
+        <hr style={{float: 'right', width: '60px', border:'none', height:'1px', backgroundColor: 'white', boxShadow: '1px 1px 1px #696969' }}/>
+        <br/><br/>
+        <h4 style={{fontWeight: 'bold',textAlign: 'right', fontSize: '1.5rem', textShadow: '0px 0.5px 2px #696969'}}>
+          We are coming soon !
+        </h4>
+        <br/>
+        <p style={{fontSize: '1.2em', textAlign: 'right', fontSize: '1.2rem', textShadow: '0px 0.5px 2px #696969'}}>
+          Créez votre boutique maintenant en quelques minutes, répertoriez vos services,
+          indiquez vos disponibilités, vos tarifs et profitez d’un complément de revenu !
+        </p>
       </div>
     </Fragment>
   );

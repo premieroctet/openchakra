@@ -531,13 +531,13 @@ class services extends React.Component {
                                         {this.state[z.label] ?
                                         <React.Fragment> 
                                             <span onClick={()=>{this.handleclick1(z.label)}} style={{cursor:'pointer'}}>
-                                                <img style={{marginRight: '2%'}} width="13px" src="../../static/stars/arrowUp.png"/>
+                                                <img style={{marginRight: '2%'}} width="13px" src="../../static/stars/arrowDown.png"/>
                                                 {z.label}
                                             </span>
                                         </React.Fragment> : 
                                         <React.Fragment> 
                                             <span onClick={()=>{this.handleclick2(z.label)}} style={{cursor:'pointer'}}>
-                                                <img style={{marginRight: '2%'}} width="13px" src="../../static/stars/arrowDown.png"/>
+                                                <img style={{marginRight: '2%',transform: 'rotate(-90deg)'}} width="13px" src="../../static/stars/arrowDown.png"/>
                                                 {z.label}
                                             </span>
                                         </React.Fragment>}                                         
@@ -587,13 +587,13 @@ class services extends React.Component {
                                         {dropoption ?
                                         <React.Fragment> 
                                             <span onClick={this.handleclickoption1} style={{cursor:'pointer'}}>
-                                                <img width="13px" style={{marginRight: '2%'}} src="../../static/stars/arrowUp.png"/>
+                                                <img width="13px" style={{marginRight: '2%'}} src="../../static/stars/arrowDown.png"/>
                                                 Option/Supplément
                                             </span>
                                         </React.Fragment> : 
-                                        <React.Fragment> 
+                                        <React.Fragment>
                                             <span onClick={this.handleclickoption2} style={{cursor:'pointer'}}>
-                                                <img style={{marginRight: '2%'}} width="13px" src="../../static/stars/arrowDown.png"/>
+                                                <img style={{marginRight: '2%',transform: 'rotate(-90deg)'}} width="13px" src="../../static/stars/arrowDown.png"/>
                                                 Option/Supplément
                                             </span>
                                         </React.Fragment>}                                         

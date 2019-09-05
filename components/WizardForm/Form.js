@@ -1977,7 +1977,6 @@ class Form extends React.Component {
                                 
                                 {/*</div>*/}
                         </Grid>
-                        <Debug />
                         
                     </Wizard.Page>
                     <Wizard.Page>

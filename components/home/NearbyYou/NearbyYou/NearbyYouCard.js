@@ -149,7 +149,3 @@ nearbyYouCard.propTypes = {
 };
 
 export default withStyles(styles)(nearbyYouCard);
-function newFunction() {
-  return <Fragment></Fragment>;
-}
-
