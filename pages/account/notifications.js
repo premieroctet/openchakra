@@ -102,6 +102,7 @@ class notifications extends React.Component {
     }
 
     componentDidMount() {
+        document.body.style.overflow = 'auto';
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');

@@ -3,7 +3,7 @@ import { Formik, Field, ErrorMessage, FieldArray, yupToFormErrors } from 'formik
 import styled from 'styled-components';
 import axios from 'axios';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import "react-tabs/style/react-tabs.css";
+
 import InputRange from 'react-input-range';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -40,7 +40,7 @@ import Siret from './Siret';
 import Availability from './Availability';
 import { FormControl, RadioGroup, Radio } from '@material-ui/core';
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 
 
 const { config } = require('../../config/config');

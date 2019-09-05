@@ -7,17 +7,8 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
-import Checkboxes from '../components/Checkboxes/checkboxes';
-//import Selectgenre from '../components/Select/select';
-//import Datenaissance from '../components/Datenaissance/datepicker';
 import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
 import axios from "axios";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -25,9 +16,9 @@ import AlgoliaPlaces from "algolia-places-react";
 import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 import Birthday from '@material-ui/icons/CakeOutlined'
+import Footer from '../hoc/Layout/Footer/Footer';
 registerLocale('fr', fr);
 
-import Footer from '../hoc/Layout/Footer/Footer';
 
 
 const { config } = require('../config/config');
@@ -134,8 +125,12 @@ class signup extends React.Component {
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeAddress = this.onChangeAddress.bind(this);
+
       }
 
+      componentDidMount() {
+        document.body.style.overflow = 'auto';
+      }
 
 
   onChange = e => {
