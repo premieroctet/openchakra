@@ -79,11 +79,7 @@ class addPhone extends React.Component {
             .put(url+'myAlfred/api/users/profile/phone', newPhone)
             .then(res => {
                 alert('Téléphone ajouté');
-                if(localStorage.getItem('path') === '/signup') {
-                    Router.push({pathname: '/checkEmail'})
-                } else {
-                    Router.push({pathname:'/profile'})
-                }
+                Router.push({pathname: '/checkEmail'})
             })
             .catch(err =>
                 console.log(err)

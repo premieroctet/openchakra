@@ -83,15 +83,6 @@ const ServiceUserSchema = new Schema({
             type: String
         }
     },
-    majoration: {
-        active: {
-            type: Boolean,
-            default: false
-        },
-        price: {
-            type: Number
-        }
-    },
     option: {
       label: {
           type: String

@@ -104,6 +104,75 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
         .catch(error => {
             console.log(error)
         });
+});
+
+// @Route POST /myAlfred/api/serviceUser/myShop/add
+// Add service in the shop
+// @Access private
+router.post('/myShop/add',upload.fields([{name: 'file_diploma',maxCount: 1}, {name:'file_certification',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req,res)=>{
+    ServiceUser.findOne({user: req.user.id, service: req.body.service})
+        .then(service => {
+
+            if(service) {
+                return res.status(400).json({msg: "Ce service existe déjà"});
+            }
+            const fields = {};
+            fields.user= req.user.id;
+            fields.service = req.body.service;
+            fields.perimeter = req.body.perimeter;
+            fields.minimum_basket = req.body.minimum_basket;
+            fields.deadline_before_booking = req.body.deadline_before_booking;
+            fields.prestations = JSON.parse(req.body.prestations);
+            fields.level = req.body.level;
+
+            fields.diploma = {};
+            fields.certification = {};
+            const diploma = 'file_diploma';
+            const certification = 'file_certification';
+            if(req.files !== undefined) {
+                if (diploma in req.files) {
+                    fields.diploma.name = req.body.name_diploma;
+                    fields.diploma.year = req.body.year_diploma;
+                    fields.diploma.file = req.files['file_diploma'][0].path;
+                    fields.graduated = true;
+                } else {
+                    console.log('No file uploaded');
+                }
+
+                if (certification in req.files) {
+                    fields.certification.name = req.body.name_certification;
+                    fields.certification.year = req.body.year_certification;
+                    fields.certification.file = req.files['file_certification'][0].path;
+                    fields.is_certified = true;
+                } else {
+                    console.log('No file uploaded');
+                }
+            }
+
+            fields.description = req.body.description;
+            fields.equipments = JSON.parse(req.body.equipments);
+
+
+            fields.service_address = {};
+            fields.service_address.address = req.body.address;
+            fields.service_address.zip_code = req.body.zip_code;
+            fields.service_address.city = req.body.city;
+            fields.service_address.country = req.body.country;
+
+
+
+            fields.service_address.gps = {};
+            fields.service_address.gps.lat = req.body.lat;
+            fields.service_address.gps.lng = req.body.lng;
+
+            fields.option = JSON.parse(req.body.options);
+            const newService = new ServiceUser(fields);
+            newService.save().then(service => res.json(service)).catch(err => console.log(err));
+
+        })
+        .catch(error => {
+            console.log(error)
+        });
 
 
 
@@ -124,7 +193,31 @@ router.put('/edit/:id',passport.authenticate('jwt',{session:false}),(req,res) =>
     ServiceUser.findById(req.params.id)
         .then(serviceUser => {
 
+            serviceUser.prestations = req.body.prestations;
+            serviceUser.option = req.body.options;
+            serviceUser.perimeter= req.body.perimeter;
+            serviceUser.minimum_basket= req.body.minimum_basket;
+            serviceUser.deadline_before_booking= req.body.deadline_before_booking;
+            serviceUser.description = req.body.description;
+            serviceUser.level = req.body.level;
+            serviceUser.equipments= req.body.equipments;
 
+
+            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
+
+        })
+        .catch(err => console.log(err))
+});
+
+// @Route PUT /myAlfred/api/serviceUser/editWithCity/:id
+// Update a serviceUser
+// @Access private
+router.put('/editWithCity/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
+    ServiceUser.findById(req.params.id)
+        .then(serviceUser => {
+
+            serviceUser.prestations = req.body.prestations;
+            serviceUser.option = req.body.options;
             serviceUser.service_address.address = req.body.address;
             serviceUser.service_address.zip_code = req.body.zip_code;
             serviceUser.service_address.city = req.body.city;
@@ -134,9 +227,9 @@ router.put('/edit/:id',passport.authenticate('jwt',{session:false}),(req,res) =>
             serviceUser.perimeter= req.body.perimeter;
             serviceUser.minimum_basket= req.body.minimum_basket;
             serviceUser.deadline_before_booking= req.body.deadline_before_booking;
-            serviceUser.majoration.active=req.body.active;
-            serviceUser.majoration.price=req.body.price;
             serviceUser.equipments= req.body.equipments;
+            serviceUser.description = req.body.description;
+            serviceUser.level = req.body.level;
 
 
             serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
@@ -190,10 +283,15 @@ router.put('/editPrestation/:id',passport.authenticate('jwt',{session:false}),(r
 // @Route POST /myAlfred/api/serviceUser/addDiploma/:id
 // Add a diploma for a service
 // @Access private
-router.post('/addDiploma/:id',upload.single('diploma'),passport.authenticate('jwt',{session:false}),(req,res) => {
+router.post('/addDiploma/:id',upload.single('file_diploma'),passport.authenticate('jwt',{session:false}),(req,res) => {
     ServiceUser.findById(req.params.id)
         .then(serviceUser => {
-            serviceUser.diploma = req.file.path;
+            serviceUser.diploma.name = req.body.name;
+            serviceUser.diploma.year = req.body.year;
+            const diploma = 'file_diploma';
+            if(req.file !== undefined) {
+                serviceUser.diploma.file = req.file.path;
+            }
             serviceUser.graduated = true;
 
             serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
@@ -204,10 +302,14 @@ router.post('/addDiploma/:id',upload.single('diploma'),passport.authenticate('jw
 // @Route POST /myAlfred/api/serviceUser/addCertification/:id
 // Add a certification for a service
 // @Access private
-router.post('/addCertification/:id',upload.single('certification'),passport.authenticate('jwt',{session:false}),(req,res) => {
+router.post('/addCertification/:id',upload.single('file_certification'),passport.authenticate('jwt',{session:false}),(req,res) => {
     ServiceUser.findById(req.params.id)
         .then(serviceUser => {
-            serviceUser.certification = req.file.path;
+            serviceUser.certification.name = req.body.name;
+            serviceUser.certification.year = req.body.year;
+            if(req.file !== undefined) {
+                serviceUser.certification.file = req.file.path;
+            }
             serviceUser.is_certified = true;
 
             serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
@@ -316,6 +418,7 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
 
     ServiceUser.find({user: req.user.id})
         .populate('service')
+        .populate('user')
         .populate({path: 'service', populate: { path: 'category' }})
         .populate('prestations.prestation')
         .populate('equipments')
@@ -340,7 +443,7 @@ router.get('/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
     ServiceUser.findById(req.params.id)
         .populate('user')
         .populate('service')
-        .populate('prestations.prestation')
+        .populate({path: 'prestations.prestation', populate: { path: 'filter_presentation' }})
         .populate('equipments')
         .populate('service.equipments')
         .then(service => {
@@ -372,6 +475,36 @@ router.put('/deletePrestation/:id', passport.authenticate('jwt', { session: fals
             .catch(err => res.status(404).json(err));
     }
 );
+
+// @Route DELETE /myAlfred/api/serviceUser/delete/diploma/:id
+// Delete diploma for a service
+// @Access private
+router.delete('/delete/diploma/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    ServiceUser.findById(req.params.id)
+        .then(services => {
+            services.diploma = undefined;
+            services.graduated = false;
+
+            services.save().then(service => res.json(service)).catch(err => console.log(err));
+
+        })
+        .catch(err => res.status(404).json({servicenotfound: 'No service found'}));
+});
+
+// @Route DELETE /myAlfred/api/serviceUser/delete/certification/:id
+// Delete certification for a service
+// @Access private
+router.delete('/delete/certification/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    ServiceUser.findById(req.params.id)
+        .then(services => {
+            services.certification = undefined;
+            services.is_certified = false;
+
+            services.save().then(service => res.json(service)).catch(err => console.log(err));
+
+        })
+        .catch(err => res.status(404).json({servicenotfound: 'No service found'}));
+});
 
 // @Route DELETE /myAlfred/api/serviceUser/current/allServices
 // Delete all the service for an alfred

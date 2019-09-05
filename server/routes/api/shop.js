@@ -121,8 +121,9 @@ router.get('/all/:id',(req,res)=> {
 router.get('/alfred/:id_alfred',(req,res)=> {
 
     Shop.findOne({alfred: req.params.id_alfred})
+        .populate('services')
         .populate('alfred')
-        .populate({path:'services.label',populate:{path: 'service',select:['label','picture']}})
+        .populate({path:'services',populate:{path: 'service',select:['label','picture']}})
         .then(shop => {
             if(Object.keys(shop).length === 0 && shop.constructor === Object){
                 return res.status(400).json({msg: 'No shop found'});
@@ -209,11 +210,11 @@ router.put('/editWelcomeMessage',passport.authenticate('jwt',{session:false}),(r
 // @Access private
 router.put('/editParameters',passport.authenticate('jwt',{session:false}),(req,res) => {
     Shop.findOneAndUpdate({alfred: req.user.id},{
-        booking_request: req.body.booking_request, my_alfred_conditions: req.body.my_alfred_conditions,
+        booking_request: req.body.booking_request,no_booking_request: req.body.no_booking_request ,my_alfred_conditions: req.body.my_alfred_conditions,
         profile_picture: req.body.profile_picture, identity_card: req.body.identity_card,
         recommandations: req.body.recommandations,
         flexible_cancel: req.body.flexible_cancel, moderate_cancel: req.body.moderate_cancel,
-        strict_cancel: req.body.strict_cancel
+        strict_cancel: req.body.strict_cancel,welcome_message: req.body.welcome_message
     }, {new: true})
         .then(shop => {
             res.json(shop)

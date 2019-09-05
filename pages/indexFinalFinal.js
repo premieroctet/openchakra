@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import Layout from "../hoc/Layout/Layouthome";
+import Footer from "../hoc/Layout/Footer/Footer";
 import PopularCategories from '../components/home/PopularCategories/PopularCategories';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import Profiteandlearn from '../components/home/profite&learn/profite&learn'
@@ -12,7 +13,7 @@ import Wellbeing from '../components/home/Wellbeing/Wellbeing';
 import Proposeservice from '../components/home/proposeservice/Proposeservice';
 import Verypractical from '../components/home/Verypractical/Verypractical';
 import Assureback from '../components/home/AssureBack/Assureback';
-import TopService from '../components/home/TopService/Topservice';
+import TopService from '../components/home/Topservice/Topservice';
 import setAuthToken from '../utils/setAuthToken';
 import Router from "next/router";
 import '../static/stylebg.css'
@@ -60,6 +61,7 @@ class Home extends React.Component {
                 <Verypractical />
                 <Assureback />
                 <TopService />
+                <Footer />
             </Fragment>
         )
     }

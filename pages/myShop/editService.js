@@ -21,6 +21,7 @@ import EditIcon from '@material-ui/icons/EditOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import { Document,Page } from 'react-pdf'
 import { pdfjs } from 'react-pdf';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import Switch from "@material-ui/core/Switch";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -30,6 +31,7 @@ moment.locale('fr');
 
 
 const _ = require('lodash');
+const monggose = require('mongoose');
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
@@ -79,8 +81,8 @@ class editService extends React.Component {
             name_diploma: '',
             year_diploma: '',
             file_diploma: null,
-            name_newDiploma: '',
-            year_newDiploma: '',
+            name_newDiploma: null,
+            year_newDiploma: null,
 
             certification: {},
             haveCertification: false,
@@ -88,8 +90,8 @@ class editService extends React.Component {
             name_certification: '',
             year_certification: '',
             file_certification: null,
-            name_newCertification: '',
-            year_newCertification: '',
+            name_newCertification: null,
+            year_newCertification: null,
 
             typeOptions: null,
             typeOptions2: null,
@@ -99,12 +101,12 @@ class editService extends React.Component {
             clickAddress: false,
             dates: [],
 
-            city: '',
-            zip_code: '',
-            address: '',
-            country: '',
-            lat: '',
-            lng: '',
+            city: null,
+            zip_code: null,
+            address: null,
+            country: null,
+            lat: null,
+            lng: null,
 
             pageNumber: 1,
             numPages: null,
@@ -158,28 +160,31 @@ class editService extends React.Component {
                     this.setState({certification: serviceUser.certification,name_certification:serviceUser.certification.name,year_certification:serviceUser.certification.year,
                         haveCertification: true,extCertification: serviceUser.certification.file.split('.').pop()});
                 }
-                const deadline = serviceUser.deadline_before_booking.substring(0,3);
-                const deadline_number = parseInt(deadline);
+                const deadline = serviceUser.deadline_before_booking.split(' ');
+                const deadline_number = parseInt(deadline[0]);
                 this.setState({deadline_before_booking_number: deadline_number});
-                this.setState({deadline_before_booking_string:serviceUser.deadline_before_booking.substring(3)});
+                this.setState({deadline_before_booking_string:serviceUser.deadline_before_booking.split(' ').pop()});
+                //this.setState({new_prestations: serviceUser.prestations});
+                serviceUser.prestations.forEach(q => {
+                   let obj = {prestation: q.prestation._id,billing:q.billing,price: q.price};
+                   this.setState({new_prestations: [...this.state.new_prestations,obj]})
+                });
 
 
                 axios.get(url+`myAlfred/api/service/${serviceUser.service._id}`)
                     .then(response => {
                         const data = response.data;
                         this.setState({all_equipments: data.equipments});
-                        data.equipments.forEach(e => {
-                            this.state.current_equipments.forEach(h => {
-                                if(h.label === e.label){
-                                    this.setState({[e.label]:true});
-                                    this.setState({
-                                        equipments: [...this.state.equipments, h._id]
-                                    })
-                                } else {
-                                    this.setState({[e.label]:false})
-                                }
-                            });
-
+                        this.state.current_equipments.forEach(h => {
+                            let index = _.findIndex(data.equipments,['label',h.label]);
+                            if (index !== -1) {
+                                this.setState({[h.label]: true});
+                                this.setState({
+                                    equipments: [...this.state.equipments, h._id]
+                                })
+                            } else {
+                                this.setState({[h.label]:false})
+                            }
                         });
 
                     })
@@ -199,30 +204,17 @@ class editService extends React.Component {
 
                            this.setState({uniqFilter: uniqFilter});
                         });
-                        prestations.forEach(r => {
-                            this.state.prestations.forEach(t => {
-                                if(t.prestation._id === r._id){
-                                    this.setState({[r.label]: true});
-                                    this.setState({[r.label+'price']: t.price});
-                                    this.setState({[r.label+'billing']: t.billing});
-                                } else {
-                                    this.setState({[r.label]:false});
-                                    this.setState({[r.label+'price']: ''});
-                                    this.setState({[r.label+'billing']: ''});
-                                }
-                            })
-                        });
-
-                        this.state.uniqFilter.forEach(f=> {
-
-                            axios.get(url+`myAlfred/api/prestation/${serviceUser.service._id}/${f._id}`)
-                                .then(data => {
-                                    this.setState({[f.label]:data.data});
-
-                                })
-                                .catch(err => console.log(err))
-
-
+                        this.state.prestations.forEach(a => {
+                            let index = _.findIndex(prestations,['label',a.prestation.label]);
+                            if (index !== -1) {
+                                this.setState({[a.prestation.label]: true});
+                                this.setState({[a.prestation.label+'price']: a.price});
+                                this.setState({[a.prestation.label+'billing']: a.billing});
+                            } else {
+                                this.setState({[a.prestation.label]:false});
+                                this.setState({[a.prestation.label+'price']: ''});
+                                this.setState({[a.prestation.label+'billing']: ''});
+                            }
                         })
 
 
@@ -291,7 +283,7 @@ class editService extends React.Component {
             options: {
                 ...prevState.options,
                 price: this.state.priceOptions,
-                type: this.state.typeOptions.label
+                option_extra: this.state.typeOptions.label
             }
         }));
 
@@ -304,7 +296,7 @@ class editService extends React.Component {
                 label: this.state.descOptions,
                 price: this.state.priceOptions2,
                 unity: this.state.unityOptions.label,
-                type: this.state.typeOptions2.label
+                option_extra: this.state.typeOptions2.label
             }
         }));
 
@@ -332,29 +324,215 @@ class editService extends React.Component {
         this.setState({[name]: event.target.checked });
     };
 
-
-    onSubmit = e => {
-        e.preventDefault();
-        const equipments = this.state.equipments;
-        const perimeter = this.state.perimeter;
-        const active = this.state.active;
-        const { city,minimum_basket,deadline_before_booking,price } = this.state.serviceUser;
-        const id = this.props.service_id;
-
-
-        axios.put(`${url}myAlfred/api/serviceUser/edit/${id}`,{city,minimum_basket,deadline_before_booking,price,equipments,perimeter
-            ,active})
-            .then(res => {
-
-                alert('Service modifié avec succès');
-                Router.push({pathname:'/myShop/services'})
-            })
-            .catch(err => {
-                console.log(err);
-            })
+    onChangePrestation(label,id) {
+        const arrayPrestations = [];
+        let array = [...this.state.new_prestations];
+        let index = _.findIndex(array,['prestation',id]);
+        if (index !== -1) {
+            array.splice(index, 1);
+            this.setState({new_prestations: array});
+            this.setState({[label+'price']:null});
+            this.setState({[label+'billing']:null});
+        } else {
+            const obj = {prestation: id,billing:null,price:null};
+            arrayPrestations.push(obj);
+            this.setState({new_prestations: [...this.state.new_prestations, obj]});
+        }
 
 
     };
+
+    onChangePrice(label,e,id) {
+        let array = this.state.new_prestations;
+        let index = _.findIndex(array,['prestation',id]);
+        array[index].price = e.target.value;
+        this.setState({new_prestations:  array});
+    };
+
+    onChangeBilling(label,e,id) {
+        let array = this.state.new_prestations;
+        let index = _.findIndex(array,['prestation',id]);
+        array[index].billing = e.target.value;
+        this.setState({new_prestations:  array});
+    }
+
+
+    onSubmit = e => {
+        e.preventDefault();
+
+        if(this.state.city !== null){
+            let options = null;
+            const prestations = this.state.new_prestations;
+            if(_.isEmpty(this.state.options)){
+                 options = this.state.current_options;
+
+            } else {
+                 options = this.state.options
+            }
+            const city = this.state.city;
+            const address = this.state.address;
+            const zip_code = this.state.zip_code;
+            const country = this.state.country;
+            const lat = this.state.lat;
+            const lng = this.state.lng;
+            const deadline_before_booking = this.state.deadline_before_booking_number + ' '+this.state.deadline_before_booking_string;
+            const equipments = this.state.equipments;
+            const perimeter = this.state.perimeter;
+            const {minimum_basket,description,level } = this.state.serviceUser;
+            const id = this.props.service_id;
+
+
+            axios.put(`${url}myAlfred/api/serviceUser/editWithCity/${id}`,{prestations,options,minimum_basket,deadline_before_booking,equipments,perimeter
+                ,city,address,zip_code,country,lat,lng,description,level})
+                .then(res => {
+
+                    alert('Service modifié avec succès');
+                    Router.push({pathname:'/myShop/services'})
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        } else {
+            let options = null;
+            const prestations = this.state.new_prestations;
+            if(_.isEmpty(this.state.options)){
+                options = this.state.current_options;
+
+            } else {
+                options = this.state.options
+            }
+            const deadline_before_booking = this.state.deadline_before_booking_number + ' '+this.state.deadline_before_booking_string;
+            const equipments = this.state.equipments;
+            const perimeter = this.state.perimeter;
+            const {minimum_basket,description,level } = this.state.serviceUser;
+            const id = this.props.service_id;
+
+
+            axios.put(`${url}myAlfred/api/serviceUser/edit/${id}`,{prestations,options,minimum_basket,deadline_before_booking,equipments,perimeter
+                ,description,level})
+                .then(res => {
+
+                    alert('Service modifié avec succès');
+                    Router.push({pathname:'/myShop/services'})
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+
+
+
+    };
+
+    editDiploma() {
+        const id = this.props.service_id;
+        if(this.state.name_newDiploma === null) {
+            const name = this.state.name_diploma;
+            const year = this.state.year_diploma;
+            let diploma = this.state.file_diploma;
+
+            if(diploma !== null) {
+                diploma = this.state.file_diploma;
+
+            }
+
+            const formData = new FormData();
+            formData.append('name',name);
+            formData.append('year',year);
+            formData.append('file_diploma',diploma);
+
+            axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+id,formData)
+                .then(() => {
+                    alert('Diplome modifié')
+                })
+                .catch(err => console.log(err))
+
+        } else {
+            const id = this.props.service_id;
+
+                const name = this.state.name_newDiploma;
+                const year = this.state.year_newDiploma;
+                let diploma = this.state.file_diploma;
+
+                const formData = new FormData();
+                formData.append('name',name);
+                formData.append('year',year);
+                formData.append('file_diploma',diploma);
+
+                axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+id,formData)
+                    .then(() => {
+                        alert('Diplome ajouté');
+                        this.componentDidMount();
+                        this.setState({haveDiploma: true})
+                    })
+                    .catch(err => console.log(err))
+        }
+    }
+
+    deleteDiploma() {
+        const id = this.props.service_id;
+        axios.delete(url+'myAlfred/api/serviceUser/delete/diploma/'+id)
+            .then(() => {
+                alert('Diplôme supprimé');
+                this.setState({haveDiploma: false,editDiploma: false})
+            })
+            .catch(err => console.log(err))
+    }
+
+    editCertification() {
+        const id = this.props.service_id;
+        if(this.state.name_newCertification === null) {
+            const name = this.state.name_certification;
+            const year = this.state.year_certification;
+            let certification = this.state.file_certification;
+
+            if(certification !== null) {
+                certification = this.state.file_certification;
+
+            }
+
+            const formData = new FormData();
+            formData.append('name',name);
+            formData.append('year',year);
+            formData.append('file_certification',certification);
+
+            axios.post(url+'myAlfred/api/serviceUser/addCertification/'+id,formData)
+                .then(() => {
+                    alert('Certification modifiée')
+                })
+                .catch(err => console.log(err))
+
+        } else {
+            const id = this.props.service_id;
+
+            const name = this.state.name_newCertification;
+            const year = this.state.year_newCertification;
+            let certification = this.state.file_certification;
+
+            const formData = new FormData();
+            formData.append('name',name);
+            formData.append('year',year);
+            formData.append('file_certification',certification);
+
+            axios.post(url+'myAlfred/api/serviceUser/addCertification/'+id,formData)
+                .then(() => {
+                    alert('Certification ajoutée');
+                    this.componentDidMount();
+                    this.setState({haveCertification: true})
+                })
+                .catch(err => console.log(err))
+        }
+    }
+
+    deleteCertification() {
+        const id = this.props.service_id;
+        axios.delete(url+'myAlfred/api/serviceUser/delete/certification/'+id)
+            .then(() => {
+                alert('Certification supprimée');
+                this.setState({haveCertification: false,editCertification: false})
+            })
+            .catch(err => console.log(err))
+    }
 
 
 
@@ -444,8 +622,10 @@ class editService extends React.Component {
                                                                         <Switch
                                                                             type="checkbox"
                                                                             checked={this.state[z.label] ? true : false}
-                                                                            onChange={()=>
-                                                                                this.setState({[z.label]: !this.state[z.label]})
+                                                                            onChange={()=> {
+                                                                                this.setState({[z.label]: !this.state[z.label]});
+                                                                                this.onChangePrestation(z.label,z._id)
+                                                                            }
 
 
                                                                             }
@@ -459,7 +639,10 @@ class editService extends React.Component {
                                                                         id="standard-name"
                                                                         value={this.state[z.label+'price']}
                                                                         name={z.label+'price'}
-                                                                        onChange={this.onChange2}
+                                                                        onChange={(event)=>{
+                                                                            this.onChange2(event);
+                                                                            this.onChangePrice(z.label,event,z._id);
+                                                                        }}
                                                                         style={{width: 125}}
                                                                         label={`Prix`}
                                                                         type="number"
@@ -482,7 +665,8 @@ class editService extends React.Component {
                                                                             helperText={`Méthode de facturation`}
                                                                             value={this.state[z.label+'billing']}
                                                                             name={z.label+'billing'}
-                                                                            onChange={this.onChange2}
+                                                                            onChange={(event)=>{this.onChange2(event);
+                                                                            this.onChangeBilling(z.label,event,z._id)}}
                                                                         >
                                                                             <MenuItem value="">...</MenuItem>
                                                                             {z.billing.map(y => (
@@ -514,8 +698,8 @@ class editService extends React.Component {
                             </Grid>
                             <Grid item xs={9}>
                                 {haveOption ?
-                                    <React.Fragment><p>Option actuellement sélectionnée : {current_options.label} au prix de {current_options.price}€/
-                                        {current_options.unity}</p>
+                                    <React.Fragment><p>Actuellement sélectionné : {current_options.label} au prix de {current_options.price}€/
+                                        {current_options.unity} ({current_options.option_extra})</p>
                                         <Button onClick={()=>this.setState({haveOption:false})} color={"primary"} variant={"contained"} style={{color:"white"}}>Modifier</Button>
                                     </React.Fragment>
 
@@ -606,7 +790,7 @@ class editService extends React.Component {
                                                 label="Autre option"
                                             />
 
-                                                <Button onClick={()=>this.setState({haveOption:true})} variant={"contained"} color={"secondary"} style={{color:"white"}}>Annuler</Button>
+                                                <Button onClick={()=>this.setState({haveOption:true,otherOptions: false})} variant={"contained"} color={"secondary"} style={{color:"white"}}>Annuler</Button>
 
 
                                             </React.Fragment>
@@ -720,7 +904,7 @@ class editService extends React.Component {
                                         }>
 
 
-                                                <img src={`../../${e.logo2}`} height={100} width={100}
+                                                <img src={`../../${e.logo2}`} height={80} width={80}
                                                      alt={`logo2`}/>
                                         </label>
                                             <Checkbox
@@ -851,7 +1035,6 @@ class editService extends React.Component {
                                                 id="standard-with-placeholder"
                                                 color="primary"
                                                 variant="outlined"
-                                                label="Adresse"
                                                 placeholder="Adresse"
                                                 margin="normal"
                                                 style={{ width: '100%' }}
@@ -869,7 +1052,6 @@ class editService extends React.Component {
                                                 id="standard-with-placeholder"
                                                 color="primary"
                                                 variant="outlined"
-                                                label="Ville"
                                                 placeholder="Ville"
                                                 margin="normal"
                                                 style={{ width: '100%' }}
@@ -887,7 +1069,6 @@ class editService extends React.Component {
                                                 id="standard-with-placeholder"
                                                 color="primary"
                                                 variant="outlined"
-                                                label="Code postal"
                                                 placeholder="Code postal"
                                                 margin="normal"
                                                 style={{ width: '100%' }}
@@ -905,7 +1086,6 @@ class editService extends React.Component {
                                                 id="standard-with-placeholder"
                                                 color="primary"
                                                 variant="outlined"
-                                                label="Pays"
                                                 placeholder="Pays"
                                                 margin="normal"
                                                 style={{ width: '100%' }}
@@ -1061,7 +1241,7 @@ class editService extends React.Component {
                                         </Grid>
                                         <Grid item xs={3} style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
                                             <EditIcon onClick={()=>this.setState({editDiploma: true})} color={"primary"} style={{marginRight:20,cursor:"pointer"}}/>
-                                            <DeleteIcon color={"secondary"} style={{cursor:"pointer"}}/>
+                                            <DeleteIcon onClick={()=>this.deleteDiploma()} color={"secondary"} style={{cursor:"pointer"}}/>
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>
@@ -1120,7 +1300,7 @@ class editService extends React.Component {
                                             </p>
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Button color={"primary"} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
+                                            <Button color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>
@@ -1194,7 +1374,7 @@ class editService extends React.Component {
                                             </p>
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Button color={"primary"} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
+                                            <Button color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>
@@ -1215,7 +1395,7 @@ class editService extends React.Component {
                                         </Grid>
                                         <Grid item xs={3} style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
                                             <EditIcon onClick={()=>this.setState({editCertification: true})} color={"primary"} style={{marginRight:20,cursor:"pointer"}}/>
-                                            <DeleteIcon color={"secondary"} style={{cursor:"pointer"}}/>
+                                            <DeleteIcon onClick={()=>this.deleteCertification()} color={"secondary"} style={{cursor:"pointer"}}/>
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>
@@ -1274,7 +1454,7 @@ class editService extends React.Component {
                                             </p>
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Button color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
+                                            <Button onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>
@@ -1320,7 +1500,7 @@ class editService extends React.Component {
                                             <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
                                                 <p style={{cursor:"pointer",color:'black'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
-                                                       onChange={this.onChangeDiploma}
+                                                       onChange={this.onChangeCertification}
                                                        className="form-control"
                                                 />
                                             </label>
@@ -1348,7 +1528,7 @@ class editService extends React.Component {
                                             </p>
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Button color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
+                                            <Button onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>
@@ -1358,7 +1538,7 @@ class editService extends React.Component {
                         </Grid>
                         <hr/>
                         <Grid container style={{display:"flex",justifyContent:"flex-end",width:'90%'}}>
-                            <Button variant={"contained"} color={"secondary"} style={{color:"white"}}>Enregistrer</Button>
+                            <Button variant={"contained"} onClick={(event)=>this.onSubmit(event)} color={"secondary"} style={{color:"white"}}>Enregistrer</Button>
                         </Grid>
 
 
@@ -1379,8 +1559,9 @@ class editService extends React.Component {
 
                     </Grid>
 
-
+            <Footer/>
             </Layout>
+            
 
         );
     };

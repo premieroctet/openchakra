@@ -25,8 +25,11 @@ const style = theme => ({
     alignItems: 'center',
   },
   avatar: {
-    height: 200,
-    width: 200,
+    height: 150,
+    width: 150,
+    marginRight: 'auto',
+    marginLeft: 'auto',
+    display: 'block'
   },
   itemAvatar: {
     flexDirection: 'column',
@@ -130,7 +133,8 @@ class alfredBanner extends React.Component{
     return (
         <Fragment>
                 <Grid container className={classes.bannerContainer}
-                      style={{backgroundImage: have_picture ? `url(${shop.picture})`: 'url("../../../static/photo-1538342014732-212dc8f76863-min.jpeg")'}}>
+                      style={{backgroundImage: `url('../../${shop.picture}')`,backgroundPosition: "center",
+                      backgroundSize:"cover", backgroundRepeat:"no-repeat"}}>
                     <Grid container className={classes.darkOverlay}>
                         <Grid container className={classes.container}>
                             <Grid item className={classes.itemShare}>
@@ -148,7 +152,7 @@ class alfredBanner extends React.Component{
                                 </Grid>
                             </Grid>
                             <Grid item className={classes.itemAvatar}>
-                                <Avatar alt="John Doe" src={`../../../../${alfred.picture}`} className={classes.avatar} />
+                                <Avatar alt="photo de profil" src={`../../../../${alfred.picture}`} className={classes.avatar} />
                                 <Typography className={classes.textAvatar}>{alfred.name} {alfred.firstname}</Typography>
                             </Grid>
                             <Grid item className={classes.itemDispo}>

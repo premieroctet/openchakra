@@ -14,6 +14,10 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import axios from 'axios';
 import Select2 from 'react-select';
 import {Typography} from "@material-ui/core";
+import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import fr from 'date-fns/locale/fr';
+registerLocale('fr', fr);
 
 const {config} = require('../config/config');
 const url = config.apiUrl;
@@ -372,7 +376,7 @@ class testAvailability extends React.Component{
                     {monday ?
                         <React.Fragment>
                             <Grid item>
-                                <TextField
+                                {/*<TextField
                                     id="standard-with-placeholder"
                                     label="De"
                                     margin="normal"
@@ -387,24 +391,30 @@ class testAvailability extends React.Component{
                                     }}
                                     value={this.state.monday_begin}
                                     onChange={this.onChange}
+                                />*/}
+                                <p>De :</p>
+                                <DatePicker
+                                    selected={this.state.monday_begin}
+                                    onChange={date => this.setState({monday_begin:date})}
+                                    locale='fr'
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={15}
+                                    timeCaption="Début"
+                                    dateFormat="HH:mm"
                                 />
                             </Grid>
                             <Grid item>
-                                <TextField
-                                    id="standard-with-placeholder"
-                                    label="A"
-                                    margin="normal"
-                                    style={{ width: '100%' }}
-                                    type="time"
-                                    name="monday_end"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    inputProps={{
-                                        step: 300, // 5 min
-                                    }}
-                                    value={this.state.monday_end}
-                                    onChange={this.onChange}
+                                <p>A :</p>
+                                <DatePicker
+                                    selected={this.state.monday_end}
+                                    onChange={date => this.setState({monday_end:date})}
+                                    locale='fr'
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={15}
+                                    timeCaption="Fin"
+                                    dateFormat="HH:mm"
                                 />
                             </Grid>
                             <Typography style={{ fontSize: 17 }}>Service(s)</Typography>

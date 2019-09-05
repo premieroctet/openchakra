@@ -11,10 +11,6 @@ import Checkboxes from '../components/Checkboxes/checkboxes';
 //import Selectgenre from '../components/Select/select';
 //import Datenaissance from '../components/Datenaissance/datepicker';
 import Router from 'next/router';
-
-
-
-
 import Layout from '../hoc/Layout/Layout';
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -26,6 +22,12 @@ import axios from "axios";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AlgoliaPlaces from "algolia-places-react";
+import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import fr from 'date-fns/locale/fr';
+import Birthday from '@material-ui/icons/CakeOutlined'
+registerLocale('fr', fr);
+
+import Footer from '../hoc/Layout/Footer/Footer';
 
 
 const { config } = require('../config/config');
@@ -101,7 +103,15 @@ const styles = theme => ({
   },
 
 
+
 });
+
+/*const Input2 = ({value,  onClick }) => (
+    <Button value={value} color={"primary"} variant={"contained"} style={{color:"white"}} className="example-custom-input" onClick={onClick}>
+      {value}
+    </Button>
+
+);*/
 
 class signup extends React.Component {
       constructor(props) {
@@ -126,9 +136,6 @@ class signup extends React.Component {
         this.onChangeAddress = this.onChangeAddress.bind(this);
       }
 
-      componentDidMount() {
-        localStorage.setItem('path',Router.pathname);
-      }
 
 
   onChange = e => {
@@ -140,6 +147,10 @@ class signup extends React.Component {
             lat: suggestion.latlng.lat, lng: suggestion.latlng.lng});
 
     }
+
+  onChangeBirthday = date => {
+      this.setState({birthday: date})
+  };
 
   handleChecked () {
     this.setState({checked: !this.state.checked});
@@ -364,8 +375,8 @@ class signup extends React.Component {
                       <p>Pour vous inscrire, vous devez être agé d’au moins 16 ans. Les autres<br/>
                         utilisateurs ne verront pas votre date de naissance.
                       </p>
-                      <Grid item className={classes.datenaissance}>
-                        <TextField
+                      <Grid item className={classes.datenaissance} style={{display:"flex",alignItems:"center"}}>
+                        {/*<TextField
                             id="date"
                             label="Date de naissance"
                             type="date"
@@ -377,6 +388,19 @@ class signup extends React.Component {
                             InputLabelProps={{
                               shrink: true,
                             }}
+                        />*/}
+                        <Birthday style={{marginRight:20}}/>
+                        <DatePicker
+                          selected={this.state.birthday}
+                          onChange={(date)=>this.onChangeBirthday(date)}
+                          //customInput={<Input2 />}
+                          locale='fr'
+                          placeholderText="jj/mm/aaaa"
+                          showYearDropdown
+                          showMonthDropdown
+                          dateFormat="dd/MM/yyyy"
+
+
                         />
 
                       </Grid>
@@ -398,7 +422,7 @@ class signup extends React.Component {
                       </Grid>
 
                       <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                        {this.state.checked ? <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                        {this.state.checked ? <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color:"white" }}>
                           Inscription
                         </Button> : <Button disabled type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                           Inscription
@@ -419,6 +443,7 @@ class signup extends React.Component {
                 </Card>
                 </div>
               </Grid>
+              <Footer/>
             </Layout>
         );
       };
