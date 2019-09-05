@@ -304,7 +304,7 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
+                                {/*<Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
@@ -347,7 +347,7 @@ class editProfile extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
 
                             </Grid>
@@ -435,18 +435,6 @@ class editProfile extends React.Component {
 
                                 </Grid>
                                 <Grid item xs={12} style={{marginTop: 10,display:"flex",alignItems:"center"}}>
-                                    {/*<TextField
-                                        id="date"
-                                        type="date"
-                                        name="birthday"
-                                        style={{width: '100%'}}
-                                        className={classes.textField}
-                                        value={moment(user.birthday).format('YYYY-MM-DD')}
-                                        onChange={this.onChange}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                    />*/}
                                     <Birthday style={{marginRight:20}}/>
                                     <DatePicker
                                         selected={Date.parse(birthday)}

@@ -275,7 +275,7 @@ class editPicture extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
+                                {/*<Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
@@ -318,7 +318,7 @@ class editPicture extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
 
                             </Grid>
