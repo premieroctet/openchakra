@@ -11,11 +11,8 @@ import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import Footer from '../../hoc/Layout/Footer/Footer';
-import MenuItem from "@material-ui/core/MenuItem";
 import Select from "react-select";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+
 
 
 const _ = require('lodash');
@@ -56,12 +53,29 @@ class selectCategory extends React.Component {
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get(url+'myAlfred/api/category/all')
+        axios.get(url+'myAlfred/api/users/current')
             .then(res => {
-                let category = res.data;
-                this.setState({all_category: category});
+                let user = res.data;
+                if(user.is_alfred === false) {
+                    Router.push('/becomeAlfredForm');
+                } else {
+                    axios.get(url+'myAlfred/api/category/all')
+                        .then(res => {
+                            let category = res.data;
+                            this.setState({all_category: category});
+                        })
+                        .catch(err => console.log(err));
+                }
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                    console.log(err);
+                    if(err.response.status === 401 || err.response.status === 403) {
+                        localStorage.removeItem('token');
+                        Router.push({pathname: '/login'})
+                    }
+                }
+            );
+
 
 
     }

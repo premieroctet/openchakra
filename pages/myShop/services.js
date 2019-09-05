@@ -20,7 +20,7 @@ import EditIcon from '@material-ui/icons/EditOutlined';
 import Modal from '@material-ui/core/Modal';
 import { Carousel } from 'react-responsive-carousel';
 import SearchIcon from '@material-ui/icons/SearchOutlined';
-const jwt = require('jsonwebtoken');
+
 
 
 moment.locale('fr');
@@ -137,27 +137,51 @@ class services extends React.Component {
 
 
         localStorage.setItem('path',Router.pathname);
-        const token = localStorage.getItem('token').split(' ')[1];
-        const decode = jwt.decode(token);
-        if (decode.is_alfred === false) {
-            Router.push('/becomeAlfredForm');
 
-        }
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get(url+'myAlfred/api/shopBanner/all')
-            .then(response => {
-                let banner = response.data;
 
-                this.setState({banner: banner})
-            })
-            .catch(err =>{console.log(err)});
-        axios
-            .get(url+'myAlfred/api/users/current')
+        axios.get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
-                this.setState({user:user});
+                if(user.is_alfred === false) {
+                    Router.push('/becomeAlfredForm');
+                } else {
+                    this.setState({user:user});
+
+                    axios.get(url+'myAlfred/api/shopBanner/all')
+                        .then(response => {
+                            let banner = response.data;
+
+                            this.setState({banner: banner})
+                        })
+                        .catch(err =>{console.log(err)});
+
+                    axios
+                        .get(url+'myAlfred/api/shop/currentAlfred')
+                        .then(res => {
+                            let shop = res.data;
+                            this.setState({shop:shop,booking_request: shop.booking_request, no_booking_request:shop.no_booking_request,my_alfred_conditions: shop.my_alfred_conditions,
+                                profile_picture: shop.profile_picture, identity_card: shop.identity_card, recommandations: shop.recommandations,
+                                flexible_cancel: shop.flexible_cancel, moderate_cancel: shop.moderate_cancel, strict_cancel: shop.strict_cancel,
+                                welcome_message: shop.welcome_message});
+                        })
+                        .catch(err =>
+                            console.log(err)
+                        );
+
+                    axios
+                        .get(url+'myAlfred/api/serviceUser/currentAlfred')
+                        .then(res => {
+                            let serviceUser = res.data;
+                            this.setState({serviceUser: serviceUser});
+                        })
+                        .catch(err =>
+                            console.log(err)
+                        );
+
+                }
             })
             .catch(err => {
                     console.log(err);
@@ -168,28 +192,7 @@ class services extends React.Component {
                 }
             );
 
-        axios
-            .get(url+'myAlfred/api/shop/currentAlfred')
-            .then(res => {
-                let shop = res.data;
-                this.setState({shop:shop,booking_request: shop.booking_request, no_booking_request:shop.no_booking_request,my_alfred_conditions: shop.my_alfred_conditions,
-                    profile_picture: shop.profile_picture, identity_card: shop.identity_card, recommandations: shop.recommandations,
-                    flexible_cancel: shop.flexible_cancel, moderate_cancel: shop.moderate_cancel, strict_cancel: shop.strict_cancel,
-                    welcome_message: shop.welcome_message});
-            })
-            .catch(err =>
-                console.log(err)
-            );
 
-        axios
-            .get(url+'myAlfred/api/serviceUser/currentAlfred')
-            .then(res => {
-                let serviceUser = res.data;
-                this.setState({serviceUser: serviceUser});
-            })
-            .catch(err =>
-                console.log(err)
-            );
     }
 
     handleOpen = () => {

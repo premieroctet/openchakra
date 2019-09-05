@@ -139,8 +139,66 @@ class addService extends React.Component {
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
-                this.setState({ city: user.billing_address.city, address: user.billing_address.address, zip_code: user.billing_address.zip_code,
-                                    country: user.billing_address.country, lat:user.billing_address.gps.lat, lng: user.billing_address.gps.lng})
+                if(user.is_alfred === false) {
+                    Router.push('/becomeAlfredForm');
+                } else {
+                    this.setState({ city: user.billing_address.city, address: user.billing_address.address, zip_code: user.billing_address.zip_code,
+                        country: user.billing_address.country, lat:user.billing_address.gps.lat, lng: user.billing_address.gps.lng});
+
+                    axios.get(url+`myAlfred/api/service/${id}`)
+                        .then(response => {
+                            const data = response.data;
+                            this.setState({all_equipments: data.equipments,service: data});
+
+                            data.equipments.forEach(h => {
+                                this.setState({[h.label]:false})
+
+                            });
+
+
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+
+                    axios.get(url+`myAlfred/api/prestation/${id}`)
+                        .then(result => {
+                            let prestations = result.data;
+                            this.setState({all_prestations: prestations});
+                            let arrayFilter =  [];
+
+                            prestations.forEach(e => {
+                                arrayFilter.push(e.filter_presentation);
+                                let uniqFilter = _.uniqBy(arrayFilter,'label');
+
+                                this.setState({uniqFilter: uniqFilter});
+                            });
+                            prestations.forEach(a => {
+                                this.setState({[a.label]:false});
+                                this.setState({[a.label+'price']: ''});
+                                this.setState({[a.label+'billing']: ''});
+
+                            })
+
+
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+
+
+
+
+                    axios.get(url+`myAlfred/api/options/all`)
+                        .then(result => {
+                            let options = result.data;
+                            this.setState({all_options: options});
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                }
+
 
 
 
@@ -154,58 +212,7 @@ class addService extends React.Component {
                 }
             );
 
-        axios.get(url+`myAlfred/api/service/${id}`)
-            .then(response => {
-                const data = response.data;
-                this.setState({all_equipments: data.equipments,service: data});
 
-                data.equipments.forEach(h => {
-                    this.setState({[h.label]:false})
-
-                });
-
-
-            })
-            .catch(error => {
-                console.log(error);
-            });
-
-        axios.get(url+`myAlfred/api/prestation/${id}`)
-            .then(result => {
-                let prestations = result.data;
-                this.setState({all_prestations: prestations});
-                let arrayFilter =  [];
-
-                prestations.forEach(e => {
-                    arrayFilter.push(e.filter_presentation);
-                    let uniqFilter = _.uniqBy(arrayFilter,'label');
-
-                    this.setState({uniqFilter: uniqFilter});
-                });
-                prestations.forEach(a => {
-                    this.setState({[a.label]:false});
-                    this.setState({[a.label+'price']: ''});
-                    this.setState({[a.label+'billing']: ''});
-
-                })
-
-
-            })
-            .catch(error => {
-                console.log(error);
-            });
-
-
-
-
-        axios.get(url+`myAlfred/api/options/all`)
-            .then(result => {
-                let options = result.data;
-                this.setState({all_options: options});
-            })
-            .catch(error => {
-                console.log(error);
-            });
 
 
     }

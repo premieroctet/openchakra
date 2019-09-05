@@ -31,7 +31,6 @@ moment.locale('fr');
 
 
 const _ = require('lodash');
-const monggose = require('mongoose');
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
