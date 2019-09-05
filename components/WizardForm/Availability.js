@@ -1884,7 +1884,6 @@ class Availability extends React.Component {
         <Grid>
         <Button onClick={()=>this.onSubmit()} variant={"contained"} color={"primary"} style={{color:"white",marginRight:20}}>Enregistrer</Button>
         </Grid>
-        {<Debug />}
       </React.Fragment>
     );
   }

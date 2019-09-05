@@ -75,17 +75,7 @@ class nearbyYou extends React.Component{
 
   componentDidMount() {
     const token = localStorage.getItem('token');
-    if (token) {
-      this.setState({logged:true});
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      axios.get(url+'myAlfred/api/serviceUser/near')
-          .then(response => {
-            let service = response.data;
-
-            this.setState({service:service})
-          })
-    } else {
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      //axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.get(url+'myAlfred/api/serviceUser/home')
           .then(response => {
             let service = response.data;
@@ -93,7 +83,6 @@ class nearbyYou extends React.Component{
             this.setState({service:service})
           })
     }
-  }
 
   render() {
 

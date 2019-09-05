@@ -82,7 +82,7 @@ const styles = theme => ({
     },
     trait2:{
         width: '87%',
-        marginTop: -18.5,
+        marginTop: -18,
         height: 4,
         backgroundColor: 'lightgray',
         borderColor: 'transparent'
