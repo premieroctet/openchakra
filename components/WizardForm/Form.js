@@ -1,4 +1,5 @@
 import React from 'react';
+import Router from 'next/router';
 import { Formik, Field, ErrorMessage, FieldArray, yupToFormErrors } from 'formik';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -401,6 +402,51 @@ class Wizard extends React.Component {
                                         .then(result => {
                                             alert('Shop créée avec succès !');
 
+                                            const formDataIdProfile = new FormData();
+                                            formDataIdProfile.append('myCardR',values.createShop.id_recto);
+                                            if (values.createShop.id_verso !== null) {
+                                                formDataIdProfile.append('myCardV',values.createShop.id_verso);
+                                            }
+                                            axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
+                                                .then(res => {
+                                                    alert('Profil mis à jours')
+                                                })
+                                                .catch(err => {
+                                                    console.log(err);
+                                                })
+
+                                            const profilePicture = values.alfredUpdate.profile_picture_user;
+                                            const formDataPicture = new FormData();
+                                            formDataPicture.append('myImage',profilePicture);
+                                            axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
+                                                .then(res => {
+                                                    alert('Photo ajoutée')
+                                                })
+                                                .catch(err => {
+                                                    console.log(err);
+                                                })
+
+                                            const phone = values.alfredUpdate.phone;
+                                            console.log(phone)
+                                            axios.put(url+'myAlfred/api/users/profile/phone', {phone})
+                                                .then(res => {
+                                                    alert('Téléphone ajouté');
+                                                })
+                                                .catch(err => {
+                                                    console.log(err);
+                                                });
+                                            axios.put(url+'myAlfred/api/users/users/becomeAlfred')
+                                                .then(res => {
+                                                    alert('Vous êtes maintenant un Alfred');
+                                                    Router.push('/myShop/services');
+                                                    
+                                                })
+                                                .catch(err => {
+                                                    console.log(err);
+                                                })
+
+                                            return console.log(values);
+
 
                                         })
                                         .catch(error => {
@@ -415,49 +461,7 @@ class Wizard extends React.Component {
                         console.log(err);
                     })
             });
-            const formDataIdProfile = new FormData();
-            formDataIdProfile.append('myCardR',values.createShop.id_recto);
-            if (values.createShop.id_verso !== null) {
-                formDataIdProfile.append('myCardV',values.createShop.id_verso);
-            }
-            axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
-                .then(res => {
-                    alert('Profil mis à jours')
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-
-            const profilePicture = values.alfredUpdate.profile_picture_user;
-            const formDataPicture = new FormData();
-            formDataPicture.append('myImage',profilePicture);
-            axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
-                .then(res => {
-                    alert('Photo ajoutée')
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-
-            const phone = values.alfredUpdate.phone;
-            console.log(phone)
-            axios.put(url+'myAlfred/api/users/profile/phone', {phone})
-                .then(res => {
-                    alert('Téléphone ajouté');
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-            axios.put(url+'myAlfred/api/users/users/becomeAlfred')
-                .then(res => {
-                    alert('Vous êtes maintenant un Alfred');
-                    
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-
-            return console.log(values);
+            
         } else {
             bag.setTouched({});
             bag.setSubmitting(false);
@@ -580,14 +584,34 @@ class Wizard extends React.Component {
                                 </div>
                                 <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '999'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
-                                        {page !== 0 && <Button
+                                        {page !== 0 && <React.Fragment><Button
                                             color="primary"
                                             type="button"
                                             onClick={this.previous}
                                             disabled={page === 0 ? true : false}
                                         >
                                             Retour
-                                        </Button>}
+                                        </Button>
+                                        <Field 
+                                            render={({form}) => {
+                                                return (
+                                                    <Button
+                                                        onClick={() => {
+                                                        console.log(this.state.values)
+                                                        console.log(this.props.initialValues)
+                                                        this.setState({
+                                                            page: 0,
+                                                            values: this.props.initialValues
+                                                        })
+                                                        handleReset;
+                                                    }}
+                                                >
+                                                    Reset
+                                                </Button>
+                                                )
+                                            }}
+                                        />
+                                        </React.Fragment>}
                                         {page === 0 && <Button
                                             type="submit"
                                             variant="contained"
@@ -697,7 +721,7 @@ class Wizard extends React.Component {
                                                         color="secondary" 
                                                         disabled={check}
                                                         onClick={() => {
-                                                            if (form.values.createShop.siret !== '' && form.values.createShop.siret.length === 14) {
+                                                            if (form.values.createShop.siret !== '' && form.values.createShop.siret.length === 14 || form.values.createShop.is_professional === false) {
                                                                 return null;
                                                             } else {
                                                                 toast.error(<div>Veuillez renseigner un numéro siret</div>);
@@ -1308,7 +1332,7 @@ class Form extends React.Component {
                                             </div>
                                     }}
                                 </Field>    
-                                              
+                                   <Debug />           
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
@@ -1328,7 +1352,7 @@ class Form extends React.Component {
                                                 <Tabs>
                                                     <TabList>
                                                         {this.state.allInOneServ.map((data, index) => {
-                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{typeof arrayHelpers.form.errors.submission === 'undefined' ? <span style={{height: 10, width: 10, borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? <span style={{height: 10, width: 10, backgroundColor: '#F8727F', borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : null) }{data.serviceLabel}</div></Tab>
+                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{typeof arrayHelpers.form.errors.submission === 'undefined' ? <span style={{height: 10, width: 10, borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? <span style={{height: 10, width: 10, backgroundColor: '#F8727F', marginRight: 5, display: 'inline-block'}}></span> : null) }{data.serviceLabel}</div></Tab>
                                                         })}
                                                     </TabList>
                                                     {this.state.allInOneServ.map((s, index) => {
@@ -2446,7 +2470,7 @@ class Form extends React.Component {
                                                                     value={this.state.phone}
                                                                     onChange={() => {
                                                                         this.setState({phone: event.target.value});
-                                                                        form.setFieldValue('alfredUpdate.phone', this.state.phone);
+                                                                        form.setFieldValue('alfredUpdate.phone', event.target.value);
                                                                     }}
                                                                 />
                                                             )
