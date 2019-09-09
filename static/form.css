@@ -2,6 +2,10 @@
   overflow: hidden;
 }*/
 
+.noscrollbar::-webkit-scrollbar {
+  width: 0px!important
+}
+
 @media screen and (max-width: 960px) {
   .imgDiv {
     display: none;
@@ -92,7 +96,7 @@
   color: white !important;
   border-top-right-radius: 20px;
   margin-right: -40px;
-  z-index: 999!important;
+  z-index: 999999999!important;
 }
 
 .react-tabs__tab--selected div {

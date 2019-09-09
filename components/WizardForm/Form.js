@@ -578,8 +578,8 @@ class Wizard extends React.Component {
                             </div>
                         </div>}
                         <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh'}}>
-                            <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%'}}>
-                                <div style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative'}}>
+                            <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%', overflow: 'hidden'}}>
+                                <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative'}}>
                                     {activePage}
                                 </div>
                                 <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '999'}}>
@@ -597,13 +597,12 @@ class Wizard extends React.Component {
                                                 return (
                                                     <Button
                                                         onClick={() => {
-                                                        console.log(this.state.values)
-                                                        console.log(this.props.initialValues)
-                                                        this.setState({
-                                                            page: 0,
-                                                            values: this.props.initialValues
-                                                        })
-                                                        handleReset;
+                                                            let confirm = window.confirm('Souhaitez-vous réinitialiser le formulaire ?')
+                                                            if (confirm === true) {
+                                                                window.location.reload();
+                                                            } else {
+                                                                return;
+                                                            }   
                                                     }}
                                                 >
                                                     Reset
@@ -626,6 +625,10 @@ class Wizard extends React.Component {
                                             color="secondary"
                                             style={{color: 'white'}}
                                             disabled={values.submission.length > 0 ? false : true}
+                                            onClick={() => {
+                                                const div = document.getElementById('bigDiv');
+                                                div.scrollTop = 0;
+                                            }}
                                         >
                                             Suivant
                                         </Button>}
@@ -657,7 +660,8 @@ class Wizard extends React.Component {
                                                             disabled={checkArr.some(check) ? true : false} 
                                                             onClick={() => {
                                                                 if (typeof form.errors.submission === 'undefined') {
-                                                                    return null;
+                                                                    const div = document.getElementById('bigDiv');
+                                                                    div.scrollTop = 0;
                                                                 } else {
                                                                     toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
                                                                         if (typeof service === 'undefined') {
@@ -680,6 +684,10 @@ class Wizard extends React.Component {
                                             variant="contained"
                                             color="secondary"
                                             style={{ color: 'white'}}
+                                            onClick={() => {
+                                                const div = document.getElementById('bigDiv');
+                                                div.scrollTop = 0;
+                                            }}
                                         >
                                             Suivant
                                         </Button>}
@@ -694,7 +702,10 @@ class Wizard extends React.Component {
                                             }
         
                                             return (
-                                                <Button type="submit" variant="contained" color="secondary" style={{color: !cancel ? 'white' : null }} disabled={cancel}>
+                                                <Button type="submit" variant="contained" color="secondary" style={{color: !cancel ? 'white' : null }} disabled={cancel} onClick={() => {
+                                                    const div = document.getElementById('bigDiv');
+                                                    div.scrollTop = 0;
+                                                }}>
                                                     Suivant
                                                 </Button>
                                             )
@@ -841,6 +852,14 @@ class Form extends React.Component {
 
             currentUser: null,
             passportid: 'passport',
+
+            diplomaName: null,
+            diplomaYear: null,
+            diplomaObj: null,
+
+            certifName: null,
+            certifYear: null,
+            certifObj: null
         }
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -1074,7 +1093,7 @@ class Form extends React.Component {
                     }}
                 >
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer} style={{justifyContent: 'start'}}>
+                        <Grid container className={classes.cardContainer} style={{justifyContent: 'start', overflow: 'hidden'}}>
                             
                             <div style={{padding: '0rem 2rem 1rem 2rem', width: '100%'}}>
                                 <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
@@ -1104,7 +1123,7 @@ class Form extends React.Component {
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start'}}>
+                        <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', overflow: 'hidden'}}>
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Vos catégories de service</Typography>
                                     <Typography>
@@ -1165,12 +1184,11 @@ class Form extends React.Component {
                                                                         {/*<Typography align="center" style={{marginLeft: 80, color: "grey"}}>Choisissez vos services pour {categorie.label}</Typography>*/}
                                                                     </ExpansionPanelSummary>
                                                                     <ExpansionPanelDetails>
-                                                                        <Grid container spacing={2}>
+                                                                        <Grid container>
                                                                             {categorie[categorie.label.replace(/\s/g, '') + 'Services'].map((service, index) => {
                                                                                 return (
-                                                                                    <Grid item xs={6} sm={6} md={3}>
+                                                                                    <Grid item xs={6} sm={6} md={3} key={index}>
                                                                                         <FormControlLabel
-                                                                                            key={index}
                                                                                             control={
                                                                                                 <Switch
                                                                                                     color="primary"
@@ -1325,18 +1343,17 @@ class Form extends React.Component {
                                                     style={{marginTop: '3rem', color: 'white', borderRadius: 8}}
                                                     variant="contained"
                                                     type="button"
-                                                    disabled="true"
+                                                    disabled={true}
                                                 >
                                                     Je valide mes services
                                                 </Button>
                                             </div>
                                     }}
-                                </Field>    
-                                   <Debug />           
+                                </Field>             
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer}>
+                        <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
                             
                                 <FieldArray
                                     name="submission"
@@ -1352,18 +1369,23 @@ class Form extends React.Component {
                                                 <Tabs>
                                                     <TabList>
                                                         {this.state.allInOneServ.map((data, index) => {
-                                                            return <Tab key={index} style={{zIndex: 999999999 - index}}><div>{typeof arrayHelpers.form.errors.submission === 'undefined' ? <span style={{height: 10, width: 10, borderRadius: '50%', marginRight: 5, display: 'inline-block'}}></span> : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? <span style={{height: 10, width: 10, backgroundColor: '#F8727F', marginRight: 5, display: 'inline-block'}}></span> : null) }{data.serviceLabel}</div></Tab>
+                                                            return <Tab 
+                                                                        key={index} 
+                                                                        style={{zIndex: 999999999 - index, position: 'relative'}} 
+                                                                        onClick={() => {
+                                                                            const div = document.getElementById('bigDiv');
+                                                                            div.scrollTop = 0;
+                                                                        }}
+                                                                    >
+                                                                        <div>
+                                                                            {typeof arrayHelpers.form.errors.submission === 'undefined' ? <span style={{position: 'absolute', borderTopRightRadius: 20, top: 0, right: 0, height: '100%', width: '5%', display: 'inline-block'}}></span> : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? <span style={{position: 'absolute', borderTopRightRadius: 20, top: 0, right: 0, height: '100%', width: '5%', backgroundColor: '#F8727F', display: 'inline-block'}}></span> : null) }{data.serviceLabel}
+                                                                        </div>
+                                                                    </Tab>
                                                         })}
                                                     </TabList>
                                                     {this.state.allInOneServ.map((s, index) => {
                                                         return(
                                                             <TabPanel key={index}>
-                                                                {/*<div style={{padding: '0 2rem'}}>
-                                                                    <h2 className={classes.text1} style={{margin: '15px 0'}}>{s.CategoryLabel}</h2>
-                                                                    <div className={classes.title2} style={{marginBottom: '0 !important'}}>
-                                                                        <h4 style={{color: 'white'}} className={classes.text1}>{s.serviceLabel}</h4>
-                                                                    </div>
-                                                        </div>*/}
                                                                 <div style={{padding: '0 2rem'}}>
                                                                     <div style={{paddingBottom: '1rem'}}>
                                                                         <Grid container spacing={8}>
@@ -1814,8 +1836,10 @@ class Form extends React.Component {
                                                                                 <Grid item xs={12}>
                                                                                     <Typography>Nombre d'années d'expériences</Typography>
                                                                                     <Select 
+                                                                                        isClearable={true}
                                                                                         placeholder="Vos années d'expériences"
                                                                                         options={[
+                                                                                            {value: '', label: "Aucune année d'expérience"},
                                                                                             {value: 'ZeroOrOne', label: 'Entre 0 et 1 an'},
                                                                                             {value: 'OneToFive', label: 'Entre 1 et 5 ans'},
                                                                                             {value: 'FiveToTen', label: 'Entre 5 et 10 ans'},
@@ -1839,6 +1863,15 @@ class Form extends React.Component {
                                                                                         <React.Fragment>
                                                                                             <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
                                                                                                 <p>{arrayHelpers.form.values.submission[index].diploma.label} | {arrayHelpers.form.values.submission[index].diploma.year}</p>
+                                                                                                <Button 
+                                                                                                    variant="contained"
+                                                                                                    color="secondary"
+                                                                                                    style={{color: 'white', marginBottom: '.5rem'}}
+                                                                                                    onClick={() => {
+                                                                                                        arrayHelpers.form.setFieldValue(`submission.${index}.diploma.label`, null);
+                                                                                                        arrayHelpers.form.setFieldValue(`submission.${index}.diploma.year`, null);
+                                                                                                        arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, null);
+                                                                                                }}>Supprimer</Button>
                                                                                             </div>
                                                                                         </React.Fragment>
                                                                                         : null
@@ -1852,22 +1885,18 @@ class Form extends React.Component {
                                                                                         <ExpansionPanelDetails>
                                                                                             <Grid container>
                                                                                                 <Grid item xs={12}>
-                                                                                                <Field
-                                                                                                    name={`submission.${index}.diploma.label`}
-                                                                                                    render={({field}) => {
-                                                                                                        return (
-                                                                                                            <TextField
-                                                                                                                {...field}
-                                                                                                                style={{width: '50%', marginRight: '5%'}}
-                                                                                                                className={classes.inputDiplomaCertifResp}
-                                                                                                                label="Nom du diplôme"
-                                                                                                                margin="dense"
-                                                                                                                variant="outlined"
-                                                                                                                //helperText="Délai de prévenance avant réservation."
-                                                                                                            />
-                                                                                                        )
-                                                                                                    }}
-                                                                                                />
+                                                                                                    <TextField
+                                                                                                        value={this.state.diplomaName}
+                                                                                                        style={{width: '50%', marginRight: '5%'}}
+                                                                                                        className={classes.inputDiplomaCertifResp}
+                                                                                                        label="Nom du diplôme"
+                                                                                                        margin="dense"
+                                                                                                        variant="outlined"
+                                                                                                        onChange={() => {
+                                                                                                            this.setState({ diplomaName: event.target.value })
+                                                                                                        }}
+                                                                                                        //helperText="Délai de prévenance avant réservation."
+                                                                                                    />
                                                                                                 </Grid>
                                                                                                 <Grid item xs={12}>
                                                                                                     <Field
@@ -1897,12 +1926,23 @@ class Form extends React.Component {
                                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                                         Joindre mon diplôme
                                                                                                         <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" onChange={(event) => {
-                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, event.currentTarget.files[0]);
+                                                                                                            //arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, event.currentTarget.files[0]);
+                                                                                                            this.setState({ diplomaObj: event.currentTarget.files[0] })
                                                                                                         }} className="form-control"
                                                                                                         />
                                                                                                     </label>
-                                                                                                    <span>{arrayHelpers.form.values.submission[index].diploma.diploma !== null ? arrayHelpers.form.values.submission[index].diploma.diploma.name : null}</span>
+                                                                                                    <span>{this.state.diplomaObj !== null ? this.state.diplomaObj.name : null}</span>
                                                                                                     <p>En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ses derniers</p>
+                                                                                                    <Button
+                                                                                                        variant="contained"
+                                                                                                        color="primary"
+                                                                                                        style={{color: 'white'}}
+                                                                                                        onClick={() => {
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma.label`, this.state.diplomaName);
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, this.state.diplomaObj);
+                                                                                                        }}
+                                                                                                        disabled={this.state.diplomaName === null || this.state.diplomaName === '' || arrayHelpers.form.values.submission[index].diploma.year === null || this.state.diplomaObj === null ? true : false}
+                                                                                                    >Ajouter mon diplôme</Button>
                                                                                                 </Grid>
                                                                                             </Grid>
                                                                                         </ExpansionPanelDetails>
@@ -1914,6 +1954,15 @@ class Form extends React.Component {
                                                                                         <React.Fragment>
                                                                                             <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
                                                                                                 <p>{arrayHelpers.form.values.submission[index].certification.label} | {arrayHelpers.form.values.submission[index].certification.year}</p>
+                                                                                                <Button 
+                                                                                                    variant="contained"
+                                                                                                    color="secondary"
+                                                                                                    style={{color: 'white', marginBottom: '.5rem'}}
+                                                                                                    onClick={() => {
+                                                                                                        arrayHelpers.form.setFieldValue(`submission.${index}.certification.label`, null);
+                                                                                                        arrayHelpers.form.setFieldValue(`submission.${index}.certification.year`, null);
+                                                                                                        arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, null);
+                                                                                                }}>Supprimer</Button>
                                                                                             </div>
                                                                                         </React.Fragment>
                                                                                         : null
@@ -1927,21 +1976,17 @@ class Form extends React.Component {
                                                                                         <ExpansionPanelDetails>
                                                                                             <Grid container>
                                                                                                 <Grid item xs={12}>
-                                                                                                    <Field
-                                                                                                        name={`submission.${index}.certification.label`}
-                                                                                                        render={({field}) => {
-                                                                                                            return (
-                                                                                                                <TextField
-                                                                                                                    {...field}
-                                                                                                                    style={{width: '50%', marginRight: '5%'}}
-                                                                                                                    className={classes.inputDiplomaCertifResp}
-                                                                                                                    label="Nom du certificat"
-                                                                                                                    margin="dense"
-                                                                                                                    variant="outlined"
-                                                                                                                    //helperText="Délai de prévenance avant réservation."
-                                                                                                                />
-                                                                                                            )
+                                                                                                    <TextField
+                                                                                                        value={this.state.certifName}
+                                                                                                        onChange={() => {
+                                                                                                            this.setState({ certifName: event.target.value })
                                                                                                         }}
+                                                                                                        style={{width: '50%', marginRight: '5%'}}
+                                                                                                        className={classes.inputDiplomaCertifResp}
+                                                                                                        label="Nom du certificat"
+                                                                                                        margin="dense"
+                                                                                                        variant="outlined"
+                                                                                                        //helperText="Délai de prévenance avant réservation."
                                                                                                     />
                                                                                                 </Grid>
                                                                                                 <Grid item xs={12}>
@@ -1972,12 +2017,23 @@ class Form extends React.Component {
                                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                                         Joindre ma certification
                                                                                                         <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certification" type="file" onChange={(event) => {
-                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, event.currentTarget.files[0]);
+                                                                                                            //arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, event.currentTarget.files[0]);
+                                                                                                            this.setState({ certifObj: event.currentTarget.files[0] })
                                                                                                         }} className="form-control"
                                                                                                         />
                                                                                                     </label>
-                                                                                                    <span>{arrayHelpers.form.values.submission[index].certification.certification !== null ? arrayHelpers.form.values.submission[index].certification.certification.name : null}</span>
+                                                                                                    <span>{this.state.certifObj !== null ? this.state.certifObj.name : null}</span>
                                                                                                     <p>En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ses derniers</p>
+                                                                                                    <Button
+                                                                                                        variant="contained"
+                                                                                                        color="primary"
+                                                                                                        style={{color: 'white'}}
+                                                                                                        onClick={() => {
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification.label`, this.state.certifName);
+                                                                                                            arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, this.state.certifObj);
+                                                                                                        }}
+                                                                                                        disabled={this.state.certifName === null || this.state.certifName === '' || arrayHelpers.form.values.submission[index].certification.year === null || this.state.certifObj === null ? true : false}
+                                                                                                    >Ajouter ma certification</Button>
                                                                                                 </Grid>
                                                                                             </Grid>
                                                                                         </ExpansionPanelDetails>
@@ -2001,6 +2057,7 @@ class Form extends React.Component {
                                 
                                 {/*</div>*/}
                         </Grid>
+                        <Debug />
                         
                     </Wizard.Page>
                     <Wizard.Page>
@@ -2011,7 +2068,7 @@ class Form extends React.Component {
                         }} />
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer}>
+                        <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
                             
                             <div className={classes.newContainer}>
                                     <Grid container>
@@ -2390,7 +2447,7 @@ class Form extends React.Component {
                         <Field>
                             {({ form, field }) => (
                                 <React.Fragment>
-                                    <Grid container className={classes.cardContainer}>
+                                    <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
                                         
                                             <div className={classes.newContainer}>
                                                 <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
@@ -2793,7 +2850,6 @@ class Form extends React.Component {
                                 </React.Fragment>
                             )}
                         </Field>
-                        <Debug />
                     </Wizard.Page>
                 </Wizard>
             </div>
