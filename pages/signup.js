@@ -17,6 +17,7 @@ import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 import Birthday from '@material-ui/icons/CakeOutlined'
 import Footer from '../hoc/Layout/Footer/Footer';
+import { toast } from 'react-toastify';
 registerLocale('fr', fr);
 
 
@@ -25,7 +26,7 @@ const { config } = require('../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
   fullContainer: {
-    backgroundImage: 'url(../static/bailey-zindel-396399-unsplash.jpg)',
+    backgroundImage: 'url(../static/bailey-zindel-396399-unsplash-min.jpg)',
     filter: 'blur(5px)',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
@@ -130,6 +131,11 @@ class signup extends React.Component {
 
       componentDidMount() {
         document.body.style.overflow = 'auto';
+        const token = localStorage.getItem('token');
+        if(token !== null) {
+          toast.warn('Vous êtes déjà inscrit');
+          Router.push('/')
+        }
       }
 
 
@@ -175,6 +181,7 @@ class signup extends React.Component {
         axios
             .post(url+'myAlfred/api/users/register', newUser)
             .then(res => {
+              toast.info('Inscription réussi');
               axios.post(url+'myAlfred/api/users/login',{username, password})
                   .then(response => {
                     const {token} = response.data;
@@ -266,7 +273,7 @@ class signup extends React.Component {
                         </Grid>
                       </Grid>
                       <Grid container style={{marginTop: 15}}>
-                        <Typography style={{fontSize: '1.2rem', width:'100%'}}>Adresse</Typography>
+                        <Typography style={{fontSize: '1.2rem', width:'100%'}}>Adresse postale</Typography>
                         <p>Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous proposer<br/>
                         ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</p>
                         <Grid item style={{width: '100%'}}> <AlgoliaPlaces
@@ -289,8 +296,8 @@ class signup extends React.Component {
                         <Grid item style={{width: '100%'}}>
                           <TextField
                               id="standard-with-placeholder"
-                              label="Adresse"
-                              placeholder="Adresse"
+                              label="Rue"
+                              placeholder="Rue"
                               margin="normal"
                               variant="outlined"
                               style={{ width: '100%' }}

@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import { toast } from 'react-toastify';
 
 
 const { config } = require('../../config/config');
@@ -117,7 +118,7 @@ class parameters extends React.Component {
                 .then(() => {
                     axios.delete(url+'myAlfred/api/shop/current/delete')
                         .then(shop => {
-                            alert('Shop supprimée');
+                            toast.error('Boutique supprimée');
                         })
                         .catch(err => console.log(err));
                 })
@@ -131,7 +132,7 @@ class parameters extends React.Component {
         if(confirm('Etes-vous sur de vouloir supprimer votre compte ?')){
             axios.delete(url+'myAlfred/api/users/current/delete')
                 .then(shop => {
-                    alert('Compte supprimé');
+                    toast.error('Compte supprimé');
                     Router.push('/');
                 })
                 .catch(err => console.log(err));

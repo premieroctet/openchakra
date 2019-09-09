@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
@@ -10,6 +9,7 @@ import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 import Link from "next/link";
+import { toast } from 'react-toastify';
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
@@ -78,7 +78,7 @@ class addPhone extends React.Component {
         axios
             .put(url+'myAlfred/api/users/profile/phone', newPhone)
             .then(res => {
-                alert('Téléphone ajouté');
+                toast.info('Téléphone ajouté');
                 Router.push({pathname: '/checkEmail'})
             })
             .catch(err =>
@@ -101,7 +101,8 @@ class addPhone extends React.Component {
 
                         </div>
                             <div className={classes.newContainer}>
-                                <Typography style={{fontFamily: 'helveticaNeue'}}>De cette façon, vos Alfred ou vos clients pourront vous contacter si besoin.</Typography>
+                                <Typography style={{fontFamily: 'helveticaNeue'}}>L'ajout de votre numéro de téléphone permet aux membres My-Alfred
+                                    de disposer d'un moyen pour vous contacter.</Typography>
                                 <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
                                     <img src='../static/smartphone.svg' style={{width: 100}}/>
                                 </Grid>
@@ -129,7 +130,7 @@ class addPhone extends React.Component {
                                     </form>
                                 </Grid>
                                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
-                                    <Link href={'/'}><a style={{textDecoration: 'none', color: 'black'}}>Je le ferai plus tard</a></Link>
+                                    <Link href={'/checkEmail'}><a style={{textDecoration: 'none', color: 'black'}}>Je le ferai plus tard</a></Link>
                                 </Grid>
                             </div>
 

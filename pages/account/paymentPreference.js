@@ -8,9 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
+import { toast } from 'react-toastify';
 import Footer from '../../hoc/Layout/Footer/Footer';
 
 
@@ -143,7 +141,7 @@ class paymentPreference extends React.Component {
 
       axios.put(url+'myAlfred/api/users/account/rib',data)
           .then(res => {
-              alert('RIB ajouté');
+              toast.info('RIB ajouté');
               this.setState({user: res.data});
               this.setState({haveAccount: true,account: res.data.account});
 

@@ -280,8 +280,8 @@ class detailsAvailability extends React.Component {
     };
 
     handleClickMonday() {
-        if(moment(this.state.monday_end).isBefore(moment(this.state.monday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.monday_end).isBefore(moment(this.state.monday_begin))|| this.state.monday_begin ==="" || this.state.monday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -316,8 +316,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickTuesday() {
-        if(moment(this.state.tuesday_end).isBefore(moment(this.state.tuesday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.tuesday_end).isBefore(moment(this.state.tuesday_begin))|| this.state.tuesday_begin ==="" || this.state.tuesday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -352,8 +352,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickWednesday() {
-        if(moment(this.state.wednesday_end).isBefore(moment(this.state.wednesday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.wednesday_end).isBefore(moment(this.state.wednesday_begin))|| this.state.wednesday_begin ==="" || this.state.wednesday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -388,8 +388,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickThursday() {
-        if(moment(this.state.thursday_end).isBefore(moment(this.state.thursday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.thursday_end).isBefore(moment(this.state.thursday_begin))|| this.state.thursday_begin ==="" || this.state.thursday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -424,8 +424,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickFriday() {
-        if(moment(this.state.friday_end).isBefore(moment(this.state.friday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.friday_end).isBefore(moment(this.state.friday_begin))|| this.state.friday_begin ==="" || this.state.friday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -460,8 +460,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickSaturday() {
-        if(moment(this.state.saturday_end).isBefore(moment(this.state.saturday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.saturday_end).isBefore(moment(this.state.saturday_begin))|| this.state.saturday_begin ==="" || this.state.saturday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -496,8 +496,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickSunday() {
-        if(moment(this.state.sunday_end).isBefore(moment(this.state.sunday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.sunday_end).isBefore(moment(this.state.sunday_begin))|| this.state.sunday_begin ==="" || this.state.sunday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -628,7 +628,7 @@ class detailsAvailability extends React.Component {
 
 
                         </Grid>
-                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:115}}>
+                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
 
                         </Grid>
                         <Grid item>

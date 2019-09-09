@@ -10,6 +10,7 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import Footer from '../../hoc/Layout/Footer/Footer';
+import { toast } from 'react-toastify';
 
 moment.locale('fr');
 
@@ -131,7 +132,7 @@ class security extends React.Component {
         axios
             .put(url+'myAlfred/api/users/profile/editPassword', data)
             .then(res => {
-                alert('Mot de passe modifié');
+                toast.info('Mot de passe modifié');
                 this.componentDidMount();
             })
             .catch(err =>

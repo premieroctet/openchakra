@@ -18,6 +18,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import styled from "styled-components";
+import { toast } from 'react-toastify';
+
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
@@ -93,6 +95,42 @@ const styles = theme => ({
 
 
 });
+
+class Thumb extends React.Component {
+    state = {
+        loading: false,
+        thumb: undefined,
+    };
+
+    componentWillReceiveProps(nextProps) {
+        if (!nextProps.file) { return; }
+
+        this.setState({ loading: true }, () => {
+            let reader = new FileReader();
+
+            reader.onloadend = () => {
+                this.setState({ loading: false, thumb: reader.result });
+            };
+
+            reader.readAsDataURL(nextProps.file);
+        });
+    }
+
+    render() {
+        const { file } = this.props;
+        const { loading, thumb } = this.state;
+
+        if (!file) { return null; }
+
+        if (loading) { return <p>loading...</p>; }
+
+        return (<img src={thumb}
+                     alt={file.name}
+                     height={'auto'}
+                     width={100}
+                     />);
+    }
+}
 
 class trustAndVerification extends React.Component {
     constructor(props) {
@@ -234,7 +272,7 @@ class trustAndVerification extends React.Component {
         };
         axios.post(url+"myAlfred/api/users/profile/idCard",formData,config)
             .then((response) => {
-                alert("Carte d'identité ajouté");
+                toast.info('Carte d\'identité ajoutée');
 
             }).catch((error) => {
             console.log(error)
@@ -248,7 +286,7 @@ class trustAndVerification extends React.Component {
     sendEmail = () =>{
       axios.get(url+'myAlfred/api/users/sendMailVerification')
           .then(() => {
-              alert('Email envoyé')
+              toast.info('Email envoyé');
           })
           .catch(err => console.log(err));
     };
@@ -272,7 +310,7 @@ class trustAndVerification extends React.Component {
         axios
             .put(url+'myAlfred/api/shop/editStatus', newStatus)
             .then(res => {
-                alert('Statut modifié');
+                toast.info('Statut modifié')
 
             })
             .catch(err =>
@@ -517,29 +555,34 @@ class trustAndVerification extends React.Component {
 
                                     </TextField>
                                     <form onSubmit={this.onSubmit}>
-                                    <div style={{marginTop: 20,padding: '2% 13%',border:'0.2px solid lightgrey',width:'80%'}}>
-                                        <label style={{display: 'inline-block', marginTop: 15,paddingLeft: 50}} className="forminputs">
+                                    <Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center"}}>
+                                        <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger recto</p>
                                             <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
                                                    onChange={this.onChangeRecto}
-                                                   className="form-control"
+                                                   className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                             />
                                         </label>
-                                        <span>{this.state.id_recto.name !== null ? this.state.id_recto.name : null}</span>
-                                    </div>
-                                    <div style={{marginTop: 20,padding: '3% 8%',paddingTop: '5%',border:'0.2px solid lightgrey',width:'80%'}}>
-                                        <label style={{display: 'inline-block', }} className="forminputs">
+
+
+                                    </Grid>
+                                        <Thumb file={this.state.id_recto} />
+                                    <Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center"}}>
+                                        <label style={{display: 'inline-block',textAlign:"center" }} className="forminputs">
                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
                                             <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
                                                    onChange={this.onChangeVerso}
-                                                   className="form-control"
+                                                   className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                             />
                                         </label>
-                                        <span>{this.state.id_verso.name !== null ? this.state.id_verso.name : null}</span>
-                                    </div>
-                                            <Button type="submit" variant="contained" color="primary" style={{ width: '80%',color:'white',marginTop:15 }}>
+
+                                    </Grid>
+                                        <Thumb file={this.state.id_verso} />
+                                        <Grid item xs={5}>
+                                            <Button type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
                                                 Valider
                                             </Button>
+                                        </Grid>
                                     </form>
                                 </Grid>
 
@@ -549,10 +592,10 @@ class trustAndVerification extends React.Component {
                                         <div style={{marginTop: 20,width:'80%',display:'flex'}}>
                                             {ext ==='pdf' ?
                                                 <Document
-                                                    file={`../${this.state.card.recto}`}
-                                                    onLoadSuccess={this.onDocumentLoadSuccess}
+                                                file={`../${this.state.card.recto}`}
+                                                onLoadSuccess={this.onDocumentLoadSuccess}
                                                 >
-                                                    <Page pageNumber={this.state.pageNumber} width='250' />
+                                                <Page pageNumber={this.state.pageNumber} width='250' />
                                                 </Document>
                                                 :
                                                 <img src={`../${this.state.card.recto}`} alt={'recto'} width={200}/>

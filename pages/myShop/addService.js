@@ -17,12 +17,10 @@ import Checkbox from "@material-ui/core/Checkbox";
 import AlgoliaPlaces from 'algolia-places-react';
 import InputRange from 'react-input-range';
 import moment from "moment";
-import EditIcon from '@material-ui/icons/EditOutlined';
-import DeleteIcon from '@material-ui/icons/DeleteOutlined';
-import { Document,Page } from 'react-pdf'
 import { pdfjs } from 'react-pdf';
 import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
+import { toast } from 'react-toastify';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
@@ -376,7 +374,7 @@ class addService extends React.Component {
         axios.post(`${url}myAlfred/api/serviceUser/myShop/add`,formData)
             .then(res => {
 
-                alert('Service ajouté avec succès');
+                toast.info('Service ajouté avec succès');
                 Router.push({pathname:'/myShop/services'})
             })
             .catch(err => {

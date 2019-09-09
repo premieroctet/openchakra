@@ -19,7 +19,7 @@ import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/EditOutlined';
 import Modal from '@material-ui/core/Modal';
 import { Carousel } from 'react-responsive-carousel';
-import SearchIcon from '@material-ui/icons/SearchOutlined';
+import { toast } from 'react-toastify';
 
 
 
@@ -248,14 +248,14 @@ class services extends React.Component {
         axios.put(url+'myAlfred/api/shop/editParameters',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card,
         recommandations,welcome_message,flexible_cancel,moderate_cancel,strict_cancel})
             .then(() => {
-                alert('Pramètres modifiés')
+                toast.info('Paramètres modifiés')
             })
             .catch(err => console.log(err))
-    }
+    };
 
     handleClicktabs2 =() => {
         this.setState({ tabs: true });
-    }
+    };
 
     handleClicktabs =() => {
         this.setState({ tabs: false });
@@ -267,7 +267,7 @@ class services extends React.Component {
 
             axios.delete(url + 'myAlfred/api/serviceUser/' + id)
                 .then(() => {
-                    alert('Service supprimé');
+                    toast.error('Service supprimé');
                     this.componentDidMount();
                 })
                 .catch(err => console.log(err))
@@ -280,7 +280,7 @@ class services extends React.Component {
 
         axios.put(url+'myAlfred/api/shop/editBanner',data)
             .then(res => {
-                alert('Photo modifiée');
+                toast.info('Photo modifiée');
                 this.setState({open:false});
                 this.componentDidMount();
             })
@@ -288,7 +288,7 @@ class services extends React.Component {
                 console.log(err)
             })
 
-    }
+    };
 
     render() {
         const {classes} = this.props;
@@ -341,15 +341,15 @@ class services extends React.Component {
 
 
                         </Grid>
-                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:115}}>
+                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
 
                         </Grid>
                         <Grid item>
 
                             <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'45%',zIndex:501}} width={'9%'} alt={'picture'}/>
                         </Grid>
-                        <Grid item style={{position:"absolute",left:'3%',top:'18%',zIndex:502}}>
-                            <p onClick={()=>this.handleOpen()} style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1rem'}}>{/*<EditIcon  style={{cursor: 'pointer',width:15, height:15, marginRight: 3,}}/>*/}Modifier</p>
+                        <Grid item style={{position:"absolute",left:'3%',top:'20%',zIndex:502}}>
+                            <img src={'../static/edit-image.svg'} alt={'edit'} onClick={()=>this.handleOpen()} style={{cursor:'pointer'}} width={30}/>
                         </Grid>
                         <Grid item style={{position:"absolute",right:'3%',top:'18%',zIndex:502}}>
                             <Link href={'/myShop/shopPreview?id_alfred=' + this.state.user._id}><a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}}><p>Aperçu de ma boutique</p></a></Link>

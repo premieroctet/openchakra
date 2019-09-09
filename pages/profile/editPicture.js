@@ -10,6 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Fab from '@material-ui/core/Fab';
 import Footer from '../../hoc/Layout/Footer/Footer';
+import { toast } from 'react-toastify';
 
 moment.locale('fr');
 
@@ -160,7 +161,7 @@ class editPicture extends React.Component {
         };
         axios.post(url+"myAlfred/api/users/profile/picture",formData,config)
             .then((response) => {
-                alert("Photo modifiée");
+                toast.info('Photo modifiée');
                 Router.push({pathname:'/profile/editProfile'})
             }).catch((error) => {
             console.log(error)
@@ -170,7 +171,7 @@ class editPicture extends React.Component {
     deletePicture = () => {
       axios.delete(url+'myAlfred/api/users/profile/picture/delete')
           .then(() => {
-              alert('Photo supprimée');
+              toast.error('Photo supprimée');
               this.componentDidMount();
           })
           .catch(err => console.log(err));
@@ -333,7 +334,7 @@ class editPicture extends React.Component {
                                 <Grid item style={{width: 150, height: 150}}>
                                     <DeleteIcon onClick={()=>this.deletePicture()} className={classes.deleteicon} style={{marginLeft: '90%',padding: '2%', marginBottom: '-10%', color: '#616060',  cursor: 'pointer' }}/>
 
-                                    <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img height={150} width={150} style={{borderRadius: '50%'}} src={`../${user.picture}`}></img>}
+                                    <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img height={150} width={150} style={{borderRadius: '50%'}} src={`../${user.picture}`} alt={'picture'}/>}
                                 </Grid>
 
                                 <Grid item style={{marginLeft: '5%'}}>

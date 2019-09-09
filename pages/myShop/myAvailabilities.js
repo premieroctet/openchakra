@@ -167,7 +167,7 @@ class myAvailabilities extends React.Component {
 
 
                         </Grid>
-                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:115}}>
+                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
 
                         </Grid>
                         <Grid item>

@@ -12,6 +12,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
+import { toast } from 'react-toastify';
 
 
 
@@ -169,7 +170,7 @@ class notifications extends React.Component {
 
         axios.put(url+'myAlfred/api/users/account/notifications',data)
             .then(() => {
-                alert('Compte mis à jour');
+                toast.info('Compte mis à jour');
             })
             .catch(err => {
                 console.log(err);

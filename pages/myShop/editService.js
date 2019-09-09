@@ -23,6 +23,7 @@ import { Document,Page } from 'react-pdf'
 import { pdfjs } from 'react-pdf';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import Switch from "@material-ui/core/Switch";
+import { toast } from 'react-toastify';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
@@ -411,7 +412,7 @@ class editService extends React.Component {
                 ,description,level})
                 .then(res => {
 
-                    alert('Service modifié avec succès');
+                    toast.info('Service modifié avec succès');
                     Router.push({pathname:'/myShop/services'})
                 })
                 .catch(err => {
@@ -442,7 +443,7 @@ class editService extends React.Component {
 
             axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+id,formData)
                 .then(() => {
-                    alert('Diplome modifié')
+                    toast.info('Diplome modifié')
                 })
                 .catch(err => console.log(err))
 
@@ -460,7 +461,7 @@ class editService extends React.Component {
 
                 axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+id,formData)
                     .then(() => {
-                        alert('Diplome ajouté');
+                        toast.info('Diplome ajouté');
                         this.componentDidMount();
                         this.setState({haveDiploma: true})
                     })
@@ -472,7 +473,7 @@ class editService extends React.Component {
         const id = this.props.service_id;
         axios.delete(url+'myAlfred/api/serviceUser/delete/diploma/'+id)
             .then(() => {
-                alert('Diplôme supprimé');
+                toast.error('Diplôme supprimé');
                 this.setState({haveDiploma: false,editDiploma: false})
             })
             .catch(err => console.log(err))
@@ -497,7 +498,7 @@ class editService extends React.Component {
 
             axios.post(url+'myAlfred/api/serviceUser/addCertification/'+id,formData)
                 .then(() => {
-                    alert('Certification modifiée')
+                    toast.info('Certification modifiée')
                 })
                 .catch(err => console.log(err))
 
@@ -515,7 +516,7 @@ class editService extends React.Component {
 
             axios.post(url+'myAlfred/api/serviceUser/addCertification/'+id,formData)
                 .then(() => {
-                    alert('Certification ajoutée');
+                    toast.info('Certification ajoutée');
                     this.componentDidMount();
                     this.setState({haveCertification: true})
                 })
@@ -527,7 +528,7 @@ class editService extends React.Component {
         const id = this.props.service_id;
         axios.delete(url+'myAlfred/api/serviceUser/delete/certification/'+id)
             .then(() => {
-                alert('Certification supprimée');
+                toast.error('Certification supprimée');
                 this.setState({haveCertification: false,editCertification: false})
             })
             .catch(err => console.log(err))

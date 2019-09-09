@@ -9,14 +9,10 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import {FormLabel} from "@material-ui/core";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import AlgoliaPlaces from 'algolia-places-react';
+import { toast } from 'react-toastify';
 
 
 
@@ -96,7 +92,7 @@ class myAddresses extends React.Component {
             new_address: '',
             new_city: '',
             new_zip_code: '',
-            floor: '',
+            //floor: '',
             note: '',
             phone: '',
             lat: '',
@@ -109,7 +105,7 @@ class myAddresses extends React.Component {
             edit_address: '',
             edit_city: '',
             edit_zip_code: '',
-            edit_floor: '',
+            //edit_floor: '',
             edit_note: '',
             edit_phone: '',
             edit_lat: '',
@@ -179,7 +175,7 @@ class myAddresses extends React.Component {
           .then(res => {
               let result = res.data;
               this.setState({address_selected: result,edit_label: result.label,edit_address:result.address,edit_zip_code:result.zip_code,
-              edit_city:result.city, edit_floor:result.floor, edit_note: result.note,edit_phone: result.phone_address,edit_lat: result.lat,edit_lng: result.lng});
+              edit_city:result.city, edit_note: result.note,edit_phone: result.phone_address,edit_lat: result.lat,edit_lng: result.lng});
           })
           .catch(err => console.log(err));
     };
@@ -195,7 +191,7 @@ class myAddresses extends React.Component {
         axios
             .put(url+'myAlfred/api/users/profile/billingAddress', address)
             .then(res => {
-                alert('Adresse principale modifiée');
+                toast.info('Adresse principale modifiée');
                 Router.push({pathname:'/profile/myAddresses'})
             })
             .catch(err =>
@@ -212,13 +208,12 @@ class myAddresses extends React.Component {
             lat: this.state.lat,
             lng: this.state.lng,
             label: this.state.label_address,
-            floor: this.state.floor,
             note: this.state.note,
             phone: this.state.phone,
         };
         axios.put(url+'myAlfred/api/users/profile/serviceAddress',newAddress)
             .then(() => {
-                alert('Adresse ajoutée');
+                toast.info('Adresse ajoutéé');
                 this.setState({clickAdd: false});
                 this.componentDidMount();
             })
@@ -235,14 +230,13 @@ class myAddresses extends React.Component {
             lat: this.state.edit_lat,
             lng: this.state.edit_lng,
             label: this.state.edit_label,
-            floor: this.state.edit_floor,
             note: this.state.edit_note,
             phone: this.state.edit_phone,
       };
 
       axios.put(url+'myAlfred/api/users/profile/address/'+id,editAddress)
           .then(()=> {
-              alert('Adresse modifiée avec succès');
+              toast.info('Adresse modifiée avec succès');
               this.setState({clickEdit: false});
               this.componentDidMount();
 
@@ -251,13 +245,16 @@ class myAddresses extends React.Component {
     };
 
     deleteAddress = (id) => {
-        axios.delete(url+'myAlfred/api/users/profile/address/'+id)
-            .then(() => {
-                alert('Adresse supprimée');
-                this.setState({clickEdit: false});
-                this.componentDidMount();
-            })
-            .catch(err => console.log(err));
+        if(confirm('Etes vous sûr de vouloir supprimer cette adresse ?')) {
+            axios.delete(url+'myAlfred/api/users/profile/address/'+id)
+                .then(() => {
+                    toast.error('Adresse supprimée');
+                    this.setState({clickEdit: false});
+                    this.componentDidMount();
+                })
+                .catch(err => console.log(err));
+        }
+
     };
 
 
@@ -593,7 +590,7 @@ class myAddresses extends React.Component {
                                                     placeholder={'Ecrire ici'}
                                                 />
                                             </Grid>
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                            {/*<Grid item xs={12} style={{marginTop: 20}}>
 
                                                 <InputLabel style={{color: 'black'}}>Etage</InputLabel>
                                                 <TextField
@@ -606,7 +603,7 @@ class myAddresses extends React.Component {
                                                     placeholder={'Ecrire ici'}
                                                 />
 
-                                            </Grid>
+                                            </Grid>*/}
                                             <Grid item xs={12} style={{marginTop: 20}}>
 
                                                 <InputLabel style={{color: 'black'}}>Note (optionnel)</InputLabel>
@@ -732,7 +729,7 @@ class myAddresses extends React.Component {
                                                     placeholder={'Ecrire ici'}
                                                 />
                                             </Grid>
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                            {/*<Grid item xs={12} style={{marginTop: 20}}>
 
                                                 <InputLabel style={{color: 'black'}}>Etage</InputLabel>
                                                 <TextField
@@ -745,7 +742,7 @@ class myAddresses extends React.Component {
                                                     placeholder={'Ecrire ici'}
                                                 />
 
-                                            </Grid>
+                                            </Grid>*/}
                                             <Grid item xs={12} style={{marginTop: 20}}>
 
                                                 <InputLabel style={{color: 'black'}}>Note (optionnel)</InputLabel>
