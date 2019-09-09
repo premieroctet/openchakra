@@ -144,26 +144,29 @@ class NavBar extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token !== null) {
       this.setState({logged:true});
       const token2 = localStorage.getItem('token').split(' ')[1];
       const decode = jwt.decode(token2);
       this.setState({alfred: decode.is_alfred});
-    }
-    axios.defaults.headers.common['Authorization'] = token;
-    axios
-        .get(url+'myAlfred/api/users/current')
-        .then(res => {
+
+      axios.defaults.headers.common['Authorization'] = token;
+      axios
+          .get(url+'myAlfred/api/users/current')
+          .then(res => {
             let user = res.data;
             this.setState({user:user, alfred:user.is_alfred});
 
             if(typeof user.picture !="undefined") {
-                this.setState({picture: true})
+              this.setState({picture: true})
 
             } else {
               this.setState({picture: false})
             }
-        })
+          })
+          .catch(err => console.log(err))
+    }
+
 
   }
 
@@ -250,8 +253,8 @@ class NavBar extends Component {
   </React.Fragment>;
 
     const logoutAvatar = 
-    <React.Fragment>
-    <MenuItem onClick={this.handleMenuClose}>
+    [
+    <MenuItem key={1} onClick={this.handleMenuClose}>
       <Typography>
         <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
@@ -259,8 +262,8 @@ class NavBar extends Component {
           </a>
         </Link>
       </Typography>
-    </MenuItem>
-    <MenuItem onClick={this.handleMenuClose}>
+    </MenuItem>,
+    <MenuItem key={2} onClick={this.handleMenuClose}>
       <Typography>
         <Link href={'/account/notifications'}>
           <a className={classes.navbarLinkMobile}>
@@ -268,8 +271,8 @@ class NavBar extends Component {
           </a>
         </Link>
       </Typography>
-    </MenuItem>
-    <MenuItem onClick={()=>this.logout2()}>
+    </MenuItem>,
+    <MenuItem key={3} onClick={()=>this.logout2()}>
       <Typography>
 
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
@@ -278,7 +281,7 @@ class NavBar extends Component {
 
       </Typography>
     </MenuItem>
-  </React.Fragment>;
+  ];
 
     const renderMenu = (
       <Menu

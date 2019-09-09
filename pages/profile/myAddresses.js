@@ -497,7 +497,7 @@ class myAddresses extends React.Component {
                                 </Grid>
                                 <Grid container style={{marginTop: 20}}>
                                     {service_address.map((e,index) =>(
-                                       <React.Fragment> <Grid item xs={10} key={index} style={{marginLeft: -55}}>
+                                       <React.Fragment key={index}> <Grid item xs={10}  style={{marginLeft: -55}}>
                                             <hr style={{borderColor: '#fefefe',width:'125%'}}/>
                                             <h4 style={{paddingLeft: 40}}>{e.label}</h4>
                                             <p style={{paddingLeft: 40,marginBottom: 0}}>{e.address}</p>

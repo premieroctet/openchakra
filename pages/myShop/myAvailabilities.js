@@ -180,10 +180,10 @@ class myAvailabilities extends React.Component {
                         <Grid container style={{marginTop: 20}}>
                             <Grid item xs={7}>
 
-                                {all_availabilities.map(e => {
+                                {all_availabilities.map((e,index) => {
                                     if(e.period.active){
                                         return (
-                                            <Link href={'/myShop/detailsAvailability?id='+e._id}>
+                                            <Link key={index} href={'/myShop/detailsAvailability?id='+e._id}>
                                                 <a style={{textDecoration:'none'}}>
                                                     <p>Disponibilités pour la période : {moment(e.period.month_begin).format('LL')} / {moment(e.period.month_end).format('LL')}</p>
                                                 </a>
@@ -191,7 +191,7 @@ class myAvailabilities extends React.Component {
                                         )
                                     } else {
                                         return (
-                                            <Link href={'/myShop/detailsAvailability?id='+e._id}>
+                                            <Link key={index} href={'/myShop/detailsAvailability?id='+e._id}>
                                                 <a style={{textDecoration:'none'}}>
                                                     <p>Disponibilités sans période</p>
                                                 </a>

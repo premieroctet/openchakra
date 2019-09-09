@@ -479,11 +479,12 @@ class trustAndVerification extends React.Component {
 
                                     <InputLabel style={{color: 'black'}}>Email</InputLabel>
                                 </Grid>
+                                <Grid container>
                                 <Grid item xs={12} style={{display:"contents",justifyContent:"center"}}>
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width:'50%'}}
-                                        value={user.email}
+                                        value={user.email || ''}
                                         margin="normal"
                                         name={'email'}
                                         variant={'outlined'}
@@ -492,25 +493,27 @@ class trustAndVerification extends React.Component {
                                     {user.is_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :
                                         <img src={'../static/success.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
                                     }
+                                </Grid>
 
 
                                 </Grid>
                                 {user.is_confirmed ?
                                     null
-                                    : <Button type="submit" onClick={()=>this.sendEmail()} variant="contained" color="primary" style={{width:'50%',color:'white',marginTop:15 }}>
+                                    : <Grid container> <Grid item xs={7}> <Button type="submit" onClick={()=>this.sendEmail()} variant="contained" color="primary" style={{width:'50%',color:'white',marginTop:15 }}>
                                         Envoyer email de vérification
-                                    </Button>}
+                                    </Button></Grid></Grid>}
+
 
 
                                 <Grid item xs={12} style={{marginTop: 20}}>
 
                                     <InputLabel style={{color: 'black'}}>Téléphone</InputLabel>
                                 </Grid>
+                                <Grid container>
                                 <Grid item xs={12} style={{display:"contents",justifyContent:"center"}}>
                                     <TextField
-                                        id="standard-name"
                                         style={{ marginTop: 15,width:'50%'}}
-                                        value={user.phone}
+                                        value={user.phone || ''}
                                         margin="normal"
                                         name={'phone'}
                                         variant={'outlined'}
@@ -522,15 +525,19 @@ class trustAndVerification extends React.Component {
 
 
                                 </Grid>
-                                <Grid container>
-                                <Grid item xs={6}>
+                                </Grid>
+
                                     {user.phone_confirmed ?
                                         null
-                                        : <Button type="submit" onClick={()=>this.sendSms()} variant="contained" color="primary" style={{width:'100%',color:'white',marginTop:15 }}>
+                                        :
+                                        <Grid container>
+                                            <Grid item xs={4} style={{maxWidth:'30%'}}>
+                                        <Button type="submit" onClick={()=>this.sendSms()} variant="contained" color="primary" style={{width:'100%',color:'white',marginTop:15 }}>
                                             Envoyer sms de vérification
-                                        </Button>}
-                                </Grid>
-                                </Grid>
+                                        </Button>
+                                            </Grid>
+                                        </Grid>}
+
 
                                 <Grid item xs={6}>
                                     <h2 style={{fontWeight:'100'}}>Pièce d'identité</h2>
@@ -558,7 +565,7 @@ class trustAndVerification extends React.Component {
                                     <Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center"}}>
                                         <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger recto</p>
-                                            <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
+                                            <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
                                                    onChange={this.onChangeRecto}
                                                    className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                             />
@@ -570,7 +577,7 @@ class trustAndVerification extends React.Component {
                                     <Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center"}}>
                                         <label style={{display: 'inline-block',textAlign:"center" }} className="forminputs">
                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
-                                            <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
+                                            <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
                                                    onChange={this.onChangeVerso}
                                                    className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                             />
@@ -595,7 +602,7 @@ class trustAndVerification extends React.Component {
                                                 file={`../${this.state.card.recto}`}
                                                 onLoadSuccess={this.onDocumentLoadSuccess}
                                                 >
-                                                <Page pageNumber={this.state.pageNumber} width='250' />
+                                                <Page pageNumber={this.state.pageNumber} width={250} />
                                                 </Document>
                                                 :
                                                 <img src={`../${this.state.card.recto}`} alt={'recto'} width={200}/>

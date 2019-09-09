@@ -225,7 +225,6 @@ class signup extends React.Component {
                       <Grid container>
                         <Grid item style={{width: '100%'}}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Email"
                               placeholder="Email"
                               margin="normal"
@@ -257,7 +256,6 @@ class signup extends React.Component {
                         </Grid>
                         <Grid item style={{width: '48%'}}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Nom"
                               placeholder="Nom"
                               margin="normal"
@@ -295,7 +293,6 @@ class signup extends React.Component {
                         /></Grid>
                         <Grid item style={{width: '100%'}}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Rue"
                               placeholder="Rue"
                               margin="normal"
@@ -311,7 +308,6 @@ class signup extends React.Component {
                         </Grid>
                         <Grid item style={{width: '25%', marginRight: 20}}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Code postal"
                               placeholder="Code postal"
                               margin="normal"
@@ -327,7 +323,6 @@ class signup extends React.Component {
                         </Grid>
                         <Grid item style={{width: '71%'}}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Ville"
                               placeholder="Ville"
                               margin="normal"
@@ -343,7 +338,6 @@ class signup extends React.Component {
                         </Grid>
                         <Grid item className={classes.country}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Pays"
                               value={this.state.country}
                               name="country"
@@ -358,7 +352,6 @@ class signup extends React.Component {
                         </Grid>
                         <Grid item style={{width: '100%'}}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Créer un mot de passe"
                               placeholder="Créer un mot de passe"
                               margin="normal"

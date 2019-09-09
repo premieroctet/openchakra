@@ -367,7 +367,7 @@ class editProfile extends React.Component {
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
-                                        value={user.firstname}
+                                        value={user.firstname || ''}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'firstname'}
@@ -381,7 +381,7 @@ class editProfile extends React.Component {
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
-                                        value={user.name}
+                                        value={user.name || ''}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'name'}
@@ -397,7 +397,7 @@ class editProfile extends React.Component {
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
-                                        value={user.description}
+                                        value={user.description || ''}
                                         multiline
                                         rows={5}
                                         variant={'outlined'}
@@ -416,7 +416,7 @@ class editProfile extends React.Component {
                                     <TextField
                                         id="standard-name"
                                         style={{width: '100%'}}
-                                        value={user.gender}
+                                        value={user.gender || ''}
                                         select
                                         onChange={this.onChange}
                                         margin="normal"
@@ -454,7 +454,7 @@ class editProfile extends React.Component {
                                     <TextField
                                         id="standard-name"
                                         style={{width: '100%'}}
-                                        value={user.email}
+                                        value={user.email || ''}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'email'}
@@ -465,7 +465,7 @@ class editProfile extends React.Component {
                                     <TextField
                                         id="standard-name"
                                         style={{width: '100%'}}
-                                        value={user.phone}
+                                        value={user.phone || ''}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'phone'}
@@ -480,7 +480,7 @@ class editProfile extends React.Component {
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
-                                            value={user.diplomes}
+                                            value={user.diplomes || ''}
                                             onChange={this.onChange}
                                             margin="normal"
                                             name={'diplomes'}
@@ -493,7 +493,7 @@ class editProfile extends React.Component {
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
-                                            value={user.school}
+                                            value={user.school || ''}
                                             onChange={this.onChange}
                                             margin="normal"
                                             name={'school'}
@@ -505,7 +505,7 @@ class editProfile extends React.Component {
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
-                                            value={user.job}
+                                            value={user.job || ''}
                                             onChange={this.onChange}
                                             margin="normal"
                                             name={'job'}
@@ -535,7 +535,7 @@ class editProfile extends React.Component {
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
-                                            value={user.emergency_phone}
+                                            value={user.emergency_phone || ''}
                                             onChange={this.onChange}
                                             margin="normal"
                                             name={'emergency_phone'}

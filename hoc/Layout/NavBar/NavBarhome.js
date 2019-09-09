@@ -264,8 +264,8 @@ class NavBar extends Component {
   </React.Fragment>;
 
     const logoutAvatar = 
-    <React.Fragment>
-    <MenuItem onClick={this.handleMenuClose}>
+    [
+    <MenuItem key={1} onClick={this.handleMenuClose}>
       <Typography>
         <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
@@ -273,8 +273,8 @@ class NavBar extends Component {
           </a>
         </Link>
       </Typography>
-    </MenuItem>
-    <MenuItem onClick={this.handleMenuClose}>
+    </MenuItem>,
+    <MenuItem key={2} onClick={this.handleMenuClose}>
       <Typography>
         <Link href={'/account/notifications'}>
           <a className={classes.navbarLinkMobile}>
@@ -282,8 +282,8 @@ class NavBar extends Component {
           </a>
         </Link>
       </Typography>
-    </MenuItem>
-    <MenuItem onClick={()=>this.logout2()}>
+    </MenuItem>,
+    <MenuItem key={3} onClick={()=>this.logout2()}>
       <Typography>
 
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
@@ -291,8 +291,8 @@ class NavBar extends Component {
           </a>
 
       </Typography>
-    </MenuItem>
-  </React.Fragment>;
+    </MenuItem>]
+  ;
 
     const renderMenu = (
       <Menu

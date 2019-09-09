@@ -355,7 +355,6 @@ class security extends React.Component {
                                 <form onSubmit={this.onSubmit}>
                                     <Grid item>
                                         <TextField
-                                            id="standard-with-placeholder"
                                             margin="normal"
                                             label={"Mot de passe actuel"}
                                             placeholder={"Mot de passe actuel"}

@@ -299,8 +299,8 @@ class services extends React.Component {
 
         const {banner} = this.state;
 
-        const image = banner.map(e => (
-            <div key={e._id}>
+        const image = banner.map((e,index) => (
+            <div key={index}>
                 <img src={`../../../${e.picture}`} alt={e.label} />
                 <div className="legend">
                     <p>{e.label}</p>
@@ -360,7 +360,7 @@ class services extends React.Component {
                                 <Grid container>
                                     <Grid item xs={6} style={{textAlign:"center"}}>
                                         <div>
-                                            <h2 style={{position: 'sticky',}} onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '25%'}}> Mes services</h2>
+                                            <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '25%',position: 'sticky'}}> Mes services</h2>
                                             {tabs ?
                                                 <React.Fragment>
                                                     <hr className={classes.trait1}/>
@@ -631,8 +631,8 @@ class services extends React.Component {
                                     </Grid>:
                                     <React.Fragment>
                                         {serviceUser.map((e,index)=> (
-                                            <React.Fragment>
-                                                <Grid key={index} container>
+                                            <React.Fragment key={index}>
+                                                <Grid container>
                                                     <Grid style={{marginLeft: 130, backgroundColor: 'white',marginBottom: '-36px',padding: '8px',}}>
                                                         <h3 style={{color: '#505050'}}>{e.service.category.label}</h3>
 
@@ -652,11 +652,11 @@ class services extends React.Component {
                                                                 <h4 style={{paddingRight: 7,fontWeight: 'bolder',fontSize: 16,color:'#3CBED4',marginTop:0,cursor:"pointer"}}><EditIcon  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
                                                             </a>
                                                         </Link>
-                                                        <Link>
+
                                                             <a style={{cursor: 'pointer',textDecoration:'none',height:'fit-content'}}>
                                                                 <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}><DeleteIcon onClick={()=>this.deleteService(e._id)}  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
                                                             </a>
-                                                        </Link>
+
                                                     </Grid>
 
                                                 </Grid>

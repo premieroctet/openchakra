@@ -117,7 +117,7 @@ class addPicture extends React.Component {
                         </div>
 
                             <div className={classes.newContainer}>
-                                <Typography>Votre photo apparaîtra sur votre page de profil,. Assurez-vous d’utiliser une photo
+                                <Typography>Votre photo apparaîtra sur votre page de profil. Assurez-vous d’utiliser une photo
                                     qui montre clairement votre visage et qui ne contient pas d’information personnelles ou sensibles.</Typography>
                             <form onSubmit={this.onSubmit}>
                                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 25}}>
