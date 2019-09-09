@@ -146,11 +146,26 @@ class NavBar extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token !== null) {
       this.setState({logged:true});
       const token2 = localStorage.getItem('token').split(' ')[1];
       const decode = jwt.decode(token2);
       this.setState({alfred: decode.is_alfred});
+
+      axios.defaults.headers.common['Authorization'] = token;
+      axios
+          .get(url+'myAlfred/api/users/current')
+          .then(res => {
+            let user = res.data;
+            this.setState({user:user, alfred:user.is_alfred});
+
+            if(typeof user.picture !="undefined") {
+              this.setState({picture: true})
+            } else {
+              this.setState({picture: false})
+            }
+          })
+          .catch(err => console.log(err))
     }
 
     document.addEventListener('scroll', () => {
@@ -160,19 +175,7 @@ class NavBar extends Component {
       }
   });
 
-    axios.defaults.headers.common['Authorization'] = token;
-    axios
-        .get(url+'myAlfred/api/users/current')
-        .then(res => {
-            let user = res.data;
-            this.setState({user:user, alfred:user.is_alfred});
 
-            if(typeof user.picture !="undefined") {
-                this.setState({picture: true})
-            } else {
-                this.setState({picture: false})
-            }
-        })
   }
 
   logout2() {
@@ -251,11 +254,11 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={()=>this.logout2()}>
       <Typography>
-        <Link>
+
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
               Déconnexion
           </a>
-        </Link> 
+
       </Typography>
     </MenuItem>
   </React.Fragment>;
@@ -282,11 +285,11 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={()=>this.logout2()}>
       <Typography>
-        <Link>
+
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
               Déconnexion
           </a>
-        </Link> 
+
       </Typography>
     </MenuItem>
   </React.Fragment>;

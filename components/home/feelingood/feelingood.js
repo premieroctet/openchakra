@@ -8,7 +8,9 @@ import FeelingoodCard from './feelingoodCard/feelingoodCard';
 import axios from 'axios';
 import "../../../static/stylesfonts.css"
 
-const url = "https://myalfred.hausdivision.com/";
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
+
 
 const styles = theme => ({
   container: {
@@ -57,7 +59,7 @@ const styles = theme => ({
   },
   grosHR: {
     height: '10px',
-    backgroundColor: '#6ec1e4',
+    backgroundColor: '#2FBCD3',
     marginBottom: 60,
   },
 });
@@ -99,8 +101,8 @@ class feelingood extends React.Component{
     const {service} = this.state;
     const resdata = shuffleArray(service);
 
-    const cards = resdata.slice(0, 4).map(e => (
-        <Grid item xs={12} sm={6} md={3}>
+    const cards = resdata.slice(0, 4).map((e,index) => (
+        <Grid key={index} item xs={12} sm={6} md={3}>
           <FeelingoodCard img={e.picture} title={e.label} />
         </Grid>
     ));

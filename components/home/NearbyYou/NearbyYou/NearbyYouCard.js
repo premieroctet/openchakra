@@ -125,7 +125,7 @@ const nearbyYouCard = (props) => {
           </Typography>
          
           <Typography variant="body2" component="p" style={{textAlign:'center'}}>
-              <center> {title}</center>
+               {title}
             </Typography>
             
           <Grid container>

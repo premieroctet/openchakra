@@ -15,7 +15,9 @@ import axios from 'axios';
 import Link from 'next/link';
 import "../../../static/stylesfonts.css";
 
-const url = "https://myalfred.hausdivision.com/";
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
+
 
 const styles = theme => ({
   container: {
@@ -132,18 +134,19 @@ class Wellbeing extends React.Component {
           <Card className={classes.card}>
             <CardActionArea>
               <CardMedia
+
                   className={classes.media2}
                   image={e.picture}
                   title="Paysage"
               />
               <CardContent>
                 
-                <Typography gutterBottom variant="p" style={{color: 'rgba(84,89,95,0.95)', fontSize: 20}}>
+                <p style={{color: 'rgba(84,89,95,0.95)', fontSize: 20}}>
                   {e.label}
-                </Typography>
-                <Typography component="p">
+                </p>
+                <p>
                   {e.description}
-                </Typography>
+                </p>
               </CardContent>
             </CardActionArea>
             <CardActions>

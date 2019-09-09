@@ -15,7 +15,8 @@ import axios from 'axios';
 import Link from 'next/link';
 import '../../../static/stylefixresponsive.css';
 import { dark } from 'react-syntax-highlighter/dist/styles/hljs';
-const url = "https://myalfred.hausdivision.com/";
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
@@ -296,15 +297,14 @@ class Assureback extends React.Component{
           </Grid>
           <Grid container className={classes.container} spacing={24} wrap="wrap">
             <Grid item xs={12}>
-              <Card container className={classes.card1}>
+              <Card  className={classes.card1}>
               <CardMedia
-                    item
                     xs={12}
                     className={classes.cover}
                     image='../../static/assureback.jpg'
                     title="Proposeserviceimg"
                 />
-                <div item xs={12} className={classes.details}>
+                <Grid item xs={12} className={classes.details}>
                   <CardContent className={classes.content}>
                     <Typography component="h5" variant="h5" className={classes.padding}>
                         Nous assurons vos arrières !
@@ -315,10 +315,10 @@ class Assureback extends React.Component{
                         Une assurance en responsabilité vous est offerte pour toutes réalisations de services ! 
                     </Typography>
                   </CardContent>
-                </div>
+                </Grid>
               </Card>
               <Card className={classes.card22}>
-                <div item xs={12} className={classes.details}>
+                <Grid item xs={12} className={classes.details}>
                   <CardActionArea>
                     <CardMedia
                         className={classes.media}
@@ -335,7 +335,7 @@ class Assureback extends React.Component{
                       </Typography>
                     </CardContent>
                   </CardActionArea>
-                </div>
+                </Grid>
               </Card>
             </Grid>
           </Grid>

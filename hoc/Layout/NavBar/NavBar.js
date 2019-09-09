@@ -240,11 +240,11 @@ class NavBar extends Component {
 
     <MenuItem onClick={()=>this.logout2()}>
       <Typography>
-        <Link>
+
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
               Déconnexion
           </a>
-        </Link> 
+
       </Typography>
     </MenuItem>
   </React.Fragment>;
@@ -271,11 +271,11 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={()=>this.logout2()}>
       <Typography>
-        <Link>
+
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
               Déconnexion
           </a>
-        </Link> 
+
       </Typography>
     </MenuItem>
   </React.Fragment>;
@@ -400,7 +400,7 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  color="white" position="fixed">
+        <AppBar  color="inherit" position="fixed">
           <Toolbar>
             <Link href={'/'}>
               <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>

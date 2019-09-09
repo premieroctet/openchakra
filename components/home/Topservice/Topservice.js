@@ -14,7 +14,8 @@ import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
 import "../../../static/stylesfonts.css"
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
   container: {

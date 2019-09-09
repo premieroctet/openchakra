@@ -15,7 +15,8 @@ import axios from 'axios';
 import Link from 'next/link';
 import '../../../static/stylefixresponsive.css';
 import { dark } from 'react-syntax-highlighter/dist/styles/hljs';
-const url = "https://myalfred.hausdivision.com/";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
@@ -148,12 +149,10 @@ const styles = theme => ({
   },
   margin: {
     margin: '0.7rem',
-    backgroundColor:'#23c1ed',
     color: 'white',
   },
   margin2: {
     margin: '0.7rem',
-    backgroundColor:'#23c1ed',
     color: 'white',
   },
 
@@ -223,35 +222,6 @@ class becomeAlfred extends React.Component{
     const {classes} = this.props;
     const {alfred} = this.state;
 
-    const cards = alfred.map(e => (
-        <Card className={classes.card11} key={e._id}>
-          <Link href={`/shop?id_alfred=${e._id}`}>
-        <CardActionArea>
-          <CardContent className={classes.card}>
-            <Grid container>
-              <Grid item xs={1}></Grid>
-              <Grid item xs={1}><Avatar className={classes.imgavat} alt="John Doe" src={`../../../${e.picture}`} /></Grid>
-              <Grid item xs={1}></Grid>
-              <Grid item xs={8} className={classes.petitpaddingpers}>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <Typography className={classes.personName}>{e.name} {e.firstname}</Typography>
-                  </Grid>  
-                  <Grid item xs={3}></Grid>  
-                  <Grid item xs={6}>
-                    <Typography className={classes.personName2}>{e.job}</Typography>
-                  </Grid>
-                  <Grid item xs={3}></Grid>  
-                </Grid>
-              </Grid>
-              <Grid item xs={2}></Grid>
-           
-            </Grid>
-          </CardContent>
-          </CardActionArea>
-          </Link>
-        </Card>
-    ));
 
     return (
         <Fragment>
@@ -259,33 +229,36 @@ class becomeAlfred extends React.Component{
           </Grid>
           <Grid container className={classes.container} spacing={24} wrap="wrap">
             <Grid item xs={12}>
-              <Card container className={classes.card1}>
+              <Card className={classes.card1}>
                 <CardMedia
-                    item
                     xs={12}
                     className={classes.cover}
                     image='../../static/joshua-earle-133254-unsplash.jpg'
                     title="Live from space album cover"
                 />
-                <div item xs={12} className={classes.details}>
+                <Grid item xs={12} className={classes.details}>
                   <CardContent className={classes.content}>
                     <Typography component="h5" variant="h5" className={classes.padding}>
                       Devenir Alfred
                     </Typography>
                     <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
                                 className={classes.padding}>
-                      Créez en quelques minutes votre espace Alfred, 
-                      répertoriez vos services, indiquez vos disponibilités, 
-                      vos tarifs et profitez d’un complément de revenu ! 
+                      Créez en quelques minutes votre espace Alfred,
+                      répertoriez vos services, indiquez vos disponibilités,
+                      vos tarifs et profitez d’un complément de revenu !
                     </Typography>
-                    <Button variant="contained" className={classes.margin}>
+                    <Link href={'/becomeAlfredForm'}>
+                      <a style={{textDecoration:'none'}}>
+                    <Button variant="contained" color={"primary"} className={classes.margin}>
                       Créer mon shop
                     </Button>
+                      </a>
+                    </Link>
                   </CardContent>
-                </div>
+                </Grid>
               </Card>
               <Card className={classes.card22}>
-                <div item xs={12} className={classes.details}>
+                <Grid item xs={12} className={classes.details}>
                   <CardActionArea className={classes.centercontent}>
                     <CardMedia
                         className={classes.media}
@@ -297,16 +270,20 @@ class becomeAlfred extends React.Component{
                         Devenir Alfred
                       </Typography>
                       <Typography variant="body1" color="textSecondary" className={classes.padding}>
-                        Créez en quelques minutes votre espace Alfred, 
-                        répertoriez vos services, indiquez vos disponibilités, 
-                        vos tarifs et profitez d’un complément de revenu ! 
+                        Créez en quelques minutes votre espace Alfred,
+                        répertoriez vos services, indiquez vos disponibilités,
+                        vos tarifs et profitez d’un complément de revenu !
                       </Typography>
                     </CardContent>
-                    <Button variant="contained" className={classes.margin2}>
-                      Créer mon shop
-                    </Button>
+                    <Link href={'/becomeAlfredForm'}>
+                      <a style={{textDecoration:'none'}}>
+                        <Button variant="contained" color={"primary"} className={classes.margin}>
+                          Créer mon shop
+                        </Button>
+                      </a>
+                    </Link>
                   </CardActionArea>
-                </div>
+                </Grid>
               </Card>
             </Grid>
           </Grid>

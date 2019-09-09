@@ -16,7 +16,9 @@ import Link from 'next/link';
 import "../../../static/stylesfonts.css";
 import "../../../static/style1.css";
 
-const url = "https://myalfred.hausdivision.com/";
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
+
 
 const styles = theme => ({
   container: {
@@ -113,7 +115,7 @@ const styles = theme => ({
   },
   grosHR: {
     height: '10px',
-    backgroundColor: '#6ec1e4',
+    backgroundColor: '#2FBCD3',
   },
 
 });

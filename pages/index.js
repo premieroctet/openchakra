@@ -33,6 +33,7 @@ class Home extends React.Component {
         if (token) {
             this.setState({'logged':true})
         }
+        console.clear();
     }
 
     logout() {

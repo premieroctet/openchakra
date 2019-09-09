@@ -59,7 +59,7 @@ const styles = theme => ({
   },
   grosHR: {
     height: '10px',
-    backgroundColor: '#6ec1e4',
+    backgroundColor: '#2FBCD3',
   },
 });
 
@@ -89,13 +89,7 @@ class nearbyYou extends React.Component{
 
     const {classes} = this.props;
     const {service} = this.state;
-    const logged = this.state.logged;
-    const near = <Typography variant="h5" className={classes.textBox}>
-      Cela se passe près de chez vous
-    </Typography>;
-    const all = <Typography variant="h5" className={classes.textBox}>
-    
-    </Typography>;
+
     const cards = service.map(e => (
         <Grid item xs={12} sm={6} md={4} key={e._id}>
           <NearbyYouCard img={e.service.picture} title={e.service.label} alfred={e.user.firstname}
