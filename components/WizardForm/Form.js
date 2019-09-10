@@ -1414,7 +1414,7 @@ class Form extends React.Component {
                                                     <TabList>
                                                         {this.state.allInOneServ.map((data, index) => {
                                                             return <Tab 
-                                                                        key={data.CategoryLabel} 
+                                                                        key={data.serviceId} 
                                                                         style={{zIndex: 999999999 - index, position: 'relative'}} 
                                                                         onClick={() => {
                                                                             const div = document.getElementById('bigDiv');
@@ -1429,7 +1429,7 @@ class Form extends React.Component {
                                                     </TabList>
                                                     {this.state.allInOneServ.map((s, index) => {
                                                         return(
-                                                            <TabPanel key={index}>
+                                                            <TabPanel key={s.serviceId}>
                                                                 <div style={{padding: '0 2rem'}}>
                                                                     <div style={{paddingBottom: '1rem'}}>
                                                                         <Grid container spacing={8}>
@@ -1438,14 +1438,14 @@ class Form extends React.Component {
                                                                                     <Grid
                                                                                         item
                                                                                         xs={12}
-                                                                                        key={indexf}
+                                                                                        key={f.id}
                                                                                         className={classes.prestationsPres}
                                                                                     >
                                                                                         <p>{f.label === "Aucun" ? null : f.label}</p>
                                                                                         <Grid container>
                                                                                         {f.prestations.map((p, indexp) => {
                                                                                             return(
-                                                                                                <Grid item xs={6} sm={6} md={3} key={indexp}>
+                                                                                                <Grid item xs={6} sm={6} md={3} key={p.id}>
                                                                                                     <FormControlLabel
                                                                                                         control={
                                                                                                             <Switch
@@ -1508,11 +1508,13 @@ class Form extends React.Component {
                                                                                                                                 margin="none"
 
                                                                                                                             >
-                                                                                                                                {p.billing.map(option => (
-                                                                                                                                    <MenuItem key={option.value} value={option.label}>
+                                                                                                                                {p.billing.map(option => {
+                                                                                                                                    return (
+                                                                                                                                    <MenuItem key={option._id} value={option.label}>
                                                                                                                                         {option.label}
                                                                                                                                     </MenuItem>
-                                                                                                                                ))}
+                                                                                                                                    )
+                                                                                                                                })}
                                                                                                                             </TextField>
                                                                                                                             <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                                                         </React.Fragment>
@@ -1695,7 +1697,7 @@ class Form extends React.Component {
                                                                                             return null;
                                                                                         };
                                                                                         return (
-                                                                                            <Grid item xs={2} key={indexe}>
+                                                                                            <Grid item xs={2} key={e.id}>
                                                                                             <label style={{cursor: 'pointer'}} onClick={() => {
                                                                                                 e.checked = !e.checked;
                                                                                                 arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
