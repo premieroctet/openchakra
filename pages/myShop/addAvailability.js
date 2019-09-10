@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import axios from "axios";
 import moment from 'moment';
 import Button from "@material-ui/core/Button";
@@ -2106,6 +2107,7 @@ class addAvailability extends React.Component {
 
 
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

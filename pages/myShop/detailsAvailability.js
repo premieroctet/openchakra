@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import axios from "axios";
 import moment from 'moment';
 import Button from "@material-ui/core/Button";
@@ -21,6 +22,11 @@ import FormControl from "@material-ui/core/FormControl";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { toast } from 'react-toastify';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 registerLocale('fr', fr);
 const _ = require('lodash');
 
@@ -123,6 +129,7 @@ class detailsAvailability extends React.Component {
             saturday: false,
             sunday: false,
             all_service: [],
+            open: false,
 
         };
         this.handleChecked=this.handleChecked.bind(this);
@@ -214,6 +221,14 @@ class detailsAvailability extends React.Component {
 
 
 
+    }
+
+    handleClickOpen() {
+        this.setState({open:true});
+    }
+
+    handleClose() {
+        this.setState({open:false});
     }
 
 
@@ -1853,7 +1868,7 @@ class detailsAvailability extends React.Component {
                             <Grid container style={{marginTop:20,marginLeft:20}}>
 
                                 <Button onClick={()=>this.onSubmit()} variant={"contained"} color={"primary"} style={{color:"white",marginRight:20}}>Enregistrer</Button>
-                                <Button onClick={()=>this.deleteAvailability()} variant={"contained"} color={"secondary"} style={{color:"white"}}>Supprimer</Button>
+                                <Button onClick={()=>this.handleClickOpen()} variant={"contained"} color={"secondary"} style={{color:"white"}}>Supprimer</Button>
                             </Grid>
 
 
@@ -1864,6 +1879,29 @@ class detailsAvailability extends React.Component {
 
 
                 </Layout>
+                <Footer/>
+
+                <Dialog
+                    open={this.state.open}
+                    onClose={()=>this.handleClose()}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Supprimer cette disponibilité"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Voulez-vous vraiment supprimer cette disponibilité ?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose()} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={()=>this.deleteAvailability()} color="secondary" autoFocus>
+                            Supprimer
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
             </Fragment>
         );

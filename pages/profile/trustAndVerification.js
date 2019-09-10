@@ -181,8 +181,12 @@ class trustAndVerification extends React.Component {
                         .then(response => {
                             let result = response.data;
                             this.setState({professional: result.is_professional,particular:result.is_particular,company: result.company});
-                            this.setState({siret: result.company.siret,name: result.company.name,naf_ape: result.company.naf_ape,
-                                                creation_date: result.company.creation_date, status: result.company.status})
+
+                            if(result.is_professional === true) {
+                                this.setState({siret: result.company.siret,name: result.company.name,naf_ape: result.company.naf_ape,
+                                    creation_date: result.company.creation_date, status: result.company.status})
+                            }
+
                         })
                 }
 

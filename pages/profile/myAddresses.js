@@ -13,6 +13,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import AlgoliaPlaces from 'algolia-places-react';
 import { toast } from 'react-toastify';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 
@@ -100,6 +105,7 @@ class myAddresses extends React.Component {
             service_address: [],
             clickAdd: false,
             clickEdit: false,
+            open: false,
             address_selected: {},
             edit_label: '',
             edit_address: '',
@@ -110,6 +116,7 @@ class myAddresses extends React.Component {
             edit_phone: '',
             edit_lat: '',
             edit_lng: '',
+            id_address: '',
 
 
 
@@ -150,6 +157,14 @@ class myAddresses extends React.Component {
                     }
                 }
             );
+    }
+
+    handleClickOpen(id) {
+        this.setState({id_address: id, open:true});
+    }
+
+    handleClose() {
+        this.setState({id_address:'', open:false});
     }
 
     onChange = e => {
@@ -213,7 +228,7 @@ class myAddresses extends React.Component {
         };
         axios.put(url+'myAlfred/api/users/profile/serviceAddress',newAddress)
             .then(() => {
-                toast.info('Adresse ajoutéé');
+                toast.info('Adresse ajoutée');
                 this.setState({clickAdd: false});
                 this.componentDidMount();
             })
@@ -245,15 +260,15 @@ class myAddresses extends React.Component {
     };
 
     deleteAddress = (id) => {
-        if(confirm('Etes vous sûr de vouloir supprimer cette adresse ?')) {
+        //if(confirm('Etes vous sûr de vouloir supprimer cette adresse ?')) {
             axios.delete(url+'myAlfred/api/users/profile/address/'+id)
                 .then(() => {
                     toast.error('Adresse supprimée');
-                    this.setState({clickEdit: false});
+                    this.setState({clickEdit: false,open:false,id_address:''});
                     this.componentDidMount();
                 })
                 .catch(err => console.log(err));
-        }
+       // }
 
     };
 
@@ -781,11 +796,11 @@ class myAddresses extends React.Component {
                                             />
 
                                         </Grid>
-                                        <Button size={'large'} type={'submit'} variant="contained" color="secondary"
+                                        <Button size={'large'} type={'submit'} variant="contained" color="primary"
                                                 style={{color: 'white',marginTop: 15}}>
                                             Enregistrer
                                         </Button>
-                                        <Button size={'large'} onClick={()=>this.deleteAddress(address_selected._id)} type={'button'} variant="contained" color="secondary"
+                                        <Button size={'large'} onClick={()=>this.handleClickOpen(address_selected._id)} type={'button'} variant="contained" color="secondary"
                                                 style={{color: 'white',marginTop: 15,marginLeft: 15}}>
                                             Supprimer
                                         </Button>
@@ -801,6 +816,28 @@ class myAddresses extends React.Component {
                     </Grid>
                 </Layout>
                 <Footer/>
+
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Supprimer cette adresse ?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Voulez-vous vraiment supprimer cette adresse ?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose()} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={()=>this.deleteAddress(this.state.id_address)} color="secondary" autoFocus>
+                            Supprimer
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
             </Fragment>
         );

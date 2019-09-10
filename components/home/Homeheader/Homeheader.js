@@ -1,12 +1,8 @@
 import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Pickerhome from '../../Pickerhome/pickerhome';
-import Selecthome from '../../selectforhome/selecthome';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-/*import LocationCity from '@material-ui/icons/LocationCity';*/
-import Search from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
 import Link from 'next/link';
@@ -187,6 +183,17 @@ const styles = theme => ({
     border:'0px solid transparent',
 
   },
+  paper: {
+    zIndex:'99999',
+    position: 'fixed',
+    width: 400,
+    backgroundColor: 'white',
+    boxShadow: '0 0 7px black',
+    padding: 'auto',
+    top: '25%',
+    left: '25%',
+    transform: 'translate(50%, 50%)',
+  },
 });
 
 const Input2 = ({value,  onClick }) => (
@@ -205,7 +212,16 @@ class Homeheader extends React.Component {
       place: '',
       date: Date.now(),
       hour: Date.now(),
+      popopen: false,
     };
+  }
+
+  handleClick1 =() => {
+    this.setState({ popopen: true });
+  };
+
+  handleClose =() =>{
+    this.setState({ popopen: false });
   }
 
   onChange = e => {
@@ -214,6 +230,7 @@ class Homeheader extends React.Component {
 
   render() {
     const {classes} = this.props;
+    const {popopen} = this.state;
 
     return (
         <Fragment>
@@ -226,7 +243,7 @@ class Homeheader extends React.Component {
             </video>
           </div>
           <div className={classes.headeroverlay}></div>
-          <div className={classes.headerhome}>
+          <div className={classes.headerhome} onClick={()=>this.handleClick1()}>
             <Grid container>
               <Grid item xs={12}>
                 <h3 className={classes.homeform} style={{marginTop:0}}>Et si vous pouviez réserver n'importe quel service immediatement ?</h3>
@@ -355,6 +372,29 @@ class Homeheader extends React.Component {
               indiquez vos disponibilités, vos tarifs et profitez d’un complément de revenu !
             </p>
           </div>
+
+
+          {popopen ? <React.Fragment>
+                <div className={classes.paper}>
+                  <Grid container>
+                    <Grid item xs={4} style={{height: '1px'}}></Grid>
+                    <Grid item xs={4} style={{height: '35px'}}><img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110,}} alt={'Logo Bleu'}/></Grid>
+                    <Grid item xs={3} style={{height: '1px'}}></Grid>
+                    <Grid item xs={1} style={{height: '4px', zIndex: '10'}}>
+                      <p onClick={this.handleClose} style={{color: '#F8727F', cursor: 'pointer'}}>x</p>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <h2 style={{textAlign: 'center',color: 'rgba(84,89,95,0.95)',letterSpacing: -2, fontWeight: 'bold',}}>Les réservations ne seront disponible qu'à partir d'octobre</h2>
+                    </Grid>
+                    <Grid item xs={5}></Grid>
+                    <Grid item xs={2} style={{marginTop: '-10px'}}><hr className={classes.grosHR}/></Grid>
+                    <Grid item xs={5}></Grid>
+                  </Grid>
+                </div>
+
+                <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '9999px', height: '9999px', zIndex: '99998'}}></div>
+              </React.Fragment>
+              : null}
         </Fragment>
     );
   };

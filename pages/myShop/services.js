@@ -7,12 +7,9 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import styled from 'styled-components';
-import Typography from "@material-ui/core/Typography";
 import { TextField } from '@material-ui/core';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
@@ -20,6 +17,11 @@ import EditIcon from '@material-ui/icons/EditOutlined';
 import Modal from '@material-ui/core/Modal';
 import { Carousel } from 'react-responsive-carousel';
 import { toast } from 'react-toastify';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 
@@ -127,6 +129,8 @@ class services extends React.Component {
             welcome_message: '',
             open: false,
             banner: [],
+            open2: false,
+            id_service: '',
         };
 
 
@@ -193,6 +197,14 @@ class services extends React.Component {
             );
 
 
+    }
+
+    handleClickOpen(id) {
+        this.setState({id_service: id, open2:true});
+    }
+
+    handleClose2() {
+        this.setState({id_service:'', open2:false});
     }
 
     handleOpen = () => {
@@ -262,16 +274,13 @@ class services extends React.Component {
     };
 
     deleteService(id) {
-        if(confirm('Etes vous sûr de vouloir supprimé ce service da votre boutique ?')) {
-
-
-            axios.delete(url + 'myAlfred/api/serviceUser/' + id)
+        axios.delete(url + 'myAlfred/api/serviceUser/' + id)
                 .then(() => {
                     toast.error('Service supprimé');
                     this.componentDidMount();
                 })
                 .catch(err => console.log(err))
-        }
+
     }
 
     onSubmitBanner = e =>{
@@ -654,7 +663,7 @@ class services extends React.Component {
                                                         </Link>
 
                                                             <a style={{cursor: 'pointer',textDecoration:'none',height:'fit-content'}}>
-                                                                <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}><DeleteIcon onClick={()=>this.deleteService(e._id)}  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
+                                                                <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}><DeleteIcon onClick={()=>this.handleClickOpen(e._id)}  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
                                                             </a>
 
                                                     </Grid>
@@ -726,6 +735,28 @@ class services extends React.Component {
                     </Modal>
                 </Layout>
                 <Footer/>
+
+                <Dialog
+                    open={this.state.open2}
+                    onClose={()=>this.handleClose2()}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Supprimer un service"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Voulez-vous vraiment supprimer ce service de votre boutique ?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose2()} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={()=>this.deleteService(this.state.id_service)} color="secondary" autoFocus>
+                            Supprimer
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
             </Fragment>
         );
