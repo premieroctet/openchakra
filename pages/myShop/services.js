@@ -277,6 +277,7 @@ class services extends React.Component {
         axios.delete(url + 'myAlfred/api/serviceUser/' + id)
                 .then(() => {
                     toast.error('Service supprimé');
+                    this.setState({open2:false,id_service:''});
                     this.componentDidMount();
                 })
                 .catch(err => console.log(err))
