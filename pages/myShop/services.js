@@ -138,6 +138,7 @@ class services extends React.Component {
     }
 
     componentDidMount() {
+        document.body.style.overflow = 'auto';
 
 
         localStorage.setItem('path',Router.pathname);
