@@ -93,6 +93,26 @@ router.get('/all/:category',(req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/service/all/tags/:tags
+// View all service per tags
+router.get('/all/tags/:tags',(req,res)=> {
+
+    Service.find({tags: req.params.tags})
+        .populate('tags')
+        .populate('equipments')
+        .populate('category')
+        .then(service => {
+            if(typeof service !== 'undefined' && service.length > 0){
+                res.json(service);
+            } else {
+                return res.status(400).json({msg: 'No service found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ service: 'No service found' }));
+
+});
+
 
 
 

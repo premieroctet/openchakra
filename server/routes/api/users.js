@@ -6,6 +6,8 @@ const keys = require('../../config/keys');
 const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const mongoose = require('mongoose');
+const path = require('path');
+
 
 const validateRegisterInput = require('../../validation/register');
 const validateSimpleRegisterInput = require('../../validation/simpleRegister');
@@ -22,10 +24,19 @@ const storage = multer.diskStorage({
         cb(null, 'static/profile/')
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname  )
+        let datetimestamp = Date.now();
+        let key = crypto.randomBytes(5).toString('hex');
+        cb(null, datetimestamp+'_'+key+ '_'+file.originalname )
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage,
+    fileFilter: function (req, file, callback) {
+        let ext = path.extname(file.originalname);
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+            return callback(new Error('Only images are allowed'))
+        }
+        callback(null, true)
+    },});
 
 const storage2 = multer.diskStorage({
     destination: function (req, file, cb) {

@@ -90,7 +90,7 @@ const styles = theme => ({
   },
   grosHR: {
     height: '10px',
-    backgroundColor: '#6ec1e4',
+    backgroundColor: '#2FBCD3',
   },
 
 });
@@ -111,23 +111,36 @@ class Wellbeing extends React.Component {
     super(props);
     this.state = {
       service: [],
+      tags: {},
     }
   }
 
   componentDidMount() {
 
-    axios.get(url+'myAlfred/api/service/all')
+    axios.get(url + 'myAlfred/api/tags/all')
         .then(response => {
-          let service = response.data;
+              let data = response.data;
+              let random = data[Math.floor(Math.random() * data.length)];
+              this.setState({tags:random});
+              axios.get(url + 'myAlfred/api/service/all/tags/' + random._id)
+                  .then(res => {
+                    let service = res.data;
 
-          this.setState({service: service})
+                    this.setState({service: service})
 
-        })
+                  })
+                  .catch(err => console.log(err))
+            }
+        )
+        .catch(error => {
+          console.log(error)
+        });
   }
 
   render() {
     const {classes} = this.props;
     const {service} = this.state;
+    const {tags} = this.state;
     const resdata = shuffleArray(service);
     const services = resdata.slice(0, 6).map(e => (
         <Grid item xs={12} sm={6} md={4} lg={4} key={e._id}>
@@ -163,7 +176,7 @@ class Wellbeing extends React.Component {
             <Grid item xs={8}>
               <div>
                 <Typography variant="h4" className={classes.textBox1}>
-                Accordez-vous une pause bien-être
+                {tags.title}
                 </Typography>
                 <Grid container>
                   <Grid item xs={5}></Grid>
