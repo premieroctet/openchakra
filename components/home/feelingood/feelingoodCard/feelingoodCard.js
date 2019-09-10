@@ -26,7 +26,8 @@ const styles = theme => ({
     backgroundColor:'transparent',
     textAlign:'center',
     margin:10,
-    boxShadow: '1px 3px 1px transparent'
+    boxShadow: '1px 3px 1px transparent',
+    height: '90%',
   },
   gridContainer: {
     display: 'flex',

@@ -12,6 +12,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
+import Footer2 from '../../hoc/Layout/Footer/Footer2';
 
 
 
@@ -164,6 +165,8 @@ class paymentPreference extends React.Component {
             const {clickAdd} = this.state;
             const {clickEdit} = this.state;
             const {haveAccount} = this.state;
+            const editfooter = clickEdit ? <Footer/> :<Footer2/>;
+            const addfooter = clickAdd ? <Footer/> :<Footer2/>;
 
 
             return (
@@ -196,7 +199,7 @@ class paymentPreference extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10}}className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10}}className={classes.hidesm}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/credit-card.svg'} alt={'credit-card'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -215,7 +218,7 @@ class paymentPreference extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
                                 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
@@ -237,7 +240,7 @@ class paymentPreference extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/transactions'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -256,7 +259,7 @@ class paymentPreference extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>
@@ -279,7 +282,7 @@ class paymentPreference extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/applications'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -298,7 +301,7 @@ class paymentPreference extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
@@ -321,7 +324,7 @@ class paymentPreference extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/sponsors'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -340,7 +343,7 @@ class paymentPreference extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                             </Grid>
                         </Grid>
@@ -370,7 +373,7 @@ class paymentPreference extends React.Component {
                                             onClick={this.handleClick}>Ajouter un RIB</h2>}
                                     </Grid>
                                     {clickAdd ?
-                                        <Grid item xs={9}>
+                                        <Grid item xs={9} style={{marginBottom: '25%'}}>
                                             <form onSubmit={this.onSubmit}>
                                                 <Grid item xs={12}>
                                                     <TextField
@@ -430,7 +433,7 @@ class paymentPreference extends React.Component {
                                         </Grid>
                                         : null}
                                     {clickEdit ?
-                                        <Grid item xs={9}>
+                                        <Grid item xs={9} >
                                             <form onSubmit={this.onSubmit}>
                                                 <Grid item xs={12}>
                                                     <TextField
@@ -493,8 +496,7 @@ class paymentPreference extends React.Component {
                             </Grid>
                         </Grid>
                     </Layout>
-                    <Footer/>
-
+                    {haveAccount ? editfooter : addfooter}
                 </Fragment>
             );
         }

@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import Pickerhome from '../../Pickerhome/pickerhome';
 import Selecthome from '../../selectforhome/selecthome';
 import Grid from '@material-ui/core/Grid';
@@ -8,8 +9,8 @@ import TextField from '@material-ui/core/TextField';
 /*import LocationCity from '@material-ui/icons/LocationCity';*/
 import Search from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
+import Modal from '@material-ui/core/Modal';
 import { Typography } from '@material-ui/core';
-import Link from 'next/link';
 import '../../../static/stylebg.css'
 
    
@@ -154,6 +155,17 @@ const styles = theme => ({
     marginBottom: '-60px',
     
   },
+  paper: {
+    zIndex:'99999',
+    position: 'fixed',
+    width: 400,
+    backgroundColor: 'white',
+    boxShadow: '0 0 7px black',
+    padding: 'auto',
+    top: '25%',
+    left: '25%',
+    transform: 'translate(50%, 50%)',
+  },
   homepunchline: {
     color: 'lightgrey!important',
   },
@@ -185,8 +197,27 @@ const styles = theme => ({
   },
 });
 
-const Homeheader = (props) => {
-  const { classes } = props;
+
+class Homeheader extends React.Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+         popopen: false,
+      };
+    }
+
+handleClick1 =() => {
+  this.setState({ popopen: true });
+};
+
+handleClose =() =>{
+  this.setState({ popopen: false });
+}
+
+
+render() {
+  const {classes} = this.props;
+  const {popopen} = this.state;
 
   return (
     <Fragment>
@@ -199,7 +230,7 @@ const Homeheader = (props) => {
         </video>
       </div>
       <div className={classes.headeroverlay}></div>
-      <div className={classes.headerhome}>
+      <div className={classes.headerhome} onClick={this.handleClick1}>
         <Grid container>
           <Grid item xs={12}>
           <Typography><h3 className={classes.homeform}>Et si vous pouviez réserver n'importe quel service immediatement ?</h3></Typography>
@@ -237,30 +268,54 @@ const Homeheader = (props) => {
         </form>
         </Grid>
         </Grid>
+        
+        
+        
       
       </div>
       
-      <div style={{textAlign: 'right'}} className={classes.headerhome2}>
+
+
+        {popopen ? <React.Fragment>
+          <div className={classes.paper}>
+            <Grid container>
+              <Grid item xs={11} style={{height: '1px'}}></Grid>
+              <Grid item xs={1} style={{height: '4px', zIndex: '10'}}>
+                <p onClick={this.handleClose} style={{color: '#F8727F', cursor: 'pointer'}}>x</p>
+              </Grid>
+              <Grid item xs={12}>
+                <h2 style={{textAlign: 'center'}}>Les réservations ne seront disponible qu'à partir d'octobre</h2>
+              </Grid>
+            </Grid>
+          </div>
+          
+          <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '9999px', height: '9999px', zIndex: '99998'}}></div>
+        </React.Fragment>
+        : null}
+
+
+      <div style={{textAlign: 'left'}} className={classes.headerhome2}>
+        
         <br/>
-        <h2 style={{fontWeight: 'bold',textAlign: 'right', fontSize: '2rem', textShadow: '0px 0.5px 2px #696969'}}>Vous connaissez Airbnb pour les logements ?
+        <h2 style={{fontWeight: 'bold',textAlign: 'left', fontSize: '2rem', textShadow: '0px 0.5px 2px #696969'}}>Vous connaissez Airbnb pour les logements ?
           Découvrez My-Alfred pour les services ! </h2>
-        <hr style={{float: 'right', width: '60px', border:'none', height:'1px', backgroundColor: 'white', boxShadow: '1px 1px 1px #696969' }}/>
+        <hr style={{float: 'left', width: '60px', border:'none', height:'1px', backgroundColor: 'white', boxShadow: '1px 1px 1px #696969' }}/>
         <br/><br/>
-        <h4 style={{fontWeight: 'bold',textAlign: 'right', fontSize: '1.5rem', textShadow: '0px 0.5px 2px #696969'}}>
+        <h4 style={{fontWeight: 'bold',textAlign: 'left', fontSize: '1.5rem', textShadow: '0px 0.5px 2px #696969'}}>
           We are coming soon !
         </h4>
         <br/>
-        <p style={{fontSize: '1.2em', textAlign: 'right', fontSize: '1.2rem', textShadow: '0px 0.5px 2px #696969'}}>
+        <p style={{fontSize: '1.2em', textAlign: 'left', fontSize: '1.2rem', textShadow: '0px 0.5px 2px #696969'}}>
           Créez votre boutique maintenant en quelques minutes, répertoriez vos services,
           indiquez vos disponibilités, vos tarifs et profitez d’un complément de revenu !
         </p>
       </div>
+      
     </Fragment>
   );
 };
-
-Homeheader.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
 };
+
+
 
 export default withStyles(styles)(Homeheader);
