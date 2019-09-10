@@ -382,7 +382,7 @@ class services extends React.Component {
                                         <Grid item xs={5}></Grid>
                                     </Grid>
                                     <Grid container>
-                                        {equipments.map((e)=>(<React.Fragment>
+                                        {equipments.map((e,index)=>(<React.Fragment key={index}>
                                             <Grid item xs={1} style={{ marginLeft: '1.5%'}}><img src={'../'+ e.logo2}/></Grid>
                                         </React.Fragment>))}
                                         <Grid item xs={1}></Grid>
@@ -406,8 +406,8 @@ class services extends React.Component {
                                         <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
                                          <Typography>
                                              Lundi :  <br/>
-                                        {monday_event.map((e)=>(
-                                            <React.Fragment>
+                                        {monday_event.map((e,index)=>(
+                                            <React.Fragment key={index}>
                                                 
                                                  {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
                                                 
@@ -419,8 +419,8 @@ class services extends React.Component {
                                         <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
                                          <Typography>
                                              Mardi :  <br/>
-                                        {tuesday_event.map((e)=>(
-                                            <React.Fragment>
+                                        {tuesday_event.map((e,index)=>(
+                                            <React.Fragment key={index}>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
                                                 
@@ -432,8 +432,8 @@ class services extends React.Component {
                                         <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
                                          <Typography>
                                              Mercredi :  <br/>
-                                        {wednesday_event.map((e)=>(
-                                            <React.Fragment>
+                                        {wednesday_event.map((e,index)=>(
+                                            <React.Fragment key={index}>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
                                                 
@@ -445,8 +445,8 @@ class services extends React.Component {
                                         <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
                                          <Typography>
                                              Jeudi :  <br/>
-                                        {thursday_event.map((e)=>(
-                                            <React.Fragment>
+                                        {thursday_event.map((e,index)=>(
+                                            <React.Fragment key={index}>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
                                                 
@@ -458,8 +458,8 @@ class services extends React.Component {
                                         <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
                                          <Typography>
                                              Vendredi :  <br/>
-                                        {friday_event.map((e)=>(
-                                            <React.Fragment>
+                                        {friday_event.map((e,index)=>(
+                                            <React.Fragment key={index}>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
                                                 
@@ -471,8 +471,8 @@ class services extends React.Component {
                                         <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
                                          <Typography>
                                              Samedi :  <br/>
-                                        {saturday_event.map((e)=>(
-                                            <React.Fragment>
+                                        {saturday_event.map((e,index)=>(
+                                            <React.Fragment key={index}>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
                                                 
@@ -484,8 +484,8 @@ class services extends React.Component {
                                         <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
                                          <Typography>
                                              Dimanche :  <br/>
-                                        {sunday_event.map((e)=>(
-                                            <React.Fragment>
+                                        {sunday_event.map((e,index)=>(
+                                            <React.Fragment key={index}>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
                                                 
@@ -586,9 +586,9 @@ class services extends React.Component {
                                 <Grid container style={{border: 'thin solid #dedede',maxWidth: '80%',marginLeft:'14%'}}>
                                     <Grid item xs={12}><Typography style={{marginTop: '4%' ,marginBottom: '1%' ,marginLeft: '4%' ,color: 'gray', fontSize:'0.9rem'}}>Type de prestation</Typography></Grid>
                                     
-                                    {uniqFilter.map(z =>{
+                                    {uniqFilter.map((z,index) =>{
                                     return (
-                                    <React.Fragment>
+                                    <React.Fragment key={index}>
                                     <Grid item xs={12} style={{marginBottom: '2%'}}>
                                         <Typography style={{marginLeft: '3%' , fontSize:'1.1rem', fontWeight: '5e00'}}>
                                         {this.state[z.label] ?
@@ -609,13 +609,13 @@ class services extends React.Component {
 
                                    {this.state[z.label] ?<React.Fragment>
                                     <Grid item xs={1}></Grid>
-                                    {prestations.map(d=>{
+                                    {prestations.map((d,index)=>{
                                     if(d.prestation.filter_presentation.label !== z.label){return null}
                                     else{
                                         return(
 
                                         
-                                    <React.Fragment>
+                                    <React.Fragment key={index}>
                                     <Grid item xs={4} style={{marginTop: '6%'}}>
                                         <Grid container>
                                             

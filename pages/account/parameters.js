@@ -395,7 +395,7 @@ class parameters extends React.Component {
                                     <Switch
                                         checked={this.state.index_google}
                                         onChange={this.handleChange('index_google')}
-                                        value={this.state.index_google}
+                                        value={'index_google'}
                                         color="primary"
                                         inputProps={{ 'aria-label': 'primary checkbox' }}
                                     />

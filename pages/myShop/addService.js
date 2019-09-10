@@ -51,7 +51,7 @@ class addService extends React.Component {
             service: {},
             prestations: [],
             equipments: [],
-            perimeter: '',
+            perimeter: 0,
             minimum_basket: '',
             description: '',
             level: '',
@@ -425,9 +425,9 @@ class addService extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
 
-                                {uniqFilter.map(a => {
+                                {uniqFilter.map((a,index) => {
                                     return (
-                                        <Grid container>
+                                        <Grid container key={index}>
                                             <Grid item xs={12}>
                                                 <h4>{a.label}</h4>
                                             </Grid>
@@ -452,6 +452,7 @@ class addService extends React.Component {
 
                                                                         }
                                                                         color="primary"
+                                                                        value={'value'}
                                                                     />
                                                                 }
                                                                 label={z.label}
@@ -599,7 +600,7 @@ class addService extends React.Component {
                                             <Checkbox
                                                 checked={this.state.otherOptions}
                                                 onChange={()=>this.setState({otherOptions: !this.state.otherOptions})}
-                                                value={this.state.otherOptions}
+                                                value={'otherOptions'}
                                                 color="primary"
                                             />
                                         }
@@ -704,8 +705,8 @@ class addService extends React.Component {
                             {all_equipments.map((e,index)=> {
                                 if(this.state[e.label]){
                                     return(
-                                        <Grid item xs={3}>
-                                            <label style={{cursor: 'pointer'}} key={index} onClick={() => {
+                                        <Grid item xs={3} key={index}>
+                                            <label style={{cursor: 'pointer'}} onClick={() => {
                                                 this.setState({[e.label]: false});
                                                 let array = [...this.state.equipments]; // make a separate copy of the array
                                                 let index = array.indexOf(e._id);
@@ -731,6 +732,7 @@ class addService extends React.Component {
                                                     this.setState({[e.label]: false})
 
                                                 }
+                                                value={'equipment'}
                                             />
 
                                         </Grid>)
@@ -759,6 +761,7 @@ class addService extends React.Component {
                                                     this.setState({[e.label]: true})
 
                                                 }
+                                                value={'equipment2'}
                                             />
 
 
@@ -924,7 +927,7 @@ class addService extends React.Component {
                                         formatLabel={value => `${value}km`}
                                         step={5}
                                         maxValue={500}
-                                        minValue={5}
+                                        minValue={0}
                                         value={this.state.perimeter}
                                         onChange={value =>this.setState({perimeter: value})}
                                     />
@@ -1072,8 +1075,8 @@ class addService extends React.Component {
                                                 name={'year_diploma'}
                                                 onChange={this.onChange2}
                                             >
-                                                {dates.map(e => (
-                                                    <MenuItem value={e}>{e}</MenuItem>
+                                                {dates.map((e,index) => (
+                                                    <MenuItem key={index} value={e}>{e}</MenuItem>
                                                 ))}
                                             </TextField>
 
@@ -1134,8 +1137,8 @@ class addService extends React.Component {
                                                 name={'year_certification'}
                                                 onChange={this.onChange2}
                                             >
-                                                {dates.map(e => (
-                                                    <MenuItem value={e}>{e}</MenuItem>
+                                                {dates.map((e,index) => (
+                                                    <MenuItem key={index} value={e}>{e}</MenuItem>
                                                 ))}
                                             </TextField>
 

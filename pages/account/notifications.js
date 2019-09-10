@@ -384,7 +384,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.messages_email}
                                             onChange={this.handleChange('messages_email')}
-                                            value={this.state.messages_email}
+                                            value={'messages_email'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -398,7 +398,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.messages_push}
                                             onChange={this.handleChange('messages_push')}
-                                            value={this.state.messages_push}
+                                            value={'messages_push'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -412,7 +412,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.messages_sms}
                                             onChange={this.handleChange('messages_sms')}
-                                            value={this.state.messages_sms}
+                                            value={'messages_sms'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -444,7 +444,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.rappel_email}
                                             onChange={this.handleChange('rappel_email')}
-                                            value={this.state.rappel_email}
+                                            value={'rappel_email'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -458,7 +458,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.rappel_push}
                                             onChange={this.handleChange('rappel_push')}
-                                            value={this.state.rappel_push}
+                                            value={'rappel_push'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -472,7 +472,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.rappel_sms}
                                             onChange={this.handleChange('rappel_sms')}
-                                            value={this.state.rappel_sms}
+                                            value={'rappel_sms'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -505,7 +505,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.promotions_email}
                                             onChange={this.handleChange('promotions_email')}
-                                            value={this.state.promotions_email}
+                                            value={'promotions_email'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -519,7 +519,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.promotions_push}
                                             onChange={this.handleChange('promotions_push')}
-                                            value={this.state.promotions_push}
+                                            value={'promotions_push'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -533,7 +533,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.promotions_sms}
                                             onChange={this.handleChange('promotions_sms')}
-                                            value={this.state.promotions_sms}
+                                            value={'promotions_sms'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -547,7 +547,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.promotions_phone}
                                             onChange={this.handleChange('promotions_phone')}
-                                            value={this.state.promotions_phone}
+                                            value={'promotions_phone'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -579,7 +579,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.community_email}
                                             onChange={this.handleChange('community_email')}
-                                            value={this.state.community_email}
+                                            value={'community_email'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -593,7 +593,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.community_push}
                                             onChange={this.handleChange('community_push')}
-                                            value={this.state.community_push}
+                                            value={'community_push'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -607,7 +607,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.community_sms}
                                             onChange={this.handleChange('community_sms')}
-                                            value={this.state.community_sms}
+                                            value={'community_sms'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -646,7 +646,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.assistance_email}
                                             onChange={this.handleChange('assistance_email')}
-                                            value={this.state.assistance_email}
+                                            value={'assistance_email'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -660,7 +660,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.assistance_push}
                                             onChange={this.handleChange('assistance_push')}
-                                            value={this.state.assistance_push}
+                                            value={'assistance_push'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -674,7 +674,7 @@ class notifications extends React.Component {
                                         <Switch
                                             checked={this.state.assistance_sms}
                                             onChange={this.handleChange('assistance_sms')}
-                                            value={this.state.assistance_sms}
+                                            value={'assistance_sms'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />

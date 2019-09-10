@@ -12,11 +12,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import Chip from "@material-ui/core/Chip";
-import MenuItem from "@material-ui/core/MenuItem";
 import Select2 from 'react-select';
 
 const {config} = require('../../../config/config');

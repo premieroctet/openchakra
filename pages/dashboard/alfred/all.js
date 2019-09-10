@@ -20,7 +20,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import Link from "next/link";
 import HomeIcon from '@material-ui/icons/Home';
-import "../../../static/cssdashboard.css"
+
 
 
 const {config} = require('../../../config/config');

@@ -416,7 +416,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.booking_request}
                                                         onChange={this.handleChangeBr}
-                                                        value={this.state.booking_request}
+                                                        value={'booking_request'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -439,7 +439,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.no_booking_request}
                                                         onChange={this.handleChangeNbr}
-                                                        value={this.state.no_booking_request}
+                                                        value={'no_booking_request'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -467,7 +467,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.my_alfred_conditions}
                                                         onChange={this.handleChange('my_alfred_conditions')}
-                                                        value={this.state.my_alfred_conditions}
+                                                        value={'my_alfred_conditions'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -488,7 +488,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.profile_picture}
                                                         onChange={this.handleChange('profile_picture')}
-                                                        value={this.state.profile_picture}
+                                                        value={'profile_picture'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -508,7 +508,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.identity_card}
                                                         onChange={this.handleChange('identity_card')}
-                                                        value={this.state.identity_card}
+                                                        value={'identity_card'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -528,7 +528,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.recommandations}
                                                         onChange={this.handleChange('recommandations')}
-                                                        value={this.state.recommandations}
+                                                        value={'recommandations'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -579,7 +579,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.flexible_cancel}
                                                         onChange={this.handleChangeF}
-                                                        value={this.state.flexible_cancel}
+                                                        value={'flexible_cancel'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -600,7 +600,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.moderate_cancel}
                                                         onChange={this.handleChangeM}
-                                                        value={this.state.moderate_cancel}
+                                                        value={'moderate_cancel'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -620,7 +620,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.strict_cancel}
                                                         onChange={this.handleChangeS}
-                                                        value={this.state.strict_cancel}
+                                                        value={'strict_cancel'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',

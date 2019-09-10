@@ -709,7 +709,7 @@ class addAvailability extends React.Component {
                                                                     <Checkbox
                                                                         checked={this.state.monday}
                                                                         onChange={this.handleChecked}
-                                                                        value={this.state.monday}
+                                                                        value={'monday'}
                                                                         color="primary"
                                                                         name={'monday'}
                                                                     />
@@ -723,7 +723,7 @@ class addAvailability extends React.Component {
                                                                     <Checkbox
                                                                         checked={this.state.tuesday}
                                                                         onChange={this.handleChecked}
-                                                                        value={this.state.tuesday}
+                                                                        value={'tuesday'}
                                                                         color="primary"
                                                                         name={'tuesday'}
                                                                     />
@@ -737,7 +737,7 @@ class addAvailability extends React.Component {
                                                                     <Checkbox
                                                                         checked={this.state.wednesday}
                                                                         onChange={this.handleChecked}
-                                                                        value={this.state.wednesday}
+                                                                        value={'wednesday'}
                                                                         color="primary"
                                                                         name={'wednesday'}
                                                                     />
@@ -751,7 +751,7 @@ class addAvailability extends React.Component {
                                                                     <Checkbox
                                                                         checked={this.state.thursday}
                                                                         onChange={this.handleChecked}
-                                                                        value={this.state.thursday}
+                                                                        value={'thursday'}
                                                                         color="primary"
                                                                         name={'thursday'}
                                                                     />
@@ -765,7 +765,7 @@ class addAvailability extends React.Component {
                                                                     <Checkbox
                                                                         checked={this.state.friday}
                                                                         onChange={this.handleChecked}
-                                                                        value={this.state.friday}
+                                                                        value={'friday'}
                                                                         color="primary"
                                                                         name={'friday'}
                                                                     />
@@ -779,7 +779,7 @@ class addAvailability extends React.Component {
                                                                     <Checkbox
                                                                         checked={this.state.saturday}
                                                                         onChange={this.handleChecked}
-                                                                        value={this.state.saturday}
+                                                                        value={'saturday'}
                                                                         color="primary"
                                                                         name={'saturday'}
                                                                     />
@@ -793,7 +793,7 @@ class addAvailability extends React.Component {
                                                                     <Checkbox
                                                                         checked={this.state.sunday}
                                                                         onChange={this.handleChecked}
-                                                                        value={this.state.sunday}
+                                                                        value={'sunday'}
                                                                         color="primary"
                                                                         name={'sunday'}
                                                                     />
@@ -862,7 +862,7 @@ class addAvailability extends React.Component {
                                                                 <Checkbox
                                                                     checked={this.state.recurrent_all_service}
                                                                     onChange={this.handleChecked}
-                                                                    value={this.state.recurrent_all_service}
+                                                                    value={'recurrent_all_service'}
                                                                     color="primary"
                                                                     name={'recurrent_all_service'}
                                                                 />
@@ -903,9 +903,9 @@ class addAvailability extends React.Component {
                                     <ExpansionPanelDetails>
                                         <Grid container>
 
-                                            {monday_event.map(e=> (
+                                            {monday_event.map((e,index)=> (
 
-                                                <Grid item xs={4}>
+                                                <Grid item xs={4} key={index}>
                                                     <Card
                                                         style={{
                                                             padding: "2rem",
@@ -1026,7 +1026,7 @@ class addAvailability extends React.Component {
                                                                 <Checkbox
                                                                     checked={this.state.monday_all_service}
                                                                     onChange={this.handleChecked}
-                                                                    value={this.state.monday_all_service}
+                                                                    value={'monday_all_service'}
                                                                     color="primary"
                                                                     name={'monday_all_service'}
                                                                 />
@@ -1068,9 +1068,9 @@ class addAvailability extends React.Component {
                                     <ExpansionPanelDetails>
                                         <Grid container>
 
-                                            {tuesday_event.map(e=> (
+                                            {tuesday_event.map((e,index)=> (
 
-                                                <Grid item xs={4}>
+                                                <Grid item xs={4} key={index}>
                                                     <Card
                                                         style={{
                                                             padding: "2rem",
@@ -1191,7 +1191,7 @@ class addAvailability extends React.Component {
                                                                 <Checkbox
                                                                     checked={this.state.tuesday_all_service}
                                                                     onChange={this.handleChecked}
-                                                                    value={this.state.tuesday_all_service}
+                                                                    value={'tuesday_all_service'}
                                                                     color="primary"
                                                                     name={'tuesday_all_service'}
                                                                 />
