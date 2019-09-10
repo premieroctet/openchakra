@@ -151,7 +151,7 @@ class Availability extends React.Component {
       moment(this.props.formikCtx.values.servicesAvailability.all_end).isBefore(
         moment(this.props.formikCtx.values.servicesAvailability.all_begin)
       )
-    ) {
+      || this.props.formikCtx.values.servicesAvailability.all_begin === "" || this.props.formikCtx.values.servicesAvailability.all_end === "") {
       toast.error("Erreur, heure de fin antérieure à l'heure de début");
     } else {
       let arrayService = [];
@@ -289,7 +289,7 @@ class Availability extends React.Component {
       ).isBefore(
         moment(this.props.formikCtx.values.servicesAvailability.monday_begin)
       )
-    ) {
+      || this.props.formikCtx.values.servicesAvailability.monday_begin === "" || this.props.formikCtx.values.servicesAvailability.monday_end === "") {
       toast.error("Erreur, heure de fin antérieure à l'heure de début");
     } else {
       let arrayService = [];
@@ -337,7 +337,7 @@ class Availability extends React.Component {
       ).isBefore(
         moment(this.props.formikCtx.values.servicesAvailability.tuesday_begin)
       )
-    ) {
+      || this.props.formikCtx.values.servicesAvailability.tuesday_begin === "" || this.props.formikCtx.values.servicesAvailability.tuesday_end === "") {
       toast.error("Erreur, heure de fin antérieure à l'heure de début");
     } else {
       let arrayService = [];
@@ -388,7 +388,7 @@ class Availability extends React.Component {
       ).isBefore(
         moment(this.props.formikCtx.values.servicesAvailability.wednesday_begin)
       )
-    ) {
+      || this.props.formikCtx.values.servicesAvailability.wednesday_begin === "" || this.props.formikCtx.values.servicesAvailability.wednesday_end === "") {
       toast.error("Erreur, heure de fin antérieure à l'heure de début");
     } else {
       let arrayService = [];
@@ -443,7 +443,7 @@ class Availability extends React.Component {
       ).isBefore(
         moment(this.props.formikCtx.values.servicesAvailability.thursday_begin)
       )
-    ) {
+      || this.props.formikCtx.values.servicesAvailability.thursday_begin === "" || this.props.formikCtx.values.servicesAvailability.thursday_end === "") {
       toast.error("Erreur, heure de fin antérieure à l'heure de début");
     } else {
       let arrayService = [];
@@ -495,7 +495,7 @@ class Availability extends React.Component {
       ).isBefore(
         moment(this.props.formikCtx.values.servicesAvailability.friday_begin)
       )
-    ) {
+      || this.props.formikCtx.values.servicesAvailability.friday_begin === "" || this.props.formikCtx.values.servicesAvailability.friday_end === "") {
       toast.error("Erreur, heure de fin antérieure à l'heure de début");
     } else {
       let arrayService = [];
@@ -543,7 +543,7 @@ class Availability extends React.Component {
       ).isBefore(
         moment(this.props.formikCtx.values.servicesAvailability.saturday_begin)
       )
-    ) {
+      || this.props.formikCtx.values.servicesAvailability.saturday_begin === "" || this.props.formikCtx.values.servicesAvailability.saturday_end === "") {
       toast.error("Erreur, heure de fin antérieure à l'heure de début");
     } else {
       let arrayService = [];
@@ -595,7 +595,7 @@ class Availability extends React.Component {
       ).isBefore(
         moment(this.props.formikCtx.values.servicesAvailability.sunday_begin)
       )
-    ) {
+      || this.props.formikCtx.values.servicesAvailability.sunday_begin === "" || this.props.formikCtx.values.servicesAvailability.sunday_end === "") {
       toast.error("Erreur, heure de fin antérieure à l'heure de début");
     } else {
       let arrayService = [];
@@ -641,7 +641,7 @@ class Availability extends React.Component {
     this.props.formikCtx.setFieldValue(`servicesAvailability.${name}`, date);
   };
 
-  onSubmit = e => {
+  /*onSubmit = e => {
     const data = {
       active: this.props.formikCtx.values.servicesAvailability.active,
       month_begin: this.props.formikCtx.values.servicesAvailability.month_begin,
@@ -672,7 +672,7 @@ class Availability extends React.Component {
         alert("Disponibilité ajoutée");
       })
       .catch(err => console.log(err));
-  };
+  };*/
 
   render() {
     const { monday } = this.state;
@@ -2321,7 +2321,8 @@ class Availability extends React.Component {
             </React.Fragment>
           ) : null}
         </Grid>
-        <Grid>
+        <Debug />
+        {/*<Grid>
           <Button
             type="button"
             onClick={() => this.onSubmit()}
@@ -2331,7 +2332,7 @@ class Availability extends React.Component {
           >
             Enregistrer
           </Button>
-        </Grid>
+        </Grid>*/}
       </React.Fragment>
     );
   }

@@ -679,18 +679,61 @@ class Wizard extends React.Component {
                                                 )
                                             }} 
                                         />}
-                                        {page === 3 && <Button
-                                            type="submit"
-                                            variant="contained"
-                                            color="secondary"
-                                            style={{ color: 'white'}}
-                                            onClick={() => {
-                                                const div = document.getElementById('bigDiv');
-                                                div.scrollTop = 0;
-                                            }}
-                                        >
-                                            Suivant
-                                        </Button>}
+                                        {page === 3 && 
+                                        <Field render={({form}) => {
+                                            return (
+                                                <Button
+                                                    type="submit"
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    style={{ color: 'white'}}
+                                                    onClick={() => {
+                                                        if (form.values.servicesAvailability.monday_event.length > 0 || form.values.servicesAvailability.tuesday_event.length > 0 || form.values.servicesAvailability.wednesday_event.length > 0 || form.values.servicesAvailability.thursday_event.length > 0 || form.values.servicesAvailability.friday_event.length > 0 || form.values.servicesAvailability.saturday_event.length > 0 || form.values.servicesAvailability.sunday_event.length > 0) {
+                                                            const data = {
+                                                                active: form.values.servicesAvailability.active,
+                                                                month_begin: form.values.servicesAvailability.month_begin,
+                                                                month_end: form.values.servicesAvailability.month_end,
+                                                                monday_event: form.values.servicesAvailability
+                                                                .monday_event,
+                                                                tuesday_event: form.values.servicesAvailability
+                                                                .tuesday_event,
+                                                                wednesday_event: form.values.servicesAvailability
+                                                                .wednesday_event,
+                                                                thursday_event: form.values.servicesAvailability
+                                                                .thursday_event,
+                                                                friday_event: form.values.servicesAvailability
+                                                                .friday_event,
+                                                                saturday_event: form.values.servicesAvailability
+                                                                .saturday_event,
+                                                                sunday_event: form.values.servicesAvailability
+                                                                .sunday_event
+                                                            };
+                                                        
+                                                            axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+                                                                "token"
+                                                            );
+                                                        
+                                                            axios
+                                                                .post(url + "myAlfred/api/availability/add", data)
+                                                                .then(() => {
+                                                                toast.success("Disponibilité(s) ajoutée(s) avec succès");
+                                                            })
+                                                                .catch(err => console.log(err));
+    
+                                                            const div = document.getElementById('bigDiv');
+                                                            div.scrollTop = 0;
+                                                        } else {
+                                                            const div = document.getElementById('bigDiv');
+                                                            div.scrollTop = 0;
+                                                        }
+                                                        
+                                                    }}
+                                                >
+                                                    Suivant
+                                                </Button>
+                                            )
+                                        }}/>
+                                        }
                                         {page === 4 && 
                                         <Field render={({form}) => {
                                             let cancel = true;
@@ -1173,7 +1216,7 @@ class Form extends React.Component {
                                                             return (
                                                                 <ExpansionPanel
                                                                     disabled={this.state.isDisabledExpansionPanels}
-                                                                    key={index}
+                                                                    key={categorie.value}
                                                                 >
                                                                     <ExpansionPanelSummary
                                                                         expandIcon={<ExpandMoreIcon />}
@@ -1187,7 +1230,7 @@ class Form extends React.Component {
                                                                         <Grid container>
                                                                             {categorie[categorie.label.replace(/\s/g, '') + 'Services'].map((service, index) => {
                                                                                 return (
-                                                                                    <Grid item xs={6} sm={6} md={3} key={index}>
+                                                                                    <Grid item xs={6} sm={6} md={3} key={service.value}>
                                                                                         <FormControlLabel
                                                                                             control={
                                                                                                 <Switch
@@ -1357,7 +1400,8 @@ class Form extends React.Component {
                             
                                 <FieldArray
                                     name="submission"
-                                    render={(arrayHelpers) => {                           
+                                    render={(arrayHelpers) => { 
+                                        console.log('rerender')                          
                                         return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
                                             <React.Fragment>
                                                 <div style={{padding: '2rem 2rem 1rem 2rem'}}>
@@ -1370,7 +1414,7 @@ class Form extends React.Component {
                                                     <TabList>
                                                         {this.state.allInOneServ.map((data, index) => {
                                                             return <Tab 
-                                                                        key={index} 
+                                                                        key={data.CategoryLabel} 
                                                                         style={{zIndex: 999999999 - index, position: 'relative'}} 
                                                                         onClick={() => {
                                                                             const div = document.getElementById('bigDiv');
@@ -1430,6 +1474,7 @@ class Form extends React.Component {
                                                                                                                     <React.Fragment>
                                                                                                                         <TextField
                                                                                                                             {...field}
+                                                                                                                            value={field.value}
                                                                                                                             style={{width: 125}}
                                                                                                                             label={`Prix`}
                                                                                                                             type="number"
@@ -1456,6 +1501,7 @@ class Form extends React.Component {
                                                                                                                         <React.Fragment>
                                                                                                                             <TextField
                                                                                                                                 {...field}
+                                                                                                                                value={field.value}
                                                                                                                                 helperText={`Méthode de facturation`}
                                                                                                                                 disabled={!p.checked}
                                                                                                                                 select
@@ -1540,27 +1586,33 @@ class Form extends React.Component {
                                                                                 />
                                                                                 {this.state[`otherOptionChecked${index}`] === true ?
                                                                                     <Grid container spacing={3}>
-                                                                                        <Grid item xs={3}>
+                                                                                        <Grid item xs={12}>
                                                                                             <Field 
                                                                                                 name={`submission.${index}.option.label`}
                                                                                                 render={({form, field}) => {
                                                                                                     return (
                                                                                                         <TextField 
                                                                                                             {...field}
+                                                                                                            value={field.value}
                                                                                                             type="text"
+                                                                                                            style={{marginBottom: '.5rem'}}
+                                                                                                            placeholder="Nom de l'option"
                                                                                                         />
                                                                                                     )
                                                                                                 }} 
                                                                                             />
                                                                                         </Grid>
-                                                                                        <Grid item xs={3}>
+                                                                                        <Grid item xs={12}>
                                                                                             <Field 
                                                                                                 name={`submission.${index}.option.price`}
                                                                                                 render={({form, field}) => {
                                                                                                     return (
                                                                                                         <TextField 
                                                                                                             {...field}
+                                                                                                            value={field.value}
                                                                                                             type="number"
+                                                                                                            style={{marginBottom: '.5rem'}}
+                                                                                                            placeholder="Prix de l'option"
                                                                                                             InputProps={{
                                                                                                                 endAdornment: <InputAdornment position="start">€</InputAdornment>,
                                                                                                             }}
@@ -1569,7 +1621,7 @@ class Form extends React.Component {
                                                                                                 }} 
                                                                                             />
                                                                                         </Grid>
-                                                                                        <Grid item xs={3}>
+                                                                                        <Grid item xs={12}>
                                                                                             <Field 
                                                                                                 name={`submission.${index}.option.unity`}
                                                                                                 render={({form, field}) => {
@@ -1596,7 +1648,7 @@ class Form extends React.Component {
                                                                                                 }} 
                                                                                             />
                                                                                         </Grid>
-                                                                                        <Grid item xs={3}>
+                                                                                        <Grid item xs={12}>
                                                                                             <Field 
                                                                                                 name={`submission.${index}.option.type`}
                                                                                                 render={({form, field}) => {
@@ -1643,8 +1695,8 @@ class Form extends React.Component {
                                                                                             return null;
                                                                                         };
                                                                                         return (
-                                                                                            <Grid item xs={2}>
-                                                                                            <label style={{cursor: 'pointer'}} key={indexe} onClick={() => {
+                                                                                            <Grid item xs={2} key={indexe}>
+                                                                                            <label style={{cursor: 'pointer'}} onClick={() => {
                                                                                                 e.checked = !e.checked;
                                                                                                 arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
                                                                                             }}>
@@ -1682,6 +1734,7 @@ class Form extends React.Component {
                                                                                         return(
                                                                                             <TextField
                                                                                                 {...field}
+                                                                                                value={field.value}
                                                                                                 fullWidth
                                                                                                 label="Panier minimum"
                                                                                                 margin="dense"
@@ -1783,6 +1836,7 @@ class Form extends React.Component {
                                                                                         return (
                                                                                             <TextField
                                                                                                 {...field}
+                                                                                                value={field.value}
                                                                                                 style={{width: '30%'}}
                                                                                                 className={classes.selectDelayInputRepsonsive}
                                                                                                 select
@@ -1813,6 +1867,7 @@ class Form extends React.Component {
                                                                                     return (
                                                                                         <TextField
                                                                                             {...field}
+                                                                                            value={field.value}
                                                                                             id="outlined-multiline-static"
                                                                                             label="Description du service"
                                                                                             multiline
@@ -1905,6 +1960,7 @@ class Form extends React.Component {
                                                                                                             return (
                                                                                                                 <TextField
                                                                                                                     {...field}
+                                                                                                                    value={field.value}
                                                                                                                     style={{width: '50%', marginRight: '5%'}}
                                                                                                                     className={classes.inputDiplomaCertifResp}
                                                                                                                     label="Année d'obtention"
@@ -1915,7 +1971,7 @@ class Form extends React.Component {
                                                                                                                     //helperText="Délai de prévenance avant réservation."
                                                                                                                 >
                                                                                                                     {dates.map(date => {
-                                                                                                                        return <MenuItem style={{zIndex: 9999}} value={date}>{date}</MenuItem>
+                                                                                                                        return <MenuItem key={date} style={{zIndex: 9999}} value={date}>{date}</MenuItem>
                                                                                                                     })}
                                                                                                                 </TextField>
                                                                                                             )
@@ -1996,6 +2052,7 @@ class Form extends React.Component {
                                                                                                             return (
                                                                                                                 <TextField
                                                                                                                     {...field}
+                                                                                                                    value={field.value}
                                                                                                                     style={{width: '50%', marginRight: '5%'}}
                                                                                                                     className={classes.inputDiplomaCertifResp}
                                                                                                                     label="Année d'obtention"
@@ -2006,7 +2063,7 @@ class Form extends React.Component {
                                                                                                                     //helperText="Délai de prévenance avant réservation."
                                                                                                                 >
                                                                                                                     {dates.map(date => {
-                                                                                                                        return <MenuItem value={date}>{date}</MenuItem>
+                                                                                                                        return <MenuItem key={date} value={date}>{date}</MenuItem>
                                                                                                                     })}
                                                                                                                 </TextField>
                                                                                                             )
@@ -2914,7 +2971,7 @@ export function CheckboxSelect(props) {
                         return (
                             props.option.map((select, index) => {
                                 return (
-                                    <React.Fragment>
+                                    <React.Fragment key={index}>
                                         <p>Prestation(s) pour : {select.serviceLabel} ({select.filterLabel})</p>
                                         <label>
                                             {select.label}
