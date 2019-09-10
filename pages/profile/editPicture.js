@@ -390,7 +390,7 @@ class editPicture extends React.Component {
 
                 <Dialog
                     open={this.state.open}
-                    onClose={this.handleClose}
+                    onClose={()=>this.handleClose()}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
