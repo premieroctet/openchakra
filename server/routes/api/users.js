@@ -36,17 +36,25 @@ const upload = multer({ storage: storage,
             return callback(new Error('Only images are allowed'))
         }
         callback(null, true)
-    },});
+    }});
 
 const storage2 = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'static/profile/idCard/')
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname  )
+        let datetimestamp = Date.now();
+        let key = crypto.randomBytes(5).toString('hex');
+        cb(null, datetimestamp+'_'+key+ '_'+file.originalname )
     }
 });
-const upload2 = multer({ storage: storage2 });
+const upload2 = multer({ storage: storage2,fileFilter: function (req, file, callback) {
+        let ext = path.extname(file.originalname);
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
+            return callback(new Error('Error extension'))
+        }
+        callback(null, true)
+    } });
 
 
 router.get('/test',(req, res) => res.json({msg: 'Users Works!'}) );

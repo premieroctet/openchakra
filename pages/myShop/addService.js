@@ -1085,7 +1085,7 @@ class addService extends React.Component {
                                                 <p style={{cursor:"pointer",color:'black'}}>Joindre mon diplôme</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
                                                        onChange={this.onChangeDiploma}
-                                                       className="form-control"
+                                                       className="form-control" accept={'image/*,.pdf'}
                                                 />
                                             </label>
                                             <span>{this.state.file_diploma !== null ? this.state.file_diploma.name : null}</span>
@@ -1147,7 +1147,7 @@ class addService extends React.Component {
                                                 <p style={{cursor:"pointer",color:'black'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
                                                        onChange={this.onChangeCertification}
-                                                       className="form-control"
+                                                       className="form-control" accept={'image/*,.pdf'}
                                                 />
                                             </label>
                                             <span>{this.state.file_certification !== null ? this.state.file_certification.name : null}</span>

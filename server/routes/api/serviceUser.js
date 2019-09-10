@@ -7,6 +7,7 @@ const ServiceUser = require('../../models/ServiceUser');
 const User = require('../../models/User');
 const axios = require('axios');
 const multer = require("multer");
+const crypto = require('crypto');
 
 
 const storage = multer.diskStorage({
@@ -14,10 +15,18 @@ const storage = multer.diskStorage({
         cb(null, 'static/profile/diploma/')
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname  )
+        let datetimestamp = Date.now();
+        let key = crypto.randomBytes(5).toString('hex');
+        cb(null, datetimestamp+'_'+key+ '_'+file.originalname )
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage,fileFilter: function (req, file, callback) {
+        let ext = path.extname(file.originalname);
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
+            return callback(new Error('Error extension'))
+        }
+        callback(null, true)
+    } });
 
 
 
