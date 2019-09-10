@@ -113,4 +113,35 @@ router.put('/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
 });
 
 
+// @Route DELETE /myAlfred/api/availability/currentAlfred
+// Delete all availability for one user
+router.delete('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,res)=> {
+
+    Availability.find({user: req.user.id})
+        .then(availability => {
+            availability.remove().then(() => res.json({success: true}));
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
+
+});
+
+// @Route DELETE /myAlfred/api/availability/:id
+// Delete one availability
+router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+
+    Availability.findById(req.params.id)
+        .then(availability => {
+            availability.remove().then(res => res.json({msg: 'Ok'})).catch(error => console.log(error))
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
+
+});
+
+
 module.exports = router;

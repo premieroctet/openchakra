@@ -847,7 +847,9 @@ router.delete('/profile/picture/delete',passport.authenticate('jwt',{session:fal
 router.delete('/current/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
     User.findById(req.user.id)
         .then(user => {
-            user.remove().then(data => console.log('User deleted')).catch(err => console.log(err));
+            user.active = false;
+            user.is_alfred = false;
+            user.save().then(data => console.log('User deleted')).catch(err => console.log(err));
         })
         .catch(err => console.log(err));
 });

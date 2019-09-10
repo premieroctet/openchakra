@@ -12,6 +12,11 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { toast } from 'react-toastify';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 const { config } = require('../../config/config');
@@ -78,7 +83,11 @@ class parameters extends React.Component {
         this.state = {
             user: {},
             index_google: false,
-        }
+            alfred: false,
+            open : false,
+            open2: false,
+        };
+        this.handleClose = this.handleClose.bind(this);
 
     }
 
@@ -89,7 +98,7 @@ class parameters extends React.Component {
         axios
             .get(url+'myAlfred/api/users/current')
             .then(res => {
-                this.setState({user: res.data, index_google: res.data.index_google});
+                this.setState({user: res.data, index_google: res.data.index_google,alfred:res.data.is_alfred});
 
             })
             .catch(err => {
@@ -102,43 +111,88 @@ class parameters extends React.Component {
             );
     }
 
+     handleClickOpen() {
+        this.setState({open:true});
+    }
+
+     handleClose() {
+        this.setState({open:false});
+    }
+
+    handleClickOpen2() {
+        this.setState({open2:true});
+    }
+
+    handleClose2() {
+        this.setState({open2:false});
+    }
+
      handleChange = name => event => {
          this.setState({[name]: event.target.checked });
          const data = {index_google:!this.state.index_google};
          axios.put(url+'myAlfred/api/users/account/indexGoogle', data)
             .then(() => {
-                console.log('ok');
+                toast.info('Compte mis à jour');
             })
             .catch(err => console.log(err));
     };
 
     deleteShop = () => {
-        if(confirm('Etes-vous sur de vouloir supprimer votre shop ?')){
-            axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
-                .then(() => {
-                    axios.delete(url+'myAlfred/api/shop/current/delete')
-                        .then(shop => {
-                            toast.error('Boutique supprimée');
-                        })
-                        .catch(err => console.log(err));
-                })
-                .catch(err => console.log(err));
-        } else {
-            console.log('Pas ok');
-        }
+
+        axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
+            .then(() => {
+                axios.delete(url+'myAlfred/api/shop/current/delete')
+                    .then(shop => {
+                        toast.error('Boutique supprimée');
+                    })
+                    .catch(err => console.log(err));
+
+
+            })
+            .catch(err => console.log(err));
+        axios.delete(url+'myAlfred/api/availability/currentAlfred')
+            .then(() => {
+                console.log('ok')
+            })
+            .catch(error => console.log(error));
+
     };
 
     deleteAccount = () => {
-        if(confirm('Etes-vous sur de vouloir supprimer votre compte ?')){
+        if(this.state.alfred === true) {
+            axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
+                .then(() => {
+                    axios.delete(url+'myAlfred/api/shop/current/delete')
+                        .then(() => {
+                            axios.delete(url+'myAlfred/api/users/current/delete')
+                                .then(shop => {
+                                    toast.error('Compte désactivé');
+                                    localStorage.removeItem('token');
+                                    Router.push('/');
+                                })
+                                .catch(err => console.log(err));
+                        })
+                        .catch(err => console.log(err));
+
+
+                })
+                .catch(err => console.log(err));
+            axios.delete(url+'myAlfred/api/availability/currentAlfred')
+                .then(() => {
+                    console.log('ok')
+                })
+                .catch(error => console.log(error));
+        } else {
             axios.delete(url+'myAlfred/api/users/current/delete')
                 .then(shop => {
-                    toast.error('Compte supprimé');
+                    toast.error('Compte désactivé');
+                    localStorage.removeItem('token');
                     Router.push('/');
                 })
                 .catch(err => console.log(err));
-        } else {
-            console.log('Pas ok');
         }
+
+
     };
 
 
@@ -363,7 +417,7 @@ class parameters extends React.Component {
                                         </p>
                                     </Grid>
                                     <Grid item xs={4} style={{paddingLeft: 40}}>
-                                        <Button size={'large'} type={'button'} onClick={()=>this.deleteShop()} variant="contained" color="secondary"
+                                        <Button size={'large'} type={'button'} onClick={()=>this.handleClickOpen()} variant="contained" color="secondary"
                                                 style={{color: 'white'}}>
                                             Supprimer
                                         </Button>
@@ -388,7 +442,7 @@ class parameters extends React.Component {
                                     </p>
                                 </Grid>
                                 <Grid item xs={4} style={{paddingLeft: 40}}>
-                                    <Button size={'large'} type={'button'} onClick={()=>this.deleteAccount()} variant="contained" color="secondary"
+                                    <Button size={'large'} type={'button'} onClick={()=>this.handleClickOpen2()} variant="contained" color="secondary"
                                             style={{color: 'white'}}>
                                         Désactiver
                                     </Button>
@@ -400,7 +454,55 @@ class parameters extends React.Component {
                 </Layout>
                 <Footer/>
 
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Supprimer votre boutique ?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Attention, cette action est irréversible. Si vous souhaitez garder votre boutique sans que les
+                            utilisateurs puissent réserver vos services, vous pouvez supprimer vos disponibilités sur votre calendrier.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose()} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={()=>this.deleteShop()} color="secondary" autoFocus>
+                            Supprimer
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
+                    open={this.state.open2}
+                    onClose={this.handleClose2}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Désactiver votre compte ?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Attention, cette action est irréversible. Si vous souhaitez ne plus être référencé par les
+                            moteurs de recherche, vous pouvez désactiver l’indexation par les moteurs de recherche.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose2()} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={()=>this.deleteAccount()} color="secondary" autoFocus>
+                            Désactiver
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
             </Fragment>
+
+
         );
     };
 }
