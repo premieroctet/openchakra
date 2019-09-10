@@ -23,7 +23,7 @@ const styles = theme => ({
     })
 
 
-class Footer extends Component {
+class Footer2 extends Component {
     constructor(props) {
         super(props);
       }
@@ -33,7 +33,7 @@ class Footer extends Component {
         return(
             <React.Fragment>
                 
-                <Grid container style={{backgroundColor: '#747474', width: '100%',marginTop: '2%',}}>
+                <Grid container style={{backgroundColor: '#747474', width: '100%',marginTop: '2%',marginTop: '15vh'}}>
                     <Grid item md={3} sm={6} xs={12} style={{textAlign: 'center', margin: '2% 0px'}}>
 
                         {/*Responsive */}
@@ -197,4 +197,4 @@ class Footer extends Component {
     }
 }
 
-export default withStyles(styles)(Footer);
+export default withStyles(styles)(Footer2);

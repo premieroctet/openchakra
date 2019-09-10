@@ -10,6 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import { toast } from 'react-toastify';
 import Footer from '../../hoc/Layout/Footer/Footer';
+import Footer2 from '../../hoc/Layout/Footer/Footer2';
 
 
 
@@ -162,6 +163,8 @@ class paymentPreference extends React.Component {
             const {clickAdd} = this.state;
             const {clickEdit} = this.state;
             const {haveAccount} = this.state;
+            const editfooter = clickEdit ? <Footer/> :<Footer2/>;
+            const addfooter = clickAdd ? <Footer/> :<Footer2/>;
 
 
             return (
@@ -368,7 +371,7 @@ class paymentPreference extends React.Component {
                                             onClick={this.handleClick}>Ajouter un RIB</h2>}
                                     </Grid>
                                     {clickAdd ?
-                                        <Grid item xs={9}>
+                                        <Grid item xs={9} style={{marginBottom: '25%'}}>
                                             <form onSubmit={this.onSubmit}>
                                                 <Grid item xs={12}>
                                                     <TextField
@@ -428,7 +431,7 @@ class paymentPreference extends React.Component {
                                         </Grid>
                                         : null}
                                     {clickEdit ?
-                                        <Grid item xs={9}>
+                                        <Grid item xs={9} >
                                             <form onSubmit={this.onSubmit}>
                                                 <Grid item xs={12}>
                                                     <TextField
@@ -495,12 +498,7 @@ class paymentPreference extends React.Component {
                             </Grid>
                         </Grid>
                     </Layout>
-
-
-                    <Footer/>
-
-
-
+                    {haveAccount ? editfooter : addfooter}
                 </Fragment>
             );
         }

@@ -377,10 +377,10 @@ class notifications extends React.Component {
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                <Grid item xs={2}>
+                                <Grid item xs={3}>
                                     <p>Email</p>
                                 </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.messages_email}
                                             onChange={this.handleChange('messages_email')}
@@ -391,10 +391,10 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Notification push</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.messages_push}
                                             onChange={this.handleChange('messages_push')}
@@ -405,10 +405,10 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>SMS</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.messages_sms}
                                             onChange={this.handleChange('messages_sms')}
@@ -437,10 +437,10 @@ class notifications extends React.Component {
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Email</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.rappel_email}
                                             onChange={this.handleChange('rappel_email')}
@@ -451,10 +451,10 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Notification push</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.rappel_push}
                                             onChange={this.handleChange('rappel_push')}
@@ -465,10 +465,10 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>SMS</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.rappel_sms}
                                             onChange={this.handleChange('rappel_sms')}
@@ -498,10 +498,10 @@ class notifications extends React.Component {
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Email</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.promotions_email}
                                             onChange={this.handleChange('promotions_email')}
@@ -512,10 +512,10 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Notification push</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.promotions_push}
                                             onChange={this.handleChange('promotions_push')}
@@ -526,10 +526,10 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>SMS</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.promotions_sms}
                                             onChange={this.handleChange('promotions_sms')}
@@ -540,10 +540,10 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Appel téléphonique</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.promotions_phone}
                                             onChange={this.handleChange('promotions_phone')}
@@ -572,10 +572,10 @@ class notifications extends React.Component {
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Email</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.community_email}
                                             onChange={this.handleChange('community_email')}
@@ -586,10 +586,10 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Notification push</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.community_push}
                                             onChange={this.handleChange('community_push')}
@@ -600,10 +600,10 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>SMS</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.community_sms}
                                             onChange={this.handleChange('community_sms')}
@@ -639,10 +639,10 @@ class notifications extends React.Component {
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Email</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.assistance_email}
                                             onChange={this.handleChange('assistance_email')}
@@ -653,10 +653,10 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Notification push</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.assistance_push}
                                             onChange={this.handleChange('assistance_push')}
@@ -667,10 +667,10 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>SMS</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.assistance_sms}
                                             onChange={this.handleChange('assistance_sms')}
@@ -688,13 +688,19 @@ class notifications extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
-                        alignItems:"center",height:60}}>
-                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                style={{color: 'white',maxHeight:40,marginRight:20}}>
-                            Enregistrer
-                        </Button>
-                    </div>
+                    <Grid container>
+                        <Grid item xs={8}>
+                            <div style={{display:'flex',justifyContent:'flex-end',marginBottom: '-1.95%',width:'100%',bottom:0,
+                            alignItems:"center",height:60}}>
+                                <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
+                                style={{color: 'white',maxHeight:40,marginRight:40}}>
+                                    Enregistrer
+                                </Button>
+                            </div>
+                        </Grid>
+                        <Grid item xs={4}></Grid>
+                    </Grid>
+
                 </Layout>
                 <Footer/>
 
