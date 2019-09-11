@@ -2056,7 +2056,7 @@ class Availability extends React.Component {
             </ExpansionPanel>
             <hr style={{ margin: "1%" }} />
           </Grid>
-          <Grid xs={12}>
+          <Grid item xs={12}>
             <ExpansionPanel
               style={{ border: "none", boxShadow: "none", width: "70%" }}
             >

@@ -1,6 +1,6 @@
 import React from 'react';
 import Router from 'next/router';
-import { Formik, Field, ErrorMessage, FieldArray, yupToFormErrors } from 'formik';
+import { Formik, Field, ErrorMessage, FieldArray, FastField } from 'formik';
 import styled from 'styled-components';
 import axios from 'axios';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -362,7 +362,6 @@ class Wizard extends React.Component {
                 axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
                 axios.post(url+'myAlfred/api/serviceUser/add',formData)
                     .then(res => {
-                        alert("Service ajouté");
 
                             const booking_request = values.createShop.booking_request;
                             const my_alfred_conditions = values.createShop.my_alfred_conditions;
@@ -400,7 +399,6 @@ class Wizard extends React.Component {
                                     , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
                                     self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
                                         .then(result => {
-                                            alert('Shop créée avec succès !');
 
                                             const formDataIdProfile = new FormData();
                                             formDataIdProfile.append('myCardR',values.createShop.id_recto);
@@ -409,7 +407,7 @@ class Wizard extends React.Component {
                                             }
                                             axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
                                                 .then(res => {
-                                                    alert('Profil mis à jours')
+                                                    
                                                 })
                                                 .catch(err => {
                                                     console.log(err);
@@ -420,24 +418,23 @@ class Wizard extends React.Component {
                                             formDataPicture.append('myImage',profilePicture);
                                             axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
                                                 .then(res => {
-                                                    alert('Photo ajoutée')
+
                                                 })
                                                 .catch(err => {
                                                     console.log(err);
                                                 })
 
                                             const phone = values.alfredUpdate.phone;
-                                            console.log(phone)
                                             axios.put(url+'myAlfred/api/users/profile/phone', {phone})
                                                 .then(res => {
-                                                    alert('Téléphone ajouté');
+
                                                 })
                                                 .catch(err => {
                                                     console.log(err);
                                                 });
                                             axios.put(url+'myAlfred/api/users/users/becomeAlfred')
                                                 .then(res => {
-                                                    alert('Vous êtes maintenant un Alfred');
+                                                    toast.info('Boutique créée avec succès');
                                                     Router.push('/myShop/services');
                                                     
                                                 })
@@ -476,7 +473,7 @@ class Wizard extends React.Component {
           submission: Yup.array().of(Yup.object().shape({
             //descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
             minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').required('Le minimum d\'achat est requis'),
-            delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi heures, jours et semaines').required(),
+            delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi heures, jours et semaines').required('Choisissez parmi heures, jours et semaines'),
             city: Yup.string().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
             filters: Yup.array().of(Yup.object().shape({
                 prestations: Yup.array().of(Yup.object().shape({
@@ -485,6 +482,11 @@ class Wizard extends React.Component {
                         is: true,
                         then: Yup.number().typeError('Le prix doit être un nombre').moreThan(0, 'Le prix doit être supérieur à 0€').required('Veuillez entrer un prix'),
                         otherwise: Yup.number().notRequired(),
+                    }),
+                    billing: Yup.string().when('checked', {
+                        is: true,
+                        then: Yup.string().typeError('Veuillez sélectionner une méthode de facturation').required('Veuillez sélectionner une méthode de facturation'),
+                        otherwise: Yup.string().notRequired().nullable(),
                     })
                 }))
             }))
@@ -596,14 +598,14 @@ class Wizard extends React.Component {
                                             render={({form}) => {
                                                 return (
                                                     <Button
-                                                        onClick={() => {
+                                                        onClick={/*() => {
                                                             let confirm = window.confirm('Souhaitez-vous réinitialiser le formulaire ?')
                                                             if (confirm === true) {
                                                                 window.location.reload();
                                                             } else {
                                                                 return;
                                                             }   
-                                                    }}
+                                                    }*/handleReset}
                                                 >
                                                     Reset
                                                 </Button>
@@ -917,7 +919,6 @@ class Form extends React.Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
-                console.log(res);
                 this.state.phone = res.data.phone;
                 this.state.currentUser = res.data;
                 this.state.userCity = {label: res.data.billing_address.city, value: res.data.billing_address.city};
@@ -959,19 +960,26 @@ class Form extends React.Component {
             categorie = [];
         }
         this.setState({
-            categories: [this.state.categories, categorie]
+            categoriesFinal: [this.state.categories, categorie]
         });
         categorie.map((categorie, catInd) => {
             axios.get(`${url}myAlfred/api/service/all/${categorie.value}`)
-                .then(response => {
+                .then((response) => {
                     //let difference = this.state.services.filter(x => !value.includes(x));
                     //console.log('Removed: ', difference);
                     const services = response.data;
+                    if (formikCtx.form.values.categories[catInd][categorie.label.replace(/\s/g, '') + 'Services'].length > 0) {
+                        console.log('oui')
+                        formikCtx.form.values.categories[catInd][categorie.label.replace(/\s/g, '') + 'Services'] = [];
+                        //formikCtx.form.setFieldValue(`categories[${catInd}][${categorie.label.replace(/\s/g, '') + 'Services'}]`, []);
+                    }
                     const options = services.map((service) => {
                         let arrServ = [];
                         const servObj = { value: service._id, label: service.label, categorieId: categorie.value, categorieLabel: categorie.label, checked: false }
                         arrServ.push(servObj);
+                        //formikCtx.form.setFieldValue(`categories[${catInd}][${servObj.categorieLabel.replace(/\s/g, '') + 'Services'}]`, []);
                         if (categorie.hasOwnProperty(servObj.categorieLabel.replace(/\s/g, '') + 'Services')) {
+                            console.log('io')
                             formikCtx.form.values.categories[catInd][servObj.categorieLabel.replace(/\s/g, '') + 'Services'].push(servObj);
                             this.setState({
                                 [servObj.categorieLabel.replace(/\s/g, '') + 'Services']: []
@@ -1063,7 +1071,7 @@ class Form extends React.Component {
                             isCertified: false,
                         },
                         alfredUpdate: {
-                            phone: this.state.phone,
+                            phone: null,
                             profile_picture_user: null,
                         },
                         servicesAvailability: {
@@ -1182,18 +1190,40 @@ class Form extends React.Component {
                                                     placeholder="Sélectionnez vos catégories..."
                                                     option={this.state.categories}
                                                     value={arrayHelpers.form.values.categories}
-                                                    disabled={this.state.isDisabledCategoryInput}
-                                                    update={async categorie => {
-                                                        await arrayHelpers.form.setFieldValue('categories', categorie)
+                                                    //disabled={this.state.isDisabledCategoryInput}
+                                                    update={categorie => {
+                                                        console.log(categorie)
+                                                        if (categorie === null) {
+                                                            arrayHelpers.form.setFieldValue('categories', []);
+                                                        } else {
+                                                            arrayHelpers.form.setFieldValue('categories', categorie);
+                                                        }
+                                                        arrayHelpers.form.setFieldValue('submission', []);
+                                                        arrayHelpers.form.setFieldValue('services', []);
+                                                        /*if (arrayHelpers.form.values.categories === null) {
+                                                            console.log('kzrngenf')
+                                                            arrayHelpers.form.setFieldValue('categories', [])
+                                                        }*/
                                                     }}
                                                 />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        arrayHelpers.form.handleReset();
+                                                        this.setState({ isDisabledCategoryInput: false });
+                                                        arrayHelpers.form.setFieldValue('categories', []);
+                                                        //this.resetCat();
+                                                    }}
+                                                >
+                                                    reset
+                                                </button>
                                                 <Button
                                                     color="primary"
                                                     style={{marginTop: '1rem', marginBottom: '2rem', color: 'white', borderRadius: 8}}
                                                     type="button"
                                                     variant="contained"
-                                                    disabled={this.state.isDisabledCategoryInput}
-                                                    onClick={() => {
+                                                    //disabled={this.state.isDisabledCategoryInput}
+                                                    onClick={async () => {
                                                         if (arrayHelpers.form.values.categories != '' && arrayHelpers.form.values.categories != null) {
                                                             this.handleCategorieChange(arrayHelpers.form.values.categories, arrayHelpers);
                                                             this.setState({
@@ -1213,9 +1243,10 @@ class Form extends React.Component {
                                                 <div style={{marginTop: '1rem'}}>
                                                     {arrayHelpers.form.values.categories && arrayHelpers.form.values.categories.length > 0 ? (
                                                         arrayHelpers.form.values.categories.map((categorie, index) => {
+                                                            const servName = categorie.label.replace(/\s/g, '') + 'Services';
                                                             return (
                                                                 <ExpansionPanel
-                                                                    disabled={this.state.isDisabledExpansionPanels}
+                                                                    disabled={this.state.isDisabledExpansionPanels || categorie[servName].length < 0}
                                                                     key={categorie.value}
                                                                 >
                                                                     <ExpansionPanelSummary
@@ -1314,7 +1345,7 @@ class Form extends React.Component {
                                                                             certification: null 
                                                                         }, perimeter: 50, 
                                                                         delayBeforeShop: 1, 
-                                                                        delayBeforeShopDWM: null, 
+                                                                        delayBeforeShopDWM: '', 
                                                                         city: this.state.userCity, 
                                                                         address: this.state.userAddress, 
                                                                         postal_code: this.state.userZipCode, 
@@ -1350,7 +1381,7 @@ class Form extends React.Component {
                                                                                 axios.get(`${url}myAlfred/api/prestation/${service}/${filterObj.id}`)
                                                                                     .then(res => {
                                                                                         res.data.map(prestation => {
-                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: 0, billing: prestation.billing, checked: false };
+                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: 0, billingChoice: prestation.billing, billing: null, checked: false };
                                                                                             servCompObj.filters.map(p => {
                                                                                                 if (p.id === prestationObj.filterId) {
                                                                                                     p.prestations.push(prestationObj);
@@ -1394,14 +1425,14 @@ class Form extends React.Component {
                                     }}
                                 </Field>             
                         </Grid>
+                        <Debug />
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
                             
                                 <FieldArray
                                     name="submission"
-                                    render={(arrayHelpers) => { 
-                                        console.log('rerender')                          
+                                    render={(arrayHelpers) => {                          
                                         return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
                                             <React.Fragment>
                                                 <div style={{padding: '2rem 2rem 1rem 2rem'}}>
@@ -1501,22 +1532,22 @@ class Form extends React.Component {
                                                                                                                         <React.Fragment>
                                                                                                                             <TextField
                                                                                                                                 {...field}
-                                                                                                                                value={field.value}
                                                                                                                                 helperText={`Méthode de facturation`}
                                                                                                                                 disabled={!p.checked}
                                                                                                                                 select
                                                                                                                                 margin="none"
-
                                                                                                                             >
-                                                                                                                                {p.billing.map(option => {
+                                                                                                                                {p.billingChoice.map(option => {
                                                                                                                                     return (
                                                                                                                                     <MenuItem key={option._id} value={option.label}>
                                                                                                                                         {option.label}
                                                                                                                                     </MenuItem>
                                                                                                                                     )
+                                                                                                                                    
                                                                                                                                 })}
+                                                                                                                                <MenuItem value='test'>test</MenuItem>
                                                                                                                             </TextField>
-                                                                                                                            <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                                                            <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                                                         </React.Fragment>
                                                                                                                     )
                                                                                                                 }}
@@ -1697,7 +1728,7 @@ class Form extends React.Component {
                                                                                             return null;
                                                                                         };
                                                                                         return (
-                                                                                            <Grid item xs={2} key={e.id}>
+                                                                                            <Grid item xs={3} sm={3} md={2} key={e.id}>
                                                                                             <label style={{cursor: 'pointer'}} onClick={() => {
                                                                                                 e.checked = !e.checked;
                                                                                                 arrayHelpers.form.setFieldValue(`submission[${index}].equipments[${indexe}].checked`, e.checked);
@@ -2575,6 +2606,7 @@ class Form extends React.Component {
                                                     <Grid item xs={1} />
                                                     <Grid item xs={12} md={4}>
                                                         <Field name={"alfredUpdate.phone"} render={({field, form}) => {
+                                                            form.values.alfredUpdate.phone === null ? form.setFieldValue('alfredUpdate.phone', this.state.phone) : null;
                                                             return (
                                                                 <TextField
                                                                     {...field}
@@ -2582,10 +2614,10 @@ class Form extends React.Component {
                                                                     label="Téléphone"
                                                                     margin="normal"
                                                                     variant="outlined"
+                                                                    value={form.values.alfredUpdate.phone}
                                                                     type="tel"
-                                                                    value={this.state.phone}
+                                                                    InputLabelProps={{shrink: form.values.alfredUpdate.phone !== null ? true : false}}
                                                                     onChange={() => {
-                                                                        this.setState({phone: event.target.value});
                                                                         form.setFieldValue('alfredUpdate.phone', event.target.value);
                                                                     }}
                                                                 />
@@ -2909,6 +2941,7 @@ class Form extends React.Component {
                                 </React.Fragment>
                             )}
                         </Field>
+                        <Debug />
                     </Wizard.Page>
                 </Wizard>
             </div>
