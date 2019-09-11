@@ -8,18 +8,10 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import {FormLabel} from "@material-ui/core";
 import Select2 from 'react-select';
 import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import fr from 'date-fns/locale/fr';
-import Birthday from '@material-ui/icons/CakeOutlined'
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
 registerLocale('fr', fr);
@@ -34,9 +26,8 @@ const { config } = require('../../config/config');
 const url = config.apiUrl;
 
 const ExampleCustomInput = ({ value,onClick }) => (
-    <Button variant={"outlined"} className="example-custom-input" onClick={onClick}>
-        {value}
-    </Button>
+    <TextField value={value} label={'Date de naissance'} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
+
 );
 
 const styles = theme => ({
@@ -373,6 +364,8 @@ class editProfile extends React.Component {
                                         margin="normal"
                                         name={'firstname'}
                                         placeholder={'Prénom'}
+                                        variant={"outlined"}
+                                        label={'Prénom'}
 
                                     />
 
@@ -387,6 +380,8 @@ class editProfile extends React.Component {
                                         margin="normal"
                                         name={'name'}
                                         placeholder={'Nom'}
+                                        variant={"outlined"}
+                                        label={'Nom'}
 
                                     />
 
@@ -394,7 +389,7 @@ class editProfile extends React.Component {
 
                                 <Grid item xs={12} style={{marginTop: 20}}>
 
-                                    <InputLabel style={{color: 'black'}}>A propos de moi</InputLabel>
+                                    {/*<InputLabel style={{color: 'black'}}>A propos de moi</InputLabel>*/}
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
@@ -405,25 +400,30 @@ class editProfile extends React.Component {
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'description'}
+                                        label={'A propos de moi'}
 
                                     />
 
                                 </Grid>
                             </Grid>
                             <Grid container style={{maxWidth: '60%'}}>
+                                <Grid item xs={12}>
                                 <h2 style={{fontWeight: '100'}}>Informations personnelles</h2>
-                                <Grid item xs={12} style={{marginTop: 10}}>
+                                </Grid>
+                                <Grid container style={{marginTop:10}}>
+                                <Grid item xs={5}>
 
                                     <TextField
                                         id="standard-name"
                                         style={{width: '100%'}}
                                         value={user.gender || ''}
                                         select
+                                        variant={"outlined"}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'gender'}
                                         placeholder={'Sexe'}
-                                        helperText={'Sexe'}
+                                        label={'Sexe'}
 
                                     >
 
@@ -436,8 +436,8 @@ class editProfile extends React.Component {
                                     </TextField>
 
                                 </Grid>
-                                <Grid item xs={12} style={{marginTop: 10,display:"flex",alignItems:"center"}}>
-                                    <Birthday style={{marginRight:20}}/>
+                                    <Grid item xs={2}></Grid>
+                                <Grid item xs={5} style={{marginTop:15}}>
                                     <DatePicker
                                         selected={Date.parse(birthday)}
                                         onChange={(date)=>this.onChangeBirthday(date)}
@@ -447,9 +447,11 @@ class editProfile extends React.Component {
                                         showYearDropdown
                                         showMonthDropdown
                                         dateFormat="dd/MM/yyyy"
-                                        style={{padding:10,fontSize: '0.9rem'}}
+                                        style={{fontSize: '0.9rem'}}
+                                        maxDate={new Date()}
                                     />
 
+                                </Grid>
                                 </Grid>
                                 <Grid item xs={12} style={{marginTop: 10}}>
                                     <TextField
@@ -460,6 +462,8 @@ class editProfile extends React.Component {
                                         margin="normal"
                                         name={'email'}
                                         placeholder={'Email'}
+                                        variant={"outlined"}
+                                        label={'Adresse email'}
                                     />
                                 </Grid>
                                 <Grid item xs={12} style={{marginTop: 10}}>
@@ -471,6 +475,8 @@ class editProfile extends React.Component {
                                         margin="normal"
                                         name={'phone'}
                                         placeholder={'Téléphone'}
+                                        variant={"outlined"}
+                                        label={'Téléphone'}
                                     />
                                 </Grid>
                             </Grid>
@@ -486,6 +492,8 @@ class editProfile extends React.Component {
                                             margin="normal"
                                             name={'diplomes'}
                                             placeholder={'Diplomes'}
+                                            variant={"outlined"}
+                                            label={'Diplômes'}
 
                                         />
 
@@ -499,6 +507,8 @@ class editProfile extends React.Component {
                                             margin="normal"
                                             name={'school'}
                                             placeholder={'Ecoles'}
+                                            variant={"outlined"}
+                                            label={'Ecoles'}
 
                                         />
                                     </Grid>
@@ -511,6 +521,8 @@ class editProfile extends React.Component {
                                             margin="normal"
                                             name={'job'}
                                             placeholder={'Emploi'}
+                                            variant={"outlined"}
+                                            label={'Emploi'}
                                         />
                                     </Grid>
                                     <Grid item xs={12} style={{marginTop: 10}}>
@@ -523,9 +535,14 @@ class editProfile extends React.Component {
                                         value={this.state.selectedLanguages}
                                         onChange={this.handleChangeLanguages}
                                         options={options}
+                                        styles={{
+                                            menu: provided => ({ ...provided, zIndex: 9999 })
+                                        }}
                                         isMulti
                                         isSearchable
                                         closeMenuOnSelect={false}
+                                        placeholder={'Sélectionnez vos langues'}
+                                        noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                     />
                                             </Grid>
@@ -541,6 +558,8 @@ class editProfile extends React.Component {
                                             margin="normal"
                                             name={'emergency_phone'}
                                             placeholder={'Numéro d\'urgence'}
+                                            variant={"outlined"}
+                                            label={'Numéro d\'urgence'}
                                         />
                                     </Grid>
                                 </Grid>

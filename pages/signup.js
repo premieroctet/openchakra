@@ -98,12 +98,11 @@ const styles = theme => ({
 
 });
 
-/*const Input2 = ({value,  onClick }) => (
-    <Button value={value} color={"primary"} variant={"contained"} style={{color:"white"}} className="example-custom-input" onClick={onClick}>
-      {value}
-    </Button>
+const Input2 = ({value,  onClick }) => (
+    <TextField value={value} placeholder={'jj//mm/aaaa'} style={{cursor:"pointer"}} color={"primary"} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
 
-);*/
+
+);
 
 class signup extends React.Component {
       constructor(props) {
@@ -384,15 +383,16 @@ class signup extends React.Component {
                               shrink: true,
                             }}
                         />*/}
-                        <Birthday style={{marginRight:20}}/>
+                        {/*<Birthday style={{marginRight:20}}/>*/}
                         <DatePicker
                           selected={this.state.birthday}
                           onChange={(date)=>this.onChangeBirthday(date)}
-                          //customInput={<Input2 />}
+                          customInput={<Input2 />}
                           locale='fr'
                           placeholderText="jj/mm/aaaa"
                           showYearDropdown
                           showMonthDropdown
+                          maxDate={new Date()}
                           dateFormat="dd/MM/yyyy"
 
 

@@ -18,7 +18,14 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import styled from "styled-components";
+import Edit from '@material-ui/icons/EditOutlined';
+import Delete from '@material-ui/icons/DeleteOutlined';
 import { toast } from 'react-toastify';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -138,13 +145,17 @@ class trustAndVerification extends React.Component {
         this.state = {
             user: {},
             type: '',
-            id_recto: '',
-            id_verso: '',
+            id_recto: null,
+            id_verso: null,
             card:{},
             haveCard: false,
+            haveCardV: false,
             pageNumber: 1,
             numPages: null,
+            file: null,
+            file2: null,
             ext: '',
+            extVerso: '',
             professional: false,
             particular: false,
             alfred: false,
@@ -154,6 +165,7 @@ class trustAndVerification extends React.Component {
             naf_ape: '',
             creation_date: '',
             status: '',
+            open:false,
         };
         this.editSiret = this.editSiret.bind(this);
     }
@@ -169,8 +181,15 @@ class trustAndVerification extends React.Component {
                 this.setState({user:user});
                 if(user.id_card !== undefined) {
                     this.setState({card:user.id_card});
-                    const ext = this.state.card.recto.split('.').pop();
-                    this.setState({ext:ext , haveCard: true});
+                    if(user.id_card.recto !== undefined){
+                        const ext = this.state.card.recto.split('.').pop();
+                        this.setState({ext:ext , haveCard: true});
+                    }
+                    if(user.id_card.verso !== undefined){
+                        const extVerso = this.state.card.verso.split('.').pop();
+                        this.setState({extVerso:extVerso,haveCardV:true});
+                    }
+
                 }
 
 
@@ -205,6 +224,14 @@ class trustAndVerification extends React.Component {
             );
     }
 
+    handleClickOpen() {
+        this.setState({open:true});
+    }
+
+    handleClose() {
+        this.setState({open:false});
+    }
+
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     };
@@ -223,10 +250,18 @@ class trustAndVerification extends React.Component {
 
     onChangeRecto = e => {
         this.setState({id_recto:e.target.files[0]});
+        this.setState({
+            file:
+                URL.createObjectURL(e.target.files[0])    })
+
+
     };
 
     onChangeVerso = e => {
         this.setState({id_verso:e.target.files[0]});
+        this.setState({
+            file2:
+                URL.createObjectURL(e.target.files[0])    })
     };
 
     handleChecked () {
@@ -320,6 +355,17 @@ class trustAndVerification extends React.Component {
             .catch(err =>
                 console.log(err)
             );
+    }
+
+    deleteRecto() {
+        this.setState({open:false});
+        axios.delete(url+'myAlfred/api/users/profile/idCard/recto')
+            .then(() => {
+                toast.error('Recto supprimé')
+
+            })
+            .catch(err => console.log(err));
+
     }
 
     render() {
@@ -566,7 +612,59 @@ class trustAndVerification extends React.Component {
 
                                     </TextField>
                                     <form onSubmit={this.onSubmit}>
-                                    <Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center"}}>
+
+                                        {this.state.haveCard ?
+                                            <Grid item xs={12}>
+
+                                                    <Grid container style={{alignItems:"center"}}>
+                                                        <Grid item xs={9}>
+                                                            <Grid container style={{border:'1px solid lightgrey',marginTop:20,alignItems:"center"}}>
+                                                                <Grid item xs={8}>
+
+                                                                    {ext ==='pdf' ?
+                                                                        <Document
+                                                                            file={`../${this.state.card.recto}`}
+                                                                            onLoadSuccess={this.onDocumentLoadSuccess}
+                                                                        >
+                                                                            <Page pageNumber={this.state.pageNumber} width={200} />
+                                                                        </Document>
+                                                                        :
+                                                                        <img src={`../${this.state.card.recto}`} alt={'recto'} width={200}/>
+
+                                                                    }
+                                                                </Grid>
+                                                                <Grid item xs={4}>
+
+                                                                    <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
+                                                                        <Edit style={{cursor:"pointer"}}/>
+                                                                        <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
+                                                                               onChange={this.onChangeRecto}
+                                                                               className="form-control" accept=".jpg,.jpeg,.png,.pdf"
+                                                                        />
+                                                                    </label>
+                                                                    <Delete style={{cursor:"pointer"}} color={"secondary"} onClick={()=>this.handleClickOpen()}/>
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            {user.id_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :
+                                                                <img src={'../static/success.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
+                                                            }
+                                                        </Grid>
+
+
+
+                                                    </Grid>
+
+
+
+
+
+                                            </Grid>
+                                            :(
+
+                                        this.state.file===null ?<Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
+                                                                                            }}>
                                         <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger recto</p>
                                             <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
@@ -576,9 +674,28 @@ class trustAndVerification extends React.Component {
                                         </label>
 
 
-                                    </Grid>
-                                        <Thumb file={this.state.id_recto} />
-                                    <Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center"}}>
+
+                                    </Grid> :
+                                            <Grid container style={{marginTop: 20,alignItems:"center"}}>
+                                            <Grid item xs={6} style={{height:115,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
+                                                backgroundImage:`url('${this.state.file}')`,backgroundPosition:"center",backgroundSize:"cover"}}>
+
+                                            </Grid>
+                                                <Grid item xs={3}>
+                                                    <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
+                                                    <Edit style={{cursor:"pointer"}}/>
+                                                    <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
+                                                           onChange={this.onChangeRecto}
+                                                           className="form-control" accept=".jpg,.jpeg,.png,.pdf"
+                                                    />
+                                                    </label>
+                                                    <Delete style={{cursor:"pointer"}} color={"secondary"} onClick={()=>this.setState({file:null})}/>
+                                                </Grid>
+
+                                            </Grid>
+                                            )}
+
+                                    {/*<Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center"}}>
                                         <label style={{display: 'inline-block',textAlign:"center" }} className="forminputs">
                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
                                             <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
@@ -593,11 +710,95 @@ class trustAndVerification extends React.Component {
                                             <Button type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
                                                 Valider
                                             </Button>
-                                        </Grid>
+                                        </Grid>*/}
+                                        {this.state.haveCard && this.state.haveCardV ?
+                                            <Grid item xs={12}>
+
+                                                <Grid container style={{alignItems:"center"}}>
+                                                    <Grid item xs={9}>
+                                                        <Grid container style={{border:'1px solid lightgrey',marginTop:20,alignItems:"center"}}>
+                                                            <Grid item xs={8}>
+
+                                                                {ext ==='pdf' ?
+                                                                    <Document
+                                                                        file={`../${this.state.card.verso}`}
+                                                                        onLoadSuccess={this.onDocumentLoadSuccess}
+                                                                    >
+                                                                        <Page pageNumber={this.state.pageNumber} width={200} />
+                                                                    </Document>
+                                                                    :
+                                                                    <img src={`../${this.state.card.verso}`} alt={'verso'} width={200}/>
+
+                                                                }
+                                                            </Grid>
+                                                            <Grid item xs={4}>
+
+                                                                <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
+                                                                    <Edit style={{cursor:"pointer"}}/>
+                                                                    <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
+                                                                           onChange={this.onChangeVerso}
+                                                                           className="form-control" accept=".jpg,.jpeg,.png,.pdf"
+                                                                    />
+                                                                </label>
+                                                                <Delete style={{cursor:"pointer"}} color={"secondary"} onClick={()=>this.handleClickOpen()}/>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid item xs={3}>
+                                                        {user.id_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :
+                                                            <img src={'../static/success.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
+                                                        }
+                                                    </Grid>
+
+
+
+                                                </Grid>
+
+
+
+
+
+                                            </Grid>
+                                            :(
+
+                                                this.state.file2===null ?<Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
+                                                    }}>
+                                                        <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
+                                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
+                                                            <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
+                                                                   onChange={this.onChangeVerso}
+                                                                   className="form-control" accept=".jpg,.jpeg,.png,.pdf"
+                                                            />
+                                                        </label>
+
+
+
+                                                    </Grid> :
+                                                    <Grid container style={{marginTop: 20,alignItems:"center"}}>
+                                                        <Grid item xs={6} style={{height:115,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
+                                                            backgroundImage:`url('${this.state.file2}')`,backgroundPosition:"center",backgroundSize:"cover"}}>
+
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
+                                                                <Edit style={{cursor:"pointer"}}/>
+                                                                <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
+                                                                       onChange={this.onChangeVerso}
+                                                                       className="form-control" accept=".jpg,.jpeg,.png,.pdf"
+                                                                />
+                                                            </label>
+                                                            <Delete style={{cursor:"pointer"}} color={"secondary"} onClick={()=>this.setState({file2:null})}/>
+                                                        </Grid>
+
+                                                    </Grid>
+                                            )}
+                                            <Grid item style={{marginTop:20}}>
+                                            <Button color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
+                                            </Grid>
                                     </form>
                                 </Grid>
 
-                                <Grid item xs={6} style={{borderLeft:'0.2px solid lightgrey',height:"max-content",paddingLeft:20}}>
+                                {/*<Grid item xs={6} style={{borderLeft:'0.2px solid lightgrey',height:"max-content",paddingLeft:20}}>
 
                                     {this.state.haveCard ?
                                         <div style={{marginTop: 20,width:'80%',display:'flex'}}>
@@ -621,7 +822,7 @@ class trustAndVerification extends React.Component {
 
 
 
-                                </Grid>
+                                </Grid>*/}
                             </Grid>
                             {alfred ?
                                 <React.Fragment><Grid container>
@@ -727,6 +928,28 @@ class trustAndVerification extends React.Component {
                     </Grid>
                 </Layout>
                 <Footer/>
+
+                <Dialog
+                    open={this.state.open}
+                    onClose={()=>this.handleClose()}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Supprimer la carte d'identité"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Voulez-vous vraiment supprimer le recto de votre carte d'identité/passeport ?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose()} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={()=>this.deleteRecto()} color="secondary" autoFocus>
+                            Supprimer
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
             </Fragment>
         );

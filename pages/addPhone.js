@@ -129,9 +129,7 @@ class addPhone extends React.Component {
                                         </Grid>
                                     </form>
                                 </Grid>
-                                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
-                                    <Link href={'/checkEmail'}><a style={{textDecoration: 'none', color: 'black'}}>Je le ferai plus tard</a></Link>
-                                </Grid>
+
                             </div>
 
                     </Card>

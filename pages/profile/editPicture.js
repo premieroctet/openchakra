@@ -364,7 +364,7 @@ class editPicture extends React.Component {
                                                 avec seulement vous sur la photo. </p><br />
 
                                             <label style={{display: 'inline-block', marginTop: 15,color:'#2FBCD3'}} className="forminputs">
-                                                <p style={{cursor:"pointer",fontSize:'0.8rem'}}>Télécharger une photo depuis votre ordinateur</p>
+                                                <p style={{cursor:"pointer",fontSize:'0.8rem'}}>Téléchargez une photo depuis votre ordinateur</p>
                                                 <input id="file" style={{display: 'none'}} name="myImage" type="file"
                                                        onChange={this.onChange}
                                                        className="form-control" accept={'image/*'}
@@ -374,7 +374,7 @@ class editPicture extends React.Component {
 
                                         </Grid>
                                         <Grid item style={{ display: 'flex', justifyContent: 'left', marginTop: 30 }}>
-                                            <Button type="submit" variant="contained" color="primary" style={{ width: '50%',color: 'white' }}>
+                                            <Button type="submit" variant="contained" color="primary" style={{ width: '20%',color: 'white' }}>
                                                 Valider
                                             </Button>
                                         </Grid>

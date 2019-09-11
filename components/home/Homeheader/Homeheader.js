@@ -72,7 +72,7 @@ const styles = theme => ({
     borderRadius: '10px',
     boxShadow: '6px 6px 5px -6px black',
     padding:'2%',
-    minHeight:'580px', 
+    minHeight:'520px',
     bottom:50, 
     marginTop:-10,
 
@@ -261,6 +261,7 @@ class Homeheader extends React.Component {
                       margin="normal"
                       variant="outlined"
                       style={{width:'100%'}}
+                      disabled={true}
                   >
 
                     <MenuItem value=''>
@@ -281,6 +282,7 @@ class Homeheader extends React.Component {
                           margin="normal"
                           variant="outlined"
                           style={{width:'100%'}}
+                          disabled={true}
                       />
                     </Grid>
                   </Grid>
@@ -300,6 +302,7 @@ class Homeheader extends React.Component {
                         locale='fr'
                         showMonthDropdown
                         dateFormat="dd/MM/yyyy"
+                        disabled
 
 
                     />
@@ -323,6 +326,7 @@ class Homeheader extends React.Component {
                             timeCaption="Heure"
                             dateFormat="HH:mm"
                             locale='fr'
+                            disabled
 
 
 
@@ -331,7 +335,7 @@ class Homeheader extends React.Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Button variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
+                <Button  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
                   Rechercher
                 </Button>
 

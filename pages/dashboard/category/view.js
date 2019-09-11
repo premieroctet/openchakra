@@ -234,9 +234,9 @@ class view extends React.Component {
                                     <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                                         Modifier
                                     </Button>
-                                    <Button type="button" variant="contained" color="secondary" style={{ width: '100%' }} onClick={this.handleClick}>
+                                    {/*<Button type="button" variant="contained" color="secondary" style={{ width: '100%' }} onClick={this.handleClick}>
                                         Supprimer
-                                    </Button>
+                                    </Button>*/}
 
                                 </Grid>
                             </form>

@@ -854,6 +854,21 @@ router.delete('/current/delete',passport.authenticate('jwt',{session:false}),(re
         .catch(err => console.log(err));
 });
 
+// @Route DELETE /myAlfred/api/users/profile/idCard/recto
+// Delete recto identity card
+// @Access private
+router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findById(req.user.id)
+        .then(user => {
+            user.id_card.recto = undefined;
+
+            user.save().then(user => res.json(user)).catch(err => console.log(err));
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
 
 module.exports = router;
 
