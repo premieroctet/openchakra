@@ -4,8 +4,6 @@ const csv = require("fast-csv");
 
 const fs = require('fs');
 
-const csvfile = __dirname +"/Calculateur.csv";
-const stream = fs.createReadStream(csvfile);
 
 const Calculating = require('../../models/Calculating');
 
@@ -30,7 +28,7 @@ router.get('/all', (req,res)=> {
 
 });
 
-router.get('/import',(req,res) => {
+/*router.get('/import',(req,res) => {
     let  result  = [];
     let csvStream = csv.fromPath(csvfile)
         .on("data", function(data){
@@ -52,7 +50,7 @@ router.get('/import',(req,res) => {
 
     stream.pipe(csvStream);
     res.json({success : "Data imported successfully.", status : 200});
-});
+});*/
 
 // @Route GET /myAlfred/api/calculating/:id
 // View one calculating system
