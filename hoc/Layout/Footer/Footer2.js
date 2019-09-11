@@ -183,7 +183,7 @@ class Footer2 extends Component {
                                         <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Conditions générales d'utilisation</Typography></a></Link>
                                     </Grid>    
                                     <Grid item xs={12}>
-                                        <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Politique de confidentialité</Typography></a></Link>
+                                        <Link href="/footer/privacypolicy"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Politique de confidentialité</Typography></a></Link>
                                     </Grid>
                                 </Grid>
                     </Grid>

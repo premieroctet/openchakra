@@ -66,8 +66,6 @@ class Home extends React.Component {
             </Fragment>
         )
     }
-
-
 }
 
 

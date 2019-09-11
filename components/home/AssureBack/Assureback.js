@@ -16,7 +16,8 @@ import Link from 'next/link';
 import '../../../static/stylefixresponsive.css';
 import { dark } from 'react-syntax-highlighter/dist/styles/hljs';
 const { config } = require('../../../config/config');
-const url = config.apiUrl;
+/*const url = config.apiUrl;*/
+const url = "https://myalfred.hausdivision.com";
 
 const styles = theme => ({
   container: {

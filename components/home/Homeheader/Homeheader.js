@@ -72,7 +72,7 @@ const styles = theme => ({
     borderRadius: '10px',
     boxShadow: '6px 6px 5px -6px black',
     padding:'2%',
-    minHeight:'580px', 
+    minHeight:'520px', 
     bottom:50, 
     marginTop:-10,
 
@@ -246,7 +246,7 @@ class Homeheader extends React.Component {
           <div className={classes.headerhome} onClick={()=>this.handleClick1()}>
             <Grid container>
               <Grid item xs={12}>
-                <h3 className={classes.homeform} style={{marginTop:0}}>Et si vous pouviez réserver n'importe quel service immediatement ?</h3>
+                <h3 className={classes.homeform} style={{marginTop:0}}>Et si vous pouviez réserver n'importe quel service immédiatement ?</h3>
               </Grid>
               <Grid item xs={12} style={{width: '100%',}}>
 
@@ -255,6 +255,7 @@ class Homeheader extends React.Component {
                   <TextField
                       id="outlined-select-currency"
                       select
+                      disabled={true}
                       label="Quel service ?"
                       value={this.state.service}
                       onChange={this.onChange}
@@ -276,6 +277,7 @@ class Homeheader extends React.Component {
                     <Grid item className={classes.pickerhomelocation}>
                       <TextField
                           label="Lieu"
+                          disabled={true}
                           value={this.state.place}
                           onChange={this.onChange}
                           margin="normal"
@@ -300,6 +302,7 @@ class Homeheader extends React.Component {
                         locale='fr'
                         showMonthDropdown
                         dateFormat="dd/MM/yyyy"
+                        disabled={true}
 
 
                     />
@@ -317,6 +320,7 @@ class Homeheader extends React.Component {
                             selected={this.state.hour}
                             onChange={(date)=>this.setState({hour:date})}
                             customInput={<Input2 />}
+                            disabled={true}
                             showTimeSelect
                             showTimeSelectOnly
                             timeIntervals={15}
@@ -340,17 +344,17 @@ class Homeheader extends React.Component {
 
           </div>
 
-          <div style={{textAlign: 'right'}} className={classes.headerhome2}>
+          <div style={{textAlign: 'left'}} className={classes.headerhome2}>
             <br/>
             <h2 style={{
               fontWeight: 'bold',
-              textAlign: 'right',
+              textAlign: 'left',
               fontSize: '2rem',
               textShadow: '0px 0.5px 2px #696969'
             }}>Vous connaissez Airbnb pour les logements ?
               Découvrez My-Alfred pour les services ! </h2>
             <hr style={{
-              float: 'right',
+              float: 'left',
               width: '60px',
               border: 'none',
               height: '1px',
@@ -360,14 +364,14 @@ class Homeheader extends React.Component {
             <br/><br/>
             <h4 style={{
               fontWeight: 'bold',
-              textAlign: 'right',
+              textAlign: 'left',
               fontSize: '1.5rem',
               textShadow: '0px 0.5px 2px #696969'
             }}>
               We are coming soon !
             </h4>
             <br/>
-            <p style={{fontSize: '1.2em', textAlign: 'right', textShadow: '0px 0.5px 2px #696969'}}>
+            <p style={{fontSize: '1.2em', textAlign: 'left', textShadow: '0px 0.5px 2px #696969'}}>
               Créez votre boutique maintenant en quelques minutes, répertoriez vos services,
               indiquez vos disponibilités, vos tarifs et profitez d’un complément de revenu !
             </p>
