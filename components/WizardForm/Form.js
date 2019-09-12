@@ -41,6 +41,8 @@ import Availability from './Availability';
 import { FormControl, RadioGroup, Radio } from '@material-ui/core';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from 'react-loader-spinner';
+import Clear from '@material-ui/icons/Clear';
 
 
 const { config } = require('../../config/config');
@@ -423,15 +425,6 @@ class Wizard extends React.Component {
                                                 .catch(err => {
                                                     console.log(err);
                                                 })
-
-                                            const phone = values.alfredUpdate.phone;
-                                            axios.put(url+'myAlfred/api/users/profile/phone', {phone})
-                                                .then(res => {
-
-                                                })
-                                                .catch(err => {
-                                                    console.log(err);
-                                                });
                                             axios.put(url+'myAlfred/api/users/users/becomeAlfred')
                                                 .then(res => {
                                                     toast.info('Boutique créée avec succès');
@@ -499,9 +492,6 @@ class Wizard extends React.Component {
         })
     });
     Step5Schema = Yup.object().shape({
-        alfredUpdate: Yup.object().shape({
-            phone: Yup.string().matches(this.phoneRegEx, 'Numéro de téléphone invalide')
-        }),
         createShop: Yup.object().shape({
             is_professional: Yup.boolean(),
             id_recto: Yup.mixed().required('Veuillez uploader le recto de votre carte d\'identité ou bien votre passeport'),
@@ -594,24 +584,6 @@ class Wizard extends React.Component {
                                         >
                                             Retour
                                         </Button>
-                                        <Field 
-                                            render={({form}) => {
-                                                return (
-                                                    <Button
-                                                        onClick={/*() => {
-                                                            let confirm = window.confirm('Souhaitez-vous réinitialiser le formulaire ?')
-                                                            if (confirm === true) {
-                                                                window.location.reload();
-                                                            } else {
-                                                                return;
-                                                            }   
-                                                    }*/handleReset}
-                                                >
-                                                    Reset
-                                                </Button>
-                                                )
-                                            }}
-                                        />
                                         </React.Fragment>}
                                         {page === 0 && <Button
                                             type="submit"
@@ -862,6 +834,7 @@ class Form extends React.Component {
 
             isDisabledCategoryInput: false,
             isDisabledExpansionPanels: true,
+            loading: false,
 
             prestationsCount: 0,
 
@@ -960,7 +933,8 @@ class Form extends React.Component {
             categorie = [];
         }
         this.setState({
-            categoriesFinal: [this.state.categories, categorie]
+            categoriesFinal: [this.state.categories, categorie],
+            loading: true
         });
         categorie.map((categorie, catInd) => {
             axios.get(`${url}myAlfred/api/service/all/${categorie.value}`)
@@ -969,24 +943,27 @@ class Form extends React.Component {
                     //console.log('Removed: ', difference);
                     const services = response.data;
                     if (formikCtx.form.values.categories[catInd][categorie.label.replace(/\s/g, '') + 'Services'].length > 0) {
-                        console.log('oui')
                         formikCtx.form.values.categories[catInd][categorie.label.replace(/\s/g, '') + 'Services'] = [];
                         //formikCtx.form.setFieldValue(`categories[${catInd}][${categorie.label.replace(/\s/g, '') + 'Services'}]`, []);
                     }
-                    const options = services.map((service) => {
+                    const options = services.map(async (service) => {
                         let arrServ = [];
                         const servObj = { value: service._id, label: service.label, categorieId: categorie.value, categorieLabel: categorie.label, checked: false }
                         arrServ.push(servObj);
                         //formikCtx.form.setFieldValue(`categories[${catInd}][${servObj.categorieLabel.replace(/\s/g, '') + 'Services'}]`, []);
                         if (categorie.hasOwnProperty(servObj.categorieLabel.replace(/\s/g, '') + 'Services')) {
-                            console.log('io')
-                            formikCtx.form.values.categories[catInd][servObj.categorieLabel.replace(/\s/g, '') + 'Services'].push(servObj);
+                            await formikCtx.form.values.categories[catInd][servObj.categorieLabel.replace(/\s/g, '') + 'Services'].push(servObj);
+                            this.setState({
+                                isDisabledCategoryInput: true,
+                                isDisabledExpansionPanels: false,
+                            })
                             this.setState({
                                 [servObj.categorieLabel.replace(/\s/g, '') + 'Services']: []
                             })
                             this.setState({
                                 [servObj.categorieLabel.replace(/\s/g, '') + 'Services']: formikCtx.form.values.categories[catInd][servObj.categorieLabel.replace(/\s/g, '') + 'Services']
                             })
+                            await setTimeout(() => this.setState({ loading: false }), '2000')
 
                         }
                     });
@@ -1188,6 +1165,7 @@ class Form extends React.Component {
                                             <div style={{padding: '.5rem 2rem'}}>
                                                 <MultipleSelect
                                                     placeholder="Sélectionnez vos catégories..."
+                                                    noOption='Pas de catégories disponibles'
                                                     option={this.state.categories}
                                                     value={arrayHelpers.form.values.categories}
                                                     //disabled={this.state.isDisabledCategoryInput}
@@ -1200,36 +1178,22 @@ class Form extends React.Component {
                                                         }
                                                         arrayHelpers.form.setFieldValue('submission', []);
                                                         arrayHelpers.form.setFieldValue('services', []);
+                                                        this.setState({ isDisabledExpansionPanels: true });
                                                         /*if (arrayHelpers.form.values.categories === null) {
                                                             console.log('kzrngenf')
                                                             arrayHelpers.form.setFieldValue('categories', [])
                                                         }*/
                                                     }}
                                                 />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        arrayHelpers.form.handleReset();
-                                                        this.setState({ isDisabledCategoryInput: false });
-                                                        arrayHelpers.form.setFieldValue('categories', []);
-                                                        //this.resetCat();
-                                                    }}
-                                                >
-                                                    reset
-                                                </button>
                                                 <Button
                                                     color="primary"
                                                     style={{marginTop: '1rem', marginBottom: '2rem', color: 'white', borderRadius: 8}}
                                                     type="button"
                                                     variant="contained"
                                                     //disabled={this.state.isDisabledCategoryInput}
-                                                    onClick={async () => {
+                                                    onClick={() => {
                                                         if (arrayHelpers.form.values.categories != '' && arrayHelpers.form.values.categories != null) {
                                                             this.handleCategorieChange(arrayHelpers.form.values.categories, arrayHelpers);
-                                                            this.setState({
-                                                                isDisabledCategoryInput: true,
-                                                                isDisabledExpansionPanels: false,
-                                                            })
                                                         }
                                                     }}>
                                                     Je valide mes catégories
@@ -1241,7 +1205,7 @@ class Form extends React.Component {
                                                     </Typography>
                                                 </div>
                                                 <div style={{marginTop: '1rem'}}>
-                                                    {arrayHelpers.form.values.categories && arrayHelpers.form.values.categories.length > 0 ? (
+                                                    {arrayHelpers.form.values.categories && arrayHelpers.form.values.categories.length > 0 && this.state.loading === false ? (
                                                         arrayHelpers.form.values.categories.map((categorie, index) => {
                                                             const servName = categorie.label.replace(/\s/g, '') + 'Services';
                                                             return (
@@ -1301,7 +1265,16 @@ class Form extends React.Component {
                                                                 </ExpansionPanel>
                                                             )
                                                         })
-                                                    ):(<Typography align="center" style={{fontSize: 15, marginTop: '2rem', color: '#F8727F'}}>Afin d'afficher la sélection des services, veuillez sélectionner vos catégories...</Typography>)}
+                                                    ):(this.state.loading === true 
+                                                        ? <Loader 
+                                                            type="TailSpin"
+                                                            color="#2FBCD3"
+                                                            height={100}
+                                                            width={100}
+                                                            style={{textAlign: 'center'}}
+                                                        /> 
+                                                        : 
+                                                        <Typography align="center" style={{fontSize: 15, marginTop: '2rem', color: '#F8727F'}}>Afin d'afficher la sélection des services, veuillez sélectionner vos catégories...</Typography>)}
                                                 </div>
                                             </div>
                                         ): (<p style={{padding: '0 2rem'}}>Chargement...</p>)
@@ -1425,7 +1398,6 @@ class Form extends React.Component {
                                     }}
                                 </Field>             
                         </Grid>
-                        <Debug />
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
@@ -1436,7 +1408,7 @@ class Form extends React.Component {
                                         return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
                                             <React.Fragment>
                                                 <div style={{padding: '2rem 2rem 1rem 2rem'}}>
-                                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>Paramétrez vos services & prestations</Typography>
+                                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>Paramétrez vos services & prestations <span style={{color: '#F8727F' }}>*</span></Typography>
                                                     <Typography>
                                                         Indiquez les prestations que vous souhaitez réaliser dans chacun de vos services. Indiquez vos tarifs et vos éventuelles majorations sur les services éligibles.
                                                     </Typography>
@@ -1446,14 +1418,14 @@ class Form extends React.Component {
                                                         {this.state.allInOneServ.map((data, index) => {
                                                             return <Tab 
                                                                         key={data.serviceId} 
-                                                                        style={{zIndex: 999999999 - index, position: 'relative'}} 
+                                                                        style={{zIndex: 999999999 - index, position: 'relative', boxShadow: typeof arrayHelpers.form.errors.submission === 'undefined' ? null : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? 'inset 0 -5px 0 rgb(248, 114, 127)' : null)}} 
                                                                         onClick={() => {
                                                                             const div = document.getElementById('bigDiv');
                                                                             div.scrollTop = 0;
                                                                         }}
                                                                     >
                                                                         <div>
-                                                                            {typeof arrayHelpers.form.errors.submission === 'undefined' ? <span style={{position: 'absolute', borderTopRightRadius: 20, top: 0, right: 0, height: '100%', width: '5%', display: 'inline-block'}}></span> : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? <span style={{position: 'absolute', borderTopRightRadius: 20, top: 0, right: 0, height: '100%', width: '5%', backgroundColor: '#F8727F', display: 'inline-block'}}></span> : null) }{data.serviceLabel}
+                                                                            {data.serviceLabel}
                                                                         </div>
                                                                     </Tab>
                                                         })}
@@ -1580,6 +1552,7 @@ class Form extends React.Component {
                                                                                 ));
                                                                                 return (
                                                                                     <Select 
+                                                                                        noOptionsMessage={() => "Pas d'options disponibles"}
                                                                                         placeholder="Options disponibles"
                                                                                         isDisabled={this.state[`otherOptionChecked${index}`]}
                                                                                         options={
@@ -1756,7 +1729,7 @@ class Form extends React.Component {
                                                                         }
 
                                                                         <div>
-                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Définissez votre montant minimum de réservation</Typography>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Définissez votre montant minimum de réservation <span style={{color: '#F8727F' }}>*</span></Typography>
                                                                             <Typography>
                                                                                 Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service. Si vous indiquez un montant de 10€, les clients ne pourront pas réserver vos services si la somme des prestations n’atteint pas ce montant.
                                                                             </Typography>
@@ -1785,7 +1758,7 @@ class Form extends React.Component {
                                                                         </div>
                                                                         <hr style={{margin: '1rem 0'}}></hr>
                                                                         <div>
-                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Renseignez votre périmètre d’intervention</Typography>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Renseignez votre périmètre d’intervention <span style={{color: '#F8727F' }}>*</span></Typography>
                                                                             <Typography>
                                                                                 Votre périmètre d’intervention est la zone dans laquelle vous souhaitez réaliser vos services. Par défaut, nous utiliserons la ville de l’adresse renseignée dans votre profil comme base de référence. Cette adresse ne vous convient pas ? Vous pouvez changer votre ville de référence à tout moment !
                                                                             </Typography>
@@ -1832,7 +1805,7 @@ class Form extends React.Component {
                                                                         </div>
                                                                         <hr style={{margin: '1rem 0'}}></hr>
                                                                         <div>
-                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez votre délai de prévenance</Typography>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Indiquez votre délai de prévenance <span style={{color: '#F8727F' }}>*</span></Typography>
                                                                             <Typography>
                                                                                 Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du service. Par exemple, si vous indiquez un délai de 24 heures, un client pourra réserver votre service 24 heures avant votre intervention.
                                                                             </Typography>
@@ -1949,17 +1922,14 @@ class Form extends React.Component {
                                                                                     <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre diplôme</Typography>
                                                                                     {arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.year !== null && arrayHelpers.form.values.submission[index].diploma.diploma !== null ?
                                                                                         <React.Fragment>
-                                                                                            <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
-                                                                                                <p>{arrayHelpers.form.values.submission[index].diploma.label} | {arrayHelpers.form.values.submission[index].diploma.year}</p>
-                                                                                                <Button 
-                                                                                                    variant="contained"
-                                                                                                    color="secondary"
-                                                                                                    style={{color: 'white', marginBottom: '.5rem'}}
-                                                                                                    onClick={() => {
+                                                                                            <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>
+                                                                                                <div onClick={() => {
                                                                                                         arrayHelpers.form.setFieldValue(`submission.${index}.diploma.label`, null);
                                                                                                         arrayHelpers.form.setFieldValue(`submission.${index}.diploma.year`, null);
                                                                                                         arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, null);
-                                                                                                }}>Supprimer</Button>
+                                                                                                    }
+                                                                                                } style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}><Clear color="secondary"/></div>
+                                                                                                <p>{arrayHelpers.form.values.submission[index].diploma.label} | {arrayHelpers.form.values.submission[index].diploma.year}</p>
                                                                                             </div>
                                                                                         </React.Fragment>
                                                                                         : null
@@ -2041,17 +2011,14 @@ class Form extends React.Component {
                                                                                 <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre certification</Typography>
                                                                                     {arrayHelpers.form.values.submission[index].certification.label !== null && arrayHelpers.form.values.submission[index].certification.year !== null && arrayHelpers.form.values.submission[index].certification.certification !== null ?
                                                                                         <React.Fragment>
-                                                                                            <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem'}}>
-                                                                                                <p>{arrayHelpers.form.values.submission[index].certification.label} | {arrayHelpers.form.values.submission[index].certification.year}</p>
-                                                                                                <Button 
-                                                                                                    variant="contained"
-                                                                                                    color="secondary"
-                                                                                                    style={{color: 'white', marginBottom: '.5rem'}}
-                                                                                                    onClick={() => {
+                                                                                            <div style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>
+                                                                                            <div onClick={() => {
                                                                                                         arrayHelpers.form.setFieldValue(`submission.${index}.certification.label`, null);
                                                                                                         arrayHelpers.form.setFieldValue(`submission.${index}.certification.year`, null);
                                                                                                         arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, null);
-                                                                                                }}>Supprimer</Button>
+                                                                                                }
+                                                                                                } style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}><Clear color="secondary"/></div>
+                                                                                                <p>{arrayHelpers.form.values.submission[index].certification.label} | {arrayHelpers.form.values.submission[index].certification.year}</p>
                                                                                             </div>
                                                                                         </React.Fragment>
                                                                                         : null
@@ -2112,7 +2079,7 @@ class Form extends React.Component {
                                                                                                         }} className="form-control"
                                                                                                         />
                                                                                                     </label>
-                                                                                                    <span>{this.state.certifObj !== null ? this.state.certifObj.name : null}</span>
+                                                                                                    <span>{this.state.certifObj !== null ? (typeof this.state.certifObj.name !== undefined ? this.state.certifObj.name : null) : null}</span>
                                                                                                     <p>En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ses derniers</p>
                                                                                                     <Button
                                                                                                         variant="contained"
@@ -2146,9 +2113,7 @@ class Form extends React.Component {
                                 {/*<div>*/}
                                 
                                 {/*</div>*/}
-                        </Grid>
-                        <Debug />
-                        
+                        </Grid>                      
                     </Wizard.Page>
                     <Wizard.Page>
                         <FieldArray render={({form}) => {
@@ -2164,7 +2129,7 @@ class Form extends React.Component {
                                     <Grid container>
 
                                             <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
-                                                Comment les utilisateurs peuvent réserver ?
+                                                Comment les utilisateurs peuvent réserver ? <span style={{color: '#F8727F' }}>*</span>
                                             </h6>
 
                                         <Grid item style={{marginLeft: 20}}>
@@ -2364,7 +2329,7 @@ class Form extends React.Component {
                                     <Grid container>
                                         <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                             Votre message de bienvenue validant votre
-                                            réservation
+                                            réservation <span style={{color: '#F8727F' }}>*</span>
                                         </h6>
                                         <Typography>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation.</Typography>
                                         <Grid item style={{ marginTop: 15, width: "100%" }}>
@@ -2393,7 +2358,7 @@ class Form extends React.Component {
                                     <Grid container>
 
                                         <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
-                                            Conditions d’annulation
+                                            Conditions d’annulation <span style={{color: '#F8727F' }}>*</span>
                                         </h6>
 
                                         <Typography style={{fontFamily: 'helveticaNeue', width: '100%'}}>
@@ -2592,7 +2557,7 @@ class Form extends React.Component {
                                                 <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                                 <Grid container>
                                                     <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10, width: '100%'}}>
-                                                        Vérifiez votre identité
+                                                        Vérifiez votre identité <span style={{color: '#F8727F' }}>*</span>
                                                     </h6>
                                                     <Typography style={{fontFamily: 'helveticaNeue'}}>
                                                         Ces informations ne seront pas visibles par les utilisateurs. Un profil vérifié est plus engageant pour les utilisateurs !
@@ -2603,30 +2568,7 @@ class Form extends React.Component {
                                                             autres utilisateurs
                                                         </Typography>
                                                     </Grid>
-                                                    <Grid item xs={1} />
-                                                    <Grid item xs={12} md={4}>
-                                                        <Field name={"alfredUpdate.phone"} render={({field, form}) => {
-                                                            form.values.alfredUpdate.phone === null ? form.setFieldValue('alfredUpdate.phone', this.state.phone) : null;
-                                                            return (
-                                                                <TextField
-                                                                    {...field}
-                                                                    id="outlined-name"
-                                                                    label="Téléphone"
-                                                                    margin="normal"
-                                                                    variant="outlined"
-                                                                    value={form.values.alfredUpdate.phone}
-                                                                    type="tel"
-                                                                    InputLabelProps={{shrink: form.values.alfredUpdate.phone !== null ? true : false}}
-                                                                    onChange={() => {
-                                                                        form.setFieldValue('alfredUpdate.phone', event.target.value);
-                                                                    }}
-                                                                />
-                                                            )
-                                                        }} />
-                                                        <ErrorMessage name="alfredUpdate.phone" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                    </Grid>
-                                                    <Grid item xs={1} />
-                                                    <Grid item xs={12} sm={12} md={5}>
+                                                    <Grid item xs={12} sm={12} md={12}>
                                                         <Grid container>
                                                             <div
                                                                 style={{
@@ -2888,7 +2830,7 @@ class Form extends React.Component {
                                                 <Grid container>
                                                     <Grid item xs={12}>
                                                         <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
-                                                            Vos obligations légales
+                                                            Vos obligations légales <span style={{color: '#F8727F' }}>*</span>
                                                         </h6>
                                                     </Grid>
 
@@ -2941,7 +2883,6 @@ class Form extends React.Component {
                                 </React.Fragment>
                             )}
                         </Field>
-                        <Debug />
                     </Wizard.Page>
                 </Wizard>
             </div>

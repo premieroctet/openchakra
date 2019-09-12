@@ -2250,7 +2250,7 @@ class Availability extends React.Component {
           {formik.servicesAvailability.active ? (
             <React.Fragment>
               <FormControl style={{ width: "100%" }}>
-                <InputLabel htmlFor="age-simple">A partir de</InputLabel>
+                <Typography>Du</Typography>
                 {/*<Select
                   value={formik.servicesAvailability.month_begin}
                   onChange={this.onChange}
@@ -2285,7 +2285,7 @@ class Availability extends React.Component {
               </FormControl>
 
               <FormControl style={{ width: "100%" }}>
-                <InputLabel htmlFor="age-simple">Jusqu'à</InputLabel>
+                <Typography>Au</Typography>
                 {/*<Select
                   value={formik.servicesAvailability.month_end}
                   onChange={this.onChange}
