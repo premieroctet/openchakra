@@ -690,7 +690,14 @@ class Wizard extends React.Component {
                                                             axios
                                                                 .post(url + "myAlfred/api/availability/add", data)
                                                                 .then(() => {
-                                                                toast.success("Disponibilité(s) ajoutée(s) avec succès");
+                                                                toast.info("Disponibilité(s) ajoutée(s) avec succès");
+                                                                form.setFieldValue(`servicesAvailability.monday_event`, []);
+                                                                form.setFieldValue(`servicesAvailability.tuesday_event`, []);
+                                                                form.setFieldValue(`servicesAvailability.wednesday_event`, []);
+                                                                form.setFieldValue(`servicesAvailability.thursday_event`, []);
+                                                                form.setFieldValue(`servicesAvailability.friday_event`, []);
+                                                                form.setFieldValue(`servicesAvailability.saturday_event`, []);
+                                                                form.setFieldValue(`servicesAvailability.sunday_event`, []);
                                                             })
                                                                 .catch(err => console.log(err));
     
@@ -731,11 +738,14 @@ class Wizard extends React.Component {
                                             <Field render={({form}) => {
                                                 let check = true;
 
-                                                if (form.values.createShop.is_particular === true) {
+                                                if (form.values.createShop.is_particular === true && form.values.createShop.isEngaged === true) {
                                                     check = false;
-                                                } else if(form.values.createShop.is_professional === true && form.values.createShop.siret === "" && form.values.createShop.denomination === "") {
+                                                } else if(form.values.createShop.is_professional === true && form.values.createShop.siret === "" && form.values.createShop.denomination === "" || form.values.createShop.isEngaged === false) {
                                                     check = true;
-                                                } else if (form.values.createShop.is_professional === true && form.values.createShop.siret !== "" && form.values.createShop.denomination !== "") {
+                                                } 
+                                                else if (form.values.createShop.is_professional === true && form.values.createShop.isCertified === false) {
+                                                    check = true
+                                                } else if (form.values.createShop.is_professional === true && form.values.createShop.siret !== "" && form.values.createShop.denomination !== "" || form.values.createShop.isEngaged === false) {
                                                     check = false;
                                                 } else {
                                                     check = true;
@@ -1170,7 +1180,6 @@ class Form extends React.Component {
                                                     value={arrayHelpers.form.values.categories}
                                                     //disabled={this.state.isDisabledCategoryInput}
                                                     update={categorie => {
-                                                        console.log(categorie)
                                                         if (categorie === null) {
                                                             arrayHelpers.form.setFieldValue('categories', []);
                                                         } else {
@@ -1517,7 +1526,6 @@ class Form extends React.Component {
                                                                                                                                     )
                                                                                                                                     
                                                                                                                                 })}
-                                                                                                                                <MenuItem value='test'>test</MenuItem>
                                                                                                                             </TextField>
                                                                                                                             <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                                                         </React.Fragment>

@@ -193,7 +193,7 @@ class Availability extends React.Component {
         this.props.formikCtx.values.servicesAvailability.sunday_event.push(obj);
       }
 
-      toast.success("Créneau ajouté");
+      toast.info("Créneau ajouté");
 
       /*this.setState({monday:false, tuesday:false, wednesday:false, thursday:false, friday:false, saturday:false, sunday:false,
                             all_begin: '', all_end: '', recurrent_service: null, recurrent_all_service: false})*/
@@ -884,7 +884,9 @@ class Availability extends React.Component {
                       <FormControl style={{ width: "100%" }}>
                         <Select2
                           value={formik.servicesAvailability.recurrent_service}
+                          placeholder={"Choisissez vos services"}
                           onChange={this.handleChangeSelectRecurrent}
+                          noOptionsMessage={() => "Pas de services disponible"}
                           options={optionsService}
                           isMulti
                           isSearchable
@@ -1104,6 +1106,8 @@ class Availability extends React.Component {
                     <Select2
                       value={formik.servicesAvailability.monday_service}
                       onChange={this.handleChangeSelectMonday}
+                      placeholder="Choisissez vos services"
+                      noOptionsMessage={() => "Pas de services disponible"}
                       options={optionsService}
                       isMulti
                       isSearchable
@@ -1282,6 +1286,8 @@ class Availability extends React.Component {
                   <FormControl style={{ width: "100%" }}>
                     <Select2
                       value={formik.servicesAvailability.tuesday_service}
+                      placeholder="Choisissez vos servives"
+                      noOptionsMessage={() => "Pas de services disponible"}
                       onChange={this.handleChangeSelectTuesday}
                       options={optionsService}
                       isMulti
@@ -1463,6 +1469,8 @@ class Availability extends React.Component {
                   </Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
+                      placeholder="Choisissez vos services"
+                      noOptionsMessage={() => "Pas de services disponible"}
                       value={formik.servicesAvailability.wednesday_service}
                       onChange={this.handleChangeSelectWednesday}
                       options={optionsService}
@@ -1646,6 +1654,8 @@ class Availability extends React.Component {
                   </Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
+                      placeholder="Choisissez vos services"
+                      noOptionsMessage={() => "Pas de services disponible"}
                       value={formik.servicesAvailability.thursday_service}
                       onChange={this.handleChangeSelectThursday}
                       options={optionsService}
@@ -1827,6 +1837,8 @@ class Availability extends React.Component {
                   </Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
+                      placeholder="Choisissez vos services"
+                      noOptionsMessage={() => "Pas de services disponibles"}
                       value={formik.servicesAvailability.friday_service}
                       onChange={this.handleChangeSelectFriday}
                       options={optionsService}
@@ -2006,6 +2018,8 @@ class Availability extends React.Component {
                   </Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
+                      placeholder="Choisissez vos services"
+                      noOptionsMessage={() => "Pas de services disponible"}
                       value={formik.servicesAvailability.saturday_service}
                       onChange={this.handleChangeSelectSaturday}
                       options={optionsService}
@@ -2187,6 +2201,8 @@ class Availability extends React.Component {
                   </Typography>
                   <FormControl style={{ width: "100%" }}>
                     <Select2
+                      placeholder="Choisissez vos services"
+                      noOptionsMessage={() => "Pas de services disponible"}
                       value={formik.servicesAvailability.sunday_service}
                       onChange={this.handleChangeSelectSunday}
                       options={optionsService}
@@ -2321,7 +2337,6 @@ class Availability extends React.Component {
             </React.Fragment>
           ) : null}
         </Grid>
-        <Debug />
         {/*<Grid>
           <Button
             type="button"
