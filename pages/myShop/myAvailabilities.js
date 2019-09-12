@@ -173,7 +173,7 @@ class myAvailabilities extends React.Component {
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'45%',zIndex:501}} width={'9%'} height={'17%'} alt={'picture'}/>
+                            <img src={'../'+user.picture} style={{clipPath:'circle(50%)',position:'absolute',top:'27%',left:'45%',zIndex:501}} width={'9%'} alt={'picture'}/>
                         </Grid>
                     </Grid>
 
@@ -204,7 +204,7 @@ class myAvailabilities extends React.Component {
 
                             </Grid>
                         </Grid>
-                    <Grid container>
+                    <Grid container style={{marginBottom:20}}>
                         <Link href={'/myShop/addAvailability'}>
                         <a style={{textDecoration:'none'}}><Button color={"primary"} style={{color:"white"}} variant={"contained"}>Ajouter une disponibilité</Button></a>
                         </Link>

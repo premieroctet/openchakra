@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import Layout from '../hoc/Layout/Layout';
 import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import axios from 'axios';
 const { config } = require('../config/config');
 const url = config.apiUrl;

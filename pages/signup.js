@@ -15,7 +15,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AlgoliaPlaces from "algolia-places-react";
 import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
-import Birthday from '@material-ui/icons/CakeOutlined'
 import Footer from '../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
 registerLocale('fr', fr);

@@ -567,7 +567,7 @@ class editProfile extends React.Component {
                         </Grid>
 
                     </Grid>
-                    <Grid container>
+                    <Grid container style={{marginBottom:20}}>
                         <Grid item xs={9}>
                             <div style={{display:'flex',justifyContent:'flex-end',marginBottom: '-1.95%',width:'100%',bottom:0,
                             alignItems:"center",height:60}}>

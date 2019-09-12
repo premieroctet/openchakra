@@ -431,7 +431,7 @@ class myAddresses extends React.Component {
 
 
                         <Grid item xs={9} style={{paddingLeft: 55}}>
-                            <Grid container>
+                            <Grid container style={{marginBottom:20}}>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Mes adresses de prestations</h1>
                                 <Grid container>
                                     <Grid item>
@@ -527,22 +527,24 @@ class myAddresses extends React.Component {
                                     ))}
                                 </Grid>
                                 <Grid container style={{marginTop: 20}}>
-                                    <h2 style={{fontWeight: '100',color: '#2FBCD3',cursor:'pointer'}} onClick={()=>this.setState({clickAdd:true,clickEdit:false})}>Ajouter une adresse</h2>
+                                    <h2 style={{fontWeight: '100',color: '#2FBCD3',cursor:'pointer'}} onClick={()=>this.setState({clickAdd:!clickAdd,clickEdit:false})}>Ajouter une adresse</h2>
                                 </Grid>
                                 {clickAdd ?
                                     <form onSubmit={this.onSubmit2}>
                                         <Grid container style={{width: '52%'}}>
                                             <Grid item xs={12}>
 
-                                                <InputLabel style={{color: 'black'}}>Nom de l'adresse</InputLabel>
+
                                                 <TextField
                                                     id="standard-name"
-                                                    style={{marginLeft: -126, marginTop: 30,width: '100%'}}
+                                                    style={{ marginTop: 30,width: '100%'}}
                                                     value={this.state.label_address}
                                                     onChange={this.onChange}
                                                     margin="normal"
                                                     name={'label_address'}
                                                     placeholder={'Ecrire ici'}
+                                                    variant={"outlined"}
+                                                    label={'Nom de l\'adresse'}
                                                 />
 
                                             </Grid>
@@ -565,7 +567,6 @@ class myAddresses extends React.Component {
 
                                             <Grid item xs={12} style={{marginTop: 20}}>
 
-                                                <InputLabel style={{color: 'black'}}>Adresse</InputLabel>
                                                 <TextField
                                                     id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
@@ -574,13 +575,14 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     name={'new_address'}
                                                     placeholder={'Ecrire ici'}
+                                                    variant={"outlined"}
+                                                    label={'Rue'}
                                                 />
 
                                             </Grid>
 
                                             <Grid item xs={12} style={{marginTop: 20}}>
 
-                                                <InputLabel style={{color: 'black'}}>Code postal</InputLabel>
                                                 <TextField
                                                     id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
@@ -589,12 +591,13 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     name={'new_zip_code'}
                                                     placeholder={'Ecrire ici'}
+                                                    variant={"outlined"}
+                                                    label={'Code postal'}
                                                 />
 
                                             </Grid>
                                             <Grid item xs={12} style={{marginTop: 20}}>
 
-                                                <InputLabel style={{color: 'black'}}>Ville</InputLabel>
                                                 <TextField
                                                     id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
@@ -603,6 +606,8 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     name={'new_city'}
                                                     placeholder={'Ecrire ici'}
+                                                    variant={"outlined"}
+                                                    label={'Ville'}
                                                 />
                                             </Grid>
                                             {/*<Grid item xs={12} style={{marginTop: 20}}>
@@ -621,7 +626,7 @@ class myAddresses extends React.Component {
                                             </Grid>*/}
                                             <Grid item xs={12} style={{marginTop: 20}}>
 
-                                                <InputLabel style={{color: 'black'}}>Note (optionnel)</InputLabel>
+
                                                 <TextField
                                                     id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
@@ -632,6 +637,8 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     name={'note'}
                                                     placeholder={'Ecrire ici'}
+                                                    variant={"outlined"}
+                                                    label={'Note (Optionnel)'}
                                                 />
 
                                             </Grid>
@@ -645,7 +652,6 @@ class myAddresses extends React.Component {
                                         </Grid>
                                         <Grid item xs={12} style={{marginTop: 20,maxWidth:'52%'}}>
 
-                                            <InputLabel style={{color: 'black'}}>Téléphone</InputLabel>
                                             <TextField
                                                 id="standard-name"
                                                 style={{ marginTop: 15,width: '100%'}}
@@ -654,6 +660,8 @@ class myAddresses extends React.Component {
                                                 margin="normal"
                                                 name={'phone'}
                                                 placeholder={'Ecrire ici'}
+                                                variant={"outlined"}
+                                                label={'Téléphone'}
                                             />
 
                                         </Grid>
@@ -673,15 +681,17 @@ class myAddresses extends React.Component {
                                         <Grid container style={{width: '52%'}}>
                                             <Grid item xs={12}>
 
-                                                <InputLabel style={{color: 'black'}}>Nom de l'adresse</InputLabel>
+
                                                 <TextField
                                                     id="standard-name"
-                                                    style={{marginLeft: -126, marginTop: 30,width: '100%'}}
+                                                    style={{ marginTop: 30,width: '100%'}}
                                                     value={this.state.edit_label}
                                                     onChange={this.onChange}
                                                     margin="normal"
                                                     name={'edit_label'}
                                                     placeholder={'Ecrire ici'}
+                                                    variant={"outlined"}
+                                                    label={'Nom de l\'adresse'}
                                                 />
 
                                             </Grid>
@@ -704,7 +714,7 @@ class myAddresses extends React.Component {
 
                                             <Grid item xs={12} style={{marginTop: 20}}>
 
-                                                <InputLabel style={{color: 'black'}}>Adresse</InputLabel>
+
                                                 <TextField
                                                     id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
@@ -713,13 +723,15 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     name={'edit_address'}
                                                     placeholder={'Ecrire ici'}
+                                                    variant={"outlined"}
+                                                    label={'Rue'}
                                                 />
 
                                             </Grid>
 
                                             <Grid item xs={12} style={{marginTop: 20}}>
 
-                                                <InputLabel style={{color: 'black'}}>Code postal</InputLabel>
+
                                                 <TextField
                                                     id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
@@ -728,12 +740,14 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     name={'edit_zip_code'}
                                                     placeholder={'Ecrire ici'}
+                                                    variant={"outlined"}
+                                                    label={'Code postal'}
                                                 />
 
                                             </Grid>
                                             <Grid item xs={12} style={{marginTop: 20}}>
 
-                                                <InputLabel style={{color: 'black'}}>Ville</InputLabel>
+
                                                 <TextField
                                                     id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
@@ -742,6 +756,8 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     name={'edit_city'}
                                                     placeholder={'Ecrire ici'}
+                                                    variant={"outlined"}
+                                                    label={'Ville'}
                                                 />
                                             </Grid>
                                             {/*<Grid item xs={12} style={{marginTop: 20}}>
@@ -760,7 +776,7 @@ class myAddresses extends React.Component {
                                             </Grid>*/}
                                             <Grid item xs={12} style={{marginTop: 20}}>
 
-                                                <InputLabel style={{color: 'black'}}>Note (optionnel)</InputLabel>
+
                                                 <TextField
                                                     id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
@@ -771,6 +787,8 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     name={'edit_note'}
                                                     placeholder={'Ecrire ici'}
+                                                    variant={"outlined"}
+                                                    label={'Note (optionnel)'}
                                                 />
 
                                             </Grid>
@@ -784,7 +802,7 @@ class myAddresses extends React.Component {
                                         </Grid>
                                         <Grid item xs={12} style={{marginTop: 20,maxWidth:'52%'}}>
 
-                                            <InputLabel style={{color: 'black'}}>Téléphone</InputLabel>
+
                                             <TextField
                                                 id="standard-name"
                                                 style={{ marginTop: 15,width: '100%'}}
@@ -793,6 +811,8 @@ class myAddresses extends React.Component {
                                                 margin="normal"
                                                 name={'edit_phone'}
                                                 placeholder={'Ecrire ici'}
+                                                variant={"outlined"}
+                                                label={'Téléphone'}
                                             />
 
                                         </Grid>

@@ -363,7 +363,7 @@ class services extends React.Component {
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto',zIndex:501}} width={'9%'} height={'17%'} alt={'picture'}/>
+                            <img src={'../'+user.picture} style={{clipPath: 'circle(50%)',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto',zIndex:501}} width={'9%'}  alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'3%',top:'20%',zIndex:502}}>
                             <EditIcon onClick={()=>this.handleOpen()} style={{cursor:'pointer',color:"white",width:40}}/>

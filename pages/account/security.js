@@ -362,6 +362,8 @@ class security extends React.Component {
                                             name="password"
                                             value={this.state.password}
                                             onChange={this.onChange}
+                                            variant={"outlined"}
+
                                         />
                                     </Grid>
 
@@ -379,6 +381,7 @@ class security extends React.Component {
                                             name="newPassword"
                                             value={this.state.newPassword}
                                             onChange={this.onChangeNewPassword}
+                                            variant={"outlined"}
                                         />
                                     </Grid>
                                     {this.state.check ? <p style={{color : 'red'}}>Mot de passe invalide</p> : null}
@@ -398,7 +401,7 @@ class security extends React.Component {
                                 <Grid item style={{ display: 'flex', justifyContent: 'left' }}>
                                     <h2 style={{ fontWeight: '100' }}>Dernières connexions : </h2>
                                 </Grid>
-                                <Grid item style={{display: 'flex', border:'1px darkgray solid', padding: 25, maxWidth: '50%'}}>
+                                <Grid item style={{display: 'flex', border:'1px darkgray solid', padding: 25, maxWidth: '50%',marginBottom:20}}>
                                     <Grid container>
                                         {last_login.map((e,index)=>(
                                             <Grid key={index} item xs={12}>

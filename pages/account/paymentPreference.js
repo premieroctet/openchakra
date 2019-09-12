@@ -492,7 +492,7 @@ class paymentPreference extends React.Component {
                                                         label={'IBAN'}
                                                     />
                                                 </Grid>
-                                                <Grid item xs={12} style={{display: "flex", justifyContent: "flex-end"}}>
+                                                <Grid item xs={12} style={{display: "flex", justifyContent: "flex-end",marginBottom:20}}>
                                                     <Button size={'large'} type={'submit'} variant="contained" color="primary"
                                                             style={{color: 'white',marginTop: 15}}>
                                                         Modifier

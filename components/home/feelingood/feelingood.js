@@ -6,11 +6,11 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import FeelingoodCard from './feelingoodCard/feelingoodCard';
 import axios from 'axios';
-import "../../../static/stylesfonts.css"
+
 
 const { config } = require('../../../config/config');
-/*const url = config.apiUrl;*/
-const url = "https://myalfred.hausdivision.com";
+const url = config.apiUrl;
+
 
 
 const styles = theme => ({

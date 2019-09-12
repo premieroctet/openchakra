@@ -13,10 +13,9 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
-import "../../../static/style1.css";
 const {config} = require('../../../config/config');
-/*const url = config.apiUrl;*/
-const url = "https://myalfred.hausdivision.com/";
+const url = config.apiUrl;
+
 
 const styles = theme => ({
   container: {

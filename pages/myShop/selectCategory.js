@@ -2,15 +2,12 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
-import Footer from '../../hoc/Layout/Footer/Footer';
 import Select from "react-select";
 
 
@@ -38,6 +35,8 @@ class selectCategory extends React.Component {
             all_category: [],
             selectedCategory: null,
             categoryOk: false,
+            step1:false,
+            step2:false,
 
             all_services: [],
             selectedService: null,
@@ -87,11 +86,13 @@ class selectCategory extends React.Component {
     };
 
     handleChangeCategory = selectedCategory => {
-        this.setState({selectedCategory})
+        this.setState({selectedCategory});
+        this.setState({step1:true});
     };
 
     handleChangeService = selectedService => {
-        this.setState({selectedService})
+        this.setState({selectedService});
+        this.setState({step2:true});
     };
 
     handleCategory() {
@@ -184,7 +185,7 @@ class selectCategory extends React.Component {
                                 />
                             </Grid>
                             <Grid item xs={5} style={{marginTop:20}}>
-                                <Button onClick={()=>this.handleCategory()} type="submit" variant="contained" color="primary" style={{ color:"white" }}>
+                                <Button disabled={!this.state.step1} onClick={()=>this.handleCategory()} type="submit" variant="contained" color="primary" style={{ color:"white" }}>
                                     Je valide la catégorie
                                 </Button>
                             </Grid>
@@ -224,7 +225,7 @@ class selectCategory extends React.Component {
                                         />
                                     </Grid>
                                     <Grid item xs={5} style={{marginTop:20}}>
-                                        <Button onClick={()=>this.handleService()} type="submit" variant="contained" color="primary" style={{ color:"white" }}>
+                                        <Button disabled={!this.state.step2} onClick={()=>this.handleService()} type="submit" variant="contained" color="primary" style={{ color:"white" }}>
                                             Je valide le service
                                         </Button>
                                     </Grid>
@@ -270,7 +271,7 @@ class selectCategory extends React.Component {
 
                 </Grid>
 
-            <Footer/>
+
             </Layout>
             
 

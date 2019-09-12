@@ -213,7 +213,7 @@ class Privacypolicy extends React.Component {
                        <Grid item xs={9}>
                             <Grid container>
                                 <Grid item xs={12}>
-                                    <p style={{fontWeight: 'bold', color: '#585858', fontSize: '1.35rem', paddingLeft: '7%', fontWeight: 'bold'}}>Politique de confidentialité & gestion des cookies</p>
+                                    <p style={{fontWeight: 'bold', color: '#585858', fontSize: '1.35rem', paddingLeft: '7%'}}>Politique de confidentialité & gestion des cookies</p>
                                 </Grid>
                                 {click ? 
                                     <Grid item xs={12}>
