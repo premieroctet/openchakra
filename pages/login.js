@@ -16,15 +16,33 @@ import Router from "next/router";
 const { config } = require('../config/config');
 const url = config.apiUrl;
 const styles = {
-  loginContainer: {
+  fullContainer: {
+    backgroundImage: 'url(../static/bailey-zindel-396399-unsplash-min.jpg)',
+    filter: 'blur(5px)',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
     alignItems: 'center',
     height: '100vh',
-    justifyContent: 'center',
+    justifyContent: 'top',
     flexDirection: 'column',
+},
+  loginContainer: {
+    backgroundColor: 'rgba(0,0,0, 0.35)',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    alignItems: 'center',
+    height: '100vh',
+    flexDirection: 'column',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: '2',
   },
   card: {
     padding: '1.5rem 3rem',
     width: 400,
+    marginTop: '15%'
   },
   cardContant: {
     flexDirection: 'column',
@@ -97,6 +115,7 @@ class login extends React.Component {
 
     return (
         <Layout>
+          <Grid className={classes.fullContainer}></Grid>
           <Grid container className={classes.loginContainer}>
             <Card className={classes.card}>
               <Grid>

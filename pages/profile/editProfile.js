@@ -567,13 +567,18 @@ class editProfile extends React.Component {
                         </Grid>
 
                     </Grid>
-                    <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
-                    alignItems:"center",height:60}}>
-                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                style={{color: 'white',maxHeight:40,marginRight:20}}>
-                            Enregistrer
-                        </Button>
-                    </div>
+                    <Grid container>
+                        <Grid item xs={9}>
+                            <div style={{display:'flex',justifyContent:'flex-end',marginBottom: '-1.95%',width:'100%',bottom:0,
+                            alignItems:"center",height:60}}>
+                                <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
+                                style={{color: 'white',maxHeight:40,marginRight:55}}>
+                                    Enregistrer
+                                </Button>
+                            </div>
+                        </Grid>
+                        <Grid item xs={3}></Grid>
+                    </Grid>
                 </Layout>
                 <Footer/>
 

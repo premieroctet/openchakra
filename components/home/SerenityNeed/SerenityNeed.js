@@ -17,7 +17,8 @@ import "../../../static/stylesfonts.css";
 import "../../../static/style1.css";
 
 const { config } = require('../../../config/config');
-const url = config.apiUrl;
+/*const url = config.apiUrl;*/
+const url = "https://myalfred.hausdivision.com/";
 
 
 
