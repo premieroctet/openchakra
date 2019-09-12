@@ -77,6 +77,7 @@ class services extends React.Component {
             moderate2: false,
             strict2: false,
             options: {},
+            haveOptions: false,
             availability: [],
             monday: {},
             tuesday: {},
@@ -273,7 +274,10 @@ class services extends React.Component {
                     let uniqFilter = _.uniqBy(arrayFilter,'label');
                     this.setState({uniqFilter: uniqFilter});
                 });
-                this.setState({options:serviceUser.option})
+                if(serviceUser.option !== undefined){
+
+                    this.setState({options:serviceUser.option,haveOptions:true})
+                }
                 this.setState({service: serviceUser.service})
                 this.setState({equipments: serviceUser.equipments});
                 this.setState({prestations: serviceUser.prestations})
@@ -362,7 +366,7 @@ class services extends React.Component {
                                         <Grid item xs={12}>
                                             <h2 style={{fontSize: '1.6rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: 'bold',}}>{service.label}</h2>
                                         </Grid>
-                                        <Grid item xs={2} style={{marginTop: '-20px', marginBottom: '15px'}}><hr className={classes.grosHR}/></Grid>
+                                        <Grid item xs={2} style={{marginTop: '-20px', marginBottom: '15px'}}><hr className={classes.fournitureHR}/></Grid>
                                         <Grid item xs={5}></Grid>
                                         <Grid item xs={5}></Grid>
                                     </Grid>
@@ -521,7 +525,7 @@ class services extends React.Component {
                                                 </Grid>
                                             </Grid>
                                         </Grid>
-                                        <Grid item xs={12} style={{margin: '4% 0'}}>
+                                        <Grid item xs={12}>
                                             <Grid container>
                                                 <Grid item xs={1}>
                                                     {this.state.moderate2 ? <img src="../../static/checkboxes/roundSkyblueFull.png" width={'35%'}/> : <img src="../../static/checkboxes/roundSkyblue.png" width={'35%'}/>}
@@ -642,9 +646,9 @@ class services extends React.Component {
 
                                     
                                     <Grid item xs={12}></Grid>   
-                                    <Grid item xs={2}></Grid><Grid item xs={8}><hr style={{marginTop:'8%', backgroundColor:'#dedede', border: '1px solid transparent'}} ></hr></Grid><Grid item xs={2}></Grid></React.Fragment> : null} </React.Fragment>)})}
+                                    <Grid item xs={2}></Grid><Grid item xs={8}></Grid><Grid item xs={2}></Grid></React.Fragment> : null} </React.Fragment>)})}
 
-
+                                    {this.state.haveOptions ?
                                     <Grid item xs={12} style={{marginBottom: '2%'}}>
                                         <Typography style={{marginLeft: '3%' , fontSize:'1.1rem', fontWeight: '5e00'}}>
                                         {dropoption ?
@@ -662,7 +666,7 @@ class services extends React.Component {
                                         </React.Fragment>}                                         
                                             
                                         </Typography>
-                                    </Grid>
+                                    </Grid> : null}
 
                                     {dropoption ?
                                     <React.Fragment>

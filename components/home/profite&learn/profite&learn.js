@@ -229,7 +229,7 @@ class profiteandlearn extends React.Component {
                 </Grid>
                 <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 10}}>
                   <Typography className={classes.textBox3}>
-                    Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement les prestations que vous souhaitez réaliser en vous appuyant sur une liste de plus de ..... services proposées sur My-Alfred. Un service n'apparait pas ? Proposez-le à nos équipes !
+                    Vous n'avez aucuns frais à payer pour proposer vos services. Indiquez simplement les prestations que vous souhaitez réaliser en vous appuyant sur une liste de plus de ..... services proposés sur My-Alfred. Un service n'apparaît pas ? Proposez-le à nos équipes !
                   </Typography>
                 </Grid>
               </Grid>
@@ -255,7 +255,7 @@ class profiteandlearn extends React.Component {
                 </Grid>
                 <Grid item xs={12}>
                   <Typography className={classes.textBox2}>
-                    Fixer vos conditions
+                    Fixez vos conditions
                   </Typography>
                 </Grid>
                 <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 10}}>

@@ -431,7 +431,7 @@ class notifications extends React.Component {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <p style={{marginTop:0}}>
-                                        Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et d’autres rappels relatifs à vos activités sur my-Alfred.
+                                        Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et d’autres rappels relatifs à vos activités sur My-Alfred.
 
 
                                     </p>

@@ -172,6 +172,7 @@ class all extends React.Component {
                                                 <TableCell>Prénom</TableCell>
                                                 <TableCell>Email</TableCell>
                                                 <TableCell>Action</TableCell>
+                                                <TableCell>Carte d'identité</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -189,6 +190,9 @@ class all extends React.Component {
                                                         </TableCell>
                                                         <TableCell>
                                                             <Link href={`/dashboard/users/view?id=${e._id}`}><a>Modifier</a></Link>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Link href={`/dashboard/users/idCard?id=${e._id}`}><a>Détails</a></Link>
                                                         </TableCell>
 
                                                     </TableRow>

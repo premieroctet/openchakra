@@ -25,6 +25,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 
+
 moment.locale('fr');
 
 const { config } = require('../../config/config');
@@ -360,7 +361,7 @@ class services extends React.Component {
                             <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto',zIndex:501}} width={'9%'} alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'3%',top:'20%',zIndex:502}}>
-                            <img src={'../static/edit-image.svg'} alt={'edit'} onClick={()=>this.handleOpen()} style={{cursor:'pointer'}} width={30}/>
+                            <EditIcon onClick={()=>this.handleOpen()} style={{cursor:'pointer',color:"white",width:40}}/>
                         </Grid>
                         <Grid item style={{position:"absolute",right:'3%',top:'18%',zIndex:502}}>
                             <Link href={'/myShop/shopPreview?id_alfred=' + this.state.user._id}><a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}}><p>Aperçu de ma boutique</p></a></Link>
@@ -656,6 +657,7 @@ class services extends React.Component {
                                                     <Grid item xs={6}>
                                                         <h4 style={{fontWeight: 'bolder',fontSize: 18,color: '#737373'}}>{e.service.label}</h4>
                                                         <p style={{fontSize: 14}}>{e.prestations.length} Prestation(s) proposée(s)</p>
+                                                        <p style={{fontSize: 14}}>{e.number_of_views} Vue(s) du service</p>
                                                     </Grid>
                                                     <Grid item xs={3} style={{display:"flex", justifyContent:"flex-end"}}>
                                                         <Link href={'/myShop/editService?id='+e._id}>

@@ -249,7 +249,7 @@ class trustAndVerification extends React.Component {
     };
 
     onChangeRecto = e => {
-        this.setState({id_recto:e.target.files[0]});
+        this.setState({id_recto:e.target.files[0],haveCard:false});
         this.setState({
             file:
                 URL.createObjectURL(e.target.files[0])    })
@@ -318,6 +318,23 @@ class trustAndVerification extends React.Component {
         });
     };
 
+    addVerso() {
+        const formData = new FormData();
+        formData.append('myCardV',this.state.id_verso);
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+        axios.post(url+"myAlfred/api/users/profile/idCard/addVerso",formData,config)
+            .then((response) => {
+                toast.info('Carte d\'identité ajoutée');
+
+            }).catch((error) => {
+            console.log(error)
+        });
+    }
+
     onDocumentLoadSuccess = ({ numPages }) => {
         this.setState({ numPages });
     };
@@ -372,6 +389,7 @@ class trustAndVerification extends React.Component {
         const {classes} = this.props;
         const {user} = this.state;
         const {ext} = this.state;
+        const {ext2} = this.state;
         const {professional} = this.state;
         const {alfred} = this.state;
         const {company} = this.state;
@@ -719,7 +737,7 @@ class trustAndVerification extends React.Component {
                                                         <Grid container style={{border:'1px solid lightgrey',marginTop:20,alignItems:"center"}}>
                                                             <Grid item xs={8}>
 
-                                                                {ext ==='pdf' ?
+                                                                {ext2 ==='pdf' ?
                                                                     <Document
                                                                         file={`../${this.state.card.verso}`}
                                                                         onLoadSuccess={this.onDocumentLoadSuccess}
@@ -792,9 +810,16 @@ class trustAndVerification extends React.Component {
 
                                                     </Grid>
                                             )}
+                                        {this.state.id_recto === null && this.state.id_verso !==null ?
                                             <Grid item style={{marginTop:20}}>
-                                            <Button color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
+                                                <Button onClick={()=>this.addVerso()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider verso</Button>
                                             </Grid>
+                                            :
+                                            <Grid item style={{marginTop:20}}>
+                                                <Button type={"submit"} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
+                                            </Grid>
+                                        }
+
                                     </form>
                                 </Grid>
 
@@ -938,7 +963,7 @@ class trustAndVerification extends React.Component {
                     <DialogTitle id="alert-dialog-title">{"Supprimer la carte d'identité"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            Voulez-vous vraiment supprimer le recto de votre carte d'identité/passeport ?
+                            Voulez-vous vraiment supprimer votre carte d'identité/passeport ?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

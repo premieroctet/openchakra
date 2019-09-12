@@ -16,7 +16,7 @@ import Assureback from '../components/home/AssureBack/Assureback';
 import TopService from '../components/home/Topservice/Topservice';
 import setAuthToken from '../utils/setAuthToken';
 import Router from "next/router";
-import '../static/stylebg.css'
+
 
 
 class Home extends React.Component {

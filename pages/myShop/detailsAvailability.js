@@ -788,6 +788,8 @@ class detailsAvailability extends React.Component {
                                                             isSearchable
                                                             closeMenuOnSelect={false}
                                                             isDisabled={this.state.monday_all_service}
+                                                            placeholder={'Sélectionnez vos services'}
+                                                            noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                         />
                                                     </FormControl>
@@ -953,6 +955,8 @@ class detailsAvailability extends React.Component {
                                                                 isSearchable
                                                                 closeMenuOnSelect={false}
                                                                 isDisabled={this.state.tuesday_all_service}
+                                                                placeholder={'Sélectionnez vos services'}
+                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                             />
                                                         </FormControl>
@@ -1118,6 +1122,8 @@ class detailsAvailability extends React.Component {
                                                                 isSearchable
                                                                 closeMenuOnSelect={false}
                                                                 isDisabled={this.state.wednesday_all_service}
+                                                                placeholder={'Sélectionnez vos services'}
+                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                             />
                                                         </FormControl>
@@ -1281,6 +1287,8 @@ class detailsAvailability extends React.Component {
                                                                                 isSearchable
                                                                                 closeMenuOnSelect={false}
                                                                                 isDisabled={this.state.thursday_all_service}
+                                                                                placeholder={'Sélectionnez vos services'}
+                                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                                             />
                                                                         </FormControl>
@@ -1446,6 +1454,8 @@ class detailsAvailability extends React.Component {
                                                                                                 isSearchable
                                                                                                 closeMenuOnSelect={false}
                                                                                                 isDisabled={this.state.friday_all_service}
+                                                                                                placeholder={'Sélectionnez vos services'}
+                                                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                                                             />
                                                                                         </FormControl>
@@ -1611,6 +1621,8 @@ class detailsAvailability extends React.Component {
                                                                 isSearchable
                                                                 closeMenuOnSelect={false}
                                                                 isDisabled={this.state.saturday_all_service}
+                                                                placeholder={'Sélectionnez vos services'}
+                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                             />
                                                         </FormControl>
@@ -1777,6 +1789,8 @@ class detailsAvailability extends React.Component {
                                                                 isSearchable
                                                                 closeMenuOnSelect={false}
                                                                 isDisabled={this.state.sunday_all_service}
+                                                                placeholder={'Sélectionnez vos services'}
+                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                             />
                                                         </FormControl>

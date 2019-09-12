@@ -366,7 +366,7 @@ class signup extends React.Component {
                         </Grid>
                       </Grid>
                       <Typography style={{fontSize: '1.2rem', width:'100%', marginTop: 15}}>Date de naissance</Typography>
-                      <p>Pour vous inscrire, vous devez être agé d’au moins 16 ans. Les autres<br/>
+                      <p>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les autres<br/>
                         utilisateurs ne verront pas votre date de naissance.
                       </p>
                       <Grid item className={classes.datenaissance} style={{display:"flex",alignItems:"center"}}>

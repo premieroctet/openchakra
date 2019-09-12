@@ -389,7 +389,7 @@ class parameters extends React.Component {
                             </Grid>
                             <Grid container>
                                 <Grid item xs={8}>
-                                    <p>J'accepte que mon profil, ma boutique soient indexés par les moteurs de recherche</p>
+                                    <p>J'accepte que mon profil et ma boutique soient indexés par les moteurs de recherche</p>
                                 </Grid>
                                 <Grid item xs={4}>
                                     <Switch

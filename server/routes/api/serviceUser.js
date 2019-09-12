@@ -485,6 +485,20 @@ router.put('/deletePrestation/:id', passport.authenticate('jwt', { session: fals
     }
 );
 
+// @Route PUT /myAlfred/api/serviceUser/views/:id
+// Update number of views for a service
+router.put('/views/:id',(req,res) => {
+    ServiceUser.findByIdAndUpdate(req.params.id,{$inc: {number_of_views: 1}},{new:true})
+        .then(service => {
+            if(!service){
+                return res.status(400).json({msg: 'No service found'});
+            }
+            res.json(service);
+
+        })
+        .catch(err => res.status(404).json({ user: 'No service found' }));
+});
+
 // @Route DELETE /myAlfred/api/serviceUser/delete/diploma/:id
 // Delete diploma for a service
 // @Access private

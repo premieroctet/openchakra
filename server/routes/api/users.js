@@ -368,6 +368,22 @@ router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {na
         })
 });
 
+// @Route PUT /myAlfred/api/users/profile/idCard
+// Add an identity card
+// @Access private
+router.post('/profile/idCard/addVerso',upload2.single('myCardV'),passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findById(req.user.id)
+        .then(user => {
+            user.id_card.verso = req.file.path;
+
+
+            user.save().then(user => res.json(user)).catch(err => console.log(err));
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
 // @Route POST /myAlfred/api/users/register/alfred
 // Register an alfred
 router.post('/register/alfred', (req, res) => {
@@ -860,7 +876,7 @@ router.delete('/current/delete',passport.authenticate('jwt',{session:false}),(re
 router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findById(req.user.id)
         .then(user => {
-            user.id_card.recto = undefined;
+            user.id_card = undefined;
 
             user.save().then(user => res.json(user)).catch(err => console.log(err));
         })

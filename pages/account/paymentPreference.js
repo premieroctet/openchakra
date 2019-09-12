@@ -362,7 +362,7 @@ class paymentPreference extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid container>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={3}>
                                         {haveAccount ?
                                             <h2 style={{color: '#2FBCD3', fontWeight: '100', cursor: 'pointer'}}
                                                 onClick={this.handleClick2}>Modifier le RIB</h2>
@@ -371,6 +371,7 @@ class paymentPreference extends React.Component {
                                             onClick={this.handleClick}>Ajouter un RIB</h2>}
                                     </Grid>
                                     {clickAdd ?
+                                        <Grid container>
                                         <Grid item xs={9} style={{marginBottom: '25%'}}>
                                             <form onSubmit={this.onSubmit}>
                                                 <Grid item xs={12}>
@@ -383,6 +384,7 @@ class paymentPreference extends React.Component {
                                                         margin="normal"
                                                         variant="outlined"
                                                         placeholder={'Nom et prénom du titulaire du compte'}
+                                                        label={'Nom et prénom du titulaire du compte'}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12}>
@@ -395,6 +397,7 @@ class paymentPreference extends React.Component {
                                                         margin="normal"
                                                         variant="outlined"
                                                         placeholder={'Nom de la banque'}
+                                                        label={'Nom de la banque'}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12}>
@@ -407,6 +410,7 @@ class paymentPreference extends React.Component {
                                                         margin="normal"
                                                         variant="outlined"
                                                         placeholder={'Code SWIFT / BIC'}
+                                                        label={'Code SWIFT / BIC'}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12}>
@@ -419,6 +423,7 @@ class paymentPreference extends React.Component {
                                                         margin="normal"
                                                         variant="outlined"
                                                         placeholder={'IBAN'}
+                                                        label={'IBAN'}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12} style={{display: "flex", justifyContent: "flex-end"}}>
@@ -429,8 +434,10 @@ class paymentPreference extends React.Component {
                                                 </Grid>
                                             </form>
                                         </Grid>
+                                        </Grid>
                                         : null}
                                     {clickEdit ?
+                                        <Grid container>
                                         <Grid item xs={9} >
                                             <form onSubmit={this.onSubmit}>
                                                 <Grid item xs={12}>
@@ -492,6 +499,7 @@ class paymentPreference extends React.Component {
                                                     </Button>
                                                 </Grid>
                                             </form>
+                                        </Grid>
                                         </Grid>
                                         : null}
                                 </Grid>
