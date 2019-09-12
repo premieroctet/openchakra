@@ -18,6 +18,7 @@ import '../static/forminputs.css';
 import "../static/inputRange.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "../static/cssdashboard.css";
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 toast.configure({
   position: 'top-center',

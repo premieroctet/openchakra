@@ -6,6 +6,7 @@ function MultipleSelect(props) {
 
     return (
         <Select
+            noOptionsMessage={() => props.noOption}
             closeMenuOnSelect={false}
             placeholder={props.placeholder}
             isMulti
