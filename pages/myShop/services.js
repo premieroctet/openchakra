@@ -84,7 +84,7 @@ const styles = theme => ({
     },
     trait2:{
         width: '87%',
-        marginTop: -18,
+        marginTop: -18.5,
         height: 4,
         backgroundColor: 'lightgray',
         borderColor: 'transparent'
@@ -103,6 +103,11 @@ const styles = theme => ({
         backgroundColor: 'white',
         border: '2px solid #000',
 
+    },
+    shopbar:{
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
+        }
     },
 
 
@@ -325,23 +330,23 @@ class services extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
-                            <Grid item xs={1}></Grid>
-                            <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
+                        <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
+                            <Grid item xs={1} className={classes.shopbar}></Grid>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
                                 <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
                                 </Link>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
                             </Grid>
 
@@ -357,7 +362,7 @@ class services extends React.Component {
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto',zIndex:501}} width={'9%'} alt={'picture'}/>
+                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto',zIndex:501}} width={'9%'} height={'17%'} alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'3%',top:'20%',zIndex:502}}>
                             <img src={'../static/edit-image.svg'} alt={'edit'} onClick={()=>this.handleOpen()} style={{cursor:'pointer'}} width={30}/>
@@ -635,8 +640,21 @@ class services extends React.Component {
                                                         Remboursement intégral jusqu'à 10 jours avant la prestation.
                                                     </p>
                                                 </Grid>
-                                            </Grid>
 
+                                              
+                                            </Grid>
+                                            <Grid item xs={1} style={{zIndex: 999}}></Grid>
+                            
+                                                <Grid item xs={2} style={{zIndex: 999}}>
+                                                {tabs ?
+                                                    <div style={{display:'flex',justifyContent:'flex-start',width:'100%',bottom:0,
+                                                        alignItems:"center",height:60}}>
+                                                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
+                                                                style={{color: 'white',maxHeight:40,marginRight:20, zIndex: '999'}}>
+                                                            Enregistrer
+                                                        </Button>
+                                                    </div>: null}
+                                                </Grid>
                                         </Grid>
 
                                     </Grid>:
@@ -707,14 +725,7 @@ class services extends React.Component {
                             </Grid>
                             <Grid item xs={1} style={{zIndex: -999}}></Grid>
 
-                            {tabs ?
-                                <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
-                                    alignItems:"center",height:60}}>
-                                    <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                            style={{color: 'white',maxHeight:40,marginRight:20}}>
-                                        Enregistrer
-                                    </Button>
-                                </div>: null}
+                            
                         </Grid>
 
                     </Grid>

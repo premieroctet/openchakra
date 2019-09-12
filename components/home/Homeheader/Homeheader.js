@@ -351,8 +351,7 @@ class Homeheader extends React.Component {
               textAlign: 'left',
               fontSize: '2rem',
               textShadow: '0px 0.5px 2px #696969'
-            }}>Vous connaissez Airbnb pour les logements ?
-              Découvrez My-Alfred pour les services ! </h2>
+            }}>Vous avez du talent, de l’or entre vos mains. Qu’attendez-vous pour le mettre à profit ? </h2>
             <hr style={{
               float: 'left',
               width: '60px',
@@ -368,13 +367,8 @@ class Homeheader extends React.Component {
               fontSize: '1.5rem',
               textShadow: '0px 0.5px 2px #696969'
             }}>
-              We are coming soon !
+              Créez dès aujourd’hui votre boutique, proposez vos services Et dans 1 mois les clients vous supplieront et vos banquiers vous applaudiront
             </h4>
-            <br/>
-            <p style={{fontSize: '1.2em', textAlign: 'left', textShadow: '0px 0.5px 2px #696969'}}>
-              Créez votre boutique maintenant en quelques minutes, répertoriez vos services,
-              indiquez vos disponibilités, vos tarifs et profitez d’un complément de revenu !
-            </p>
           </div>
 
 
