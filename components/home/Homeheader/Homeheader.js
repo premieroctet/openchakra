@@ -188,13 +188,14 @@ const styles = theme => ({
   paper: {
     zIndex:'99999',
     position: 'fixed',
-    width: 400,
+    maxWidth: 390,
     backgroundColor: 'white',
     boxShadow: '0 0 7px black',
     padding: 'auto',
-    top: '25%',
-    left: '25%',
-    transform: 'translate(50%, 50%)',
+    top: '45%',
+    left: '0%',
+    margin: 'auto',
+
   }
 });
 

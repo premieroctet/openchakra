@@ -26,7 +26,7 @@ const { config } = require('../../config/config');
 const url = config.apiUrl;
 
 const ExampleCustomInput = ({ value,onClick }) => (
-    <TextField value={value} label={'Date de naissance'} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
+    <TextField style={{width:'100%'}} value={value} label={'Date de naissance'} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
 
 );
 
@@ -64,9 +64,17 @@ const styles = theme => ({
     transition: 'display 0.7s',
 
        }
-     }
+     },
 
-}
+
+
+},
+    responsiveContainer: {
+        [theme.breakpoints.down('sm')]: {
+            width:'148%!important',
+        }
+    }
+
 
     ,toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
@@ -206,7 +214,7 @@ class editProfile extends React.Component {
         return (
             <Fragment>
                 <Layout>
-                    <Grid container className={classes.bigContainer}>
+                    <Grid container className={classes.bigContainer} style={{overflowX:"hidden"}}>
 
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
                          
@@ -349,12 +357,13 @@ class editProfile extends React.Component {
 
 
 
-                        <Grid item xs={9} style={{paddingLeft: 55}}>
+                        <Grid item xs={9} style={{paddingLeft: 20}}>
                             <h1 style={{color: 'dimgray',fontWeight: '100'}}>Modifier le profil</h1>
                             <form>
 
-                            <Grid container style={{maxWidth: '60%'}}>
-                                <Grid item xs={12} style={{marginTop: 20}}>
+                            <Grid container className={classes.responsiveContainer}>
+                                <Grid container>
+                                <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 20}}>
 
                                     <TextField
                                         id="standard-name"
@@ -370,7 +379,9 @@ class editProfile extends React.Component {
                                     />
 
                                 </Grid>
-                                <Grid item xs={12}>
+                                </Grid>
+                                <Grid container>
+                                <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 20}}>
 
                                     <TextField
                                         id="standard-name"
@@ -386,8 +397,9 @@ class editProfile extends React.Component {
                                     />
 
                                 </Grid>
+                                </Grid>
 
-                                <Grid item xs={12} style={{marginTop: 20}}>
+                                <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 20}}>
 
                                     {/*<InputLabel style={{color: 'black'}}>A propos de moi</InputLabel>*/}
                                     <TextField
@@ -406,12 +418,12 @@ class editProfile extends React.Component {
 
                                 </Grid>
                             </Grid>
-                            <Grid container style={{maxWidth: '60%'}}>
+                            <Grid container className={classes.responsiveContainer}>
                                 <Grid item xs={12}>
                                 <h2 style={{fontWeight: '100'}}>Informations personnelles</h2>
                                 </Grid>
                                 <Grid container style={{marginTop:10}}>
-                                <Grid item xs={5}>
+                                <Grid item lg={2} xs={10} sm={5} md={3} >
 
                                     <TextField
                                         id="standard-name"
@@ -436,8 +448,9 @@ class editProfile extends React.Component {
                                     </TextField>
 
                                 </Grid>
-                                    <Grid item xs={2}></Grid>
-                                <Grid item xs={5} style={{marginTop:15}}>
+                                    <Grid item xs={1}></Grid>
+
+                                <Grid item lg={3} xs={10} sm={6} md={3}  style={{marginTop:15}}>
                                     <DatePicker
                                         selected={Date.parse(birthday)}
                                         onChange={(date)=>this.onChangeBirthday(date)}
@@ -453,7 +466,8 @@ class editProfile extends React.Component {
 
                                 </Grid>
                                 </Grid>
-                                <Grid item xs={12} style={{marginTop: 10}}>
+                                <Grid container>
+                                <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 10}}>
                                     <TextField
                                         id="standard-name"
                                         style={{width: '100%'}}
@@ -466,7 +480,8 @@ class editProfile extends React.Component {
                                         label={'Adresse email'}
                                     />
                                 </Grid>
-                                <Grid item xs={12} style={{marginTop: 10}}>
+                                </Grid>
+                                <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 10}}>
                                     <TextField
                                         id="standard-name"
                                         style={{width: '100%'}}
@@ -480,9 +495,11 @@ class editProfile extends React.Component {
                                     />
                                 </Grid>
                             </Grid>
-                                <Grid container style={{maxWidth: '60%'}}>
+                                <Grid container className={classes.responsiveContainer}>
+                                    <Grid item xs={12}>
                                     <h2 style={{fontWeight: '100'}}>Informations facultatives</h2>
-                                    <Grid item xs={12} style={{marginTop: 10}}>
+                                    </Grid>
+                                    <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 10}}>
 
                                         <TextField
                                             id="standard-name"
@@ -498,7 +515,8 @@ class editProfile extends React.Component {
                                         />
 
                                     </Grid>
-                                    <Grid item xs={12} style={{marginTop: 10}}>
+                                    <Grid container>
+                                    <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 10}}>
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
@@ -512,7 +530,9 @@ class editProfile extends React.Component {
 
                                         />
                                     </Grid>
-                                    <Grid item xs={12} style={{marginTop: 10}}>
+                                    </Grid>
+                                    <Grid container>
+                                    <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 10}}>
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
@@ -525,12 +545,14 @@ class editProfile extends React.Component {
                                             label={'Emploi'}
                                         />
                                     </Grid>
+                                    </Grid>
                                     <Grid item xs={12} style={{marginTop: 10}}>
                                         <Grid container>
+                                            <Grid item xs={10} lg={6} md={6} sm={6}>
                                             <Grid item xs={2} style={{lineHeight:'1px'}}>
                                                 <p>Langues</p>
                                             </Grid>
-                                            <Grid item xs={10}>
+                                            <Grid item xs={12}>
                                     <Select2
                                         value={this.state.selectedLanguages}
                                         onChange={this.handleChangeLanguages}
@@ -547,8 +569,9 @@ class editProfile extends React.Component {
                                     />
                                             </Grid>
                                         </Grid>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs={12} style={{marginTop: 10}}>
+                                    <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 10}}>
 
                                         <TextField
                                             id="standard-name"

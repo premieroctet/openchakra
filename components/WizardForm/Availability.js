@@ -130,7 +130,7 @@ class Availability extends React.Component {
             [name]: value
         });*/
     this.props.formikCtx.setFieldValue(`servicesAvailability.${name}`, value);
-    console.log(this.props.formikCtx);
+
   }
 
   handleChangeSelectRecurrent = recurrent_service => {
@@ -682,7 +682,7 @@ class Availability extends React.Component {
     const formik = this.props.formikCtx.values;
 
     const services = this.props.formikCtx.values.submission;
-    console.log(services);
+
 
     const optionsService = services.map(service => ({
       label: service.serviceLabel,
