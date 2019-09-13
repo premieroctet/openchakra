@@ -1591,8 +1591,13 @@ class Form extends React.Component {
                                                                                                 this.setState({
                                                                                                     [`otherOptionChecked${index}`]: !this.state[`otherOptionChecked${index}`]
                                                                                                 });
-                                                                                                const optObj = { label: null, price: null, unity: null, type: null } 
-                                                                                                arrayHelpers.form.setFieldValue(`submission.${index}.option`, optObj)
+                                                                                                if (this.state[`otherOptionChecked${index}`] === true) {
+                                                                                                    arrayHelpers.form.setFieldValue(`submission.${index}.option`, null)
+                                                                                                } else {
+                                                                                                    const optObj = { label: null, price: null, unity: null, type: null } 
+                                                                                                    arrayHelpers.form.setFieldValue(`submission.${index}.option`, optObj)
+                                                                                                }
+                                                                                                
                                                                                             }}
                                                                                         />
                                                                                     }
@@ -2121,7 +2126,8 @@ class Form extends React.Component {
                                 {/*<div>*/}
                                 
                                 {/*</div>*/}
-                        </Grid>                      
+                        </Grid>    
+                        <Debug />                  
                     </Wizard.Page>
                     <Wizard.Page>
                         <FieldArray render={({form}) => {
