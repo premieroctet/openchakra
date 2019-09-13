@@ -62,7 +62,13 @@ const styles = theme => ({
        }
      }
 
-}
+},
+    responsiveContainer: {
+        [theme.breakpoints.down('sm')]: {
+            width:'135%!important',
+
+        }
+    }
 
     ,toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
@@ -290,13 +296,13 @@ class myAddresses extends React.Component {
         return (
             <Fragment>
                 <Layout>
-                    <Grid container className={classes.bigContainer}>
+                    <Grid container className={classes.bigContainer} style={{overflowX:"hidden"}}>
 
-                        <Grid item xs={3} style={{borderRight: '1px solid darkgray'}}>
+                        <Grid className={classes.toggle}  item xs={3} style={{}}>
 
-                            <Grid container style={{justifyContent: 'center'}}>
-
-                                <Grid item style={{marginTop: 30,width: 281}}>
+                            <div className={classes.trigger}></div>
+                            <Grid container style={{justifyContent: 'center',}}>
+                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -322,7 +328,8 @@ class myAddresses extends React.Component {
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/sign-2.svg'} alt={'sign'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mes adresses de prestations
+                                                Mes adresses de <br/>
+                                                prestations
                                             </a>
                                         </div>
                                     </Link>
@@ -350,7 +357,7 @@ class myAddresses extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editPicture'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 10,marginLeft:10}}/>
+                                            <img src={'../static/picture-2.svg'} alt={'picture'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Photo
                                             </a>
@@ -372,7 +379,7 @@ class myAddresses extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 10,marginLeft:10}}/>
+                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Confiance et vérification
                                             </a>
@@ -395,7 +402,7 @@ class myAddresses extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 10,marginLeft:10}}/>
+                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Commentaires
                                             </a>
@@ -417,7 +424,7 @@ class myAddresses extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/recommandations'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 10,marginLeft:10}}/>
+                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Recommandations
                                             </a>
@@ -430,14 +437,14 @@ class myAddresses extends React.Component {
                         </Grid>
 
 
-                        <Grid item xs={9} style={{paddingLeft: 55}}>
+                        <Grid item xs={9} style={{paddingLeft: 20}}>
                             <Grid container style={{marginBottom:20}}>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Mes adresses de prestations</h1>
                                 <Grid container>
                                     <Grid item>
                                         <h2 style={{fontWeight: '100'}}>Mon adresse principale</h2>
                                         <form onSubmit={this.onSubmit}>
-                                            <Grid container>
+                                            <Grid container className={classes.responsiveContainer}>
                                             <Grid item xs={10}>
                                                 <TextField
                                                     id="outlined-name"
@@ -448,13 +455,15 @@ class myAddresses extends React.Component {
                                                     margin="normal"
                                                     variant="outlined"
                                                     placeholder={'Adresse'}
-                                                    label={'Adresse'}
+                                                    label={'Rue'}
                                                 />
                                             </Grid>
-                                            <Grid item xs={4}>
+                                                <Grid container>
+                                            <Grid item xs={10} lg={4}>
                                                 <TextField
                                                     id="outlined-name"
                                                     className={classes.textField}
+                                                    style={{width: '100%'}}
                                                     value={this.state.currentZip_code}
                                                     name={'currentZip_code'}
                                                     onChange={this.onChange}
@@ -464,7 +473,8 @@ class myAddresses extends React.Component {
                                                     label={'Code postal'}
                                                 />
                                             </Grid>
-                                                <Grid item xs={6}>
+                                                    <Grid item xs={2}></Grid>
+                                                <Grid item xs={10} lg={4}>
                                                     <TextField
                                                         id="outlined-name"
                                                         style={{width: '100%'}}
@@ -476,6 +486,7 @@ class myAddresses extends React.Component {
                                                         placeholder={'Ville'}
                                                         label={'Ville'}
                                                     />
+                                                </Grid>
                                                 </Grid>
                                             <Grid item xs={7}>
                                                 <TextField
@@ -531,8 +542,8 @@ class myAddresses extends React.Component {
                                 </Grid>
                                 {clickAdd ?
                                     <form onSubmit={this.onSubmit2}>
-                                        <Grid container style={{width: '52%'}}>
-                                            <Grid item xs={12}>
+                                        <Grid container>
+                                            <Grid item xs={12} lg={6} sm={12} md={6}>
 
 
                                                 <TextField
@@ -548,7 +559,8 @@ class myAddresses extends React.Component {
                                                 />
 
                                             </Grid>
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                            <Grid container>
+                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <AlgoliaPlaces
                                                     placeholder='Recherchez votre adresse'
 
@@ -564,8 +576,9 @@ class myAddresses extends React.Component {
                                                     onChange={(suggestion) =>this.onChangeAlgolia(suggestion)}
                                                 />
                                             </Grid>
+                                            </Grid>
 
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 
                                                 <TextField
                                                     id="standard-name"
@@ -580,23 +593,24 @@ class myAddresses extends React.Component {
                                                 />
 
                                             </Grid>
+                                            <Grid container>
+                                                <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                                    <TextField
+                                                        id="standard-name"
+                                                        style={{ marginTop: 15,width: '100%'}}
+                                                        value={this.state.new_zip_code}
+                                                        onChange={this.onChange}
+                                                        margin="normal"
+                                                        name={'new_zip_code'}
+                                                        placeholder={'Ecrire ici'}
+                                                        variant={"outlined"}
+                                                        label={'Code postal'}
+                                                    />
 
-                                                <TextField
-                                                    id="standard-name"
-                                                    style={{ marginTop: 15,width: '100%'}}
-                                                    value={this.state.new_zip_code}
-                                                    onChange={this.onChange}
-                                                    margin="normal"
-                                                    name={'new_zip_code'}
-                                                    placeholder={'Ecrire ici'}
-                                                    variant={"outlined"}
-                                                    label={'Code postal'}
-                                                />
-
+                                                </Grid>
                                             </Grid>
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 
                                                 <TextField
                                                     id="standard-name"
@@ -624,7 +638,8 @@ class myAddresses extends React.Component {
                                                 />
 
                                             </Grid>*/}
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                            <Grid container>
+                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 
 
                                                 <TextField
@@ -642,15 +657,16 @@ class myAddresses extends React.Component {
                                                 />
 
                                             </Grid>
+                                            </Grid>
 
                                         </Grid>
                                         <p style={{color: '#F8727F',marginTop:25}}>OPTION DE CONTACT</p>
-                                        <Grid item>
+                                        <Grid item xs={12} lg={6} sm={12} md={6}>
                                             <p style={{marginBottom: 0}}>Nous avons besoin d’un numéro de téléphone dans le cas où votre Alfred</p>
                                             <p style={{marginTop:0,marginBottom:0}}>aurait besoin de vous contacter
                                                 ou de contacter la personne de confiance</p><p style={{marginTop:0}}> associée à cette adresse</p>
                                         </Grid>
-                                        <Grid item xs={12} style={{marginTop: 20,maxWidth:'52%'}}>
+                                        <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 
                                             <TextField
                                                 id="standard-name"
@@ -678,8 +694,8 @@ class myAddresses extends React.Component {
 
                                 {clickEdit ?
                                     <form onSubmit={(event)=>this.onSubmit3(event,address_selected._id)}>
-                                        <Grid container style={{width: '52%'}}>
-                                            <Grid item xs={12}>
+                                        <Grid container>
+                                            <Grid item xs={12} lg={6} sm={12} md={6}>
 
 
                                                 <TextField
@@ -695,7 +711,8 @@ class myAddresses extends React.Component {
                                                 />
 
                                             </Grid>
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                            <Grid container>
+                                            <Grid  item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <AlgoliaPlaces
                                                     placeholder='Recherchez votre adresse'
 
@@ -711,8 +728,9 @@ class myAddresses extends React.Component {
                                                     onChange={(suggestion) =>this.onChangeAlgolia2(suggestion)}
                                                 />
                                             </Grid>
+                                            </Grid>
 
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 
 
                                                 <TextField
@@ -729,7 +747,9 @@ class myAddresses extends React.Component {
 
                                             </Grid>
 
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                            <Grid container>
+
+                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 
 
                                                 <TextField
@@ -745,7 +765,8 @@ class myAddresses extends React.Component {
                                                 />
 
                                             </Grid>
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                            </Grid>
+                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 
 
                                                 <TextField
@@ -774,7 +795,8 @@ class myAddresses extends React.Component {
                                                 />
 
                                             </Grid>*/}
-                                            <Grid item xs={12} style={{marginTop: 20}}>
+                                            <Grid container>
+                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 
 
                                                 <TextField
@@ -792,15 +814,16 @@ class myAddresses extends React.Component {
                                                 />
 
                                             </Grid>
+                                            </Grid>
 
                                         </Grid>
                                         <p style={{color: '#F8727F',marginTop:25}}>OPTION DE CONTACT</p>
-                                        <Grid item>
+                                        <Grid item xs={12} lg={6} sm={12} md={6}>
                                             <p style={{marginBottom: 0}}>Nous avons besoin d’un numéro de téléphone dans le cas où votre Alfred</p>
                                             <p style={{marginTop:0,marginBottom:0}}>aurait besoin de vous contacter
                                                 ou de contacter la personne de confiance</p><p style={{marginTop:0}}> associée à cette adresse</p>
                                         </Grid>
-                                        <Grid item xs={12} style={{marginTop: 20,maxWidth:'52%'}}>
+                                        <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 
 
                                             <TextField
