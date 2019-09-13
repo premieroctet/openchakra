@@ -346,7 +346,7 @@ class editPicture extends React.Component {
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Photo</h1>
                             </Grid>
                             <Grid container style={{marginTop: 20}}>
-                                <Grid item style={{width: 150, height: 150}}>
+                                <Grid item>
                                     <DeleteIcon onClick={()=>this.handleClickOpen()} className={classes.deleteicon} style={{marginLeft: '90%',padding: '2%', marginBottom: '-10%', color: '#616060',  cursor: 'pointer' }}/>
 
                                     <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img height={150} width={150} style={{borderRadius: '50%'}} src={`../${user.picture}`} alt={'picture'}/>}
@@ -355,8 +355,8 @@ class editPicture extends React.Component {
                                 <Grid item style={{marginLeft: '5%'}}>
 
                                     <form onSubmit={this.onSubmit}>
-
-                                        <Grid item>
+                                        <Grid container>
+                                        <Grid item xs={6} lg={12}>
                                             <p style={{display: 'inline-block', marginTop: 15,color:'black', width: 600}}>La photo de votre profil sera
                                                 visible des utilisateurs du site et leur permettra de déjà vous connaitre !
                                                 Téléchargez une photo de vous claire et lumineuse, de bonne qualité. Pour un rendu optimal,
@@ -372,6 +372,7 @@ class editPicture extends React.Component {
                                             </label>
 
 
+                                        </Grid>
                                         </Grid>
                                         <Grid item style={{ display: 'flex', justifyContent: 'left', marginTop: 30 }}>
                                             <Button type="submit" variant="contained" color="primary" style={{ width: '20%',color: 'white' }}>
