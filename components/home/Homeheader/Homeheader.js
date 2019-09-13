@@ -1,15 +1,15 @@
 import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Pickerhome from '../../Pickerhome/pickerhome';
-import Selecthome from '../../selectforhome/selecthome';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-/*import LocationCity from '@material-ui/icons/LocationCity';*/
-import Search from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
-import '../../../static/stylebg.css'
+import Link from 'next/link';
+import MenuItem from "@material-ui/core/MenuItem";
+import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import fr from 'date-fns/locale/fr';
+registerLocale('fr', fr);
 
    
 const styles = theme => ({
@@ -23,7 +23,6 @@ const styles = theme => ({
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
-  marginTop: 64,
   top: '0%',
   left: '0%',
   zIndex: '2',
@@ -36,7 +35,6 @@ const styles = theme => ({
       backgroundAttachment: "fixed",
      display: 'none',
     },
-    marginTop: 64,
   /* Full height */
   height: '100vh!important',
   width: '100%!important',
@@ -53,7 +51,6 @@ const styles = theme => ({
       backgroundAttachment: "fixed",
      display: 'none',
     },
-    marginTop: 112,
     position: 'absolute',
     top: '0%',
     left: '0%',
@@ -74,7 +71,7 @@ const styles = theme => ({
     borderRadius: '10px',
     boxShadow: '6px 6px 5px -6px black',
     padding:'2%',
-    minHeight:'580px', 
+    minHeight:'520px',
     bottom:50, 
     marginTop:-10,
 
@@ -131,12 +128,12 @@ const styles = theme => ({
       top: '50%',
     },
     [theme.breakpoints.up('lg')]: { // large: 1280px or larger
-      width: '30%',
+      width: '40%',
       top: '50%',
       left: '75%',
     },
     [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
-      width: '30%',
+      width: '40%',
       top: '50%',
       left: '75%',
     },
@@ -163,7 +160,7 @@ const styles = theme => ({
     color: '#505050!important',
     textAlign: 'left',
     width:'100%',
-    fontSize: '30px!important',
+    fontSize: '28px!important',
     fontFamily: 'Helvetica',
     letterSpacing: '-1px',
     lineHeight: '39px!important',
@@ -183,64 +180,225 @@ const styles = theme => ({
     padding:15,
     borderRadius:10,
     border:'0px solid transparent',
+    '&:hover': {
+      backgroundColor: 'darkgray'
+    }
 
   },
+  paper: {
+    zIndex:'99999',
+    position: 'fixed',
+    width: 400,
+    backgroundColor: 'white',
+    boxShadow: '0 0 7px black',
+    padding: 'auto',
+    top: '25%',
+    left: '25%',
+    transform: 'translate(50%, 50%)',
+  }
 });
 
-const Homeheader = (props) => {
-  const { classes } = props;
+const Input2 = ({value,  onClick }) => (
+    <Button value={value} color={"inherit"} variant={"outlined"} style={{color:"gray"}} className="example-custom-input" onClick={onClick}>
+      {value}
+    </Button>
 
-  return (
-    <Fragment>
-      <div className={classes.headerimg}></div>
-      <div className={classes.headerhomevid}>
-        <video id="background-video" loop autoPlay muted playsinline style={{width: '100%'}}>
-          <source src="../../../static/bgmyalfredlight.mp4" type="video/mp4" />
-          <source src="../../../static/bgmyalfredlight.mp4" type="video/ogg" />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-      <div className={classes.headeroverlay}></div>
-      <div className={classes.headerhome}>
-        <Grid container>
-          <Grid item xs={12}>
-          <Typography><h3 className={classes.homeform}>Et si vous pouviez réserver n'importe quel service immediatement ?</h3></Typography>
-          </Grid>
-        <Grid item xs={12}  style={{ width:'100%',}}>
-        <form className={classes.formlabel} style={{ width:'100%',}} >
-        <div className={classes.selecthomecategory} style={{ width:'100%', }}>
-          <Selecthome  />
-        </div>
-        <div className={classes.pickerhomelocation}>
-          <Grid container alignItems="center">
-            <Grid item className={classes.pickerhomelocation}>
-              <TextField
-                disabled
-                id="standard-disabled"
-                defaultValue="Rouen, FR"
-                style={{textAlign: "center", width: "100%",
-                borderRadius:'3px',
-                padding:10,}}
-                margin="normal"
-                variant="outlined"
-                label="Lieu"
-              />
-            </Grid>
-            </Grid>
+);
+
+class Homeheader extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      service: '',
+      place: '',
+      date: Date.now(),
+      hour: Date.now(),
+      popopen: false,
+    };
+  }
+
+  handleClick1 =() => {
+    this.setState({ popopen: true });
+  };
+
+  handleClose =() =>{
+    this.setState({ popopen: false });
+  }
+
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  render() {
+    const {classes} = this.props;
+    const {popopen} = this.state;
+
+    return (
+        <Fragment>
+          <div className={classes.headerimg}></div>
+          <div className={classes.headerhomevid}>
+            <video id="background-video" loop autoPlay muted playsInline style={{width: '100%'}}>
+              <source src="../../../static/newVideoLight.mp4" type="video/mp4"/>
+              <source src="../../../static/newVideoLight.mp4" type="video/ogg"/>
+              Your browser does not support the video tag.
+            </video>
           </div>
-        
-        <Pickerhome />
-        <Button variant="contained" color={'primary'} className={classes.button}>
-        Rechercher
-      </Button>
-        </form>
-        </Grid>
-        </Grid>
-        
-      </div>
-    </Fragment>
-  );
-};
+          <div className={classes.headeroverlay}></div>
+          <div className={classes.headerhome} onClick={()=>this.handleClick1()}>
+            <Grid container>
+              <Grid item xs={12}>
+                <h3 className={classes.homeform} style={{marginTop:0}}>Et si vous pouviez réserver n'importe quel service immédiatement ?</h3>
+              </Grid>
+              <Grid item xs={12} style={{width: '100%',}}>
+
+                <Grid container alignItems="center">
+                  <Grid item className={classes.pickerhomelocation}>
+                  <TextField
+                      id="outlined-select-currency"
+                      select
+                      label="Quel service ?"
+                      value={this.state.service}
+                      onChange={this.onChange}
+                      margin="normal"
+                      variant="outlined"
+                      style={{width:'100%'}}
+                      disabled={true}
+                  >
+
+                    <MenuItem value=''>
+                      Service
+                    </MenuItem>
+
+                  </TextField>
+                  </Grid>
+                </Grid>
+
+
+                  <Grid container alignItems="center">
+                    <Grid item className={classes.pickerhomelocation}>
+                      <TextField
+                          label="Lieu"
+                          value={this.state.place}
+                          onChange={this.onChange}
+                          margin="normal"
+                          variant="outlined"
+                          style={{width:'100%'}}
+                          disabled={true}
+                      />
+                    </Grid>
+                  </Grid>
+
+
+                <Grid container style={{marginTop:20}}>
+                  <Grid item xs={6}>
+                    <Grid container style={{alignItems:"center"}}>
+                      <Grid item xs={2}>
+                    <p style={{color:"gray"}}>Le</p>
+                      </Grid>
+                      <Grid item xs={10}>
+                    <DatePicker
+                        selected={this.state.date}
+                        onChange={(date)=>this.setState({date:date})}
+                        customInput={<Input2 />}
+                        locale='fr'
+                        showMonthDropdown
+                        dateFormat="dd/MM/yyyy"
+                        disabled
+
+
+                    />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+
+                  <Grid item xs={6} >
+                    <Grid container style={{alignItems:"center"}}>
+                      <Grid item xs={2}>
+                        <p style={{color:"gray"}}>À</p>
+                      </Grid>
+                      <Grid item xs={10}>
+                        <DatePicker
+                            selected={this.state.hour}
+                            onChange={(date)=>this.setState({hour:date})}
+                            customInput={<Input2 />}
+                            showTimeSelect
+                            showTimeSelectOnly
+                            timeIntervals={15}
+                            timeCaption="Heure"
+                            dateFormat="HH:mm"
+                            locale='fr'
+                            disabled
+
+
+
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Button  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
+                  Rechercher
+                </Button>
+
+              </Grid>
+            </Grid>
+
+          </div>
+
+          <div style={{textAlign: 'left'}} className={classes.headerhome2}>
+            <br/>
+            <h2 style={{
+              fontWeight: 'bold',
+              textAlign: 'left',
+              fontSize: '2rem',
+              textShadow: '0px 0.5px 2px #696969'
+            }}>Vous avez du talent, de l’or entre vos mains. Qu’attendez-vous pour le mettre à profit ? </h2>
+            <hr style={{
+              float: 'left',
+              width: '60px',
+              border: 'none',
+              height: '1px',
+              backgroundColor: 'white',
+              boxShadow: '1px 1px 1px #696969'
+            }}/>
+            <br/><br/>
+            <h4 style={{
+              fontWeight: 'bold',
+              textAlign: 'left',
+              fontSize: '1.5rem',
+              textShadow: '0px 0.5px 2px #696969'
+            }}>
+              Créez dès aujourd’hui votre boutique, proposez vos services Et dans 1 mois les clients vous supplieront et vos banquiers vous applaudiront
+            </h4>
+          </div>
+
+
+          {popopen ? <React.Fragment>
+                <div className={classes.paper}>
+                  <Grid container>
+                    <Grid item xs={4} style={{height: '1px'}}></Grid>
+                    <Grid item xs={4} style={{height: '35px'}}><img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110,}} alt={'Logo Bleu'}/></Grid>
+                    <Grid item xs={3} style={{height: '1px'}}></Grid>
+                    <Grid item xs={1} style={{height: '4px', zIndex: '10'}}>
+                      <p onClick={this.handleClose} style={{color: '#F8727F', cursor: 'pointer'}}>x</p>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <h2 style={{textAlign: 'center',color: 'rgba(84,89,95,0.95)',letterSpacing: -2, fontWeight: 'bold',}}>Les réservations ne seront disponible qu'à partir d'octobre</h2>
+                    </Grid>
+                    <Grid item xs={5}></Grid>
+                    <Grid item xs={2} style={{marginTop: '-10px'}}><hr className={classes.grosHR}/></Grid>
+                    <Grid item xs={5}></Grid>
+                  </Grid>
+                </div>
+
+                <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '9999px', height: '9999px', zIndex: '99998'}}></div>
+              </React.Fragment>
+              : null}
+        </Fragment>
+    );
+  };
+}
 
 Homeheader.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,

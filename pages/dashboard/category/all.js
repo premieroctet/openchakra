@@ -22,7 +22,7 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import HomeIcon from '@material-ui/icons/Home';
-import "../../../static/cssdashboard.css"
+
 
 const {config} = require('../../../config/config');
 const url = config.apiUrl;

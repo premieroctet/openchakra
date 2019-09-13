@@ -11,7 +11,7 @@ import Link from 'next/link';
 import Layout from '../hoc/Layout/Layout';
 import IconButton from '@material-ui/core/IconButton';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
-
+import { toast } from 'react-toastify';
 import axios from "axios";
 
 
@@ -92,7 +92,7 @@ class addPicture extends React.Component {
         };
         axios.post(url+"myAlfred/api/users/profile/picture",formData,config)
             .then((response) => {
-                alert("Photo ajouté");
+                toast.info('Photo de profil ajoutée');
                 Router.push({pathname: '/addPhone'})
 
 
@@ -117,7 +117,7 @@ class addPicture extends React.Component {
                         </div>
 
                             <div className={classes.newContainer}>
-                                <Typography>Votre photo apparaîtra sur votre page de profil,. Assurez-vous d’utiliser une photo
+                                <Typography>Votre photo apparaîtra sur votre page de profil. Assurez-vous d’utiliser une photo
                                     qui montre clairement votre visage et qui ne contient pas d’information personnelles ou sensibles.</Typography>
                             <form onSubmit={this.onSubmit}>
                                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 25}}>

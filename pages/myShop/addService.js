@@ -17,12 +17,10 @@ import Checkbox from "@material-ui/core/Checkbox";
 import AlgoliaPlaces from 'algolia-places-react';
 import InputRange from 'react-input-range';
 import moment from "moment";
-import EditIcon from '@material-ui/icons/EditOutlined';
-import DeleteIcon from '@material-ui/icons/DeleteOutlined';
-import { Document,Page } from 'react-pdf'
 import { pdfjs } from 'react-pdf';
 import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
+import { toast } from 'react-toastify';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
@@ -53,7 +51,7 @@ class addService extends React.Component {
             service: {},
             prestations: [],
             equipments: [],
-            perimeter: '',
+            perimeter: 0,
             minimum_basket: '',
             description: '',
             level: '',
@@ -139,8 +137,66 @@ class addService extends React.Component {
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
-                this.setState({ city: user.billing_address.city, address: user.billing_address.address, zip_code: user.billing_address.zip_code,
-                                    country: user.billing_address.country, lat:user.billing_address.gps.lat, lng: user.billing_address.gps.lng})
+                if(user.is_alfred === false) {
+                    Router.push('/becomeAlfredForm');
+                } else {
+                    this.setState({ city: user.billing_address.city, address: user.billing_address.address, zip_code: user.billing_address.zip_code,
+                        country: user.billing_address.country, lat:user.billing_address.gps.lat, lng: user.billing_address.gps.lng});
+
+                    axios.get(url+`myAlfred/api/service/${id}`)
+                        .then(response => {
+                            const data = response.data;
+                            this.setState({all_equipments: data.equipments,service: data});
+
+                            data.equipments.forEach(h => {
+                                this.setState({[h.label]:false})
+
+                            });
+
+
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+
+                    axios.get(url+`myAlfred/api/prestation/${id}`)
+                        .then(result => {
+                            let prestations = result.data;
+                            this.setState({all_prestations: prestations});
+                            let arrayFilter =  [];
+
+                            prestations.forEach(e => {
+                                arrayFilter.push(e.filter_presentation);
+                                let uniqFilter = _.uniqBy(arrayFilter,'label');
+
+                                this.setState({uniqFilter: uniqFilter});
+                            });
+                            prestations.forEach(a => {
+                                this.setState({[a.label]:false});
+                                this.setState({[a.label+'price']: ''});
+                                this.setState({[a.label+'billing']: ''});
+
+                            })
+
+
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+
+
+
+
+                    axios.get(url+`myAlfred/api/options/all`)
+                        .then(result => {
+                            let options = result.data;
+                            this.setState({all_options: options});
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                }
+
 
 
 
@@ -154,58 +210,7 @@ class addService extends React.Component {
                 }
             );
 
-        axios.get(url+`myAlfred/api/service/${id}`)
-            .then(response => {
-                const data = response.data;
-                this.setState({all_equipments: data.equipments,service: data});
 
-                data.equipments.forEach(h => {
-                    this.setState({[h.label]:false})
-
-                });
-
-
-            })
-            .catch(error => {
-                console.log(error);
-            });
-
-        axios.get(url+`myAlfred/api/prestation/${id}`)
-            .then(result => {
-                let prestations = result.data;
-                this.setState({all_prestations: prestations});
-                let arrayFilter =  [];
-
-                prestations.forEach(e => {
-                    arrayFilter.push(e.filter_presentation);
-                    let uniqFilter = _.uniqBy(arrayFilter,'label');
-
-                    this.setState({uniqFilter: uniqFilter});
-                });
-                prestations.forEach(a => {
-                    this.setState({[a.label]:false});
-                    this.setState({[a.label+'price']: ''});
-                    this.setState({[a.label+'billing']: ''});
-
-                })
-
-
-            })
-            .catch(error => {
-                console.log(error);
-            });
-
-
-
-
-        axios.get(url+`myAlfred/api/options/all`)
-            .then(result => {
-                let options = result.data;
-                this.setState({all_options: options});
-            })
-            .catch(error => {
-                console.log(error);
-            });
 
 
     }
@@ -369,7 +374,7 @@ class addService extends React.Component {
         axios.post(`${url}myAlfred/api/serviceUser/myShop/add`,formData)
             .then(res => {
 
-                alert('Service ajouté avec succès');
+                toast.info('Service ajouté avec succès');
                 Router.push({pathname:'/myShop/services'})
             })
             .catch(err => {
@@ -420,9 +425,9 @@ class addService extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
 
-                                {uniqFilter.map(a => {
+                                {uniqFilter.map((a,index) => {
                                     return (
-                                        <Grid container>
+                                        <Grid container key={index}>
                                             <Grid item xs={12}>
                                                 <h4>{a.label}</h4>
                                             </Grid>
@@ -447,6 +452,7 @@ class addService extends React.Component {
 
                                                                         }
                                                                         color="primary"
+                                                                        value={'value'}
                                                                     />
                                                                 }
                                                                 label={z.label}
@@ -594,7 +600,7 @@ class addService extends React.Component {
                                             <Checkbox
                                                 checked={this.state.otherOptions}
                                                 onChange={()=>this.setState({otherOptions: !this.state.otherOptions})}
-                                                value={this.state.otherOptions}
+                                                value={'otherOptions'}
                                                 color="primary"
                                             />
                                         }
@@ -699,8 +705,8 @@ class addService extends React.Component {
                             {all_equipments.map((e,index)=> {
                                 if(this.state[e.label]){
                                     return(
-                                        <Grid item xs={3}>
-                                            <label style={{cursor: 'pointer'}} key={index} onClick={() => {
+                                        <Grid item xs={3} key={index}>
+                                            <label style={{cursor: 'pointer'}} onClick={() => {
                                                 this.setState({[e.label]: false});
                                                 let array = [...this.state.equipments]; // make a separate copy of the array
                                                 let index = array.indexOf(e._id);
@@ -726,6 +732,7 @@ class addService extends React.Component {
                                                     this.setState({[e.label]: false})
 
                                                 }
+                                                value={'equipment'}
                                             />
 
                                         </Grid>)
@@ -754,6 +761,7 @@ class addService extends React.Component {
                                                     this.setState({[e.label]: true})
 
                                                 }
+                                                value={'equipment2'}
                                             />
 
 
@@ -919,7 +927,7 @@ class addService extends React.Component {
                                         formatLabel={value => `${value}km`}
                                         step={5}
                                         maxValue={500}
-                                        minValue={5}
+                                        minValue={0}
                                         value={this.state.perimeter}
                                         onChange={value =>this.setState({perimeter: value})}
                                     />
@@ -1067,8 +1075,8 @@ class addService extends React.Component {
                                                 name={'year_diploma'}
                                                 onChange={this.onChange2}
                                             >
-                                                {dates.map(e => (
-                                                    <MenuItem value={e}>{e}</MenuItem>
+                                                {dates.map((e,index) => (
+                                                    <MenuItem key={index} value={e}>{e}</MenuItem>
                                                 ))}
                                             </TextField>
 
@@ -1080,7 +1088,7 @@ class addService extends React.Component {
                                                 <p style={{cursor:"pointer",color:'black'}}>Joindre mon diplôme</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
                                                        onChange={this.onChangeDiploma}
-                                                       className="form-control"
+                                                       className="form-control" accept={'image/*,.pdf'}
                                                 />
                                             </label>
                                             <span>{this.state.file_diploma !== null ? this.state.file_diploma.name : null}</span>
@@ -1129,8 +1137,8 @@ class addService extends React.Component {
                                                 name={'year_certification'}
                                                 onChange={this.onChange2}
                                             >
-                                                {dates.map(e => (
-                                                    <MenuItem value={e}>{e}</MenuItem>
+                                                {dates.map((e,index) => (
+                                                    <MenuItem key={index} value={e}>{e}</MenuItem>
                                                 ))}
                                             </TextField>
 
@@ -1142,7 +1150,7 @@ class addService extends React.Component {
                                                 <p style={{cursor:"pointer",color:'black'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
                                                        onChange={this.onChangeCertification}
-                                                       className="form-control"
+                                                       className="form-control" accept={'image/*,.pdf'}
                                                 />
                                             </label>
                                             <span>{this.state.file_certification !== null ? this.state.file_certification.name : null}</span>

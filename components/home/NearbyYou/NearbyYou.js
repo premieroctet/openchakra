@@ -6,11 +6,12 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import NearbyYouCard from './NearbyYou/NearbyYouCard';
 import axios from 'axios';
-import "../../../static/stylesfonts.css"
+
 
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
+
 
 const styles = theme => ({
   container: {
@@ -59,7 +60,7 @@ const styles = theme => ({
   },
   grosHR: {
     height: '10px',
-    backgroundColor: '#6ec1e4',
+    backgroundColor: '#2FBCD3',
   },
 });
 
@@ -75,17 +76,7 @@ class nearbyYou extends React.Component{
 
   componentDidMount() {
     const token = localStorage.getItem('token');
-    if (token) {
-      this.setState({logged:true});
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      axios.get(url+'myAlfred/api/serviceUser/near')
-          .then(response => {
-            let service = response.data;
-
-            this.setState({service:service})
-          })
-    } else {
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      //axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.get(url+'myAlfred/api/serviceUser/home')
           .then(response => {
             let service = response.data;
@@ -93,20 +84,13 @@ class nearbyYou extends React.Component{
             this.setState({service:service})
           })
     }
-  }
 
   render() {
 
 
     const {classes} = this.props;
     const {service} = this.state;
-    const logged = this.state.logged;
-    const near = <Typography variant="h5" className={classes.textBox}>
-      Cela se passe près de chez vous
-    </Typography>;
-    const all = <Typography variant="h5" className={classes.textBox}>
-    
-    </Typography>;
+
     const cards = service.map(e => (
         <Grid item xs={12} sm={6} md={4} key={e._id}>
           <NearbyYouCard img={e.service.picture} title={e.service.label} alfred={e.user.firstname}

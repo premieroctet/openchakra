@@ -4,10 +4,6 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -22,7 +18,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Card from "@material-ui/core/Card";
 import { FieldArray } from "formik";
 import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import fr from "date-fns/locale/fr";
 import { toast } from "react-toastify";
 registerLocale("fr", fr);
@@ -311,7 +306,7 @@ class Availability extends React.Component {
           .monday_all_service
       };
       this.props.formikCtx.values.servicesAvailability.monday_event.push(obj);
-      alert("Créneau lundi ajouté, vous pouvez en ajouter d'autre");
+      toast.info("Créneau ajouté");
 
       //this.setState({monday_begin: '',monday_end: '',monday_service: null,monday_all_service: false})
       this.props.formikCtx.setFieldValue(
@@ -359,7 +354,7 @@ class Availability extends React.Component {
           .tuesday_all_service
       };
       this.props.formikCtx.values.servicesAvailability.tuesday_event.push(obj);
-      alert("Créneau mardi ajouté, vous pouvez en ajouter d'autre");
+      toast.info("Créneau ajouté");
 
       //this.setState({tuesday_begin: '',tuesday_end: '',tuesday_service: null,tuesday_all_service: false})
       this.props.formikCtx.setFieldValue(
@@ -414,7 +409,7 @@ class Availability extends React.Component {
         obj
       );
 
-      alert("Créneau mercredi ajouté, vous pouvez en ajouter d'autre");
+      toast.info("Créneau ajouté");
 
       //this.setState({wednesday_begin: '',wednesday_end: '',wednesday_service: null,wednesday_all_service: false})
       this.props.formikCtx.setFieldValue(
@@ -466,7 +461,7 @@ class Availability extends React.Component {
           .thursday_all_service
       };
       this.props.formikCtx.values.servicesAvailability.thursday_event.push(obj);
-      alert("Créneau jeudi ajouté, vous pouvez en ajouter d'autre");
+      toast.info("Créneau ajouté");
 
       //this.setState({thursday_begin: '',thursday_end: '',thursday_service: null,thursday_all_service: false})
       this.props.formikCtx.setFieldValue(
@@ -517,7 +512,7 @@ class Availability extends React.Component {
           .friday_all_service
       };
       this.props.formikCtx.values.servicesAvailability.friday_event.push(obj);
-      alert("Créneau vendredi ajouté, vous pouvez en ajouter d'autre");
+      toast.info("Créneau ajouté");
 
       //this.setState({friday_begin: '',friday_end: '',friday_service: null,friday_all_service: false})
       this.props.formikCtx.setFieldValue(
@@ -566,7 +561,7 @@ class Availability extends React.Component {
           .saturday_all_service
       };
       this.props.formikCtx.values.servicesAvailability.saturday_event.push(obj);
-      alert("Créneau samedi ajouté, vous pouvez en ajouter d'autre");
+      toast.info("Créneau ajouté");
 
       //this.setState({saturday_begin: '',saturday_end: '',saturday_service: null,saturday_all_service: false})
       this.props.formikCtx.setFieldValue(
@@ -617,7 +612,7 @@ class Availability extends React.Component {
           .sunday_all_service
       };
       this.props.formikCtx.values.servicesAvailability.sunday_event.push(obj);
-      alert("Créneau dimanche ajouté, vous pouvez en ajouter d'autre");
+      toast.info("Créneau ajouté");
 
       //this.setState({sunday_begin: '',sunday_end: '',sunday_service: null,sunday_all_service: false})
       this.props.formikCtx.setFieldValue(
@@ -1021,6 +1016,7 @@ class Availability extends React.Component {
                                             onClick={() => {
                                               arrayHelper.remove(index);
                                             }}
+                                            style={{color:"white"}}
                                           >
                                             Supprimer
                                           </Button>
@@ -1235,6 +1231,7 @@ class Availability extends React.Component {
                                             onClick={() => {
                                               arrayHelper.remove(index);
                                             }}
+                                            style={{color:"white"}}
                                           >
                                             Supprimer
                                           </Button>
@@ -1419,6 +1416,7 @@ class Availability extends React.Component {
                                             onClick={() => {
                                               arrayHelper.remove(index);
                                             }}
+                                            style={{color:"white"}}
                                           >
                                             Supprimer
                                           </Button>
@@ -1604,6 +1602,7 @@ class Availability extends React.Component {
                                             onClick={() => {
                                               arrayHelper.remove(index);
                                             }}
+                                            style={{color:"white"}}
                                           >
                                             Supprimer
                                           </Button>
@@ -1787,6 +1786,7 @@ class Availability extends React.Component {
                                             onClick={() => {
                                               arrayHelper.remove(index);
                                             }}
+                                            style={{color:"white"}}
                                           >
                                             Supprimer
                                           </Button>
@@ -1968,6 +1968,7 @@ class Availability extends React.Component {
                                             onClick={() => {
                                               arrayHelper.remove(index);
                                             }}
+                                            style={{color:"white"}}
                                           >
                                             Supprimer
                                           </Button>
@@ -2151,6 +2152,7 @@ class Availability extends React.Component {
                                             onClick={() => {
                                               arrayHelper.remove(index);
                                             }}
+                                            style={{color:"white"}}
                                           >
                                             Supprimer
                                           </Button>

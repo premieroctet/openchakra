@@ -24,7 +24,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import PropTypes from "prop-types";
 import HomeIcon from '@material-ui/icons/Home';
-import "../../../static/cssdashboard.css"
+
 
 const {config} = require('../../../config/config');
 const url = config.apiUrl;
@@ -112,7 +112,7 @@ class all extends React.Component {
         this.state = {
             prestation: [],
             page: 0,
-            rowsPerPage: 10,
+            rowsPerPage: 100,
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);

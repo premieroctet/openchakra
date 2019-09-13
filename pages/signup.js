@@ -7,34 +7,25 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
-import Checkboxes from '../components/Checkboxes/checkboxes';
-//import Selectgenre from '../components/Select/select';
-//import Datenaissance from '../components/Datenaissance/datepicker';
 import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
 import axios from "axios";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AlgoliaPlaces from "algolia-places-react";
 import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
-import Birthday from '@material-ui/icons/CakeOutlined'
+import Footer from '../hoc/Layout/Footer/Footer';
+import { toast } from 'react-toastify';
 registerLocale('fr', fr);
 
-import Footer from '../hoc/Layout/Footer/Footer';
 
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
   fullContainer: {
-    backgroundImage: 'url(../static/bailey-zindel-396399-unsplash.jpg)',
+    backgroundImage: 'url(../static/bailey-zindel-396399-unsplash-min.jpg)',
     filter: 'blur(5px)',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
@@ -106,12 +97,11 @@ const styles = theme => ({
 
 });
 
-/*const Input2 = ({value,  onClick }) => (
-    <Button value={value} color={"primary"} variant={"contained"} style={{color:"white"}} className="example-custom-input" onClick={onClick}>
-      {value}
-    </Button>
+const Input2 = ({value,  onClick }) => (
+    <TextField value={value} placeholder={'jj//mm/aaaa'} style={{cursor:"pointer"}} color={"primary"} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
 
-);*/
+
+);
 
 class signup extends React.Component {
       constructor(props) {
@@ -134,8 +124,17 @@ class signup extends React.Component {
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeAddress = this.onChangeAddress.bind(this);
+
       }
 
+      componentDidMount() {
+        document.body.style.overflow = 'auto';
+        const token = localStorage.getItem('token');
+        if(token !== null) {
+          toast.warn('Vous êtes déjà inscrit');
+          Router.push('/')
+        }
+      }
 
 
   onChange = e => {
@@ -180,6 +179,7 @@ class signup extends React.Component {
         axios
             .post(url+'myAlfred/api/users/register', newUser)
             .then(res => {
+              toast.info('Inscription réussi');
               axios.post(url+'myAlfred/api/users/login',{username, password})
                   .then(response => {
                     const {token} = response.data;
@@ -223,7 +223,6 @@ class signup extends React.Component {
                       <Grid container>
                         <Grid item style={{width: '100%'}}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Email"
                               placeholder="Email"
                               margin="normal"
@@ -255,7 +254,6 @@ class signup extends React.Component {
                         </Grid>
                         <Grid item style={{width: '48%'}}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Nom"
                               placeholder="Nom"
                               margin="normal"
@@ -271,7 +269,7 @@ class signup extends React.Component {
                         </Grid>
                       </Grid>
                       <Grid container style={{marginTop: 15}}>
-                        <Typography style={{fontSize: '1.2rem', width:'100%'}}>Adresse</Typography>
+                        <Typography style={{fontSize: '1.2rem', width:'100%'}}>Adresse postale</Typography>
                         <p>Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous proposer<br/>
                         ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</p>
                         <Grid item style={{width: '100%'}}> <AlgoliaPlaces
@@ -293,9 +291,8 @@ class signup extends React.Component {
                         /></Grid>
                         <Grid item style={{width: '100%'}}>
                           <TextField
-                              id="standard-with-placeholder"
-                              label="Adresse"
-                              placeholder="Adresse"
+                              label="Rue"
+                              placeholder="Rue"
                               margin="normal"
                               variant="outlined"
                               style={{ width: '100%' }}
@@ -309,7 +306,6 @@ class signup extends React.Component {
                         </Grid>
                         <Grid item style={{width: '25%', marginRight: 20}}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Code postal"
                               placeholder="Code postal"
                               margin="normal"
@@ -325,7 +321,6 @@ class signup extends React.Component {
                         </Grid>
                         <Grid item style={{width: '71%'}}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Ville"
                               placeholder="Ville"
                               margin="normal"
@@ -341,7 +336,6 @@ class signup extends React.Component {
                         </Grid>
                         <Grid item className={classes.country}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Pays"
                               value={this.state.country}
                               name="country"
@@ -356,7 +350,6 @@ class signup extends React.Component {
                         </Grid>
                         <Grid item style={{width: '100%'}}>
                           <TextField
-                              id="standard-with-placeholder"
                               label="Créer un mot de passe"
                               placeholder="Créer un mot de passe"
                               margin="normal"
@@ -372,7 +365,7 @@ class signup extends React.Component {
                         </Grid>
                       </Grid>
                       <Typography style={{fontSize: '1.2rem', width:'100%', marginTop: 15}}>Date de naissance</Typography>
-                      <p>Pour vous inscrire, vous devez être agé d’au moins 16 ans. Les autres<br/>
+                      <p>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les autres<br/>
                         utilisateurs ne verront pas votre date de naissance.
                       </p>
                       <Grid item className={classes.datenaissance} style={{display:"flex",alignItems:"center"}}>
@@ -389,15 +382,16 @@ class signup extends React.Component {
                               shrink: true,
                             }}
                         />*/}
-                        <Birthday style={{marginRight:20}}/>
+                        {/*<Birthday style={{marginRight:20}}/>*/}
                         <DatePicker
                           selected={this.state.birthday}
                           onChange={(date)=>this.onChangeBirthday(date)}
-                          //customInput={<Input2 />}
+                          customInput={<Input2 />}
                           locale='fr'
                           placeholderText="jj/mm/aaaa"
                           showYearDropdown
                           showMonthDropdown
+                          maxDate={new Date()}
                           dateFormat="dd/MM/yyyy"
 
 

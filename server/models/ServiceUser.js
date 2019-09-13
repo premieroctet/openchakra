@@ -102,7 +102,11 @@ const ServiceUserSchema = new Schema({
     },
     level: {
         type: String
-    }
+    },
+    number_of_views: {
+        type: Number,
+        default : 0
+    },
 });
 
 module.exports = ServiceUser = mongoose.model('serviceUser',ServiceUserSchema);

@@ -13,10 +13,9 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
-import "../../../static/stylesfonts.css";
-import "../../../static/style1.css";
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
-const url = "https://myalfred.hausdivision.com/";
 
 const styles = theme => ({
   container: {
@@ -98,7 +97,7 @@ const styles = theme => ({
   },
   grosHR: {
     height: '10px',
-    backgroundColor: '#6ec1e4',
+    backgroundColor: '#2FBCD3',
   },
 
 });
@@ -119,23 +118,36 @@ class Verypractical extends React.Component {
     super(props);
     this.state = {
       service: [],
+      tags:{},
     }
   }
 
   componentDidMount() {
 
-    axios.get(url+'myAlfred/api/service/all')
+    axios.get(url + 'myAlfred/api/tags/all')
         .then(response => {
-          let service = response.data;
+              let data = response.data;
+              let random = data[Math.floor(Math.random() * data.length)];
+              this.setState({tags:random});
+              axios.get(url + 'myAlfred/api/service/all/tags/' + random._id)
+                  .then(res => {
+                    let service = res.data;
 
-          this.setState({service: service})
+                    this.setState({service: service})
 
-        })
+                  })
+                  .catch(err => console.log(err))
+            }
+        )
+        .catch(error => {
+          console.log(error)
+        });
   }
 
   render() {
     const {classes} = this.props;
     const {service} = this.state;
+    const {tags} = this.state;
     const resdata = shuffleArray(service);
     const services = resdata.slice(0, 12).map(e => (
         <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
@@ -172,7 +184,7 @@ class Verypractical extends React.Component {
             <Grid item xs={8}>
               <div>
                 <Typography variant="h4" className={classes.textBox1}>
-                  Bien pratique !
+                  {tags.title}
                 </Typography>
                 <Grid container>
                   <Grid item xs={5}></Grid>
@@ -180,8 +192,7 @@ class Verypractical extends React.Component {
                   <Grid item xs={5}></Grid>
                 </Grid>
                 <Typography className={classes.textBox}>
-                  Petits tracas du quotidien, imprévus, 
-                  nos Alfred près de chez vous sont là pour vous prêter main forte et vous faciliter la vie ! 
+                  {tags.description}
                 </Typography>
               </div>
             </Grid>

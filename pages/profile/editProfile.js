@@ -8,18 +8,10 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import {FormLabel} from "@material-ui/core";
 import Select2 from 'react-select';
 import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import fr from 'date-fns/locale/fr';
-import Birthday from '@material-ui/icons/CakeOutlined'
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
 registerLocale('fr', fr);
@@ -34,9 +26,8 @@ const { config } = require('../../config/config');
 const url = config.apiUrl;
 
 const ExampleCustomInput = ({ value,onClick }) => (
-    <Button variant={"outlined"} className="example-custom-input" onClick={onClick}>
-        {value}
-    </Button>
+    <TextField value={value} label={'Date de naissance'} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
+
 );
 
 const styles = theme => ({
@@ -128,6 +119,7 @@ class editProfile extends React.Component {
     }
 
     componentDidMount() {
+        document.body.style.overflow = 'auto';
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
@@ -241,12 +233,13 @@ class editProfile extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/myAddresses'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mes adresses de prestations
+                                                Mes adresses de <br/>
+                                                prestations
                                             </a>
                                         </div>
                                     </Link>
@@ -304,7 +297,7 @@ class editProfile extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
+                                {/*<Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
@@ -325,9 +318,9 @@ class editProfile extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
+                                {/*<Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/recommandations'}>
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
@@ -347,7 +340,7 @@ class editProfile extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
 
                             </Grid>
@@ -366,11 +359,13 @@ class editProfile extends React.Component {
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
-                                        value={user.firstname}
+                                        value={user.firstname || ''}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'firstname'}
                                         placeholder={'Prénom'}
+                                        variant={"outlined"}
+                                        label={'Prénom'}
 
                                     />
 
@@ -380,11 +375,13 @@ class editProfile extends React.Component {
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
-                                        value={user.name}
+                                        value={user.name || ''}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'name'}
                                         placeholder={'Nom'}
+                                        variant={"outlined"}
+                                        label={'Nom'}
 
                                     />
 
@@ -392,36 +389,41 @@ class editProfile extends React.Component {
 
                                 <Grid item xs={12} style={{marginTop: 20}}>
 
-                                    <InputLabel style={{color: 'black'}}>A propos de moi</InputLabel>
+                                    {/*<InputLabel style={{color: 'black'}}>A propos de moi</InputLabel>*/}
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
-                                        value={user.description}
+                                        value={user.description || ''}
                                         multiline
                                         rows={5}
                                         variant={'outlined'}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'description'}
+                                        label={'A propos de moi'}
 
                                     />
 
                                 </Grid>
                             </Grid>
                             <Grid container style={{maxWidth: '60%'}}>
+                                <Grid item xs={12}>
                                 <h2 style={{fontWeight: '100'}}>Informations personnelles</h2>
-                                <Grid item xs={12} style={{marginTop: 10}}>
+                                </Grid>
+                                <Grid container style={{marginTop:10}}>
+                                <Grid item xs={5}>
 
                                     <TextField
                                         id="standard-name"
                                         style={{width: '100%'}}
-                                        value={user.gender}
+                                        value={user.gender || ''}
                                         select
+                                        variant={"outlined"}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'gender'}
                                         placeholder={'Sexe'}
-                                        helperText={'Sexe'}
+                                        label={'Sexe'}
 
                                     >
 
@@ -434,20 +436,8 @@ class editProfile extends React.Component {
                                     </TextField>
 
                                 </Grid>
-                                <Grid item xs={12} style={{marginTop: 10,display:"flex",alignItems:"center"}}>
-                                    {/*<TextField
-                                        id="date"
-                                        type="date"
-                                        name="birthday"
-                                        style={{width: '100%'}}
-                                        className={classes.textField}
-                                        value={moment(user.birthday).format('YYYY-MM-DD')}
-                                        onChange={this.onChange}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                    />*/}
-                                    <Birthday style={{marginRight:20}}/>
+                                    <Grid item xs={2}></Grid>
+                                <Grid item xs={5} style={{marginTop:15}}>
                                     <DatePicker
                                         selected={Date.parse(birthday)}
                                         onChange={(date)=>this.onChangeBirthday(date)}
@@ -457,30 +447,36 @@ class editProfile extends React.Component {
                                         showYearDropdown
                                         showMonthDropdown
                                         dateFormat="dd/MM/yyyy"
-                                        style={{padding:10,fontSize: '0.9rem'}}
+                                        style={{fontSize: '0.9rem'}}
+                                        maxDate={new Date()}
                                     />
 
+                                </Grid>
                                 </Grid>
                                 <Grid item xs={12} style={{marginTop: 10}}>
                                     <TextField
                                         id="standard-name"
                                         style={{width: '100%'}}
-                                        value={user.email}
+                                        value={user.email || ''}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'email'}
                                         placeholder={'Email'}
+                                        variant={"outlined"}
+                                        label={'Adresse email'}
                                     />
                                 </Grid>
                                 <Grid item xs={12} style={{marginTop: 10}}>
                                     <TextField
                                         id="standard-name"
                                         style={{width: '100%'}}
-                                        value={user.phone}
+                                        value={user.phone || ''}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'phone'}
                                         placeholder={'Téléphone'}
+                                        variant={"outlined"}
+                                        label={'Téléphone'}
                                     />
                                 </Grid>
                             </Grid>
@@ -491,11 +487,13 @@ class editProfile extends React.Component {
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
-                                            value={user.diplomes}
+                                            value={user.diplomes || ''}
                                             onChange={this.onChange}
                                             margin="normal"
                                             name={'diplomes'}
                                             placeholder={'Diplomes'}
+                                            variant={"outlined"}
+                                            label={'Diplômes'}
 
                                         />
 
@@ -504,11 +502,13 @@ class editProfile extends React.Component {
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
-                                            value={user.school}
+                                            value={user.school || ''}
                                             onChange={this.onChange}
                                             margin="normal"
                                             name={'school'}
                                             placeholder={'Ecoles'}
+                                            variant={"outlined"}
+                                            label={'Ecoles'}
 
                                         />
                                     </Grid>
@@ -516,11 +516,13 @@ class editProfile extends React.Component {
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
-                                            value={user.job}
+                                            value={user.job || ''}
                                             onChange={this.onChange}
                                             margin="normal"
                                             name={'job'}
                                             placeholder={'Emploi'}
+                                            variant={"outlined"}
+                                            label={'Emploi'}
                                         />
                                     </Grid>
                                     <Grid item xs={12} style={{marginTop: 10}}>
@@ -533,9 +535,14 @@ class editProfile extends React.Component {
                                         value={this.state.selectedLanguages}
                                         onChange={this.handleChangeLanguages}
                                         options={options}
+                                        styles={{
+                                            menu: provided => ({ ...provided, zIndex: 9999 })
+                                        }}
                                         isMulti
                                         isSearchable
                                         closeMenuOnSelect={false}
+                                        placeholder={'Sélectionnez vos langues'}
+                                        noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                     />
                                             </Grid>
@@ -546,11 +553,13 @@ class editProfile extends React.Component {
                                         <TextField
                                             id="standard-name"
                                             style={{width: '100%'}}
-                                            value={user.emergency_phone}
+                                            value={user.emergency_phone || ''}
                                             onChange={this.onChange}
                                             margin="normal"
                                             name={'emergency_phone'}
                                             placeholder={'Numéro d\'urgence'}
+                                            variant={"outlined"}
+                                            label={'Numéro d\'urgence'}
                                         />
                                     </Grid>
                                 </Grid>
@@ -558,13 +567,18 @@ class editProfile extends React.Component {
                         </Grid>
 
                     </Grid>
-                    <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
-                    alignItems:"center",height:60}}>
-                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                style={{color: 'white',maxHeight:40,marginRight:20}}>
-                            Enregistrer
-                        </Button>
-                    </div>
+                    <Grid container style={{marginBottom:20}}>
+                        <Grid item xs={9}>
+                            <div style={{display:'flex',justifyContent:'flex-end',marginBottom: '-1.95%',width:'100%',bottom:0,
+                            alignItems:"center",height:60}}>
+                                <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
+                                style={{color: 'white',maxHeight:40,marginRight:55}}>
+                                    Enregistrer
+                                </Button>
+                            </div>
+                        </Grid>
+                        <Grid item xs={3}></Grid>
+                    </Grid>
                 </Layout>
                 <Footer/>
 

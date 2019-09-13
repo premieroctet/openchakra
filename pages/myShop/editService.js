@@ -23,6 +23,7 @@ import { Document,Page } from 'react-pdf'
 import { pdfjs } from 'react-pdf';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import Switch from "@material-ui/core/Switch";
+import { toast } from 'react-toastify';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
@@ -31,7 +32,6 @@ moment.locale('fr');
 
 
 const _ = require('lodash');
-const monggose = require('mongoose');
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
@@ -412,7 +412,7 @@ class editService extends React.Component {
                 ,description,level})
                 .then(res => {
 
-                    alert('Service modifié avec succès');
+                    toast.info('Service modifié avec succès');
                     Router.push({pathname:'/myShop/services'})
                 })
                 .catch(err => {
@@ -443,7 +443,7 @@ class editService extends React.Component {
 
             axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+id,formData)
                 .then(() => {
-                    alert('Diplome modifié')
+                    toast.info('Diplome modifié')
                 })
                 .catch(err => console.log(err))
 
@@ -461,7 +461,7 @@ class editService extends React.Component {
 
                 axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+id,formData)
                     .then(() => {
-                        alert('Diplome ajouté');
+                        toast.info('Diplome ajouté');
                         this.componentDidMount();
                         this.setState({haveDiploma: true})
                     })
@@ -473,7 +473,7 @@ class editService extends React.Component {
         const id = this.props.service_id;
         axios.delete(url+'myAlfred/api/serviceUser/delete/diploma/'+id)
             .then(() => {
-                alert('Diplôme supprimé');
+                toast.error('Diplôme supprimé');
                 this.setState({haveDiploma: false,editDiploma: false})
             })
             .catch(err => console.log(err))
@@ -498,7 +498,7 @@ class editService extends React.Component {
 
             axios.post(url+'myAlfred/api/serviceUser/addCertification/'+id,formData)
                 .then(() => {
-                    alert('Certification modifiée')
+                    toast.info('Certification modifiée')
                 })
                 .catch(err => console.log(err))
 
@@ -516,7 +516,7 @@ class editService extends React.Component {
 
             axios.post(url+'myAlfred/api/serviceUser/addCertification/'+id,formData)
                 .then(() => {
-                    alert('Certification ajoutée');
+                    toast.info('Certification ajoutée');
                     this.componentDidMount();
                     this.setState({haveCertification: true})
                 })
@@ -528,7 +528,7 @@ class editService extends React.Component {
         const id = this.props.service_id;
         axios.delete(url+'myAlfred/api/serviceUser/delete/certification/'+id)
             .then(() => {
-                alert('Certification supprimée');
+                toast.error('Certification supprimée');
                 this.setState({haveCertification: false,editCertification: false})
             })
             .catch(err => console.log(err))
@@ -1286,7 +1286,7 @@ class editService extends React.Component {
                                                 <p style={{cursor:"pointer",color:'black'}}>Joindre mon diplôme</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
                                                        onChange={this.onChangeDiploma}
-                                                       className="form-control"
+                                                       className="form-control" accept={'image/*,.pdf'}
                                                 />
                                             </label>
                                             <span>{this.state.file_diploma !== null ? this.state.file_diploma.name : null}</span>
@@ -1347,7 +1347,7 @@ class editService extends React.Component {
                                                 <p style={{cursor:"pointer",color:'black'}}>Joindre mon diplôme</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
                                                        onChange={this.onChangeDiploma}
-                                                       className="form-control"
+                                                       className="form-control" accept={'image/*,.pdf'}
                                                 />
                                             </label>
                                             <span>{this.state.file_diploma !== null ? this.state.file_diploma.name : null}</span>
@@ -1440,7 +1440,7 @@ class editService extends React.Component {
                                                 <p style={{cursor:"pointer",color:'black'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
                                                        onChange={this.onChangeCertification}
-                                                       className="form-control"
+                                                       className="form-control" accept={'image/*,.pdf'}
                                                 />
                                             </label>
                                             <span>{this.state.file_certification !== null ? this.state.file_certification.name : null}</span>
@@ -1501,7 +1501,7 @@ class editService extends React.Component {
                                                 <p style={{cursor:"pointer",color:'black'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
                                                        onChange={this.onChangeCertification}
-                                                       className="form-control"
+                                                       className="form-control" accept={'image/*,.pdf'}
                                                 />
                                             </label>
                                             <span>{this.state.file_certification !== null ? this.state.file_certification.name : null}</span>

@@ -7,13 +7,17 @@ import JssProvider from 'react-jss/lib/JssProvider';
 import getPageContext from '../lib/getPageContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import "react-tabs/style/react-tabs.css";
 import "react-input-range/lib/css/index.css";
-import '../static/stylesfonts.css'
+import '../static/stylesfonts.css';
+import "../static/style1.css";
+import '../static/stylefixresponsive.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../static/form.css';
 import '../static/forminputs.css';
 import "../static/inputRange.css";
 import "react-datepicker/dist/react-datepicker.css";
+import "../static/cssdashboard.css";
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 toast.configure({

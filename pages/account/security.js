@@ -10,6 +10,7 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import Footer from '../../hoc/Layout/Footer/Footer';
+import { toast } from 'react-toastify';
 
 moment.locale('fr');
 
@@ -131,7 +132,7 @@ class security extends React.Component {
         axios
             .put(url+'myAlfred/api/users/profile/editPassword', data)
             .then(res => {
-                alert('Mot de passe modifié');
+                toast.info('Mot de passe modifié');
                 this.componentDidMount();
             })
             .catch(err =>
@@ -185,7 +186,7 @@ class security extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10}} className={classes.hidesm}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/credit-card.svg'} alt={'credit-card'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -204,7 +205,7 @@ class security extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
                                 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
@@ -226,7 +227,7 @@ class security extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/transactions'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -245,7 +246,7 @@ class security extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>
@@ -268,7 +269,7 @@ class security extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/applications'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -287,7 +288,7 @@ class security extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
@@ -310,7 +311,7 @@ class security extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/sponsors'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -329,7 +330,7 @@ class security extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                             </Grid>
                         </Grid>
@@ -354,7 +355,6 @@ class security extends React.Component {
                                 <form onSubmit={this.onSubmit}>
                                     <Grid item>
                                         <TextField
-                                            id="standard-with-placeholder"
                                             margin="normal"
                                             label={"Mot de passe actuel"}
                                             placeholder={"Mot de passe actuel"}
@@ -362,6 +362,8 @@ class security extends React.Component {
                                             name="password"
                                             value={this.state.password}
                                             onChange={this.onChange}
+                                            variant={"outlined"}
+
                                         />
                                     </Grid>
 
@@ -379,6 +381,7 @@ class security extends React.Component {
                                             name="newPassword"
                                             value={this.state.newPassword}
                                             onChange={this.onChangeNewPassword}
+                                            variant={"outlined"}
                                         />
                                     </Grid>
                                     {this.state.check ? <p style={{color : 'red'}}>Mot de passe invalide</p> : null}
@@ -398,7 +401,7 @@ class security extends React.Component {
                                 <Grid item style={{ display: 'flex', justifyContent: 'left' }}>
                                     <h2 style={{ fontWeight: '100' }}>Dernières connexions : </h2>
                                 </Grid>
-                                <Grid item style={{display: 'flex', border:'1px darkgray solid', padding: 25, maxWidth: '50%'}}>
+                                <Grid item style={{display: 'flex', border:'1px darkgray solid', padding: 25, maxWidth: '50%',marginBottom:20}}>
                                     <Grid container>
                                         {last_login.map((e,index)=>(
                                             <Grid key={index} item xs={12}>

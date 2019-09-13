@@ -6,6 +6,8 @@ const keys = require('../../config/keys');
 const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const mongoose = require('mongoose');
+const path = require('path');
+
 
 const validateRegisterInput = require('../../validation/register');
 const validateSimpleRegisterInput = require('../../validation/simpleRegister');
@@ -22,20 +24,37 @@ const storage = multer.diskStorage({
         cb(null, 'static/profile/')
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname  )
+        let datetimestamp = Date.now();
+        let key = crypto.randomBytes(5).toString('hex');
+        cb(null, datetimestamp+'_'+key+ '_'+file.originalname )
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage,
+    fileFilter: function (req, file, callback) {
+        let ext = path.extname(file.originalname);
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+            return callback(new Error('Only images are allowed'))
+        }
+        callback(null, true)
+    }});
 
 const storage2 = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'static/profile/idCard/')
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname  )
+        let datetimestamp = Date.now();
+        let key = crypto.randomBytes(5).toString('hex');
+        cb(null, datetimestamp+'_'+key+ '_'+file.originalname )
     }
 });
-const upload2 = multer({ storage: storage2 });
+const upload2 = multer({ storage: storage2,fileFilter: function (req, file, callback) {
+        let ext = path.extname(file.originalname);
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
+            return callback(new Error('Error extension'))
+        }
+        callback(null, true)
+    } });
 
 
 router.get('/test',(req, res) => res.json({msg: 'Users Works!'}) );
@@ -341,6 +360,22 @@ router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {na
             if (verso in req.files) {
                 user.id_card.verso = req.files['myCardV'][0].path;
             }
+
+            user.save().then(user => res.json(user)).catch(err => console.log(err));
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
+// @Route PUT /myAlfred/api/users/profile/idCard
+// Add an identity card
+// @Access private
+router.post('/profile/idCard/addVerso',upload2.single('myCardV'),passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findById(req.user.id)
+        .then(user => {
+            user.id_card.verso = req.file.path;
+
 
             user.save().then(user => res.json(user)).catch(err => console.log(err));
         })
@@ -828,9 +863,26 @@ router.delete('/profile/picture/delete',passport.authenticate('jwt',{session:fal
 router.delete('/current/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
     User.findById(req.user.id)
         .then(user => {
-            user.remove().then(data => console.log('User deleted')).catch(err => console.log(err));
+            user.active = false;
+            user.is_alfred = false;
+            user.save().then(data => console.log('User deleted')).catch(err => console.log(err));
         })
         .catch(err => console.log(err));
+});
+
+// @Route DELETE /myAlfred/api/users/profile/idCard/recto
+// Delete recto identity card
+// @Access private
+router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findById(req.user.id)
+        .then(user => {
+            user.id_card = undefined;
+
+            user.save().then(user => res.json(user)).catch(err => console.log(err));
+        })
+        .catch(err => {
+            console.log(err)
+        })
 });
 
 

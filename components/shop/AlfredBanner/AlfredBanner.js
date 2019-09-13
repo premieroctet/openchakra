@@ -153,7 +153,7 @@ class alfredBanner extends React.Component{
                             </Grid>
                             <Grid item className={classes.itemAvatar}>
                                 <Avatar alt="photo de profil" src={`../../../../${alfred.picture}`} className={classes.avatar} />
-                                <Typography className={classes.textAvatar}>{alfred.name} {alfred.firstname}</Typography>
+                                <Typography style={{marginTop:20}} className={classes.textAvatar}>Boutique de {alfred.firstname}</Typography>
                             </Grid>
                             <Grid item className={classes.itemDispo}>
                                 <Grid item style={{ display: 'flex', flexDirection: 'row' }}>

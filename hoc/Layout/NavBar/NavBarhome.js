@@ -30,6 +30,7 @@ const jwt = require('jsonwebtoken');
 const styles = theme => ({
   root: {
     width: '100%',
+    backgroundColor: 'red',
   },
   grow: {
     flexGrow: 1,
@@ -58,6 +59,7 @@ const styles = theme => ({
       marginLeft: theme.spacing.unit * 3,
       width: 'auto',
     },
+    display: 'none',
   },
   searchIcon: {
     width: theme.spacing.unit * 9,
@@ -87,7 +89,7 @@ const styles = theme => ({
     display: 'none',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
-    },
+    },  
   },
   sectionMobile: {
     display: 'flex',
@@ -100,13 +102,13 @@ const styles = theme => ({
   },
   navbarItem: {
     alignSelf: 'center',
-    color: '#545659',
+    color:"white",
     marginRight: '20px',
     fontSize: '15px'
   },
   navbarLink: {
     textDecoration: 'none',
-    color: '#545659',
+    color:"white",
   },
   navbarLinkMobile: {
     color: 'black',
@@ -139,30 +141,41 @@ class NavBar extends Component {
     avatarMoreAnchorEl: null,
     logged: false,
     alfred: false,
+    isTop: true,
   };
 
   componentDidMount() {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token !== null) {
       this.setState({logged:true});
       const token2 = localStorage.getItem('token').split(' ')[1];
       const decode = jwt.decode(token2);
       this.setState({alfred: decode.is_alfred});
-    }
-    
-    axios.defaults.headers.common['Authorization'] = token;
-    axios
-        .get(url+'myAlfred/api/users/current')
-        .then(res => {
+
+      axios.defaults.headers.common['Authorization'] = token;
+      axios
+          .get(url+'myAlfred/api/users/current')
+          .then(res => {
             let user = res.data;
             this.setState({user:user, alfred:user.is_alfred});
 
             if(typeof user.picture !="undefined") {
-                this.setState({picture: true})
+              this.setState({picture: true})
             } else {
-                this.setState({picture: false})
+              this.setState({picture: false})
             }
-        })
+          })
+          .catch(err => console.log(err))
+    }
+
+    document.addEventListener('scroll', () => {
+      const isTop = window.scrollY < 820;
+      if (isTop !== this.state.isTop) {
+          this.onScroll(isTop);
+      }
+  });
+
+
   }
 
   logout2() {
@@ -183,6 +196,10 @@ class NavBar extends Component {
     this.handleMobileMenuClose();
     this.handleAvatarMenuClose();
   };
+
+  onScroll(isTop) {
+    this.setState({ isTop });
+}
 
   handleMobileMenuOpen = event => {
     this.setState({ mobileMoreAnchorEl: event.currentTarget });
@@ -237,18 +254,18 @@ class NavBar extends Component {
     </MenuItem>
     <MenuItem onClick={()=>this.logout2()}>
       <Typography>
-        <Link>
+
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
               Déconnexion
           </a>
-        </Link> 
+
       </Typography>
     </MenuItem>
   </React.Fragment>;
 
     const logoutAvatar = 
-    <React.Fragment>
-    <MenuItem onClick={this.handleMenuClose}>
+    [
+    <MenuItem key={1} onClick={this.handleMenuClose}>
       <Typography>
         <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
@@ -256,8 +273,8 @@ class NavBar extends Component {
           </a>
         </Link>
       </Typography>
-    </MenuItem>
-    <MenuItem onClick={this.handleMenuClose}>
+    </MenuItem>,
+    <MenuItem key={2} onClick={this.handleMenuClose}>
       <Typography>
         <Link href={'/account/notifications'}>
           <a className={classes.navbarLinkMobile}>
@@ -265,17 +282,17 @@ class NavBar extends Component {
           </a>
         </Link>
       </Typography>
-    </MenuItem>
-    <MenuItem onClick={()=>this.logout2()}>
+    </MenuItem>,
+    <MenuItem key={3} onClick={()=>this.logout2()}>
       <Typography>
-        <Link>
+
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
               Déconnexion
           </a>
-        </Link> 
+
       </Typography>
-    </MenuItem>
-  </React.Fragment>;
+    </MenuItem>]
+  ;
 
     const renderMenu = (
       <Menu
@@ -395,14 +412,14 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  color="white" position="fixed">
+        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(47, 188, 211)'}} position="fixed">
           <Toolbar>
             <Link href={'/'}>
-              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
+              <img src={'../../../static/assets/img/logo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
             </Link>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
-                <SearchIcon />
+                {/*<SearchIcon />*/}
               </div>
               <InputBase
                 placeholder="Search…"
@@ -445,7 +462,7 @@ class NavBar extends Component {
                 </Link>
               </Typography>
               {test ? null : <React.Fragment><Link href={'/login'}>
-                    <Button variant="outlined" color={'primary'} style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
+                    <Button variant="outlined" color={'primary'} style={{color:this.state.isTop ? '' : 'white' , marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
                       Connexion
                     </Button>
                   </Link>

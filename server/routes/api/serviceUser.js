@@ -7,6 +7,7 @@ const ServiceUser = require('../../models/ServiceUser');
 const User = require('../../models/User');
 const axios = require('axios');
 const multer = require("multer");
+const crypto = require('crypto');
 
 
 const storage = multer.diskStorage({
@@ -14,10 +15,18 @@ const storage = multer.diskStorage({
         cb(null, 'static/profile/diploma/')
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname  )
+        let datetimestamp = Date.now();
+        let key = crypto.randomBytes(5).toString('hex');
+        cb(null, datetimestamp+'_'+key+ '_'+file.originalname )
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage,fileFilter: function (req, file, callback) {
+        let ext = path.extname(file.originalname);
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg') {
+            return callback(new Error('Error extension'))
+        }
+        callback(null, true)
+    } });
 
 
 
@@ -475,6 +484,20 @@ router.put('/deletePrestation/:id', passport.authenticate('jwt', { session: fals
             .catch(err => res.status(404).json(err));
     }
 );
+
+// @Route PUT /myAlfred/api/serviceUser/views/:id
+// Update number of views for a service
+router.put('/views/:id',(req,res) => {
+    ServiceUser.findByIdAndUpdate(req.params.id,{$inc: {number_of_views: 1}},{new:true})
+        .then(service => {
+            if(!service){
+                return res.status(400).json({msg: 'No service found'});
+            }
+            res.json(service);
+
+        })
+        .catch(err => res.status(404).json({ user: 'No service found' }));
+});
 
 // @Route DELETE /myAlfred/api/serviceUser/delete/diploma/:id
 // Delete diploma for a service

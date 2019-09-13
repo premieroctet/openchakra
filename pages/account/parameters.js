@@ -6,11 +6,18 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import Footer from '../../hoc/Layout/Footer/Footer';
+import Footer2 from '../../hoc/Layout/Footer/Footer2';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import { toast } from 'react-toastify';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 const { config } = require('../../config/config');
@@ -77,7 +84,11 @@ class parameters extends React.Component {
         this.state = {
             user: {},
             index_google: false,
-        }
+            alfred: false,
+            open : false,
+            open2: false,
+        };
+        this.handleClose = this.handleClose.bind(this);
 
     }
 
@@ -88,7 +99,7 @@ class parameters extends React.Component {
         axios
             .get(url+'myAlfred/api/users/current')
             .then(res => {
-                this.setState({user: res.data, index_google: res.data.index_google});
+                this.setState({user: res.data, index_google: res.data.index_google,alfred:res.data.is_alfred});
 
             })
             .catch(err => {
@@ -101,43 +112,88 @@ class parameters extends React.Component {
             );
     }
 
+     handleClickOpen() {
+        this.setState({open:true});
+    }
+
+     handleClose() {
+        this.setState({open:false});
+    }
+
+    handleClickOpen2() {
+        this.setState({open2:true});
+    }
+
+    handleClose2() {
+        this.setState({open2:false});
+    }
+
      handleChange = name => event => {
          this.setState({[name]: event.target.checked });
          const data = {index_google:!this.state.index_google};
          axios.put(url+'myAlfred/api/users/account/indexGoogle', data)
             .then(() => {
-                console.log('ok');
+                toast.info('Compte mis à jour');
             })
             .catch(err => console.log(err));
     };
 
     deleteShop = () => {
-        if(confirm('Etes-vous sur de vouloir supprimer votre shop ?')){
-            axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
-                .then(() => {
-                    axios.delete(url+'myAlfred/api/shop/current/delete')
-                        .then(shop => {
-                            alert('Shop supprimée');
-                        })
-                        .catch(err => console.log(err));
-                })
-                .catch(err => console.log(err));
-        } else {
-            console.log('Pas ok');
-        }
+
+        axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
+            .then(() => {
+                axios.delete(url+'myAlfred/api/shop/current/delete')
+                    .then(shop => {
+                        toast.error('Boutique supprimée');
+                    })
+                    .catch(err => console.log(err));
+
+
+            })
+            .catch(err => console.log(err));
+        axios.delete(url+'myAlfred/api/availability/currentAlfred')
+            .then(() => {
+                console.log('ok')
+            })
+            .catch(error => console.log(error));
+
     };
 
     deleteAccount = () => {
-        if(confirm('Etes-vous sur de vouloir supprimer votre compte ?')){
+        if(this.state.alfred === true) {
+            axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
+                .then(() => {
+                    axios.delete(url+'myAlfred/api/shop/current/delete')
+                        .then(() => {
+                            axios.delete(url+'myAlfred/api/users/current/delete')
+                                .then(shop => {
+                                    toast.error('Compte désactivé');
+                                    localStorage.removeItem('token');
+                                    Router.push('/');
+                                })
+                                .catch(err => console.log(err));
+                        })
+                        .catch(err => console.log(err));
+
+
+                })
+                .catch(err => console.log(err));
+            axios.delete(url+'myAlfred/api/availability/currentAlfred')
+                .then(() => {
+                    console.log('ok')
+                })
+                .catch(error => console.log(error));
+        } else {
             axios.delete(url+'myAlfred/api/users/current/delete')
                 .then(shop => {
-                    alert('Compte supprimé');
+                    toast.error('Compte désactivé');
+                    localStorage.removeItem('token');
                     Router.push('/');
                 })
                 .catch(err => console.log(err));
-        } else {
-            console.log('Pas ok');
         }
+
+
     };
 
 
@@ -171,14 +227,14 @@ class parameters extends React.Component {
                                     <Link href={'/account/notifications'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} width={27} style={{marginRight: 4}}/>
-                                            <a s style={{fontSize: '1.1rem'}}>
+                                            <a  style={{fontSize: '1.1rem'}}>
                                                
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10}}className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10}} className={classes.hidesm}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/credit-card.svg'} alt={'credit-card'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -188,7 +244,7 @@ class parameters extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10}}className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/credit-card.svg'} alt={'credit-card'} width={27} style={{marginleft: 4}}/>
@@ -197,7 +253,7 @@ class parameters extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
                                 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
@@ -219,7 +275,7 @@ class parameters extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/transactions'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -238,7 +294,7 @@ class parameters extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>
@@ -261,7 +317,7 @@ class parameters extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/applications'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -280,7 +336,7 @@ class parameters extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
@@ -303,7 +359,7 @@ class parameters extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/sponsors'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -318,11 +374,11 @@ class parameters extends React.Component {
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                             </Grid>
                         </Grid>
@@ -334,13 +390,13 @@ class parameters extends React.Component {
                             </Grid>
                             <Grid container>
                                 <Grid item xs={8}>
-                                    <p>J'accepte que mon profil, ma boutique soient indexés par les moteurs de recherches</p>
+                                    <p>J'accepte que mon profil et ma boutique soient indexés par les moteurs de recherche</p>
                                 </Grid>
                                 <Grid item xs={4}>
                                     <Switch
                                         checked={this.state.index_google}
                                         onChange={this.handleChange('index_google')}
-                                        value={this.state.index_google}
+                                        value={'index_google'}
                                         color="primary"
                                         inputProps={{ 'aria-label': 'primary checkbox' }}
                                     />
@@ -362,7 +418,7 @@ class parameters extends React.Component {
                                         </p>
                                     </Grid>
                                     <Grid item xs={4} style={{paddingLeft: 40}}>
-                                        <Button size={'large'} type={'button'} onClick={()=>this.deleteShop()} variant="contained" color="secondary"
+                                        <Button size={'large'} type={'button'} onClick={()=>this.handleClickOpen()} variant="contained" color="secondary"
                                                 style={{color: 'white'}}>
                                             Supprimer
                                         </Button>
@@ -387,7 +443,7 @@ class parameters extends React.Component {
                                     </p>
                                 </Grid>
                                 <Grid item xs={4} style={{paddingLeft: 40}}>
-                                    <Button size={'large'} type={'button'} onClick={()=>this.deleteAccount()} variant="contained" color="secondary"
+                                    <Button size={'large'} type={'button'} onClick={()=>this.handleClickOpen2()} variant="contained" color="secondary"
                                             style={{color: 'white'}}>
                                         Désactiver
                                     </Button>
@@ -397,9 +453,57 @@ class parameters extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+                <Footer2/>
+
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Supprimer votre boutique ?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Attention, cette action est irréversible. Si vous souhaitez garder votre boutique sans que les
+                            utilisateurs puissent réserver vos services, vous pouvez supprimer vos disponibilités sur votre calendrier.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose()} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={()=>this.deleteShop()} color="secondary" autoFocus>
+                            Supprimer
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
+                    open={this.state.open2}
+                    onClose={this.handleClose2}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Désactiver votre compte ?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Attention, cette action est irréversible. Si vous souhaitez ne plus être référencé par les
+                            moteurs de recherche, vous pouvez désactiver l’indexation par les moteurs de recherche.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose2()} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={()=>this.deleteAccount()} color="secondary" autoFocus>
+                            Désactiver
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
             </Fragment>
+
+
         );
     };
 }

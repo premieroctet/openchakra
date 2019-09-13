@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import axios from "axios";
 import moment from 'moment';
 import Button from "@material-ui/core/Button";
@@ -167,12 +168,12 @@ class myAvailabilities extends React.Component {
 
 
                         </Grid>
-                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:115}}>
+                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
 
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'45%',zIndex:501}} width={'9%'} alt={'picture'}/>
+                            <img src={'../'+user.picture} style={{borderRadius:'50%',position:'absolute',top:'27%',left:'45%',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}} alt={'picture'}/>
                         </Grid>
                     </Grid>
 
@@ -180,10 +181,10 @@ class myAvailabilities extends React.Component {
                         <Grid container style={{marginTop: 20}}>
                             <Grid item xs={7}>
 
-                                {all_availabilities.map(e => {
+                                {all_availabilities.map((e,index) => {
                                     if(e.period.active){
                                         return (
-                                            <Link href={'/myShop/detailsAvailability?id='+e._id}>
+                                            <Link key={index} href={'/myShop/detailsAvailability?id='+e._id}>
                                                 <a style={{textDecoration:'none'}}>
                                                     <p>Disponibilités pour la période : {moment(e.period.month_begin).format('LL')} / {moment(e.period.month_end).format('LL')}</p>
                                                 </a>
@@ -191,7 +192,7 @@ class myAvailabilities extends React.Component {
                                         )
                                     } else {
                                         return (
-                                            <Link href={'/myShop/detailsAvailability?id='+e._id}>
+                                            <Link key={index} href={'/myShop/detailsAvailability?id='+e._id}>
                                                 <a style={{textDecoration:'none'}}>
                                                     <p>Disponibilités sans période</p>
                                                 </a>
@@ -203,7 +204,7 @@ class myAvailabilities extends React.Component {
 
                             </Grid>
                         </Grid>
-                    <Grid container>
+                    <Grid container style={{marginBottom:20}}>
                         <Link href={'/myShop/addAvailability'}>
                         <a style={{textDecoration:'none'}}><Button color={"primary"} style={{color:"white"}} variant={"contained"}>Ajouter une disponibilité</Button></a>
                         </Link>
@@ -211,6 +212,7 @@ class myAvailabilities extends React.Component {
 
 
                 </Layout>
+                <Footer/>
 
             </Fragment>
         );

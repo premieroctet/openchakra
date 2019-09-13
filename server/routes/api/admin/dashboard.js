@@ -240,6 +240,46 @@ router.put('/users/users/:id',passport.authenticate('jwt',{session: false}),(req
 
 });
 
+// @Route PUT /myAlfred/admin/users/users/idCard/:id
+// Validate id card for a user
+// @Access private
+router.put('/users/users/idCard/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+        User.findOneAndUpdate({_id: req.params.id},{$set: {id_confirmed: true }}, {new: true})
+            .then(user => {
+                res.json(user);
+            })
+            .catch(err => res.status(404).json({ usernotfound: 'No user found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route PUT /myAlfred/admin/users/users/idCard/delete:id
+// Delete id card for a user
+// @Access private
+router.put('/users/users/idCard/delete/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+        User.findOneAndUpdate({_id: req.params.id},{$set: {id_confirmed: false }}, {new: true})
+            .then(user => {
+                res.json(user);
+            })
+            .catch(err => res.status(404).json({ usernotfound: 'No user found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
 // @Route DELETE /myAlfred/api/admin/users/users/:id
 // Delete one user
 // @Access private
@@ -316,6 +356,46 @@ router.put('/users/alfred/:id',passport.authenticate('jwt',{session: false}),(re
 
     if(admin) {
         User.findOneAndUpdate({_id: req.params.id},{$set: {is_alfred: req.body.is_alfred ,active: req.body.active, super_alfred: req.body.super_alfred}}, {new: true})
+            .then(user => {
+                res.json(user);
+            })
+            .catch(err => res.status(404).json({ usernotfound: 'No user found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route PUT /myAlfred/admin/users/alfred/idCard/:id
+// Validate id card for an alfred
+// @Access private
+router.put('/users/alfred/idCard/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+        User.findOneAndUpdate({_id: req.params.id},{$set: {id_confirmed: true }}, {new: true})
+            .then(user => {
+                res.json(user);
+            })
+            .catch(err => res.status(404).json({ usernotfound: 'No user found' }));
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+});
+
+// @Route PUT /myAlfred/admin/users/alfred/idCard/delete:id
+// Delete id card for an alfred
+// @Access private
+router.put('/users/alfred/idCard/delete/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+        User.findOneAndUpdate({_id: req.params.id},{$set: {id_confirmed: false }}, {new: true})
             .then(user => {
                 res.json(user);
             })
@@ -1706,6 +1786,7 @@ router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,r
 
     if(admin) {
         Prestation.find()
+            .sort({category:-1,label:1})
             .populate('category')
             .populate('job')
             .populate('service')

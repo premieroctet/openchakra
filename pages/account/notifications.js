@@ -12,6 +12,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
+import { toast } from 'react-toastify';
 
 
 
@@ -102,6 +103,7 @@ class notifications extends React.Component {
     }
 
     componentDidMount() {
+        document.body.style.overflow = 'auto';
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
@@ -168,7 +170,7 @@ class notifications extends React.Component {
 
         axios.put(url+'myAlfred/api/users/account/notifications',data)
             .then(() => {
-                alert('Compte mis à jour');
+                toast.info('Compte mis à jour');
             })
             .catch(err => {
                 console.log(err);
@@ -204,14 +206,14 @@ class notifications extends React.Component {
                                     <Link href={'/account/notifications'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/smartphone-call-2.svg'} alt={'smartphone-call'} width={27} style={{marginRight: 4}}/>
-                                            <a s style={{fontSize: '1.1rem'}}>
+                                            <a  style={{fontSize: '1.1rem'}}>
                                                
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10}}className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10}} className={classes.hidesm}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/credit-card.svg'} alt={'credit-card'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -221,7 +223,7 @@ class notifications extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10}}className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/credit-card.svg'} alt={'credit-card'} width={27} style={{marginleft: 4}}/>
@@ -230,7 +232,7 @@ class notifications extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
                                 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
@@ -252,7 +254,7 @@ class notifications extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/transactions'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -271,7 +273,7 @@ class notifications extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>
@@ -294,7 +296,7 @@ class notifications extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/applications'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -313,7 +315,7 @@ class notifications extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
@@ -336,7 +338,7 @@ class notifications extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/sponsors'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -355,7 +357,7 @@ class notifications extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                             </Grid>
                         </Grid>
@@ -375,42 +377,42 @@ class notifications extends React.Component {
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                <Grid item xs={2}>
+                                <Grid item xs={3}>
                                     <p>Email</p>
                                 </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.messages_email}
                                             onChange={this.handleChange('messages_email')}
-                                            value={this.state.messages_email}
+                                            value={'messages_email'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Notification push</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.messages_push}
                                             onChange={this.handleChange('messages_push')}
-                                            value={this.state.messages_push}
+                                            value={'messages_push'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>SMS</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.messages_sms}
                                             onChange={this.handleChange('messages_sms')}
-                                            value={this.state.messages_sms}
+                                            value={'messages_sms'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -429,48 +431,48 @@ class notifications extends React.Component {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <p style={{marginTop:0}}>
-                                        Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et d’autres rappels relatifs à vos activités sur my-Alfred.
+                                        Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et d’autres rappels relatifs à vos activités sur My-Alfred.
 
 
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Email</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.rappel_email}
                                             onChange={this.handleChange('rappel_email')}
-                                            value={this.state.rappel_email}
+                                            value={'rappel_email'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Notification push</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.rappel_push}
                                             onChange={this.handleChange('rappel_push')}
-                                            value={this.state.rappel_push}
+                                            value={'rappel_push'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>SMS</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.rappel_sms}
                                             onChange={this.handleChange('rappel_sms')}
-                                            value={this.state.rappel_sms}
+                                            value={'rappel_sms'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -496,56 +498,56 @@ class notifications extends React.Component {
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Email</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.promotions_email}
                                             onChange={this.handleChange('promotions_email')}
-                                            value={this.state.promotions_email}
+                                            value={'promotions_email'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Notification push</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.promotions_push}
                                             onChange={this.handleChange('promotions_push')}
-                                            value={this.state.promotions_push}
+                                            value={'promotions_push'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>SMS</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.promotions_sms}
                                             onChange={this.handleChange('promotions_sms')}
-                                            value={this.state.promotions_sms}
+                                            value={'promotions_sms'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Appel téléphonique</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.promotions_phone}
                                             onChange={this.handleChange('promotions_phone')}
-                                            value={this.state.promotions_phone}
+                                            value={'promotions_phone'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -570,42 +572,42 @@ class notifications extends React.Component {
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Email</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.community_email}
                                             onChange={this.handleChange('community_email')}
-                                            value={this.state.community_email}
+                                            value={'community_email'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Notification push</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.community_push}
                                             onChange={this.handleChange('community_push')}
-                                            value={this.state.community_push}
+                                            value={'community_push'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>SMS</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.community_sms}
                                             onChange={this.handleChange('community_sms')}
-                                            value={this.state.community_sms}
+                                            value={'community_sms'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -637,42 +639,42 @@ class notifications extends React.Component {
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Email</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.assistance_email}
                                             onChange={this.handleChange('assistance_email')}
-                                            value={this.state.assistance_email}
+                                            value={'assistance_email'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>Notification push</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.assistance_push}
                                             onChange={this.handleChange('assistance_push')}
-                                            value={this.state.assistance_push}
+                                            value={'assistance_push'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container className={classes.item}>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
                                         <p>SMS</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={9}>
                                         <Switch
                                             checked={this.state.assistance_sms}
                                             onChange={this.handleChange('assistance_sms')}
-                                            value={this.state.assistance_sms}
+                                            value={'assistance_sms'}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'primary checkbox' }}
                                         />
@@ -686,13 +688,19 @@ class notifications extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
-                        alignItems:"center",height:60}}>
-                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                style={{color: 'white',maxHeight:40,marginRight:20}}>
-                            Enregistrer
-                        </Button>
-                    </div>
+                    <Grid container style={{marginBottom:20}}>
+                        <Grid item xs={8}>
+                            <div style={{display:'flex',justifyContent:'flex-end',marginBottom: '-1.95%',width:'100%',bottom:0,
+                            alignItems:"center",height:60}}>
+                                <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
+                                style={{color: 'white',maxHeight:40,marginRight:40}}>
+                                    Enregistrer
+                                </Button>
+                            </div>
+                        </Grid>
+                        <Grid item xs={4}></Grid>
+                    </Grid>
+
                 </Layout>
                 <Footer/>
 

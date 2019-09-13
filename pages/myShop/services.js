@@ -7,20 +7,23 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import styled from 'styled-components';
-import Typography from "@material-ui/core/Typography";
 import { TextField } from '@material-ui/core';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/EditOutlined';
 import Modal from '@material-ui/core/Modal';
 import { Carousel } from 'react-responsive-carousel';
-import SearchIcon from '@material-ui/icons/SearchOutlined';
-const jwt = require('jsonwebtoken');
+import { toast } from 'react-toastify';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
+
 
 
 moment.locale('fr');
@@ -102,6 +105,11 @@ const styles = theme => ({
         border: '2px solid #000',
 
     },
+    shopbar:{
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
+        }
+    },
 
 
 
@@ -127,6 +135,8 @@ class services extends React.Component {
             welcome_message: '',
             open: false,
             banner: [],
+            open2: false,
+            id_service: '',
         };
 
 
@@ -134,9 +144,14 @@ class services extends React.Component {
     }
 
     componentDidMount() {
+        document.body.style.overflow = 'auto';
+
+
+        localStorage.setItem('path',Router.pathname);
 
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
 
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
@@ -187,6 +202,16 @@ class services extends React.Component {
                     }
                 }
             );
+
+
+    }
+
+    handleClickOpen(id) {
+        this.setState({id_service: id, open2:true});
+    }
+
+    handleClose2() {
+        this.setState({id_service:'', open2:false});
     }
 
     handleOpen = () => {
@@ -242,30 +267,28 @@ class services extends React.Component {
         axios.put(url+'myAlfred/api/shop/editParameters',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card,
         recommandations,welcome_message,flexible_cancel,moderate_cancel,strict_cancel})
             .then(() => {
-                alert('Pramètres modifiés')
+                toast.info('Paramètres modifiés')
             })
             .catch(err => console.log(err))
-    }
+    };
 
     handleClicktabs2 =() => {
         this.setState({ tabs: true });
-    }
+    };
 
     handleClicktabs =() => {
         this.setState({ tabs: false });
     };
 
     deleteService(id) {
-        if(confirm('Etes vous sûr de vouloir supprimé ce service da votre boutique ?')) {
-
-
-            axios.delete(url + 'myAlfred/api/serviceUser/' + id)
+        axios.delete(url + 'myAlfred/api/serviceUser/' + id)
                 .then(() => {
-                    alert('Service supprimé');
+                    toast.error('Service supprimé');
+                    this.setState({open2:false,id_service:''});
                     this.componentDidMount();
                 })
                 .catch(err => console.log(err))
-        }
+
     }
 
     onSubmitBanner = e =>{
@@ -274,7 +297,7 @@ class services extends React.Component {
 
         axios.put(url+'myAlfred/api/shop/editBanner',data)
             .then(res => {
-                alert('Photo modifiée');
+                toast.info('Photo modifiée');
                 this.setState({open:false});
                 this.componentDidMount();
             })
@@ -282,7 +305,7 @@ class services extends React.Component {
                 console.log(err)
             })
 
-    }
+    };
 
     render() {
         const {classes} = this.props;
@@ -293,8 +316,8 @@ class services extends React.Component {
 
         const {banner} = this.state;
 
-        const image = banner.map(e => (
-            <div key={e._id}>
+        const image = banner.map((e,index) => (
+            <div key={index}>
                 <img src={`../../../${e.picture}`} alt={e.label} />
                 <div className="legend">
                     <p>{e.label}</p>
@@ -308,23 +331,23 @@ class services extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
-                            <Grid item xs={1}></Grid>
-                            <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
+                        <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
+                            <Grid item xs={1} className={classes.shopbar}></Grid>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
                                 <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
                                 </Link>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
                             </Grid>
 
@@ -335,15 +358,15 @@ class services extends React.Component {
 
 
                         </Grid>
-                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:115}}>
+                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
 
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'45%',zIndex:501}} width={'9%'} alt={'picture'}/>
+                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto', minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',zIndex:501}}  alt={'picture'}/>
                         </Grid>
-                        <Grid item style={{position:"absolute",left:'3%',top:'18%',zIndex:502}}>
-                            <p onClick={()=>this.handleOpen()} style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1rem'}}>{/*<EditIcon  style={{cursor: 'pointer',width:15, height:15, marginRight: 3,}}/>*/}Modifier</p>
+                        <Grid item style={{position:"absolute",left:'3%',top:'20%',zIndex:502}}>
+                            <EditIcon onClick={()=>this.handleOpen()} style={{cursor:'pointer',color:"white",width:40}}/>
                         </Grid>
                         <Grid item style={{position:"absolute",right:'3%',top:'18%',zIndex:502}}>
                             <Link href={'/myShop/shopPreview?id_alfred=' + this.state.user._id}><a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}}><p>Aperçu de ma boutique</p></a></Link>
@@ -354,7 +377,7 @@ class services extends React.Component {
                                 <Grid container>
                                     <Grid item xs={6} style={{textAlign:"center"}}>
                                         <div>
-                                            <h2 style={{position: 'sticky',}} onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '25%'}}> Mes services</h2>
+                                            <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '25%',position: 'sticky'}}> Mes services</h2>
                                             {tabs ?
                                                 <React.Fragment>
                                                     <hr className={classes.trait1}/>
@@ -399,7 +422,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.booking_request}
                                                         onChange={this.handleChangeBr}
-                                                        value={this.state.booking_request}
+                                                        value={'booking_request'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -422,7 +445,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.no_booking_request}
                                                         onChange={this.handleChangeNbr}
-                                                        value={this.state.no_booking_request}
+                                                        value={'no_booking_request'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -450,7 +473,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.my_alfred_conditions}
                                                         onChange={this.handleChange('my_alfred_conditions')}
-                                                        value={this.state.my_alfred_conditions}
+                                                        value={'my_alfred_conditions'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -471,7 +494,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.profile_picture}
                                                         onChange={this.handleChange('profile_picture')}
-                                                        value={this.state.profile_picture}
+                                                        value={'profile_picture'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -491,7 +514,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.identity_card}
                                                         onChange={this.handleChange('identity_card')}
-                                                        value={this.state.identity_card}
+                                                        value={'identity_card'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -511,7 +534,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.recommandations}
                                                         onChange={this.handleChange('recommandations')}
-                                                        value={this.state.recommandations}
+                                                        value={'recommandations'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -562,7 +585,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.flexible_cancel}
                                                         onChange={this.handleChangeF}
-                                                        value={this.state.flexible_cancel}
+                                                        value={'flexible_cancel'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -583,7 +606,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.moderate_cancel}
                                                         onChange={this.handleChangeM}
-                                                        value={this.state.moderate_cancel}
+                                                        value={'moderate_cancel'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -603,7 +626,7 @@ class services extends React.Component {
                                                     <Checkbox
                                                         checked={this.state.strict_cancel}
                                                         onChange={this.handleChangeS}
-                                                        value={this.state.strict_cancel}
+                                                        value={'strict_cancel'}
                                                         color="primary"
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
@@ -618,15 +641,28 @@ class services extends React.Component {
                                                         Remboursement intégral jusqu'à 10 jours avant la prestation.
                                                     </p>
                                                 </Grid>
-                                            </Grid>
 
+                                              
+                                            </Grid>
+                                            <Grid item xs={1} style={{zIndex: 999}}></Grid>
+                            
+                                                <Grid item xs={2} style={{zIndex: 999}}>
+                                                {tabs ?
+                                                    <div style={{display:'flex',justifyContent:'flex-start',width:'100%',bottom:0,
+                                                        alignItems:"center",height:60}}>
+                                                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
+                                                                style={{color: 'white',maxHeight:40,marginRight:20, zIndex: '999'}}>
+                                                            Enregistrer
+                                                        </Button>
+                                                    </div>: null}
+                                                </Grid>
                                         </Grid>
 
                                     </Grid>:
                                     <React.Fragment>
                                         {serviceUser.map((e,index)=> (
-                                            <React.Fragment>
-                                                <Grid key={index} container>
+                                            <React.Fragment key={index}>
+                                                <Grid container>
                                                     <Grid style={{marginLeft: 130, backgroundColor: 'white',marginBottom: '-36px',padding: '8px',}}>
                                                         <h3 style={{color: '#505050'}}>{e.service.category.label}</h3>
 
@@ -639,6 +675,7 @@ class services extends React.Component {
                                                     <Grid item xs={6}>
                                                         <h4 style={{fontWeight: 'bolder',fontSize: 18,color: '#737373'}}>{e.service.label}</h4>
                                                         <p style={{fontSize: 14}}>{e.prestations.length} Prestation(s) proposée(s)</p>
+                                                        <p style={{fontSize: 14}}>{e.number_of_views} Vue(s) du service</p>
                                                     </Grid>
                                                     <Grid item xs={3} style={{display:"flex", justifyContent:"flex-end"}}>
                                                         <Link href={'/myShop/editService?id='+e._id}>
@@ -646,11 +683,11 @@ class services extends React.Component {
                                                                 <h4 style={{paddingRight: 7,fontWeight: 'bolder',fontSize: 16,color:'#3CBED4',marginTop:0,cursor:"pointer"}}><EditIcon  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
                                                             </a>
                                                         </Link>
-                                                        <Link>
+
                                                             <a style={{cursor: 'pointer',textDecoration:'none',height:'fit-content'}}>
-                                                                <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}><DeleteIcon onClick={()=>this.deleteService(e._id)}  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
+                                                                <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}><DeleteIcon onClick={()=>this.handleClickOpen(e._id)}  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
                                                             </a>
-                                                        </Link>
+
                                                     </Grid>
 
                                                 </Grid>
@@ -690,14 +727,7 @@ class services extends React.Component {
                             </Grid>
                             <Grid item xs={1} style={{zIndex: -999}}></Grid>
 
-                            {tabs ?
-                                <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
-                                    alignItems:"center",height:60}}>
-                                    <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                            style={{color: 'white',maxHeight:40,marginRight:20}}>
-                                        Enregistrer
-                                    </Button>
-                                </div>: null}
+                            
                         </Grid>
 
                     </Grid>
@@ -720,6 +750,28 @@ class services extends React.Component {
                     </Modal>
                 </Layout>
                 <Footer/>
+
+                <Dialog
+                    open={this.state.open2}
+                    onClose={()=>this.handleClose2()}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Supprimer un service"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Voulez-vous vraiment supprimer ce service de votre boutique ?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose2()} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={()=>this.deleteService(this.state.id_service)} color="secondary" autoFocus>
+                            Supprimer
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
             </Fragment>
         );

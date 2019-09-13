@@ -10,6 +10,13 @@ import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Fab from '@material-ui/core/Fab';
 import Footer from '../../hoc/Layout/Footer/Footer';
+import { toast } from 'react-toastify';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Footer2 from '../../hoc/Layout/Footer/Footer2';
 
 moment.locale('fr');
 
@@ -112,6 +119,7 @@ class editPicture extends React.Component {
         this.state = {
             user: {},
             haveapicture: '',
+            open: false,
 
         };
     }
@@ -142,6 +150,14 @@ class editPicture extends React.Component {
             );
     }
 
+    handleClickOpen() {
+        this.setState({open:true});
+    }
+
+    handleClose() {
+        this.setState({open:false});
+    }
+
     onChange = e => {
         this.setState({haveapicture:e.target.files[0]});
     };
@@ -160,7 +176,7 @@ class editPicture extends React.Component {
         };
         axios.post(url+"myAlfred/api/users/profile/picture",formData,config)
             .then((response) => {
-                alert("Photo modifiée");
+                toast.info('Photo modifiée');
                 Router.push({pathname:'/profile/editProfile'})
             }).catch((error) => {
             console.log(error)
@@ -170,7 +186,7 @@ class editPicture extends React.Component {
     deletePicture = () => {
       axios.delete(url+'myAlfred/api/users/profile/picture/delete')
           .then(() => {
-              alert('Photo supprimée');
+              toast.error('Photo supprimée');
               this.componentDidMount();
           })
           .catch(err => console.log(err));
@@ -212,9 +228,9 @@ class editPicture extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/myAddresses'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Mes adresses de prestations
@@ -275,7 +291,7 @@ class editPicture extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
+                                {/*<Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
@@ -318,7 +334,7 @@ class editPicture extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
 
                             </Grid>
@@ -331,9 +347,9 @@ class editPicture extends React.Component {
                             </Grid>
                             <Grid container style={{marginTop: 20}}>
                                 <Grid item style={{width: 150, height: 150}}>
-                                    <DeleteIcon onClick={()=>this.deletePicture()} className={classes.deleteicon} style={{marginLeft: '90%',padding: '2%', marginBottom: '-10%', color: '#616060',  cursor: 'pointer' }}/>
+                                    <DeleteIcon onClick={()=>this.handleClickOpen()} className={classes.deleteicon} style={{marginLeft: '90%',padding: '2%', marginBottom: '-10%', color: '#616060',  cursor: 'pointer' }}/>
 
-                                    <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img height={150} width={150} style={{borderRadius: '50%'}} src={`../${user.picture}`}></img>}
+                                    <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img height={150} width={150} style={{borderRadius: '50%'}} src={`../${user.picture}`} alt={'picture'}/>}
                                 </Grid>
 
                                 <Grid item style={{marginLeft: '5%'}}>
@@ -348,7 +364,7 @@ class editPicture extends React.Component {
                                                 avec seulement vous sur la photo. </p><br />
 
                                             <label style={{display: 'inline-block', marginTop: 15,color:'#2FBCD3'}} className="forminputs">
-                                                <p style={{cursor:"pointer",fontSize:'0.8rem'}}>Télécharger une photo depuis votre ordinateur</p>
+                                                <p style={{cursor:"pointer",fontSize:'0.8rem'}}>Téléchargez une photo depuis votre ordinateur</p>
                                                 <input id="file" style={{display: 'none'}} name="myImage" type="file"
                                                        onChange={this.onChange}
                                                        className="form-control" accept={'image/*'}
@@ -358,7 +374,7 @@ class editPicture extends React.Component {
 
                                         </Grid>
                                         <Grid item style={{ display: 'flex', justifyContent: 'left', marginTop: 30 }}>
-                                            <Button type="submit" variant="contained" color="primary" style={{ width: '50%',color: 'white' }}>
+                                            <Button type="submit" variant="contained" color="primary" style={{ width: '20%',color: 'white' }}>
                                                 Valider
                                             </Button>
                                         </Grid>
@@ -370,7 +386,29 @@ class editPicture extends React.Component {
                     </Grid>
 
                 </Layout>
-                <Footer/>
+                <Footer2/>
+
+                <Dialog
+                    open={this.state.open}
+                    onClose={()=>this.handleClose()}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Supprimer votre photo ?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Voulez-vous vraiment supprimer votre photo de profil ?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose()} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={()=>this.deletePicture()} color="secondary" autoFocus>
+                            Supprimer
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
             </Fragment>
         );

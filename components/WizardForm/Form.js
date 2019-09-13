@@ -4,7 +4,7 @@ import { Formik, Field, ErrorMessage, FieldArray, FastField } from 'formik';
 import styled from 'styled-components';
 import axios from 'axios';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import "react-tabs/style/react-tabs.css";
+
 import InputRange from 'react-input-range';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -40,7 +40,6 @@ import Siret from './Siret';
 import Availability from './Availability';
 import { FormControl, RadioGroup, Radio } from '@material-ui/core';
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Loader from 'react-loader-spinner';
 import Clear from '@material-ui/icons/Clear';
 
@@ -409,7 +408,7 @@ class Wizard extends React.Component {
                                             }
                                             axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
                                                 .then(res => {
-                                                    
+
                                                 })
                                                 .catch(err => {
                                                     console.log(err);
@@ -742,7 +741,7 @@ class Wizard extends React.Component {
                                                     check = false;
                                                 } else if(form.values.createShop.is_professional === true && form.values.createShop.siret === "" && form.values.createShop.denomination === "" || form.values.createShop.isEngaged === false) {
                                                     check = true;
-                                                } 
+                                                }
                                                 else if (form.values.createShop.is_professional === true && form.values.createShop.isCertified === false) {
                                                     check = true
                                                 } else if (form.values.createShop.is_professional === true && form.values.createShop.siret !== "" && form.values.createShop.denomination !== "" || form.values.createShop.isEngaged === false) {
@@ -1274,15 +1273,15 @@ class Form extends React.Component {
                                                                 </ExpansionPanel>
                                                             )
                                                         })
-                                                    ):(this.state.loading === true 
-                                                        ? <Loader 
+                                                    ):(this.state.loading === true
+                                                        ? <Loader
                                                             type="TailSpin"
                                                             color="#2FBCD3"
                                                             height={100}
                                                             width={100}
                                                             style={{textAlign: 'center'}}
-                                                        /> 
-                                                        : 
+                                                        />
+                                                        :
                                                         <Typography align="center" style={{fontSize: 15, marginTop: '2rem', color: '#F8727F'}}>Afin d'afficher la sélection des services, veuillez sélectionner vos catégories...</Typography>)}
                                                 </div>
                                             </div>
@@ -1327,7 +1326,7 @@ class Form extends React.Component {
                                                                             certification: null 
                                                                         }, perimeter: 50, 
                                                                         delayBeforeShop: 1, 
-                                                                        delayBeforeShopDWM: '', 
+                                                                        delayBeforeShopDWM: '',
                                                                         city: this.state.userCity, 
                                                                         address: this.state.userAddress, 
                                                                         postal_code: this.state.userZipCode, 
@@ -1413,7 +1412,7 @@ class Form extends React.Component {
                             
                                 <FieldArray
                                     name="submission"
-                                    render={(arrayHelpers) => {                          
+                                    render={(arrayHelpers) => {
                                         return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
                                             <React.Fragment>
                                                 <div style={{padding: '2rem 2rem 1rem 2rem'}}>
@@ -1427,7 +1426,7 @@ class Form extends React.Component {
                                                         {this.state.allInOneServ.map((data, index) => {
                                                             return <Tab 
                                                                         key={data.serviceId} 
-                                                                        style={{zIndex: 999999999 - index, position: 'relative', boxShadow: typeof arrayHelpers.form.errors.submission === 'undefined' ? null : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? 'inset 0 -5px 0 rgb(248, 114, 127)' : null)}} 
+                                                                        style={{zIndex: 999999999 - index, position: 'relative', boxShadow: typeof arrayHelpers.form.errors.submission === 'undefined' ? null : (typeof arrayHelpers.form.errors.submission[index] !== 'undefined' && arrayHelpers.form.errors.submission[index] !== null ? 'inset 0 -5px 0 rgb(248, 114, 127)' : null)}}
                                                                         onClick={() => {
                                                                             const div = document.getElementById('bigDiv');
                                                                             div.scrollTop = 0;
@@ -1524,7 +1523,7 @@ class Form extends React.Component {
                                                                                                                                         {option.label}
                                                                                                                                     </MenuItem>
                                                                                                                                     )
-                                                                                                                                    
+
                                                                                                                                 })}
                                                                                                                             </TextField>
                                                                                                                             <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
@@ -2126,8 +2125,7 @@ class Form extends React.Component {
                                 {/*<div>*/}
                                 
                                 {/*</div>*/}
-                        </Grid>    
-                        <Debug />                  
+                        </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
                         <FieldArray render={({form}) => {

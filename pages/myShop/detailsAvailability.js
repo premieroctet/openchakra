@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import axios from "axios";
 import moment from 'moment';
 import Button from "@material-ui/core/Button";
@@ -21,6 +22,11 @@ import FormControl from "@material-ui/core/FormControl";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { toast } from 'react-toastify';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 registerLocale('fr', fr);
 const _ = require('lodash');
 
@@ -123,6 +129,7 @@ class detailsAvailability extends React.Component {
             saturday: false,
             sunday: false,
             all_service: [],
+            open: false,
 
         };
         this.handleChecked=this.handleChecked.bind(this);
@@ -216,6 +223,14 @@ class detailsAvailability extends React.Component {
 
     }
 
+    handleClickOpen() {
+        this.setState({open:true});
+    }
+
+    handleClose() {
+        this.setState({open:false});
+    }
+
 
     handleChange = name => event => {
         this.setState({ [name]: event.target.checked });
@@ -280,8 +295,8 @@ class detailsAvailability extends React.Component {
     };
 
     handleClickMonday() {
-        if(moment(this.state.monday_end).isBefore(moment(this.state.monday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.monday_end).isBefore(moment(this.state.monday_begin))|| this.state.monday_begin ==="" || this.state.monday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -316,8 +331,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickTuesday() {
-        if(moment(this.state.tuesday_end).isBefore(moment(this.state.tuesday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.tuesday_end).isBefore(moment(this.state.tuesday_begin))|| this.state.tuesday_begin ==="" || this.state.tuesday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -352,8 +367,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickWednesday() {
-        if(moment(this.state.wednesday_end).isBefore(moment(this.state.wednesday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.wednesday_end).isBefore(moment(this.state.wednesday_begin))|| this.state.wednesday_begin ==="" || this.state.wednesday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -388,8 +403,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickThursday() {
-        if(moment(this.state.thursday_end).isBefore(moment(this.state.thursday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.thursday_end).isBefore(moment(this.state.thursday_begin))|| this.state.thursday_begin ==="" || this.state.thursday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -424,8 +439,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickFriday() {
-        if(moment(this.state.friday_end).isBefore(moment(this.state.friday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.friday_end).isBefore(moment(this.state.friday_begin))|| this.state.friday_begin ==="" || this.state.friday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -460,8 +475,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickSaturday() {
-        if(moment(this.state.saturday_end).isBefore(moment(this.state.saturday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.saturday_end).isBefore(moment(this.state.saturday_begin))|| this.state.saturday_begin ==="" || this.state.saturday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -496,8 +511,8 @@ class detailsAvailability extends React.Component {
     }
 
     handleClickSunday() {
-        if(moment(this.state.sunday_end).isBefore(moment(this.state.sunday_begin))){
-            toast.error('Erreur, heure de fin antérieure à l\'heure de début');
+        if(moment(this.state.sunday_end).isBefore(moment(this.state.sunday_begin))|| this.state.sunday_begin ==="" || this.state.sunday_end ===""){
+            toast.error('Erreur, vérifiez vos horaires');
         } else {
 
 
@@ -628,12 +643,12 @@ class detailsAvailability extends React.Component {
 
 
                         </Grid>
-                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:115}}>
+                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
 
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'45%',zIndex:501}} width={'9%'} alt={'picture'}/>
+                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'45%',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}} alt={'picture'}/>
                         </Grid>
                     </Grid>
 
@@ -773,6 +788,8 @@ class detailsAvailability extends React.Component {
                                                             isSearchable
                                                             closeMenuOnSelect={false}
                                                             isDisabled={this.state.monday_all_service}
+                                                            placeholder={'Sélectionnez vos services'}
+                                                            noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                         />
                                                     </FormControl>
@@ -938,6 +955,8 @@ class detailsAvailability extends React.Component {
                                                                 isSearchable
                                                                 closeMenuOnSelect={false}
                                                                 isDisabled={this.state.tuesday_all_service}
+                                                                placeholder={'Sélectionnez vos services'}
+                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                             />
                                                         </FormControl>
@@ -1103,6 +1122,8 @@ class detailsAvailability extends React.Component {
                                                                 isSearchable
                                                                 closeMenuOnSelect={false}
                                                                 isDisabled={this.state.wednesday_all_service}
+                                                                placeholder={'Sélectionnez vos services'}
+                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                             />
                                                         </FormControl>
@@ -1266,6 +1287,8 @@ class detailsAvailability extends React.Component {
                                                                                 isSearchable
                                                                                 closeMenuOnSelect={false}
                                                                                 isDisabled={this.state.thursday_all_service}
+                                                                                placeholder={'Sélectionnez vos services'}
+                                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                                             />
                                                                         </FormControl>
@@ -1431,6 +1454,8 @@ class detailsAvailability extends React.Component {
                                                                                                 isSearchable
                                                                                                 closeMenuOnSelect={false}
                                                                                                 isDisabled={this.state.friday_all_service}
+                                                                                                placeholder={'Sélectionnez vos services'}
+                                                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                                                             />
                                                                                         </FormControl>
@@ -1596,6 +1621,8 @@ class detailsAvailability extends React.Component {
                                                                 isSearchable
                                                                 closeMenuOnSelect={false}
                                                                 isDisabled={this.state.saturday_all_service}
+                                                                placeholder={'Sélectionnez vos services'}
+                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                             />
                                                         </FormControl>
@@ -1762,6 +1789,8 @@ class detailsAvailability extends React.Component {
                                                                 isSearchable
                                                                 closeMenuOnSelect={false}
                                                                 isDisabled={this.state.sunday_all_service}
+                                                                placeholder={'Sélectionnez vos services'}
+                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
                                                             />
                                                         </FormControl>
@@ -1850,10 +1879,10 @@ class detailsAvailability extends React.Component {
                                     </Grid>
                                     : null}
                             </Grid>
-                            <Grid container style={{marginTop:20,marginLeft:20}}>
+                            <Grid container style={{marginTop:20,marginLeft:20,marginBottom:20}}>
 
                                 <Button onClick={()=>this.onSubmit()} variant={"contained"} color={"primary"} style={{color:"white",marginRight:20}}>Enregistrer</Button>
-                                <Button onClick={()=>this.deleteAvailability()} variant={"contained"} color={"secondary"} style={{color:"white"}}>Supprimer</Button>
+                                <Button onClick={()=>this.handleClickOpen()} variant={"contained"} color={"secondary"} style={{color:"white"}}>Supprimer</Button>
                             </Grid>
 
 
@@ -1864,6 +1893,29 @@ class detailsAvailability extends React.Component {
 
 
                 </Layout>
+                <Footer/>
+
+                <Dialog
+                    open={this.state.open}
+                    onClose={()=>this.handleClose()}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Supprimer cette disponibilité"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Voulez-vous vraiment supprimer cette disponibilité ?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose()} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={()=>this.deleteAvailability()} color="secondary" autoFocus>
+                            Supprimer
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
             </Fragment>
         );

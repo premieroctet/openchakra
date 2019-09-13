@@ -16,7 +16,6 @@ const jwt = require('jsonwebtoken');
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '170vh',
         justifyContent: 'top',
         flexDirection: 'column',
 
