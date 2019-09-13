@@ -1998,7 +1998,11 @@ class Form extends React.Component {
                                                                                                         Joindre mon diplôme
                                                                                                         <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" onChange={(event) => {
                                                                                                             //arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, event.currentTarget.files[0]);
-                                                                                                            this.setState({ diplomaObj: event.currentTarget.files[0] })
+                                                                                                            if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                                                return;
+                                                                                                            } else {
+                                                                                                                this.setState({ diplomaObj: event.currentTarget.files[0] })
+                                                                                                            } 
                                                                                                         }} className="form-control"
                                                                                                         />
                                                                                                     </label>
@@ -2087,7 +2091,11 @@ class Form extends React.Component {
                                                                                                         Joindre ma certification
                                                                                                         <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certification" type="file" onChange={(event) => {
                                                                                                             //arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, event.currentTarget.files[0]);
-                                                                                                            this.setState({ certifObj: event.currentTarget.files[0] })
+                                                                                                            if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                                                return;
+                                                                                                            } else {
+                                                                                                                this.setState({ certifObj: event.currentTarget.files[0] })
+                                                                                                            } 
                                                                                                         }} className="form-control"
                                                                                                         />
                                                                                                     </label>
@@ -2538,24 +2546,31 @@ class Form extends React.Component {
                                                                                 id="icon-button-file"
                                                                                 type="file"
                                                                                 onChange={(event) => {
-                                                                                    form.setFieldValue("alfredUpdate.profile_picture_user", event.currentTarget.files[0])
+                                                                                    if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                        return;
+                                                                                    } else {
+                                                                                        form.setFieldValue("alfredUpdate.profile_picture_user", event.currentTarget.files[0]);
+                                                                                    }
                                                                                 }}
                                                                                 name={"myImage"}
                                                                             />
-                                                                            <label htmlFor="icon-button-file">
-                                                                                <IconButton
-                                                                                    color="primary"
-                                                                                    className={classes.button}
-                                                                                    style={{
-                                                                                        width: 100,
-                                                                                        height: 100,
-                                                                                        backgroundColor: "lightgrey"
-                                                                                    }}
-                                                                                    component="span"
-                                                                                >
-                                                                                    {form.values.alfredUpdate.profile_picture_user === null ? <img src={this.state.currentUser.picture} height="100" width="100" style={{borderRadius: '50%'}} /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
-                                                                                </IconButton>
-                                                                            </label>
+                                                                            <div style={{position: 'relative'}}>
+                                                                                <label htmlFor="icon-button-file">
+                                                                                    <IconButton
+                                                                                        color="primary"
+                                                                                        className={classes.button}
+                                                                                        style={{
+                                                                                            width: 100,
+                                                                                            height: 100,
+                                                                                            backgroundColor: "lightgrey",
+                                                                                        }}
+                                                                                        component="span"
+                                                                                    >
+                                                                                        {form.values.alfredUpdate.profile_picture_user === null ? <img src={this.state.currentUser.picture} height="100" width="100" style={{borderRadius: '50%'}} /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
+                                                                                    </IconButton>
+                                                                                </label>
+                                                                                {form.values.alfredUpdate.profile_picture_user === null ? null : <Clear color="secondary" style={{cursor: 'pointer', position: 'absolute', top: 0, right: -20}} onClick={() => form.setFieldValue(`alfredUpdate.profile_picture_user`, null)}/>}
+                                                                            </div>
                                                                         </React.Fragment>
                                                                     )
                                                                 }} />
@@ -2635,11 +2650,15 @@ class Form extends React.Component {
                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                         Carte identité recto
                                                                                         <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
-                                                                                            form.setFieldValue("createShop.id_recto", event.currentTarget.files[0])
+                                                                                            if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                                return;
+                                                                                            } else {
+                                                                                                form.setFieldValue("createShop.id_recto", event.currentTarget.files[0]);
+                                                                                            }
                                                                                         }} className="form-control"
                                                                                         />
                                                                                     </label>
-                                                                                    <span>{form.values.createShop.id_recto !== null ? form.values.createShop.id_recto.name.substr(0, 10) + '...' : null}</span>
+                                                                                    {form.values.createShop.id_recto !== null ? <React.Fragment><span>{form.values.createShop.id_recto.name.substr(0, 10) + '...'}</span><Clear color="secondary" style={{cursor: 'pointer'}} onClick={() => form.setFieldValue("createShop.id_recto", null)}/></React.Fragment> : null}
                                                                                     <ErrorMessage name="createShop.id_recto" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                 </React.Fragment>
                                                                             )
@@ -2656,11 +2675,15 @@ class Form extends React.Component {
                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                         Carte identité verso
                                                                                         <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
-                                                                                            form.setFieldValue("createShop.id_verso", event.currentTarget.files[0])
+                                                                                            if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                                return;
+                                                                                            } else {
+                                                                                                form.setFieldValue("createShop.id_verso", event.currentTarget.files[0]);
+                                                                                            }
                                                                                         }} className="form-control"
                                                                                         />
                                                                                     </label>
-                                                                                    <span>{form.values.createShop.id_verso !== null ? form.values.createShop.id_verso.name.substr(0, 10) + '...' : null}</span>
+                                                                                    {form.values.createShop.id_verso !== null ? <React.Fragment><span>{form.values.createShop.id_verso.name.substr(0, 10) + '...'}</span><Clear color="secondary" style={{cursor: 'pointer'}} onClick={() => form.setFieldValue("createShop.id_verso", null)}/></React.Fragment> : null}
                                                                                     <ErrorMessage name="createShop.id_verso" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                 </React.Fragment>
                                                                             )
@@ -2675,11 +2698,15 @@ class Form extends React.Component {
                                                                                 <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                     Passeport
                                                                                     <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
-                                                                                        form.setFieldValue("createShop.id_recto", event.currentTarget.files[0])
+                                                                                        if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                            return;
+                                                                                        } else {
+                                                                                            form.setFieldValue("createShop.id_recto", event.currentTarget.files[0]);
+                                                                                        }
                                                                                     }} className="form-control"
                                                                                     />
                                                                                 </label>
-                                                                                <span>{form.values.createShop.id_recto !== null ? form.values.createShop.id_recto.name.substr(0, 10) + '...' : null}</span>
+                                                                                {form.values.createShop.id_recto !== null ? <React.Fragment><span>{form.values.createShop.id_recto.name.substr(0, 10) + '...'}</span> <Clear color="secondary" style={{cursor: 'pointer'}} onClick={() => form.setFieldValue("createShop.id_recto", null)}/></React.Fragment> : null}
                                                                                 <ErrorMessage name="createShop.id_recto" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                             </React.Fragment>
                                                                         )
