@@ -10,6 +10,16 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import dynamic from 'next/dynamic';
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpandMoreIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Card from "@material-ui/core/Card";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import DatePicker from "react-datepicker";
+import FormControl from "@material-ui/core/FormControl";
+import Select2 from "react-select";
 
 
 
@@ -330,6 +340,7 @@ class services extends React.Component {
         const {friday_event} = this.state;
         const {saturday_event} = this.state;
         const {sunday_event} = this.state;
+        const {availability} = this.state;
 
 
         return (
@@ -398,7 +409,7 @@ class services extends React.Component {
                                     <Grid container>
                                         <Grid item xs={12}>
                                             <h3 style={{fontSize: '1.35rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: 'bold',}}>
-                                                Disponibilité :
+                                                Disponibilités :
                                             </h3>
                                         </Grid>
                                         <Grid item xs={2} style={{marginTop: '-20px', marginBottom: '15px'}}><hr className={classes.disponibilityHR}/></Grid>
@@ -407,7 +418,7 @@ class services extends React.Component {
                                     </Grid>
                                     <Grid container>
                                         {/*<Grid item xs={1} style={{}}></Grid>*/}
-                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
+                                        {/*<Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
                                          <Typography>
                                              Lundi :  <br/>
                                         {monday_event.map((e,index)=>(
@@ -496,7 +507,68 @@ class services extends React.Component {
                                             </React.Fragment>
                                         ))}
                                         </Typography>
-                                        </Grid>
+                                        </Grid>*/}
+                                        {availability.map((e,index)=> {
+                                            if(e.period.active){
+                                                return (
+                                                    <ExpansionPanel
+                                                        style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                                    >
+                                                        <ExpansionPanelSummary
+                                                            expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                                        >
+                                                            <Typography
+                                                                style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
+                                                            >
+                                                                Du {moment(e.period.month_begin).format('LL')} au {moment(e.period.month_end).format('LL')}
+                                                            </Typography>
+                                                            <Typography style={{ fontSize: 12, lineHeight: 3 }}>
+
+                                                            </Typography>
+                                                        </ExpansionPanelSummary>
+                                                        <ExpansionPanelDetails>
+
+                                                            <Grid container>
+
+                                                            </Grid>
+
+
+
+                                                        </ExpansionPanelDetails>
+                                                    </ExpansionPanel>
+                                                )
+                                            } else {
+                                                return (
+                                                    <ExpansionPanel
+                                                        style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                                    >
+                                                        <ExpansionPanelSummary
+                                                            expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                                        >
+                                                            <Typography
+                                                                style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
+                                                            >
+                                                                Disponibilités sans périodes
+                                                            </Typography>
+                                                            <Typography style={{ fontSize: 12, lineHeight: 3 }}>
+                                                            </Typography>
+                                                        </ExpansionPanelSummary>
+                                                        <ExpansionPanelDetails>
+
+                                                            <Grid container>
+
+                                                            </Grid>
+
+
+
+                                                        </ExpansionPanelDetails>
+                                                    </ExpansionPanel>
+                                                )
+                                            }
+                                                })}
+
+
+
                                     </Grid>
                                 </div>
 
