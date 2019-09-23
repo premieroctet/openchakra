@@ -29,6 +29,7 @@ import Switch from "@material-ui/core/Switch";
 import CircleCheckedFilled from '@material-ui/icons/CheckCircle';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import Select from 'react-select';
+import MaterialSelect from '@material-ui/core/Select';
 
 import { Debug } from './Debug';
 import MultipleSelect from './MultipleSelect';
@@ -1070,6 +1071,7 @@ class Form extends React.Component {
                             friday_event: [],
                             saturday_event: [],
                             sunday_event: [],
+                            recurrent_event: [],
                 
                             active: false,
                             month_begin: '',
@@ -1512,12 +1514,28 @@ class Form extends React.Component {
                                                                                                                 render={({field, form}) => {
                                                                                                                     return (
                                                                                                                         <React.Fragment>
-                                                                                                                            <TextField
+                                                                                                                            <MaterialSelect
                                                                                                                                 {...field}
                                                                                                                                 helperText={`Méthode de facturation`}
                                                                                                                                 disabled={!p.checked}
-                                                                                                                                select
                                                                                                                                 margin="none"
+                                                                                                                                onChange={event => {
+                                                                                                                                    this.setState({
+                                                                                                                                        [`billingChoice${indexp}`]: event.target.value
+                                                                                                                                    });
+                                                                                                                                    form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, event.target.value);
+                                                                                                                                }}
+                                                                                                                                value={p.billingChoice.map((option, index) => {
+                                                                                                                                    if (index === 0) {
+                                                                                                                                        if (typeof this.state[`billingChoice${indexp}`] === 'undefined' || this.state[`billingChoice${indexp}`] === null) {
+                                                                                                                                            this.setState({
+                                                                                                                                                [`billingChoice${indexp}`]: option.label
+                                                                                                                                            });
+                                                                                                                                            form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, option.label);
+                                                                                                                                        }
+                                                                                                                                        return this.state[`billingChoice${indexp}`];
+                                                                                                                                    }
+                                                                                                                                })}
                                                                                                                             >
                                                                                                                                 {p.billingChoice.map(option => {
                                                                                                                                     return (
@@ -1527,7 +1545,8 @@ class Form extends React.Component {
                                                                                                                                     )
 
                                                                                                                                 })}
-                                                                                                                            </TextField>
+                                                                                                                                <MenuItem value="test">Test</MenuItem>
+                                                                                                                            </MaterialSelect>
                                                                                                                             <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                                                         </React.Fragment>
                                                                                                                     )
@@ -2136,6 +2155,7 @@ class Form extends React.Component {
                                 
                                 {/*</div>*/}
                         </Grid>
+                        <Debug />
                     </Wizard.Page>
                     <Wizard.Page>
                         <FieldArray render={({form}) => {

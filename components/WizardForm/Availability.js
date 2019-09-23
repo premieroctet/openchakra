@@ -166,27 +166,45 @@ class Availability extends React.Component {
           .recurrent_all_service
       };
 
+      const objRecurrent = {
+        days: [],
+        begin: this.props.formikCtx.values.servicesAvailability.all_begin,
+        end: this.props.formikCtx.values.servicesAvailability.all_end,
+        services: arrayService,
+        all_services: this.props.formikCtx.values.servicesAvailability
+          .recurrent_all_service
+      }
+
       if (this.props.formikCtx.values.servicesAvailability.monday) {
         this.props.formikCtx.values.servicesAvailability.monday_event.push(obj);
+        objRecurrent.days.push('lundi');
       }
       if (this.props.formikCtx.values.servicesAvailability.tuesday) {
         this.props.formikCtx.values.servicesAvailability.tuesday_event.push(obj);
+        objRecurrent.days.push('mardi');
       }
       if (this.props.formikCtx.values.servicesAvailability.wednesday) {
         this.props.formikCtx.values.servicesAvailability.wednesday_event.push(obj);
+        objRecurrent.days.push('mercredi');
       }
       if (this.props.formikCtx.values.servicesAvailability.thursday) {
         this.props.formikCtx.values.servicesAvailability.thursday_event.push(obj);
+        objRecurrent.days.push('jeudi');
       }
       if (this.props.formikCtx.values.servicesAvailability.friday) {
         this.props.formikCtx.values.servicesAvailability.friday_event.push(obj);
+        objRecurrent.days.push('vendredi');
       }
       if (this.props.formikCtx.values.servicesAvailability.saturday) {
         this.props.formikCtx.values.servicesAvailability.saturday_event.push(obj);
+        objRecurrent.days.push('samedi');
       }
       if (this.props.formikCtx.values.servicesAvailability.sunday) {
         this.props.formikCtx.values.servicesAvailability.sunday_event.push(obj);
+        objRecurrent.days.push('dimanche');
       }
+
+      this.props.formikCtx.values.servicesAvailability.recurrent_event.push(objRecurrent);
 
       toast.info("Créneau ajouté");
 
@@ -722,6 +740,104 @@ class Availability extends React.Component {
               <ExpansionPanelDetails>
                 <Grid container>
                   <Card style={{ width: "100%", marginTop: 15 }}>
+                  {formik.servicesAvailability.recurrent_event.length ? (
+                      <Grid container>
+                        {formik.servicesAvailability.recurrent_event.map(
+                          (event, index) => {
+                            return (
+                              <FieldArray
+                                name="servicesAvailability.recurrent_event"
+                                render={arrayHelper => {
+                                  return (
+                                    <Grid item xs={12} sm={12} md={4}>
+                                      <Card
+                                        style={{
+                                          padding: "2rem",
+                                          display: "flex",
+                                          flexFlow: "column",
+                                          marginRight: "1rem",
+                                          minHeight: 205,
+                                          minWidth: 300
+                                        }}
+                                      >
+                                        <Typography
+                                          style={{
+                                            textAlign: "center",
+                                            marginBottom: "1rem"
+                                          }}
+                                        >
+                                          {event.days.length !== 0 ? (
+                                            event.days.map(day => (
+                                                <span style={{display: 'inline-block'}}>{day}&nbsp;</span>
+                                            ))
+                                          ) : null}
+                                        </Typography>
+                                        {event.services.length !== 0 ? (
+                                          event.services.map(service => (
+                                            <Typography
+                                              style={{
+                                                textAlign: "center",
+                                                marginBottom: "1rem"
+                                              }}
+                                            >
+                                              {service.label}
+                                            </Typography>
+                                          ))
+                                        ) : (
+                                          <Typography
+                                            style={{
+                                              textAlign: "center",
+                                              marginBottom: "1rem"
+                                            }}
+                                          >
+                                            Tous les services
+                                          </Typography>
+                                        )}
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            flexFlow: "row",
+                                            justifyContent: "space-between",
+                                            marginBottom: "1rem"
+                                          }}
+                                        >
+                                          <Typography>
+                                            {moment(event.begin).format("LT")}
+                                          </Typography>
+                                          <Typography>-</Typography>
+                                          <Typography>
+                                            {moment(event.end).format("LT")}
+                                          </Typography>
+                                        </div>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "center"
+                                          }}
+                                        >
+                                          <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={() => {
+                                              arrayHelper.remove(index);
+                                            }}
+                                            style={{color:"white"}}
+                                          >
+                                            Supprimer
+                                          </Button>
+                                        </div>
+                                      </Card>
+                                    </Grid>
+                                  );
+                                }}
+                              />
+                            );
+                          }
+                        )}
+                      </Grid>
+                    ) : (
+                      <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
+                    )}
                     <Grid container style={{ paddingLeft: 20 }}>
                       <h4>Ajouter une disponibilité</h4>
                     </Grid>
@@ -2350,6 +2466,7 @@ class Availability extends React.Component {
             Enregistrer
           </Button>
         </Grid>*/}
+        <Debug />
       </React.Fragment>
     );
   }
