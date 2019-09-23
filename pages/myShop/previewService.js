@@ -592,6 +592,20 @@ class services extends React.Component {
                                                         <ExpansionPanelDetails>
 
                                                             <Grid container>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Lundi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {monday_event.map((e)=>(
+                                                                                <React.Fragment>
+
+                                                                                    {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
+
+                                                                                </React.Fragment>
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
 
                                                             </Grid>
 
