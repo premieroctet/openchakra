@@ -117,6 +117,7 @@ class signup extends React.Component {
           zip_code: '',
           country: '',
           checked: false,
+          check2: false,
           errors: {},
           lat: '',
           lng: '',
@@ -140,6 +141,17 @@ class signup extends React.Component {
   onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
       };
+
+  onChangePassword = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")){
+      this.setState({password: e.target.value});
+      this.setState({check2: true});
+
+    } else {
+      this.setState({check2: false});
+    }
+  };
 
     onChangeAddress({query, rawAnswer, suggestion, suggestionIndex}) {
         this.setState({city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode,country: suggestion.country,
@@ -358,9 +370,10 @@ class signup extends React.Component {
                               type="password"
                               name="password"
                               value={this.state.password}
-                              onChange={this.onChange}
+                              onChange={this.onChangePassword}
                               error={errors.password}
-                              helperText="8 caractères minimum"
+                              helperText="8 caractères minimum dont
+                                    une majuscule, une minuscule, un chiffre et un caractère spécial"
                           />
                         </Grid>
                       </Grid>
@@ -417,7 +430,7 @@ class signup extends React.Component {
                       </Grid>
 
                       <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                        {this.state.checked ? <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color:"white" }}>
+                        {this.state.checked && this.state.check2 ? <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color:"white" }}>
                           Inscription
                         </Button> : <Button disabled type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
                           Inscription

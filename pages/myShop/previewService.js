@@ -593,16 +593,195 @@ class services extends React.Component {
 
                                                             <Grid container>
                                                                 <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
                                                                     <Typography>
                                                                         <div className={classes.dispoheader}>Lundi  </div>
                                                                         <br/>
                                                                         <div className={classes.dispocardin} >
-                                                                            {monday_event.map((e)=>(
-                                                                                <React.Fragment>
+                                                                            {e.monday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
 
-                                                                                    {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
 
-                                                                                </React.Fragment>
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Mardi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.tuesday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Mercredi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.wednesday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Jeudi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.thursday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Vendredi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.friday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Samedi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.saturday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Dimanche  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.sunday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    }
+                                                                                    else{
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
                                                                             ))}</div>
                                                                     </Typography>
                                                                 </Grid>
@@ -633,7 +812,198 @@ class services extends React.Component {
                                                         <ExpansionPanelDetails>
 
                                                             <Grid container>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
 
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Lundi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.monday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Mardi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.tuesday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Mercredi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.wednesday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Jeudi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.thursday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Vendredi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.friday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Samedi  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.saturday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
+
+                                                                    <Typography>
+                                                                        <div className={classes.dispoheader}>Dimanche  </div>
+                                                                        <br/>
+                                                                        <div className={classes.dispocardin} >
+                                                                            {e.sunday.event.map((f)=> (
+                                                                                f.services.map(g => {
+                                                                                    if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <p>Aucune disponibilités</p>
+                                                                                        )
+                                                                                    }
+
+                                                                                })
+
+                                                                            ))}</div>
+                                                                    </Typography>
+                                                                </Grid>
                                                             </Grid>
 
 
