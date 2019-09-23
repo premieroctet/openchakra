@@ -22,6 +22,7 @@ import fr from 'date-fns/locale/fr';
 import Birthday from '@material-ui/icons/CakeOutlined'
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
+import {number} from "prop-types";
 registerLocale('fr', fr);
 
 
@@ -118,6 +119,8 @@ class editProfile extends React.Component {
         super(props);
         this.state = {
             user: {},
+            phone: '',
+            checked: false,
             languages: [],
             selectedLanguages: null,
             birthday: null,
@@ -143,7 +146,7 @@ class editProfile extends React.Component {
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
-                this.setState({user:user});
+                this.setState({user:user,phone:user.phone});
                 this.setState({birthday:user.birthday});
                 this.setState({selectedLanguages :user.languages.map(b => ({
                         label: b,
@@ -492,12 +495,14 @@ class editProfile extends React.Component {
                                 </Grid>
                                 <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 10}}>
                                     <TextField
-                                        type="number"
 
                                         id="standard-name"
                                         style={{width: '100%'}}
                                         value={user.phone || ''}
-                                        InputProps={{ inputProps: { min: 0, max: 10 } }}
+                                        onInput = {(e) =>{
+                                            e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                                        }}
+                                        type={'number'}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'phone'}
@@ -586,10 +591,13 @@ class editProfile extends React.Component {
                                     <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 10}}>
 
                                         <TextField
-                                            type="number"
                                             id="standard-name"
                                             style={{width: '100%'}}
                                             value={user.emergency_phone || ''}
+                                            onInput = {(e) =>{
+                                                e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                                            }}
+                                            type={'number'}
                                             onChange={this.onChange}
                                             margin="normal"
                                             name={'emergency_phone'}
@@ -605,7 +613,7 @@ class editProfile extends React.Component {
                     </Grid>
                     <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
                     alignItems:"center",height:60, marginBottom:"-30px"}}>
-                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
+                        <Button disabled={this.state.checked} size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
                                 style={{color: 'white',maxHeight:40,marginRight:20}}>
                             Enregistrer
                         </Button>
