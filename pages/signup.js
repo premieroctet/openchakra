@@ -98,7 +98,7 @@ const styles = theme => ({
 });
 
 const Input2 = ({value,  onClick }) => (
-    <TextField value={value} placeholder={'jj//mm/aaaa'} style={{cursor:"pointer"}} color={"primary"} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
+    <TextField value={value} placeholder={'jj/mm/aaaa'} style={{cursor:"pointer"}} color={"primary"} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
 
 
 );
@@ -398,6 +398,7 @@ class signup extends React.Component {
                         />
 
                       </Grid>
+                          {this.state.errors.birthday != null ? <em>{this.state.errors.birthday}</em> : null}
 
 
 

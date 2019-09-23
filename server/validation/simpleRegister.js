@@ -1,5 +1,9 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
+const moment = require('moment');
+const year = new Date().getFullYear()-16;
+const currentYear = new Date().getFullYear();
+moment.locale('fr');
 
 module.exports = function validateSimpleRegisterInput(data) {
     let errors = {};
@@ -53,6 +57,9 @@ module.exports = function validateSimpleRegisterInput(data) {
 
     if(Validator.isEmpty(data.country)) {
         errors.country = 'Veuillez choisir un pays';
+    }
+    if(moment(data.birthday).isAfter(moment().subtract(16,'year'))){
+        errors.birthday = 'Date de naissance invalide';
     }
 
 

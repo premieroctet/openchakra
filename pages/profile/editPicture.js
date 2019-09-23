@@ -187,6 +187,7 @@ class editPicture extends React.Component {
       axios.delete(url+'myAlfred/api/users/profile/picture/delete')
           .then(() => {
               toast.error('Photo supprimée');
+              this.setState({open:false});
               this.componentDidMount();
           })
           .catch(err => console.log(err));
@@ -349,7 +350,7 @@ class editPicture extends React.Component {
                                 <Grid item>
                                     <DeleteIcon onClick={()=>this.handleClickOpen()} className={classes.deleteicon} style={{marginLeft: '90%',padding: '2%', marginBottom: '-10%', color: '#616060',  cursor: 'pointer' }}/>
 
-                                    <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img height={150} width={150} style={{borderRadius: '50%'}} src={`../${user.picture}`} alt={'picture'}/>}
+                                    <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img width={150} style={{borderRadius: '50%'}} src={`../${user.picture}`} alt={'picture'}/>}
                                 </Grid>
 
                                 <Grid item style={{marginLeft: '5%'}}>
