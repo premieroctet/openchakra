@@ -903,6 +903,8 @@ class Form extends React.Component {
             .then(res => {
                 this.state.phone = res.data.phone;
                 this.state.currentUser = res.data;
+                if (res.data.id_card.recto) this.state.userIdCardRecto = res.data.id_card.recto.substr(22);
+                if (res.data.id_card.verso) this.state.userIdCardVerso = res.data.id_card.verso.substr(22);
                 this.state.userCity = {label: res.data.billing_address.city, value: res.data.billing_address.city};
                 this.state.userAddress = {label: res.data.billing_address.address, value: res.data.billing_address.address};
                 this.state.userZipCode = {label: res.data.billing_address.zip_code, value: res.data.billing_address.zip_code};
@@ -2016,7 +2018,7 @@ class Form extends React.Component {
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.diploma.label`, this.state.diplomaName);
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, this.state.diplomaObj);
                                                                                                         }}
-                                                                                                        disabled={this.state.diplomaName === null || this.state.diplomaName === '' || arrayHelpers.form.values.submission[index].diploma.year === null || this.state.diplomaObj === null ? true : false}
+                                                                                                        disabled={this.state.diplomaName === null || this.state.diplomaName === '' || arrayHelpers.form.values.submission[index].diploma.year === null || this.state.diplomaObj === null || arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.diploma !== null ? true : false}
                                                                                                     >Ajouter mon diplôme</Button>
                                                                                                 </Grid>
                                                                                             </Grid>
@@ -2109,7 +2111,7 @@ class Form extends React.Component {
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.certification.label`, this.state.certifName);
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, this.state.certifObj);
                                                                                                         }}
-                                                                                                        disabled={this.state.certifName === null || this.state.certifName === '' || arrayHelpers.form.values.submission[index].certification.year === null || this.state.certifObj === null ? true : false}
+                                                                                                        disabled={this.state.certifName === null || this.state.certifName === '' || arrayHelpers.form.values.submission[index].certification.year === null || this.state.certifObj === null || arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.diploma !== null ? true : false}
                                                                                                     >Ajouter ma certification</Button>
                                                                                                 </Grid>
                                                                                             </Grid>
@@ -2649,15 +2651,35 @@ class Form extends React.Component {
                                                                                 <React.Fragment>
                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                         Carte identité recto
-                                                                                        <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
+                                                                                        <input id="file" accept="image/*, application/pdf" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
                                                                                             if (typeof event.currentTarget.files[0] === 'undefined') {
                                                                                                 return;
                                                                                             } else {
                                                                                                 form.setFieldValue("createShop.id_recto", event.currentTarget.files[0]);
+                                                                                                this.setState({
+                                                                                                    userIdCardRecto: null
+                                                                                                })
                                                                                             }
                                                                                         }} className="form-control"
                                                                                         />
                                                                                     </label>
+                                                                                    {form.values.createShop.id_recto === null && typeof this.state.userIdCardRecto !== 'undefined' && this.state.userIdCardRecto !== null && typeof this.state.userIdCardVerso !== 'undefined' ? 
+                                                                                    <React.Fragment>
+                                                                                        <span>
+                                                                                            {this.state.userIdCardRecto.slice(0, 10) + '...'}
+                                                                                        </span>
+                                                                                        <Clear 
+                                                                                            color="secondary"
+                                                                                            style={{ cursor: 'pointer' }}
+                                                                                            onClick={() => {
+                                                                                                this.setState({
+                                                                                                    userIdCardRecto: null
+                                                                                                })
+                                                                                            }}
+                                                                                        />
+                                                                                    </React.Fragment>
+                                                                                    : 
+                                                                                    null}
                                                                                     {form.values.createShop.id_recto !== null ? <React.Fragment><span>{form.values.createShop.id_recto.name.substr(0, 10) + '...'}</span><Clear color="secondary" style={{cursor: 'pointer'}} onClick={() => form.setFieldValue("createShop.id_recto", null)}/></React.Fragment> : null}
                                                                                     <ErrorMessage name="createShop.id_recto" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                 </React.Fragment>
@@ -2674,15 +2696,36 @@ class Form extends React.Component {
                                                                                 <React.Fragment>
                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                         Carte identité verso
-                                                                                        <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
+                                                                                        <input id="file" accept="image/*, application/pdf" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
                                                                                             if (typeof event.currentTarget.files[0] === 'undefined') {
                                                                                                 return;
                                                                                             } else {
                                                                                                 form.setFieldValue("createShop.id_verso", event.currentTarget.files[0]);
+                                                                                                this.setState({
+                                                                                                    userIdCardVerso: null
+                                                                                                })
                                                                                             }
                                                                                         }} className="form-control"
                                                                                         />
                                                                                     </label>
+                                                                                    {form.values.createShop.id_verso === null && typeof this.state.userIdCardVerso !== 'undefined' && this.state.userIdCardVerso !== null ? 
+                                                                                        <React.Fragment>
+                                                                                            <span>
+                                                                                                {this.state.userIdCardVerso.slice(0, 10) + '...'}
+                                                                                            </span>
+                                                                                            <Clear 
+                                                                                                color="secondary"
+                                                                                                style={{ cursor: 'pointer' }}
+                                                                                                onClick={() => {
+                                                                                                    this.setState({
+                                                                                                        userIdCardVerso: null
+                                                                                                    })
+                                                                                                }}
+                                                                                            />
+                                                                                        </React.Fragment>
+                                                                                        : 
+                                                                                        null
+                                                                                    }
                                                                                     {form.values.createShop.id_verso !== null ? <React.Fragment><span>{form.values.createShop.id_verso.name.substr(0, 10) + '...'}</span><Clear color="secondary" style={{cursor: 'pointer'}} onClick={() => form.setFieldValue("createShop.id_verso", null)}/></React.Fragment> : null}
                                                                                     <ErrorMessage name="createShop.id_verso" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                 </React.Fragment>
@@ -2697,15 +2740,36 @@ class Form extends React.Component {
                                                                             <React.Fragment>
                                                                                 <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                     Passeport
-                                                                                    <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
+                                                                                    <input id="file" accept="image/*, application/pdf" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
                                                                                         if (typeof event.currentTarget.files[0] === 'undefined') {
                                                                                             return;
                                                                                         } else {
                                                                                             form.setFieldValue("createShop.id_recto", event.currentTarget.files[0]);
+                                                                                            this.setState({
+                                                                                                userIdCardRecto: null
+                                                                                            })
                                                                                         }
                                                                                     }} className="form-control"
                                                                                     />
                                                                                 </label>
+                                                                                {form.values.createShop.id_recto === null && typeof this.state.userIdCardRecto !== 'undefined' && this.state.userIdCardRecto !== null && typeof this.state.userIdCardVerso === 'undefined'? 
+                                                                                    <React.Fragment>
+                                                                                        <span>
+                                                                                            {this.state.userIdCardRecto.slice(0, 10) + '...'}
+                                                                                        </span>
+                                                                                        <Clear 
+                                                                                            color="secondary"
+                                                                                            style={{ cursor: 'pointer' }}
+                                                                                            onClick={() => {
+                                                                                                this.setState({
+                                                                                                    userIdCardRecto: null
+                                                                                                })
+                                                                                            }}
+                                                                                        />
+                                                                                    </React.Fragment>
+                                                                                    : 
+                                                                                    null
+                                                                                }
                                                                                 {form.values.createShop.id_recto !== null ? <React.Fragment><span>{form.values.createShop.id_recto.name.substr(0, 10) + '...'}</span> <Clear color="secondary" style={{cursor: 'pointer'}} onClick={() => form.setFieldValue("createShop.id_recto", null)}/></React.Fragment> : null}
                                                                                 <ErrorMessage name="createShop.id_recto" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                             </React.Fragment>
