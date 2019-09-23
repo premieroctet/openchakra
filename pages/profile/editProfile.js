@@ -191,7 +191,8 @@ class editProfile extends React.Component {
             });
         }
         const languages = arrayLanguages;
-        const {email, name, firstname,birthday,description,gender,phone,job,diplomes,school,emergency_phone} = this.state.user;
+        const birthday = this.state.birthday;
+        const {email, name, firstname,description,gender,phone,job,diplomes,school,emergency_phone} = this.state.user;
 
         axios.put(url+'myAlfred/api/users/profile/editProfile',{email,name,firstname,birthday,description,gender,phone,job,diplomes,school,
         emergency_phone,languages})
