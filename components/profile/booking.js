@@ -15,9 +15,9 @@ import Toolbar from "@material-ui/core/Toolbar";
 import {Divider, List, ListItem, ListItemText} from "@material-ui/core";
 
 moment.locale('fr');
-
 const { config } = require('../../config/config');
 const url = config.apiUrl;
+
 
 const styles = theme => ({
     bigContainer: {
@@ -25,7 +25,7 @@ const styles = theme => ({
         flexGrow: 1,
     },
 
-});
+}); 
 
 class booking extends React.Component {
     constructor(props) {

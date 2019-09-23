@@ -161,8 +161,11 @@ class TopService extends React.Component {
               />
               <CardContent>
                 
-                <Typography gutterBottom variant="h5" component="p" style={{fontSize:15, fontWeight:100, textAlign:'center'}}>
+                <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center'}}>
                   {e.label}
+                </Typography>
+                <Typography component="p">
+                  {e.description}
                 </Typography>
                
               </CardContent>

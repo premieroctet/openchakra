@@ -88,6 +88,7 @@ class popularCategories extends React.Component {
 
           this.setState({
             category: category,
+           
 
           })
         })

@@ -441,9 +441,9 @@ class editProfile extends React.Component {
                                     <DatePicker
                                         selected={Date.parse(birthday)}
                                         onChange={(date)=>this.onChangeBirthday(date)}
-                                        customInput={<ExampleCustomInput />}
+                                        //customInput={<ExampleCustomInput />}
                                         locale='fr'
-                                        placeholderText="Sélectionnez votre date de naissance"
+                                        placeholderText="dd/MM/yyyy"
                                         showYearDropdown
                                         showMonthDropdown
                                         dateFormat="dd/MM/yyyy"
@@ -464,9 +464,12 @@ class editProfile extends React.Component {
                                 </Grid>
                                 <Grid item xs={12} style={{marginTop: 10}}>
                                     <TextField
+                                        type="number"
+                                        
                                         id="standard-name"
                                         style={{width: '100%'}}
                                         value={user.phone || ''}
+                                        InputProps={{ inputProps: { min: 0, max: 10 } }}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'phone'}
@@ -534,6 +537,7 @@ class editProfile extends React.Component {
                                     <Grid item xs={12} style={{marginTop: 10}}>
 
                                         <TextField
+                                            type="number"
                                             id="standard-name"
                                             style={{width: '100%'}}
                                             value={user.emergency_phone || ''}
@@ -549,7 +553,7 @@ class editProfile extends React.Component {
 
                     </Grid>
                     <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
-                    alignItems:"center",height:60}}>
+                    alignItems:"center",height:60, marginBottom:"-30px"}}>
                         <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
                                 style={{color: 'white',maxHeight:40,marginRight:20}}>
                             Enregistrer

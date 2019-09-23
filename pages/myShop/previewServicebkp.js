@@ -155,7 +155,6 @@ class services extends React.Component {
             saturday_event: [],
             sunday_event: [],
             position: '',
-            all_availabilities: [],
         };
 
         this.handleclick1 = this.handleclick1.bind(this);
@@ -204,13 +203,6 @@ class services extends React.Component {
             .catch(err =>
                 console.log(err)
             );
-            axios.get(url+'myAlfred/api/availability/currentAlfred')
-            .then(res => {
-                let availability = res.data;
-                this.setState({all_availabilities: availability});
-
-            })
-            .catch(err => console.log(err));
 
         axios
             .get(url+`myAlfred/api/availability/currentAlfred`)
@@ -396,7 +388,6 @@ class services extends React.Component {
         const {friday_event} = this.state;
         const {saturday_event} = this.state;
         const {sunday_event} = this.state;
-        const {all_availabilities} = this.state;
 
 
         return (
@@ -468,32 +459,6 @@ class services extends React.Component {
                                                 Disponibilité :
                                             </h3>
                                         </Grid>
-                                        <Grid container style={{marginTop: 20}}>
-                            <Grid item xs={7}>
-
-                                {all_availabilities.map((e,index) => {
-                                    if(e.period.active ){
-                                        return (
-                                            <Link key={index} href={'/myShop/detailsAvailability?id='+e._id}>
-                                                <a style={{textDecoration:'none'}}>
-                                                    <p>Disponibilités pour la période : {moment(e.period.month_begin).format('LL')} / {moment(e.period.month_end).format('LL')}</p>
-                                                </a>
-                                            </Link>
-                                        )
-                                    } else {
-                                        return (
-                                            <Link key={index} href={'/myShop/detailsAvailability?id='+e._id}>
-                                                <a style={{textDecoration:'none'}}>
-                                                    <p>Disponibilités sans période</p>
-                                                </a>
-                                            </Link>
-                                        )
-                                    }
-                                })}
-
-
-                            </Grid>
-                        </Grid>
                                         <Grid item xs={2} style={{marginTop: '-20px', marginBottom: '15px'}}><hr className={classes.disponibilityHR}/></Grid>
                                         <Grid item xs={5}></Grid>
                                         <Grid item xs={5}></Grid>

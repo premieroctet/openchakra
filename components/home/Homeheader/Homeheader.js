@@ -190,9 +190,11 @@ const styles = theme => ({
     backgroundColor: 'white',
     boxShadow: '0 0 7px black',
     padding: 'auto',
-    top: '25%',
-    left: '25%',
-    transform: 'translate(50%, 50%)',
+    top: '45%',
+    left: '0%',
+    right: '0%',
+    margin:'auto',
+    
   },
 });
 

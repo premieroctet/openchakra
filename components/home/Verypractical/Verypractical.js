@@ -165,6 +165,9 @@ class Verypractical extends React.Component {
                 <Typography gutterBottom variant="h5" component="h2">
                  
                 </Typography>
+                <Typography gutterBottom variant="p" component="p" style={{fontSize:16}}>
+                {e.label}
+                </Typography>
                 <Typography component="p">
                   {e.description}
                 </Typography>
