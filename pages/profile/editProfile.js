@@ -8,10 +8,18 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import {FormLabel} from "@material-ui/core";
 import Select2 from 'react-select';
 import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import fr from 'date-fns/locale/fr';
+import Birthday from '@material-ui/icons/CakeOutlined'
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
 registerLocale('fr', fr);
@@ -483,9 +491,12 @@ class editProfile extends React.Component {
                                 </Grid>
                                 <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 10}}>
                                     <TextField
+                                        type="number"
+
                                         id="standard-name"
                                         style={{width: '100%'}}
                                         value={user.phone || ''}
+                                        InputProps={{ inputProps: { min: 0, max: 10 } }}
                                         onChange={this.onChange}
                                         margin="normal"
                                         name={'phone'}
@@ -574,6 +585,7 @@ class editProfile extends React.Component {
                                     <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 10}}>
 
                                         <TextField
+                                            type="number"
                                             id="standard-name"
                                             style={{width: '100%'}}
                                             value={user.emergency_phone || ''}
@@ -590,18 +602,13 @@ class editProfile extends React.Component {
                         </Grid>
 
                     </Grid>
-                    <Grid container style={{marginBottom:20}}>
-                        <Grid item xs={9}>
-                            <div style={{display:'flex',justifyContent:'flex-end',marginBottom: '-1.95%',width:'100%',bottom:0,
-                            alignItems:"center",height:60}}>
-                                <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                style={{color: 'white',maxHeight:40,marginRight:55}}>
-                                    Enregistrer
-                                </Button>
-                            </div>
-                        </Grid>
-                        <Grid item xs={3}></Grid>
-                    </Grid>
+                    <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
+                    alignItems:"center",height:60, marginBottom:"-30px"}}>
+                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
+                                style={{color: 'white',maxHeight:40,marginRight:20}}>
+                            Enregistrer
+                        </Button>
+                    </div>
                 </Layout>
                 <Footer/>
 

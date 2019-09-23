@@ -724,9 +724,9 @@ class trustAndVerification extends React.Component {
 
                                     </Grid>
                                         <Thumb file={this.state.id_verso} />
-                                        <Grid item xs={5}>
+                                        <Grid item xs={6}>
                                             <Button type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
-                                                Valider
+                                            Enregistrer
                                             </Button>
                                         </Grid>*/}
                                         {this.state.haveCard && this.state.haveCardV ?
@@ -940,8 +940,8 @@ class trustAndVerification extends React.Component {
                                         </React.Fragment>
                                         : null}
                                         <Grid item xs={5}>
-                                    <Button onClick={this.editSiret} type="submit" variant="contained" color="primary" style={{ width: '80%',color:'white',marginTop:15 }}>
-                                        Valider
+                                    <Button onClick={this.editSiret} type="submit" variant="contained" color="primary" style={{ width: '100%',color:'white',marginTop:15 }}>
+                                    Enregistrer
                                     </Button>
                                         </Grid>
 

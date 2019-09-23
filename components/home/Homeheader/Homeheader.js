@@ -194,9 +194,10 @@ const styles = theme => ({
     padding: 'auto',
     top: '45%',
     left: '0%',
-    margin: 'auto',
+    right: '0%',
+    margin:'auto',
 
-  }
+  },
 });
 
 const Input2 = ({value,  onClick }) => (

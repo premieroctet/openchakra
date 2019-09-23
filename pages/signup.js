@@ -49,7 +49,7 @@ const styles = theme => ({
   },
   card: {
     //padding: '1.5rem 3rem',
-    width: 600,
+    maxWidth: 600,
     marginTop: '100px',
     boxShadow: '0px 2px 66px -37px rgba(10,10,10,0.65)',
   },
@@ -304,7 +304,7 @@ class signup extends React.Component {
                           />
                           <em>{errors.address}</em>
                         </Grid>
-                        <Grid item style={{width: '25%', marginRight: 20}}>
+                        <Grid item style={{width: '30%', marginRight: 20}}>
                           <TextField
                               label="Code postal"
                               placeholder="Code postal"
@@ -319,7 +319,7 @@ class signup extends React.Component {
                           />
                           <em>{errors.zip_code}</em>
                         </Grid>
-                        <Grid item style={{width: '71%'}}>
+                        <Grid item style={{width: '66%'}}>
                           <TextField
                               label="Ville"
                               placeholder="Ville"
