@@ -120,7 +120,6 @@ class editProfile extends React.Component {
         this.state = {
             user: {},
             phone: '',
-            checked: false,
             languages: [],
             selectedLanguages: null,
             birthday: null,
@@ -607,17 +606,19 @@ class editProfile extends React.Component {
                                         />
                                     </Grid>
                                 </Grid>
+                                <Grid container style={{marginBottom:20}}>
+                                    <Grid item xs={6} style={{display:"flex",justifyContent:"flex-end"}}>
+                                    <Button  size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
+                                             style={{color: 'white',maxHeight:40}}>
+                                        Enregistrer
+                                    </Button>
+                                    </Grid>
+                                </Grid>
                             </form>
                         </Grid>
 
                     </Grid>
-                    <div style={{backgroundColor: 'lightgray',display:'flex',justifyContent:'flex-end',width:'100%',bottom:0,
-                    alignItems:"center",height:60, marginBottom:"-30px"}}>
-                        <Button disabled={this.state.checked} size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                style={{color: 'white',maxHeight:40,marginRight:20}}>
-                            Enregistrer
-                        </Button>
-                    </div>
+
                 </Layout>
                 <Footer/>
 
