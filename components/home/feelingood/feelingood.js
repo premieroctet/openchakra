@@ -92,7 +92,7 @@ class feelingood extends React.Component{
               let data = response.data;
               let random = data[Math.floor(Math.random() * data.length)];
               this.setState({tags:random});
-              axios.get(url + 'myAlfred/api/service/all/tags/' + random._id)
+              axios.get(url + 'myAlfred/api/services/all/tags/' + random._id)
                   .then(res => {
                     let service = res.data;
 

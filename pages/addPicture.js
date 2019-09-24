@@ -132,10 +132,15 @@ class addPicture extends React.Component {
                                     </label>
 
                                 </Grid>
-                                <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
-                                        Ajouter
-                                    </Button>
+                                
+                                <Grid container>
+                                    <Grid item xs={4}></Grid>
+                                    <Grid item xs={4} style={{justifyContent: 'center', marginTop: 30, justifyItems: 'center' }}>
+                                        <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
+                                            Suivant
+                                        </Button>
+                                    <Grid item xs={4}></Grid>
+                                    </Grid>
                                 </Grid>
                                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
                                     <Link href={'/addPhone'}><a style={{textDecoration: 'none', color: 'black'}}>Je le ferai plus tard</a></Link>

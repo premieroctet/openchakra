@@ -79,6 +79,7 @@ class security extends React.Component {
             user: {},
             password: '',
             newPassword: '',
+            newPassword2: '',
             check : false,
             checkbuttonvalidate : false,
             testpremier : false,
@@ -114,16 +115,34 @@ class security extends React.Component {
 
     onChangeNewPassword = e => {
         this.setState({ [e.target.name]: e.target.value });
-        if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})") != null){
+        if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")){
             this.setState({newPassword: e.target.value});
+        }
+    }
+
+   onChangeNewPassword2 = e => {
+        this.setState({ [e.target.name]: e.target.value });
+        if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})") && this.state.newPassword === this.state.newPassword2){
+            this.setState({newPassword2: e.target.value});
             this.setState({check: false});
-            this.setState({checkbuttonvalidate : true});
+            this.setState({checkbuttonvalidate : true});  
+            
         } else {
             this.setState({check: true});
             this.setState({checkbuttonvalidate : false});
         }
     }
 
+    onClick1 = () => {
+        if(this.state.newPassword === this.state.newPassword2){
+            this.setState({check: false});
+            this.setState({checkbuttonvalidate : true});  
+        } else {
+            this.setState({check: true});
+            this.setState({checkbuttonvalidate : false});
+        }
+    }
+ 
 
     onSubmit = e => {
         e.preventDefault();
@@ -384,6 +403,22 @@ class security extends React.Component {
                                             variant={"outlined"}
                                         />
                                     </Grid>
+
+                                    <Grid item>
+                                        <TextField
+                                            id="standard-with-placeholder"
+                                            margin="normal"
+                                            label={"Répéter le nouveau mot de passe"}
+                                            placeholder={"Répéter le nouveau mot de passe"}
+                                            type="password"
+                                            name="newPassword2"
+                                            value={this.state.newPassword2}
+                                            onChange={this.onChangeNewPassword2}
+                                            variant={"outlined"}
+                                            onKeyUp={this.onClick1}
+                                        />
+                                    </Grid>
+                                    
                                     {this.state.check ? <p style={{color : 'red'}}>Mot de passe invalide</p> : null}
 
                                     <Grid item style={{ display: 'flex', justifyContent: 'left', marginTop: 30 }}>

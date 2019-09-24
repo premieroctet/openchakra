@@ -14,6 +14,9 @@ import Proposeservice from '../components/home/proposeservice/Proposeservice';
 import Verypractical from '../components/home/Verypractical/Verypractical';
 import Assureback from '../components/home/AssureBack/Assureback';
 import TopService from '../components/home/Topservice/Topservice';
+import Passions from '../components/home/Passions/passions';
+import Façon from '../components/home/Façons/façon';
+import Otter from '../components/home/Otter/otter';
 import setAuthToken from '../utils/setAuthToken';
 import Router from "next/router";
 
@@ -61,6 +64,9 @@ class Home extends React.Component {
                 <Proposeservice />
                 <Verypractical />
                 <Assureback />
+                <Passions />
+                <Façon />
+                <Otter />
                 <TopService />
                 <Footer />
             </Fragment>

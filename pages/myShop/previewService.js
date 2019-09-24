@@ -21,6 +21,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import DatePicker from "react-datepicker";
 import FormControl from "@material-ui/core/FormControl";
 import Select2 from "react-select";
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 
@@ -801,7 +802,7 @@ class services extends React.Component {
                                     <Grid item xs={2}></Grid><Grid item xs={8}></Grid><Grid item xs={2}></Grid></React.Fragment> : null} </React.Fragment>)})}
 
                                     {this.state.haveOptions ?
-                                    <Grid item xs={12} style={{marginBottom: '2%'}}>
+                                    <Grid item xs={12} style={{marginBottom: '2%', marginTop: '2%'}}>
                                         <Typography style={{marginLeft: '3%' , fontSize:'1.1rem', fontWeight: '5e00', color:'white', minHeight:'40px', padding:'10px', backgroundColor:'gray', borderRadius:5,}}>
                                         {dropoption ?
                                         <React.Fragment> 
@@ -822,24 +823,27 @@ class services extends React.Component {
 
                                     {dropoption ?
                                     <React.Fragment>
-                                    <Grid item xs={1}></Grid>
-                                    <Grid item xs={4} style={{marginTop: '6%'}}>
+                                    <Grid item xs={12}>
                                         <Grid container>
-                                            
-                                            <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
+                                            <Grid item xs={12} style={{marginTop: '2%', marginBottom: '2%', paddingLeft:'4%',}}>
                                                 <Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={12}>
-                                                        {options.price}€
+
+                                                    <Grid container className={classes.prestationlist} style={{backgroundColor:'white',padding:'0px', paddingBottom:'15px',  paddingTop:'15px', minHeight:'50px', minWidth:'120px',}}>
+                                                    <Grid item xs={1} className={classes.prestationside} >
+
+                                                   </Grid>
+
+                                            <Grid item xs={5} className={classes.prestationheader} style={{backgroundColor:'white', color:'black', borderBottom:'1px solid white'}}>
+                                                <Typography style={{fontSize:"1rem", fontWeight:'bold', color:'black', marginTop:3}}>{options.label}</Typography>
+                                            </Grid>
+                                                        <Grid item xs={2}  className={classes.prestationin} style={{fontSize:"1rem", fontWeight:'bold', marginTop:'3px',  padding:'0px',  textAlign:'right'}}>
+                                                            {options.price}€
                                                         </Grid>
-                                                        <Grid item xs={12} style={{fontSize:"0.6rem"}}>
-                                                            /{options.unity}({options.option_extra})
+                                                        <Grid item xs={3} style={{fontSize:"1rem", textAlign:'left', paddingLeft:'10px', marginTop:'3px'}}>
+                                                            {options.unity} <Tooltip title={options.option_extra}><span style={{color: '#07bce5', cursor: 'pointer'}}>?</span></Tooltip>   
                                                         </Grid>
                                                     </Grid>
                                                 </Typography>
-                                            </Grid>
-                                            <Grid item xs={10}>
-                                                <Typography>{options.label}</Typography>     
                                             </Grid>
                                             
                                         </Grid>

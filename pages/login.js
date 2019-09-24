@@ -17,8 +17,7 @@ const { config } = require('../config/config');
 const url = config.apiUrl;
 const styles = {
   fullContainer: {
-    backgroundImage: 'url(../static/bailey-zindel-396399-unsplash-min.jpg)',
-    filter: 'blur(5px)',
+    backgroundImage: 'url(../static/background/Inscription-connexion.svg)',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     alignItems: 'center',
@@ -27,7 +26,7 @@ const styles = {
     flexDirection: 'column',
 },
   loginContainer: {
-    backgroundColor: 'rgba(0,0,0, 0.35)',
+    backgroundColor: 'rgba(0,0,0, 0.15)',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     alignItems: 'center',

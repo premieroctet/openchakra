@@ -107,8 +107,8 @@ class Thumb extends React.Component {
 
         return (<img src={thumb}
                      alt={file.name}
-                     height={150}
                      width={150}
+                     height={150}
                      style={{borderRadius: '50%'}}/>);
     }
 }
@@ -350,7 +350,7 @@ class editPicture extends React.Component {
                                 <Grid item>
                                     <DeleteIcon onClick={()=>this.handleClickOpen()} className={classes.deleteicon} style={{marginLeft: '90%',padding: '2%', marginBottom: '-10%', color: '#616060',  cursor: 'pointer' }}/>
 
-                                    <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img width={150} style={{borderRadius: '50%'}} src={`../${user.picture}`} alt={'picture'}/>}
+                                    <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img width={150} height={150} style={{borderRadius: '50%'}} src={`../${user.picture}`} alt={'picture'}/>}
                                 </Grid>
 
                                 <Grid item style={{marginLeft: '5%'}}>
