@@ -11,6 +11,7 @@ function MultipleSelect(props) {
             classNamePrefix="indicator"
             closeMenuOnSelect={false}
             placeholder={props.placeholder}
+            value={props.value}
             isMulti
             isDisabled={props.disabled}
             options={props.option}

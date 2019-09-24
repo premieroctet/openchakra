@@ -43,6 +43,7 @@ import { FormControl, RadioGroup, Radio } from '@material-ui/core';
 import { toast, ToastContainer } from "react-toastify";
 import Loader from 'react-loader-spinner';
 import Clear from '@material-ui/icons/Clear';
+import Chip from '@material-ui/core/Chip';
 
 
 const { config } = require('../../config/config');
@@ -1197,6 +1198,14 @@ class Form extends React.Component {
                                                         }*/
                                                     }}
                                                 />
+                                                {/*<Grid item xs={12}>
+                                                    {arrayHelpers.form.values.categories.length ? arrayHelpers.form.values.categories.map(categorie => {
+                                                        return <Chip 
+                                                                    label={categorie.label} 
+                                                                    style={{ borderRadius: 3, marginTop: 10, marginRight: 10, color: 'white', backgroundColor: '#2FBCD3' }}
+                                                                />;
+                                                    }) : null}
+                                                </Grid>*/}
                                                 <Button
                                                     color="primary"
                                                     style={{marginTop: '1rem', marginBottom: '2rem', color: 'white', borderRadius: 8}}
@@ -1490,7 +1499,7 @@ class Form extends React.Component {
                                                                                                                         <TextField
                                                                                                                             {...field}
                                                                                                                             value={field.value}
-                                                                                                                            style={{width: 125}}
+                                                                                                                            style={{width: '90%'}}
                                                                                                                             label={`Prix`}
                                                                                                                             type="number"
                                                                                                                             disabled={!p.checked}
@@ -1516,6 +1525,7 @@ class Form extends React.Component {
                                                                                                                         <React.Fragment>
                                                                                                                             <MaterialSelect
                                                                                                                                 {...field}
+                                                                                                                                style={{width: '90%'}}
                                                                                                                                 helperText={`Méthode de facturation`}
                                                                                                                                 disabled={!p.checked}
                                                                                                                                 margin="none"
@@ -1583,6 +1593,7 @@ class Form extends React.Component {
                                                                                         noOptionsMessage={() => "Pas d'options disponibles"}
                                                                                         placeholder="Options disponibles"
                                                                                         isDisabled={this.state[`otherOptionChecked${index}`]}
+                                                                                        value={form.values.submission[index].option}
                                                                                         options={
                                                                                             array_option
                                                                                         }
@@ -1932,6 +1943,7 @@ class Form extends React.Component {
                                                                                     <Select 
                                                                                         isClearable={true}
                                                                                         placeholder="Vos années d'expériences"
+                                                                                        value={arrayHelpers.form.values.submission[index].experienceYears}
                                                                                         options={[
                                                                                             {value: '', label: "Aucune année d'expérience"},
                                                                                             {value: 'ZeroOrOne', label: 'Entre 0 et 1 an'},
