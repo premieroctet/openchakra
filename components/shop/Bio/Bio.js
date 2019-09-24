@@ -84,6 +84,8 @@ class bio extends React.Component {
       currentCity: '',
       currentZip_code: '',
       currentCountry: '',
+      user: [],
+      description: '',
     };
   }
 
@@ -92,6 +94,24 @@ class bio extends React.Component {
 
 
     const id_alfred = self.props.shop;
+
+    
+    axios
+    .get(url+'myAlfred/api/users/current')
+    .then(res => {
+        let user = res.data;
+        this.setState({user:user});
+        this.setState({description:user.description});
+    })
+    .catch(err => {
+            console.log(err);
+            if(err.response.status === 401 || err.response.status === 403) {
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            }
+        }
+    );
+
     axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
         .then(function (response) {
 
@@ -159,7 +179,7 @@ class bio extends React.Component {
               <Grid item xs={8} className={classes.biographyContainer}>
                 <Card className={classes.biography}>
                   <Typography>
-                    {shop.welcome_message}
+                    {this.state.description}
                   </Typography>
                 </Card>
               </Grid>

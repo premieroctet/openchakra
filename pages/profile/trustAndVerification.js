@@ -312,6 +312,8 @@ class trustAndVerification extends React.Component {
         axios.post(url+"myAlfred/api/users/profile/idCard",formData,config)
             .then((response) => {
                 toast.info('Carte d\'identité ajoutée');
+                this.componentDidMount();
+
 
             }).catch((error) => {
             console.log(error)
@@ -378,7 +380,8 @@ class trustAndVerification extends React.Component {
         this.setState({open:false});
         axios.delete(url+'myAlfred/api/users/profile/idCard/recto')
             .then(() => {
-                toast.error('Recto supprimé')
+                toast.error('Recto supprimé');
+                setTimeout(() => window.location.reload(), 2000);
 
             })
             .catch(err => console.log(err));
@@ -609,7 +612,7 @@ class trustAndVerification extends React.Component {
 
                                 <Grid item xs={6}>
                                     <h2 style={{fontWeight:'100'}}>Pièce d'identité</h2>
-                                    <p style={{color:'#2FBCD3'}}>Ajouter ou modifier une pièce d'identité</p>
+                                    <p style={{color:'#2FBCD3'}}>Vous pouvez ajouter ou modifier une pièce d’identité en sélectionnant le type de pièce et télécharger le document.  Un recto pour le passeport et le recto/verso pour la pièce d’identité</p>
                                     <TextField
                                         select
                                         style={{width:'70%'}}

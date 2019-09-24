@@ -141,13 +141,13 @@ class alfredBanner extends React.Component{
                                 <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
                                     <Share style={{ color: 'white' }} />
                                     <Typography variant="body1" style={{ color: 'white', fontSize: 15 }}>
-                                        Share
+                                        Partager
                                     </Typography>
                                 </Grid>
                                 <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
                                     <FavoriteBorderOutlined style={{ color: 'white' }} onClick={this.addFavoris} />
                                     <Typography variant="body1" style={{ color: 'white', fontSize: 15 }}>
-                                        Add to wishlist
+                                        Ajouter à la wishlist
                                     </Typography>
                                 </Grid>
                             </Grid>
