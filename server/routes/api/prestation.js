@@ -89,7 +89,25 @@ router.get('/:service/:filter', (req, res) => {
     }
   })
   .catch(err => res.status(404).json({ prestation: 'No prestation found' }));
-})
+});
+
+// @Route GET /myAlfred/api/prestation/all/tags/:tags
+// View all prestations per tags
+router.get('/all/tags/:tags',(req,res)=> {
+
+    Prestation.find({tags: req.params.tags})
+        .populate('tags')
+        .then(prestations => {
+            if(typeof prestations !== 'undefined' && prestations.length > 0){
+                res.json(prestations);
+            } else {
+                return res.status(400).json({msg: 'No prestations found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ service: 'No prestation found' }));
+
+});
 
 // @Route GET /myAlfred/api/prestation/:id
 // View one prestation

@@ -125,82 +125,16 @@ class profiteandlearn extends React.Component {
 
   componentDidMount() {
 
-    axios.get(url + 'myAlfred/api/tags/all')
-        .then(response => {
-              let data = response.data;
-              let random = data[Math.floor(Math.random() * data.length)];
-              this.setState({tags:random});
-              axios.get(url + 'myAlfred/api/service/all/tags/' + random._id)
-                  .then(res => {
-                    let service = res.data;
-
-                    this.setState({service: service})
-
-                  })
-                  .catch(err => console.log(err))
-            }
-        )
-        .catch(error => {
-          console.log(error)
-        });
   }
 
   render() {
     const {classes} = this.props;
-    const {service} = this.state;
-    const {tags} = this.state;
-    const resdata = shuffleArray(service);
-    const services = resdata.slice(0, 6).map(e => (
-        <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
-          <Card className={classes.card} style={{
-            height:'350px',
-            backgroundColor:'transparent',
-            textAlign:'center',
-            margin:10,
-            boxShadow: '1px 3px 1px transparent'}}>
-            <CardActionArea style={{
-              height:'350px',
-            }}>
-              <CardMedia
-                  className={classes.media2}
-                  image={e.picture}
-                  title="Paysage"
-                  style={{height:'280px'}}
-              />
-              <CardContent>
 
-                <Typography gutterBottom variant="h5" component="p" style={{fontSize:15, fontWeight:100, textAlign:'center'}}>
-                  {e.label}
-                </Typography>
 
-              </CardContent>
-            </CardActionArea>
-
-          </Card>
-        </Grid>
-    ));
 
     return (
         <Fragment>
           <Grid container className={classes.container}>
-            <Grid item xs={2}></Grid>
-
-            <Grid item xs={8}>
-              <div>
-                <Typography variant="h4" className={classes.textBox1}>
-                  {tags.title}
-                </Typography>
-                <Grid container>
-                  <Grid item xs={5}></Grid>
-                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
-                  <Grid item xs={5}></Grid>
-                </Grid>
-              </div>
-            </Grid>
-            <Grid item xs={2}></Grid>
-            <Grid container>
-            {services}
-            </Grid>
             <Grid item xs={2}></Grid>
             <Grid item xs={8}>
               <div>

@@ -64,6 +64,17 @@ const styles = theme => ({
   },
 });
 
+function shuffleArray(array) {
+  let i = array.length - 1;
+  for (; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+}
+
 class nearbyYou extends React.Component{
 
   constructor(props) {
@@ -90,8 +101,9 @@ class nearbyYou extends React.Component{
 
     const {classes} = this.props;
     const {service} = this.state;
+    const resdata = shuffleArray(service);
 
-    const cards = service.map(e => (
+    const cards = resdata.slice(0, 6).map(e => (
         <Grid item xs={12} sm={6} md={4} key={e._id}>
           <NearbyYouCard img={e.service.picture} title={e.service.label} alfred={e.user.firstname}
                          avatar={`../../../${e.user.picture}`} score={e.user.score} shop={e.user._id}/>

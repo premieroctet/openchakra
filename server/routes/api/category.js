@@ -46,6 +46,24 @@ router.get('/random/home',(req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/category/all/tags/:tags
+// View all category per tags
+router.get('/all/tags/:tags',(req,res)=> {
+
+    Category.find({tags: req.params.tags})
+        .populate('tags')
+        .then(category => {
+            if(typeof category !== 'undefined' && category.length > 0){
+                res.json(category);
+            } else {
+                return res.status(400).json({msg: 'No category found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ service: 'No category found' }));
+
+});
+
 // @Route GET /myAlfred/api/category/:id
 // View one category
 router.get('/:id', (req,res)=> {

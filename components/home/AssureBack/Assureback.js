@@ -295,7 +295,7 @@ class Assureback extends React.Component{
           {/*Nous assurons vos arrière*/}
           <Grid container className={classes.container}>
           </Grid>
-          <Grid container className={classes.container} spacing={24} wrap="wrap">
+          <Grid container className={classes.container} style={{marginBottom:20}} spacing={24} wrap="wrap">
             <Grid item xs={12}>
               <Card  className={classes.card1}>
               <CardMedia
@@ -339,72 +339,6 @@ class Assureback extends React.Component{
               </Card>
             </Grid>
           </Grid>
-          {/* 
-          <div className="thewrap">
-            <section className="card2">
-
-              {cards}
-
-            </section>
-          </div>
-          */}
-
-
-
-          {/*Comment utiliser myAlfred*/}
-          <Grid container>
-          <Grid item xs={3}></Grid>
-            <Grid item xs={6}>
-              <div>
-                <Typography variant="h4" className={classes.textBox1}>
-                Comment utiliser My-Alfred ?
-                </Typography>
-                <Grid container>
-                  <Grid item xs={5}></Grid>
-                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
-                  <Grid item xs={5}></Grid>
-                </Grid>
-              </div>
-            </Grid>
-            <Grid item xs={3}></Grid>
-            
-            <Grid item xs={2}></Grid>
-            <Grid item md={4} xs={12} className={classes.textdesc}>
-            <Grid container>
-                <Grid item xs={12}>
-                  <Typography className={classes.textBox2}>
-                    Pourquoi devenir Alfred ?
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 16}}>
-                  <Typography style={{paddingLeft:15,lineHeight: 2, fontSize: 18}}>
-                    My-Alfred vous permet de manière simple et sécurisée, de mettre vos services à disposition de tout à chacun. 
-                    Un talent pour la décoration ? Une passion pour la cuisine ? Ou tout simplement du temps : 
-                    proposer vos services et complétez vos revenus. 
-                    Vous avez un contrôle total sur vos disponibilités, vos prix et sur le détail de vos prestations.
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item md={4} xs={12} className={classes.textdesc} style={{marginRight: 15}}>
-            <Grid container>
-                <Grid item xs={12}>
-                  <Typography className={classes.textBox2}>
-                    Qui peut devenir Alfred ?
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 16}}>
-                  <Typography style={{paddingLeft:15,lineHeight: 2, fontSize: 18}}>
-                  Nous sommes tous des Alfred dès l'âge de 16 ans. Chacun d'entre nous doit pouvoir partager ses savoir faire, 
-                  ses compétences, ses passions... 
-                  Tantôt consommateur d'Alfred, tantôt Alfred, rejoignez la communauté Alfred en quelques clics !                  
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={2}></Grid>
-            
-            </Grid>
         </Fragment>
     );
   }

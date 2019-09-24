@@ -14,6 +14,12 @@ import Proposeservice from '../components/home/proposeservice/Proposeservice';
 import Verypractical from '../components/home/Verypractical/Verypractical';
 import Assureback from '../components/home/AssureBack/Assureback';
 import TopService from '../components/home/Topservice/Topservice';
+import Section3 from '../components/home/section3';
+import Section6 from '../components/home/section6';
+import Section8 from '../components/home/section8';
+import Passions from '../components/home/Passions/passions';
+import Facons from '../components/home/Facons/facons';
+import Otter from '../components/home/Otter/otter';
 import setAuthToken from '../utils/setAuthToken';
 import Router from "next/router";
 
@@ -54,14 +60,27 @@ class Home extends React.Component {
                 <Homeheader />
                 <SerenityNeed />
                 <BecomeAlfred />
+                <Section3/>
                 <NearbyYou />
                 <Profiteandlearn />
-                <Feelingood />
+                <Section6/>
                 <Wellbeing />
+                <Section8/>
+                <Feelingood />
+                <SerenityNeed/>
                 <Proposeservice />
-                <Verypractical />
-                <Assureback />
-                <TopService />
+                <Section3/>
+                <NearbyYou />
+                <Passions/>
+                <Section6/>
+                <Wellbeing />
+                <Facons/>
+                <Feelingood />
+                <SerenityNeed />
+                <Otter/>
+                <Wellbeing />
+                <Section6/>
+                <Assureback/>
                 <Footer />
             </Fragment>
         )

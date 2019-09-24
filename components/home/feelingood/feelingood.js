@@ -56,12 +56,11 @@ const styles = theme => ({
     paddingRight: 15,
     paddingLeft: 15,
     marginBottom: 60,
-    marginTop: 15,
   },
   grosHR: {
     height: '10px',
     backgroundColor: '#2FBCD3',
-    marginBottom: 60,
+    marginBottom: 30,
   },
 });
 
@@ -87,7 +86,7 @@ class feelingood extends React.Component{
 
   componentDidMount() {
 
-    axios.get(url + 'myAlfred/api/tags/all')
+    axios.get(url + 'myAlfred/api/tags/services')
         .then(response => {
               let data = response.data;
               let random = data[Math.floor(Math.random() * data.length)];
@@ -135,6 +134,9 @@ class feelingood extends React.Component{
                   <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
                   <Grid item xs={5}></Grid>
                 </Grid>
+                <Typography className={classes.textBox}>
+                  {tags.description}
+                </Typography>
               </div>
             </Grid>
             <Grid item xs={2}></Grid>

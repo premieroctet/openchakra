@@ -600,19 +600,35 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Lundi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.monday.event.map((f)=> (
-                                                                                    f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
-                                                                                            return (
-                                                                                                <React.Fragment>
+                                                                                {e.monday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
 
-                                                                                                    {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
 
-                                                                                                </React.Fragment>
-                                                                                            )
-                                                                                        }
+                                                                                            </React.Fragment>
+                                                                                        )
 
-                                                                                    })
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.monday.event.map(f=> (
+
+                                                                                        f.services.map(g => {
+                                                                                            if (g.value === this.props.service_id) {
+                                                                                                return (
+                                                                                                    <React.Fragment>
+
+                                                                                                        {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                                    </React.Fragment>
+                                                                                                )
+                                                                                            }
+
+                                                                                        })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -637,9 +653,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Mardi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.tuesday.event.map((f)=> (
+                                                                                {e.tuesday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.tuesday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -650,6 +680,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -674,9 +706,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Mercredi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.wednesday.event.map((f)=> (
+                                                                                {e.wednesday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.wednesday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -687,6 +733,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -711,9 +759,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Jeudi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.thursday.event.map((f)=> (
+                                                                                {e.thursday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.thursday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -724,6 +786,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -748,9 +812,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Vendredi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.friday.event.map((f)=> (
+                                                                                {e.friday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.friday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -761,6 +839,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -785,9 +865,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Samedi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.saturday.event.map((f)=> (
+                                                                                {e.saturday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.saturday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -798,6 +892,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -822,9 +918,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Dimanche  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.sunday.event.map((f)=> (
+                                                                                {e.sunday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.sunday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -835,6 +945,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -887,9 +999,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Lundi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.monday.event.map((f)=> (
+                                                                                {e.monday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.monday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -900,6 +1026,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -924,9 +1052,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Mardi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.tuesday.event.map((f)=> (
+                                                                                {e.tuesday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.tuesday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -937,6 +1079,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -961,9 +1105,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Mercredi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.wednesday.event.map((f)=> (
+                                                                                {e.wednesday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.wednesday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -974,6 +1132,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -998,9 +1158,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Jeudi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.thursday.event.map((f)=> (
+                                                                                {e.thursday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.thursday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -1011,6 +1185,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -1035,9 +1211,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Vendredi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.friday.event.map((f)=> (
+                                                                                {e.friday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.friday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -1048,6 +1238,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -1072,9 +1264,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Samedi  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.saturday.event.map((f)=> (
+                                                                                {e.saturday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.saturday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -1085,6 +1291,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>
@@ -1109,9 +1317,23 @@ class services extends React.Component {
                                                                             <div className={classes.dispoheader}>Dimanche  </div>
                                                                             <br/>
                                                                             <div className={classes.dispocardin} >
-                                                                                {e.sunday.event.map((f)=> (
+                                                                                {e.sunday.event.map(f=> {
+                                                                                    if (f.all_services === true) {
+                                                                                        return (
+                                                                                            <React.Fragment>
+
+                                                                                                {moment(f.begin).format('LT')} - {moment(f.end).format('LT')}<br/>
+
+                                                                                            </React.Fragment>
+                                                                                        )
+
+
+                                                                                    }
+                                                                                })}
+                                                                                {e.sunday.event.map(f=> (
+
                                                                                     f.services.map(g => {
-                                                                                        if(f.all_services === true || g.value === this.props.service_id){
+                                                                                        if (g.value === this.props.service_id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -1122,6 +1344,8 @@ class services extends React.Component {
                                                                                         }
 
                                                                                     })
+
+
 
                                                                                 ))}</div>
                                                                         </Typography>

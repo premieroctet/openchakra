@@ -408,7 +408,6 @@ router.get('/home',(req,res)=> {
     ServiceUser.find()
         .populate('user')
         .populate('service')
-        .limit(6)
         .then(service => {
             if(typeof service !== 'undefined' && service.length > 0){
                 res.json(service);

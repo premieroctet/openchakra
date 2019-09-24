@@ -22,6 +22,54 @@ router.get('/all',(req,res)=> {
             .catch(err => res.status(404).json({ tags: 'No tags found' }));
 });
 
+// @Route GET /myAlfred/api/tags/prestations
+// View all tags for prestations
+router.get('/prestations',(req,res)=> {
+
+    Tags.find({title:{$in:['Nid douillet','Tracas','Plaisirs']}})
+        .then(tags => {
+            if(typeof tags !== 'undefined' && tags.length > 0){
+                res.json(tags);
+            } else {
+                return res.status(400).json({msg: 'No tags found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/category
+// View all tags for category
+router.get('/category',(req,res)=> {
+
+    Tags.find({title:{$in:[/Sérénité/i,'Cours','Bien chez soi']}})
+        .then(tags => {
+            if(typeof tags !== 'undefined' && tags.length > 0){
+                res.json(tags);
+            } else {
+                return res.status(400).json({msg: 'No tags found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/services
+// View all tags for services
+router.get('/services',(req,res)=> {
+
+    Tags.find({title:{$in:[/Fête/i,/Bien-être/i,'Bien pratique','Top services','Jardin','Proche','Animaux']}})
+        .then(tags => {
+            if(typeof tags !== 'undefined' && tags.length > 0){
+                res.json(tags);
+            } else {
+                return res.status(400).json({msg: 'No tags found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
 // @Route GET /myAlfred/api/tags/:id
 // View one tag
 router.get('/:id', (req,res)=> {

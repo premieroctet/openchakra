@@ -94,6 +94,7 @@ const styles = theme => ({
     backgroundColor: '#2FBCD3',
   },
 
+
 });
 
 function shuffleArray(array) {
@@ -118,7 +119,7 @@ class Wellbeing extends React.Component {
 
   componentDidMount() {
 
-    axios.get(url + 'myAlfred/api/tags/all')
+    axios.get(url + 'myAlfred/api/tags/services')
         .then(response => {
               let data = response.data;
               let random = data[Math.floor(Math.random() * data.length)];
@@ -151,7 +152,7 @@ class Wellbeing extends React.Component {
 
                   className={classes.media2}
                   image={e.picture}
-                  title="Paysage"
+                  title={e.label}
               />
               <CardContent>
                 
@@ -184,6 +185,9 @@ class Wellbeing extends React.Component {
                   <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
                   <Grid item xs={5}></Grid>
                 </Grid>
+                <Typography className={classes.textBox}>
+                  {tags.description}
+                </Typography>
               </div>
             </Grid>
             <Grid item xs={2}></Grid>

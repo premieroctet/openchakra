@@ -136,23 +136,23 @@ class serenityNeed extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      service: [],
+      prestations: [],
       tags: {},
     }
   }
 
   componentDidMount() {
 
-    axios.get(url + 'myAlfred/api/tags/all')
+    axios.get(url + 'myAlfred/api/tags/prestations')
         .then(response => {
               let data = response.data;
               let random = data[Math.floor(Math.random() * data.length)];
               this.setState({tags:random});
-              axios.get(url + 'myAlfred/api/service/all/tags/' + random._id)
+              axios.get(url + 'myAlfred/api/prestation/all/tags/' + random._id)
                   .then(res => {
-                    let service = res.data;
+                    let prestations = res.data;
 
-                    this.setState({service: service})
+                    this.setState({prestations: prestations})
 
                   })
                   .catch(err => console.log(err))
@@ -167,9 +167,9 @@ class serenityNeed extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {service} = this.state;
+    const {prestations} = this.state;
     const {tags} = this.state;
-    const resdata = shuffleArray(service);
+    const resdata = shuffleArray(prestations);
     const services = resdata.slice(0, 12).map(e => (
         <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
           <Card className={classes.card}>
@@ -178,7 +178,7 @@ class serenityNeed extends React.Component {
               <CardMedia
                   className={classes.media2}
                   image={e.picture}
-                  title="Paysage"
+                  title={e.label}
               />
               <CardContent>
                 
