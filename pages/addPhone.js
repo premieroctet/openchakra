@@ -115,7 +115,7 @@ class addPhone extends React.Component {
                                                 placeholder="Numéro de téléphone"
                                                 margin="normal"
                                                 style={{ width: '100%' }}
-                                                type="text"
+                                                type={'number'}
                                                 name="phone"
                                                 variant="outlined"
                                                 value={this.state.address}

@@ -498,9 +498,6 @@ class editProfile extends React.Component {
                                         id="standard-name"
                                         style={{width: '100%'}}
                                         value={user.phone || ''}
-                                        onInput = {(e) =>{
-                                            e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
-                                        }}
                                         type={'number'}
                                         onChange={this.onChange}
                                         margin="normal"
@@ -593,9 +590,6 @@ class editProfile extends React.Component {
                                             id="standard-name"
                                             style={{width: '100%'}}
                                             value={user.emergency_phone || ''}
-                                            onInput = {(e) =>{
-                                                e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
-                                            }}
                                             type={'number'}
                                             onChange={this.onChange}
                                             margin="normal"

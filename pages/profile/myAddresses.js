@@ -675,6 +675,7 @@ class myAddresses extends React.Component {
                                                 onChange={this.onChange}
                                                 margin="normal"
                                                 name={'phone'}
+                                                type={'number'}
                                                 placeholder={'Ecrire ici'}
                                                 variant={"outlined"}
                                                 label={'Téléphone'}
@@ -833,6 +834,7 @@ class myAddresses extends React.Component {
                                                 onChange={this.onChange}
                                                 margin="normal"
                                                 name={'edit_phone'}
+                                                type={'number'}
                                                 placeholder={'Ecrire ici'}
                                                 variant={"outlined"}
                                                 label={'Téléphone'}
