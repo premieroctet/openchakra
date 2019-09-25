@@ -171,7 +171,7 @@ class security extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const testpremier = this.state.testpremier ?  <Button type="submit" variant="contained" color="primary"> Valider</Button> :  <Button disabled type="submit" variant="contained" color="primary">Valider</Button>;
+        const testpremier = this.state.testpremier ?  <Button type="submit" style={{color:"white"}} variant="contained" color="primary"> Valider</Button> :  <Button disabled style={{color:"white"}} type="submit" variant="contained" color="primary">Valider</Button>;
         const {last_login} = this.state;
 
 
@@ -372,9 +372,10 @@ class security extends React.Component {
                                 </p>
                                 </Grid>
                                 <form onSubmit={this.onSubmit}>
-                                    <Grid item>
+                                    <Grid item xs={4}>
                                         <TextField
                                             margin="normal"
+                                            style={{width:'100%'}}
                                             label={"Mot de passe actuel"}
                                             placeholder={"Mot de passe actuel"}
                                             type="password"
@@ -390,10 +391,11 @@ class security extends React.Component {
                                     {/*{this.state.testpremier ? <p>c'est remplis </p> : <p>c'est pas remplis</p>}*/}
 
 
-                                    <Grid item>
+                                    <Grid item xs={4}>
                                         <TextField
                                             id="standard-with-placeholder"
                                             margin="normal"
+                                            style={{width:'100%'}}
                                             label={"Nouveau mot de passe"}
                                             placeholder={"Nouveau mot de passe"}
                                             type="password"
@@ -404,14 +406,15 @@ class security extends React.Component {
                                         />
                                     </Grid>
 
-                                    <Grid item>
+                                    <Grid item xs={4}>
                                         <TextField
                                             id="standard-with-placeholder"
                                             margin="normal"
-                                            label={"Répéter le nouveau mot de passe"}
-                                            placeholder={"Répéter le nouveau mot de passe"}
+                                            label={"Répéter le mot de passe"}
+                                            placeholder={"Répéter le mot de passe"}
                                             type="password"
                                             name="newPassword2"
+                                            style={{width:'100%'}}
                                             value={this.state.newPassword2}
                                             onChange={this.onChangeNewPassword2}
                                             variant={"outlined"}

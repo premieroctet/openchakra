@@ -814,12 +814,12 @@ class trustAndVerification extends React.Component {
                                                     </Grid>
                                             )}
                                         {this.state.id_recto === null && this.state.id_verso !==null ?
-                                            <Grid item style={{marginTop:20}}>
-                                                <Button onClick={()=>this.addVerso()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider verso</Button>
+                                            <Grid item xs={9} style={{marginTop:20,display:"flex",justifyContent:"flex-end"}}>
+                                                <Button onClick={()=>this.addVerso()} color={"primary"} variant={"contained"} style={{color:"white"}}>Enregistrer verso</Button>
                                             </Grid>
                                             :
-                                            <Grid item style={{marginTop:20}}>
-                                                <Button type={"submit"} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
+                                            <Grid item xs={9} style={{marginTop:20,display:"flex",justifyContent:"flex-end"}}>
+                                                <Button type={"submit"} color={"primary"} variant={"contained"} style={{color:"white"}}>Enregistrer</Button>
                                             </Grid>
                                         }
 
@@ -943,7 +943,7 @@ class trustAndVerification extends React.Component {
                                         </React.Fragment>
                                         : null}
                                         <Grid item xs={5}>
-                                    <Button onClick={this.editSiret} type="submit" variant="contained" color="primary" style={{ width: '100%',color:'white',marginTop:15 }}>
+                                    <Button onClick={this.editSiret} type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
                                     Enregistrer
                                     </Button>
                                         </Grid>

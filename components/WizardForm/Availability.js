@@ -2466,7 +2466,6 @@ class Availability extends React.Component {
             Enregistrer
           </Button>
         </Grid>*/}
-        <Debug />
       </React.Fragment>
     );
   }

@@ -284,7 +284,7 @@ class facon extends React.Component{
                             <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 16}}>
                                 <Typography style={{paddingLeft:15,lineHeight: 2, fontSize: 18}}>
                                     A travers la création de votre boutique vous proposez vos services en
-                                    décrivant l'ensemble de vos prestations. vous pouvez à tout moment
+                                    décrivant l'ensemble de vos prestations. Vous pouvez à tout moment
                                     revenir sur votre boutique, ajouter ou supprimer des services. Les
                                     différentes étapes de création de votre boutique sont extrêmement
                                     simple. À vous de jouer !

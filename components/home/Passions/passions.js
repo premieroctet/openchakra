@@ -271,7 +271,7 @@ class Passions extends React.Component{
                             <Grid item xs={12} className={classes.details}>
                                 <CardContent className={classes.content}>
                                     <Typography component="h5" variant="h5" className={classes.padding}>
-                                        Partager vos passions et vos compétences !
+                                        Partagez vos passions et vos compétences !
                                     </Typography>
                                     <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
                                                 className={classes.padding2}>

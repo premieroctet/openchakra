@@ -26,7 +26,7 @@ router.get('/all',(req,res)=> {
 // View all tags for prestations
 router.get('/prestations',(req,res)=> {
 
-    Tags.find({title:{$in:['Nid douillet','Tracas','Plaisirs']}})
+    Tags.find({label:{$in:['Nid douillet','Tracas','Plaisirs']}})
         .then(tags => {
             if(typeof tags !== 'undefined' && tags.length > 0){
                 res.json(tags);
@@ -42,7 +42,7 @@ router.get('/prestations',(req,res)=> {
 // View all tags for category
 router.get('/category',(req,res)=> {
 
-    Tags.find({title:{$in:[/Sérénité/i,'Cours','Bien chez soi']}})
+    Tags.find({label:{$in:[/Sérénité/i,'Cours','Bien chez soi']}})
         .then(tags => {
             if(typeof tags !== 'undefined' && tags.length > 0){
                 res.json(tags);
@@ -58,7 +58,7 @@ router.get('/category',(req,res)=> {
 // View all tags for services
 router.get('/services',(req,res)=> {
 
-    Tags.find({title:{$in:[/Fête/i,/Bien-être/i,'Bien pratique','Top services','Jardin','Proche','Animaux']}})
+    Tags.find({label:{$in:[/Fête/i,/Bien-être/i,'Bien pratique','Top services','Jardin','Proche','Animaux']}})
         .then(tags => {
             if(typeof tags !== 'undefined' && tags.length > 0){
                 res.json(tags);

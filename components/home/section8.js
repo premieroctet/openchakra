@@ -284,7 +284,7 @@ class section8 extends React.Component{
                                 <Typography style={{paddingLeft:15,lineHeight: 2, fontSize: 18}}>
                                     My-Alfred vous permet de manière simple et sécurisée, de mettre vos services à disposition de tout à chacun.
                                     Un talent pour la décoration ? Une passion pour la cuisine ? Ou tout simplement du temps :
-                                    proposer vos services et complétez vos revenus.
+                                    proposez vos services et complétez vos revenus.
                                     Vous avez un contrôle total sur vos disponibilités, vos prix et sur le détail de vos prestations.
                                 </Typography>
                             </Grid>
