@@ -138,3 +138,9 @@
 
 
 /* REACT TABS FIN */
+
+.indicator__indicator:first-child {
+  color: #F8727F !important;
+}
+
+

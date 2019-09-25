@@ -7,8 +7,11 @@ function MultipleSelect(props) {
     return (
         <Select
             noOptionsMessage={() => props.noOption}
+            className="indicator"
+            classNamePrefix="indicator"
             closeMenuOnSelect={false}
             placeholder={props.placeholder}
+            value={props.value}
             isMulti
             isDisabled={props.disabled}
             options={props.option}
@@ -20,6 +23,16 @@ function MultipleSelect(props) {
                     primary: '#2FBCD3',
                 }
             })}
+            styles={{
+                indicatorsContainer: (styles) => {
+                    return {
+                        ...styles,
+                        ':nth-child(1)': {
+                            color: '#F8727F !important',
+                        }
+                    }
+                }
+            }}
         />
     );
 }

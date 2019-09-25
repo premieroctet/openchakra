@@ -29,6 +29,7 @@ import Switch from "@material-ui/core/Switch";
 import CircleCheckedFilled from '@material-ui/icons/CheckCircle';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import Select from 'react-select';
+import MaterialSelect from '@material-ui/core/Select';
 
 import { Debug } from './Debug';
 import MultipleSelect from './MultipleSelect';
@@ -42,6 +43,7 @@ import { FormControl, RadioGroup, Radio } from '@material-ui/core';
 import { toast, ToastContainer } from "react-toastify";
 import Loader from 'react-loader-spinner';
 import Clear from '@material-ui/icons/Clear';
+import Chip from '@material-ui/core/Chip';
 
 
 const { config } = require('../../config/config');
@@ -903,6 +905,8 @@ class Form extends React.Component {
             .then(res => {
                 this.state.phone = res.data.phone;
                 this.state.currentUser = res.data;
+                if (res.data.id_card.recto) this.state.userIdCardRecto = res.data.id_card.recto.substr(22);
+                if (res.data.id_card.verso) this.state.userIdCardVerso = res.data.id_card.verso.substr(22);
                 this.state.userCity = {label: res.data.billing_address.city, value: res.data.billing_address.city};
                 this.state.userAddress = {label: res.data.billing_address.address, value: res.data.billing_address.address};
                 this.state.userZipCode = {label: res.data.billing_address.zip_code, value: res.data.billing_address.zip_code};
@@ -1068,6 +1072,7 @@ class Form extends React.Component {
                             friday_event: [],
                             saturday_event: [],
                             sunday_event: [],
+                            recurrent_event: [],
                 
                             active: false,
                             month_begin: '',
@@ -1193,6 +1198,14 @@ class Form extends React.Component {
                                                         }*/
                                                     }}
                                                 />
+                                                {/*<Grid item xs={12}>
+                                                    {arrayHelpers.form.values.categories.length ? arrayHelpers.form.values.categories.map(categorie => {
+                                                        return <Chip 
+                                                                    label={categorie.label} 
+                                                                    style={{ borderRadius: 3, marginTop: 10, marginRight: 10, color: 'white', backgroundColor: '#2FBCD3' }}
+                                                                />;
+                                                    }) : null}
+                                                </Grid>*/}
                                                 <Button
                                                     color="primary"
                                                     style={{marginTop: '1rem', marginBottom: '2rem', color: 'white', borderRadius: 8}}
@@ -1486,7 +1499,7 @@ class Form extends React.Component {
                                                                                                                         <TextField
                                                                                                                             {...field}
                                                                                                                             value={field.value}
-                                                                                                                            style={{width: 125}}
+                                                                                                                            style={{width: '90%'}}
                                                                                                                             label={`Prix`}
                                                                                                                             type="number"
                                                                                                                             disabled={!p.checked}
@@ -1510,12 +1523,29 @@ class Form extends React.Component {
                                                                                                                 render={({field, form}) => {
                                                                                                                     return (
                                                                                                                         <React.Fragment>
-                                                                                                                            <TextField
+                                                                                                                            <MaterialSelect
                                                                                                                                 {...field}
+                                                                                                                                style={{width: '90%'}}
                                                                                                                                 helperText={`Méthode de facturation`}
                                                                                                                                 disabled={!p.checked}
-                                                                                                                                select
                                                                                                                                 margin="none"
+                                                                                                                                onChange={event => {
+                                                                                                                                    this.setState({
+                                                                                                                                        [`billingChoice${indexp}`]: event.target.value
+                                                                                                                                    });
+                                                                                                                                    form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, event.target.value);
+                                                                                                                                }}
+                                                                                                                                value={p.billingChoice.map((option, index) => {
+                                                                                                                                    if (index === 0) {
+                                                                                                                                        if (typeof this.state[`billingChoice${indexp}`] === 'undefined' || this.state[`billingChoice${indexp}`] === null) {
+                                                                                                                                            this.setState({
+                                                                                                                                                [`billingChoice${indexp}`]: option.label
+                                                                                                                                            });
+                                                                                                                                            form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, option.label);
+                                                                                                                                        }
+                                                                                                                                        return this.state[`billingChoice${indexp}`];
+                                                                                                                                    }
+                                                                                                                                })}
                                                                                                                             >
                                                                                                                                 {p.billingChoice.map(option => {
                                                                                                                                     return (
@@ -1525,7 +1555,8 @@ class Form extends React.Component {
                                                                                                                                     )
 
                                                                                                                                 })}
-                                                                                                                            </TextField>
+                                                                                                                                <MenuItem value="test">Test</MenuItem>
+                                                                                                                            </MaterialSelect>
                                                                                                                             <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                                                         </React.Fragment>
                                                                                                                     )
@@ -1562,6 +1593,7 @@ class Form extends React.Component {
                                                                                         noOptionsMessage={() => "Pas d'options disponibles"}
                                                                                         placeholder="Options disponibles"
                                                                                         isDisabled={this.state[`otherOptionChecked${index}`]}
+                                                                                        value={form.values.submission[index].option}
                                                                                         options={
                                                                                             array_option
                                                                                         }
@@ -1593,9 +1625,10 @@ class Form extends React.Component {
                                                                                                 if (this.state[`otherOptionChecked${index}`] === true) {
                                                                                                     arrayHelpers.form.setFieldValue(`submission.${index}.option`, null)
                                                                                                 } else {
-                                                                                                    const optObj = { label: null, price: null, unity: null, type: null }
+                                                                                                    const optObj = { label: null, price: null, unity: null, type: null } 
                                                                                                     arrayHelpers.form.setFieldValue(`submission.${index}.option`, optObj)
                                                                                                 }
+                                                                                                
                                                                                             }}
                                                                                         />
                                                                                     }
@@ -1910,6 +1943,7 @@ class Form extends React.Component {
                                                                                     <Select 
                                                                                         isClearable={true}
                                                                                         placeholder="Vos années d'expériences"
+                                                                                        value={arrayHelpers.form.values.submission[index].experienceYears}
                                                                                         options={[
                                                                                             {value: '', label: "Aucune année d'expérience"},
                                                                                             {value: 'ZeroOrOne', label: 'Entre 0 et 1 an'},
@@ -1997,7 +2031,11 @@ class Form extends React.Component {
                                                                                                         Joindre mon diplôme
                                                                                                         <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" onChange={(event) => {
                                                                                                             //arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, event.currentTarget.files[0]);
-                                                                                                            this.setState({ diplomaObj: event.currentTarget.files[0] })
+                                                                                                            if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                                                return;
+                                                                                                            } else {
+                                                                                                                this.setState({ diplomaObj: event.currentTarget.files[0] })
+                                                                                                            } 
                                                                                                         }} className="form-control"
                                                                                                         />
                                                                                                     </label>
@@ -2011,7 +2049,7 @@ class Form extends React.Component {
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.diploma.label`, this.state.diplomaName);
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, this.state.diplomaObj);
                                                                                                         }}
-                                                                                                        disabled={this.state.diplomaName === null || this.state.diplomaName === '' || arrayHelpers.form.values.submission[index].diploma.year === null || this.state.diplomaObj === null ? true : false}
+                                                                                                        disabled={this.state.diplomaName === null || this.state.diplomaName === '' || arrayHelpers.form.values.submission[index].diploma.year === null || this.state.diplomaObj === null || arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.diploma !== null ? true : false}
                                                                                                     >Ajouter mon diplôme</Button>
                                                                                                 </Grid>
                                                                                             </Grid>
@@ -2086,7 +2124,11 @@ class Form extends React.Component {
                                                                                                         Joindre ma certification
                                                                                                         <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certification" type="file" onChange={(event) => {
                                                                                                             //arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, event.currentTarget.files[0]);
-                                                                                                            this.setState({ certifObj: event.currentTarget.files[0] })
+                                                                                                            if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                                                return;
+                                                                                                            } else {
+                                                                                                                this.setState({ certifObj: event.currentTarget.files[0] })
+                                                                                                            } 
                                                                                                         }} className="form-control"
                                                                                                         />
                                                                                                     </label>
@@ -2100,7 +2142,7 @@ class Form extends React.Component {
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.certification.label`, this.state.certifName);
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, this.state.certifObj);
                                                                                                         }}
-                                                                                                        disabled={this.state.certifName === null || this.state.certifName === '' || arrayHelpers.form.values.submission[index].certification.year === null || this.state.certifObj === null ? true : false}
+                                                                                                        disabled={this.state.certifName === null || this.state.certifName === '' || arrayHelpers.form.values.submission[index].certification.year === null || this.state.certifObj === null || arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.diploma !== null ? true : false}
                                                                                                     >Ajouter ma certification</Button>
                                                                                                 </Grid>
                                                                                             </Grid>
@@ -2125,6 +2167,7 @@ class Form extends React.Component {
                                 
                                 {/*</div>*/}
                         </Grid>
+                        <Debug />
                     </Wizard.Page>
                     <Wizard.Page>
                         <FieldArray render={({form}) => {
@@ -2537,24 +2580,31 @@ class Form extends React.Component {
                                                                                 id="icon-button-file"
                                                                                 type="file"
                                                                                 onChange={(event) => {
-                                                                                    form.setFieldValue("alfredUpdate.profile_picture_user", event.currentTarget.files[0])
+                                                                                    if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                        return;
+                                                                                    } else {
+                                                                                        form.setFieldValue("alfredUpdate.profile_picture_user", event.currentTarget.files[0]);
+                                                                                    }
                                                                                 }}
                                                                                 name={"myImage"}
                                                                             />
-                                                                            <label htmlFor="icon-button-file">
-                                                                                <IconButton
-                                                                                    color="primary"
-                                                                                    className={classes.button}
-                                                                                    style={{
-                                                                                        width: 100,
-                                                                                        height: 100,
-                                                                                        backgroundColor: "lightgrey"
-                                                                                    }}
-                                                                                    component="span"
-                                                                                >
-                                                                                    {form.values.alfredUpdate.profile_picture_user === null ? <img src={this.state.currentUser.picture} height="100" width="100" style={{borderRadius: '50%'}} /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
-                                                                                </IconButton>
-                                                                            </label>
+                                                                            <div style={{position: 'relative'}}>
+                                                                                <label htmlFor="icon-button-file">
+                                                                                    <IconButton
+                                                                                        color="primary"
+                                                                                        className={classes.button}
+                                                                                        style={{
+                                                                                            width: 100,
+                                                                                            height: 100,
+                                                                                            backgroundColor: "lightgrey",
+                                                                                        }}
+                                                                                        component="span"
+                                                                                    >
+                                                                                        {form.values.alfredUpdate.profile_picture_user === null ? <img src={this.state.currentUser.picture} height="100" width="100" style={{borderRadius: '50%'}} /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
+                                                                                    </IconButton>
+                                                                                </label>
+                                                                                {form.values.alfredUpdate.profile_picture_user === null ? null : <Clear color="secondary" style={{cursor: 'pointer', position: 'absolute', top: 0, right: -20}} onClick={() => form.setFieldValue(`alfredUpdate.profile_picture_user`, null)}/>}
+                                                                            </div>
                                                                         </React.Fragment>
                                                                     )
                                                                 }} />
@@ -2633,12 +2683,36 @@ class Form extends React.Component {
                                                                                 <React.Fragment>
                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                         Carte identité recto
-                                                                                        <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
-                                                                                            form.setFieldValue("createShop.id_recto", event.currentTarget.files[0])
+                                                                                        <input id="file" accept="image/*, application/pdf" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
+                                                                                            if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                                return;
+                                                                                            } else {
+                                                                                                form.setFieldValue("createShop.id_recto", event.currentTarget.files[0]);
+                                                                                                this.setState({
+                                                                                                    userIdCardRecto: null
+                                                                                                })
+                                                                                            }
                                                                                         }} className="form-control"
                                                                                         />
                                                                                     </label>
-                                                                                    <span>{form.values.createShop.id_recto !== null ? form.values.createShop.id_recto.name.substr(0, 10) + '...' : null}</span>
+                                                                                    {form.values.createShop.id_recto === null && typeof this.state.userIdCardRecto !== 'undefined' && this.state.userIdCardRecto !== null && typeof this.state.userIdCardVerso !== 'undefined' ? 
+                                                                                    <React.Fragment>
+                                                                                        <span>
+                                                                                            {this.state.userIdCardRecto.slice(0, 10) + '...'}
+                                                                                        </span>
+                                                                                        <Clear 
+                                                                                            color="secondary"
+                                                                                            style={{ cursor: 'pointer' }}
+                                                                                            onClick={() => {
+                                                                                                this.setState({
+                                                                                                    userIdCardRecto: null
+                                                                                                })
+                                                                                            }}
+                                                                                        />
+                                                                                    </React.Fragment>
+                                                                                    : 
+                                                                                    null}
+                                                                                    {form.values.createShop.id_recto !== null ? <React.Fragment><span>{form.values.createShop.id_recto.name.substr(0, 10) + '...'}</span><Clear color="secondary" style={{cursor: 'pointer'}} onClick={() => form.setFieldValue("createShop.id_recto", null)}/></React.Fragment> : null}
                                                                                     <ErrorMessage name="createShop.id_recto" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                 </React.Fragment>
                                                                             )
@@ -2654,12 +2728,37 @@ class Form extends React.Component {
                                                                                 <React.Fragment>
                                                                                     <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                         Carte identité verso
-                                                                                        <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
-                                                                                            form.setFieldValue("createShop.id_verso", event.currentTarget.files[0])
+                                                                                        <input id="file" accept="image/*, application/pdf" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
+                                                                                            if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                                return;
+                                                                                            } else {
+                                                                                                form.setFieldValue("createShop.id_verso", event.currentTarget.files[0]);
+                                                                                                this.setState({
+                                                                                                    userIdCardVerso: null
+                                                                                                })
+                                                                                            }
                                                                                         }} className="form-control"
                                                                                         />
                                                                                     </label>
-                                                                                    <span>{form.values.createShop.id_verso !== null ? form.values.createShop.id_verso.name.substr(0, 10) + '...' : null}</span>
+                                                                                    {form.values.createShop.id_verso === null && typeof this.state.userIdCardVerso !== 'undefined' && this.state.userIdCardVerso !== null ? 
+                                                                                        <React.Fragment>
+                                                                                            <span>
+                                                                                                {this.state.userIdCardVerso.slice(0, 10) + '...'}
+                                                                                            </span>
+                                                                                            <Clear 
+                                                                                                color="secondary"
+                                                                                                style={{ cursor: 'pointer' }}
+                                                                                                onClick={() => {
+                                                                                                    this.setState({
+                                                                                                        userIdCardVerso: null
+                                                                                                    })
+                                                                                                }}
+                                                                                            />
+                                                                                        </React.Fragment>
+                                                                                        : 
+                                                                                        null
+                                                                                    }
+                                                                                    {form.values.createShop.id_verso !== null ? <React.Fragment><span>{form.values.createShop.id_verso.name.substr(0, 10) + '...'}</span><Clear color="secondary" style={{cursor: 'pointer'}} onClick={() => form.setFieldValue("createShop.id_verso", null)}/></React.Fragment> : null}
                                                                                     <ErrorMessage name="createShop.id_verso" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                 </React.Fragment>
                                                                             )
@@ -2673,12 +2772,37 @@ class Form extends React.Component {
                                                                             <React.Fragment>
                                                                                 <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                                                                                     Passeport
-                                                                                    <input id="file" accept="image/*" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
-                                                                                        form.setFieldValue("createShop.id_recto", event.currentTarget.files[0])
+                                                                                    <input id="file" accept="image/*, application/pdf" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
+                                                                                        if (typeof event.currentTarget.files[0] === 'undefined') {
+                                                                                            return;
+                                                                                        } else {
+                                                                                            form.setFieldValue("createShop.id_recto", event.currentTarget.files[0]);
+                                                                                            this.setState({
+                                                                                                userIdCardRecto: null
+                                                                                            })
+                                                                                        }
                                                                                     }} className="form-control"
                                                                                     />
                                                                                 </label>
-                                                                                <span>{form.values.createShop.id_recto !== null ? form.values.createShop.id_recto.name.substr(0, 10) + '...' : null}</span>
+                                                                                {form.values.createShop.id_recto === null && typeof this.state.userIdCardRecto !== 'undefined' && this.state.userIdCardRecto !== null && typeof this.state.userIdCardVerso === 'undefined'? 
+                                                                                    <React.Fragment>
+                                                                                        <span>
+                                                                                            {this.state.userIdCardRecto.slice(0, 10) + '...'}
+                                                                                        </span>
+                                                                                        <Clear 
+                                                                                            color="secondary"
+                                                                                            style={{ cursor: 'pointer' }}
+                                                                                            onClick={() => {
+                                                                                                this.setState({
+                                                                                                    userIdCardRecto: null
+                                                                                                })
+                                                                                            }}
+                                                                                        />
+                                                                                    </React.Fragment>
+                                                                                    : 
+                                                                                    null
+                                                                                }
+                                                                                {form.values.createShop.id_recto !== null ? <React.Fragment><span>{form.values.createShop.id_recto.name.substr(0, 10) + '...'}</span> <Clear color="secondary" style={{cursor: 'pointer'}} onClick={() => form.setFieldValue("createShop.id_recto", null)}/></React.Fragment> : null}
                                                                                 <ErrorMessage name="createShop.id_recto" render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                             </React.Fragment>
                                                                         )
