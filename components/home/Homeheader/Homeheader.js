@@ -371,7 +371,7 @@ class Homeheader extends React.Component {
               fontSize: '1.5rem',
               textShadow: '0px 0.5px 2px #696969'
             }}>
-              Créez dès aujourd’hui votre boutique, proposez vos services Et dans 1 mois les clients vous supplieront et vos banquiers vous applaudiront
+              Créez dès aujourd’hui votre boutique, proposez vos services et dans 1 mois les clients vous supplieront et vos banquiers vous applaudiront
             </h4>
           </div>
 

@@ -7,13 +7,6 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import Card from "@material-ui/core/Card";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import DatePicker from "react-datepicker";
-import FormControl from "@material-ui/core/FormControl";
-import Select2 from "react-select";
-import Button from "@material-ui/core/Button";
 import Link from 'next/link';
 
 
@@ -1509,8 +1502,8 @@ class faq extends React.Component {
                                             </p>
                                             <p>
                                                 Pour retrouver vos messages en tant qu’utilisateur, il vous suffit de vous rendre dans l’onglet
-                                                <strong>Messages</strong>. Pour retrouver vos messages en tant qu’Alfred, il vous suffit cliquez sur l’onglet
-                                                <strong>Je suis Alfred</strong>, et de vous rendre dans la rubrique <strong>Messages</strong>.
+                                                 <strong> Messages</strong>. Pour retrouver vos messages en tant qu’Alfred, il vous suffit cliquez sur l’onglet
+                                                 <strong> Je suis Alfred</strong>, et de vous rendre dans la rubrique <strong>Messages</strong>.
                                             </p>
 
                                         </Grid>
