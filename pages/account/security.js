@@ -150,9 +150,9 @@ class security extends React.Component {
         const data = {password: this.state.password, newPassword: this.state.newPassword};
         axios
             .put(url+'myAlfred/api/users/profile/editPassword', data)
-            .then(res => {
+            .then(() => {
                 toast.info('Mot de passe modifié');
-                this.componentDidMount();
+                setTimeout(() => window.location.reload(), 2000);
             })
             .catch(err =>
                 console.log(err)

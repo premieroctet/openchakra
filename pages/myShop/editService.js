@@ -1553,7 +1553,7 @@ class editService extends React.Component {
 
 
                     <Grid item xs={7} style={{backgroundImage:'url(../../static/Creation_shop_step1.png)',backgroundSize:"contain",
-                        backgroundRepeat:"no-repeat",height:'100vh'}}>
+                        backgroundRepeat:"no-repeat",height:'100vh',position:"sticky",top:0}}>
                     </Grid>
 
 

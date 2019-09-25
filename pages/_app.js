@@ -22,7 +22,7 @@ import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 toast.configure({
   position: 'top-center',
-  autoClose: 2500
+  autoClose: 2500,
 });
 class MyApp extends App {
   constructor() {

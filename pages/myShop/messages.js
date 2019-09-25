@@ -4,7 +4,7 @@ import Layout from '../../hoc/Layout/Layout';
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from '@material-ui/core/styles';
 import Footer from '../../hoc/Layout/Footer/Footer';
-
+import { toast } from 'react-toastify';
 
 
 
@@ -82,9 +82,7 @@ const styles = theme => ({
         [theme.breakpoints.down('md')]: {
             display: 'none',
         }
-    },
-
-
+    }
 
 });
 

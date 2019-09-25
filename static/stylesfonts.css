@@ -45,3 +45,11 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
+
+.Toastify__toast--info {
+    background: #2FBCD3;
+}
+
+.Toastify__toast--error {
+    background: #F8727F;
+}

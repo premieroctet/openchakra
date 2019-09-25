@@ -32,7 +32,7 @@ class faq extends React.Component {
         return (
             <Layout>
                 <Grid container style={{marginTop:80}}>
-                    <Grid item xs={8} style={{paddingLeft:'3%'}}>
+                    <Grid item xs={7} style={{paddingLeft:'3%'}}>
                         <Grid container>
                         <h3>Devenir Alfred</h3>
                             <Grid item xs={12}>
@@ -2278,6 +2278,14 @@ class faq extends React.Component {
                             </Grid>
                         </Grid>
 
+                    </Grid>
+                    <Grid item xs={5} style={{position:"fixed",right:0}}>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <img src={'../static/Creation_shop_step1.png'} alt={'picture'} width={'100%'}/>
+
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Layout>
