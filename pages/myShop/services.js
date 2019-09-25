@@ -331,27 +331,45 @@ class services extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
-                            <Grid item xs={1} className={classes.shopbar}></Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
-                            </Grid>
+                    <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
+                                <Grid item xs={1} className={classes.shopbar}></Grid>
+                                <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
+                                    <Link href={'/myShop/services'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
+                                        </a>
+                                    </Link>
+                                </Grid>
+                                <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                    <Link href={'/myShop/messages'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                                        </a>
+                                    </Link> 
+                                </Grid>
+                                <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                    <Link href={'/myShop/mesreservations'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                                        </a> 
+                                    </Link>
+                                </Grid>
+                                <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                    <Link href={'/myShop/myAvailabilities'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
+                                        </a>
+                                    </Link>
+                                </Grid>
+                                <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                    <Link href={'/myShop/performances'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                                        </a>
+                                    </Link>
+                                </Grid>
 
-                        </Grid>
+                            </Grid>
                         <Grid container style={{backgroundImage: `url('../../${this.state.shop.picture}')`,backgroundPosition: "center", height:'42vh',
                             backgroundSize:"cover", backgroundRepeat:"no-repeat",justifyContent:"center",alignItems:"center"}}>
 

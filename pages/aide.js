@@ -4,15 +4,13 @@ import SubBar from '../components/search/SubBar/SubBar';
 import BodySearch from '../components/search/BodySearch/BodySearch';
 import Footer from '../hoc/Layout/Footer/Footer';
 
-const Search = () => (
+const Aide = () => (
   <Fragment>
     <Layout>
       <div style={{backgroundImage:'url(../static/background/pagesina.svg)',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover', width: '100%', height: '100vh'}}></div>
-      {/*<SubBar />
-      <BodySearch />*/}
-      <Footer />
+      <Footer/>  
     </Layout>
   </Fragment>
 );
 
-export default Search;
+export default Aide;

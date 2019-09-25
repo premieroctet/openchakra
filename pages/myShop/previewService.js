@@ -356,7 +356,7 @@ class services extends React.Component {
                 this.setState({equipments: serviceUser.equipments});
                 this.setState({prestations: serviceUser.prestations})
                 this.state.uniqFilter.forEach(e =>{
-                    this.setState({[e.label]:false})
+                    this.setState({[e.label]:true})
                 });
                 const lat = serviceUser.service_address.gps.lat;
                 const lng = serviceUser.service_address.gps.lng;

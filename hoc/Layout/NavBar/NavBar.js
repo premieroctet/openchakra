@@ -307,7 +307,7 @@ class NavBar extends Component {
       >
         {/*<MenuItem onClick={this.handleAvatarMenuClose}>
           <Typography>
-            <Link href='#'>
+            <Link href='/aide'>
               <a className={classes.navbarLinkAvatar}>
                 Aide
               </a>
@@ -353,7 +353,7 @@ class NavBar extends Component {
         {test ?<React.Fragment>
               <MenuItem onClick={this.handleMobileMenuOpen}>
                 <Typography>
-                    <Link href='#'>
+                    <Link href='/myShop/messages'>
                       <a className={classes.navbarLinkMobile}>
                         Messages
                       </a>
@@ -363,7 +363,7 @@ class NavBar extends Component {
             </React.Fragment> : null }
               <MenuItem onClick={this.handleMobileMenuOpen}>
               <Typography>
-                <Link href='#'>
+                <Link href='/aide'>
                   <a className={classes.navbarLinkMobile}>
                     Aide
                   </a>
@@ -372,7 +372,7 @@ class NavBar extends Component {
               </MenuItem>
         {/*<MenuItem onClick={this.handleMobileMenuClose}>
           <Typography>
-            <Link href='#'>
+            <Link href='/aide'>
               <a className={classes.navbarLinkMobile}>
                 Aide
               </a>
@@ -440,14 +440,14 @@ class NavBar extends Component {
               </Typography>}
 
               {test ?<React.Fragment><Typography className={classes.navbarItem}>
-                <Link href='#'>
+                <Link href='/myShop/messages'>
                   <a className={classes.navbarLink}>
                     Messages
                   </a>
                 </Link>
               </Typography></React.Fragment> : null }
               <Typography className={classes.navbarItem}>
-                <Link href='#'>
+                <Link href='/aide'>
                   <a className={classes.navbarLink}>
                     Aide
                   </a>
