@@ -316,7 +316,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.monday_event.push(obj);
-            toast.success('Créneau ajouté');
+            toast.info('Créneau ajouté');
 
             this.setState({monday_begin: '', monday_end: '', monday_service: null, monday_all_service: false})
         }
@@ -352,7 +352,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.tuesday_event.push(obj);
-            toast.success('Créneau ajouté');
+            toast.info('Créneau ajouté');
 
             this.setState({tuesday_begin: '', tuesday_end: '', tuesday_service: null, tuesday_all_service: false})
         }
@@ -388,7 +388,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.wednesday_event.push(obj);
-            toast.success('Créneau ajouté');
+            toast.info('Créneau ajouté');
 
             this.setState({wednesday_begin: '', wednesday_end: '', wednesday_service: null, wednesday_all_service: false})
         }
@@ -424,7 +424,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.thursday_event.push(obj);
-            toast.success('Créneau ajouté');
+            toast.info('Créneau ajouté');
 
             this.setState({thursday_begin: '', thursday_end: '', thursday_service: null, thursday_all_service: false})
         }
@@ -460,7 +460,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.friday_event.push(obj);
-            toast.success('Créneau ajouté');
+            toast.info('Créneau ajouté');
 
             this.setState({friday_begin: '', friday_end: '', friday_service: null, friday_all_service: false})
         }
@@ -496,7 +496,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.saturday_event.push(obj);
-            toast.success('Créneau ajouté');
+            toast.info('Créneau ajouté');
 
             this.setState({saturday_begin: '', saturday_end: '', saturday_service: null, saturday_all_service: false})
         }
@@ -532,7 +532,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.sunday_event.push(obj);
-            toast.success('Créneau ajouté');
+            toast.info('Créneau ajouté');
 
             this.setState({sunday_begin: '', sunday_end: '', sunday_service: null, sunday_all_service: false})
         }
@@ -570,7 +570,7 @@ class detailsAvailability extends React.Component {
 
             axios.put(url+'myAlfred/api/availability/'+id,data)
                 .then(() => {
-                    toast.success('Disponibilité modifiée avec succès !');
+                    toast.info('Disponibilité modifiée avec succès !');
                     Router.push('/myShop/myAvailabilities')
                 })
                 .catch(err => console.log(err))

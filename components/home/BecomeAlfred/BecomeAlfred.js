@@ -13,7 +13,6 @@ import Button from '@material-ui/core/Button';
 import Avatar from "@material-ui/core/Avatar";
 import axios from 'axios';
 import Link from 'next/link';
-import { dark } from 'react-syntax-highlighter/dist/styles/hljs';
 const {config} = require('../../../config/config');
 const url = config.apiUrl;
 

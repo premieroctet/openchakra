@@ -386,7 +386,7 @@ class editService extends React.Component {
                 ,city,address,zip_code,country,lat,lng,description,level})
                 .then(res => {
 
-                    alert('Service modifié avec succès');
+                    toast.info('Service modifié avec succès');
                     Router.push({pathname:'/myShop/services'})
                 })
                 .catch(err => {
