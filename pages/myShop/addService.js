@@ -964,9 +964,9 @@ class addService extends React.Component {
                                 </div>
 
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={5}>
                                 <TextField
-                                    style={{width: '30%'}}
+                                    style={{width:'100%'}}
                                     select
                                     margin="dense"
                                     variant="outlined"
@@ -1194,7 +1194,6 @@ class addService extends React.Component {
 
                 </Grid>
 
-            <Footer/>
             </Layout>
             
             

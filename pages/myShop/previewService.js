@@ -13,7 +13,7 @@ import dynamic from 'next/dynamic';
 import { border } from 'polished';
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpandMoreIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Card from "@material-ui/core/Card";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
