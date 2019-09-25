@@ -775,8 +775,8 @@ class Wizard extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="imgDiv" style={{width: /*40 inital value*/ '70%', overflow: 'hidden'}}>
-                                <img src='../../static/01_illustration_my_alfred_Plan de travail 1 copie 2.svg' height='100%'  width='100%'/>
+                            <div className="imgDiv" style={{width: /*40 inital value*/ '100%', overflow: 'hidden', backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : page === 3 ? 'url("../../static/Creation_shop_step2.png")' : page === 4 || page === 5 ? 'url("../../static/Creation_shop_step3.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center'}}>
+                                {/*<img src='../../static/Creation_shop_step1.png' height="100%" width="100%"/>*/}
                             </div>
                         </form>
                     </React.Fragment>
@@ -2168,7 +2168,6 @@ class Form extends React.Component {
                                 
                                 {/*</div>*/}
                         </Grid>
-                        <Debug />
                     </Wizard.Page>
                     <Wizard.Page>
                         <FieldArray render={({form}) => {
