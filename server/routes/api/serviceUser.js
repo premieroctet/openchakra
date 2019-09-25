@@ -4,6 +4,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const path = require('path');
 const ServiceUser = require('../../models/ServiceUser');
+const Shop = require('../../models/Shop');
 const User = require('../../models/User');
 const axios = require('axios');
 const multer = require("multer");
@@ -176,7 +177,15 @@ router.post('/myShop/add',upload.fields([{name: 'file_diploma',maxCount: 1}, {na
 
             fields.option = JSON.parse(req.body.options);
             const newService = new ServiceUser(fields);
-            newService.save().then(service => res.json(service)).catch(err => console.log(err));
+            newService.save().then(service =>{
+                Shop.find({alfred:req.user.id})
+                    .then(shop => {
+                        shop.services.unshift(service._id);
+                        shop.save();
+                    })
+                    .catch(error => console.log(error))
+        })
+                .catch(err => console.log(err));
 
         })
         .catch(error => {
@@ -546,7 +555,18 @@ router.delete('/current/allServices', passport.authenticate('jwt', { session: fa
 router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
     ServiceUser.findById(req.params.id)
         .then(event => {
-            event.remove().then(() => res.json({success: true}));
+            event.remove().then(() => {
+                Shop.find({alfred:req.user.id})
+                    .then(shop => {
+                        const removeIndex = shop.services
+                            .indexOf(req.params.id);
+
+                        shop.services.splice(removeIndex, 1);
+
+
+                        shop.save();
+                    })
+            });
         })
         .catch(err => res.status(404).json({eventnotfound: 'No event found'}));
 });

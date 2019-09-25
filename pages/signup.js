@@ -25,9 +25,10 @@ const { config } = require('../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
   fullContainer: {
-    backgroundImage: 'url(../static/background/Inscription-connexion.svg)',
+    backgroundImage: 'url(../static/background/connexion_inscription.png)',
     backgroundPosition: 'center',
-    backgroundSize: 'cover',
+    backgroundSize: 'contain',
+    backgroundRepeat:'no-repeat',
     alignItems: 'center',
     height: '180vh',
     justifyContent: 'top',
