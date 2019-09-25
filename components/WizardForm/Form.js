@@ -46,6 +46,7 @@ import Clear from '@material-ui/icons/Clear';
 import Chip from '@material-ui/core/Chip';
 
 
+
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -1531,19 +1532,19 @@ class Form extends React.Component {
                                                                                                                                 margin="none"
                                                                                                                                 onChange={event => {
                                                                                                                                     this.setState({
-                                                                                                                                        [`billingChoice${indexp}`]: event.target.value
+                                                                                                                                        [`billingChoice${index}${indexf}${indexp}`]: event.target.value
                                                                                                                                     });
                                                                                                                                     form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, event.target.value);
                                                                                                                                 }}
-                                                                                                                                value={p.billingChoice.map((option, index) => {
-                                                                                                                                    if (index === 0) {
-                                                                                                                                        if (typeof this.state[`billingChoice${indexp}`] === 'undefined' || this.state[`billingChoice${indexp}`] === null) {
+                                                                                                                                value={p.billingChoice.map((option, indexc) => {
+                                                                                                                                    if (indexc === 0) {
+                                                                                                                                        if (typeof this.state[`billingChoice${index}${indexf}${indexp}`] === 'undefined' || this.state[`billingChoice${index}${indexf}${indexp}`] === null) {
                                                                                                                                             this.setState({
-                                                                                                                                                [`billingChoice${indexp}`]: option.label
+                                                                                                                                                [`billingChoice${index}${indexf}${indexp}`]: option.label
                                                                                                                                             });
                                                                                                                                             form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, option.label);
                                                                                                                                         }
-                                                                                                                                        return this.state[`billingChoice${indexp}`];
+                                                                                                                                        return this.state[`billingChoice${index}${indexf}${indexp}`];
                                                                                                                                     }
                                                                                                                                 })}
                                                                                                                             >
