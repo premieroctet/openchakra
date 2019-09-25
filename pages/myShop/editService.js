@@ -594,7 +594,7 @@ class editService extends React.Component {
             <Layout>
 
                 <Grid container className={classes.bigContainer}>
-                    <Grid item xs={7} style={{paddingLeft:20}}>
+                    <Grid item xs={5} style={{paddingLeft:20}}>
                         <h2 style={{fontWeight: '100'}}>Paramétrez votre service {service.label}</h2>
 
                         <Grid container>
@@ -1552,14 +1552,14 @@ class editService extends React.Component {
 
 
 
-                    <Grid item xs={5} style={{backgroundColor: 'whitesmoke'}}>
+                    <Grid item xs={7} style={{backgroundImage:'url(../../static/Creation_shop_step1.png)',backgroundSize:"contain",
+                        backgroundRepeat:"no-repeat",height:'100vh'}}>
                     </Grid>
 
 
 
                     </Grid>
 
-            <Footer/>
             </Layout>
             
 
