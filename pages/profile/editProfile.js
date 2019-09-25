@@ -17,7 +17,6 @@ import FormControl from "@material-ui/core/FormControl";
 import {FormLabel} from "@material-ui/core";
 import Select2 from 'react-select';
 import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import fr from 'date-fns/locale/fr';
 import Birthday from '@material-ui/icons/CakeOutlined'
 import Footer from '../../hoc/Layout/Footer/Footer';
