@@ -353,7 +353,7 @@ class NavBar extends Component {
         {test ?<React.Fragment>
               <MenuItem onClick={this.handleMobileMenuOpen}>
                 <Typography>
-                    <Link href='/myShop/messages'>
+                    <Link href={'/myShop/messages'}>
                       <a className={classes.navbarLinkMobile}>
                         Messages
                       </a>
@@ -363,7 +363,7 @@ class NavBar extends Component {
             </React.Fragment> : null }
               <MenuItem onClick={this.handleMobileMenuOpen}>
               <Typography>
-                <Link href='/aide'>
+                <Link href={'/faq'}>
                   <a className={classes.navbarLinkMobile}>
                     Aide
                   </a>
@@ -440,14 +440,14 @@ class NavBar extends Component {
               </Typography>}
 
               {test ?<React.Fragment><Typography className={classes.navbarItem}>
-                <Link href='/myShop/messages'>
+                <Link href={'/myShop/messages'}>
                   <a className={classes.navbarLink}>
                     Messages
                   </a>
                 </Link>
               </Typography></React.Fragment> : null }
               <Typography className={classes.navbarItem}>
-                <Link href='/aide'>
+                <Link href={'/faq'}>
                   <a className={classes.navbarLink}>
                     Aide
                   </a>

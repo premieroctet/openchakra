@@ -32,7 +32,7 @@ class faq extends React.Component {
         return (
             <Layout>
                 <Grid container style={{marginTop:80}}>
-                    <Grid item xs={8}>
+                    <Grid item xs={8} style={{paddingLeft:'3%'}}>
                         <Grid container>
                         <h3>Devenir Alfred</h3>
                             <Grid item xs={12}>
