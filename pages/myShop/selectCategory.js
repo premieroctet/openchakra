@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -9,6 +8,7 @@ import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import Select from "react-select";
+import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 
@@ -21,6 +21,38 @@ const styles = theme => ({
         marginTop: 68,
         flexGrow: 1,
     },
+    sidebg:{
+display:'block', 
+
+[theme.breakpoints.down('sm')]: {
+    display: 'none!important',
+},
+ suivant:{
+    [theme.breakpoints.down('sm')]: {
+        right:10
+    },
+   
+
+
+ }
+
+    },
+    maincontainer:{
+      
+        
+        [theme.breakpoints.down('sm')]: {
+            width:'98% !important',
+            margin:'auto',
+        },
+        
+            },
+            bottombar:{visibility:'hidden', [theme.breakpoints.down('sm')]: {
+                visibility:'visible',
+                boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
+            }},
+            topbar:{visibility:'visible', position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
+                visibility:'hidden',
+            }},
 
 
 
@@ -156,7 +188,28 @@ class selectCategory extends React.Component {
             <Layout>
 
                 <Grid container className={classes.bigContainer}>
-                    <Grid item xs={5} style={{paddingLeft:20}}>
+                <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
+                            
+                            <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white'}}>
+                                <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
+                                </Link>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                            </Grid>
+
+                        </Grid>
+                    <Grid className={classes.maincontainer} item xs={12} md={7} style={{paddingLeft:20}}>
                         <Grid container>
                             <Grid item xs={12}>
                                 <h2 style={{fontWeight: '100'}}>Votre catégorie de service</h2>
@@ -247,7 +300,7 @@ class selectCategory extends React.Component {
                                 <Grid item xs={6}>
                                     {serviceOk ?
                                         <Link href={'/myShop/addService?id='+this.state.selectedService.value}>
-                            <Button type="submit" variant="contained" color="secondary" style={{ color:"white" }}>
+                            <Button type="submit" variant="contained" color="secondary" className={classes.suivant} style={{ color:"white" }}>
                                 Suivant
                             </Button>
                                         </Link>
@@ -264,16 +317,46 @@ class selectCategory extends React.Component {
 
 
 
-                    <Grid item xs={7} style={{backgroundImage:'url(../../static/Creation_shop_step1.png)',backgroundSize:"contain",
-                                            backgroundRepeat:"no-repeat",height:'100vh'}}>
-
+                    <Grid item xs={5} className={classes.sidebg} style={{backgroundColor: 'whitesmoke'}}>
                     </Grid>
 
 
 
                 </Grid>
+                <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
+                         
+                         <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
+                             <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                             </Link>
+                         </Grid>
 
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
 
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                     </Grid>
+            <Footer/>
             </Layout>
             
 

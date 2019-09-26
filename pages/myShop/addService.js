@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -37,6 +36,25 @@ const styles = theme => ({
         marginTop: 68,
         flexGrow: 1,
     },
+    field1:{width: '30%', [theme.breakpoints.down('sm')]: {
+        width:'90%',
+        margin:'auto'
+    }},
+
+     sidebg:{
+        display:'block',
+
+        [theme.breakpoints.down('sm')]: {
+            display: 'none!important',
+        }
+     },
+     bottombar:{visibility:'hidden', [theme.breakpoints.down('sm')]: {
+         visibility:'visible',
+         boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
+     }},
+     topbar:{visibility:'visible', position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
+         visibility:'hidden',
+     }},
 
 
 
@@ -416,7 +434,28 @@ class addService extends React.Component {
             <Layout>
 
                 <Grid container className={classes.bigContainer}>
-                    <Grid item xs={5} style={{paddingLeft:20}}>
+                <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
+
+                            <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white'}}>
+                                <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
+                                </Link>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                            </Grid>
+
+                        </Grid>
+                    <Grid item xs={12} md={7} style={{paddingLeft:20}}>
                         <h2 style={{fontWeight: '100'}}>Paramétrez votre service {service.label}</h2>
 
                         <Grid container>
@@ -587,7 +626,7 @@ class addService extends React.Component {
                                         />
 
                                     </Grid>
-                                    <Button color={"primary"} variant={"contained"} style={{color:"white"}} onClick={()=> this.validateOptions()}>Valider mon option</Button>
+                                    <Button color={"primary"} variant={"contained"} style={{color:"white"}} onClick={()=> this.validateOptions()}>Valider</Button>
 
                                 </React.Fragment>
 
@@ -686,7 +725,7 @@ class addService extends React.Component {
                                             })}
                                         />
                                     </Grid>
-                                    <Button color={"primary"} variant={"contained"} style={{color:"white"}} onClick={()=> this.validateOptions2()}>Valider mon option</Button>
+                                    <Button color={"primary"} variant={"contained"} style={{color:"white"}} onClick={()=> this.validateOptions2()}>Valider </Button>
 
                                 </React.Fragment>
 
@@ -949,7 +988,7 @@ class addService extends React.Component {
 
                                 </p>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={12} md={4}>
                                 <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center",
                                     lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }}
                                      onClick={()=> this.setState({deadline_before_booking_number: this.state.deadline_before_booking_number -1})}>
@@ -964,9 +1003,9 @@ class addService extends React.Component {
                                 </div>
 
                             </Grid>
-                            <Grid item xs={5}>
-                                <TextField
-                                    style={{width:'100%'}}
+                            <Grid item xs={12} md={6}>
+                                <TextField className={classes.field1}
+
                                     select
                                     margin="dense"
                                     variant="outlined"
@@ -1085,7 +1124,7 @@ class addService extends React.Component {
                                     <Grid container>
                                         <Grid item xs={4}>
                                             <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",color:'black'}}>Joindre mon diplôme</p>
+                                                <p style={{cursor:"pointer",textAlign:'center',color:'black'}}>Joindre mon diplôme</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
                                                        onChange={this.onChangeDiploma}
                                                        className="form-control" accept={'image/*,.pdf'}
@@ -1147,7 +1186,7 @@ class addService extends React.Component {
                                     <Grid container>
                                         <Grid item xs={4}>
                                             <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",color:'black'}}>Joindre ma certification</p>
+                                                <p style={{cursor:"pointer",textAlign:'center',color:'black'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
                                                        onChange={this.onChangeCertification}
                                                        className="form-control" accept={'image/*,.pdf'}
@@ -1171,7 +1210,7 @@ class addService extends React.Component {
 
                         </Grid>
                         <hr/>
-                        <Grid container style={{display:"flex",justifyContent:"flex-end",width:'90%'}}>
+                        <Grid container style={{display:"flex",justifyContent:"flex-end",width:'90%', marginBottom: '10px'}}>
                             <Button variant={"contained"} onClick={(event)=>this.onSubmit(event)} color={"secondary"} style={{color:"white"}}>Enregistrer</Button>
                         </Grid>
 
@@ -1186,14 +1225,47 @@ class addService extends React.Component {
 
 
 
-                    <Grid item xs={7} style={{backgroundImage:'url(../../static/Creation_shop_step2.png)',backgroundSize:"contain",
-                        backgroundRepeat:"no-repeat",height:'100vh',position:"sticky",top:0}}>
+                    <Grid item xs={5} className={classes.sidebg} style={{backgroundColor: 'whitesmoke'}}>
                     </Grid>
 
 
 
                 </Grid>
 
+                <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
+
+                         <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
+                             <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                             </Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                     </Grid>
+            <Footer/>
             </Layout>
             
             
@@ -1204,5 +1276,4 @@ class addService extends React.Component {
 
 
 export default withStyles(styles)(addService);
-
 

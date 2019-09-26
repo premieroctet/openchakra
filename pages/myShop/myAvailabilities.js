@@ -22,7 +22,9 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 68,
         flexGrow: 1,
+       
     },
+   
     marginbot: {
         marginBottom: '3.5%',
     },
@@ -35,7 +37,74 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             display: 'none!important',
         },
-    }
+    },
+    containercalendar:{width:'60%',   [theme.breakpoints.down('sm')]: {
+        width:'100%!important',
+        
+    }},
+    containerheader:{[theme.breakpoints.down('sm')]: {
+        width:'100%!important',
+        marginTop:'-70px',
+    }},
+    bottombar:{visibility:'hidden', [theme.breakpoints.down('sm')]: {
+        visibility:'visible',
+        boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
+    }},
+    topbar:{visibility:'visible', position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
+        visibility:'hidden',
+    }},
+    dispocard:{
+
+        minHeight:'100px',
+        maxWidth:'250px',
+        textAlign:'center',
+        backgroundColor:'#f2f2f2',
+   
+        boxShadow: '4px 4px 41px -37px rgba(0,0,0,0.0)',
+        border:'solid 1px #ccc',
+        borderRadius:'10px',
+        padding:'5%',
+   
+   
+         },
+          dispocardin:{
+   
+        padding:'5%',
+         fontSize:'20px',
+      
+        marginBottom:10,
+   
+   
+         },
+   
+        
+   
+         dispoheader:{
+   
+           height:'10%',
+           color:'gray',
+           width:'100%',
+          
+   
+           fontSize:'15px',
+           textAlign:'left',
+   
+           borderRadius:'0px',
+           marginBottom:'5 px'
+   
+   
+            },
+
+    respbg:{
+        [theme.breakpoints.down('sm')]: {
+            marginTop: '-13%',
+        }
+    },
+    resppic:{
+        [theme.breakpoints.down('sm')]: {
+            top: '17%!important',
+        }
+    },
 
 
 
@@ -141,7 +210,7 @@ class myAvailabilities extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
+                        <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
                             <Grid item xs={1} className={classes.shopbar}></Grid>
                             <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
                                 <Link href={'/myShop/services'}>
@@ -180,39 +249,40 @@ class myAvailabilities extends React.Component {
                             </Grid>
 
                         </Grid>
-                        <Grid container style={{backgroundImage: `url('../../${this.state.shop.picture}')`,backgroundPosition: "center", height:'42vh',
+                        <Grid className={classes.respbg} container style={{backgroundImage: `url('../../${this.state.shop.picture}')`,backgroundPosition: "center", height:'42vh',
                             backgroundSize:"cover", backgroundRepeat:"no-repeat",justifyContent:"center",alignItems:"center"}}>
 
 
 
                         </Grid>
-                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
+                        <Grid className={classes.respbg} item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
 
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius:'50%',position:'absolute',top:'27%',left:'45%',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}} alt={'picture'}/>
+                            <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius:'50%',position:'absolute',top:'27%',left:'0%',right:'0%',margin: 'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}} alt={'picture'}/>
                         </Grid>
                     </Grid>
 
 
-                        <Grid container style={{marginTop: 20}}>
-                            <Grid item xs={7}>
+                    <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
+                            <Grid item xs={12} >
 
                                 {all_availabilities.map((e,index) => {
                                     if(e.period.active){
                                         return (
-                                            <Link key={index} href={'/myShop/detailsAvailability?id='+e._id}>
-                                                <a style={{textDecoration:'none'}}>
-                                                    <p>Disponibilités pour la période : {moment(e.period.month_begin).format('LL')} / {moment(e.period.month_end).format('LL')}</p>
+                                            <Link className={classes.dispocard} key={index} href={'/myShop/detailsAvailability?id='+e._id}>
+                                                <a className={classes.dispocardin} style={{textDecoration:'none', color:'gray'}}>
+                                                    <div className={classes.dispoheader}><p>Disponibilités pour la période:</p></div>
+                                                    <p style={{marginLeft:'20px',}}>  {moment(e.period.month_begin).format('LL')} / {moment(e.period.month_end).format('LL')}</p>
                                                 </a>
                                             </Link>
                                         )
                                     } else {
                                         return (
-                                            <Link key={index} href={'/myShop/detailsAvailability?id='+e._id}>
-                                                <a style={{textDecoration:'none'}}>
-                                                    <p>Disponibilités sans période</p>
+                                            <Link className={classes.dispocard} key={index} href={'/myShop/detailsAvailability?id='+e._id}>
+                                                <a className={classes.dispocardin} style={{textDecoration:'none', color:'gray'}}>
+                                                    <p style={{marginLeft:'20px',}}>Disponibilités sans période</p>
                                                 </a>
                                             </Link>
                                         )
@@ -222,14 +292,48 @@ class myAvailabilities extends React.Component {
 
                             </Grid>
                         </Grid>
-                    <Grid container style={{marginBottom:20}}>
+                    <Grid container  style={{ padding:'3%'}}>
                         <Link href={'/myShop/addAvailability'}>
                         <a style={{textDecoration:'none'}}><Button color={"primary"} style={{color:"white"}} variant={"contained"}>Ajouter une disponibilité</Button></a>
                         </Link>
                     </Grid>
 
 
+
                 </Layout>
+                <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
+                         
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                             <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                             </Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center",zIndex:999, borderBottom: '3px solid #4fbdd7'}}>
+                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                     </Grid>
                 <Footer/>
 
             </Fragment>
