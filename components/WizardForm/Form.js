@@ -2050,7 +2050,7 @@ class Form extends React.Component {
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, this.state.diplomaObj);
                                                                                                         }}
                                                                                                         disabled={this.state.diplomaName === null || this.state.diplomaName === '' || arrayHelpers.form.values.submission[index].diploma.year === null || this.state.diplomaObj === null || arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.diploma !== null ? true : false}
-                                                                                                    >Ajouter mon diplôme</Button>
+                                                                                                    >Valider</Button>
                                                                                                 </Grid>
                                                                                             </Grid>
                                                                                         </ExpansionPanelDetails>
@@ -2143,7 +2143,7 @@ class Form extends React.Component {
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, this.state.certifObj);
                                                                                                         }}
                                                                                                         disabled={this.state.certifName === null || this.state.certifName === '' || arrayHelpers.form.values.submission[index].certification.year === null || this.state.certifObj === null || arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.diploma !== null ? true : false}
-                                                                                                    >Ajouter ma certification</Button>
+                                                                                                    >Valider</Button>
                                                                                                 </Grid>
                                                                                             </Grid>
                                                                                         </ExpansionPanelDetails>
