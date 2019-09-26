@@ -8,13 +8,18 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Link from 'next/link';
+import Footer from '../hoc/Layout/Footer/Footer';
 
 
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
-
+    hideed:{
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        }
+    }
 });
 
 class faq extends React.Component {
@@ -32,7 +37,7 @@ class faq extends React.Component {
         return (
             <Layout>
                 <Grid container style={{marginTop:80}}>
-                    <Grid item xs={7} style={{paddingLeft:'3%'}}>
+                    <Grid item md={7} sm={12} style={{paddingLeft:'3%'}}>
                         <Grid container>
                         <h3>Devenir Alfred</h3>
                             <Grid item xs={12}>
@@ -2279,15 +2284,11 @@ class faq extends React.Component {
                         </Grid>
 
                     </Grid>
-                    <Grid item xs={5} style={{position:"fixed",right:0}}>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <img src={'../static/Creation_shop_step1.png'} alt={'picture'} width={'100%'}/>
-
-                            </Grid>
-                        </Grid>
+                    <Grid item xs={5}>
+                        <Grid className={classes.hideed} container style={{position: 'sticky',height:'90vh', backgroundImage:'url(../static/illustration-FAQ.svg)',backgroundRepeat:'no-repeat',top:100,backgroundSize: 'cover', backgroundPosition:'center'}}></Grid>
                     </Grid>
                 </Grid>
+                <Footer/>
             </Layout>
         );
     };

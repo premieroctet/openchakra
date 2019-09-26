@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
+import Link from 'next/link';
 import axios from "axios";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "react-select";
@@ -1228,7 +1229,8 @@ class addService extends React.Component {
 
 
 
-                    <Grid item xs={5} className={classes.sidebg} style={{backgroundColor: 'whitesmoke'}}>
+                    <Grid item xs={5} className={classes.sidebg}>
+                        <Grid container style={{position: 'sticky',height:'88vh', backgroundImage:'url(../../static/Creation_shop_step1.png)',backgroundRepeat:'no-repeat',top:100,backgroundSize: 'cover', backgroundPosition:'center'}}></Grid>
                     </Grid>
 
 
