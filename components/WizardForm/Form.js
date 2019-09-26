@@ -1375,7 +1375,7 @@ class Form extends React.Component {
                                                                                 axios.get(`${url}myAlfred/api/prestation/${service}/${filterObj.id}`)
                                                                                     .then(res => {
                                                                                         res.data.map(prestation => {
-                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: 0, billingChoice: prestation.billing, billing: null, checked: false };
+                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: null, billingChoice: prestation.billing, billing: null, checked: false };
                                                                                             servCompObj.filters.map(p => {
                                                                                                 if (p.id === prestationObj.filterId) {
                                                                                                     p.prestations.push(prestationObj);
@@ -2167,7 +2167,7 @@ class Form extends React.Component {
                                 
                                 {/*</div>*/}
                         </Grid>
-
+                        <Debug />
                     </Wizard.Page>
                     <Wizard.Page>
                         <FieldArray render={({form}) => {
