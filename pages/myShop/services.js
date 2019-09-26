@@ -393,7 +393,9 @@ class services extends React.Component {
                                 <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
+                                <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
+                                </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Performance</p>

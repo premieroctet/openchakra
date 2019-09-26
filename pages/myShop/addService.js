@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
+import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -448,7 +449,9 @@ class addService extends React.Component {
                                 <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
+                                <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
+                                </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
                                 <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
