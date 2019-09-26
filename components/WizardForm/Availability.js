@@ -841,8 +841,8 @@ class Availability extends React.Component {
                     <Grid container style={{ paddingLeft: 20 }}>
                       <h4>Ajouter une disponibilité</h4>
                     </Grid>
-                    <Grid container>
-                      <Grid item xs={3} style={{ paddingLeft: 20 }}>
+                    <Grid container  style={{ paddingLeft: 20 }}>
+                      <Grid item xs={6} sm={5} md={4}>
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -856,7 +856,7 @@ class Availability extends React.Component {
                           label="Lundi"
                         />
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={6} sm={5} md={4}>
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -870,7 +870,7 @@ class Availability extends React.Component {
                           label="Mardi"
                         />
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={6} sm={5} md={4}>
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -884,7 +884,7 @@ class Availability extends React.Component {
                           label="Mercredi"
                         />
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={6} sm={5} md={4}>
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -898,7 +898,7 @@ class Availability extends React.Component {
                           label="Jeudi"
                         />
                       </Grid>
-                      <Grid item xs={3} style={{ paddingLeft: 20 }}>
+                      <Grid item xs={6} sm={5} md={4}>
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -912,7 +912,7 @@ class Availability extends React.Component {
                           label="Vendredi"
                         />
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={6} sm={5} md={4}>
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -926,7 +926,7 @@ class Availability extends React.Component {
                           label="Samedi"
                         />
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={6} sm={5} md={4}>
                         <FormControlLabel
                           control={
                             <Checkbox
