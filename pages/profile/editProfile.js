@@ -33,10 +33,7 @@ moment.locale('fr');
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 
-const ExampleCustomInput = ({ value,onClick }) => (
-    <TextField style={{width:'100%'}} value={value} label={'Date de naissance'} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
-
-);
+    
 
 const styles = theme => ({
     bigContainer: {
@@ -174,6 +171,8 @@ class editProfile extends React.Component {
         this.setState({birthday: date})
     };
 
+    
+
     handleChangeLanguages = selectedLanguages => {
         this.setState({ selectedLanguages });
 
@@ -220,7 +219,10 @@ class editProfile extends React.Component {
         const {user} = this.state;
         const {birthday} = this.state;
 
+const ExampleCustomInput = ({ value,onClick }) => (
+        <TextField style={{width:'100%'}} onChange={(date)=>this.onChangeBirthday(date)} value={value} label={'Date de naissance'} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
 
+    );
         return (
             <Fragment>
                 <Layout>
