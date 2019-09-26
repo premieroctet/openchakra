@@ -92,6 +92,10 @@ const styles = theme => ({
   menu: {
     width: 200,
   },
+  birthday:{
+    height:40,
+    fontSize: '0.9rem'
+  }
 
 
 
@@ -399,11 +403,11 @@ class signup extends React.Component {
                         <DatePicker
                           selected={this.state.birthday}
                           onChange={(date)=>this.onChangeBirthday(date)}
-                          customInput={<Input2 />}
                           locale='fr'
                           placeholderText="jj/mm/aaaa"
                           showYearDropdown
                           showMonthDropdown
+                          className={classes.birthday}
                           maxDate={new Date()}
                           dateFormat="dd/MM/yyyy"
 

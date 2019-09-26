@@ -43,6 +43,14 @@ const styles = theme => ({
         marginTop: 70,
         flexGrow: 1,
     },
+    birthday2:{
+        height:'55px',
+        fontSize:'0.8rem',
+        border: '1px solid lightgrey',
+        paddingLeft:5,
+        width:'80%',
+        borderRadius:'2px'
+    },
     hidesm: {
         minWidth: '271px',
         [theme.breakpoints.down('sm')]: {
@@ -95,7 +103,8 @@ const styles = theme => ({
 
              }
       }  
-    }
+    },
+
 
 
 
@@ -469,13 +478,12 @@ class editProfile extends React.Component {
                                     <DatePicker
                                         selected={Date.parse(birthday)}
                                         onChange={(date) => this.onChangeBirthday(date)}
-                                        customInput={ <ExampleCustomInput/>}
                                         locale='fr'
-                                        placeholderText="Sélectionnez votre date de naissance"
+                                        placeholderText="Date de naissance"
                                         showYearDropdown
                                         showMonthDropdown
+                                        className={classes.birthday2}
                                         dateFormat="dd/MM/yyyy"
-                                        style={{fontSize: '0.9rem'}}
                                         maxDate={new Date()}
                                     />
 

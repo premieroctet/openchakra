@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
-import Link from 'next/link';
 import axios from "axios";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "react-select";
