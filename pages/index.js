@@ -20,6 +20,14 @@ import Section8 from '../components/home/section8';
 import Passions from '../components/home/Passions/passions';
 import Facons from '../components/home/Facons/facons';
 import Otter from '../components/home/Otter/otter';
+import Section10 from '../components/home/section10';
+import Section12 from '../components/home/section12';
+import Section15 from '../components/home/section15';
+import Section16 from '../components/home/section16';
+import Section18 from '../components/home/section18';
+import Section19 from '../components/home/section19';
+import Section21 from '../components/home/section21';
+import Section22 from '../components/home/section22';
 import setAuthToken from '../utils/setAuthToken';
 import Router from "next/router";
 
@@ -67,19 +75,19 @@ class Home extends React.Component {
                 <Wellbeing />
                 <Section8/>
                 <Feelingood />
-                <SerenityNeed/>
+                <Section10/>
                 <Proposeservice />
-                <Section3/>
+                <Section12/>
                 <NearbyYou />
                 <Passions/>
-                <Section6/>
-                <Wellbeing />
+                <Section15/>
+                <Section16 />
                 <Facons/>
-                <Feelingood />
-                <SerenityNeed />
+                <Section18 />
+                <Section19 />
                 <Otter/>
-                <Wellbeing />
-                <Section6/>
+                <Section21 />
+                <Section22/>
                 <Assureback/>
                 <Footer />
             </Fragment>

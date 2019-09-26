@@ -36,6 +36,11 @@ const styles = theme => ({
             width: 1366,
         },
     },
+    hideSM: {
+        [theme.breakpoints.down('md')]: { // medium: 960px or larger
+            display: 'none',
+        },
+    },
     media: {
         height: 0,
         borderRadius: '20px',
@@ -82,9 +87,13 @@ const styles = theme => ({
         paddingRight: 15,
         paddingLeft: 15,
         marginBottom: 15,
-        fontSize: 20,
+        fontSize: 27,
         fontWeight: 570,
         marginTop: 10,
+    },
+    textBox3: {
+        color: 'rgba(84,89,95,0.95)',
+        fontSize: 16,
     },
     grosHR: {
         height: '10px',
@@ -114,26 +123,26 @@ function shuffleArray(array) {
     return array;
 }
 
-class section6 extends React.Component {
+class section12 extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            category: [],
+            service: [],
             tags: {},
         }
     }
 
     componentDidMount() {
 
-        axios.get(url + 'myAlfred/api/tags/category/section6')
+        axios.get(url + 'myAlfred/api/tags/services/section12')
             .then(response => {
                     let data = response.data;
                     this.setState({tags:data});
-                    axios.get(url + 'myAlfred/api/category/all/tags/' + data._id)
+                    axios.get(url + 'myAlfred/api/service/all/tags/' + data._id)
                         .then(res => {
-                            let category = res.data;
+                            let service = res.data;
 
-                            this.setState({category: category})
+                            this.setState({service: service})
 
                         })
                         .catch(err => console.log(err))
@@ -146,29 +155,29 @@ class section6 extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {category} = this.state;
+        const {service} = this.state;
         const {tags} = this.state;
-        const resdata = shuffleArray(category);
-        const services = resdata.slice(0, 4).map(e => (
-            <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
+        const resdata = shuffleArray(service);
+        const services = resdata.slice(0, 6).map(e => (
+            <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
                 <Card className={classes.card} style={{
-                    height:'600px',
+                    height:'350px',
                     backgroundColor:'transparent',
                     textAlign:'center',
                     margin:10,
                     boxShadow: '1px 3px 1px transparent'}}>
                     <CardActionArea style={{
-                        height:'600px',
+                        height:'350px',
                     }}>
                         <CardMedia
                             className={classes.media2}
                             image={e.picture}
                             title={e.label}
-                            style={{height:'530px', width: '270px',}}
+                            style={{height:'280px'}}
                         />
                         <CardContent>
 
-                            <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center'}}>
+                            <Typography gutterBottom variant="h5" component="p" style={{fontSize:15, fontWeight:100, textAlign:'center'}}>
                                 {e.label}
                             </Typography>
                             <Typography component="p">
@@ -186,6 +195,7 @@ class section6 extends React.Component {
             <Fragment>
                 <Grid container className={classes.container}>
                     <Grid item xs={2}></Grid>
+
                     <Grid item xs={8}>
                         <div>
                             <Typography variant="h4" className={classes.textBox1}>
@@ -202,11 +212,21 @@ class section6 extends React.Component {
                         </div>
                     </Grid>
                     <Grid item xs={2}></Grid>
-                    {services}
+                    <Grid container>
+                        {services}
+                    </Grid>
                 </Grid>
+
+
+
+
+
+
+
             </Fragment>
         );
     }
 };
 
-export default withStyles(styles)(section6);
+
+export default withStyles(styles)(section12);

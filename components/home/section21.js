@@ -13,8 +13,11 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
-const {config} = require('../../config/config');
+
+
+const { config } = require('../../config/config');
 const url = config.apiUrl;
+
 
 
 const styles = theme => ({
@@ -44,6 +47,11 @@ const styles = theme => ({
     },
     card: {
 
+        backgroundColor:'transparent',
+        textAlign:'center',
+        margin:10,
+        boxShadow: `1px 3px 1px transparent`,
+
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('xs')]: { // xs: 600px or larger
             maxWidth: 450,
@@ -59,11 +67,6 @@ const styles = theme => ({
         },
 
     },
-    textdesc: {
-        [theme.breakpoints.down('sm')]: {
-            marginTop: '10%!important',
-        },
-    },
     media2: {
         height: 200
     },
@@ -75,21 +78,7 @@ const styles = theme => ({
         paddingRight: 15,
         paddingLeft: 15,
         marginBottom: 15,
-        marginTop: 80,
-    },
-    textBox2: {
-        color: 'rgba(84,89,95,0.95)',
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 15,
-        fontSize: 20,
-        fontWeight: 570,
-        marginTop: 10,
-    },
-    grosHR: {
-        height: '10px',
-        backgroundColor: '#2FBCD3',
-        marginBottom: 30,
+        marginTop: 60,
     },
     textBox: {
         fontFamily: 'Helvetica',
@@ -98,8 +87,13 @@ const styles = theme => ({
         paddingRight: 15,
         paddingLeft: 15,
         marginBottom: 60,
-
+        marginTop: 15,
     },
+    grosHR: {
+        height: '10px',
+        backgroundColor: '#2FBCD3',
+    },
+
 
 });
 
@@ -114,26 +108,26 @@ function shuffleArray(array) {
     return array;
 }
 
-class section6 extends React.Component {
+class section21 extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            category: [],
+            service: [],
             tags: {},
         }
     }
 
     componentDidMount() {
 
-        axios.get(url + 'myAlfred/api/tags/category/section6')
+        axios.get(url + 'myAlfred/api/tags/services/section21')
             .then(response => {
                     let data = response.data;
                     this.setState({tags:data});
-                    axios.get(url + 'myAlfred/api/category/all/tags/' + data._id)
+                    axios.get(url + 'myAlfred/api/service/all/tags/' + data._id)
                         .then(res => {
-                            let category = res.data;
+                            let service = res.data;
 
-                            this.setState({category: category})
+                            this.setState({service: service})
 
                         })
                         .catch(err => console.log(err))
@@ -146,38 +140,32 @@ class section6 extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {category} = this.state;
+        const {service} = this.state;
         const {tags} = this.state;
-        const resdata = shuffleArray(category);
-        const services = resdata.slice(0, 4).map(e => (
-            <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
-                <Card className={classes.card} style={{
-                    height:'600px',
-                    backgroundColor:'transparent',
-                    textAlign:'center',
-                    margin:10,
-                    boxShadow: '1px 3px 1px transparent'}}>
-                    <CardActionArea style={{
-                        height:'600px',
-                    }}>
+        const resdata = shuffleArray(service);
+        const services = resdata.slice(0, 6).map(e => (
+            <Grid item xs={12} sm={6} md={4} lg={4} key={e._id}>
+                <Card className={classes.card}>
+                    <CardActionArea>
                         <CardMedia
+
                             className={classes.media2}
                             image={e.picture}
                             title={e.label}
-                            style={{height:'530px', width: '270px',}}
                         />
                         <CardContent>
 
-                            <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center'}}>
+                            <p style={{color: 'rgba(84,89,95,0.95)', fontSize: 20}}>
                                 {e.label}
-                            </Typography>
-                            <Typography component="p">
+                            </p>
+                            <p>
                                 {e.description}
-                            </Typography>
-
+                            </p>
                         </CardContent>
                     </CardActionArea>
+                    <CardActions>
 
+                    </CardActions>
                 </Card>
             </Grid>
         ));
@@ -209,4 +197,4 @@ class section6 extends React.Component {
     }
 };
 
-export default withStyles(styles)(section6);
+export default withStyles(styles)(section21);

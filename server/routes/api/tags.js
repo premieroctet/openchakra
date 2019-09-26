@@ -38,6 +38,48 @@ router.get('/prestations',(req,res)=> {
         .catch(err => res.status(404).json({ tags: 'No tags found' }));
 });
 
+// @Route GET /myAlfred/api/tags/prestations/section1
+// View all tags for prestations
+router.get('/prestations/section1',(req,res)=> {
+
+    Tags.findOne({label:'Nid douillet'})
+        .then(tags => {
+
+                res.json(tags);
+
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/prestations/section10
+// View all tags for prestations
+router.get('/prestations/section10',(req,res)=> {
+
+    Tags.findOne({label:'Plaisirs'})
+        .then(tags => {
+
+            res.json(tags);
+
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/prestations/section19
+// View all tags for prestations
+router.get('/prestations/section19',(req,res)=> {
+
+    Tags.findOne({label:'Tracas'})
+        .then(tags => {
+
+            res.json(tags);
+
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
 // @Route GET /myAlfred/api/tags/category
 // View all tags for category
 router.get('/category',(req,res)=> {
@@ -54,6 +96,45 @@ router.get('/category',(req,res)=> {
         .catch(err => res.status(404).json({ tags: 'No tags found' }));
 });
 
+// @Route GET /myAlfred/api/tags/category/section6
+// View all tags for category
+router.get('/category/section6',(req,res)=> {
+
+    Tags.findOne({label:/Sérénité/i})
+        .then(tags => {
+            res.json(tags);
+
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/category/section15
+// View all tags for category
+router.get('/category/section15',(req,res)=> {
+
+    Tags.findOne({label:'Bien chez soi'})
+        .then(tags => {
+            res.json(tags);
+
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/category/section22
+// View all tags for category
+router.get('/category/section22',(req,res)=> {
+
+    Tags.findOne({label:'Cours'})
+        .then(tags => {
+            res.json(tags);
+
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
 // @Route GET /myAlfred/api/tags/services
 // View all tags for services
 router.get('/services',(req,res)=> {
@@ -65,6 +146,90 @@ router.get('/services',(req,res)=> {
             } else {
                 return res.status(400).json({msg: 'No tags found'});
             }
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/services/section3
+// View all tags for services
+router.get('/services/section3',(req,res)=> {
+
+    Tags.findOne({label:'Animaux'})
+        .then(tags => {
+            res.json(tags);
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/services/section7
+// View all tags for services
+router.get('/services/section7',(req,res)=> {
+
+    Tags.findOne({label:'Bien pratique'})
+        .then(tags => {
+            res.json(tags);
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/services/section9
+// View all tags for services
+router.get('/services/section9',(req,res)=> {
+
+    Tags.findOne({label:'Top services'})
+        .then(tags => {
+            res.json(tags);
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/services/section12
+// View all tags for services
+router.get('/services/section12',(req,res)=> {
+
+    Tags.findOne({label:/Fête/i})
+        .then(tags => {
+            res.json(tags);
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/services/section16
+// View all tags for services
+router.get('/services/section16',(req,res)=> {
+
+    Tags.findOne({label:'Jardin'})
+        .then(tags => {
+            res.json(tags);
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/services/section18
+// View all tags for services
+router.get('/services/section18',(req,res)=> {
+
+    Tags.findOne({label:'Proches'})
+        .then(tags => {
+            res.json(tags);
+
+        })
+        .catch(err => res.status(404).json({ tags: 'No tags found' }));
+});
+
+// @Route GET /myAlfred/api/tags/services/section21
+// View all tags for services
+router.get('/services/section21',(req,res)=> {
+
+    Tags.findOne({label:/Déco/i})
+        .then(tags => {
+            res.json(tags);
 
         })
         .catch(err => res.status(404).json({ tags: 'No tags found' }));

@@ -119,12 +119,11 @@ class Wellbeing extends React.Component {
 
   componentDidMount() {
 
-    axios.get(url + 'myAlfred/api/tags/services')
+    axios.get(url + 'myAlfred/api/tags/services/section7')
         .then(response => {
               let data = response.data;
-              let random = data[Math.floor(Math.random() * data.length)];
-              this.setState({tags:random});
-              axios.get(url + 'myAlfred/api/service/all/tags/' + random._id)
+              this.setState({tags:data});
+              axios.get(url + 'myAlfred/api/service/all/tags/' + data._id)
                   .then(res => {
                     let service = res.data;
 

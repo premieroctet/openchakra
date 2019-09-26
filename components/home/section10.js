@@ -13,8 +13,12 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
-const {config} = require('../../config/config');
+
+
+const { config } = require('../../config/config');
 const url = config.apiUrl;
+
+
 
 
 const styles = theme => ({
@@ -24,7 +28,6 @@ const styles = theme => ({
         marginRight: 'auto',
         marginLeft: 'auto',
         width: '100%',
-
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('md')]: { // medium: 960px or larger
             width: 920,
@@ -36,6 +39,21 @@ const styles = theme => ({
             width: 1366,
         },
     },
+    container1: {
+
+        [theme.breakpoints.down('xs')]: { //  medium: 960px or larger
+            marginTop: '10px!important',
+        },
+        [theme.breakpoints.up('sm')]: { //  medium: 960px or larger
+            marginTop: '10px!important',
+        },
+        [theme.breakpoints.up('md')]: { //  medium: 960px or larger
+            marginTop: '10px!important',
+        },
+        [theme.breakpoints.up('lg')]: { //  medium: 960px or larger
+            marginTop: '180px!important',
+        },
+    },
     media: {
         height: 0,
         borderRadius: '20px',
@@ -43,6 +61,11 @@ const styles = theme => ({
         maxWidth: 345,
     },
     card: {
+
+        backgroundColor:'transparent',
+        textAlign:'center',
+        margin:10,
+        boxShadow: `1px 3px 1px transparent`,
 
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('xs')]: { // xs: 600px or larger
@@ -59,13 +82,18 @@ const styles = theme => ({
         },
 
     },
-    textdesc: {
-        [theme.breakpoints.down('sm')]: {
-            marginTop: '10%!important',
-        },
-    },
     media2: {
-        height: 200
+        height: 200,
+
+        [theme.breakpoints.down('md')]: {
+            width: '200px!important',
+        },
+        [theme.breakpoints.down('xs')]: {
+            width: '200px!important',
+        },
+        [theme.breakpoints.down('sm')]: {
+            width: '200px!important',
+        },
     },
     textBox1: {
         color: 'rgba(84,89,95,0.95)',
@@ -75,21 +103,7 @@ const styles = theme => ({
         paddingRight: 15,
         paddingLeft: 15,
         marginBottom: 15,
-        marginTop: 80,
-    },
-    textBox2: {
-        color: 'rgba(84,89,95,0.95)',
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 15,
-        fontSize: 20,
-        fontWeight: 570,
-        marginTop: 10,
-    },
-    grosHR: {
-        height: '10px',
-        backgroundColor: '#2FBCD3',
-        marginBottom: 30,
+        marginTop: 60,
     },
     textBox: {
         fontFamily: 'Helvetica',
@@ -98,7 +112,11 @@ const styles = theme => ({
         paddingRight: 15,
         paddingLeft: 15,
         marginBottom: 60,
-
+        marginTop: 15,
+    },
+    grosHR: {
+        height: '10px',
+        backgroundColor: '#2FBCD3',
     },
 
 });
@@ -114,26 +132,26 @@ function shuffleArray(array) {
     return array;
 }
 
-class section6 extends React.Component {
+class section10 extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            category: [],
+            prestations: [],
             tags: {},
         }
     }
 
     componentDidMount() {
 
-        axios.get(url + 'myAlfred/api/tags/category/section6')
+        axios.get(url + 'myAlfred/api/tags/prestations/section10')
             .then(response => {
                     let data = response.data;
                     this.setState({tags:data});
-                    axios.get(url + 'myAlfred/api/category/all/tags/' + data._id)
+                    axios.get(url + 'myAlfred/api/prestation/all/tags/' + data._id)
                         .then(res => {
-                            let category = res.data;
+                            let prestations = res.data;
 
-                            this.setState({category: category})
+                            this.setState({prestations: prestations})
 
                         })
                         .catch(err => console.log(err))
@@ -144,69 +162,82 @@ class section6 extends React.Component {
             });
     }
 
+
+
     render() {
         const {classes} = this.props;
-        const {category} = this.state;
+        const {prestations} = this.state;
         const {tags} = this.state;
-        const resdata = shuffleArray(category);
-        const services = resdata.slice(0, 4).map(e => (
-            <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
-                <Card className={classes.card} style={{
-                    height:'600px',
-                    backgroundColor:'transparent',
-                    textAlign:'center',
-                    margin:10,
-                    boxShadow: '1px 3px 1px transparent'}}>
-                    <CardActionArea style={{
-                        height:'600px',
-                    }}>
+        const resdata = shuffleArray(prestations);
+        const services = resdata.slice(0, 12).map(e => (
+            <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
+                <Card className={classes.card}>
+                    <CardActionArea>
+
                         <CardMedia
                             className={classes.media2}
                             image={e.picture}
                             title={e.label}
-                            style={{height:'530px', width: '270px',}}
                         />
                         <CardContent>
 
-                            <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center'}}>
+                            <Typography gutterBottom variant="p" component="p" style={{fontSize:16}}>
                                 {e.label}
                             </Typography>
                             <Typography component="p">
                                 {e.description}
                             </Typography>
-
                         </CardContent>
                     </CardActionArea>
+                    <CardActions>
 
+                    </CardActions>
                 </Card>
             </Grid>
         ));
 
         return (
             <Fragment>
-                <Grid container className={classes.container}>
-                    <Grid item xs={2}></Grid>
-                    <Grid item xs={8}>
-                        <div>
-                            <Typography variant="h4" className={classes.textBox1}>
-                                {tags.title}
-                            </Typography>
-                            <Grid container>
-                                <Grid item xs={5}></Grid>
-                                <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
-                                <Grid item xs={5}></Grid>
-                            </Grid>
-                            <Typography className={classes.textBox}>
-                                {tags.description}
-                            </Typography>
+                <div className={classes.container1}>
+                    <Grid container className={classes.container}>
+                        <Grid item xs={2}></Grid>
+                        <Grid item xs={8}>
+                            <div>
+                                <Typography variant="h4" className={classes.textBox1}>
+                                    {tags.title}
+                                </Typography>
+                                <Grid container>
+                                    <Grid item xs={5}></Grid>
+                                    <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                                    <Grid item xs={5}></Grid>
+                                </Grid>
+                                <Typography className={classes.textBox}>
+                                    {tags.description}
+                                </Typography>
+                            </div>
+                        </Grid>
+                        <Grid item xs={2}></Grid>
+
+                        <div className="thewrap">
+                            <section className="sectioncard">
+
+                                {services}
+
+
+
+                            </section>
                         </div>
+                        <Grid container className="thewrap2">
+
+
+                            {services}
+                        </Grid>
                     </Grid>
-                    <Grid item xs={2}></Grid>
-                    {services}
-                </Grid>
+                </div>
             </Fragment>
         );
     }
 };
 
-export default withStyles(styles)(section6);
+
+export default withStyles(styles)(section10);

@@ -114,7 +114,7 @@ function shuffleArray(array) {
     return array;
 }
 
-class section6 extends React.Component {
+class section15 extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -125,7 +125,7 @@ class section6 extends React.Component {
 
     componentDidMount() {
 
-        axios.get(url + 'myAlfred/api/tags/category/section6')
+        axios.get(url + 'myAlfred/api/tags/category/section15')
             .then(response => {
                     let data = response.data;
                     this.setState({tags:data});
@@ -209,4 +209,4 @@ class section6 extends React.Component {
     }
 };
 
-export default withStyles(styles)(section6);
+export default withStyles(styles)(section15);

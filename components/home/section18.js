@@ -4,17 +4,13 @@ import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-//import SerenityNeedCard from './SerenityNeedCard/SerenityNeedCard';
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import Chip from "@material-ui/core/Chip";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
+import FeelingoodCard from './feelingood/feelingoodCard/feelingoodCard';
 import axios from 'axios';
-import Link from 'next/link';
-const {config} = require('../../config/config');
+
+
+const { config } = require('../../config/config');
 const url = config.apiUrl;
+
 
 
 const styles = theme => ({
@@ -23,6 +19,7 @@ const styles = theme => ({
         paddingLeft: 15,
         marginRight: 'auto',
         marginLeft: 'auto',
+        marginTop: '30px',
         width: '100%',
 
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
@@ -42,31 +39,6 @@ const styles = theme => ({
         paddingTop: '118.25%', // 16:9
         maxWidth: 345,
     },
-    card: {
-
-        // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
-        [theme.breakpoints.up('xs')]: { // xs: 600px or larger
-            maxWidth: 450,
-        },
-        [theme.breakpoints.up('sm')]: {
-            maxWidth: 400,
-        },
-        [theme.breakpoints.up('md')]: { // medium: 960px or larger
-            maxWidth: 350,
-        },
-        [theme.breakpoints.up('lg')]: {
-            maxWidth: 300
-        },
-
-    },
-    textdesc: {
-        [theme.breakpoints.down('sm')]: {
-            marginTop: '10%!important',
-        },
-    },
-    media2: {
-        height: 200
-    },
     textBox1: {
         color: 'rgba(84,89,95,0.95)',
         letterSpacing: -2,
@@ -77,20 +49,6 @@ const styles = theme => ({
         marginBottom: 15,
         marginTop: 80,
     },
-    textBox2: {
-        color: 'rgba(84,89,95,0.95)',
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 15,
-        fontSize: 20,
-        fontWeight: 570,
-        marginTop: 10,
-    },
-    grosHR: {
-        height: '10px',
-        backgroundColor: '#2FBCD3',
-        marginBottom: 30,
-    },
     textBox: {
         fontFamily: 'Helvetica',
         textAlign: 'center',
@@ -98,9 +56,12 @@ const styles = theme => ({
         paddingRight: 15,
         paddingLeft: 15,
         marginBottom: 60,
-
     },
-
+    grosHR: {
+        height: '10px',
+        backgroundColor: '#2FBCD3',
+        marginBottom: 30,
+    },
 });
 
 function shuffleArray(array) {
@@ -114,26 +75,26 @@ function shuffleArray(array) {
     return array;
 }
 
-class section6 extends React.Component {
+class section18 extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            category: [],
+            service: [],
             tags: {},
         }
     }
 
     componentDidMount() {
 
-        axios.get(url + 'myAlfred/api/tags/category/section6')
+        axios.get(url + 'myAlfred/api/tags/services/section18')
             .then(response => {
                     let data = response.data;
                     this.setState({tags:data});
-                    axios.get(url + 'myAlfred/api/category/all/tags/' + data._id)
+                    axios.get(url + 'myAlfred/api/services/all/tags/' + data._id)
                         .then(res => {
-                            let category = res.data;
+                            let service = res.data;
 
-                            this.setState({category: category})
+                            this.setState({service: service})
 
                         })
                         .catch(err => console.log(err))
@@ -145,40 +106,16 @@ class section6 extends React.Component {
     }
 
     render() {
+
+
         const {classes} = this.props;
-        const {category} = this.state;
+        const {service} = this.state;
         const {tags} = this.state;
-        const resdata = shuffleArray(category);
-        const services = resdata.slice(0, 4).map(e => (
-            <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
-                <Card className={classes.card} style={{
-                    height:'600px',
-                    backgroundColor:'transparent',
-                    textAlign:'center',
-                    margin:10,
-                    boxShadow: '1px 3px 1px transparent'}}>
-                    <CardActionArea style={{
-                        height:'600px',
-                    }}>
-                        <CardMedia
-                            className={classes.media2}
-                            image={e.picture}
-                            title={e.label}
-                            style={{height:'530px', width: '270px',}}
-                        />
-                        <CardContent>
+        const resdata = shuffleArray(service);
 
-                            <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center'}}>
-                                {e.label}
-                            </Typography>
-                            <Typography component="p">
-                                {e.description}
-                            </Typography>
-
-                        </CardContent>
-                    </CardActionArea>
-
-                </Card>
+        const cards = resdata.slice(0, 4).map((e,index) => (
+            <Grid key={index} item xs={12} sm={6} md={3}>
+                <FeelingoodCard img={e.picture} title={e.label} />
             </Grid>
         ));
 
@@ -202,11 +139,13 @@ class section6 extends React.Component {
                         </div>
                     </Grid>
                     <Grid item xs={2}></Grid>
-                    {services}
+
+                    {cards}
+
                 </Grid>
             </Fragment>
         );
     }
-};
+}
 
-export default withStyles(styles)(section6);
+export default withStyles(styles)(section18);
