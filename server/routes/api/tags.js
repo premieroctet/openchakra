@@ -42,7 +42,7 @@ router.get('/prestations',(req,res)=> {
 // View all tags for prestations
 router.get('/prestations/section1',(req,res)=> {
 
-    Tags.findOne({label:'Nid douillet'})
+    Tags.findOne({label:'Nid douillet - Prestations'})
         .then(tags => {
 
                 res.json(tags);
@@ -56,7 +56,7 @@ router.get('/prestations/section1',(req,res)=> {
 // View all tags for prestations
 router.get('/prestations/section10',(req,res)=> {
 
-    Tags.findOne({label:'Plaisirs'})
+    Tags.findOne({label:'Plaisirs - Prestations'})
         .then(tags => {
 
             res.json(tags);
@@ -70,7 +70,7 @@ router.get('/prestations/section10',(req,res)=> {
 // View all tags for prestations
 router.get('/prestations/section19',(req,res)=> {
 
-    Tags.findOne({label:'Tracas'})
+    Tags.findOne({label:'Tracas - Prestations'})
         .then(tags => {
 
             res.json(tags);
@@ -100,7 +100,7 @@ router.get('/category',(req,res)=> {
 // View all tags for category
 router.get('/category/section6',(req,res)=> {
 
-    Tags.findOne({label:/Sérénité/i})
+    Tags.findOne({label:/Sérénité - Catégorie/i})
         .then(tags => {
             res.json(tags);
 
@@ -113,7 +113,7 @@ router.get('/category/section6',(req,res)=> {
 // View all tags for category
 router.get('/category/section15',(req,res)=> {
 
-    Tags.findOne({label:'Bien chez soi'})
+    Tags.findOne({label:/Bien chez soi - Catégorie/i})
         .then(tags => {
             res.json(tags);
 
@@ -126,7 +126,7 @@ router.get('/category/section15',(req,res)=> {
 // View all tags for category
 router.get('/category/section22',(req,res)=> {
 
-    Tags.findOne({label:'Cours'})
+    Tags.findOne({label:/Cours - Catégorie/i})
         .then(tags => {
             res.json(tags);
 
@@ -155,7 +155,7 @@ router.get('/services',(req,res)=> {
 // View all tags for services
 router.get('/services/section3',(req,res)=> {
 
-    Tags.findOne({label:'Animaux'})
+    Tags.findOne({label:'Animaux - Services'})
         .then(tags => {
             res.json(tags);
 
@@ -167,7 +167,7 @@ router.get('/services/section3',(req,res)=> {
 // View all tags for services
 router.get('/services/section7',(req,res)=> {
 
-    Tags.findOne({label:'Bien pratique'})
+    Tags.findOne({label:'Bien pratique - Services'})
         .then(tags => {
             res.json(tags);
 
@@ -179,7 +179,7 @@ router.get('/services/section7',(req,res)=> {
 // View all tags for services
 router.get('/services/section9',(req,res)=> {
 
-    Tags.findOne({label:'Top services'})
+    Tags.findOne({label:'Top services - Services'})
         .then(tags => {
             res.json(tags);
 
@@ -191,7 +191,7 @@ router.get('/services/section9',(req,res)=> {
 // View all tags for services
 router.get('/services/section12',(req,res)=> {
 
-    Tags.findOne({label:/Fête/i})
+    Tags.findOne({label:'Fete - Services'})
         .then(tags => {
             res.json(tags);
 
@@ -203,7 +203,7 @@ router.get('/services/section12',(req,res)=> {
 // View all tags for services
 router.get('/services/section16',(req,res)=> {
 
-    Tags.findOne({label:'Jardin'})
+    Tags.findOne({label:'Jardin - Services'})
         .then(tags => {
             res.json(tags);
 
@@ -215,7 +215,7 @@ router.get('/services/section16',(req,res)=> {
 // View all tags for services
 router.get('/services/section18',(req,res)=> {
 
-    Tags.findOne({label:'Proches'})
+    Tags.findOne({label:'Proches - Services'})
         .then(tags => {
             res.json(tags);
 
@@ -227,7 +227,7 @@ router.get('/services/section18',(req,res)=> {
 // View all tags for services
 router.get('/services/section21',(req,res)=> {
 
-    Tags.findOne({label:/Déco/i})
+    Tags.findOne({label:/Déco - Services/i})
         .then(tags => {
             res.json(tags);
 
