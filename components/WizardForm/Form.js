@@ -580,7 +580,11 @@ class Wizard extends React.Component {
                                         {page !== 0 && <React.Fragment><Button
                                             color="primary"
                                             type="button"
-                                            onClick={this.previous}
+                                            onClick={() => {
+                                                const div = document.getElementById('bigDiv');
+                                                div.scrollTop = 0;
+                                                this.previous();
+                                            }}
                                             disabled={page === 0 ? true : false}
                                         >
                                             Retour
