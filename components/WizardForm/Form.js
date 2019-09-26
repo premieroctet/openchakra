@@ -255,7 +255,20 @@ class Wizard extends React.Component {
         this.state = {
             page: 0,
             values: props.initialValues,
+            hasId: false
         };
+    }
+
+    componentDidMount() {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.get(url+'myAlfred/api/users/current')
+            .then(res => {
+                console.log(res);
+                if (typeof res.data.id_card !== 'undefined') this.setState({ hasId: true });
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     next = values =>
@@ -475,7 +488,7 @@ class Wizard extends React.Component {
                     price: Yup.number().when('checked', {
                         is: true,
                         then: Yup.number().typeError('Le prix doit être un nombre').moreThan(0, 'Le prix doit être supérieur à 0€').required('Veuillez entrer un prix'),
-                        otherwise: Yup.number().notRequired(),
+                        otherwise: Yup.number().nullable(true),
                     }),
                     billing: Yup.string().when('checked', {
                         is: true,
@@ -495,7 +508,12 @@ class Wizard extends React.Component {
     Step5Schema = Yup.object().shape({
         createShop: Yup.object().shape({
             is_professional: Yup.boolean(),
-            id_recto: Yup.mixed().required('Veuillez uploader le recto de votre carte d\'identité ou bien votre passeport'),
+            id_recto: Yup.lazy(() => {
+                if (this.state.hasId === false) {
+                    return Yup.mixed().required('Veuillez uploader le recto de votre carte d\'identité ou bien votre passeport');
+                }
+                return Yup.mixed().notRequired();
+            }),
             id_verso: Yup.mixed(),
             siret: Yup.string()
                 .when('is_professional', {
@@ -892,7 +910,10 @@ class Form extends React.Component {
 
             certifName: null,
             certifYear: null,
-            certifObj: null
+            certifObj: null,
+
+            userIdCardRecto: null,
+            userIdCardVerso: null
         }
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -907,14 +928,17 @@ class Form extends React.Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
+                console.log(res);
                 this.state.phone = res.data.phone;
                 this.state.currentUser = res.data;
-                if (res.data.id_card.recto) this.state.userIdCardRecto = res.data.id_card.recto.substr(22);
-                if (res.data.id_card.verso) this.state.userIdCardVerso = res.data.id_card.verso.substr(22);
                 this.state.userCity = {label: res.data.billing_address.city, value: res.data.billing_address.city};
                 this.state.userAddress = {label: res.data.billing_address.address, value: res.data.billing_address.address};
                 this.state.userZipCode = {label: res.data.billing_address.zip_code, value: res.data.billing_address.zip_code};
                 this.state.userCountry = {label: res.data.billing_address.country, value: res.data.billing_address.country};
+                if (typeof res.data.id_card !== 'undefined') this.state.userIdCardRecto = res.data.id_card.recto.substr(22);
+                if (typeof res.data.id_card !== 'undefined') {
+                    if (typeof res.data.id_card.verso !== 'undefined') this.state.userIdCardVerso = res.data.id_card.verso.substr(22);
+                }
             })
             .catch(error => {
                 console.log(error);
