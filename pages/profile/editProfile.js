@@ -33,7 +33,7 @@ moment.locale('fr');
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 
-const ExampleCustomInput = ({ value,onClick }) => (
+const ExampleCustomInput = ({ value,onClick}) => (
     <TextField style={{width:'100%'}} value={value} label={'Date de naissance'} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
 
 );
@@ -113,6 +113,8 @@ const options = [
     { value: 'Japonais', label: 'Japonais' },
 ];
 
+const momentDateFormat = "dd/MM/yyyy";
+
 class editProfile extends React.Component {
     constructor(props) {
         super(props);
@@ -122,6 +124,8 @@ class editProfile extends React.Component {
             languages: [],
             selectedLanguages: null,
             birthday: null,
+            dpDate: moment().toDate(),
+            ipDate: moment().format(momentDateFormat)
 
 
 
@@ -178,6 +182,7 @@ class editProfile extends React.Component {
         this.setState({ selectedLanguages });
 
     };
+
 
 
 
@@ -463,8 +468,8 @@ class editProfile extends React.Component {
                                 <Grid item lg={3} xs={10} sm={6} md={3}  style={{marginTop:15}}>
                                     <DatePicker
                                         selected={Date.parse(birthday)}
-                                        onChange={(date)=>this.onChangeBirthday(date)}
-                                        customInput={<ExampleCustomInput />}
+                                        onChange={(date) => this.onChangeBirthday(date)}
+                                        customInput={ <ExampleCustomInput/>}
                                         locale='fr'
                                         placeholderText="Sélectionnez votre date de naissance"
                                         showYearDropdown
