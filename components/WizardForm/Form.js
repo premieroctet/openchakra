@@ -911,9 +911,6 @@ class Form extends React.Component {
             certifName: null,
             certifYear: null,
             certifObj: null,
-
-            userIdCardRecto: null,
-            userIdCardVerso: null
         }
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
