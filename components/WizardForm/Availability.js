@@ -739,8 +739,7 @@ class Availability extends React.Component {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container>
-                  <Card style={{ width: "100%", marginTop: 15 }}>
-                  {formik.servicesAvailability.recurrent_event.length ? (
+                {formik.servicesAvailability.recurrent_event.length ? (
                       <Grid container>
                         {formik.servicesAvailability.recurrent_event.map(
                           (event, index) => {
@@ -838,6 +837,7 @@ class Availability extends React.Component {
                     ) : (
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
+                  <Card style={{ width: "100%", marginTop: 15 }}>
                     <Grid container style={{ paddingLeft: 20 }}>
                       <h4>Ajouter une disponibilité</h4>
                     </Grid>
@@ -1080,7 +1080,8 @@ class Availability extends React.Component {
                                           display: "flex",
                                           flexFlow: "column",
                                           marginRight: "1rem",
-                                          minHeight: 205
+                                          minHeight: 205,
+                                          minWidth: 250
                                         }}
                                       >
                                         {event.services.length !== 0 ? (
@@ -1300,7 +1301,9 @@ class Availability extends React.Component {
                                         style={{
                                           padding: "2rem",
                                           display: "flex",
-                                          flexFlow: "column"
+                                          flexFlow: "column",
+                                          minHeight: 205,
+                                          minWidth: 250
                                         }}
                                       >
                                         {event.services.length !== 0 ? (
@@ -1340,7 +1343,12 @@ class Availability extends React.Component {
                                             {moment(event.end).format("LT")}
                                           </Typography>
                                         </div>
-                                        <div>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "center"
+                                          }}
+                                        >
                                           <Button
                                             variant="contained"
                                             color="secondary"
@@ -1485,7 +1493,9 @@ class Availability extends React.Component {
                                         style={{
                                           padding: "2rem",
                                           display: "flex",
-                                          flexFlow: "column"
+                                          flexFlow: "column",
+                                          minHeight: 205,
+                                          minWidth: 250
                                         }}
                                       >
                                         {event.services.length !== 0 ? (
@@ -1525,7 +1535,12 @@ class Availability extends React.Component {
                                             {moment(event.end).format("LT")}
                                           </Typography>
                                         </div>
-                                        <div>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "center"
+                                          }}
+                                        >
                                           <Button
                                             variant="contained"
                                             color="secondary"
@@ -1671,7 +1686,9 @@ class Availability extends React.Component {
                                         style={{
                                           padding: "2rem",
                                           display: "flex",
-                                          flexFlow: "column"
+                                          flexFlow: "column",
+                                          minHeight: 205,
+                                          minWidth: 250
                                         }}
                                       >
                                         {event.services.length !== 0 ? (
@@ -1711,7 +1728,12 @@ class Availability extends React.Component {
                                             {moment(event.end).format("LT")}
                                           </Typography>
                                         </div>
-                                        <div>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "center"
+                                          }}
+                                        >
                                           <Button
                                             variant="contained"
                                             color="secondary"
@@ -1855,7 +1877,9 @@ class Availability extends React.Component {
                                         style={{
                                           padding: "2rem",
                                           display: "flex",
-                                          flexFlow: "column"
+                                          flexFlow: "column",
+                                          minHeight: 205,
+                                          minWidth: 250
                                         }}
                                       >
                                         {event.services.length !== 0 ? (
@@ -1895,7 +1919,12 @@ class Availability extends React.Component {
                                             {moment(event.end).format("LT")}
                                           </Typography>
                                         </div>
-                                        <div>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "center"
+                                          }}
+                                        >
                                           <Button
                                             variant="contained"
                                             color="secondary"
@@ -2037,7 +2066,9 @@ class Availability extends React.Component {
                                         style={{
                                           padding: "2rem",
                                           display: "flex",
-                                          flexFlow: "column"
+                                          flexFlow: "column",
+                                          minHeight: 205,
+                                          minWidth: 250
                                         }}
                                       >
                                         {event.services.length !== 0 ? (
@@ -2077,7 +2108,12 @@ class Availability extends React.Component {
                                             {moment(event.end).format("LT")}
                                           </Typography>
                                         </div>
-                                        <div>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "center"
+                                          }}
+                                        >
                                           <Button
                                             variant="contained"
                                             color="secondary"
@@ -2221,7 +2257,9 @@ class Availability extends React.Component {
                                         style={{
                                           padding: "2rem",
                                           display: "flex",
-                                          flexFlow: "column"
+                                          flexFlow: "column",
+                                          minHeight: 205,
+                                          minWidth: 250
                                         }}
                                       >
                                         {event.services.length !== 0 ? (
@@ -2261,7 +2299,12 @@ class Availability extends React.Component {
                                             {moment(event.end).format("LT")}
                                           </Typography>
                                         </div>
-                                        <div>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "center"
+                                          }}
+                                        >
                                           <Button
                                             variant="contained"
                                             color="secondary"
