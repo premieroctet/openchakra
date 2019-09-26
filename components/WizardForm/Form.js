@@ -1250,7 +1250,7 @@ class Form extends React.Component {
                                                         Identifiez maintenant les services que vous souhaitez réaliser dans chacune des catégories sélectionnées. Ne vous limitez pas ! Plusieurs services peuvent être sélectionnés. Vous pourrez choisir le type de prestation que vous souhaitez réaliser dans chacun de vos services dès la prochaine étape !
                                                     </Typography>
                                                     <Typography>
-                                                        Un service n'apparaît pas ? Contacter l’équipe My-Alfred à l’adresse <a href="mailto:unservicedeplus@my-alfred.io">unservicedeplus@my-alfred.io</a>
+                                                        Un service n'apparaît pas ? Contactez l’équipe My-Alfred à l’adresse <a href="mailto:unservicedeplus@my-alfred.io">unservicedeplus@my-alfred.io</a>
                                                     </Typography>
                                                 </div>
                                                 <div style={{marginTop: '1rem'}}>
