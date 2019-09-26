@@ -778,7 +778,7 @@ class Wizard extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="imgDiv" style={{width: /*40 inital value*/ '100%', overflow: 'hidden', backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : page === 3 ? 'url("../../static/background/connexion_inscription.png")' : page === 4 || page === 5 ? 'url("../../static/Creation_shop_step3.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center'}}>
+                            <div className="imgDiv" style={{width: /*40 inital value*/ '100%', overflow: 'hidden', backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : page === 3 ? 'url("../../static/illutration boutique - Etape du calendrier.png")' : page === 4 || page === 5 ? 'url("../../static/Creation_shop_step3.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: page !== 3 ? 'center' : null}}>
                                 {/*<img src='../../static/Creation_shop_step1.png' height="100%" width="100%"/>*/}
                             </div>
                         </form>
