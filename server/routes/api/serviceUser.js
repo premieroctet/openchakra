@@ -177,11 +177,11 @@ router.post('/myShop/add',upload.fields([{name: 'file_diploma',maxCount: 1}, {na
 
             fields.option = JSON.parse(req.body.options);
             const newService = new ServiceUser(fields);
-            newService.save().then(service =>{
-                Shop.find({alfred:req.user.id})
+            newService.save().then((service) =>{
+                Shop.findOne({alfred:req.user.id})
                     .then(shop => {
                         shop.services.unshift(service._id);
-                        shop.save();
+                        shop.save().then(newShop => res.json(newShop)).catch(err=>console.log(err));
                     })
                     .catch(error => console.log(error))
         })
@@ -556,7 +556,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, re
     ServiceUser.findById(req.params.id)
         .then(event => {
             event.remove().then(() => {
-                Shop.find({alfred:req.user.id})
+                Shop.findOne({alfred:req.user.id})
                     .then(shop => {
                         const removeIndex = shop.services
                             .indexOf(req.params.id);
@@ -564,7 +564,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, re
                         shop.services.splice(removeIndex, 1);
 
 
-                        shop.save();
+                        shop.save().then(newShop => res.json(newShop)).catch(err => console.log(err));
                     })
             });
         })

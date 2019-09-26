@@ -372,7 +372,7 @@ class addService extends React.Component {
 
 
         axios.post(`${url}myAlfred/api/serviceUser/myShop/add`,formData)
-            .then(res => {
+            .then(() => {
 
                 toast.info('Service ajouté avec succès');
                 Router.push({pathname:'/myShop/services'})

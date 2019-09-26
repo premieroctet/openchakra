@@ -4,8 +4,9 @@ const next = require('next');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dev = process.env.NODE_DEV !== 'production'; //true false
+const prod = process.env.NODE_DEV === 'production'; //true false
 const nextApp = next({ dev });
-const routes = require('./routes')
+const routes = require('./routes');
 const routerHandler = routes.getRequestHandler(nextApp);
 const passport = require('passport');
 const glob = require('glob');
