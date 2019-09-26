@@ -12,7 +12,7 @@ const style = theme => ({
   bannerContainer: {
     height: '55vh',
     //backgroundImage: 'url("../../../static/photo-1538342014732-212dc8f76863-min.jpeg")',
-    marginTop: 64,
+    marginTop: 56,
   },
   darkOverlay: {
     height: '100%',
@@ -27,9 +27,12 @@ const style = theme => ({
   avatar: {
     height: 150,
     width: 150,
-    marginRight: 'auto',
-    marginLeft: 'auto',
-    display: 'block'
+    position: 'absolute',
+    top: '15%',
+    left: '0%',
+    right: '0%',
+    margin: 'auto',
+    display: 'block',
   },
   itemAvatar: {
     flexDirection: 'column',
@@ -42,6 +45,11 @@ const style = theme => ({
   textAvatar: {
     textAlign: 'center',
     color: 'white',
+    position: 'absolute',
+    top: '35%',
+    left: '0%',
+    right: '0%',
+    margin: 'auto',
     fontSize: 30,
   },
   textBio: {
