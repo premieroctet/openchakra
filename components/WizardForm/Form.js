@@ -580,7 +580,11 @@ class Wizard extends React.Component {
                                         {page !== 0 && <React.Fragment><Button
                                             color="primary"
                                             type="button"
-                                            onClick={this.previous}
+                                            onClick={() => {
+                                                const div = document.getElementById('bigDiv');
+                                                div.scrollTop = 0;
+                                                this.previous();
+                                            }}
                                             disabled={page === 0 ? true : false}
                                         >
                                             Retour
@@ -774,7 +778,7 @@ class Wizard extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="imgDiv" style={{width: /*40 inital value*/ '100%', overflow: 'hidden', backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : page === 3 ? 'url("../../static/Creation_shop_step2.png")' : page === 4 || page === 5 ? 'url("../../static/Creation_shop_step3.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center'}}>
+                            <div className="imgDiv" style={{width: /*40 inital value*/ '100%', overflow: 'hidden', backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : page === 3 ? 'url("../../static/illutration boutique - Etape du calendrier.png")' : page === 4 || page === 5 ? 'url("../../static/Creation_shop_step3.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: page !== 3 ? 'center' : null}}>
                                 {/*<img src='../../static/Creation_shop_step1.png' height="100%" width="100%"/>*/}
                             </div>
                         </form>
@@ -1375,7 +1379,7 @@ class Form extends React.Component {
                                                                                 axios.get(`${url}myAlfred/api/prestation/${service}/${filterObj.id}`)
                                                                                     .then(res => {
                                                                                         res.data.map(prestation => {
-                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: 0, billingChoice: prestation.billing, billing: null, checked: false };
+                                                                                            const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: null, billingChoice: prestation.billing, billing: null, checked: false };
                                                                                             servCompObj.filters.map(p => {
                                                                                                 if (p.id === prestationObj.filterId) {
                                                                                                     p.prestations.push(prestationObj);
@@ -2050,7 +2054,7 @@ class Form extends React.Component {
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.diploma.diploma`, this.state.diplomaObj);
                                                                                                         }}
                                                                                                         disabled={this.state.diplomaName === null || this.state.diplomaName === '' || arrayHelpers.form.values.submission[index].diploma.year === null || this.state.diplomaObj === null || arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.diploma !== null ? true : false}
-                                                                                                    >Ajouter mon diplôme</Button>
+                                                                                                    >Valider</Button>
                                                                                                 </Grid>
                                                                                             </Grid>
                                                                                         </ExpansionPanelDetails>
@@ -2143,7 +2147,7 @@ class Form extends React.Component {
                                                                                                             arrayHelpers.form.setFieldValue(`submission.${index}.certification.certification`, this.state.certifObj);
                                                                                                         }}
                                                                                                         disabled={this.state.certifName === null || this.state.certifName === '' || arrayHelpers.form.values.submission[index].certification.year === null || this.state.certifObj === null || arrayHelpers.form.values.submission[index].diploma.label !== null && arrayHelpers.form.values.submission[index].diploma.diploma !== null ? true : false}
-                                                                                                    >Ajouter ma certification</Button>
+                                                                                                    >Valider</Button>
                                                                                                 </Grid>
                                                                                             </Grid>
                                                                                         </ExpansionPanelDetails>
@@ -2167,7 +2171,6 @@ class Form extends React.Component {
                                 
                                 {/*</div>*/}
                         </Grid>
-
                     </Wizard.Page>
                     <Wizard.Page>
                         <FieldArray render={({form}) => {
