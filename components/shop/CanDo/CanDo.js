@@ -33,6 +33,11 @@ const styles = theme => ({
       width: 1366,
     },
   },
+  resphide:{
+    [theme.breakpoints.up('sm')]: { // medium: 960px or larger
+      display:'none',
+    },
+  },
   title: {
     fontSize: '1.5em',
     marginTop: '2rem',
@@ -145,7 +150,9 @@ class canDo extends React.Component{
     const {service} = this.state;
 
     const services = service.map(e => (
-      <Grid item xs={12} sm={6} md={3} key={e._id}>
+      <React.Fragment>
+      <Grid className={classes.resphide} item xs={2}></Grid>
+      <Grid item xs={10} sm={6} md={4} key={e._id}>
 
         <Card className={classes.card}>
           <CardActionArea>
@@ -180,6 +187,7 @@ class canDo extends React.Component{
           </CardActionArea>
         </Card>
       </Grid>
+      </React.Fragment>
     ));
 
     return (

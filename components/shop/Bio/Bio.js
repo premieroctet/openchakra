@@ -171,12 +171,12 @@ class bio extends React.Component {
         <Fragment>
           <Grid container className={classes.container} spacing={24}>
             <Grid container className={classes.allContainer}>
-              <Grid item xs={4} className={classes.avatarContainer}>
+              <Grid item xs={12} md={4} className={classes.avatarContainer}>
                 <Avatar alt="John Doe" src={`../../../../${alfred.picture}`} className={classes.avatar} />
                 <Typography className={classes.text}>{alfred.name} {alfred.firstname}</Typography>
                 <Typography>{this.state.currentAddress}, {this.state.currentCity} </Typography>
               </Grid>
-              <Grid item xs={8} className={classes.biographyContainer}>
+              <Grid item xs={12} md={8} className={classes.biographyContainer}>
                 <Card className={classes.biography}>
                   <Typography>
                     {this.state.description}
