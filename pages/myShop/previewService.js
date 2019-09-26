@@ -13,7 +13,7 @@ import dynamic from 'next/dynamic';
 import { border } from 'polished';
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandMoreIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Card from "@material-ui/core/Card";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -21,7 +21,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import DatePicker from "react-datepicker";
 import FormControl from "@material-ui/core/FormControl";
 import Select2 from "react-select";
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from "@material-ui/core/Tooltip";
 
 
 
@@ -73,7 +73,7 @@ const styles = theme => ({
       dispocard:{
 
      minHeight:'100px',
-     width:'200px',
+     width:'250px',
      textAlign:'center',
 
      boxShadow: '4px 4px 41px -37px rgba(0,0,0,0.0)',
@@ -85,7 +85,7 @@ const styles = theme => ({
        dispocardin:{
 
      padding:'1%',
-      fontSize:'17px',
+      fontSize:'14px',
      fontWeight:'bold',
      marginBottom:10,
 
@@ -424,8 +424,8 @@ class services extends React.Component {
 
                             <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'20%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',}} alt={'picture'}/>
                         </Grid>
-                        <Grid item style={{position:"absolute",left:'0',right:'0',marginLeft:'auto',marginRight:'auto',top:'38%',zIndex:502,textAlign: 'center'}}>
-                        <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.35rem'}}>{service.label}</p>
+                        <Grid item style={{position:"absolute",left:'0',right:'0',marginLeft:'auto',marginRight:'auto',top:'39%',zIndex:502,textAlign: 'center'}}>
+                        <p style={{color: 'white',  cursor:'pointer',fontWeight: '600',fontSize: '1.35rem'}}>{service.label}</p>
                             <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.1rem'}}>par {user.firstname} ({serviceUser.perimeter} kms)</p>
                         </Grid>
 
@@ -435,7 +435,7 @@ class services extends React.Component {
                         {/*Contenu à Gauche*/}
 
                             {/*Petite Description*/}
-                            <Grid item md={6} xs={12} style={{textAlign: 'left',margin: '0 auto', float:'right'}}>
+                            <Grid item md={6} xs={12} style={{textAlign: 'left',margin: '0 auto', float:'right', padding:'3%'}}>
                                 <div style={{margin: '20px 11%', marginTop: '5%',width: '90%'}}></div>
                                     <Grid container>
                                         <Grid item xs={12}>
@@ -576,13 +576,13 @@ class services extends React.Component {
                                             if(e.period.active){
                                                 return (
                                                     <ExpansionPanel
-                                                        style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                                        style={{ border: "none", boxShadow: "none", width: "100%" }}
                                                     >
                                                         <ExpansionPanelSummary
                                                             expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                                         >
                                                             <Typography
-                                                                style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
+                                                                style={{  fontSize: 20, flexBasis: "90%", flexShrink: 0 }}
                                                             >
                                                                 Du {moment(e.period.month_begin).format('LL')} au {moment(e.period.month_end).format('LL')}
                                                             </Typography>
@@ -599,7 +599,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Lundi  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.monday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -635,16 +635,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Lundi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
                                                                 {e.tuesday.event.length !== 0 ?
 
@@ -652,7 +643,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Mardi  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.tuesday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -688,16 +679,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Mardi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
                                                                 {e.wednesday.event.length !== 0 ?
 
@@ -705,7 +687,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Mercredi  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.wednesday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -741,16 +723,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Mercredi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
                                                                 {e.thursday.event.length !== 0 ?
 
@@ -758,7 +731,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Jeudi  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.thursday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -794,16 +767,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Jeudi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
                                                                 {e.friday.event.length !== 0 ?
 
@@ -811,7 +775,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Vendredi  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.friday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -847,16 +811,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Vendredi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
                                                                 {e.saturday.event.length !== 0 ?
 
@@ -864,7 +819,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Samedi  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.saturday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -900,16 +855,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Samedi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
                                                                 {e.sunday.event.length !== 0 ?
 
@@ -953,16 +899,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Dimanche  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                                </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
 
 
@@ -976,13 +913,13 @@ class services extends React.Component {
                                             } else {
                                                 return (
                                                     <ExpansionPanel
-                                                        style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                                        style={{ border: "none", boxShadow: "none", width: "100%" }}
                                                     >
                                                         <ExpansionPanelSummary
                                                             expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                                         >
                                                             <Typography
-                                                                style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
+                                                                style={{  fontSize: 20, flexBasis: "90%", flexShrink: 0 }}
                                                             >
                                                                 Disponibilités sans périodes
                                                             </Typography>
@@ -998,7 +935,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Lundi  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.monday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -1034,16 +971,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Lundi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                   <div></div> 
                                                                 }
                                                                 {e.tuesday.event.length !== 0 ?
 
@@ -1051,7 +979,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Mardi  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.tuesday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -1087,16 +1015,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Mardi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                   <div></div>
                                                                 }
                                                                 {e.wednesday.event.length !== 0 ?
 
@@ -1104,7 +1023,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Mercredi  </div>
-                                                                            <br/>
+                                                                        
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.wednesday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -1140,16 +1059,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Mercredi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
                                                                 {e.thursday.event.length !== 0 ?
 
@@ -1157,7 +1067,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Jeudi  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.thursday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -1193,16 +1103,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Jeudi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
                                                                 {e.friday.event.length !== 0 ?
 
@@ -1210,7 +1111,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Vendredi  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.friday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -1246,16 +1147,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Vendredi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
                                                                 {e.saturday.event.length !== 0 ?
 
@@ -1263,7 +1155,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Samedi  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.saturday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -1299,16 +1191,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Samedi  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
                                                                 {e.sunday.event.length !== 0 ?
 
@@ -1316,7 +1199,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Dimanche  </div>
-                                                                            <br/>
+                                                                            
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.sunday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -1352,16 +1235,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                    <Grid item xs={3} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
-
-                                                                        <Typography>
-                                                                            <div className={classes.dispoheader}>Dimanche  </div>
-                                                                            <br/>
-                                                                            <div className={classes.dispocardin} >
-                                                                                <p>Aucune disponibilités</p>
-                                                                            </div>
-                                                                        </Typography>
-                                                                    </Grid>
+                                                                    <div></div>
                                                                 }
                                                             </Grid>
 
@@ -1465,7 +1339,7 @@ class services extends React.Component {
 
                             {/*Contenu à droite*/}
                             <Grid item xs={12} md={5} style={{marginTop: '2%', marginBottom: '5%'}}>
-                                <Grid container style={{border: 'thin solid #dedede',maxWidth: '80%',marginLeft:'14%', padding:'2%', position: 'sticky', top: 100,}}>
+                                <Grid container style={{border: 'thin solid #dedede',maxWidth: '90%',margin:'auto', padding:'2%', position: 'sticky', top: 100,}}>
                                     <Grid item xs={12}><Typography style={{marginTop: '4%' ,marginBottom: '2%',marginLeft: '4%' ,color: 'black', fontSize:'1.2rem'}}>Type de prestation</Typography></Grid>
                                     
                                     {uniqFilter.map(z =>{
@@ -1530,7 +1404,7 @@ class services extends React.Component {
                                     <Grid item xs={2}></Grid><Grid item xs={8}></Grid><Grid item xs={2}></Grid></React.Fragment> : null} </React.Fragment>)})}
 
                                     {this.state.haveOptions ?
-                                    <Grid item xs={12} style={{marginBottom: '2%', marginTop: '2%'}}>
+                                    <Grid item xs={12} style={{marginBottom: '2%'}}>
                                         <Typography style={{marginLeft: '3%' , fontSize:'1.1rem', fontWeight: '5e00', color:'white', minHeight:'40px', padding:'10px', backgroundColor:'gray', borderRadius:5,}}>
                                         {dropoption ?
                                         <React.Fragment> 

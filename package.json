@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "nodemon -w server -w package.json server/server.js",
     "build": "next build",
-    "start": "NODE_ENV=production node server/server.js",
+    "start": "SET NODE_ENV=production & node server/server.js",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "server": "nodemon server/server.js"

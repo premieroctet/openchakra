@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -8,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../../hoc/Layout/Layout';
+import Link from 'next/link';
 import axios from "axios";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "react-select";
@@ -40,6 +40,26 @@ const styles = theme => ({
         marginTop: 68,
         flexGrow: 1,
     },
+    pasphone:{
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        }
+    },
+    bottombar:{[theme.breakpoints.up('md')]: {
+        display: 'none',
+    }},
+    topbar:{position: 'sticky', top: 65, zIndex:999,
+    [theme.breakpoints.down('sm')]: {
+        display:'none',
+    }}, 
+    validerWeb:{ 
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+    }}, 
+    validerMobile:{ 
+        [theme.breakpoints.up('md')]: {
+            display: 'none',
+    }},
 
 
 
@@ -594,7 +614,28 @@ class editService extends React.Component {
             <Layout>
 
                 <Grid container className={classes.bigContainer}>
-                    <Grid item xs={5} style={{paddingLeft:20}}>
+                <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
+                            
+                            <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white'}}>
+                                <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
+                                </Link>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
+                            </Grid>
+                            <Grid item xs={2} style={{textAlign:"center"}}>
+                                <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                            </Grid>
+
+                        </Grid>
+                    <Grid item sm={12} md={5} style={{paddingLeft:20}}>
                         <h2 style={{fontWeight: '100'}}>Paramétrez votre service {service.label}</h2>
 
                         <Grid container>
@@ -770,7 +811,8 @@ class editService extends React.Component {
                                     />
 
                                     </Grid>
-                                    <Button color={"primary"} variant={"contained"} style={{color:"white"}} onClick={()=> this.validateOptions()}>Valider mon option</Button>
+                                    <Button className={classes.validerWeb} color={"primary"} variant={"contained"} style={{color:"white"}} onClick={()=> this.validateOptions()}>Valider mon option</Button>
+                                    <Button className={classes.validerMobile} color={"primary"} variant={"contained"} style={{color:"white"}} onClick={()=> this.validateOptions()}>Valider</Button>
 
                                     </React.Fragment>
 
@@ -870,7 +912,8 @@ class editService extends React.Component {
                                 })}
                                     />
                                     </Grid>
-                                    <Button color={"primary"} variant={"contained"} style={{color:"white"}} onClick={()=> this.validateOptions2()}>Valider mon option</Button>
+                                    <Button className={classes.validerWeb} color={"primary"} variant={"contained"} style={{color:"white"}} onClick={()=> this.validateOptions2()}>Valider mon option</Button>
+                                    <Button className={classes.validerMobile} color={"primary"} variant={"contained"} style={{color:"white"}} onClick={()=> this.validateOptions2()}>Valider</Button>
 
                                     </React.Fragment>
 
@@ -1283,7 +1326,7 @@ class editService extends React.Component {
                                     <Grid container>
                                         <Grid item xs={4}>
                                             <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",color:'black'}}>Joindre mon diplôme</p>
+                                                <p style={{cursor:"pointer",textAlign:'center', color:'black'}}>Joindre mon diplôme</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
                                                        onChange={this.onChangeDiploma}
                                                        className="form-control" accept={'image/*,.pdf'}
@@ -1300,7 +1343,9 @@ class editService extends React.Component {
                                             </p>
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Button color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
+                                            <Button className={classes.validerWeb} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
+                                            <Button className={classes.validerMobile} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider</Button>
+
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>
@@ -1344,7 +1389,7 @@ class editService extends React.Component {
                                     <Grid container>
                                         <Grid item xs={4}>
                                             <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",color:'black'}}>Joindre mon diplôme</p>
+                                                <p style={{cursor:"pointer",textAlign:'center',color:'black'}}>Joindre mon diplôme</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
                                                        onChange={this.onChangeDiploma}
                                                        className="form-control" accept={'image/*,.pdf'}
@@ -1374,7 +1419,9 @@ class editService extends React.Component {
                                             </p>
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Button color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
+                                            <Button className={classes.validerWeb} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>                                            
+                                            <Button className={classes.validerMobile} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider</Button>
+
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>
@@ -1437,7 +1484,7 @@ class editService extends React.Component {
                                     <Grid container>
                                         <Grid item xs={4}>
                                             <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",color:'black'}}>Joindre ma certification</p>
+                                                <p style={{cursor:"pointer",textAlign:'center',color:'black'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
                                                        onChange={this.onChangeCertification}
                                                        className="form-control" accept={'image/*,.pdf'}
@@ -1454,7 +1501,9 @@ class editService extends React.Component {
                                             </p>
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Button onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
+                                            <Button className={classes.validerWeb} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
+                                            <Button className={classes.validerMobile} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
+
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>
@@ -1498,7 +1547,7 @@ class editService extends React.Component {
                                     <Grid container>
                                         <Grid item xs={4}>
                                             <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",color:'black'}}>Joindre ma certification</p>
+                                                <p style={{cursor:"pointer",textAlign:'center',color:'black'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
                                                        onChange={this.onChangeCertification}
                                                        className="form-control" accept={'image/*,.pdf'}
@@ -1528,7 +1577,9 @@ class editService extends React.Component {
                                             </p>
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Button onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
+                                            <Button className={classes.validerWeb} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
+                                            <Button className={classes.validerMobile} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
+
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>
@@ -1538,7 +1589,7 @@ class editService extends React.Component {
                         </Grid>
                         <hr/>
                         <Grid container style={{display:"flex",justifyContent:"flex-end",width:'90%'}}>
-                            <Button variant={"contained"} onClick={(event)=>this.onSubmit(event)} color={"secondary"} style={{color:"white"}}>Enregistrer</Button>
+                            <Button variant={"contained"} onClick={(event)=>this.onSubmit(event)} color={"secondary"} style={{color:"white", marginBottom: '10px'}}>Enregistrer</Button>
                         </Grid>
 
 
@@ -1552,14 +1603,47 @@ class editService extends React.Component {
 
 
 
-                    <Grid item xs={7} style={{backgroundImage:'url(../../static/Creation_shop_step1.png)',backgroundSize:"contain",
+                    <Grid item xs={7} className={classes.pasphone} style={{backgroundImage:'url(../../static/Creation_shop_step1.png)',backgroundSize:"contain",
                         backgroundRepeat:"no-repeat",height:'100vh'}}>
                     </Grid>
 
 
 
                     </Grid>
+                    <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
+                         
+                         <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
+                             <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                             </Link>
+                         </Grid>
 
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                         <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                         </Grid>
+
+                     </Grid>
+            <Footer/>
             </Layout>
             
 
