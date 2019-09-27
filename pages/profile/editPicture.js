@@ -353,12 +353,12 @@ class editPicture extends React.Component {
                                     <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img width={150} height={150} style={{borderRadius: '50%',objectFit:'cover'}} src={`../${user.picture}`} alt={'picture'}/>}
                                 </Grid>
 
-                                <Grid item style={{marginLeft: '5%'}}>
+                                <Grid item xs={12} md={6} style={{marginLeft: '5%'}}>
 
                                     <form onSubmit={this.onSubmit}>
                                         <Grid container>
-                                        <Grid item xs={6} lg={12}>
-                                            <p style={{display: 'inline-block', marginTop: 15,color:'black', width: 600}}>La photo de votre profil sera
+                                        <Grid item xs={12} lg={12}>
+                                            <p style={{display: 'inline-block', marginTop: 15,color:'black'}}>La photo de votre profil sera
                                                 visible des utilisateurs du site et leur permettra de déjà vous connaitre !
                                                 Téléchargez une photo de vous claire et lumineuse, de bonne qualité. Pour un rendu optimal,
                                                 la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif,
