@@ -121,7 +121,7 @@ class signup extends React.Component {
           zip_code: '',
           country: '',
           checked: false,
-          check2: false,
+          check2: true,
           errors: {},
           lat: '',
           lng: '',
@@ -377,9 +377,10 @@ class signup extends React.Component {
                               onChange={this.onChangePassword}
                               error={errors.password}
                               helperText="8 caractères minimum dont
-                                    une majuscule, une minuscule, un chiffre et un caractère spécial"
+                                    une majuscule, une minuscule, un chiffre et un caractère spécial (@,&,$,*,#,%,!)"
                           />
                         </Grid>
+                        {!this.state.check2 ? <em style={{color:'red'}}>Mot de passe invalide</em> : null}
                       </Grid>
                       <Typography style={{fontSize: '1.2rem', width:'100%', marginTop: 15}}>Date de naissance</Typography>
                       <p>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les autres<br/>
