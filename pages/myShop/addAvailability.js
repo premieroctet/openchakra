@@ -42,7 +42,7 @@ const FilledButton = styled.div`
 
 const styles = theme => ({
     bigContainer: {
-        marginTop: 68,
+        marginTop: 55,
         flexGrow: 1,
     },
     marginbot: {
@@ -57,6 +57,23 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             display: 'none!important',
         },
+    },
+    bottombar:{ [theme.breakpoints.up('md')]: {
+            display: 'none',
+            boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
+        }},
+    topbar:{ position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
+            display: 'none'
+        }},
+    respbg:{
+        [theme.breakpoints.up('md')]: {
+            height: '48.5vh!important',
+        }},
+    respcard:{
+        width:'140%',
+        [theme.breakpoints.up('md')]: {
+            width:'115%!important',
+        }
     }
 
 
@@ -172,7 +189,7 @@ class addAvailability extends React.Component {
                 if(user.is_alfred === false) {
                     Router.push('/becomeAlfredForm');
                 } else {
-                this.setState({user:user});
+                    this.setState({user:user});
                     axios
                         .get(url+'myAlfred/api/shop/currentAlfred')
                         .then(res => {
@@ -321,7 +338,7 @@ class addAvailability extends React.Component {
             toast.info('Créneau ajouté');
 
             this.setState({monday:false, tuesday:false, wednesday:false, thursday:false, friday:false, saturday:false, sunday:false,
-                                all_begin: '', all_end: '', recurrent_service: null, recurrent_all_service: false})
+                all_begin: '', all_end: '', recurrent_service: null, recurrent_all_service: false})
         }
     };
 
@@ -637,31 +654,42 @@ class addAvailability extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
-                            <Grid item xs={1}></Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
+
+                        <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
+                            <Grid item xs={1} className={classes.shopbar}></Grid>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/services'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
+                                    </a>
                                 </Link>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/messages'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                                    </a>
                                 </Link>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/mesreservations'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                                    </a>
                                 </Link>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
-                                <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
+                                <Link href={'/myShop/myAvailabilities'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
+                                    </a>
                                 </Link>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Performance</p></a>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/performances'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                                    </a>
                                 </Link>
                             </Grid>
 
@@ -672,25 +700,25 @@ class addAvailability extends React.Component {
 
 
                         </Grid>
-                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
+                        <Grid className={classes.respbg} item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh'}}>
 
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'45%',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}}  alt={'picture'}/>
+                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'20%',left:'0%',right:'0%', margin: 'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}}  alt={'picture'}/>
                         </Grid>
                     </Grid>
 
 
-                    <Grid container style={{marginTop: 20,marginLeft:30}}>
-                        <Grid item xs={8}>
+                    <Grid container style={{marginTop: 20,paddingLeft:30}}>
+                        <Grid item md={8} xs={12}>
 
                             <Grid item xs={12}>
                                 <ExpansionPanel
                                     style={{ border: "none", boxShadow: "none", width: "70%" }}
                                 >
-                                    <ExpansionPanelSummary
-                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary className={classes.respcard}
+                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
@@ -701,191 +729,191 @@ class addAvailability extends React.Component {
                                             Vos disponibilités récurrentes
                                         </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails>
+                                    <ExpansionPanelDetails className={classes.respcard}>
 
-                                            <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
-                                                    <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouter une disponibilité</h4>
-                                                    </Grid>
-                                                    <Grid container>
-                                                        <Grid item xs={3} style={{paddingLeft:20}}>
-                                                            <FormControlLabel
-                                                                control={
-                                                                    <Checkbox
-                                                                        checked={this.state.monday}
-                                                                        onChange={this.handleChecked}
-                                                                        value={'monday'}
-                                                                        color="primary"
-                                                                        name={'monday'}
-                                                                    />
-                                                                }
-                                                                label="Lundi"
-                                                            />
-                                                        </Grid>
-                                                        <Grid item xs={3}>
-                                                            <FormControlLabel
-                                                                control={
-                                                                    <Checkbox
-                                                                        checked={this.state.tuesday}
-                                                                        onChange={this.handleChecked}
-                                                                        value={'tuesday'}
-                                                                        color="primary"
-                                                                        name={'tuesday'}
-                                                                    />
-                                                                }
-                                                                label="Mardi"
-                                                            />
-                                                        </Grid>
-                                                        <Grid item xs={3}>
-                                                            <FormControlLabel
-                                                                control={
-                                                                    <Checkbox
-                                                                        checked={this.state.wednesday}
-                                                                        onChange={this.handleChecked}
-                                                                        value={'wednesday'}
-                                                                        color="primary"
-                                                                        name={'wednesday'}
-                                                                    />
-                                                                }
-                                                                label="Mercredi"
-                                                            />
-                                                        </Grid>
-                                                        <Grid item xs={3}>
-                                                            <FormControlLabel
-                                                                control={
-                                                                    <Checkbox
-                                                                        checked={this.state.thursday}
-                                                                        onChange={this.handleChecked}
-                                                                        value={'thursday'}
-                                                                        color="primary"
-                                                                        name={'thursday'}
-                                                                    />
-                                                                }
-                                                                label="Jeudi"
-                                                            />
-                                                        </Grid>
-                                                        <Grid item xs={3} style={{paddingLeft:20}}>
-                                                            <FormControlLabel
-                                                                control={
-                                                                    <Checkbox
-                                                                        checked={this.state.friday}
-                                                                        onChange={this.handleChecked}
-                                                                        value={'friday'}
-                                                                        color="primary"
-                                                                        name={'friday'}
-                                                                    />
-                                                                }
-                                                                label="Vendredi"
-                                                            />
-                                                        </Grid>
-                                                        <Grid item xs={3}>
-                                                            <FormControlLabel
-                                                                control={
-                                                                    <Checkbox
-                                                                        checked={this.state.saturday}
-                                                                        onChange={this.handleChecked}
-                                                                        value={'saturday'}
-                                                                        color="primary"
-                                                                        name={'saturday'}
-                                                                    />
-                                                                }
-                                                                label="Samedi"
-                                                            />
-                                                        </Grid>
-                                                        <Grid item xs={3}>
-                                                            <FormControlLabel
-                                                                control={
-                                                                    <Checkbox
-                                                                        checked={this.state.sunday}
-                                                                        onChange={this.handleChecked}
-                                                                        value={'sunday'}
-                                                                        color="primary"
-                                                                        name={'sunday'}
-                                                                    />
-                                                                }
-                                                                label="Dimanche"
-                                                            />
-                                                        </Grid>
-                                                    </Grid>
-                                                    <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
-                                                            <Grid container style={{alignItems:"center"}}>
-                                                                <Grid item xs={3}>
-                                                                    <p>De :</p>
-                                                                </Grid>
-                                                                <Grid item xs={9}>
-                                                                    <DatePicker
-                                                                        selected={this.state.all_begin}
-                                                                        onChange={date => this.setState({all_begin:date})}
-                                                                        locale='fr'
-                                                                        showTimeSelect
-                                                                        showTimeSelectOnly
-                                                                        timeIntervals={15}
-                                                                        timeCaption="Début"
-                                                                        dateFormat="HH:mm"
-                                                                    />
-                                                                </Grid>
-                                                            </Grid>
-                                                        </Grid>
-                                                        <Grid item xs={6}>
-                                                            <Grid container style={{alignItems:"center"}}>
-                                                                <Grid item xs={3}>
-                                                                    <p>A :</p>
-                                                                </Grid>
-                                                                <Grid item xs={9}>
-                                                                    <DatePicker
-                                                                        selected={this.state.all_end}
-                                                                        onChange={date => this.setState({all_end:date})}
-                                                                        locale='fr'
-                                                                        showTimeSelect
-                                                                        showTimeSelectOnly
-                                                                        timeIntervals={15}
-                                                                        timeCaption="Fin"
-                                                                        dateFormat="HH:mm"
-                                                                    />
-                                                                </Grid>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Grid>
-                                                    <Grid item xs={10} style={{marginTop:20,paddingLeft:20}}>
-                                                        <FormControl  style={{ width: '100%' }}>
-                                                            <Select2
-                                                                value={this.state.recurrent_service}
-                                                                onChange={this.handleChangeSelectRecurrent}
-                                                                options={optionsService}
-                                                                isMulti
-                                                                isSearchable
-                                                                closeMenuOnSelect={false}
-                                                                isDisabled={this.state.recurrent_all_service}
-                                                                placeholder={'Sélectionnez vos services'}
-                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
-
-                                                            />
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item style={{marginTop:20,paddingLeft:20}}>
+                                        <Grid container>
+                                            <Card style={{width:'100%',marginTop:15}}>
+                                                <Grid container style={{paddingLeft:20}}>
+                                                    <h4>Ajouter une disponibilité</h4>
+                                                </Grid>
+                                                <Grid container>
+                                                    <Grid item xs={3} style={{paddingLeft:20}}>
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
-                                                                    checked={this.state.recurrent_all_service}
+                                                                    checked={this.state.monday}
                                                                     onChange={this.handleChecked}
-                                                                    value={'recurrent_all_service'}
+                                                                    value={'monday'}
                                                                     color="primary"
-                                                                    name={'recurrent_all_service'}
+                                                                    name={'monday'}
                                                                 />
                                                             }
-                                                            label="Tous les services"
+                                                            label="Lundi"
                                                         />
                                                     </Grid>
-                                                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                                        <Button type="button" onClick={() => this.handleClickAll()} variant="contained"
-                                                                color="primary" style={{ width: '100%',color:"white" }}>
-                                                            Ajouter le créneau horaire
-                                                        </Button>
+                                                    <Grid item xs={3}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={this.state.tuesday}
+                                                                    onChange={this.handleChecked}
+                                                                    value={'tuesday'}
+                                                                    color="primary"
+                                                                    name={'tuesday'}
+                                                                />
+                                                            }
+                                                            label="Mardi"
+                                                        />
                                                     </Grid>
-                                                </Card>
-                                            </Grid>
+                                                    <Grid item xs={3}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={this.state.wednesday}
+                                                                    onChange={this.handleChecked}
+                                                                    value={'wednesday'}
+                                                                    color="primary"
+                                                                    name={'wednesday'}
+                                                                />
+                                                            }
+                                                            label="Mercredi"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={3}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={this.state.thursday}
+                                                                    onChange={this.handleChecked}
+                                                                    value={'thursday'}
+                                                                    color="primary"
+                                                                    name={'thursday'}
+                                                                />
+                                                            }
+                                                            label="Jeudi"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={3} style={{paddingLeft:20}}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={this.state.friday}
+                                                                    onChange={this.handleChecked}
+                                                                    value={'friday'}
+                                                                    color="primary"
+                                                                    name={'friday'}
+                                                                />
+                                                            }
+                                                            label="Vendredi"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={3}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={this.state.saturday}
+                                                                    onChange={this.handleChecked}
+                                                                    value={'saturday'}
+                                                                    color="primary"
+                                                                    name={'saturday'}
+                                                                />
+                                                            }
+                                                            label="Samedi"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={3}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={this.state.sunday}
+                                                                    onChange={this.handleChecked}
+                                                                    value={'sunday'}
+                                                                    color="primary"
+                                                                    name={'sunday'}
+                                                                />
+                                                            }
+                                                            label="Dimanche"
+                                                        />
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid container style={{paddingLeft:20}}>
+                                                    <Grid item xs={6}>
+                                                        <Grid container style={{alignItems:"center"}}>
+                                                            <Grid item xs={3}>
+                                                                <p>De :</p>
+                                                            </Grid>
+                                                            <Grid item xs={9}>
+                                                                <DatePicker
+                                                                    selected={this.state.all_begin}
+                                                                    onChange={date => this.setState({all_begin:date})}
+                                                                    locale='fr'
+                                                                    showTimeSelect
+                                                                    showTimeSelectOnly
+                                                                    timeIntervals={15}
+                                                                    timeCaption="Début"
+                                                                    dateFormat="HH:mm"
+                                                                />
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <Grid container style={{alignItems:"center"}}>
+                                                            <Grid item xs={3}>
+                                                                <p>A :</p>
+                                                            </Grid>
+                                                            <Grid item xs={9}>
+                                                                <DatePicker
+                                                                    selected={this.state.all_end}
+                                                                    onChange={date => this.setState({all_end:date})}
+                                                                    locale='fr'
+                                                                    showTimeSelect
+                                                                    showTimeSelectOnly
+                                                                    timeIntervals={15}
+                                                                    timeCaption="Fin"
+                                                                    dateFormat="HH:mm"
+                                                                />
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item xs={10} style={{marginTop:20,paddingLeft:20}}>
+                                                    <FormControl  style={{ width: '100%' }}>
+                                                        <Select2
+                                                            value={this.state.recurrent_service}
+                                                            onChange={this.handleChangeSelectRecurrent}
+                                                            options={optionsService}
+                                                            isMulti
+                                                            isSearchable
+                                                            closeMenuOnSelect={false}
+                                                            isDisabled={this.state.recurrent_all_service}
+                                                            placeholder={'Sélectionnez vos services'}
+                                                            noOptionsMessage={()=>'Plus d\'options disponibles'}
+
+                                                        />
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item style={{marginTop:20,paddingLeft:20}}>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={this.state.recurrent_all_service}
+                                                                onChange={this.handleChecked}
+                                                                value={'recurrent_all_service'}
+                                                                color="primary"
+                                                                name={'recurrent_all_service'}
+                                                            />
+                                                        }
+                                                        label="Tous les services"
+                                                    />
+                                                </Grid>
+                                                <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                                                    <Button type="button" onClick={() => this.handleClickAll()} variant="contained"
+                                                            color="primary" style={{ width: '100%',color:"white" }}>
+                                                        Ajouter le créneau horaire
+                                                    </Button>
+                                                </Grid>
+                                            </Card>
+                                        </Grid>
 
 
 
@@ -896,8 +924,8 @@ class addAvailability extends React.Component {
                                 <ExpansionPanel
                                     style={{ border: "none", boxShadow: "none", width: "70%" }}
                                 >
-                                    <ExpansionPanelSummary
-                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary className={classes.respcard}
+                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
@@ -908,7 +936,7 @@ class addAvailability extends React.Component {
                                             Vos disponibilités pour lundi
                                         </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails>
+                                    <ExpansionPanelDetails className={classes.respcard}>
                                         <Grid container>
 
                                             {monday_event.map((e,index)=> (
@@ -1063,8 +1091,8 @@ class addAvailability extends React.Component {
                                 <ExpansionPanel
                                     style={{ border: "none", boxShadow: "none", width: "70%" }}
                                 >
-                                    <ExpansionPanelSummary
-                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary className={classes.respcard}
+                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
@@ -1075,7 +1103,7 @@ class addAvailability extends React.Component {
                                             Vos disponibilités pour mardi
                                         </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails>
+                                    <ExpansionPanelDetails className={classes.respcard}>
                                         <Grid container>
 
                                             {tuesday_event.map((e,index)=> (
@@ -1230,8 +1258,8 @@ class addAvailability extends React.Component {
                                 <ExpansionPanel
                                     style={{ border: "none", boxShadow: "none", width: "70%" }}
                                 >
-                                    <ExpansionPanelSummary
-                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary className={classes.respcard}
+                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
@@ -1242,7 +1270,7 @@ class addAvailability extends React.Component {
                                             Vos disponibilités pour mercredi
                                         </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails>
+                                    <ExpansionPanelDetails className={classes.respcard}>
                                         <Grid container>
 
                                             {wednesday_event.map(e=> (
@@ -1395,8 +1423,8 @@ class addAvailability extends React.Component {
                                 <ExpansionPanel
                                     style={{ border: "none", boxShadow: "none", width: "70%" }}
                                 >
-                                    <ExpansionPanelSummary
-                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary className={classes.respcard}
+                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
@@ -1407,7 +1435,7 @@ class addAvailability extends React.Component {
                                             Vos disponibilités pour jeudi
                                         </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails>
+                                    <ExpansionPanelDetails className={classes.respcard}>
                                         <Grid container>
 
                                             {thursday_event.map(e=> (
@@ -1562,8 +1590,8 @@ class addAvailability extends React.Component {
                                 <ExpansionPanel
                                     style={{ border: "none", boxShadow: "none", width: "70%" }}
                                 >
-                                    <ExpansionPanelSummary
-                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary className={classes.respcard}
+                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
@@ -1574,7 +1602,7 @@ class addAvailability extends React.Component {
                                             Vos disponibilités pour vendredi
                                         </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails>
+                                    <ExpansionPanelDetails className={classes.respcard}>
                                         <Grid container>
 
                                             {friday_event.map(e=> (
@@ -1729,8 +1757,8 @@ class addAvailability extends React.Component {
                                 <ExpansionPanel
                                     style={{ border: "none", boxShadow: "none", width: "70%" }}
                                 >
-                                    <ExpansionPanelSummary
-                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary className={classes.respcard}
+                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
@@ -1741,7 +1769,7 @@ class addAvailability extends React.Component {
                                             Vos disponibilités pour samedi
                                         </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails>
+                                    <ExpansionPanelDetails className={classes.respcard}>
                                         <Grid container>
 
                                             {saturday_event.map(e=> (
@@ -1897,8 +1925,8 @@ class addAvailability extends React.Component {
                                 <ExpansionPanel
                                     style={{ border: "none", boxShadow: "none", width: "70%" }}
                                 >
-                                    <ExpansionPanelSummary
-                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary className={classes.respcard}
+                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
@@ -1909,7 +1937,7 @@ class addAvailability extends React.Component {
                                             Vos disponibilités pour dimanche
                                         </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails>
+                                    <ExpansionPanelDetails className={classes.respcard}>
                                         <Grid container>
 
                                             {sunday_event.map(e=> (
@@ -2061,7 +2089,7 @@ class addAvailability extends React.Component {
 
                             </Grid>
 
-                            <Grid container style={{marginLeft:20}}>
+                            <Grid container style={{paddingLeft:20}}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox
@@ -2102,20 +2130,20 @@ class addAvailability extends React.Component {
                                                 </Grid>
                                                 <Grid item xs={9}>
                                                     <DatePicker
-                                                    selected={Date.parse(this.state.month_end)}
-                                                    onChange={date => this.setState({month_end:date})}
-                                                    locale='fr'
-                                                    showYearDropdown
-                                                    showMonthDropdown
-                                                    dateFormat="dd/MM/yyyy"
-                                                />
+                                                        selected={Date.parse(this.state.month_end)}
+                                                        onChange={date => this.setState({month_end:date})}
+                                                        locale='fr'
+                                                        showYearDropdown
+                                                        showMonthDropdown
+                                                        dateFormat="dd/MM/yyyy"
+                                                    />
                                                 </Grid>
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                     : null}
                             </Grid>
-                            <Grid container style={{marginTop:20,marginLeft:20,marginBottom:20}}>
+                            <Grid container style={{marginTop:20,paddingLeft:20,marginBottom:20}}>
 
                                 <Button onClick={()=>this.onSubmit()} variant={"contained"} color={"primary"} style={{color:"white",marginRight:20}}>Enregistrer</Button>
 
@@ -2129,6 +2157,39 @@ class addAvailability extends React.Component {
 
 
                 </Layout>
+                <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
+
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                        </Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center",zIndex:999, borderBottom: '3px solid #4fbdd7'}}>
+                        <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                </Grid>
                 <Footer/>
 
             </Fragment>

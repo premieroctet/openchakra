@@ -380,6 +380,7 @@ class Wizard extends React.Component {
                     .then(res => {
 
                             const booking_request = values.createShop.booking_request;
+                            const no_booking_request = values.createShop.no_booking_request;
                             const my_alfred_conditions = values.createShop.my_alfred_conditions;
                             const profile_picture = values.createShop.profile_picture_user;
                             const identity_card = values.createShop.identity_card;
@@ -411,7 +412,7 @@ class Wizard extends React.Component {
 
                                     });
 
-                                    axios.post(url+'myAlfred/api/shop/add',{booking_request,my_alfred_conditions,profile_picture,identity_card
+                                    axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
                                     , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
                                     self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
                                         .then(result => {
