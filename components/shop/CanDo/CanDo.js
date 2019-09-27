@@ -156,7 +156,7 @@ class canDo extends React.Component{
 
         <Card className={classes.card}>
           <CardActionArea>
-            <CardMedia className={classes.media} image={e.service.picture} title={e.service.label}>
+            <CardMedia className={classes.media} image={'../../../'+e.service.picture} title={e.service.label}>
               <div className={classes.darkOverlay}>
                 <Grid container style={{
                   display: 'flex',
