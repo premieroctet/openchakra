@@ -179,7 +179,7 @@ class Performances extends React.Component {
                          </Grid>
 
                          <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
-                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                            <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
                          </Grid>

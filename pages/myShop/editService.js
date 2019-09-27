@@ -622,10 +622,14 @@ class editService extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                                <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
+                                </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                                <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
+                                </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
                                 <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
@@ -633,7 +637,9 @@ class editService extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                                <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Performance</p></a>
+                                </Link>
                             </Grid>
 
                         </Grid>
@@ -1639,7 +1645,7 @@ class editService extends React.Component {
                          </Grid>
 
                          <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                            <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
                          </Grid>
