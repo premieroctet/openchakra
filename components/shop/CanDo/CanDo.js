@@ -151,8 +151,8 @@ class canDo extends React.Component{
 
     const services = service.map(e => (
       <React.Fragment>
-      <Grid className={classes.resphide} item xs={2}></Grid>
-      <Grid item xs={10} sm={6} md={4} key={e._id}>
+      {/*<Grid className={classes.resphide} item xs={2}></Grid>*/}
+      <Grid item xs={12} sm={6} md={4} key={e._id}>
 
         <Card className={classes.card}>
           <CardActionArea>
