@@ -768,7 +768,7 @@ class services extends React.Component {
                                             <React.Fragment key={index}>
                                                 <Grid container>
                                                     <Grid style={{marginLeft: 130, backgroundColor: 'white',marginBottom: '-36px',padding: '8px',}}>
-                                                        <h3 style={{color: '#505050'}}>{'../../'+e.service.category.label}</h3>
+                                                        <h3 style={{color: '#505050'}}>{e.service.category.label}</h3>
 
                                                     </Grid>
                                                 </Grid>
