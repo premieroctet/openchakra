@@ -150,44 +150,44 @@ class canDo extends React.Component{
     const {service} = this.state;
 
     const services = service.map(e => (
-      <React.Fragment>
-      {/*<Grid className={classes.resphide} item xs={2}></Grid>*/}
-      <Grid item xs={12} sm={6} md={4} key={e._id}>
+        <React.Fragment>
+          {/*<Grid className={classes.resphide} item xs={2}></Grid>*/}
+          <Grid item xs={10} sm={6} md={4} key={e._id}>
 
-        <Card className={classes.card}>
-          <CardActionArea>
-            <CardMedia className={classes.media} image={'../../../'+e.service.picture} title={e.service.label}>
-              <div className={classes.darkOverlay}>
-                <Grid container style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: '100%',
-                  justifyContent: 'space-around'
-                }}>
-                  <Grid item/>
-                  <Grid item style={{alignSelf: 'center'}}>
-                    <Typography style={{color: 'white', fontSize: 25}}>{e.service.label}</Typography>
-                  </Grid>
-                  <Grid container style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <Grid item style={{paddingLeft: 15}}>
-                      <FavoriteBorderOutlined style={{color: 'white'}}/>
+            <Card className={classes.card}>
+              <CardActionArea>
+                <CardMedia className={classes.media} image={'../../../'+e.service.picture} title={e.service.label}>
+                  <div className={classes.darkOverlay}>
+                    <Grid container style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%',
+                      justifyContent: 'space-around'
+                    }}>
+                      <Grid item/>
+                      <Grid item style={{alignSelf: 'center'}}>
+                        <Typography style={{color: 'white', fontSize: 25, textAlign: 'center'}}>{e.service.label}</Typography>
+                      </Grid>
+                      <Grid container style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                        <Grid item style={{paddingLeft: 15}}>
+                          <FavoriteBorderOutlined style={{color: 'white'}}/>
+                        </Grid>
+                        <Grid item style={{paddingRight: 15}}>
+                          <More style={{color: 'white'}}/>
+                        </Grid>
+                      </Grid>
                     </Grid>
-                    <Grid item style={{paddingRight: 15}}>
-                      <More style={{color: 'white'}}/>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </div>
-            </CardMedia>
-            <CardContent>
-              <Typography component="p">
-                {e.description}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      </Grid>
-      </React.Fragment>
+                  </div>
+                </CardMedia>
+                <CardContent>
+                  <Typography component="p">
+                    {e.description}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+        </React.Fragment>
     ));
 
     return (

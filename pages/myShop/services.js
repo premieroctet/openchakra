@@ -70,14 +70,14 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             width:'100%',}},
 
-    tabweb:{visibility:'visible', width:'100%', position:'sticky', top:'115px', fontSize:15, backgroundColor:'white', zIndex:'999',
+    tabweb:{visibility:'visible', width:'100%', position:'sticky', top:'115px', fontSize:15, backgroundColor:'white', zIndex:'20',
         [theme.breakpoints.down('sm')]: {
             visibility:'hidden'}},
 
 
     tabmobile:{visibility:'hidden',
         [theme.breakpoints.down('sm')]: {
-            visibility:'visible', fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:9999}},
+            visibility:'visible', fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:20}},
 
     bgimage: {display:'block', width:'37%', backgroundColor:'transparent',  backgroundImage: "url('../../static/servicesbg.png')", backgroundSize:'contain', backgroundRepeat:'no-repeat', height:'68%',top:'81%', right:0, position:'absolute', [theme.breakpoints.down('sm')]: { display:'none'}},
 
@@ -143,7 +143,7 @@ const styles = theme => ({
     },
     paper: {
         position: 'absolute',
-        width: 800,
+        width: '80%',
         backgroundColor: 'white',
         border: '2px solid #000',
 
@@ -413,6 +413,7 @@ class services extends React.Component {
                             </Grid>
 
                         </Grid>
+
                         <Grid container className={classes.containerheader} style={{backgroundImage: `url('../../${this.state.shop.picture}')`,backgroundPosition: "center", height:'42vh',
                             backgroundSize:"cover", backgroundRepeat:"no-repeat",justifyContent:"center",alignItems:"center"}}>
 
@@ -767,7 +768,7 @@ class services extends React.Component {
                                             <React.Fragment key={index}>
                                                 <Grid container>
                                                     <Grid style={{marginLeft: 130, backgroundColor: 'white',marginBottom: '-36px',padding: '8px',}}>
-                                                        <h3 style={{color: '#505050'}}>{e.service.category.label}</h3>
+                                                        <h3 style={{color: '#505050'}}>{'../../'+e.service.category.label}</h3>
 
                                                     </Grid>
                                                 </Grid>
@@ -894,6 +895,7 @@ class services extends React.Component {
 
 
                     <Modal
+                        style={{zIndex: 9999}}
                         aria-labelledby="simple-modal-title"
                         aria-describedby="simple-modal-description"
                         open={this.state.open}
