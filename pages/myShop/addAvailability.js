@@ -645,10 +645,14 @@ class addAvailability extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                                <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
+                                </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                                <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
+                                </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
                                 <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
@@ -656,7 +660,9 @@ class addAvailability extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                                <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Performance</p></a>
+                                </Link>
                             </Grid>
 
                         </Grid>
