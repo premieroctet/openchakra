@@ -2053,7 +2053,7 @@ class addAvailability extends React.Component {
                                 {this.state.active ?
 
                                     <Grid container>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={12} md={6}>
                                             <Grid container style={{alignItems:"center"}}>
                                                 <Grid item xs={3}>
                                                     <p>Du :</p>
@@ -2070,7 +2070,7 @@ class addAvailability extends React.Component {
                                                 </Grid>
                                             </Grid>
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={12} md={6}>
                                             <Grid container style={{alignItems:"center"}}>
                                                 <Grid item xs={3}>
                                                     <p>Au :</p>

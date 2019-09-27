@@ -1583,7 +1583,6 @@ class Form extends React.Component {
                                                                                                                                     )
 
                                                                                                                                 })}
-                                                                                                                                <MenuItem value="test">Test</MenuItem>
                                                                                                                             </MaterialSelect>
                                                                                                                             <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                                                         </React.Fragment>
