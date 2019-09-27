@@ -715,29 +715,26 @@ class addAvailability extends React.Component {
 
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
-                                    <ExpansionPanelSummary className={classes.respcard}
-                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Récurrent
                                         </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités récurrentes
-                                        </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails className={classes.respcard}>
+                                    <ExpansionPanelDetails>
 
                                         <Grid container>
-                                            <Card style={{width:'100%',marginTop:15}}>
+                                            <Card style={{width:'100%',marginTop:15, minWidth: 270}}>
                                                 <Grid container style={{paddingLeft:20}}>
                                                     <h4>Ajouter une disponibilité</h4>
                                                 </Grid>
-                                                <Grid container>
-                                                    <Grid item xs={3} style={{paddingLeft:20}}>
+                                                <Grid container style={{paddingLeft: 20}}>
+                                                    <Grid item xs={6} sm={5} md={4}>
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
@@ -751,7 +748,7 @@ class addAvailability extends React.Component {
                                                             label="Lundi"
                                                         />
                                                     </Grid>
-                                                    <Grid item xs={3}>
+                                                    <Grid item xs={6} sm={5} md={4}>
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
@@ -765,7 +762,7 @@ class addAvailability extends React.Component {
                                                             label="Mardi"
                                                         />
                                                     </Grid>
-                                                    <Grid item xs={3}>
+                                                    <Grid item xs={6} sm={5} md={4}>
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
@@ -779,7 +776,7 @@ class addAvailability extends React.Component {
                                                             label="Mercredi"
                                                         />
                                                     </Grid>
-                                                    <Grid item xs={3}>
+                                                    <Grid item xs={6} sm={5} md={4}>
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
@@ -793,7 +790,7 @@ class addAvailability extends React.Component {
                                                             label="Jeudi"
                                                         />
                                                     </Grid>
-                                                    <Grid item xs={3} style={{paddingLeft:20}}>
+                                                    <Grid item xs={6} sm={5} md={4}>
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
@@ -807,7 +804,7 @@ class addAvailability extends React.Component {
                                                             label="Vendredi"
                                                         />
                                                     </Grid>
-                                                    <Grid item xs={3}>
+                                                    <Grid item xs={6} sm={5} md={4}>
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
@@ -821,7 +818,7 @@ class addAvailability extends React.Component {
                                                             label="Samedi"
                                                         />
                                                     </Grid>
-                                                    <Grid item xs={3}>
+                                                    <Grid item xs={6} sm={5} md={4}>
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
@@ -837,7 +834,7 @@ class addAvailability extends React.Component {
                                                     </Grid>
                                                 </Grid>
                                                 <Grid container style={{paddingLeft:20}}>
-                                                    <Grid item xs={6}>
+                                                    <Grid item item xs={12} sm={6}>
                                                         <Grid container style={{alignItems:"center"}}>
                                                             <Grid item xs={3}>
                                                                 <p>De :</p>
@@ -856,7 +853,7 @@ class addAvailability extends React.Component {
                                                             </Grid>
                                                         </Grid>
                                                     </Grid>
-                                                    <Grid item xs={6}>
+                                                    <Grid item xs={12} sm={6}>
                                                         <Grid container style={{alignItems:"center"}}>
                                                             <Grid item xs={3}>
                                                                 <p>A :</p>
@@ -922,21 +919,18 @@ class addAvailability extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
-                                    <ExpansionPanelSummary className={classes.respcard}
-                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Lundi
                                         </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités pour lundi
-                                        </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails className={classes.respcard}>
+                                    <ExpansionPanelDetails>
                                         <Grid container>
 
                                             {monday_event.map((e,index)=> (
@@ -948,7 +942,8 @@ class addAvailability extends React.Component {
                                                             display: "flex",
                                                             flexFlow: "column",
                                                             marginRight: '1rem',
-                                                            minHeight: 205
+                                                            minHeight: 205,
+                                                            minWidth: 270
                                                         }}
                                                     >
                                                         {e.services.length !== 0 ?
@@ -998,12 +993,12 @@ class addAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{width:'100%',marginTop:15, minWidth: 270}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>De :</p>
@@ -1022,7 +1017,7 @@ class addAvailability extends React.Component {
                                                                 </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>A :</p>
@@ -1089,21 +1084,18 @@ class addAvailability extends React.Component {
 
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
-                                    <ExpansionPanelSummary className={classes.respcard}
-                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Mardi
                                         </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités pour mardi
-                                        </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails className={classes.respcard}>
+                                    <ExpansionPanelDetails>
                                         <Grid container>
 
                                             {tuesday_event.map((e,index)=> (
@@ -1165,12 +1157,12 @@ class addAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{width:'100%',marginTop:15, minWidth: 270}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>De :</p>
@@ -1189,7 +1181,7 @@ class addAvailability extends React.Component {
                                                                 </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>A :</p>
@@ -1256,21 +1248,18 @@ class addAvailability extends React.Component {
 
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
-                                    <ExpansionPanelSummary className={classes.respcard}
-                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Mercredi
                                         </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités pour mercredi
-                                        </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails className={classes.respcard}>
+                                    <ExpansionPanelDetails>
                                         <Grid container>
 
                                             {wednesday_event.map(e=> (
@@ -1282,7 +1271,8 @@ class addAvailability extends React.Component {
                                                             display: "flex",
                                                             flexFlow: "column",
                                                             marginRight: '1rem',
-                                                            minHeight: 205
+                                                            minHeight: 205,
+                                                            minWidth: 270
                                                         }}
                                                     >
                                                         {e.services.length !== 0 ?
@@ -1332,12 +1322,12 @@ class addAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{width:'100%',marginTop:15, minWidth: 270}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>De :</p>
@@ -1356,7 +1346,7 @@ class addAvailability extends React.Component {
                                                                 </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>A :</p>
@@ -1421,21 +1411,18 @@ class addAvailability extends React.Component {
 
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
-                                    <ExpansionPanelSummary className={classes.respcard}
-                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Jeudi
                                         </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités pour jeudi
-                                        </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails className={classes.respcard}>
+                                    <ExpansionPanelDetails>
                                         <Grid container>
 
                                             {thursday_event.map(e=> (
@@ -1447,7 +1434,8 @@ class addAvailability extends React.Component {
                                                             display: "flex",
                                                             flexFlow: "column",
                                                             marginRight: '1rem',
-                                                            minHeight: 205
+                                                            minHeight: 205,
+                                                            minWidth: 270
                                                         }}
                                                     >
                                                         {e.services.length !== 0 ?
@@ -1497,12 +1485,12 @@ class addAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{width:'100%',marginTop:15, minWidth: 270}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>De :</p>
@@ -1521,7 +1509,7 @@ class addAvailability extends React.Component {
                                                                 </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>A :</p>
@@ -1588,21 +1576,18 @@ class addAvailability extends React.Component {
 
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
-                                    <ExpansionPanelSummary className={classes.respcard}
-                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Vendredi
                                         </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités pour vendredi
-                                        </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails className={classes.respcard}>
+                                    <ExpansionPanelDetails>
                                         <Grid container>
 
                                             {friday_event.map(e=> (
@@ -1614,7 +1599,8 @@ class addAvailability extends React.Component {
                                                             display: "flex",
                                                             flexFlow: "column",
                                                             marginRight: '1rem',
-                                                            minHeight: 205
+                                                            minHeight: 205,
+                                                            minWidth: 270
                                                         }}
                                                     >
                                                         {e.services.length !== 0 ?
@@ -1664,12 +1650,12 @@ class addAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{width:'100%',marginTop:15, minWidth: 270}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>De :</p>
@@ -1688,7 +1674,7 @@ class addAvailability extends React.Component {
                                                                 </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>A :</p>
@@ -1755,21 +1741,18 @@ class addAvailability extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
-                                    <ExpansionPanelSummary className={classes.respcard}
-                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Samedi
                                         </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités pour samedi
-                                        </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails className={classes.respcard}>
+                                    <ExpansionPanelDetails>
                                         <Grid container>
 
                                             {saturday_event.map(e=> (
@@ -1781,7 +1764,8 @@ class addAvailability extends React.Component {
                                                             display: "flex",
                                                             flexFlow: "column",
                                                             marginRight: '1rem',
-                                                            minHeight: 205
+                                                            minHeight: 205,
+                                                            minWidth: 270
                                                         }}
                                                     >
                                                         {e.services.length !== 0 ?
@@ -1831,12 +1815,12 @@ class addAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{width:'100%',marginTop:15, minWidth: 270}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>De :</p>
@@ -1855,7 +1839,7 @@ class addAvailability extends React.Component {
                                                                 </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>A :</p>
@@ -1923,26 +1907,23 @@ class addAvailability extends React.Component {
 
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
-                                    <ExpansionPanelSummary className={classes.respcard}
-                                                           expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
                                     >
                                         <Typography
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Dimanche
                                         </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités pour dimanche
-                                        </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails className={classes.respcard}>
+                                    <ExpansionPanelDetails>
                                         <Grid container>
 
                                             {sunday_event.map(e=> (
 
-                                                <Grid item xs={4}>
+                                                <Grid item xs={4} style={{minWidth: 270}}>
                                                     <Card
                                                         style={{
                                                             padding: "2rem",
@@ -1999,12 +1980,12 @@ class addAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{width:'100%',marginTop:15, minWidth: 270}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>De :</p>
@@ -2023,7 +2004,7 @@ class addAvailability extends React.Component {
                                                                 </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} sm={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>A :</p>
@@ -2089,7 +2070,7 @@ class addAvailability extends React.Component {
 
                             </Grid>
 
-                            <Grid container style={{paddingLeft:20}}>
+                            <Grid container style={{marginLeft:20}}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox
@@ -2106,7 +2087,7 @@ class addAvailability extends React.Component {
                                 {this.state.active ?
 
                                     <Grid container>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={12} md={6}>
                                             <Grid container style={{alignItems:"center"}}>
                                                 <Grid item xs={3}>
                                                     <p>Du :</p>
@@ -2123,7 +2104,7 @@ class addAvailability extends React.Component {
                                                 </Grid>
                                             </Grid>
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={12} md={6}>
                                             <Grid container style={{alignItems:"center"}}>
                                                 <Grid item xs={3}>
                                                     <p>Au :</p>
@@ -2184,7 +2165,7 @@ class addAvailability extends React.Component {
                     </Grid>
 
                     <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                        <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
                             <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                         </a></Link>
                     </Grid>

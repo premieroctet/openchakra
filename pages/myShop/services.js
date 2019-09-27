@@ -47,47 +47,47 @@ const styles = theme => ({
         marginTop: 68,
         flexGrow: 1,
     },
-    
+
     containerheader:{[theme.breakpoints.down('sm')]: {
-        width:'100%!important',
-        marginTop:'-79px',
-    }},
+            width:'100%!important',
+            marginTop:'-79px',
+        }},
     containerheader2:{[theme.breakpoints.down('sm')]: {
-        width:'100%!important',
-        marginTop:'-59px',
-    }},
+            width:'100%!important',
+            marginTop:'-59px',
+        }},
     bottombar:{visibility:'hidden', [theme.breakpoints.down('sm')]: {
-        visibility:'visible',
-        boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
-    }},
+            visibility:'visible',
+            boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
+        }},
     topbar:{visibility:'visible', position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
-        visibility:'hidden',
-    }},
+            visibility:'hidden',
+        }},
     containermain:{ paddingLeft:'5%', [theme.breakpoints.down('sm')]: {
-        padding:'2%', paddingLeft:'2%'
-    }},
+            padding:'2%', paddingLeft:'2%'
+        }},
     tabscontainer:{width:'60%',
-    [theme.breakpoints.down('sm')]: {
-        width:'100%',}},
+        [theme.breakpoints.down('sm')]: {
+            width:'100%',}},
 
     tabweb:{visibility:'visible', width:'100%', position:'sticky', top:'115px', fontSize:15, backgroundColor:'white', zIndex:'999',
-    [theme.breakpoints.down('sm')]: {
-        visibility:'hidden'}},
-        
+        [theme.breakpoints.down('sm')]: {
+            visibility:'hidden'}},
 
-        tabmobile:{visibility:'hidden', 
-    [theme.breakpoints.down('sm')]: {
-        visibility:'visible', fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:9999}},
-    
+
+    tabmobile:{visibility:'hidden',
+        [theme.breakpoints.down('sm')]: {
+            visibility:'visible', fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:9999}},
+
     bgimage: {display:'block', width:'37%', backgroundColor:'transparent',  backgroundImage: "url('../../static/servicesbg.png')", backgroundSize:'contain', backgroundRepeat:'no-repeat', height:'68%',top:'81%', right:0, position:'absolute', [theme.breakpoints.down('sm')]: { display:'none'}},
-    
+
     addweb:{
-    [theme.breakpoints.down('sm')]: {
-        display:'none'}},
-    
+        [theme.breakpoints.down('sm')]: {
+            display:'none'}},
+
     addmobile:{display:'none',
-    [theme.breakpoints.down('sm')]: {
-        display:'block', cursor:'pointer',marginBottom: 45,backgroundColor: 'transparent',width:'15%', padding:'2%',justifyContent:"center", borderRadius:'100%', bottom:'4%', right:'20px', position:'fixed', zIndex:'99999'}},
+        [theme.breakpoints.down('sm')]: {
+            display:'block', cursor:'pointer',marginBottom: 45,backgroundColor: 'transparent',width:'15%', padding:'2%',justifyContent:"center", borderRadius:'100%', bottom:'4%', right:'20px', position:'fixed', zIndex:'99999'}},
 
     marginbot: {
         marginBottom: '3.5%',
@@ -122,7 +122,7 @@ const styles = theme => ({
     },
     trait1:{
         width: '100%',
-      
+
         height: 4,
         backgroundColor: 'lightgray',
         borderColor: 'transparent'
@@ -136,7 +136,7 @@ const styles = theme => ({
     },
     trait3:{
         width: '100%',
-      
+
         height: 4,
         backgroundColor: 'rgb(47, 188, 211)',
         borderColor: 'transparent'
@@ -158,6 +158,11 @@ const styles = theme => ({
             top: '17%!important',
         }
     },
+    respimg:{
+        [theme.breakpoints.down('sm')]: {
+            width:'100%',
+        }
+    }
 
 
 
@@ -313,7 +318,7 @@ class services extends React.Component {
         const strict_cancel = this.state.strict_cancel;
 
         axios.put(url+'myAlfred/api/shop/editParameters',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card,
-        recommandations,welcome_message,flexible_cancel,moderate_cancel,strict_cancel})
+            recommandations,welcome_message,flexible_cancel,moderate_cancel,strict_cancel})
             .then(() => {
                 toast.info('Paramètres modifiés')
             })
@@ -330,12 +335,12 @@ class services extends React.Component {
 
     deleteService(id) {
         axios.delete(url + 'myAlfred/api/serviceUser/' + id)
-                .then(() => {
-                    toast.error('Service supprimé');
-                    this.setState({open2:false,id_service:''});
-                    this.componentDidMount();
-                })
-                .catch(err => console.log(err))
+            .then(() => {
+                toast.error('Service supprimé');
+                this.setState({open2:false,id_service:''});
+                this.componentDidMount();
+            })
+            .catch(err => console.log(err))
 
     }
 
@@ -379,18 +384,22 @@ class services extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                    <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
-                            
+                        <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
+
                             <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white'}}>
                                 <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
                                 </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                                <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
+                                </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                                <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
+                                </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
                                 <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
@@ -398,7 +407,9 @@ class services extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                                <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                                    <p style={{color: "white",cursor: 'pointer'}}>Performance</p></a>
+                                </Link>
                             </Grid>
 
                         </Grid>
@@ -422,76 +433,76 @@ class services extends React.Component {
                             <Link href={'/myShop/shopPreview?id_alfred=' + this.state.user._id}><a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}}><VisibilityIcon><p>Aperçu</p></VisibilityIcon></a></Link>
                         </Grid>
                         <Grid container className={classes.tabweb}>
-                                    <Grid item xs={6} style={{textAlign:"center"}}>
-                                        <div>
-                                            <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}> Mes services</h2>
-                                        </div>
-                                    </Grid>
-                                    <Grid item xs={6} >
-                                        <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100', textAlign: 'center',cursor: 'pointer'}}> Mes paramètres de réservation</h2><br/>
-                                    </Grid>
+                            <Grid item xs={6} style={{textAlign:"center"}}>
+                                <div>
+                                    <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}> Mes services</h2>
+                                </div>
+                            </Grid>
+                            <Grid item xs={6} >
+                                <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100', textAlign: 'center',cursor: 'pointer'}}> Mes paramètres de réservation</h2><br/>
+                            </Grid>
 
-                                    <Grid item xs={6} style={{textAlign:"center"}}>
-                                        {tabs ?
-                                            <React.Fragment>
-                                                <hr className={classes.trait1}/>
-                                            </React.Fragment>
-                                            :
-                                            <React.Fragment>
-                                               <hr className={classes.trait3}/>
-                                            </React.Fragment>}
-                                    </Grid>
-                                    <Grid item xs={6} >
-                                        {tabs ?
-                                            <React.Fragment>
-                                                <hr className={classes.trait}/>
-                                            </React.Fragment>
-                                            :
-                                            <React.Fragment>
-                                                <hr className={classes.trait2}/>
-                                            </React.Fragment>}
-                                    </Grid>
-                                    
-                                </Grid>
-                                <Grid container className={classes.tabmobile}>
-                                    <Grid item xs={6} style={{textAlign:"center"}}>
-                                            <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '25%'}}> Mes services</h2>
-                                    </Grid>
-                                    <Grid item xs={6} >
-                                        <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100', textAlign: 'center',cursor: 'pointer'}}>Réservation</h2><br/>
-                                    </Grid>
+                            <Grid item xs={6}>
+                                {tabs ?
+                                    <React.Fragment>
+                                        <hr className={classes.trait1} style={{marginTop:'-10px'}}/>
+                                    </React.Fragment>
+                                    :
+                                    <React.Fragment>
+                                        <hr className={classes.trait3} style={{marginTop:'-10px'}}/>
+                                    </React.Fragment>}
+                            </Grid>
+                            <Grid item xs={6}>
+                                {tabs ?
+                                    <React.Fragment>
+                                        <hr className={classes.trait} style={{marginTop:'-10px'}}/>
+                                    </React.Fragment>
+                                    :
+                                    <React.Fragment>
+                                        <hr className={classes.trait2} style={{marginTop:'-10px'}}/>
+                                    </React.Fragment>}
+                            </Grid>
 
-                                    <Grid item xs={6} style={{textAlign:"center"}}>
-                                            {tabs ?
-                                                <React.Fragment>
-                                                    <hr className={classes.trait1}/>
-                                                </React.Fragment>
-                                                :
-                                                <React.Fragment>
-                                                    <hr className={classes.trait3}/>
-                                                </React.Fragment>}
-                                    </Grid>
-                                    <Grid item xs={6} >
-                                        {tabs ?
-                                            <React.Fragment>
-                                                <hr className={classes.trait}/>
-                                            </React.Fragment>
-                                            :
-                                            <React.Fragment>
-                                                <hr className={classes.trait2}/>
-                                            </React.Fragment>}
-                                    </Grid>
+                        </Grid>
+                        <Grid container className={classes.tabmobile}>
+                            <Grid item xs={6} style={{textAlign:"center"}}>
+                                <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '25%'}}> Mes services</h2>
+                            </Grid>
+                            <Grid item xs={6} >
+                                <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100', textAlign: 'center',cursor: 'pointer'}}>Réservation</h2><br/>
+                            </Grid>
 
-                                    
-                                </Grid>
+                            <Grid item xs={6} style={{textAlign:"center"}}>
+                                {tabs ?
+                                    <React.Fragment>
+                                        <hr className={classes.trait1}/>
+                                    </React.Fragment>
+                                    :
+                                    <React.Fragment>
+                                        <hr className={classes.trait3}/>
+                                    </React.Fragment>}
+                            </Grid>
+                            <Grid item xs={6} >
+                                {tabs ?
+                                    <React.Fragment>
+                                        <hr className={classes.trait}/>
+                                    </React.Fragment>
+                                    :
+                                    <React.Fragment>
+                                        <hr className={classes.trait2}/>
+                                    </React.Fragment>}
+                            </Grid>
+
+
+                        </Grid>
                         <Grid container className={classes.containermain} style={{marginTop: 20}}>
-                        <Grid className={classes.bgimage} item style={{}}>
+                            <Grid className={classes.bgimage} item style={{}}>
 
 
-</Grid>
+                            </Grid>
                             <Grid item  className={classes.tabscontainer} >
-                        
-                             
+
+
                                 <Grid container style={{paddingLeft: 100}}>
                                     <Grid item xs={2}>
 
@@ -734,11 +745,11 @@ class services extends React.Component {
                                                     </p>
                                                 </Grid>
 
-                                              
+
                                             </Grid>
                                             <Grid item xs={1} style={{zIndex: 999}}></Grid>
-                            
-                                                <Grid item xs={2} style={{zIndex: 999}}>
+
+                                            <Grid item xs={2} style={{zIndex: 999}}>
                                                 {tabs ?
                                                     <div style={{display:'flex',justifyContent:'flex-start',width:'100%',bottom:0,
                                                         alignItems:"center",height:60}}>
@@ -747,7 +758,7 @@ class services extends React.Component {
                                                             Enregistrer
                                                         </Button>
                                                     </div>: null}
-                                                </Grid>
+                                            </Grid>
                                         </Grid>
 
                                     </Grid>:
@@ -761,10 +772,10 @@ class services extends React.Component {
                                                     </Grid>
                                                 </Grid>
                                                 <Grid container style={{ border: '1px solid lightgray',padding: '15px 15px 15px 15px',}}>
-                                                    <Grid item xs={3} style={{ borderBottom : '150px', borderLeft : '150px', cursor: 'pointer'}}>
-                                                        <Link href={'/myShop/previewService?id='+e._id}><img src={e.service.picture} alt={'picture'} width={'85%'}/></Link>
+                                                    <Grid item md={3} xs={12} style={{ borderBottom : '150px', borderLeft : '150px', cursor: 'pointer'}}>
+                                                        <Link href={'/myShop/previewService?id='+e._id}><img className={classes.respimg} src={e.service.picture} alt={'picture'} width={'85%'}/></Link>
                                                     </Grid>
-                                                    <Grid item xs={6}>
+                                                    <Grid item md={6} xs={9}>
                                                         <h4 style={{fontWeight: 'bolder',fontSize: 18,color: '#737373'}}>{e.service.label}</h4>
                                                         <p style={{fontSize: 14}}>{e.prestations.length} Prestation(s) proposée(s)</p>
                                                         <p style={{fontSize: 14}}>{e.number_of_views} Vue(s) du service</p>
@@ -776,9 +787,9 @@ class services extends React.Component {
                                                             </a>
                                                         </Link>
 
-                                                            <a style={{cursor: 'pointer',textDecoration:'none',height:'fit-content'}}>
-                                                                <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}><DeleteIcon onClick={()=>this.handleClickOpen(e._id)}  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
-                                                            </a>
+                                                        <a style={{cursor: 'pointer',textDecoration:'none',height:'fit-content'}}>
+                                                            <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}><DeleteIcon onClick={()=>this.handleClickOpen(e._id)}  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
+                                                        </a>
 
                                                     </Grid>
 
@@ -796,90 +807,90 @@ class services extends React.Component {
                                                 <Grid container>
                                                     <Grid item xs={2}>
                                                         <Link href={'/myShop/selectCategory'}><a style={{textDecoration:'none'}}>
-                                                        <img src={'../../static/plus-4.svg'} style={{marginTop: '27%'}} width={'42%'} alt={'plus'}/>
+                                                            <img src={'../../static/plus-4.svg'} style={{marginTop: '27%'}} width={'42%'} alt={'plus'}/>
                                                         </a>
                                                         </Link>
                                                     </Grid>
                                                     <Grid item xs={10}>
                                                         <Link href={'/myShop/selectCategory'}><a style={{textDecoration:'none'}}>
-                                                        <h3 style={{color:'white',fontWeight: '100'}}>Ajouter un nouveau service</h3>
+                                                            <h3 style={{color:'white',fontWeight: '100'}}>Ajouter un nouveau service</h3>
                                                         </a>
                                                         </Link>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
 
-                                            
+
                                             <Grid item xs={3} style={{justifyContent:"center"}}>
 
                                             </Grid>
                                         </Grid>
 
- <Grid container className={classes.addmobile} style={{}}>
+                                        <Grid container className={classes.addmobile} style={{}}>
 
 
 
 
-<Grid  item xs={5} style={{display:"flex",justifyContent:"center"}}>
-    <Grid container>
-        <Grid item xs={10}>
-            <Link href={'/myShop/selectCategory'}><a style={{textDecoration:'none', padding:'2%'}}>
-            <img src={'../../static/plus-5.svg'} style={{marginTop: '0%', padding:'10px', borderRadius:'50px', backgroundColor:'rgba(47, 188, 211, 1)'}} width={'50px'} alt={'plus'}/>
-            </a>
-            </Link>
-        </Grid>
-        
-    </Grid>
-</Grid>
+                                            <Grid  item xs={5} style={{display:"flex",justifyContent:"center"}}>
+                                                <Grid container>
+                                                    <Grid item xs={10}>
+                                                        <Link href={'/myShop/selectCategory'}><a style={{textDecoration:'none', padding:'2%'}}>
+                                                            <img src={'../../static/plus-5.svg'} style={{marginTop: '0%', padding:'10px', borderRadius:'50px', backgroundColor:'rgba(47, 188, 211, 1)'}} width={'50px'} alt={'plus'}/>
+                                                        </a>
+                                                        </Link>
+                                                    </Grid>
+
+                                                </Grid>
+                                            </Grid>
 
 
-<Grid item xs={3} style={{display:"flex",justifyContent:"center"}}>
+                                            <Grid item xs={3} style={{display:"flex",justifyContent:"center"}}>
 
-</Grid>
-</Grid>
+                                            </Grid>
+                                        </Grid>
                                     </React.Fragment>
                                 }
                             </Grid>
                             <Grid item xs={1} style={{zIndex: -999}}></Grid>
 
-                            
+
                         </Grid>
 
                     </Grid>
 
                     <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
-                         
-                         <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
-                             <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
-                             </Link>
-                         </Grid>
 
-                         <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
+                            <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                            </Link>
+                        </Grid>
+
+                        <Grid item xs={2} style={{textAlign:"center"}}>
                             <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
-                         </Grid>
+                        </Grid>
 
-                         <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Grid item xs={2} style={{textAlign:"center"}}>
                             <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
-                         </Grid>
+                        </Grid>
 
-                         <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                        <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
                             <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
-                         </Grid>
+                        </Grid>
 
-                         <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                        <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
-                         </Grid>
+                        </Grid>
 
-                     </Grid>
+                    </Grid>
 
 
                     <Modal

@@ -90,7 +90,7 @@ class feelingood extends React.Component{
         .then(response => {
               let data = response.data;
               this.setState({tags:data});
-              axios.get(url + 'myAlfred/api/services/all/tags/' + data._id)
+              axios.get(url + 'myAlfred/api/service/all/tags/' + data._id)
                   .then(res => {
                     let service = res.data;
 

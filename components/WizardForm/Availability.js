@@ -723,7 +723,7 @@ class Availability extends React.Component {
           </Grid>
           <Grid item xs={12}>
             <ExpansionPanel
-              style={{ border: "none", boxShadow: "none", width: "70%" }}
+              style={{ border: "none", boxShadow: "none", width: "100%" }}
             >
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -732,9 +732,6 @@ class Availability extends React.Component {
                   style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                 >
                   Récurrent
-                </Typography>
-                <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                  Vos disponibilités récurrentes
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
@@ -942,7 +939,7 @@ class Availability extends React.Component {
                       </Grid>
                     </Grid>
                     <Grid container style={{ paddingLeft: 20 }}>
-                      <Grid item xs={6}>
+                      <Grid item xs={12} sm={6}>
                         <Grid container style={{ alignItems: "center" }}>
                           <Grid item xs={3}>
                             <p>De :</p>
@@ -964,7 +961,7 @@ class Availability extends React.Component {
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid item xs={12} sm={6}>
                         <Grid container style={{ alignItems: "center" }}>
                           <Grid item xs={3}>
                             <p>A :</p>
@@ -1046,7 +1043,7 @@ class Availability extends React.Component {
           </Grid>
           <Grid item xs={12}>
             <ExpansionPanel
-              style={{ border: "none", boxShadow: "none", width: "70%" }}
+              style={{ border: "none", boxShadow: "none", width: "100%" }}
             >
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1055,9 +1052,6 @@ class Availability extends React.Component {
                   style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                 >
                   Lundi
-                </Typography>
-                <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                  Choisissez vos disponibilités pour lundi
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
@@ -1151,7 +1145,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={4} style={{ marginRight: 15 }}>
+                  <Grid item xs={12} sm={6} style={{ marginRight: 15 }}>
                     {/*<TextField
                       id="standard-with-placeholder"
                       label="De"
@@ -1182,7 +1176,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} sm={6}>
                     {/*<TextField
                       id="standard-with-placeholder"
                       label="A"
@@ -1212,7 +1206,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17, width: "100%" }}>
+                  <Typography style={{ fontSize: 17, width: "100%", marginTop: '.5rem' }}>
                     Service(s)
                   </Typography>
                   <FormControl style={{ width: "100%" }}>
@@ -1269,7 +1263,7 @@ class Availability extends React.Component {
           </Grid>
           <Grid item xs={12}>
             <ExpansionPanel
-              style={{ border: "none", boxShadow: "none", width: "70%" }}
+              style={{ border: "none", boxShadow: "none", width: "100%" }}
             >
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1278,9 +1272,6 @@ class Availability extends React.Component {
                   style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                 >
                   Mardi
-                </Typography>
-                <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                  Choisissez vos disponibilités pour mardi
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
@@ -1373,7 +1364,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={4} style={{ marginRight: 15 }}>
+                  <Grid item xs={12} sm={6} style={{ marginRight: 15 }}>
                     <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.tuesday_begin}
@@ -1387,7 +1378,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} sm={6}>
                     <Typography>À</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.tuesday_end}
@@ -1401,7 +1392,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17, width: "100%" }}>
+                  <Typography style={{ fontSize: 17, width: "100%", marginTop: '.5rem' }}>
                     Service(s)
                   </Typography>
                   <FormControl style={{ width: "100%" }}>
@@ -1461,7 +1452,7 @@ class Availability extends React.Component {
 
           <Grid item xs={12}>
             <ExpansionPanel
-              style={{ border: "none", boxShadow: "none", width: "70%" }}
+              style={{ border: "none", boxShadow: "none", width: "100%" }}
             >
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1470,9 +1461,6 @@ class Availability extends React.Component {
                   style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                 >
                   Mercredi
-                </Typography>
-                <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                  Choisissez vos disponibilités pour mercredi
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
@@ -1565,7 +1553,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={4} style={{ marginRight: 15 }}>
+                  <Grid item xs={12} sm={6} style={{ marginRight: 15 }}>
                     <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.wednesday_begin}
@@ -1579,7 +1567,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} sm={6}>
                     <Typography>À</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.wednesday_end}
@@ -1593,7 +1581,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17, width: "100%" }}>
+                  <Typography style={{ fontSize: 17, width: "100%", marginTop: '.5rem' }}>
                     Service(s)
                   </Typography>
                   <FormControl style={{ width: "100%" }}>
@@ -1654,7 +1642,7 @@ class Availability extends React.Component {
           </Grid>
           <Grid item xs={12}>
             <ExpansionPanel
-              style={{ border: "none", boxShadow: "none", width: "70%" }}
+              style={{ border: "none", boxShadow: "none", width: "100%" }}
             >
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1663,9 +1651,6 @@ class Availability extends React.Component {
                   style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                 >
                   Jeudi
-                </Typography>
-                <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                  Choisissez vos disponibilités pour jeudi
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
@@ -1758,7 +1743,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={4} style={{ marginRight: 15 }}>
+                  <Grid item xs={12} sm={6} style={{ marginRight: 15 }}>
                     <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.thursday_begin}
@@ -1772,7 +1757,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} sm={6}>
                     <Typography>À</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.thursday_end}
@@ -1786,7 +1771,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17, width: "100%" }}>
+                  <Typography style={{ fontSize: 17, width: "100%", marginTop: '.5rem' }}>
                     Service(s)
                   </Typography>
                   <FormControl style={{ width: "100%" }}>
@@ -1845,7 +1830,7 @@ class Availability extends React.Component {
           </Grid>
           <Grid item xs={12}>
             <ExpansionPanel
-              style={{ border: "none", boxShadow: "none", width: "70%" }}
+              style={{ border: "none", boxShadow: "none", width: "100%" }}
             >
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1854,9 +1839,6 @@ class Availability extends React.Component {
                   style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                 >
                   Vendredi
-                </Typography>
-                <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                  Choisissez vos disponibilités pour vendredi
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
@@ -1949,7 +1931,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={4} style={{ marginRight: 15 }}>
+                  <Grid item xs={12} sm={6} style={{ marginRight: 15 }}>
                     <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.friday_begin}
@@ -1964,7 +1946,7 @@ class Availability extends React.Component {
                     />
                   </Grid>
                   <Typography>À</Typography>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} sm={6}>
                     <DatePicker
                       selected={formik.servicesAvailability.friday_end}
                       onChange={this.onChange.bind(this, "friday_end")}
@@ -1977,7 +1959,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17, width: "100%" }}>
+                  <Typography style={{ fontSize: 17, width: "100%", marginTop: '.5rem' }}>
                     Service(s)
                   </Typography>
                   <FormControl style={{ width: "100%" }}>
@@ -2034,7 +2016,7 @@ class Availability extends React.Component {
           </Grid>
           <Grid item xs={12}>
             <ExpansionPanel
-              style={{ border: "none", boxShadow: "none", width: "70%" }}
+              style={{ border: "none", boxShadow: "none", width: "100%" }}
             >
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -2043,9 +2025,6 @@ class Availability extends React.Component {
                   style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                 >
                   Samedi
-                </Typography>
-                <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                  Choisissez vos disponibilités pour samedi
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
@@ -2138,7 +2117,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={4} style={{ marginRight: 15 }}>
+                  <Grid item xs={12} sm={6} style={{ marginRight: 15 }}>
                     <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.saturday_begin}
@@ -2152,7 +2131,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} sm={6}>
                     <Typography>À</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.saturday_end}
@@ -2166,7 +2145,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17, width: "100%" }}>
+                  <Typography style={{ fontSize: 17, width: "100%", marginTop: '.5rem' }}>
                     Service(s)
                   </Typography>
                   <FormControl style={{ width: "100%" }}>
@@ -2225,7 +2204,7 @@ class Availability extends React.Component {
           </Grid>
           <Grid item xs={12}>
             <ExpansionPanel
-              style={{ border: "none", boxShadow: "none", width: "70%" }}
+              style={{ border: "none", boxShadow: "none", width: "100%" }}
             >
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -2234,9 +2213,6 @@ class Availability extends React.Component {
                   style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                 >
                   Dimanche
-                </Typography>
-                <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                  Choisissez vos disponibilités pour dimanche
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
@@ -2329,7 +2305,7 @@ class Availability extends React.Component {
                       <p>Vos créneaux horaires ajoutés s'afficheront ici</p>
                     )}
                   </Grid>
-                  <Grid item xs={4} style={{ marginRight: 15 }}>
+                  <Grid item xs={12} sm={6} style={{ marginRight: 15 }}>
                     <Typography>De</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.sunday_begin}
@@ -2343,7 +2319,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} sm={6}>
                     <Typography>À</Typography>
                     <DatePicker
                       selected={formik.servicesAvailability.sunday_end}
@@ -2357,7 +2333,7 @@ class Availability extends React.Component {
                       dateFormat="HH:mm"
                     />
                   </Grid>
-                  <Typography style={{ fontSize: 17, width: "100%" }}>
+                  <Typography style={{ fontSize: 17, width: "100%", marginTop: '.5rem' }}>
                     Service(s)
                   </Typography>
                   <FormControl style={{ width: "100%" }}>

@@ -1584,7 +1584,6 @@ class Form extends React.Component {
                                                                                                                                     )
 
                                                                                                                                 })}
-                                                                                                                                <MenuItem value="test">Test</MenuItem>
                                                                                                                             </MaterialSelect>
                                                                                                                             <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                                                         </React.Fragment>
@@ -1813,6 +1812,7 @@ class Form extends React.Component {
                                                                                         return(
                                                                                             <TextField
                                                                                                 {...field}
+                                                                                                type="number"
                                                                                                 value={field.value}
                                                                                                 fullWidth
                                                                                                 label="Panier minimum"
@@ -1820,6 +1820,9 @@ class Form extends React.Component {
                                                                                                 variant="outlined"
                                                                                                 //helperText="Choisissez le montant minimum du panier afin de passer une commande pour ce service"
                                                                                                 InputProps={{
+                                                                                                    inputProps: {
+                                                                                                        min: 0
+                                                                                                    },
                                                                                                     endAdornment: <InputAdornment position="start">€</InputAdornment>,
                                                                                                 }}
                                                                                             />

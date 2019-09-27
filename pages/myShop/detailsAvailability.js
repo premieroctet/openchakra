@@ -61,8 +61,19 @@ const styles = theme => ({
     revealedone: {
         [theme.breakpoints.up('md')]: {
             display: 'none!important',
-        },
-    }
+        }
+    },
+    bottombar:{boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)', [theme.breakpoints.up('md')]: {
+            display: 'none',
+
+        }},
+    topbar:{ position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
+            display: 'none'
+        }},
+    respbg:{
+        [theme.breakpoints.up('md')]: {
+            height: '48.5vh!important',
+        }},
 
 
 
@@ -175,7 +186,7 @@ class detailsAvailability extends React.Component {
                 if(user.is_alfred === false) {
                     Router.push('/becomeAlfredForm');
                 } else {
-                this.setState({user:user});
+                    this.setState({user:user});
                     axios
                         .get(url+'myAlfred/api/shop/currentAlfred')
                         .then(res => {
@@ -316,7 +327,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.monday_event.push(obj);
-            toast.info('Créneau ajouté');
+            toast.info('Créneau Ajouter');
 
             this.setState({monday_begin: '', monday_end: '', monday_service: null, monday_all_service: false})
         }
@@ -352,7 +363,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.tuesday_event.push(obj);
-            toast.info('Créneau ajouté');
+            toast.info('Créneau Ajouter');
 
             this.setState({tuesday_begin: '', tuesday_end: '', tuesday_service: null, tuesday_all_service: false})
         }
@@ -388,7 +399,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.wednesday_event.push(obj);
-            toast.info('Créneau ajouté');
+            toast.info('Créneau Ajouter');
 
             this.setState({wednesday_begin: '', wednesday_end: '', wednesday_service: null, wednesday_all_service: false})
         }
@@ -424,7 +435,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.thursday_event.push(obj);
-            toast.info('Créneau ajouté');
+            toast.info('Créneau Ajouter');
 
             this.setState({thursday_begin: '', thursday_end: '', thursday_service: null, thursday_all_service: false})
         }
@@ -460,7 +471,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.friday_event.push(obj);
-            toast.info('Créneau ajouté');
+            toast.info('Créneau Ajouter');
 
             this.setState({friday_begin: '', friday_end: '', friday_service: null, friday_all_service: false})
         }
@@ -496,7 +507,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.saturday_event.push(obj);
-            toast.info('Créneau ajouté');
+            toast.info('Créneau Ajouter');
 
             this.setState({saturday_begin: '', saturday_end: '', saturday_service: null, saturday_all_service: false})
         }
@@ -532,7 +543,7 @@ class detailsAvailability extends React.Component {
 
             };
             this.state.sunday_event.push(obj);
-            toast.info('Créneau ajouté');
+            toast.info('Créneau Ajouter');
 
             this.setState({sunday_begin: '', sunday_end: '', sunday_service: null, sunday_all_service: false})
         }
@@ -551,29 +562,29 @@ class detailsAvailability extends React.Component {
         const id = this.props.availability_id;
 
 
-            const data = {
-                active : this.state.active,
-                month_begin : this.state.month_begin,
-                month_end : this.state.month_end,
-                monday_event : this.state.monday_event,
-                tuesday_event : this.state.tuesday_event,
-                wednesday_event : this.state.wednesday_event,
-                thursday_event : this.state.thursday_event,
-                friday_event : this.state.friday_event,
-                saturday_event : this.state.saturday_event,
-                sunday_event : this.state.sunday_event
-            };
+        const data = {
+            active : this.state.active,
+            month_begin : this.state.month_begin,
+            month_end : this.state.month_end,
+            monday_event : this.state.monday_event,
+            tuesday_event : this.state.tuesday_event,
+            wednesday_event : this.state.wednesday_event,
+            thursday_event : this.state.thursday_event,
+            friday_event : this.state.friday_event,
+            saturday_event : this.state.saturday_event,
+            sunday_event : this.state.sunday_event
+        };
 
 
 
-            axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-            axios.put(url+'myAlfred/api/availability/'+id,data)
-                .then(() => {
-                    toast.info('Disponibilité modifiée avec succès !');
-                    Router.push('/myShop/myAvailabilities')
-                })
-                .catch(err => console.log(err))
+        axios.put(url+'myAlfred/api/availability/'+id,data)
+            .then(() => {
+                toast.info('Disponibilité modifiée avec succès !');
+                Router.push('/myShop/myAvailabilities')
+            })
+            .catch(err => console.log(err))
 
     };
 
@@ -614,31 +625,41 @@ class detailsAvailability extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid container justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
-                            <Grid item xs={1}></Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
+                        <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
+                            <Grid item xs={1} className={classes.shopbar}></Grid>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/services'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
+                                    </a>
                                 </Link>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/messages'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                                    </a>
                                 </Link>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/mesreservations'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                                    </a>
                                 </Link>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
-                                <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
+                                <Link href={'/myShop/myAvailabilities'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
+                                    </a>
                                 </Link>
                             </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Performance</p></a>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/performances'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                                    </a>
                                 </Link>
                             </Grid>
 
@@ -649,12 +670,12 @@ class detailsAvailability extends React.Component {
 
 
                         </Grid>
-                        <Grid item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
+                        <Grid className={classes.respbg} item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh'}}>
 
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'45%',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}} alt={'picture'}/>
+                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'20%',left:'0%',right:'0%', margin: 'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}}  alt={'picture'}/>
                         </Grid>
                     </Grid>
 
@@ -663,7 +684,7 @@ class detailsAvailability extends React.Component {
                         <Grid item xs={8}>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -673,153 +694,151 @@ class detailsAvailability extends React.Component {
                                         >
                                             Lundi
                                         </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                             Vos disponibilités pour lundi
-                                        </Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
                                         <Grid container>
 
-                                                {monday_event.map(e=> (
+                                            {monday_event.map(e=> (
 
-                                                    <Grid item xs={4}>
-                                                <Card
-                                                    style={{
-                                                        padding: "2rem",
-                                                        display: "flex",
-                                                        flexFlow: "column",
-                                                        marginRight: '1rem',
-                                                        minHeight: 205
-                                                    }}
-                                                >
-                                                    {e.services.length !== 0 ?
-                                                        e.services.map(service =>
-                                                            (
-                                                                <Typography
-                                                                    style={{
-                                                                        textAlign: "center",
-                                                                        marginBottom: "1rem"
-                                                                    }}
-                                                                >
-                                                                    {service.label}
+                                                <Grid item xs={4}>
+                                                    <Card
+                                                        style={{
+                                                            padding: "2rem",
+                                                            display: "flex",
+                                                            flexFlow: "column",
+                                                            marginRight: '1rem',
+                                                            minHeight: 205,
+                                                            minWidth: 270
+                                                        }}
+                                                    >
+                                                        {e.services.length !== 0 ?
+                                                            e.services.map(service =>
+                                                                (
+                                                                    <Typography
+                                                                        style={{
+                                                                            textAlign: "center",
+                                                                            marginBottom: "1rem"
+                                                                        }}
+                                                                    >
+                                                                        {service.label}
 
-                                                                </Typography>
-                                                            )) :
-                                                        <Typography
+                                                                    </Typography>
+                                                                )) :
+                                                            <Typography
+                                                                style={{
+                                                                    textAlign: "center",
+                                                                    marginBottom: "1rem"
+                                                                }}
+                                                            >
+                                                                Tous les services
+                                                            </Typography>
+                                                        }
+                                                        <div
                                                             style={{
-                                                                textAlign: "center",
+                                                                display: "flex",
+                                                                flexFlow: "row",
+                                                                justifyContent: "space-between",
                                                                 marginBottom: "1rem"
                                                             }}
                                                         >
-                                                            Tous les services
-                                                        </Typography>
-                                                    }
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexFlow: "row",
-                                                            justifyContent: "space-between",
-                                                            marginBottom: "1rem"
-                                                        }}
-                                                    >
-                                                        <Typography>{moment(e.begin).format('LT')}</Typography>
-                                                        <Typography>-</Typography>
-                                                        <Typography>{moment(e.end).format('LT')}</Typography>
-                                                    </div>
-                                                    <div style={{display: 'flex', justifyContent: "center"}}>
-                                                        <Button
-                                                            variant="contained"
-                                                            color="secondary"
-                                                            style={{color:"white"}}
-                                                            onClick={()=>this.deleteMonday(e.begin)}
-                                                        >
-                                                            Supprimer
-                                                        </Button>
-                                                    </div>
-                                                </Card>
-                                                    </Grid>
-                                                ))}
+                                                            <Typography>{moment(e.begin).format('LT')}</Typography>
+                                                            <Typography>-</Typography>
+                                                            <Typography>{moment(e.end).format('LT')}</Typography>
+                                                        </div>
+                                                        <div style={{display: 'flex', justifyContent: "center"}}>
+                                                            <Button
+                                                                variant="contained"
+                                                                color="secondary"
+                                                                style={{color:"white"}}
+                                                                onClick={()=>this.deleteMonday(e.begin)}
+                                                            >
+                                                                Supprimer
+                                                            </Button>
+                                                        </div>
+                                                    </Card>
+                                                </Grid>
+                                            ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{minWidth: 270,marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                <Grid item xs={6}>
-                                                    <Grid container style={{alignItems:"center"}}>
-                                                        <Grid item xs={3}>
-                                                    <p>De :</p>
+                                                        <Grid item xs={12} md={6}>
+                                                            <Grid container style={{alignItems:"center"}}>
+                                                                <Grid item xs={3}>
+                                                                    <p>De :</p>
+                                                                </Grid>
+                                                                <Grid item xs={9}>
+                                                                    <DatePicker
+                                                                        selected={this.state.monday_begin}
+                                                                        onChange={date => this.setState({monday_begin:date})}
+                                                                        locale='fr'
+                                                                        showTimeSelect
+                                                                        showTimeSelectOnly
+                                                                        timeIntervals={15}
+                                                                        timeCaption="Début"
+                                                                        dateFormat="HH:mm"
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
                                                         </Grid>
-                                                        <Grid item xs={9}>
-                                                    <DatePicker
-                                                        selected={this.state.monday_begin}
-                                                        onChange={date => this.setState({monday_begin:date})}
-                                                        locale='fr'
-                                                        showTimeSelect
-                                                        showTimeSelectOnly
-                                                        timeIntervals={15}
-                                                        timeCaption="Début"
-                                                        dateFormat="HH:mm"
-                                                    />
+                                                        <Grid item xs={12} md={6}>
+                                                            <Grid container style={{alignItems:"center"}}>
+                                                                <Grid item xs={3}>
+                                                                    <p>A :</p>
+                                                                </Grid>
+                                                                <Grid item xs={9}>
+                                                                    <DatePicker
+                                                                        selected={this.state.monday_end}
+                                                                        onChange={date => this.setState({monday_end:date})}
+                                                                        locale='fr'
+                                                                        showTimeSelect
+                                                                        showTimeSelectOnly
+                                                                        timeIntervals={15}
+                                                                        timeCaption="Fin"
+                                                                        dateFormat="HH:mm"
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
                                                         </Grid>
                                                     </Grid>
-                                                </Grid>
-                                                <Grid item xs={6}>
-                                                    <Grid container style={{alignItems:"center"}}>
-                                                        <Grid item xs={3}>
-                                                    <p>A :</p>
-                                                        </Grid>
-                                                        <Grid item xs={9}>
-                                                    <DatePicker
-                                                        selected={this.state.monday_end}
-                                                        onChange={date => this.setState({monday_end:date})}
-                                                        locale='fr'
-                                                        showTimeSelect
-                                                        showTimeSelectOnly
-                                                        timeIntervals={15}
-                                                        timeCaption="Fin"
-                                                        dateFormat="HH:mm"
-                                                    />
-                                                        </Grid>
-                                                    </Grid>
-                                                </Grid>
-                                                    </Grid>
-                                                <Grid item xs={10} style={{marginTop:20,paddingLeft:20}}>
-                                                    <FormControl  style={{ width: '100%' }}>
-                                                        <Select2
-                                                            value={this.state.monday_service}
-                                                            onChange={this.handleChangeSelectMonday}
-                                                            options={optionsService}
-                                                            isMulti
-                                                            isSearchable
-                                                            closeMenuOnSelect={false}
-                                                            isDisabled={this.state.monday_all_service}
-                                                            placeholder={'Sélectionnez vos services'}
-                                                            noOptionsMessage={()=>'Plus d\'options disponibles'}
+                                                    <Grid item xs={10} style={{marginTop:20,paddingLeft:20}}>
+                                                        <FormControl  style={{ width: '100%' }}>
+                                                            <Select2
+                                                                value={this.state.monday_service}
+                                                                onChange={this.handleChangeSelectMonday}
+                                                                options={optionsService}
+                                                                isMulti
+                                                                isSearchable
+                                                                closeMenuOnSelect={false}
+                                                                isDisabled={this.state.monday_all_service}
+                                                                placeholder={'Sélectionnez vos services'}
+                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
-                                                        />
-                                                    </FormControl>
-                                                </Grid>
-                                                <Grid item style={{marginTop:20,paddingLeft:20}}>
-                                                    <FormControlLabel
-                                                        control={
-                                                            <Checkbox
-                                                                checked={this.state.monday_all_service}
-                                                                onChange={this.handleChecked}
-                                                                value={this.state.monday_all_service}
-                                                                color="primary"
-                                                                name={'monday_all_service'}
                                                             />
-                                                        }
-                                                        label="Tous les services"
-                                                    />
-                                                </Grid>
-                                                <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                                    <Button type="button" onClick={() => this.handleClickMonday()} variant="contained"
-                                                            color="primary" style={{ width: '100%',color:"white" }}>
-                                                        Ajouter le créneau horaire
-                                                    </Button>
-                                                </Grid>
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid item style={{marginTop:20,paddingLeft:20}}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={this.state.monday_all_service}
+                                                                    onChange={this.handleChecked}
+                                                                    value={this.state.monday_all_service}
+                                                                    color="primary"
+                                                                    name={'monday_all_service'}
+                                                                />
+                                                            }
+                                                            label="Tous les services"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                                                        <Button type="button" onClick={() => this.handleClickMonday()} variant="contained"
+                                                                color="primary" style={{ width: '100%',color:"white" }}>
+                                                            Ajouter le créneau horaire
+                                                        </Button>
+                                                    </Grid>
                                                 </Card>
                                             </Grid>
 
@@ -831,7 +850,7 @@ class detailsAvailability extends React.Component {
 
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -840,9 +859,6 @@ class detailsAvailability extends React.Component {
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Mardi
-                                        </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités pour mardi
                                         </Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
@@ -857,7 +873,8 @@ class detailsAvailability extends React.Component {
                                                             display: "flex",
                                                             flexFlow: "column",
                                                             marginRight: '1rem',
-                                                            minHeight: 205
+                                                            minHeight: 205,
+                                                            minWidth: 270
                                                         }}
                                                     >
                                                         {e.services.length !== 0 ?
@@ -907,12 +924,12 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{minWidth: 270,marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>De :</p>
@@ -931,7 +948,7 @@ class detailsAvailability extends React.Component {
                                                                 </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>A :</p>
@@ -998,7 +1015,7 @@ class detailsAvailability extends React.Component {
 
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1007,9 +1024,6 @@ class detailsAvailability extends React.Component {
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Mercredi
-                                        </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités pour mercredi
                                         </Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
@@ -1024,7 +1038,8 @@ class detailsAvailability extends React.Component {
                                                             display: "flex",
                                                             flexFlow: "column",
                                                             marginRight: '1rem',
-                                                            minHeight: 205
+                                                            minHeight: 205,
+                                                            minWidth: 270
                                                         }}
                                                     >
                                                         {e.services.length !== 0 ?
@@ -1074,12 +1089,12 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{minWidth: 270,marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>De :</p>
@@ -1098,7 +1113,7 @@ class detailsAvailability extends React.Component {
                                                                 </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>A :</p>
@@ -1161,333 +1176,329 @@ class detailsAvailability extends React.Component {
                                 </ExpansionPanel>
                             </Grid>
 
-                                            <Grid item xs={12}>
-                                                <ExpansionPanel
-                                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
-                                                >
-                                                    <ExpansionPanelSummary
-                                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                            <Grid item xs={12}>
+                                <ExpansionPanel
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
+                                >
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    >
+                                        <Typography
+                                            style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
+                                        >
+                                            Jeudi
+                                        </Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Grid container>
+
+                                            {thursday_event.map(e=> (
+
+                                                <Grid item xs={4}>
+                                                    <Card
+                                                        style={{
+                                                            padding: "2rem",
+                                                            display: "flex",
+                                                            flexFlow: "column",
+                                                            marginRight: '1rem',
+                                                            minHeight: 205,
+                                                            minWidth: 270
+                                                        }}
                                                     >
-                                                        <Typography
-                                                            style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
-                                                        >
-                                                            Jeudi
-                                                        </Typography>
-                                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                                            Vos disponibilités pour jeudi
-                                                        </Typography>
-                                                    </ExpansionPanelSummary>
-                                                    <ExpansionPanelDetails>
-                                                        <Grid container>
-
-                                                            {thursday_event.map(e=> (
-
-                                                                <Grid item xs={4}>
-                                                                    <Card
+                                                        {e.services.length !== 0 ?
+                                                            e.services.map(service =>
+                                                                (
+                                                                    <Typography
                                                                         style={{
-                                                                            padding: "2rem",
-                                                                            display: "flex",
-                                                                            flexFlow: "column",
-                                                                            marginRight: '1rem',
-                                                                            minHeight: 205
+                                                                            textAlign: "center",
+                                                                            marginBottom: "1rem"
                                                                         }}
                                                                     >
-                                                                        {e.services.length !== 0 ?
-                                                                            e.services.map(service =>
-                                                                                (
-                                                                                    <Typography
-                                                                                        style={{
-                                                                                            textAlign: "center",
-                                                                                            marginBottom: "1rem"
-                                                                                        }}
-                                                                                    >
-                                                                                        {service.label}
-                                                                                    </Typography>
-                                                                                )) :
-                                                                            <Typography
-                                                                                style={{
-                                                                                    textAlign: "center",
-                                                                                    marginBottom: "1rem"
-                                                                                }}
-                                                                            >
-                                                                                Tous les services
-                                                                            </Typography>
-                                                                        }
-                                                                        <div
-                                                                            style={{
-                                                                                display: "flex",
-                                                                                flexFlow: "row",
-                                                                                justifyContent: "space-between",
-                                                                                marginBottom: "1rem"
-                                                                            }}
-                                                                        >
-                                                                            <Typography>{moment(e.begin).format('LT')}</Typography>
-                                                                            <Typography>-</Typography>
-                                                                            <Typography>{moment(e.end).format('LT')}</Typography>
-                                                                        </div>
-                                                                        <div style={{display: 'flex', justifyContent: "center"}}>
-                                                                            <Button
-                                                                                variant="contained"
-                                                                                color="secondary"
-                                                                                style={{color:"white"}}
-                                                                                onClick={()=>this.deleteThursday(e.begin)}
-                                                                            >
-                                                                                Supprimer
-                                                                            </Button>
-                                                                        </div>
-                                                                    </Card>
+                                                                        {service.label}
+                                                                    </Typography>
+                                                                )) :
+                                                            <Typography
+                                                                style={{
+                                                                    textAlign: "center",
+                                                                    marginBottom: "1rem"
+                                                                }}
+                                                            >
+                                                                Tous les services
+                                                            </Typography>
+                                                        }
+                                                        <div
+                                                            style={{
+                                                                display: "flex",
+                                                                flexFlow: "row",
+                                                                justifyContent: "space-between",
+                                                                marginBottom: "1rem"
+                                                            }}
+                                                        >
+                                                            <Typography>{moment(e.begin).format('LT')}</Typography>
+                                                            <Typography>-</Typography>
+                                                            <Typography>{moment(e.end).format('LT')}</Typography>
+                                                        </div>
+                                                        <div style={{display: 'flex', justifyContent: "center"}}>
+                                                            <Button
+                                                                variant="contained"
+                                                                color="secondary"
+                                                                style={{color:"white"}}
+                                                                onClick={()=>this.deleteThursday(e.begin)}
+                                                            >
+                                                                Supprimer
+                                                            </Button>
+                                                        </div>
+                                                    </Card>
+                                                </Grid>
+                                            ))}
+                                            <Grid container>
+                                                <Card style={{minWidth: 270,marginTop:15}}>
+                                                    <Grid container style={{paddingLeft:20}}>
+                                                        <h4>Ajouter une disponibilité</h4>
+                                                    </Grid>
+                                                    <Grid container style={{paddingLeft:20}}>
+                                                        <Grid item xs={12} md={6}>
+                                                            <Grid container style={{alignItems:"center"}}>
+                                                                <Grid item xs={3}>
+                                                                    <p>De :</p>
                                                                 </Grid>
-                                                            ))}
-                                                            <Grid container>
-                                                                <Card style={{width:'100%',marginTop:15}}>
-                                                                    <Grid container style={{paddingLeft:20}}>
-                                                                        <h4>Ajouté une disponibilité</h4>
-                                                                    </Grid>
-                                                                    <Grid container style={{paddingLeft:20}}>
-                                                                        <Grid item xs={6}>
-                                                                            <Grid container style={{alignItems:"center"}}>
-                                                                                <Grid item xs={3}>
-                                                                                    <p>De :</p>
-                                                                                </Grid>
-                                                                                <Grid item xs={9}>
-                                                                                    <DatePicker
-                                                                                        selected={this.state.thursday_begin}
-                                                                                        onChange={date => this.setState({thursday_begin:date})}
-                                                                                        locale='fr'
-                                                                                        showTimeSelect
-                                                                                        showTimeSelectOnly
-                                                                                        timeIntervals={15}
-                                                                                        timeCaption="Début"
-                                                                                        dateFormat="HH:mm"
-                                                                                    />
-                                                                                </Grid>
-                                                                            </Grid>
-                                                                        </Grid>
-                                                                        <Grid item xs={6}>
-                                                                            <Grid container style={{alignItems:"center"}}>
-                                                                                <Grid item xs={3}>
-                                                                                    <p>A :</p>
-                                                                                </Grid>
-                                                                                <Grid item xs={9}>
-                                                                                    <DatePicker
-                                                                                        selected={this.state.thursday_end}
-                                                                                        onChange={date => this.setState({thursday_end:date})}
-                                                                                        locale='fr'
-                                                                                        showTimeSelect
-                                                                                        showTimeSelectOnly
-                                                                                        timeIntervals={15}
-                                                                                        timeCaption="Fin"
-                                                                                        dateFormat="HH:mm"
-                                                                                    />
-                                                                                </Grid>
-                                                                            </Grid>
-                                                                        </Grid>
-                                                                    </Grid>
-                                                                    <Grid item xs={10} style={{marginTop:20,paddingLeft:20}}>
-                                                                        <FormControl  style={{ width: '100%' }}>
-                                                                            <Select2
-                                                                                value={this.state.thursday_service}
-                                                                                onChange={this.handleChangeSelectThursday}
-                                                                                options={optionsService}
-                                                                                isMulti
-                                                                                isSearchable
-                                                                                closeMenuOnSelect={false}
-                                                                                isDisabled={this.state.thursday_all_service}
-                                                                                placeholder={'Sélectionnez vos services'}
-                                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
-
-                                                                            />
-                                                                        </FormControl>
-                                                                    </Grid>
-                                                                    <Grid item style={{marginTop:20,paddingLeft:20}}>
-                                                                        <FormControlLabel
-                                                                            control={
-                                                                                <Checkbox
-                                                                                    checked={this.state.thursday_all_service}
-                                                                                    onChange={this.handleChecked}
-                                                                                    value={this.state.thursday_all_service}
-                                                                                    color="primary"
-                                                                                    name={'thursday_all_service'}
-                                                                                />
-                                                                            }
-                                                                            label="Tous les services"
-                                                                        />
-                                                                    </Grid>
-                                                                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                                                        <Button type="button" onClick={() => this.handleClickThursday()} variant="contained"
-                                                                                color="primary" style={{ width: '100%',color:"white" }}>
-                                                                            Ajouter le créneau horaire
-                                                                        </Button>
-                                                                    </Grid>
-                                                                </Card>
+                                                                <Grid item xs={9}>
+                                                                    <DatePicker
+                                                                        selected={this.state.thursday_begin}
+                                                                        onChange={date => this.setState({thursday_begin:date})}
+                                                                        locale='fr'
+                                                                        showTimeSelect
+                                                                        showTimeSelectOnly
+                                                                        timeIntervals={15}
+                                                                        timeCaption="Début"
+                                                                        dateFormat="HH:mm"
+                                                                    />
+                                                                </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                    </ExpansionPanelDetails>
-                                                </ExpansionPanel>
+                                                        <Grid item xs={12} md={6}>
+                                                            <Grid container style={{alignItems:"center"}}>
+                                                                <Grid item xs={3}>
+                                                                    <p>A :</p>
+                                                                </Grid>
+                                                                <Grid item xs={9}>
+                                                                    <DatePicker
+                                                                        selected={this.state.thursday_end}
+                                                                        onChange={date => this.setState({thursday_end:date})}
+                                                                        locale='fr'
+                                                                        showTimeSelect
+                                                                        showTimeSelectOnly
+                                                                        timeIntervals={15}
+                                                                        timeCaption="Fin"
+                                                                        dateFormat="HH:mm"
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid item xs={10} style={{marginTop:20,paddingLeft:20}}>
+                                                        <FormControl  style={{ width: '100%' }}>
+                                                            <Select2
+                                                                value={this.state.thursday_service}
+                                                                onChange={this.handleChangeSelectThursday}
+                                                                options={optionsService}
+                                                                isMulti
+                                                                isSearchable
+                                                                closeMenuOnSelect={false}
+                                                                isDisabled={this.state.thursday_all_service}
+                                                                placeholder={'Sélectionnez vos services'}
+                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
+
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid item style={{marginTop:20,paddingLeft:20}}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={this.state.thursday_all_service}
+                                                                    onChange={this.handleChecked}
+                                                                    value={this.state.thursday_all_service}
+                                                                    color="primary"
+                                                                    name={'thursday_all_service'}
+                                                                />
+                                                            }
+                                                            label="Tous les services"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                                                        <Button type="button" onClick={() => this.handleClickThursday()} variant="contained"
+                                                                color="primary" style={{ width: '100%',color:"white" }}>
+                                                            Ajouter le créneau horaire
+                                                        </Button>
+                                                    </Grid>
+                                                </Card>
                                             </Grid>
+                                        </Grid>
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+                            </Grid>
 
 
 
-                                                            <Grid item xs={12}>
-                                                                <ExpansionPanel
-                                                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
-                                                                >
-                                                                    <ExpansionPanelSummary
-                                                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                            <Grid item xs={12}>
+                                <ExpansionPanel
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
+                                >
+                                    <ExpansionPanelSummary
+                                        expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
+                                    >
+                                        <Typography
+                                            style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
+                                        >
+                                            Vendredi
+                                        </Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <Grid container>
+
+                                            {friday_event.map(e=> (
+
+                                                <Grid item xs={4}>
+                                                    <Card
+                                                        style={{
+                                                            padding: "2rem",
+                                                            display: "flex",
+                                                            flexFlow: "column",
+                                                            marginRight: '1rem',
+                                                            minHeight: 205,
+                                                            minWidth: 270
+                                                        }}
+                                                    >
+                                                        {e.services.length !== 0 ?
+                                                            e.services.map(service =>
+                                                                (
+                                                                    <Typography
+                                                                        style={{
+                                                                            textAlign: "center",
+                                                                            marginBottom: "1rem"
+                                                                        }}
                                                                     >
-                                                                        <Typography
-                                                                            style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
-                                                                        >
-                                                                            Vendredi
-                                                                        </Typography>
-                                                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                                                            Vos disponibilités pour vendredi
-                                                                        </Typography>
-                                                                    </ExpansionPanelSummary>
-                                                                    <ExpansionPanelDetails>
-                                                                        <Grid container>
+                                                                        {service.label}
+                                                                    </Typography>
+                                                                )) :
+                                                            <Typography
+                                                                style={{
+                                                                    textAlign: "center",
+                                                                    marginBottom: "1rem"
+                                                                }}
+                                                            >
+                                                                Tous les services
+                                                            </Typography>
+                                                        }
+                                                        <div
+                                                            style={{
+                                                                display: "flex",
+                                                                flexFlow: "row",
+                                                                justifyContent: "space-between",
+                                                                marginBottom: "1rem"
+                                                            }}
+                                                        >
+                                                            <Typography>{moment(e.begin).format('LT')}</Typography>
+                                                            <Typography>-</Typography>
+                                                            <Typography>{moment(e.end).format('LT')}</Typography>
+                                                        </div>
+                                                        <div style={{display: 'flex', justifyContent: "center"}}>
+                                                            <Button
+                                                                variant="contained"
+                                                                color="secondary"
+                                                                style={{color:"white"}}
+                                                                onClick={()=>this.deleteFriday(e.begin)}
+                                                            >
+                                                                Supprimer
+                                                            </Button>
+                                                        </div>
+                                                    </Card>
+                                                </Grid>
+                                            ))}
+                                            <Grid container>
+                                                <Card style={{minWidth: 270,marginTop:15}}>
+                                                    <Grid container style={{paddingLeft:20}}>
+                                                        <h4>Ajouter une disponibilité</h4>
+                                                    </Grid>
+                                                    <Grid container style={{paddingLeft:20}}>
+                                                        <Grid item xs={12} md={6}>
+                                                            <Grid container style={{alignItems:"center"}}>
+                                                                <Grid item xs={3}>
+                                                                    <p>De :</p>
+                                                                </Grid>
+                                                                <Grid item xs={9}>
+                                                                    <DatePicker
+                                                                        selected={this.state.friday_begin}
+                                                                        onChange={date => this.setState({friday_begin:date})}
+                                                                        locale='fr'
+                                                                        showTimeSelect
+                                                                        showTimeSelectOnly
+                                                                        timeIntervals={15}
+                                                                        timeCaption="Début"
+                                                                        dateFormat="HH:mm"
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Grid>
+                                                        <Grid item xs={12} md={6}>
+                                                            <Grid container style={{alignItems:"center"}}>
+                                                                <Grid item xs={3}>
+                                                                    <p>A :</p>
+                                                                </Grid>
+                                                                <Grid item xs={9}>
+                                                                    <DatePicker
+                                                                        selected={this.state.friday_end}
+                                                                        onChange={date => this.setState({friday_end:date})}
+                                                                        locale='fr'
+                                                                        showTimeSelect
+                                                                        showTimeSelectOnly
+                                                                        timeIntervals={15}
+                                                                        timeCaption="Fin"
+                                                                        dateFormat="HH:mm"
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid item xs={10} style={{marginTop:20,paddingLeft:20}}>
+                                                        <FormControl  style={{ width: '100%' }}>
+                                                            <Select2
+                                                                value={this.state.friday_service}
+                                                                onChange={this.handleChangeSelectFriday}
+                                                                options={optionsService}
+                                                                isMulti
+                                                                isSearchable
+                                                                closeMenuOnSelect={false}
+                                                                isDisabled={this.state.friday_all_service}
+                                                                placeholder={'Sélectionnez vos services'}
+                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
 
-                                                                            {friday_event.map(e=> (
-
-                                                                                <Grid item xs={4}>
-                                                                                    <Card
-                                                                                        style={{
-                                                                                            padding: "2rem",
-                                                                                            display: "flex",
-                                                                                            flexFlow: "column",
-                                                                                            marginRight: '1rem',
-                                                                                            minHeight: 205
-                                                                                        }}
-                                                                                    >
-                                                                                        {e.services.length !== 0 ?
-                                                                                            e.services.map(service =>
-                                                                                                (
-                                                                                                    <Typography
-                                                                                                        style={{
-                                                                                                            textAlign: "center",
-                                                                                                            marginBottom: "1rem"
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        {service.label}
-                                                                                                    </Typography>
-                                                                                                )) :
-                                                                                            <Typography
-                                                                                                style={{
-                                                                                                    textAlign: "center",
-                                                                                                    marginBottom: "1rem"
-                                                                                                }}
-                                                                                            >
-                                                                                                Tous les services
-                                                                                            </Typography>
-                                                                                        }
-                                                                                        <div
-                                                                                            style={{
-                                                                                                display: "flex",
-                                                                                                flexFlow: "row",
-                                                                                                justifyContent: "space-between",
-                                                                                                marginBottom: "1rem"
-                                                                                            }}
-                                                                                        >
-                                                                                            <Typography>{moment(e.begin).format('LT')}</Typography>
-                                                                                            <Typography>-</Typography>
-                                                                                            <Typography>{moment(e.end).format('LT')}</Typography>
-                                                                                        </div>
-                                                                                        <div style={{display: 'flex', justifyContent: "center"}}>
-                                                                                            <Button
-                                                                                                variant="contained"
-                                                                                                color="secondary"
-                                                                                                style={{color:"white"}}
-                                                                                                onClick={()=>this.deleteFriday(e.begin)}
-                                                                                            >
-                                                                                                Supprimer
-                                                                                            </Button>
-                                                                                        </div>
-                                                                                    </Card>
-                                                                                </Grid>
-                                                                            ))}
-                                                                            <Grid container>
-                                                                                <Card style={{width:'100%',marginTop:15}}>
-                                                                                    <Grid container style={{paddingLeft:20}}>
-                                                                                        <h4>Ajouté une disponibilité</h4>
-                                                                                    </Grid>
-                                                                                    <Grid container style={{paddingLeft:20}}>
-                                                                                        <Grid item xs={6}>
-                                                                                            <Grid container style={{alignItems:"center"}}>
-                                                                                                <Grid item xs={3}>
-                                                                                                    <p>De :</p>
-                                                                                                </Grid>
-                                                                                                <Grid item xs={9}>
-                                                                                                    <DatePicker
-                                                                                                        selected={this.state.friday_begin}
-                                                                                                        onChange={date => this.setState({friday_begin:date})}
-                                                                                                        locale='fr'
-                                                                                                        showTimeSelect
-                                                                                                        showTimeSelectOnly
-                                                                                                        timeIntervals={15}
-                                                                                                        timeCaption="Début"
-                                                                                                        dateFormat="HH:mm"
-                                                                                                    />
-                                                                                                </Grid>
-                                                                                            </Grid>
-                                                                                        </Grid>
-                                                                                        <Grid item xs={6}>
-                                                                                            <Grid container style={{alignItems:"center"}}>
-                                                                                                <Grid item xs={3}>
-                                                                                                    <p>A :</p>
-                                                                                                </Grid>
-                                                                                                <Grid item xs={9}>
-                                                                                                    <DatePicker
-                                                                                                        selected={this.state.friday_end}
-                                                                                                        onChange={date => this.setState({friday_end:date})}
-                                                                                                        locale='fr'
-                                                                                                        showTimeSelect
-                                                                                                        showTimeSelectOnly
-                                                                                                        timeIntervals={15}
-                                                                                                        timeCaption="Fin"
-                                                                                                        dateFormat="HH:mm"
-                                                                                                    />
-                                                                                                </Grid>
-                                                                                            </Grid>
-                                                                                        </Grid>
-                                                                                    </Grid>
-                                                                                    <Grid item xs={10} style={{marginTop:20,paddingLeft:20}}>
-                                                                                        <FormControl  style={{ width: '100%' }}>
-                                                                                            <Select2
-                                                                                                value={this.state.friday_service}
-                                                                                                onChange={this.handleChangeSelectFriday}
-                                                                                                options={optionsService}
-                                                                                                isMulti
-                                                                                                isSearchable
-                                                                                                closeMenuOnSelect={false}
-                                                                                                isDisabled={this.state.friday_all_service}
-                                                                                                placeholder={'Sélectionnez vos services'}
-                                                                                                noOptionsMessage={()=>'Plus d\'options disponibles'}
-
-                                                                                            />
-                                                                                        </FormControl>
-                                                                                    </Grid>
-                                                                                    <Grid item style={{marginTop:20,paddingLeft:20}}>
-                                                                                        <FormControlLabel
-                                                                                            control={
-                                                                                                <Checkbox
-                                                                                                    checked={this.state.friday_all_service}
-                                                                                                    onChange={this.handleChecked}
-                                                                                                    value={this.state.friday_all_service}
-                                                                                                    color="primary"
-                                                                                                    name={'friday_all_service'}
-                                                                                                />
-                                                                                            }
-                                                                                            label="Tous les services"
-                                                                                        />
-                                                                                    </Grid>
-                                                                                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                                                                        <Button type="button" onClick={() => this.handleClickFriday()} variant="contained"
-                                                                                                color="primary" style={{ width: '100%',color:"white" }}>
-                                                                                            Ajouter le créneau horaire
-                                                                                        </Button>
-                                                                                    </Grid>
-                                                                                </Card>
-                                                                            </Grid>
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid item style={{marginTop:20,paddingLeft:20}}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={this.state.friday_all_service}
+                                                                    onChange={this.handleChecked}
+                                                                    value={this.state.friday_all_service}
+                                                                    color="primary"
+                                                                    name={'friday_all_service'}
+                                                                />
+                                                            }
+                                                            label="Tous les services"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                                                        <Button type="button" onClick={() => this.handleClickFriday()} variant="contained"
+                                                                color="primary" style={{ width: '100%',color:"white" }}>
+                                                            Ajouter le créneau horaire
+                                                        </Button>
+                                                    </Grid>
+                                                </Card>
+                                            </Grid>
 
 
                                         </Grid>
@@ -1497,7 +1508,7 @@ class detailsAvailability extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1506,9 +1517,6 @@ class detailsAvailability extends React.Component {
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Samedi
-                                        </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités pour samedi
                                         </Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
@@ -1523,7 +1531,8 @@ class detailsAvailability extends React.Component {
                                                             display: "flex",
                                                             flexFlow: "column",
                                                             marginRight: '1rem',
-                                                            minHeight: 205
+                                                            minHeight: 205,
+                                                            minWidth: 270
                                                         }}
                                                     >
                                                         {e.services.length !== 0 ?
@@ -1573,12 +1582,12 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{minWidth: 270,marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>De :</p>
@@ -1597,7 +1606,7 @@ class detailsAvailability extends React.Component {
                                                                 </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>A :</p>
@@ -1665,7 +1674,7 @@ class detailsAvailability extends React.Component {
 
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    style={{ border: "none", boxShadow: "none", width: "100%" }}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1674,9 +1683,6 @@ class detailsAvailability extends React.Component {
                                             style={{ fontSize: 20, flexBasis: "33.33%", flexShrink: 0 }}
                                         >
                                             Dimanche
-                                        </Typography>
-                                        <Typography style={{ fontSize: 12, lineHeight: 3 }}>
-                                            Vos disponibilités pour dimanche
                                         </Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails>
@@ -1691,7 +1697,8 @@ class detailsAvailability extends React.Component {
                                                             display: "flex",
                                                             flexFlow: "column",
                                                             marginRight: '1rem',
-                                                            minHeight: 205
+                                                            minHeight: 205,
+                                                            minWidth: 270
                                                         }}
                                                     >
                                                         {e.services.length !== 0 ?
@@ -1741,12 +1748,12 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{width:'100%',marginTop:15}}>
+                                                <Card style={{minWidth: 270,marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <h4>Ajouté une disponibilité</h4>
+                                                        <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
                                                     <Grid container style={{paddingLeft:20}}>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>De :</p>
@@ -1765,7 +1772,7 @@ class detailsAvailability extends React.Component {
                                                                 </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                        <Grid item xs={6}>
+                                                        <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
                                                                     <p>A :</p>
@@ -1848,7 +1855,7 @@ class detailsAvailability extends React.Component {
                                 {this.state.active ?
 
                                     <Grid container>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={12} md={6}>
                                             <Grid container style={{alignItems:"center"}}>
                                                 <Grid item xs={3}>
                                                     <p>Du :</p>
@@ -1865,7 +1872,7 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             </Grid>
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={12} md={6}>
                                             <Grid container style={{alignItems:"center"}}>
                                                 <Grid item xs={3}>
                                                     <p>Au :</p>
@@ -1887,7 +1894,7 @@ class detailsAvailability extends React.Component {
                             </Grid>
                             <Grid container style={{marginTop:20,marginLeft:20,marginBottom:20}}>
 
-                                <Button onClick={()=>this.onSubmit()} variant={"contained"} color={"primary"} style={{color:"white",marginRight:20}}>Enregistrer</Button>
+                                <Button onClick={()=>this.onSubmit()} variant={"contained"} color={"primary"} style={{color:"white",marginRight:20, marginBottom: 20}}>Enregistrer</Button>
                                 <Button onClick={()=>this.handleClickOpen()} variant={"contained"} color={"secondary"} style={{color:"white"}}>Supprimer</Button>
                             </Grid>
 
@@ -1899,6 +1906,39 @@ class detailsAvailability extends React.Component {
 
 
                 </Layout>
+                <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
+
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                        </Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center",zIndex:999, borderBottom: '3px solid #4fbdd7'}}>
+                        <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                </Grid>
                 <Footer/>
 
                 <Dialog

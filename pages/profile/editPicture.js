@@ -211,7 +211,7 @@ class editPicture extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Modifier le profil
                                             </a>
@@ -222,7 +222,7 @@ class editPicture extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                
                                             </a>
@@ -232,7 +232,7 @@ class editPicture extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/sign.svg'} alt={'sign'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Mes adresses de prestations
                                             </a>
@@ -243,7 +243,7 @@ class editPicture extends React.Component {
                                 <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/sign.svg'} alt={'sign'} width={27} style={{marginleft: 4}}/>
+                                            <img src={'../static/sign.svg'} alt={'sign'} height={70} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                
                                             </a>
@@ -253,7 +253,7 @@ class editPicture extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/editPicture'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/picture.svg'} alt={'picture'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/picture.svg'} alt={'picture'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                             </a>
                                         </div>
@@ -262,7 +262,7 @@ class editPicture extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editPicture'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/picture.svg'} alt={'picture'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/picture.svg'} alt={'picture'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Photo
                                             </a>
@@ -273,7 +273,7 @@ class editPicture extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/success.svg'} alt={'check'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 
                                             </a>
@@ -284,7 +284,7 @@ class editPicture extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/success.svg'} alt={'check'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/success.svg'} alt={'check'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Confiance et vérification
                                             </a>
@@ -353,12 +353,12 @@ class editPicture extends React.Component {
                                     <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img width={150} height={150} style={{borderRadius: '50%',objectFit:'cover'}} src={`../${user.picture}`} alt={'picture'}/>}
                                 </Grid>
 
-                                <Grid item style={{marginLeft: '5%'}}>
+                                <Grid item xs={12} md={6} style={{marginLeft: '5%'}}>
 
                                     <form onSubmit={this.onSubmit}>
                                         <Grid container>
-                                        <Grid item xs={6} lg={12}>
-                                            <p style={{display: 'inline-block', marginTop: 15,color:'black', width: 600}}>La photo de votre profil sera
+                                        <Grid item xs={12} lg={12}>
+                                            <p style={{display: 'inline-block', marginTop: 15,color:'black'}}>La photo de votre profil sera
                                                 visible des utilisateurs du site et leur permettra de déjà vous connaitre !
                                                 Téléchargez une photo de vous claire et lumineuse, de bonne qualité. Pour un rendu optimal,
                                                 la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif,

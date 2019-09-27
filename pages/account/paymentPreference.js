@@ -179,7 +179,7 @@ class paymentPreference extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/notifications'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Notifications
                                             </a>
@@ -189,7 +189,7 @@ class paymentPreference extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/notifications'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a  style={{fontSize: '1.1rem'}}>
                                                
                                             </a>
@@ -221,7 +221,7 @@ class paymentPreference extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/piggy-bank-2.svg'} alt={'piggy-bank'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/piggy-bank-2.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Préférence de versement
                                             </a>
@@ -231,7 +231,7 @@ class paymentPreference extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/piggy-bank-2.svg'} alt={'piggy-bank'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/piggy-bank-2.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             </a>
                                         </div>
@@ -262,7 +262,7 @@ class paymentPreference extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Sécurité
                                             </a>
@@ -272,7 +272,7 @@ class paymentPreference extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/security'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             
                                             </a>
@@ -304,7 +304,7 @@ class paymentPreference extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Paramètres
                                             </a>
@@ -314,7 +314,7 @@ class paymentPreference extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             
                                             </a>

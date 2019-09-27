@@ -187,7 +187,7 @@ class security extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/notifications'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Notifications
                                             </a>
@@ -197,7 +197,7 @@ class security extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/notifications'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a  style={{fontSize: '1.1rem'}}>
                                                
                                             </a>
@@ -229,7 +229,7 @@ class security extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Préférence de versement
                                             </a>
@@ -239,7 +239,7 @@ class security extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             </a>
                                         </div>
@@ -270,7 +270,7 @@ class security extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/locked-padlock-2.svg'} alt={'locked-padlock'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/locked-padlock-2.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Sécurité
                                             </a>
@@ -280,7 +280,7 @@ class security extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/security'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/locked-padlock-2.svg'} alt={'locked-padlock'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/locked-padlock-2.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             
                                             </a>
@@ -312,7 +312,7 @@ class security extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Paramètres
                                             </a>
@@ -322,7 +322,7 @@ class security extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             
                                             </a>
@@ -372,7 +372,7 @@ class security extends React.Component {
                                 </p>
                                 </Grid>
                                 <form onSubmit={this.onSubmit}>
-                                    <Grid item xs={4}>
+                                    <Grid item xs={12} md={4}>
                                         <TextField
                                             margin="normal"
                                             style={{width:'100%'}}
@@ -391,7 +391,7 @@ class security extends React.Component {
                                     {/*{this.state.testpremier ? <p>c'est remplis </p> : <p>c'est pas remplis</p>}*/}
 
 
-                                    <Grid item xs={4}>
+                                    <Grid item xs={12} md={4}>
                                         <TextField
                                             id="standard-with-placeholder"
                                             margin="normal"
@@ -406,7 +406,7 @@ class security extends React.Component {
                                         />
                                     </Grid>
 
-                                    <Grid item xs={4}>
+                                    <Grid item xs={12} md={4}>
                                         <TextField
                                             id="standard-with-placeholder"
                                             margin="normal"
@@ -439,7 +439,8 @@ class security extends React.Component {
                                 <Grid item style={{ display: 'flex', justifyContent: 'left' }}>
                                     <h2 style={{ fontWeight: '100' }}>Dernières connexions : </h2>
                                 </Grid>
-                                <Grid item style={{display: 'flex', border:'1px darkgray solid', padding: 25, maxWidth: '50%',marginBottom:20}}>
+                                <Grid container>
+                                <Grid item xs={12} md={6} style={{display: 'flex', border:'1px darkgray solid', padding: 25,marginBottom:20}}>
                                     <Grid container>
                                         {last_login.map((e,index)=>(
                                             <Grid key={index} item xs={12}>
@@ -449,7 +450,9 @@ class security extends React.Component {
                                         ))}
 
 
+
                                     </Grid>
+                                </Grid>
                                 </Grid>
                             </Grid>
 
