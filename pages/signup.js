@@ -195,7 +195,7 @@ class signup extends React.Component {
         axios
             .post(url+'myAlfred/api/users/register', newUser)
             .then(res => {
-              toast.info('Inscription réussi');
+              toast.info('Inscription réussie');
               axios.post(url+'myAlfred/api/users/login',{username, password})
                   .then(response => {
                     const {token} = response.data;
