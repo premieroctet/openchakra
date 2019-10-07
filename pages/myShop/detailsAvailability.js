@@ -1896,7 +1896,7 @@ class detailsAvailability extends React.Component {
                             <Grid container style={{marginTop:20,marginLeft:20,marginBottom:20}}>
 
                                 <Button onClick={()=>this.onSubmit()} variant={"contained"} color={"primary"} style={{color:"white",marginRight:20, marginBottom: 20}}>Enregistrer</Button>
-                                <Button onClick={()=>this.handleClickOpen()} variant={"contained"} color={"secondary"} style={{color:"white"}}>Supprimer</Button>
+                                <Button onClick={()=>this.handleClickOpen()} variant={"contained"} color={"secondary"} style={{color:"white",marginRight:20, marginBottom: 20}}>Supprimer</Button>
                             </Grid>
 
 
