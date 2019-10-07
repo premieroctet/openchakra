@@ -25,7 +25,7 @@ const styles = theme => ({
     border:'solid thin #ccc',
     backgroundColor:'transparent',
     textAlign:'center',
-    margin:10,
+    margin:'15px auto',
     boxShadow: '1px 3px 1px transparent'
   },
   gridContainer: {
@@ -107,14 +107,14 @@ const nearbyYouCard = (props) => {
       <Link href={`/shop?id_alfred=${shop}`}>
       <CardActionArea>
       
-        <CardMedia className={classes.media} image={img} title="Coiffure">
+        <CardMedia className={classes.media} image={img} title={alfred}>
           <div className={classes.darkOverlay}>
             <Grid container className={classes.avatarContainer}>
               <Grid container className={classes.gridContainer}>
 
               </Grid>
               <Grid container className={classes.locationAvatarGrid}>
-                <Avatar alt="John Doe" src={avatar} className={classes.avatar} />
+                <Avatar src={avatar} className={classes.avatar} />
               </Grid>
             </Grid>
           </div>

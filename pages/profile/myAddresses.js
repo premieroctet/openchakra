@@ -662,9 +662,7 @@ class myAddresses extends React.Component {
                                         </Grid>
                                         <p style={{color: '#F8727F',marginTop:25}}>OPTION DE CONTACT</p>
                                         <Grid item xs={12} lg={6} sm={12} md={6}>
-                                            <p style={{marginBottom: 0}}>Nous avons besoin d’un numéro de téléphone dans le cas où votre Alfred</p>
-                                            <p style={{marginTop:0,marginBottom:0}}>aurait besoin de vous contacter
-                                                ou de contacter la personne de confiance</p><p style={{marginTop:0}}> associée à cette adresse</p>
+                                            <p style={{marginBottom: 0}}>Vous pouvez indiquer un numéro de téléphone de contact spécifique à cette adresse et permettre à votre Alfred de contacter cette personne de confiance si vous le souhaitez</p>
                                         </Grid>
                                         <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 
@@ -820,9 +818,7 @@ class myAddresses extends React.Component {
                                         </Grid>
                                         <p style={{color: '#F8727F',marginTop:25}}>OPTION DE CONTACT</p>
                                         <Grid item xs={12} lg={6} sm={12} md={6}>
-                                            <p style={{marginBottom: 0}}>Nous avons besoin d’un numéro de téléphone dans le cas où votre Alfred</p>
-                                            <p style={{marginTop:0,marginBottom:0}}>aurait besoin de vous contacter
-                                                ou de contacter la personne de confiance</p><p style={{marginTop:0}}> associée à cette adresse</p>
+                                            <p style={{marginBottom: 0}}>Vous pouvez indiquer un numéro de téléphone de contact spécifique à cette adresse et permettre à votre Alfred de contacter cette personne de confiance si vous le souhaitez</p>
                                         </Grid>
                                         <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
 

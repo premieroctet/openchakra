@@ -394,7 +394,7 @@ class Homeheader extends React.Component {
                   </Grid>
                 </div>
 
-                <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '9999px', height: '9999px', zIndex: '99998'}}></div>
+                <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '9999px', zIndex: '99998'}}></div>
               </React.Fragment>
               : null}
         </Fragment>

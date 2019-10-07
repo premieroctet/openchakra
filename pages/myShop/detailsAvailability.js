@@ -700,7 +700,7 @@ class detailsAvailability extends React.Component {
 
                                             {monday_event.map(e=> (
 
-                                                <Grid item xs={4}>
+                                                <Grid item xs={12} md={4}>
                                                     <Card
                                                         style={{
                                                             padding: "2rem",
@@ -759,11 +759,11 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{minWidth: 270,marginTop:15}}>
+                                                <Card style={{minWidth:  '300px',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
-                                                    <Grid container style={{paddingLeft:20}}>
+                                                    <Grid container style={{paddingLeft:20, marginRight: '100px'}}>
                                                         <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
@@ -866,7 +866,7 @@ class detailsAvailability extends React.Component {
 
                                             {tuesday_event.map(e=> (
 
-                                                <Grid item xs={4}>
+                                                <Grid item xs={12} md={4}>
                                                     <Card
                                                         style={{
                                                             padding: "2rem",
@@ -924,11 +924,11 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{minWidth: 270,marginTop:15}}>
+                                                <Card style={{minWidth:  '300px',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
-                                                    <Grid container style={{paddingLeft:20}}>
+                                                    <Grid container style={{paddingLeft:20, marginRight: '100px'}}>
                                                         <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
@@ -1031,7 +1031,7 @@ class detailsAvailability extends React.Component {
 
                                             {wednesday_event.map(e=> (
 
-                                                <Grid item xs={4}>
+                                                <Grid item xs={12} md={4}>
                                                     <Card
                                                         style={{
                                                             padding: "2rem",
@@ -1089,11 +1089,11 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{minWidth: 270,marginTop:15}}>
+                                                <Card style={{minWidth:  '300px',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
-                                                    <Grid container style={{paddingLeft:20}}>
+                                                    <Grid container style={{paddingLeft:20, marginRight: '100px'}}>
                                                         <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
@@ -1194,7 +1194,7 @@ class detailsAvailability extends React.Component {
 
                                             {thursday_event.map(e=> (
 
-                                                <Grid item xs={4}>
+                                                <Grid item xs={12} md={4}>
                                                     <Card
                                                         style={{
                                                             padding: "2rem",
@@ -1252,11 +1252,11 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{minWidth: 270,marginTop:15}}>
+                                                <Card style={{minWidth:  '300px',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
-                                                    <Grid container style={{paddingLeft:20}}>
+                                                    <Grid container style={{paddingLeft:20, marginRight: '100px'}}>
                                                         <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
@@ -1359,7 +1359,7 @@ class detailsAvailability extends React.Component {
 
                                             {friday_event.map(e=> (
 
-                                                <Grid item xs={4}>
+                                                <Grid item xs={12} md={4}>
                                                     <Card
                                                         style={{
                                                             padding: "2rem",
@@ -1417,11 +1417,11 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{minWidth: 270,marginTop:15}}>
+                                                <Card style={{minWidth:  '300px',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
-                                                    <Grid container style={{paddingLeft:20}}>
+                                                    <Grid container style={{paddingLeft:20, marginRight: '100px'}}>
                                                         <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
@@ -1524,7 +1524,7 @@ class detailsAvailability extends React.Component {
 
                                             {saturday_event.map(e=> (
 
-                                                <Grid item xs={4}>
+                                                <Grid item xs={12} md={4}>
                                                     <Card
                                                         style={{
                                                             padding: "2rem",
@@ -1582,11 +1582,11 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{minWidth: 270,marginTop:15}}>
+                                                <Card style={{minWidth:  '300px',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
-                                                    <Grid container style={{paddingLeft:20}}>
+                                                    <Grid container style={{paddingLeft:20, marginRight: '100px'}}>
                                                         <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>
@@ -1690,7 +1690,7 @@ class detailsAvailability extends React.Component {
 
                                             {sunday_event.map(e=> (
 
-                                                <Grid item xs={4}>
+                                                <Grid item xs={12} md={4}>
                                                     <Card
                                                         style={{
                                                             padding: "2rem",
@@ -1748,11 +1748,11 @@ class detailsAvailability extends React.Component {
                                                 </Grid>
                                             ))}
                                             <Grid container>
-                                                <Card style={{minWidth: 270,marginTop:15}}>
+                                                <Card style={{minWidth:  '55%',marginTop:15}}>
                                                     <Grid container style={{paddingLeft:20}}>
                                                         <h4>Ajouter une disponibilité</h4>
                                                     </Grid>
-                                                    <Grid container style={{paddingLeft:20}}>
+                                                    <Grid container style={{paddingLeft:20, marginRight: '100px'}}>
                                                         <Grid item xs={12} md={6}>
                                                             <Grid container style={{alignItems:"center"}}>
                                                                 <Grid item xs={3}>

@@ -90,13 +90,20 @@ const styles = theme => ({
         height:'10%',
         color:'gray',
         width:'100%',
-
+        backgroundColor:'#f2f2f2',
+        transition: 'background-color 0.5s',
+        
 
         fontSize:'15px',
         textAlign:'left',
 
         borderRadius:'0px',
-        marginBottom:'5 px'
+        marginBottom:'5 px',
+        '&:hover': {
+            backgroundColor:'#2FBCD3',
+            transition: 'background-color 0.5s',
+            color: 'white',
+        }
 
 
     },
@@ -279,8 +286,10 @@ class myAvailabilities extends React.Component {
                                     return (
                                         <Link className={classes.dispocard} key={index} href={'/myShop/detailsAvailability?id='+e._id}>
                                             <a className={classes.dispocardin} style={{textDecoration:'none', color:'gray'}}>
-                                                <div className={classes.dispoheader}><p style={{backgroundColor:'#f2f2f2', padding: '2%'}}>Disponibilités pour la période:</p></div>
-                                                <p style={{marginLeft:'20px',padding: '2%'}}>  {moment(e.period.month_begin).format('LL')} / {moment(e.period.month_end).format('LL')}</p>
+                                                <div style={{boxShadow: '0px 0px 6px #aaa'}}>
+                                                    <div className={classes.dispoheader}><p style={{ padding: '2%'}}>Disponibilités pour la période:</p></div>
+                                                    <p style={{marginLeft:'20px',padding: '2%'}}>  {moment(e.period.month_begin).format('LL')} / {moment(e.period.month_end).format('LL')}</p>
+                                                </div>
                                             </a>
                                         </Link>
                                     )
@@ -288,7 +297,10 @@ class myAvailabilities extends React.Component {
                                     return (
                                         <Link className={classes.dispocard} key={index} href={'/myShop/detailsAvailability?id='+e._id}>
                                             <a className={classes.dispocardin} style={{textDecoration:'none', color:'gray'}}>
-                                                <p  style={{backgroundColor:'#f2f2f2', padding: '2%'}}>Disponibilités sans période</p>
+                                                <div style={{boxShadow: '0px 0px 6px #aaa'}}>
+                                                    <div className={classes.dispoheader}><p style={{ padding: '2%'}}>Disponibilités pour la période:</p></div>
+                                                    <p style={{marginLeft:'20px',padding: '2%'}}>Indéfinies</p>
+                                                </div>
                                             </a>
                                         </Link>
                                     )

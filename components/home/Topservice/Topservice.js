@@ -78,11 +78,11 @@ const styles = theme => ({
     marginTop: 80,
   },  
   textBox2: {
-    color: 'rgba(84,89,95,0.95)',
+    color: 'rgba(0, 0, 0, 0.87)', 
+    fontSize: '1.25rem',
     paddingRight: 15,
     paddingLeft: 15,
     marginBottom: 15,
-    fontSize: 20,
     fontWeight: 570,
     marginTop: 10,
   },
@@ -156,7 +156,7 @@ class TopService extends React.Component {
                   className={classes.media2}
                   image={e.picture}
                   title="Paysage"
-                  style={{height:'530px', width: '270px',}}
+                  style={{height:'530px', width: '100%',}}
               />
               <CardContent>
                 

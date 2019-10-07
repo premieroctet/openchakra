@@ -76,7 +76,7 @@ const styles = theme => ({
 
   },
   newContainer: {
-    padding: 20,
+    padding: 10,
   },
   title: {
     color: 'white',

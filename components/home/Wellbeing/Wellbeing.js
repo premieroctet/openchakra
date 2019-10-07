@@ -155,7 +155,7 @@ class Wellbeing extends React.Component {
               />
               <CardContent>
                 
-                <p style={{color: 'rgba(84,89,95,0.95)', fontSize: 20}}>
+                <p style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.25rem',}}>
                   {e.label}
                 </p>
                 <p>

@@ -422,7 +422,7 @@ class services extends React.Component {
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'20%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',}} alt={'picture'}/>
+                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'20%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px', objectFit: 'cover'}} alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'0',right:'0',marginLeft:'auto',marginRight:'auto',top:'39%',zIndex:502,textAlign: 'center'}}>
                         <p style={{color: 'white',  cursor:'pointer',fontWeight: '600',fontSize: '1.35rem'}}>{service.label}</p>

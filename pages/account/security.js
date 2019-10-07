@@ -365,9 +365,7 @@ class security extends React.Component {
                                 <Grid item xs={7}>
                                 <p>
 
-                                    Pour la sécurité de votre compte, votre mot de passe doit contenir au minimum 8 caractères dont
-                                    une majuscule, une minuscule, un chiffre et un caractère spécial.
-
+                                Pour la sécurité de votre compte, votre mot de passe doit contenir 8 caractères minimum dont une majuscule, une minuscule, un chiffre et un caractère spécial suivant :@,&,$,*,#,%,!
 
                                 </p>
                                 </Grid>
