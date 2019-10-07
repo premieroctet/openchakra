@@ -595,7 +595,7 @@ class trustAndVerification extends React.Component {
                                             variant={'outlined'}
                                             disabled={true}
                                         />
-                                        {user.is_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} height={80} width={28} style={{marginLeft: 5}}/> :
+                                        {user.is_confirmed ? <img src={'../static/success-2.svg'} height={80} alt={'check'} width={28} style={{marginLeft: 5}}/> :
                                             <img src={'../static/success.svg'} alt={'check'} height={80} width={28} style={{marginLeft: 5}}/>
                                         }
                                     </Grid>

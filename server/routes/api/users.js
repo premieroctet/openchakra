@@ -552,6 +552,20 @@ router.put('/users/becomeAlfred',passport.authenticate('jwt',{session:false}),(r
         .catch(err => res.status(404).json({ user: 'No user found' }));
 });
 
+// @Route PUT /myAlfred/api/users/users/deleteAlfred
+// Update one user is_alfred's status
+router.put('/users/deleteAlfred',passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findByIdAndUpdate(req.user.id,{is_alfred: false},{new: true})
+        .then(user => {
+            if(!user){
+                return res.status(400).json({msg: 'No user found'});
+            }
+            res.json(user);
+
+        })
+        .catch(err => res.status(404).json({ user: 'No user found' }));
+});
+
 // @Route PUT /myAlfred/api/users/alfredViews/:id
 // Update number of views for an alfred
 router.put('/alfredViews/:id',(req,res) => {

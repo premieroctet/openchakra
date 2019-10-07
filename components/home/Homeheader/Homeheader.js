@@ -386,7 +386,7 @@ class Homeheader extends React.Component {
                       <p onClick={this.handleClose} style={{color: '#F8727F', cursor: 'pointer'}}>x</p>
                     </Grid>
                     <Grid item xs={12}>
-                      <h2 style={{textAlign: 'center',color: 'rgba(84,89,95,0.95)',letterSpacing: -2, fontWeight: 'bold',}}>Les réservations ne seront disponible qu'à partir d'octobre</h2>
+                      <h2 style={{textAlign: 'center',color: 'rgba(84,89,95,0.95)',letterSpacing: -2, fontWeight: 'bold',}}>Les réservations ne seront disponible qu'à partir de Novembre</h2>
                     </Grid>
                     <Grid item xs={5}></Grid>
                     <Grid item xs={2} style={{marginTop: '-10px'}}><hr className={classes.grosHR}/></Grid>
@@ -394,7 +394,7 @@ class Homeheader extends React.Component {
                   </Grid>
                 </div>
 
-                <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '9999px', height: '9999px', zIndex: '99998'}}></div>
+                <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '9999px', zIndex: '99998'}}></div>
               </React.Fragment>
               : null}
         </Fragment>

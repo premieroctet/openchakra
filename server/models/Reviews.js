@@ -6,30 +6,48 @@ const ReviewsSchema = new Schema({
         type: String,
         required: true
     },
-    title : {
-        type: String,
-        required: true
-    },
-    note: {
-        quality_price:{
+    note_alfred: {
+        reception:{
             type: Number,
-            max: 5,
+            max: 4,
             min: 0
         },
-        punctuality: {
+        quality_price: {
             type: Number,
-            max: 5,
+            max: 4,
             min: 0
         },
-        prestation: {
+        communication: {
             type: Number,
-            max: 5,
+            max: 4,
             min: 0
         },
         global: {
           type: Number,
-          max: 5,
+          max: 4,
           min: 0
+        }
+    },
+    note_client: {
+        reception:{
+            type: Number,
+            max: 4,
+            min: 0
+        },
+        accuracy: {
+            type: Number,
+            max: 4,
+            min: 0
+        },
+        communication: {
+            type: Number,
+            max: 4,
+            min: 0
+        },
+        global: {
+            type: Number,
+            max: 4,
+            min: 0
         }
     },
     date: {
@@ -37,9 +55,9 @@ const ReviewsSchema = new Schema({
         default: Date.now,
         required: true
     },
-    booking: {
+    serviceUser: {
         type: Schema.Types.ObjectId,
-        ref: 'booking'
+        ref: 'serviceUser'
     },
     alfred: {
         type: Schema.Types.ObjectId,

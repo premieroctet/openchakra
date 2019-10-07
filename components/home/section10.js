@@ -64,7 +64,7 @@ const styles = theme => ({
 
         backgroundColor:'transparent',
         textAlign:'center',
-        margin:10,
+        margin:'15px auto',
         boxShadow: `1px 3px 1px transparent`,
 
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)

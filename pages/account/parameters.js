@@ -140,22 +140,33 @@ class parameters extends React.Component {
 
     deleteShop = () => {
 
-        axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
-            .then(() => {
-                axios.delete(url+'myAlfred/api/shop/current/delete')
-                    .then(shop => {
-                        toast.error('Boutique supprimée');
+
+                axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
+                    .then(() => {
+                        axios.delete(url+'myAlfred/api/shop/current/delete')
+                            .then(() => {
+                                axios.put(url+'myAlfred/api/users/users/deleteAlfred')
+                                    .then(() => {
+                                        this.setState({open2:false});
+                                        toast.error('Boutique supprimée');
+                                        this.componentDidMount();
+
+                                    })
+                                    .catch(error => console.log(error));
+
+                            })
+                            .catch(err => console.log(err));
+
+
                     })
                     .catch(err => console.log(err));
+                axios.delete(url+'myAlfred/api/availability/currentAlfred')
+                    .then(() => {
+                        console.log('ok')
+                    })
+                    .catch(error => console.log(error));
 
 
-            })
-            .catch(err => console.log(err));
-        axios.delete(url+'myAlfred/api/availability/currentAlfred')
-            .then(() => {
-                console.log('ok')
-            })
-            .catch(error => console.log(error));
 
     };
 

@@ -95,7 +95,7 @@ const bodySearchCard = (props) => {
   return (
     <Card className={classes.card}>
       <CardActionArea>
-        <CardMedia className={classes.media} image={img} title="Coiffure">
+        <CardMedia className={classes.media} image={img}>
           <div className={classes.darkOverlay}>
             <Grid container className={classes.avatarContainer}>
               <Grid container className={classes.gridContainer}>
