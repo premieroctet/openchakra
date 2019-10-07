@@ -541,9 +541,9 @@ router.delete('/delete/certification/:id', passport.authenticate('jwt', { sessio
 // Delete all the service for an alfred
 // @Access private
 router.delete('/current/allServices', passport.authenticate('jwt', { session: false }), (req, res) => {
-    ServiceUser.find({user: req.user.id})
-        .then(services => {
-            services.remove().then(() => res.json({success: true}));
+    ServiceUser.deleteMany({user: req.user.id})
+        .then(() => {
+            res.json({success: true});
 
         })
         .catch(err => res.status(404).json({servicenotfound: 'No service found'}));

@@ -462,7 +462,7 @@ class services extends React.Component {
                                     </Grid>
                                     <Grid container>
                                         {equipments.map((e,index)=>(<React.Fragment key={index}>
-                                            <Grid item xs={1} style={{ marginLeft: '1.5%'}}><img src={'../'+ e.logo2}/></Grid>
+                                            <Grid item xs={1} style={{ marginLeft: '1.5%'}}><img src={'../../'+ e.logo2}/></Grid>
                                         </React.Fragment>))}
                                         <Grid item xs={1}></Grid>
                                     </Grid>

@@ -590,6 +590,7 @@ class detailsAvailability extends React.Component {
 
     deleteAvailability() {
         const id = this.props.availability_id;
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.delete(url+'myAlfred/api/availability/'+id)
             .then(() => {
                 toast.error('Disponibilité supprimée');
