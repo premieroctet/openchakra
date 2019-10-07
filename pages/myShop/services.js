@@ -511,7 +511,7 @@ class services extends React.Component {
 
 
                             </Grid>
-                            <Grid item  className={classes.tabscontainer} >
+                            <Grid item style={{marginTop:'-9%'}}  className={classes.tabscontainer} >
 
 
                                 <Grid container style={{paddingLeft: 100}}>
@@ -786,7 +786,7 @@ class services extends React.Component {
                                                 </Grid>
                                                 <Grid container style={{ border: '1px solid lightgray',padding: '15px 15px 15px 15px',}}>
                                                     <Grid item md={3} xs={12} style={{ borderBottom : '150px', borderLeft : '150px', cursor: 'pointer'}}>
-                                                        <Link href={'/myShop/previewService?id='+e._id}><img className={classes.respimg} src={e.service.picture} alt={'picture'} width={'85%'}/></Link>
+                                                        <Link href={'/myShop/previewService?id='+e._id}><img className={classes.respimg} src={'../../'+e.service.picture} alt={'picture'} width={'85%'}/></Link>
                                                     </Grid>
                                                     <Grid item md={6} xs={9}>
                                                         <h4 style={{fontWeight: 'bolder',fontSize: 18,color: '#737373'}}>{e.service.label}</h4>
