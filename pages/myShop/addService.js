@@ -38,7 +38,7 @@ const styles = theme => ({
         marginTop: 68,
         flexGrow: 1,
     },
-    field1:{width: '30%', [theme.breakpoints.down('sm')]: {
+    field1:{width: '50%', [theme.breakpoints.down('sm')]: {
         width:'90%',
         margin:'auto'
     }},
@@ -1151,8 +1151,8 @@ class addService extends React.Component {
                                     </Grid>
                                     <Grid container>
                                         <Grid item xs={4}>
-                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",textAlign:'center',color:'black'}}>Joindre mon diplôme</p>
+                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center"}}>
+                                                <p style={{cursor:"pointer",textAlign:'center',color:'white'}}>Joindre mon diplôme</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
                                                        onChange={this.onChangeDiploma}
                                                        className="form-control" accept={'image/*,.pdf'}
@@ -1213,8 +1213,8 @@ class addService extends React.Component {
                                     </Grid>
                                     <Grid container>
                                         <Grid item xs={4}>
-                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",textAlign:'center',color:'black'}}>Joindre ma certification</p>
+                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center"}}>
+                                                <p style={{cursor:"pointer",textAlign:'center',color:'white'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
                                                        onChange={this.onChangeCertification}
                                                        className="form-control" accept={'image/*,.pdf'}

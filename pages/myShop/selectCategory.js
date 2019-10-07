@@ -300,7 +300,7 @@ class selectCategory extends React.Component {
                             <Grid container>
                                 <Grid item xs={6}>
                                     <Link href={'/myShop/services'}>
-                                        <Button type="button" variant="contained" color="primary" style={{ color:"white" }}>
+                                        <Button type="button" variant="contained" color="primary" style={{ color:"white", marginBottom: 10 }}>
                                             Retour
                                         </Button>
                                     </Link>
@@ -308,7 +308,7 @@ class selectCategory extends React.Component {
                                 <Grid item xs={6}>
                                     {serviceOk ?
                                         <Link href={'/myShop/addService?id='+this.state.selectedService.value}>
-                            <Button type="submit" variant="contained" color="secondary" className={classes.suivant} style={{ color:"white" }}>
+                            <Button type="submit" variant="contained" color="secondary" className={classes.suivant} style={{ color:"white", marginBottom: 10 }}>
                                 Suivant
                             </Button>
                                         </Link>

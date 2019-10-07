@@ -79,12 +79,22 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             visibility:'visible', fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:20}},
 
-    bgimage: {display:'block', width:'37%', backgroundColor:'transparent',  backgroundImage: "url('../../static/servicesbg.png')", backgroundSize:'contain', backgroundRepeat:'no-repeat', height:'68%',top:'81%', right:0, position:'absolute', [theme.breakpoints.down('sm')]: { display:'none'}},
+    bgimage: {display:'block', width:'37%', backgroundColor:'transparent',  backgroundImage: "url('../../static/servicesbg.png')", backgroundSize:'contain', backgroundRepeat:'no-repeat', height:'68%',top:'71%',zIndex: -20, right:0, position:'absolute', [theme.breakpoints.down('sm')]: { display:'none'}},
 
     addweb:{
         [theme.breakpoints.down('sm')]: {
             display:'none'}},
 
+    mobile:{
+        [theme.breakpoints.up('md')]: {
+            display: 'none'
+        }
+    },
+    notmobile:{
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        }
+    },
     addmobile:{display:'none',
         [theme.breakpoints.down('sm')]: {
             display:'block', cursor:'pointer',marginBottom: 45,backgroundColor: 'transparent',width:'15%', padding:'2%',justifyContent:"center", borderRadius:'100%', bottom:'4%', right:'20px', position:'fixed', zIndex:'99999'}},
@@ -425,7 +435,7 @@ class services extends React.Component {
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto', minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',zIndex:501}}  alt={'picture'}/>
+                            <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto', minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',zIndex:501, objectFit: 'cover'}}  alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'3%',top:'20%',zIndex:502}}>
                             <EditIcon onClick={()=>this.handleOpen()} style={{cursor:'pointer',color:"white",width:40}}/>
@@ -766,10 +776,12 @@ class services extends React.Component {
                                     <React.Fragment>
                                         {serviceUser.map((e,index)=> (
                                             <React.Fragment key={index}>
+                                                <Grid className={classes.mobile} style={{padding: '8px',marginBottom: '-20px'}}>
+                                                    <h3 style={{color: '#505050'}}>{e.service.category.label}</h3>
+                                                </Grid>
                                                 <Grid container>
-                                                    <Grid style={{marginLeft: 130, backgroundColor: 'white',marginBottom: '-36px',padding: '8px',}}>
+                                                    <Grid className={classes.notmobile} style={{marginLeft: 10, backgroundColor: 'white',marginBottom: '-36px',padding: '8px',}}>
                                                         <h3 style={{color: '#505050'}}>{e.service.category.label}</h3>
-
                                                     </Grid>
                                                 </Grid>
                                                 <Grid container style={{ border: '1px solid lightgray',padding: '15px 15px 15px 15px',}}>
