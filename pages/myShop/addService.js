@@ -21,6 +21,7 @@ import { pdfjs } from 'react-pdf';
 import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
+import NumberFormat from "react-number-format";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
@@ -60,6 +61,25 @@ const styles = theme => ({
 
 
 });
+
+function NumberFormatCustom(props) {
+    const { inputRef, onChange, ...other } = props;
+
+    return (
+        <NumberFormat
+            {...other}
+            getInputRef={inputRef}
+            onValueChange={values => {
+                onChange({
+                    target: {
+                        value: values.value,
+                    },
+                });
+            }}
+            allowNegative={false}
+        />
+    );
+}
 
 
 
@@ -193,7 +213,7 @@ class addService extends React.Component {
                             prestations.forEach(a => {
                                 this.setState({[a.label]:false});
                                 this.setState({[a.label+'price']: ''});
-                                this.setState({[a.label+'billing']: ''});
+                                this.setState({[a.label+'billing']: a.billing[0].label});
 
                             })
 
@@ -259,6 +279,12 @@ class addService extends React.Component {
 
     };
 
+    handleChange2 = name => event => {
+        this.setState({
+            [name]: event.target.value
+        });
+    };
+
 
     validateOptions = () => {
 
@@ -317,7 +343,7 @@ class addService extends React.Component {
             this.setState({[label+'price']:null});
             this.setState({[label+'billing']:null});
         } else {
-            const obj = {prestation: id,billing:null,price:null};
+            const obj = {prestation: id,billing:this.state[label+'billing'],price:null};
             arrayPrestations.push(obj);
             this.setState({prestations: [...this.state.prestations, obj]});
         }
@@ -502,7 +528,7 @@ class addService extends React.Component {
                                                             {this.state[z.label] ?
                                                                 <React.Fragment><TextField
                                                                     id="standard-name"
-                                                                    value={this.state[z.label+'price']}
+                                                                    //value={this.state[z.label+'price']}
                                                                     name={z.label+'price'}
                                                                     onChange={(event)=>{
                                                                         this.onChange2(event);
@@ -510,14 +536,11 @@ class addService extends React.Component {
                                                                     }}
                                                                     style={{width: 125}}
                                                                     label={`Prix`}
-                                                                    type="number"
                                                                     disabled={!this.state[z.label]}
                                                                     margin="none"
                                                                     InputProps={{
-                                                                        inputProps: {
-                                                                            min: 0
-                                                                        },
-                                                                        startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                        inputComponent: NumberFormatCustom,
+                                                                        endAdornment: <InputAdornment position="end">€</InputAdornment>,
 
                                                                     }}
 
@@ -595,13 +618,13 @@ class addService extends React.Component {
                                             id="standard-name"
                                             disabled={this.state.otherOptions}
                                             label="Prix"
-                                            type={'number'}
                                             name={'priceOptions'}
                                             className={classes.textField}
-                                            value={this.state.priceOptions}
-                                            onChange={this.onChange2}
+                                            //value={this.state.priceOptions}
+                                            onChange={(event)=>this.setState({priceOptions:event.target.value })}
                                             InputProps={{
-                                                startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                inputComponent: NumberFormatCustom,
+                                                endAdornment: <InputAdornment position="end">€</InputAdornment>,
                                             }}
                                             margin="normal"
                                         />
@@ -679,6 +702,8 @@ class addService extends React.Component {
                                                 {value: 'm2', label: 'm2'},
                                                 {value: 'cm2', label: 'cm2'},
                                                 {value: 'mm2', label: 'mm2'},
+                                                {value: 'km', label: 'kilomètre'},
+                                                {value: 'm', label: 'mètre'},
                                             ]}
                                             onChange={async unityOptions => {
                                                 await this.setState({unityOptions})
@@ -698,13 +723,13 @@ class addService extends React.Component {
                                         <TextField
                                             id="standard-name"
                                             label="Prix"
-                                            type={'number'}
                                             className={classes.textField}
                                             value={this.state.priceOptions2}
                                             name={'priceOptions2'}
-                                            onChange={this.onChange2}
+                                            onChange={(event)=>this.setState({priceOptions2: event.target.value})}
                                             InputProps={{
-                                                startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                inputComponent: NumberFormatCustom,
+                                                endAdornment: <InputAdornment position="end">€</InputAdornment>,
                                             }}
                                             margin="normal"
                                         />
@@ -831,13 +856,13 @@ class addService extends React.Component {
                                 <TextField
                                     id="standard-name"
                                     label="Panier minimum"
-                                    type={'number'}
                                     className={classes.textField}
                                     value={this.state.minimum_basket}
                                     name={'minimum_basket'}
-                                    onChange={this.onChange2}
+                                    onChange={(event)=>this.setState({minimum_basket:event.target.value})}
                                     InputProps={{
-                                        startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                        inputComponent: NumberFormatCustom,
+                                        endAdornment: <InputAdornment position="end">€</InputAdornment>,
                                     }}
                                     margin="normal"
                                 />

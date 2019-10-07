@@ -24,6 +24,7 @@ import { pdfjs } from 'react-pdf';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import Switch from "@material-ui/core/Switch";
 import { toast } from 'react-toastify';
+import NumberFormat from "react-number-format";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
@@ -64,6 +65,25 @@ const styles = theme => ({
 
 
 });
+
+function NumberFormatCustom(props) {
+    const { inputRef, onChange, ...other } = props;
+
+    return (
+        <NumberFormat
+            {...other}
+            getInputRef={inputRef}
+            onValueChange={values => {
+                onChange({
+                    target: {
+                        value: values.value,
+                    },
+                });
+            }}
+            allowNegative={false}
+        />
+    );
+}
 
 
 
@@ -689,19 +709,18 @@ class editService extends React.Component {
                                                                         value={this.state[z.label+'price']}
                                                                         name={z.label+'price'}
                                                                         onChange={(event)=>{
-                                                                            this.onChange2(event);
+                                                                            //this.onChange2(event);
+                                                                            this.setState({[z.label+'price']:event.target.value});
                                                                             this.onChangePrice(z.label,event,z._id);
+
                                                                         }}
                                                                         style={{width: 125}}
                                                                         label={`Prix`}
-                                                                        type="number"
                                                                         disabled={!this.state[z.label]}
                                                                         margin="none"
                                                                         InputProps={{
-                                                                            inputProps: {
-                                                                                min: 0
-                                                                            },
-                                                                            startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                            inputComponent: NumberFormatCustom,
+                                                                            endAdornment: <InputAdornment position="end">€</InputAdornment>,
 
                                                                         }}
 
@@ -1027,8 +1046,9 @@ class editService extends React.Component {
                                     value={serviceUser.minimum_basket}
                                     name={'minimum_basket'}
                                     onChange={this.onChange}
+                                    InputLabelProps={{ shrink: true }}
                                     InputProps={{
-                                        startAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                        endAdornment: <InputAdornment position="end">€</InputAdornment>,
                                     }}
                                     margin="normal"
                                 />

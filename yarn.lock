@@ -10395,6 +10395,13 @@ react-multistep@^3.6.6:
   resolved "https://registry.yarnpkg.com/react-multistep/-/react-multistep-3.6.6.tgz#b60c16cbe38a6601a091b6fcfbcdecacb0cc2bed"
   integrity sha512-0dQPptVcz/GvnZndCBaqe85QE9ujdCPSXi3xEEZ07B61oOyB4ZCleZ7pLTl10UAJQh0WcOA7cn9+DB7VEYb2LA==
 
+react-number-format@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-4.3.0.tgz#3c6d7c77debad50a121da57a26abd937c9432da6"
+  integrity sha512-IAxm26MVyuiG+CCPlrz4KAOmxi/mVidK/3pIm2796qkfNtfF108QBBOBGLIFFRJQHwdDN/HI0beiAXK6mJM4Lw==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-onclickoutside@^6.9.0:
   version "6.9.0"
   resolved "https://registry.yarnpkg.com/react-onclickoutside/-/react-onclickoutside-6.9.0.tgz#a54bc317ae8cf6131a5d78acea55a11067f37a1f"

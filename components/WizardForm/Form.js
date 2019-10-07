@@ -479,7 +479,7 @@ class Wizard extends React.Component {
     Step2Schema = Yup.object().shape({
           submission: Yup.array().of(Yup.object().shape({
             //descService: Yup.string().min(10, 'La description de votre service doit faire au moins 10 caractères').required('Veuillez entrer une description pour votre service'),
-            minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').required('Le minimum d\'achat est requis'),
+            minimumBasket: Yup.number().typeError('Un nombre est requis pour le minimum d\'achat').moreThan(0,'Le prix doit être supérieur à 0€').required('Le minimum d\'achat est requis'),
             delayBeforeShopDWM: Yup.string().typeError('Choisissez parmi heures, jours et semaines').required('Choisissez parmi heures, jours et semaines'),
             city: Yup.string().typeError('Veuillez entrer la ville où le service sera pratiqué').required('Veuillez entrer la ville où le service sera pratiqué'),
             filters: Yup.array().of(Yup.object().shape({
