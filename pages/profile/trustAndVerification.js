@@ -178,7 +178,8 @@ class trustAndVerification extends React.Component {
         super(props);
         this.state = {
             user: {},
-            type: '',
+            type: null,
+            selected: false,
             id_recto: null,
             id_verso: null,
             card:{},
@@ -652,7 +653,7 @@ class trustAndVerification extends React.Component {
                                         style={{width:'70%'}}
                                         value={this.state.type}
                                         name={'type'}
-                                        onChange={this.onChange}
+                                        onChange={(event)=>{this.onChange(event);this.setState({selected:true})}}
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">Type</InputAdornment>,
                                         }}
@@ -723,7 +724,7 @@ class trustAndVerification extends React.Component {
                                                     }}>
                                                         <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger recto</p>
-                                                            <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
+                                                            <input disabled={!this.state.selected} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
                                                                    onChange={this.onChangeRecto}
                                                                    className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                                             />
@@ -740,7 +741,7 @@ class trustAndVerification extends React.Component {
                                                         <Grid item xs={3}>
                                                             <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                                 <Edit style={{cursor:"pointer"}}/>
-                                                                <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
+                                                                <input  id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
                                                                        onChange={this.onChangeRecto}
                                                                        className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                                                 />
@@ -821,7 +822,7 @@ class trustAndVerification extends React.Component {
                                                     }}>
                                                         <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
-                                                            <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
+                                                            <input disabled={this.state.type === 'passeport' || !this.state.selected} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
                                                                    onChange={this.onChangeVerso}
                                                                    className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                                             />
