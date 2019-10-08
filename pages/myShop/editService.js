@@ -1324,6 +1324,7 @@ class editService extends React.Component {
                                                 style={{width: '100%'}}
                                                 type={'text'}
                                                 margin="normal"
+                                                label={'Nom du diplôme'}
                                                 variant="outlined"
                                                 placeholder={'Nom du diplôme'}
                                                 value={this.state.name_newDiploma}
@@ -1335,6 +1336,7 @@ class editService extends React.Component {
                                     <Grid container>
                                         <Grid item xs={6}>
                                             <TextField
+                                                InputLabelProps={{ shrink: true }}
                                                 style={{width: '100%'}}
                                                 label="Année d'obtention"
                                                 margin="normal"
@@ -1482,6 +1484,7 @@ class editService extends React.Component {
                                                 style={{width: '100%'}}
                                                 type={'text'}
                                                 margin="normal"
+                                                label={'Nom de la certification'}
                                                 variant="outlined"
                                                 placeholder={'Nom de la certification'}
                                                 value={this.state.name_newCertification}
@@ -1493,6 +1496,7 @@ class editService extends React.Component {
                                     <Grid container>
                                         <Grid item xs={6}>
                                             <TextField
+                                                InputLabelProps={{ shrink: true }}
                                                 style={{width: '100%'}}
                                                 label="Année d'obtention"
                                                 margin="normal"

@@ -152,14 +152,11 @@ class section22 extends React.Component {
         const services = resdata.slice(0, 4).map(e => (
             <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
                 <Card className={classes.card} style={{
-                    height:'600px',
                     backgroundColor:'transparent',
                     textAlign:'center',
                     margin:10,
                     boxShadow: '1px 3px 1px transparent'}}>
-                    <CardActionArea style={{
-                        height:'600px',
-                    }}>
+                    <CardActionArea >
                         <CardMedia
                             className={classes.media2}
                             image={e.picture}

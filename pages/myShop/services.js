@@ -11,7 +11,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import styled from 'styled-components';
 import { TextField } from '@material-ui/core';
-import Footer from '../../hoc/Layout/Footer/Footer';
+import Footer from '../../hoc/Layout/Footer/Footer2';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/EditOutlined';
 import Modal from '@material-ui/core/Modal';
@@ -925,7 +925,7 @@ class services extends React.Component {
                         </div>
                     </Modal>
                 </Layout>
-                <Footer/>
+                <Footer2/>
 
                 <Dialog
                     open={this.state.open2}
