@@ -875,7 +875,8 @@ router.delete('/profile/picture/delete',passport.authenticate('jwt',{session:fal
 // Delete the current user
 // @Access private
 router.put('/current/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
-    User.findByIdAndUpdate(req.user.id,{active: false,is_alfred:false})
+    const hash = crypto.randomBytes(10).toString('hex');
+    User.findByIdAndUpdate(req.user.id,{active: false,is_alfred:false,email:hash})
         .then(() => {
              res.json({msg:'Compte désactivé'});
         })

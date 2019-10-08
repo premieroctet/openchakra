@@ -95,7 +95,7 @@ class testSearch extends React.Component {
         }
 
         this.setState({click: true});
-        axios.get(url+'myAlfred/api/category/all')
+        axios.get(url+'myAlfred/api/category/all/sort')
             .then(res => {
                 let categories = res.data;
                 this.setState({categories:categories})
@@ -116,7 +116,7 @@ class testSearch extends React.Component {
         const {user} = this.state;
         const {otherAddress} = this.state;
         const {click} = this.state;
-        const categories = shuffleArray(this.state.categories);
+        const categories = this.state.categories;
         const serviceUser = shuffleArray(this.state.serviceUser);
         return (
             <Fragment>
