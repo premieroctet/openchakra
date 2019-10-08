@@ -147,7 +147,7 @@ class parameters extends React.Component {
                             .then(() => {
                                 axios.put(url+'myAlfred/api/users/users/deleteAlfred')
                                     .then(() => {
-                                        this.setState({open2:false});
+                                        this.setState({open:false});
                                         toast.error('Boutique supprimée');
                                         this.componentDidMount();
 
@@ -176,8 +176,9 @@ class parameters extends React.Component {
                 .then(() => {
                     axios.delete(url+'myAlfred/api/shop/current/delete')
                         .then(() => {
-                            axios.delete(url+'myAlfred/api/users/current/delete')
-                                .then(shop => {
+                            axios.put(url+'myAlfred/api/users/current/delete')
+                                .then(() => {
+                                    this.setState({open2:false});
                                     toast.error('Compte désactivé');
                                     localStorage.removeItem('token');
                                     Router.push('/');
@@ -195,8 +196,9 @@ class parameters extends React.Component {
                 })
                 .catch(error => console.log(error));
         } else {
-            axios.delete(url+'myAlfred/api/users/current/delete')
-                .then(shop => {
+            axios.put(url+'myAlfred/api/users/current/delete')
+                .then(() => {
+                    this.setState({open2:false});
                     toast.error('Compte désactivé');
                     localStorage.removeItem('token');
                     Router.push('/');
@@ -491,7 +493,7 @@ class parameters extends React.Component {
 
                 <Dialog
                     open={this.state.open2}
-                    onClose={this.handleClose2}
+                    onClose={()=>this.handleClose2()}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >

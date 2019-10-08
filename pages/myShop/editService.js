@@ -974,8 +974,8 @@ class editService extends React.Component {
                                         }>
 
 
-                                                <img src={`../../${e.logo2}`} height={80} width={80}
-                                                     alt={`logo2`}/>
+                                                <img src={`../../static/equipments/${e.logo.slice(0, -4)}_Selected.svg`} height={80} width={80}
+                                                     alt={e.label}/>
                                         </label>
                                             <Checkbox
                                                 style={{display: 'none'}}
@@ -1002,8 +1002,8 @@ class editService extends React.Component {
                                             }>
 
 
-                                                <img src={`../../${e.logo}`} height={100} width={100}
-                                                     alt={`logo`}/>
+                                                <img src={`../../static/equipments/${e.logo}`} height={80} width={80}
+                                                     alt={e.label}/>
                                             </label>
                                                 <Checkbox
                                                     style={{display: 'none'}}
@@ -1353,8 +1353,8 @@ class editService extends React.Component {
                                     </Grid>
                                     <Grid container>
                                         <Grid item xs={4}>
-                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",textAlign:'center', color:'black'}}>Joindre mon diplôme</p>
+                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center"}}>
+                                                <p style={{cursor:"pointer",textAlign:'center', color:'white'}}>Joindre mon diplôme</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
                                                        onChange={this.onChangeDiploma}
                                                        className="form-control" accept={'image/*,.pdf'}
@@ -1416,8 +1416,8 @@ class editService extends React.Component {
                                     </Grid>
                                     <Grid container>
                                         <Grid item xs={4}>
-                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",textAlign:'center',color:'black'}}>Joindre mon diplôme</p>
+                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center"}}>
+                                                <p style={{cursor:"pointer",textAlign:'center',color:'white'}}>Joindre mon diplôme</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
                                                        onChange={this.onChangeDiploma}
                                                        className="form-control" accept={'image/*,.pdf'}
@@ -1511,8 +1511,8 @@ class editService extends React.Component {
                                     </Grid>
                                     <Grid container>
                                         <Grid item xs={4}>
-                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",textAlign:'center',color:'black'}}>Joindre ma certification</p>
+                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center"}}>
+                                                <p style={{cursor:"pointer",textAlign:'center',color:'white'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
                                                        onChange={this.onChangeCertification}
                                                        className="form-control" accept={'image/*,.pdf'}
@@ -1574,8 +1574,8 @@ class editService extends React.Component {
                                     </Grid>
                                     <Grid container>
                                         <Grid item xs={4}>
-                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'#AFAFAF',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",textAlign:'center',color:'black'}}>Joindre ma certification</p>
+                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center"}}>
+                                                <p style={{cursor:"pointer",textAlign:'center',color:'white'}}>Joindre ma certification</p>
                                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
                                                        onChange={this.onChangeCertification}
                                                        className="form-control" accept={'image/*,.pdf'}

@@ -117,9 +117,9 @@ router.put('/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
 // Delete all availability for one user
 router.delete('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
-    Availability.find({user: req.user.id})
-        .then(availability => {
-            availability.remove().then(() => res.json({success: true}));
+    Availability.deleteMany({user: req.user.id})
+        .then(() => {
+            res.json({success: true});
         })
         .catch(err => {
             console.log(err);
