@@ -793,8 +793,8 @@ class addService extends React.Component {
                                             }>
 
 
-                                                <img src={`../../${e.logo2}`} height={80} width={80}
-                                                     alt={`logo2`}/>
+                                                <img src={`../../static/equipments/${e.logo.slice(0, -4)}_Selected.svg`} height={80} width={80}
+                                                     alt={e.label}/>
                                             </label>
                                             <Checkbox
                                                 style={{display: 'none'}}
@@ -822,8 +822,8 @@ class addService extends React.Component {
                                             }>
 
 
-                                                <img src={`../../${e.logo}`} height={100} width={100}
-                                                     alt={`logo`}/>
+                                                <img src={`../../static/equipments/${e.logo}`} height={80} width={80}
+                                                     alt={e.label}/>
                                             </label>
                                             <Checkbox
                                                 style={{display: 'none'}}
@@ -1039,7 +1039,7 @@ class addService extends React.Component {
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <TextField className={classes.field1}
-
+                                    style={{width:'53%'}}
                                     select
                                     margin="dense"
                                     variant="outlined"
