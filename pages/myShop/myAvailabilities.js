@@ -273,7 +273,7 @@ class myAvailabilities extends React.Component {
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius:'50%',position:'absolute',top:'27%',left:'0%',right:'0%',margin: 'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}} alt={'picture'}/>
+                            <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius:'50%',position:'absolute',top:'27%',left:'0%',right:'0%',margin: 'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px', objectFit: 'cover'}} alt={'picture'}/>
                         </Grid>
                     </Grid>
 
@@ -286,7 +286,7 @@ class myAvailabilities extends React.Component {
                                     return (
                                         <Link className={classes.dispocard} key={index} href={'/myShop/detailsAvailability?id='+e._id}>
                                             <a className={classes.dispocardin} style={{textDecoration:'none', color:'gray'}}>
-                                                <div style={{boxShadow: '0px 0px 6px #aaa'}}>
+                                                <div style={{boxShadow: '10px 10px 25px -13px rgba(0,0,0,0.05)'}}>
                                                     <div className={classes.dispoheader}><p style={{ padding: '2%'}}>Disponibilités pour la période:</p></div>
                                                     <p style={{marginLeft:'20px',padding: '2%'}}>  {moment(e.period.month_begin).format('LL')} / {moment(e.period.month_end).format('LL')}</p>
                                                 </div>
@@ -297,7 +297,7 @@ class myAvailabilities extends React.Component {
                                     return (
                                         <Link className={classes.dispocard} key={index} href={'/myShop/detailsAvailability?id='+e._id}>
                                             <a className={classes.dispocardin} style={{textDecoration:'none', color:'gray'}}>
-                                                <div style={{boxShadow: '0px 0px 6px #aaa'}}>
+                                                <div style={{boxShadow: '10px 10px 25px -13px rgba(0,0,0,0.05)'}}>
                                                     <div className={classes.dispoheader}><p style={{ padding: '2%'}}>Disponibilités pour la période:</p></div>
                                                     <p style={{marginLeft:'20px',padding: '2%'}}>Indéfinies</p>
                                                 </div>

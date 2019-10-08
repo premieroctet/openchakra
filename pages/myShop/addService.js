@@ -778,7 +778,7 @@ class addService extends React.Component {
                             {all_equipments.map((e,index)=> {
                                 if(this.state[e.label]){
                                     return(
-                                        <Grid item xs={3} key={index}>
+                                        <Grid item xs={1} style={{margin: '0 10px'}} key={index}>
                                             <label style={{cursor: 'pointer'}} onClick={() => {
                                                 this.setState({[e.label]: false});
                                                 let array = [...this.state.equipments]; // make a separate copy of the array
@@ -811,7 +811,7 @@ class addService extends React.Component {
                                         </Grid>)
                                 }else {
                                     return (
-                                        <Grid item xs={3}>
+                                        <Grid item xs={1} style={{margin: '0 10px'}}>
                                             <label style={{cursor: 'pointer'}} key={index} onClick={() => {
                                                 this.setState({[e.label]: true});
                                                 this.setState({
