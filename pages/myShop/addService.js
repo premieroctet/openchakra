@@ -1074,6 +1074,7 @@ class addService extends React.Component {
                                     style={{width:'100%'}}
                                     multiline
                                     rows={6}
+                                    label={'Description du service'}
                                     margin="normal"
                                     variant="outlined"
                                     value={this.state.description}
