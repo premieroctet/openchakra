@@ -332,7 +332,7 @@ class Wizard extends React.Component {
                 if(e.diploma !== null) {
                     graduated = true;
                     diploma = e.diploma.diploma;
-                    diplomaLabel = e.diploma.name;
+                    diplomaLabel = e.diploma.label;
                     diplomaYear = e.diploma.year;
 
                 }
@@ -343,7 +343,7 @@ class Wizard extends React.Component {
                 if(e.certification !== null) {
                      is_certified = true;
                      certification = e.certification.certification;
-                     certificationLabel = e.certification.name;
+                     certificationLabel = e.certification.label;
                      certificationYear = e.certification.year;
                 }
 

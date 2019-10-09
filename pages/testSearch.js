@@ -16,6 +16,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 
+const geolib = require('geolib');
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
@@ -49,6 +50,9 @@ class testSearch extends React.Component {
             click: false,
             categories: [],
             serviceUser: [],
+            lat: null,
+            lng: null,
+
 
         }
     }
@@ -79,8 +83,19 @@ class testSearch extends React.Component {
     };
 
     search() {
+        const address = this.state.addressSelected;
+        if(address.gps !== undefined){
+            this.setState({lat:address.gps.lat, lng: address.gps.lng});
+            //const result = geolib.getDistance({latitude: 49.4459653, longitude:1.0683586},{latitude:address.gps.lat,longitude:address.gps.lng});
+            //console.log(Math.round( ( geolib.convertDistance(result,'km') + Number.EPSILON ) * 100 ) / 100);
+        } else {
+            this.setState({lat:address.lat,lng: address.lng});
+            //const result = geolib.getDistance({latitude: 49.4459653, longitude:1.0683586},{latitude:address.lat,longitude:address.lng});
+            //console.log(Math.round( ( geolib.convertDistance(result,'km') + Number.EPSILON ) * 100 ) / 100);
+        }
+
         this.setState({click: true});
-        axios.get(url+'myAlfred/api/category/all')
+        axios.get(url+'myAlfred/api/category/all/sort')
             .then(res => {
                 let categories = res.data;
                 this.setState({categories:categories})
@@ -101,7 +116,7 @@ class testSearch extends React.Component {
         const {user} = this.state;
         const {otherAddress} = this.state;
         const {click} = this.state;
-        const categories = shuffleArray(this.state.categories);
+        const categories = this.state.categories;
         const serviceUser = shuffleArray(this.state.serviceUser);
         return (
             <Fragment>
@@ -133,11 +148,11 @@ class testSearch extends React.Component {
                                     margin="normal"
                                     variant="outlined"
                                 >
-                                    <MenuItem value={address.address}>
+                                    <MenuItem value={address}>
                                         Adresse principale, <em> {' '+address.address} {address.zip_code},{address.city}</em>
                                     </MenuItem>
                                     {otherAddress.map(e => (
-                                        <MenuItem key={e._id} value={e._id}>
+                                        <MenuItem key={e._id} value={e}>
                                             {e.label+', '} <em> {' '+e.address},{e.zip_code} {e.city}</em>
 
                                         </MenuItem>
@@ -166,7 +181,7 @@ class testSearch extends React.Component {
                         {click ?
                             <>
                             <Grid container>
-                                <h3>Que recherchez-vous aujourd'hui {user.firstname} ?</h3>
+                                <h3>Que recherchez-vous {user.firstname} ?</h3>
                             </Grid>
                                 <Grid container>
                                     {categories.map((e,index) => (
@@ -204,6 +219,14 @@ class testSearch extends React.Component {
                                                         <Grid item xs={3}>
                                                         <Card>
                                                         <p>{a.service.label} par {a.user.firstname}</p>
+
+                                                            <p>{a.user.billing_address.city}
+                                                                ({Math.round(( geolib.convertDistance(
+                                                                    geolib.getDistance({latitude: a.user.billing_address.gps.lat, longitude:a.user.billing_address.gps.lng},
+                                                                        {latitude:this.state.lat,longitude:this.state.lng})
+                                                                    ,'km') + Number.EPSILON ) * 100 ) / 100} kms)
+
+                                                            </p>
                                                         </Card>
                                                         </Grid>
                                                     )

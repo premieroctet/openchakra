@@ -161,13 +161,11 @@ class section3 extends React.Component {
         const services = resdata.slice(0, 6).map(e => (
             <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
                 <Card className={classes.card} style={{
-                    height:'350px',
                     backgroundColor:'transparent',
                     textAlign:'center',
                     margin:10,
                     boxShadow: '1px 3px 1px transparent'}}>
                     <CardActionArea style={{
-                        height:'350px',
                     }}>
                         <CardMedia
                             className={classes.media2}

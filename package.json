@@ -25,6 +25,7 @@
     "fast-csv": "^3.0.1",
     "file-system": "^2.2.2",
     "formik": "^1.5.7",
+    "geolib": "^3.0.4",
     "glob": "^7.1.4",
     "jsonwebtoken": "^8.5.1",
     "jss": "^9.8.7",

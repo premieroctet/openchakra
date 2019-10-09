@@ -778,7 +778,7 @@ class addService extends React.Component {
                             {all_equipments.map((e,index)=> {
                                 if(this.state[e.label]){
                                     return(
-                                        <Grid item xs={3} key={index}>
+                                        <Grid item xs={1} style={{margin: '0 10px'}} key={index}>
                                             <label style={{cursor: 'pointer'}} onClick={() => {
                                                 this.setState({[e.label]: false});
                                                 let array = [...this.state.equipments]; // make a separate copy of the array
@@ -793,8 +793,8 @@ class addService extends React.Component {
                                             }>
 
 
-                                                <img src={`../../${e.logo2}`} height={80} width={80}
-                                                     alt={`logo2`}/>
+                                                <img src={`../../static/equipments/${e.logo.slice(0, -4)}_Selected.svg`} height={80} width={80}
+                                                     alt={e.label}/>
                                             </label>
                                             <Checkbox
                                                 style={{display: 'none'}}
@@ -811,7 +811,7 @@ class addService extends React.Component {
                                         </Grid>)
                                 }else {
                                     return (
-                                        <Grid item xs={3}>
+                                        <Grid item xs={1} style={{margin: '0 10px'}}>
                                             <label style={{cursor: 'pointer'}} key={index} onClick={() => {
                                                 this.setState({[e.label]: true});
                                                 this.setState({
@@ -822,8 +822,8 @@ class addService extends React.Component {
                                             }>
 
 
-                                                <img src={`../../${e.logo}`} height={100} width={100}
-                                                     alt={`logo`}/>
+                                                <img src={`../../static/equipments/${e.logo}`} height={80} width={80}
+                                                     alt={e.label}/>
                                             </label>
                                             <Checkbox
                                                 style={{display: 'none'}}
@@ -1039,7 +1039,7 @@ class addService extends React.Component {
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <TextField className={classes.field1}
-
+                                    style={{width:'53%'}}
                                     select
                                     margin="dense"
                                     variant="outlined"

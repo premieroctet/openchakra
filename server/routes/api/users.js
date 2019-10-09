@@ -871,15 +871,14 @@ router.delete('/profile/picture/delete',passport.authenticate('jwt',{session:fal
         .catch(err => console.log(err));
 });
 
-// @Route DELETE /myAlfred/api/users/current/delete
+// @Route PUT /myAlfred/api/users/current/delete
 // Delete the current user
 // @Access private
-router.delete('/current/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
-    User.findById(req.user.id)
-        .then(user => {
-            user.active = false;
-            user.is_alfred = false;
-            user.save().then(data => console.log('User deleted')).catch(err => console.log(err));
+router.put('/current/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const hash = crypto.randomBytes(10).toString('hex');
+    User.findByIdAndUpdate(req.user.id,{active: false,is_alfred:false,email:hash})
+        .then(() => {
+             res.json({msg:'Compte désactivé'});
         })
         .catch(err => console.log(err));
 });
