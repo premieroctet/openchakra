@@ -9,6 +9,7 @@ const User = require('../../models/User');
 const axios = require('axios');
 const multer = require("multer");
 const crypto = require('crypto');
+const geolib = require('geolib');
 
 
 const storage = multer.diskStorage({
@@ -392,16 +393,69 @@ router.get('/near',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
     User.findById(req.user.id)
         .then(user => {
-            ServiceUser.find({city: user.billing_address.city})
+            ServiceUser.find()
                 .populate('user')
                 .populate('service')
-                .limit(6)
                 .then(service => {
-                    if(typeof service !== 'undefined' && service.length > 0){
-                        res.json(service);
-                    } else {
-                        return res.status(400).json({msg: 'No service found'});
-                    }
+                    const gps = user.billing_address.gps;
+                    const latUser = gps.lat;
+                    const lngUser = gps.lng;
+
+                    service.forEach(e => {
+                        const gpsAlfred = e.service_address.gps;
+                        const latAlfred = gpsAlfred.lat;
+                        const lngAlfred = gpsAlfred.lng;
+
+                        const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+
+                        if(!isNear) {
+                            const removeIndex = service.findIndex(i => i._id === e._id);
+                            service.splice(removeIndex, 1);
+                        }
+
+
+                    });
+
+                    res.json(service);
+
+                })
+                .catch(err => res.status(404).json({ service: 'No service found' }));
+        });
+
+});
+
+// @Route GET /myAlfred/api/serviceUser/nearOther
+// View all service around other address
+// @Access private
+router.get('/nearOther/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+
+    User.findById(req.user.id)
+        .then(user => {
+            ServiceUser.find()
+                .populate('user')
+                .populate('service')
+                .then(service => {
+                    const addressIndex = user.service_address.findIndex(i =>i._id == req.params.id);
+                    const gps = user.service_address[addressIndex];
+                    const latUser = gps.lat;
+                    const lngUser = gps.lng;
+
+                    service.forEach(e => {
+                        const gpsAlfred = e.service_address.gps;
+                        const latAlfred = gpsAlfred.lat;
+                        const lngAlfred = gpsAlfred.lng;
+
+                        const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+
+                        if(!isNear) {
+                            const removeIndex = service.findIndex(i => i._id === e._id);
+                            service.splice(removeIndex, 1);
+                        }
+
+
+                    });
+
+                    res.json(service);
 
                 })
                 .catch(err => res.status(404).json({ service: 'No service found' }));

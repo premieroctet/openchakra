@@ -88,10 +88,31 @@ class testSearch extends React.Component {
             this.setState({lat:address.gps.lat, lng: address.gps.lng});
             //const result = geolib.getDistance({latitude: 49.4459653, longitude:1.0683586},{latitude:address.gps.lat,longitude:address.gps.lng});
             //console.log(Math.round( ( geolib.convertDistance(result,'km') + Number.EPSILON ) * 100 ) / 100);
+            axios.get(url+'myAlfred/api/serviceUser/near')
+                .then(res => {
+                    let serviceUser = res.data;
+                    this.setState({serviceUser:serviceUser})
+                })
+                .catch(err => console.log(err));
+        } else if(address==='all') {
+            this.setState({lat:this.state.address.gps.lat, lng: this.state.address.gps.lng});
+            axios.get(url+'myAlfred/api/serviceUser/all')
+                .then(res => {
+                    let serviceUser = res.data;
+                    this.setState({serviceUser:serviceUser})
+                })
+                .catch(err => console.log(err));
         } else {
             this.setState({lat:address.lat,lng: address.lng});
             //const result = geolib.getDistance({latitude: 49.4459653, longitude:1.0683586},{latitude:address.lat,longitude:address.lng});
             //console.log(Math.round( ( geolib.convertDistance(result,'km') + Number.EPSILON ) * 100 ) / 100);
+            const id = address._id;
+            axios.get(url+'myAlfred/api/serviceUser/nearOther/'+id)
+                .then(res => {
+                    let serviceUser = res.data;
+                    this.setState({serviceUser:serviceUser})
+                })
+                .catch(err => console.log(err));
         }
 
         this.setState({click: true});
@@ -101,12 +122,7 @@ class testSearch extends React.Component {
                 this.setState({categories:categories})
             })
             .catch(err => console.log(err));
-        axios.get(url+'myAlfred/api/serviceUser/all')
-            .then(res => {
-                let serviceUser = res.data;
-                this.setState({serviceUser:serviceUser})
-            })
-            .catch(err => console.log(err));
+
     }
 
 
@@ -208,34 +224,71 @@ class testSearch extends React.Component {
 
                                 <Grid container>
                                     <h3>Nos meilleurs Alfred ...</h3>
-                                    {categories.map(e => (
-                                        <Grid container>
-                                            <Grid item xs={12}>
-                                            <h4>{e.label}</h4>
+                                    {this.state.addressSelected === 'all' ?
+
+                                        categories.map(e => (
+                                            <Grid container>
+                                                <Grid item xs={12}>
+                                                    <h4>{e.label}</h4>
+                                                </Grid>
+                                                {serviceUser.map(a => {
+                                                    if (a.service.category === e._id) {
+                                                        return (
+                                                            <Grid item xs={3}>
+                                                                <Card>
+                                                                    <p>{a.service.label} par {a.user.firstname}</p>
+
+                                                                    <p>{a.service_address.city}
+                                                                    </p>
+                                                                </Card>
+                                                            </Grid>
+                                                        )
+                                                    } else {
+                                                        return null
+                                                    }
+                                                })}
                                             </Grid>
-                                            {serviceUser.map(a => {
-                                                if(a.service.category === e._id){
-                                                    return (
-                                                        <Grid item xs={3}>
-                                                        <Card>
-                                                        <p>{a.service.label} par {a.user.firstname}</p>
+                                        ))
 
-                                                            <p>{a.user.billing_address.city}
-                                                                ({Math.round(( geolib.convertDistance(
-                                                                    geolib.getDistance({latitude: a.user.billing_address.gps.lat, longitude:a.user.billing_address.gps.lng},
-                                                                        {latitude:this.state.lat,longitude:this.state.lng})
-                                                                    ,'km') + Number.EPSILON ) * 100 ) / 100} kms)
 
-                                                            </p>
-                                                        </Card>
-                                                        </Grid>
-                                                    )
-                                                } else {
-                                                    return null
-                                                }
-                                            })}
-                                        </Grid>
-                                    ))}
+                                        :
+
+                                            categories.map(e => (
+                                                <Grid container>
+                                                    <Grid item xs={12}>
+                                                        <h4>{e.label}</h4>
+                                                    </Grid>
+                                                    {serviceUser.map(a => {
+                                                        if (a.service.category === e._id) {
+                                                            return (
+                                                                <Grid item xs={3}>
+                                                                    <Card>
+                                                                        <p>{a.service.label} par {a.user.firstname}</p>
+
+                                                                        <p>{a.service_address.city}
+                                                                            ({Math.round((geolib.convertDistance(
+                                                                                geolib.getDistance({
+                                                                                        latitude: a.service_address.gps.lat,
+                                                                                        longitude: a.service_address.gps.lng
+                                                                                    },
+                                                                                    {
+                                                                                        latitude: this.state.lat,
+                                                                                        longitude: this.state.lng
+                                                                                    })
+                                                                                , 'km') + Number.EPSILON) * 100) / 100} kms)
+
+                                                                        </p>
+                                                                    </Card>
+                                                                </Grid>
+                                                            )
+                                                        } else {
+                                                            return null
+                                                        }
+                                                    })}
+                                                </Grid>
+                                            ))
+
+                                    }
                                 </Grid>
                             </>
 
