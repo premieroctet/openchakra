@@ -35,8 +35,8 @@ class MessagesDetails extends React.Component {
         this.socket.on('message', function(data) {
           console.log('Incoming message:', data);
         });
-        this.socket.on('prout', function(data) {
-          console.log('proutomessage: ', data)
+        this.socket.on('test', function(data) {
+          console.log('testprivateroom: ', data)
         })
       })
       .catch(err => console.log(err))
@@ -48,7 +48,7 @@ class MessagesDetails extends React.Component {
 
   handleSubmit(event) {
       event.preventDefault();
-      this.socket.emit('test', this.state.message);
+      this.socket.emit('envoitest', this.state.message);
       this.setState({message: ''});
   }
 

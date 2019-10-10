@@ -57,8 +57,8 @@ io.on('connection', socket => {
         });
         roomName = room
     });
-    socket.on('test', msg => {
-        io.to(roomName).emit('prout', 'totalus proutus');
+    socket.on('envoitest', msg => {
+        io.to(roomName).emit('test', msg);
     })
 });
 
