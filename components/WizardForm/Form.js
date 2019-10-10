@@ -320,6 +320,11 @@ class Wizard extends React.Component {
                 }
                 const experienceYears = e.experienceYears.value;
                 const city = e.city.value;
+                const address = e.address.value;
+                const zip_code = e.postal_code.value;
+                const country = e.country.value;
+                const lat = e.lat.value;
+                const lng = e.lng.value;
                 const perimeter = e.perimeter;
                 const minimum_basket = e.minimumBasket;
                 const deadline_before_booking = e.delayBeforeShop + ' ' + e.delayBeforeShopDWM;
@@ -330,7 +335,7 @@ class Wizard extends React.Component {
                 let diplomaLabel = null;
                 let diplomaYear = null;
                 if(e.diploma !== null) {
-                    graduated = true;
+                    //graduated = true;
                     diploma = e.diploma.diploma;
                     diplomaLabel = e.diploma.label;
                     diplomaYear = e.diploma.year;
@@ -341,7 +346,7 @@ class Wizard extends React.Component {
                 let certificationYear = null;
                 let certificationLabel = null;
                 if(e.certification !== null) {
-                     is_certified = true;
+                     //is_certified = true;
                      certification = e.certification.certification;
                      certificationLabel = e.certification.label;
                      certificationYear = e.certification.year;
@@ -356,18 +361,23 @@ class Wizard extends React.Component {
                 const formData = new FormData();
                 formData.append('service',service);
                 formData.append('option', JSON.stringify(option));
-                formData.append('experience_years', experienceYears);
+                formData.append('level', experienceYears);
                 formData.append('prestations',JSON.stringify(arrayPrestations));
                 formData.append('equipments',JSON.stringify(arrayEquipments));
                 formData.append('city',city);
+                formData.append('address',address);
+                formData.append('zip_code',zip_code);
+                formData.append('country',country);
+                formData.append('lat',lat);
+                formData.append('lng',lng);
                 formData.append('perimeter',perimeter);
                 formData.append('minimum_basket',minimum_basket);
                 formData.append('deadline_before_booking',deadline_before_booking);
-                formData.append('graduated',graduated.toString());
+                //formData.append('graduated',graduated.toString());
                 formData.append('diploma',diploma);
                 formData.append('diplomaLabel', diplomaLabel);
                 formData.append('diplomaYear', diplomaYear);
-                formData.append('is_certified',is_certified.toString());
+                //formData.append('is_certified',is_certified.toString());
                 formData.append('certification',certification);
                 formData.append('certificationLabel', certificationLabel);
                 formData.append('certificationYear', certificationYear);
@@ -933,6 +943,8 @@ class Form extends React.Component {
                 this.state.userAddress = {label: res.data.billing_address.address, value: res.data.billing_address.address};
                 this.state.userZipCode = {label: res.data.billing_address.zip_code, value: res.data.billing_address.zip_code};
                 this.state.userCountry = {label: res.data.billing_address.country, value: res.data.billing_address.country};
+                this.state.UserLat = {label: res.data.billing_address.gps.lat, value: res.data.billing_address.gps.lat};
+                this.state.UserLng = {label: res.data.billing_address.gps.lng, value: res.data.billing_address.gps.lng};
                 if (typeof res.data.id_card !== 'undefined') this.state.userIdCardRecto = res.data.id_card.recto.substr(22);
                 if (typeof res.data.id_card !== 'undefined') {
                     if (typeof res.data.id_card.verso !== 'undefined') this.state.userIdCardVerso = res.data.id_card.verso.substr(22);
@@ -1372,8 +1384,10 @@ class Form extends React.Component {
                                                                         city: this.state.userCity, 
                                                                         address: this.state.userAddress, 
                                                                         postal_code: this.state.userZipCode, 
-                                                                        country: this.state.userCountry, 
-                                                                        experienceYears: '', 
+                                                                        country: this.state.userCountry,
+                                                                        lat: this.state.UserLat,
+                                                                        lng: this.state.UserLng,
+                                                                        experienceYears: '',
                                                                         option: null, 
                                                                         increases: { 
                                                                             label: res.data.majoration, 
@@ -1858,6 +1872,8 @@ class Form extends React.Component {
                                                                                                 arrayHelpers.form.setFieldValue(`submission[${index}].address`, this.state.userAddress);
                                                                                                 arrayHelpers.form.setFieldValue(`submission[${index}].postal_code`, this.state.userZipCode);
                                                                                                 arrayHelpers.form.setFieldValue(`submission[${index}].country`, this.state.country);
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].lat`, this.state.UserLat);
+                                                                                                arrayHelpers.form.setFieldValue(`submission[${index}].lng`, this.state.UserLng);
                                                                                             }
                                                                                         }}
                                                                                     />
@@ -1977,11 +1993,11 @@ class Form extends React.Component {
                                                                                         placeholder="Vos années d'expériences"
                                                                                         value={arrayHelpers.form.values.submission[index].experienceYears}
                                                                                         options={[
-                                                                                            {value: '', label: "Aucune année d'expérience"},
-                                                                                            {value: 'ZeroOrOne', label: 'Entre 0 et 1 an'},
-                                                                                            {value: 'OneToFive', label: 'Entre 1 et 5 ans'},
-                                                                                            {value: 'FiveToTen', label: 'Entre 5 et 10 ans'},
-                                                                                            {value: 'MoreThanTen', label: 'Plus de 10 ans'},
+                                                                                            {value: '0', label: "Aucune année d'expérience"},
+                                                                                            {value: '1', label: 'Entre 0 et 1 an'},
+                                                                                            {value: '2', label: 'Entre 1 et 5 ans'},
+                                                                                            {value: '3', label: 'Entre 5 et 10 ans'},
+                                                                                            {value: '4', label: 'Plus de 10 ans'},
                                                                                         ]}
                                                                                         onChange={async exp => {
                                                                                             await arrayHelpers.form.setFieldValue(`submission[${index}].experienceYears`, exp);

@@ -44,6 +44,26 @@ router.get('/all/sort', (req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/category/all/search
+// Search category by label
+router.get('/all/search', (req,res)=> {
+    var dat = req.body.label;
+    var data = dat.replace(new RegExp(/[eé]/g), "[eé]");
+    Category.find({label:{ $regex : data, $options : 'i' } })
+        .sort({label:1})
+        .then(category => {
+            if(typeof category !== 'undefined' && category.length > 0){
+                res.json(category);
+            } else {
+                return res.status(400).json({msg: 'No category found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ category: 'Error' }));
+
+
+});
+
 // @Route GET /myAlfred/api/category/random/home
 // View random categories homepage
 router.get('/random/home',(req,res)=> {

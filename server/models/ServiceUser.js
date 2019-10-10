@@ -101,7 +101,7 @@ const ServiceUserSchema = new Schema({
         type: String
     },
     level: {
-        type: String
+        type: Number
     },
     number_of_views: {
         type: Number,

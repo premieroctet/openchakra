@@ -1110,11 +1110,11 @@ class addService extends React.Component {
                                     name={'level'}
                                     onChange={this.onChange2}
                                 >
-                                    <MenuItem value="">...</MenuItem>
-                                    <MenuItem value="ZeroOrOne">Entre 0 et 1 an</MenuItem>
-                                    <MenuItem value="OneToFive">Entre 1 et 5 ans</MenuItem>
-                                    <MenuItem value="FiveToTen">Entre 5 et 10 ans</MenuItem>
-                                    <MenuItem value="MoreThanTen">Plus de 10 ans</MenuItem>
+                                    <MenuItem value="0">...</MenuItem>
+                                    <MenuItem value="1">Entre 0 et 1 an</MenuItem>
+                                    <MenuItem value="2">Entre 1 et 5 ans</MenuItem>
+                                    <MenuItem value="3">Entre 5 et 10 ans</MenuItem>
+                                    <MenuItem value="4">Plus de 10 ans</MenuItem>
                                 </TextField>
                             </Grid>
 

@@ -3,7 +3,10 @@ import Form from '../components/WizardForm/Form';
 import Layout from "../hoc/Layout/Layout";
 import Router from 'next/router';
 import Grid from "@material-ui/core/Grid";
+import axios from 'axios';
 const jwt = require('jsonwebtoken');
+const {config} = require('../config/config');
+const url = config.apiUrl;
 
 const becomeAlfredForm = () => {
     const [alfred, setAlfred] = useState(false);
@@ -13,11 +16,22 @@ const becomeAlfredForm = () => {
         if (token === null) {
             Router.push('/login');
         } else {
-            const token2 = localStorage.getItem('token').split(' ')[1];
-            const decode = jwt.decode(token2);
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+            axios
+                .get(url+'myAlfred/api/users/current')
+                .then(res => {
+                    let user = res.data;
+                    setAlfred(user.is_alfred);
 
-            setAlfred(decode.is_alfred);
+
+                })
+                .catch(err =>
+                    console.log(err)
+                );
+
+
         }
+
     });
 
 

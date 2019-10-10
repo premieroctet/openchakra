@@ -17,6 +17,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 
 const geolib = require('geolib');
+const _ = require('lodash');
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
@@ -46,12 +47,14 @@ class testSearch extends React.Component {
             user: {},
             address: {},
             otherAddress: [],
-            addressSelected: '',
+            addressSelected: {},
             click: false,
+            click2: false,
             categories: [],
             serviceUser: [],
             lat: null,
             lng: null,
+            research: '',
 
 
         }
@@ -65,6 +68,7 @@ class testSearch extends React.Component {
                 let user = res.data;
                 this.setState({user:user});
                 this.setState({address: user.billing_address});
+                this.setState({addressSelected: user.billing_address});
                 this.setState({otherAddress: user.service_address});
 
             })
@@ -86,12 +90,28 @@ class testSearch extends React.Component {
         const address = this.state.addressSelected;
         if(address.gps !== undefined){
             this.setState({lat:address.gps.lat, lng: address.gps.lng});
-            //const result = geolib.getDistance({latitude: 49.4459653, longitude:1.0683586},{latitude:address.gps.lat,longitude:address.gps.lng});
-            //console.log(Math.round( ( geolib.convertDistance(result,'km') + Number.EPSILON ) * 100 ) / 100);
             axios.get(url+'myAlfred/api/serviceUser/near')
                 .then(res => {
                     let serviceUser = res.data;
-                    this.setState({serviceUser:serviceUser})
+                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
+                    this.setState({serviceUser:sorted});
+                    axios.get(url+'myAlfred/api/category/all/sort')
+                        .then(res => {
+                            let categories = res.data;
+                            this.setState({categories:categories});
+                            categories.forEach(e => {
+                                this.setState({[e.label]:0});
+                                this.state.serviceUser.forEach(a => {
+                                    if(a.service.category === e._id){
+                                        this.setState(prevState => {
+                                            return {[e.label]: prevState[e.label] + 1}
+                                        })
+                                    }
+                                })
+                            })
+                        })
+                        .catch(err => console.log(err));
                 })
                 .catch(err => console.log(err));
         } else if(address==='all') {
@@ -99,31 +119,65 @@ class testSearch extends React.Component {
             axios.get(url+'myAlfred/api/serviceUser/all')
                 .then(res => {
                     let serviceUser = res.data;
-                    this.setState({serviceUser:serviceUser})
+                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
+                    this.setState({serviceUser:sorted});
+                    axios.get(url+'myAlfred/api/category/all/sort')
+                        .then(res => {
+                            let categories = res.data;
+                            this.setState({categories:categories});
+                            categories.forEach(e => {
+                                this.setState({[e.label]:0});
+                                this.state.serviceUser.forEach(a => {
+                                    if(a.service.category === e._id){
+                                        this.setState(prevState => {
+                                            return {[e.label]: prevState[e.label] + 1}
+                                        })
+                                    }
+                                })
+                            })
+                        })
+                        .catch(err => console.log(err));
                 })
                 .catch(err => console.log(err));
         } else {
             this.setState({lat:address.lat,lng: address.lng});
-            //const result = geolib.getDistance({latitude: 49.4459653, longitude:1.0683586},{latitude:address.lat,longitude:address.lng});
-            //console.log(Math.round( ( geolib.convertDistance(result,'km') + Number.EPSILON ) * 100 ) / 100);
             const id = address._id;
             axios.get(url+'myAlfred/api/serviceUser/nearOther/'+id)
                 .then(res => {
                     let serviceUser = res.data;
-                    this.setState({serviceUser:serviceUser})
+                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
+                    this.setState({serviceUser:sorted});
+                    axios.get(url+'myAlfred/api/category/all/sort')
+                        .then(res => {
+                            let categories = res.data;
+                            this.setState({categories:categories});
+                            categories.forEach(e => {
+                                this.setState({[e.label]:0});
+                                this.state.serviceUser.forEach(a => {
+                                    if(a.service.category === e._id){
+                                        this.setState(prevState => {
+                                            return {[e.label]: prevState[e.label] + 1}
+                                        })
+                                    }
+                                })
+                            })
+                        })
+                        .catch(err => console.log(err));
                 })
                 .catch(err => console.log(err));
         }
 
-        this.setState({click: true});
-        axios.get(url+'myAlfred/api/category/all/sort')
-            .then(res => {
-                let categories = res.data;
-                this.setState({categories:categories})
-            })
-            .catch(err => console.log(err));
+        this.setState({click: true, click2:false});
+
 
     }
+
+    searchWithWord(){
+        this.setState({click: false, click2: true});
+    }
+
 
 
     render() {
@@ -133,7 +187,7 @@ class testSearch extends React.Component {
         const {otherAddress} = this.state;
         const {click} = this.state;
         const categories = this.state.categories;
-        const serviceUser = shuffleArray(this.state.serviceUser);
+        const serviceUser = this.state.serviceUser;
         return (
             <Fragment>
                 <Layout>
@@ -151,6 +205,8 @@ class testSearch extends React.Component {
                                     }}
                                     placeholder={'Quel service ?'}
                                     variant={"outlined"}
+                                    value={this.state.research}
+                                    onChange={(event)=>this.setState({research: event.target.value,click2:false})}
                                 />
                             </Grid>
                             <Grid item xs={6}>
@@ -189,9 +245,17 @@ class testSearch extends React.Component {
                         </Grid>
                         <Grid container>
                             <Grid item xs={3}>
-                                <Button onClick={()=>this.search()} variant="contained" color="primary" style={{ width: '100%', color: 'white' }}>
-                                    Rechercher
-                                </Button>
+                                {this.state.research === '' ?
+                                    <Button onClick={() => this.search()} variant="contained" color="primary"
+                                            style={{width: '100%', color: 'white'}}>
+                                        Rechercher
+                                    </Button> :
+
+                                    <Button onClick={()=>this.searchWithWord()} variant="contained" color="primary"
+                                            style={{width: '100%', color: 'white'}}>
+                                        Rechercher avec un mot
+                                    </Button>
+                                }
                             </Grid>
                         </Grid>
                         {click ?
@@ -247,6 +311,8 @@ class testSearch extends React.Component {
                                                         return null
                                                     }
                                                 })}
+                                                {this.state[e.label] !== 0 ? <p>Voir les {this.state[e.label]} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
+
                                             </Grid>
                                         ))
 
@@ -260,6 +326,7 @@ class testSearch extends React.Component {
                                                     </Grid>
                                                     {serviceUser.map(a => {
                                                         if (a.service.category === e._id) {
+                                                            //this.setState({[e.label]:this.state[e.label]+1});
                                                             return (
                                                                 <Grid item xs={3}>
                                                                     <Card>
@@ -285,6 +352,7 @@ class testSearch extends React.Component {
                                                             return null
                                                         }
                                                     })}
+                                                    {this.state[e.label] !== 0 ? <p>Voir les {this.state[e.label]} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
                                                 </Grid>
                                             ))
 
@@ -293,6 +361,13 @@ class testSearch extends React.Component {
                             </>
 
 
+
+
+                            : null}
+
+                        {this.state.click2 ?
+
+                            <p>Résultat pour la recherche : {this.state.research}</p>
 
 
                             : null}

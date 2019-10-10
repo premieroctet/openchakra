@@ -10,6 +10,7 @@ const axios = require('axios');
 const multer = require("multer");
 const crypto = require('crypto');
 const geolib = require('geolib');
+const _ = require('lodash');
 
 
 const storage = multer.diskStorage({
@@ -53,30 +54,31 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
                 fields.deadline_before_booking = req.body.deadline_before_booking;
                 fields.prestations = JSON.parse(req.body.prestations);
                 fields.option = JSON.parse(req.body.option);
-                fields.experience_years = req.body.experience_years;
-                if(req.body.graduated === 'true') {
+                fields.level = parseInt(req.body.level);
+                /*if(req.body.graduated === 'true') {
                     fields.graduated = true;
                 } else {
                     fields.graduated = false;
-                }
+                }*/
 
                 const diploma = 'diploma';
                 const certification = 'certification';
                 if(diploma in req.files) {
+                    fields.graduated = true;
                     fields.diploma = {};
                     fields.diploma.name = req.body.diplomaLabel;
                     fields.diploma.year = req.body.diplomaYear;
                     fields.diploma.file = req.files['diploma'][0].path;
                 } else {
-                    console.log(req.files)
                     console.log('No file uploaded');
                 }
-            if(req.body.is_certified === 'true') {
+            /*if(req.body.is_certified === 'true') {
                 fields.is_certified = true;
             } else {
                 fields.is_certified = false;
-            }
+            }*/
             if(certification in req.files) {
+                fields.is_certified = true;
                 fields.certification = {};
                 fields.certification.name = req.body.certificationLabel;
                 fields.certification.year = req.body.certificationYear;
