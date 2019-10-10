@@ -1,10 +1,10 @@
-const appName = 'myalfred'
-const databaseName = 'test-myAlfred'
+const appName = 'myalfred';
+const databaseName = 'test-myAlfred';
 const serverPort = process.env.PORT || 3122;
 
-const apiUrl = "http://localhost:3122/";
+//const apiUrl = "http://localhost:3122/";
 
-//const apiUrl = "https://myalfred.hausdivision.com/";
+const apiUrl = "https://myalfred.hausdivision.com/";
 
 const completeConfig = {
 

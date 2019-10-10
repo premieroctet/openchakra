@@ -23,6 +23,7 @@
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "cldr-data": "^35.1.0",
     "cors": "^2.8.5",
     "date-fns": "^2.0.0-alpha.27",
     "express": "^4.16.4",
@@ -82,6 +83,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.13.0",
     "jest": "^24.8.0",
-    "nodemon": "^1.19.0"
+    "nodemon": "^1.19.0",
+    "systemjs-plugin-json": "^0.3.0"
   }
 }
