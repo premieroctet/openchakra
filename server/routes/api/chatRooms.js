@@ -24,6 +24,21 @@ router.get('/userChatRooms', passport.authenticate('jwt',{session:false}), (req,
     })
 })
 
+// Get one chatroom
+router.get('/userChatRoom/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  ChatRooms.findById(req.params.id)
+    .populate("attendees")
+    .then(chatroom => {
+      if (!chatroom) {
+        res.status(404).json({msg: 'Aucun chat trouvé'})
+      }
+
+      if (chatroom) {
+        res.json(chatroom)
+      }
+    })
+})
+
 // Add chatRoom and connect users to it
 router.post('/addAndConnect', (req, res) => {
   const emitter = mongoose.Types.ObjectId(req.body.emitter);

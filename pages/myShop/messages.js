@@ -148,10 +148,12 @@ class Messages extends React.Component {
                 {this.state.chatrooms.length ?
                     this.state.chatrooms.map(chatroom => {
                         return (
-                            <div>
-                                <p>Conversation entre vous et {chatroom.attendees[1].firstname}</p>
-                                <p>{chatroom.name}</p>
-                            </div>
+                            <Link href={`/myShop/messagesDetails?id=${chatroom._id}`}>
+                                <div>
+                                    <p>Conversation entre vous et {chatroom.attendees[1].firstname}</p>
+                                    <p>{chatroom.name}</p>
+                                </div>
+                            </Link>
                         )
                     })
                     :

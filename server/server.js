@@ -45,10 +45,20 @@ const io = require('socket.io')(server);
 
 server.listen(3000);
 
+let roomName = '';
+
 io.on('connection', socket => {
-    console.log(socket.id);
-    socket.on('chat message', msg => {
+    /*socket.on('chat message', msg => {
         io.emit('chat message', msg);
+    })*/
+    socket.on('room', room => {
+        socket.join(room, () => {
+            io.to(room).emit('message', 'what is going on, party people?');
+        });
+        roomName = room
+    });
+    socket.on('test', msg => {
+        io.to(roomName).emit('prout', 'totalus proutus');
     })
 });
 
