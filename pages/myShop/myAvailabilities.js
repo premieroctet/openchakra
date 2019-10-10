@@ -12,6 +12,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {  ScheduleComponent, RecurrenceEditorComponent, ViewsDirective, ViewDirective, Month, Inject, Day, Week } from '@syncfusion/ej2-react-schedule';
 import { DateTimePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
+import '../style.css';
 
 
 loadCldr(
@@ -288,19 +289,60 @@ class myAvailabilities extends React.Component {
     };
 
     editorTemplate(props) {
-        return (props !== undefined ? <table className="custom-event-editor" style={{ width: '100%', cellpadding: '5' }}><tbody>
-        <tr><td className="e-textlabel">Je suis disponible pour :</td><td colSpan={4}>
-            <DropDownListComponent id="EventType" placeholder='Service(s)' data-name="Subject" className="e-field" style={{ width: '100%' }} dataSource={['Tous', 'Service A', 'Service B']} value={props.EventType || null}/>
-        </td></tr>
-        <tr><td className="e-textlabel">De</td><td colSpan={4}>
-            <DateTimePickerComponent locale="fr-CH" id="StartTime" data-name="StartTime" value={new Date(props.startTime || props.StartTime)} className="e-field"/>
-        </td></tr>
-        <tr><td className="e-textlabel">Au</td><td colSpan={4}>
-            <DateTimePickerComponent locale="fr-CH" id="EndTime" data-name="EndTime" value={new Date(props.endTime || props.EndTime)} className="e-field"/>
-        </td></tr>
-        <tr><td className="e-textlabel">Récurrence de cette disponibilité</td><td colSpan={4}>
-            <RecurrenceEditorComponent locale='fr-CH' ref={recurrObject => this.recurrObject = recurrObject} id='RecurrenceEditor ' style={{ width: '100%' }}/>
-        </td></tr></tbody></table> : <div></div>);
+        return (props !== undefined ?
+          <table className="custom-event-editor" style={{ width: '100%', cellpadding: '10' }}>
+            <tbody>
+                <tr>
+                    <td className="e-textlabel">Je suis disponible pour :</td>
+                    <td>
+                     <DropDownListComponent
+                       id="EventType"
+                       placeholder='Service(s)'
+                       data-name="Subject"
+                       className="e-field"
+                       style={{ width: '100%' }}
+                       dataSource={['Tous', 'Service A', 'Service B']}
+                       value={props.EventType || null}
+                     />
+                    </td>
+                </tr>
+                <tr>
+                    <td className="e-textlabel">Du</td>
+                    <td>
+                         <DateTimePickerComponent
+                           locale="fr-CH"
+                           id="StartTime"
+                           data-name="StartTime"
+                           value={new Date(props.startTime || props.StartTime)}
+                           className="e-field"
+                         />
+                    </td>
+                </tr>
+                <tr>
+                    <td className="e-textlabel">Au</td>
+                    <td>
+                         <DateTimePickerComponent
+                           locale="fr-CH"
+                           id="EndTime"
+                           data-name="EndTime"
+                           value={new Date(props.endTime || props.EndTime)}
+                           className="e-field"
+                         />
+                    </td>
+                </tr>
+                <tr>
+                    <td className="e-textlabel">Récurrence :</td>
+                    <td>
+                        <RecurrenceEditorComponent
+                          locale='fr-CH'
+                          ref={recurrObject => this.recurrObject = recurrObject}
+                          id='RecurrenceEditor '
+                          style={{ width: '100%' }}
+                        />
+                </td>
+                </tr>
+            </tbody>
+          </table> : <div></div>);
     }
 
 

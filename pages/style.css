@@ -1,0 +1,23 @@
+.e-dlg-header-content{
+    background-color: #f87280!important;
+}
+.e-dlg-header, .e-dlg-header *{
+    color:white!important;
+}
+
+.e-btn.e-flat, .e-css.e-btn.e-flat{
+    background-color:white!important;
+
+}
+
+.e-btn.e-flat.e-primary, .e-css.e-btn.e-flat.e-primary{
+    color:#4fbdd7!important;
+}
+
+.e-btn.e-flat, .e-css.e-btn.e-flat{
+    color:grey!important;
+}
+
+.e-dialog .e-dlg-header-content + .e-dlg-content{
+    padding:3%!important;
+}
