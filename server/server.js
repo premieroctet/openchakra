@@ -35,10 +35,23 @@ const reviews = require('./routes/api/reviews');
 const shopBanner = require('./routes/api/shopBanner');
 const options = require('./routes/api/options');
 const availability = require('./routes/api/availability');
+const chatRooms = require('./routes/api/chatRooms');
 
 const admin = require('./routes/api/admin/dashboard');
 const path = require('path');
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
+server.listen(3000);
+
+io.on('connection', socket => {
+    console.log(socket.id);
+    socket.on('chat message', msg => {
+        io.emit('chat message', msg);
+    })
+});
+
 nextApp.prepare().then(() => {
 
 
@@ -97,6 +110,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/shopBanner',shopBanner);
     app.use('/myAlfred/api/options',options);
     app.use('/myAlfred/api/availability',availability);
+    app.use('/myAlfred/api/chatRooms', chatRooms);
 
     //const port = process.env.PORT || 5000;
     const rootPath = require('path').join(__dirname, '/..')

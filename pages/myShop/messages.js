@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import { withStyles } from '@material-ui/core/styles';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 
 
@@ -100,14 +101,67 @@ class Messages extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            idEmitter: '',
+            idRecipient: '',
+            chatrooms: []
+        }
     }
+
+    componentDidMount() {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.get('http://localhost:3122/myAlfred/api/users/current')
+            .then(res => {
+                console.log(res.data);
+                this.setState({ idEmitter: res.data._id })
+            })
+        axios.get('http://localhost:3122/myAlfred/api/users/users/5d8c82176b3b73c9e4c467b8')
+            .then(res => {
+                console.log(res.data);
+                this.setState({ idRecipient: res.data._id });
+            })
+
+        axios.get('http://localhost:3122/myAlfred/api/chatRooms/userChatRooms')
+            .then(res => {
+                this.setState({ chatrooms: res.data })
+            })
+    }
+
+    createChat() {
+        axios.post('http://localhost:3122/myAlfred/api/chatRooms/addAndConnect', { emitter: this.state.idEmitter, recipient: this.state.idRecipient })
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
 
     render() {
         const {classes} = this.props;
 
 
-
-        return (
+        return(
+            <>
+            <div>
+                {this.state.chatrooms.length ?
+                    this.state.chatrooms.map(chatroom => {
+                        return (
+                            <div>
+                                <p>Conversation entre vous et {chatroom.attendees[1].firstname}</p>
+                                <p>{chatroom.name}</p>
+                            </div>
+                        )
+                    })
+                    :
+                    null
+                }
+            </div>
+            <button type="button" onClick={() => this.createChat()}>Créer un chat</button>
+            </>
+        )
+        /*return (
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
@@ -204,7 +258,7 @@ class Messages extends React.Component {
 
 
             </Fragment>
-        );
+        );*/
     };
 }
 

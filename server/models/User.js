@@ -249,6 +249,10 @@ const UserSchema = new Schema({
     resetToken: {
         type: Schema.Types.ObjectId,
         ref: 'resetToken'
+    },
+    chatRooms: {
+        type: Schema.Types.ObjectId,
+        ref: 'chatRooms'
     }
 
 
