@@ -28,15 +28,14 @@ class MessagesDetails extends React.Component {
         this.socket.on('connect', socket => {
           console.log(this.state.roomData.name);
           this.socket.emit('room', this.state.roomData.name)
-        /*let messages = [...this.state.messages];
-        messages.push(msg);
-        this.setState({ messages });*/
         });
         this.socket.on('message', function(data) {
           console.log('Incoming message:', data);
         });
-        this.socket.on('test', function(data) {
-          console.log('testprivateroom: ', data)
+        this.socket.on('test', (data) => {
+          const messages = [...this.state.messages];
+          messages.push(data);
+          this.setState({ messages });
         })
       })
       .catch(err => console.log(err))
@@ -59,11 +58,11 @@ class MessagesDetails extends React.Component {
   render() {
     return (
       <div>
-          <ul>
+          <div>
               {this.state.messages.map((message, index) => {
-                  return <li key={index}>{message}</li>
+                  return <div key={index}>{message}</div>
               })}
-          </ul>
+          </div>
           <form onSubmit={this.handleSubmit}>
               <input type="text" value={this.state.message} onChange={this.handleChange} />
           </form>
