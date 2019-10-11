@@ -156,7 +156,7 @@ L10n.load({
             "timezone": "Timezone",
             "startTimezone": "Start Timezone",
             "endTimezone": "End Timezone",
-            "repeat": "Repeat",
+            "repeat": "Répéter",
             "saveButton": "Ajouter",
             "cancelButton": "Annuler",
             "deleteButton": "Supprimer",
@@ -167,7 +167,7 @@ L10n.load({
             "recurrenceDateValidation": "Some months have fewer than the selected date. For these months, the occurrence will fall on the last date of the month.",
             "sameDayAlert": "Two occurrences of the same event cannot occur on the same day.",
             "editRecurrence": "Edit Recurrence",
-            "repeats": "Repeats",
+            "repeats": "Répéter",
             "alert": "Alert",
             "startEndError": "The selected end date occurs before the start date.",
             "invalidDateError": "The entered date value is invalid.",
@@ -190,16 +190,16 @@ L10n.load({
             "month": "Mois",
             "yearly": "Yearly",
             "never": "Jamais",
-            "until": "Jusqu'à",
-            "count": "Count",
+            "until": "Jusqu'au",
+            "count": "Pendant",
             "first": "First",
             "second": "Deuxième",
             "third": "troisème",
             "fourth": "Fourth",
             "last": "Dernier",
-            "repeat": "Repeat",
-            "repeatEvery": "Repeat Every",
-            "on": "Repeat On",
+            "repeat": "Répéter",
+            "repeatEvery": "Répéter tous les",
+            "on": "Répéter sur",
             "end": "Fin",
             "onDay": "Jour",
             "days": "Jour(s)",
@@ -209,8 +209,8 @@ L10n.load({
             "every": "every",
             "summaryTimes": "time(s)",
             "summaryOn": "on",
-            "summaryUntil": "jusqu'à",
-            "summaryRepeat": "Repeats",
+            "summaryUntil": "jusqu'au",
+            "summaryRepeat": "Répéter",
             "summaryDay": "Jours(s)",
             "summaryWeek": "week(s)",
             "summaryMonth": "month(s)",
@@ -328,7 +328,7 @@ class myAvailabilities extends React.Component {
                 </div>
                 <div className={"editorTemplateContent"}>
                     <span className="e-textlabel">Récurrence :</span>
-                    <div style={{ colspan: '4' }}>
+                    <div style={{ colspan: '4', marginTop:'3%' }}>
                         <RecurrenceEditorComponent
                           locale='fr-CH'
                           ref={recurrObject => this.recurrObject = recurrObject}
@@ -336,7 +336,6 @@ class myAvailabilities extends React.Component {
                           style={{ width: '100%' }}
                           firstDayOfWeek={1}
                           frequencies={['none', 'daily', 'weekly']}
-                          cssClass={"mainwrapper"}
                         />
                     </div>
                 </div>
@@ -413,7 +412,7 @@ class myAvailabilities extends React.Component {
                             firstDayOfWeek={1}
                             editorTemplate={this.editorTemplate.bind(this)}
                           >
-                              <ViewsDirective locale='fr-CH'>
+                              <ViewsDirective locale='fr-CH' style={{backgroundColor:'#f9ccc7'}}>
                                   <ViewDirective option='Day'/>
                                   <ViewDirective option='Week'/>
                                   <ViewDirective option='Month'/>

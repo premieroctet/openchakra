@@ -24,6 +24,7 @@
 
 .e-btn.e-primary:hover, .e-css.e-btn.e-primary:hover{
     background-color:#4fbdd7!important;
+    color:white!important;
 }
 
 .e-btn.e-primary.e-active, .e-css.e-btn.e-primary.e-active{
@@ -37,4 +38,16 @@
 
 .editorTemplateContent{
     padding: 1%;
+}
+
+.e-schedule .e-vertical-view .e-day-wrapper .e-appointment{
+    background-color: #a0d6e4!important; ;
+}
+
+.e-schedule .e-schedule-toolbar .e-active-view .e-tbar-btn-text, .e-schedule .e-schedule-toolbar .e-active-view .e-icons {
+    color: #f87280!important;
+}
+
+.e-schedule .e-vertical-view .e-header-cells.e-current-day{
+    color: #f87280!important;
 }
