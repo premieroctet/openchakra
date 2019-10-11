@@ -52,13 +52,11 @@ io.on('connection', socket => {
         io.emit('chat message', msg);
     })*/
     socket.on('room', room => {
-        socket.join(room, () => {
-            io.to(room).emit('message', 'what is going on, party people?');
-        });
+        socket.join(room);
         roomName = room
     });
-    socket.on('envoitest', msg => {
-        io.to(roomName).emit('test', msg);
+    socket.on('message', msg => {
+        io.to(roomName).emit('displayMessage', msg);
     })
 });
 

@@ -7,9 +7,11 @@ class MessagesDetails extends React.Component {
     super(props)
 
     this.state = {
-      hello: '',
+      userData: {},
       message: '',
       messages: [],
+      oldMessagesDisplay: [],
+      oldMessages: [],
       roomData: {}
     }
 
@@ -21,21 +23,35 @@ class MessagesDetails extends React.Component {
     const id = this.props.chatroomId;
 
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.get('http://localhost:3122/myAlfred/api/users/current')
+      .then(res => {
+        this.setState({ userData: res.data });
+      })
     axios.get(`http://localhost:3122/myAlfred/api/chatRooms/userChatRoom/${id}`)
       .then(res => {
-        this.setState({ roomData: res.data })
+        this.setState({ 
+          roomData: res.data,
+          oldMessagesDisplay: res.data.messages,
+          oldMessages: res.data.messages
+        })
+        console.log(this.state.oldMessages);
         this.socket = io('http://localhost:3000');
         this.socket.on('connect', socket => {
           console.log(this.state.roomData.name);
           this.socket.emit('room', this.state.roomData.name)
         });
-        this.socket.on('message', function(data) {
-          console.log('Incoming message:', data);
-        });
-        this.socket.on('test', (data) => {
+        this.socket.on('displayMessage', (data) => {
           const messages = [...this.state.messages];
+          const oldMessages = [...this.state.oldMessages];
+          oldMessages.push(data);
           messages.push(data);
-          this.setState({ messages });
+          console.log(oldMessages);
+          axios.put(`http://localhost:3122/myAlfred/api/chatRooms/saveMessages/${id}`, {messages: oldMessages})
+            .then(res => console.log(res));
+          this.setState({ 
+            messages,
+            oldMessages
+          });
         })
       })
       .catch(err => console.log(err))
@@ -46,8 +62,10 @@ class MessagesDetails extends React.Component {
   }
 
   handleSubmit(event) {
+      const messObj = { user: this.state.userData.firstname, content: this.state.message };
+      console.log(messObj);
       event.preventDefault();
-      this.socket.emit('envoitest', this.state.message);
+      this.socket.emit('message', messObj);
       this.setState({message: ''});
   }
 
@@ -59,8 +77,28 @@ class MessagesDetails extends React.Component {
     return (
       <div>
           <div>
+              {
+                this.state.oldMessagesDisplay.map((oldMessage, index) => {
+                  return (
+                    <div key={index}>
+                      <p>{oldMessage.user} :</p>
+                      <p>{oldMessage.content}</p>
+                    </div>
+                  )
+                })
+              }
+              {typeof this.state.roomData.messages !== 'undefined' ?
+                <div>
+                  <hr />
+                  <p>Aujourd'hui</p>
+                </div>
+                : null
+              }
               {this.state.messages.map((message, index) => {
-                  return <div key={index}>{message}</div>
+                  return <div key={index}>
+                    <p>{message.user} :</p>
+                    <p>{message.content}</p>
+                  </div>
               })}
           </div>
           <form onSubmit={this.handleSubmit}>

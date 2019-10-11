@@ -64,4 +64,13 @@ router.post('/addAndConnect', (req, res) => {
     })
 })
 
+router.put('/saveMessages/:id', (req, res) => {
+  ChatRooms.findByIdAndUpdate(req.params.id, { messages: req.body.messages })
+    .then(chatroom => {
+      if (!chatroom) return res.status(404).json({msg: 'no chatroom found'})
+      if (chatroom) return res.json();
+    })
+    .catch(err => console.log(err));
+})
+
 module.exports = router;

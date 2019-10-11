@@ -10,9 +10,8 @@ const ChatRoomsSchema = new Schema({
       }
     ],
     messages: [{
-        sender: String,
+        user: String,
         content: String,
-        dateTime: String
     }]
 });
 
