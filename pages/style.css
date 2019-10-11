@@ -29,3 +29,12 @@
 .e-btn.e-primary.e-active, .e-css.e-btn.e-primary.e-active{
     background-color:#4fbdd7!important;
 }
+
+
+.editorTemplate{
+    padding:1%;
+}
+
+.editorTemplateContent{
+    padding: 1%;
+}

@@ -4,7 +4,6 @@ import Layout from '../../hoc/Layout/Layout';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import axios from "axios";
 import moment from 'moment';
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import {loadCldr, L10n } from '@syncfusion/ej2-base';
@@ -14,7 +13,6 @@ import { DateTimePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
 import '../style.css';
 
-
 loadCldr(
   require('../../node_modules/cldr-data/supplemental/numberingSystems.json'),
   require('../../node_modules/cldr-data/main/fr-CH/ca-gregorian.json'),
@@ -22,7 +20,6 @@ loadCldr(
   require('../../node_modules/cldr-data/main/fr-CH/numbers.json'),
   require('../../node_modules/cldr-data/main/fr-CH/timeZoneNames.json')
 );
-
 
 moment.locale('fr');
 
@@ -290,8 +287,8 @@ class myAvailabilities extends React.Component {
 
     editorTemplate(props) {
         return (props !== undefined ?
-          <div className="custom-event-editor" style={{ width: '100%', padding:'1%'}}>
-                <div>
+          <div className={"editorTemplate"}>
+                <div className={"editorTemplateContent"}>
                     <span className="e-textlabel">Je suis disponible pour :</span>
                     <div style={{ colspan: '4' }}>
                      <DropDownListComponent
@@ -305,7 +302,7 @@ class myAvailabilities extends React.Component {
                      />
                     </div>
                 </div>
-                <div>
+                <div className={"editorTemplateContent"}>
                     <span className="e-textlabel">Du</span>
                     <div style={{ colspan: '4' }}>
                          <DateTimePickerComponent
@@ -317,7 +314,7 @@ class myAvailabilities extends React.Component {
                          />
                     </div>
                 </div>
-                <div>
+                <div className={"editorTemplateContent"}>
                     <span className="e-textlabel">Au</span>
                     <div style={{ colspan: '4' }}>
                          <DateTimePickerComponent
@@ -329,7 +326,7 @@ class myAvailabilities extends React.Component {
                          />
                     </div>
                 </div>
-                <div>
+                <div className={"editorTemplateContent"}>
                     <span className="e-textlabel">Récurrence :</span>
                     <div style={{ colspan: '4' }}>
                         <RecurrenceEditorComponent
