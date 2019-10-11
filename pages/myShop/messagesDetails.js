@@ -1,6 +1,9 @@
 import React from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
+import moment from 'moment';
+
+moment.locale('fr');
 
 class MessagesDetails extends React.Component {
   constructor(props) {
@@ -34,10 +37,8 @@ class MessagesDetails extends React.Component {
           oldMessagesDisplay: res.data.messages,
           oldMessages: res.data.messages
         })
-        console.log(this.state.oldMessages);
         this.socket = io('http://localhost:3000');
         this.socket.on('connect', socket => {
-          console.log(this.state.roomData.name);
           this.socket.emit('room', this.state.roomData.name)
         });
         this.socket.on('displayMessage', (data) => {
@@ -45,7 +46,6 @@ class MessagesDetails extends React.Component {
           const oldMessages = [...this.state.oldMessages];
           oldMessages.push(data);
           messages.push(data);
-          console.log(oldMessages);
           axios.put(`http://localhost:3122/myAlfred/api/chatRooms/saveMessages/${id}`, {messages: oldMessages})
             .then(res => console.log(res));
           this.setState({ 
@@ -62,8 +62,7 @@ class MessagesDetails extends React.Component {
   }
 
   handleSubmit(event) {
-      const messObj = { user: this.state.userData.firstname, content: this.state.message };
-      console.log(messObj);
+      const messObj = { user: this.state.userData.firstname, content: this.state.message, date: moment().calendar() };
       event.preventDefault();
       this.socket.emit('message', messObj);
       this.setState({message: ''});
@@ -83,6 +82,7 @@ class MessagesDetails extends React.Component {
                     <div key={index}>
                       <p>{oldMessage.user} :</p>
                       <p>{oldMessage.content}</p>
+                      <p>{oldMessage.date}</p>
                     </div>
                   )
                 })
@@ -98,6 +98,7 @@ class MessagesDetails extends React.Component {
                   return <div key={index}>
                     <p>{message.user} :</p>
                     <p>{message.content}</p>
+                    <p>{message.date}</p>
                   </div>
               })}
           </div>

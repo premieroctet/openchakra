@@ -44,7 +44,7 @@ router.post('/addAndConnect', (req, res) => {
   const emitter = mongoose.Types.ObjectId(req.body.emitter);
   const recipient = mongoose.Types.ObjectId(req.body.recipient);
   const random = uuidv4();
-  ChatRooms.findOne({ attendees: {$in: [ req.body.emitter, req.body.recipient ]}})
+  ChatRooms.findOne({ attendees: {$all: [ req.body.emitter, req.body.recipient ]}})
     .then(users => {
       if (!users) {
         chatRoomFields = {};
@@ -62,6 +62,7 @@ router.post('/addAndConnect', (req, res) => {
         return res.status(400).json({msg: 'chat déjà existant'})
       }
     })
+    .catch(err => console.log(err));
 })
 
 router.put('/saveMessages/:id', (req, res) => {
