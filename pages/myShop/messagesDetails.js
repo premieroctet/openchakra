@@ -62,7 +62,7 @@ class MessagesDetails extends React.Component {
   }
 
   handleSubmit(event) {
-      const messObj = { user: this.state.userData.firstname, content: this.state.message, date: moment().calendar() };
+      const messObj = { user: this.state.userData.firstname, content: this.state.message, date: Date.now() };
       event.preventDefault();
       this.socket.emit('message', messObj);
       this.setState({message: ''});
@@ -80,9 +80,8 @@ class MessagesDetails extends React.Component {
                 this.state.oldMessagesDisplay.map((oldMessage, index) => {
                   return (
                     <div key={index}>
-                      <p>{oldMessage.user} :</p>
-                      <p>{oldMessage.content}</p>
-                      <p>{oldMessage.date}</p>
+                      <p>{oldMessage.user} : {oldMessage.content}</p>
+                      <p>{moment(oldMessage.date).calendar()}</p>
                     </div>
                   )
                 })
@@ -96,9 +95,8 @@ class MessagesDetails extends React.Component {
               }
               {this.state.messages.map((message, index) => {
                   return <div key={index}>
-                    <p>{message.user} :</p>
-                    <p>{message.content}</p>
-                    <p>{message.date}</p>
+                    <p>{message.user} : {message.content}</p>
+                    <p>{moment(message.date).calendar()}</p>
                   </div>
               })}
           </div>
