@@ -9,7 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import {loadCldr, L10n } from '@syncfusion/ej2-base';
 import { withStyles } from '@material-ui/core/styles';
-import {  ScheduleComponent, RecurrenceEditorComponent, ViewsDirective, ViewDirective, Month, Inject, Day, Week } from '@syncfusion/ej2-react-schedule';
+import {  ScheduleComponent, RecurrenceEditorComponent, ViewsDirective, ViewDirective, Month, Inject, Day, Week} from '@syncfusion/ej2-react-schedule';
 import { DateTimePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
 import '../style.css';
@@ -197,7 +197,7 @@ L10n.load({
             "count": "Count",
             "first": "First",
             "second": "Deuxième",
-            "third": "",
+            "third": "troisème",
             "fourth": "Fourth",
             "last": "Dernier",
             "repeat": "Repeat",
@@ -224,6 +224,7 @@ L10n.load({
 
 
 class myAvailabilities extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -231,7 +232,6 @@ class myAvailabilities extends React.Component {
             shop: {},
             all_availabilities: [],
         };
-        this.eventSettings = { dataSource: this.data };
     }
 
     componentDidMount() {
@@ -290,11 +290,10 @@ class myAvailabilities extends React.Component {
 
     editorTemplate(props) {
         return (props !== undefined ?
-          <table className="custom-event-editor" style={{ width: '100%', cellpadding: '10' }}>
-            <tbody>
-                <tr>
-                    <td className="e-textlabel">Je suis disponible pour :</td>
-                    <td>
+          <div className="custom-event-editor" style={{ width: '100%', padding:'1%'}}>
+                <div>
+                    <span className="e-textlabel">Je suis disponible pour :</span>
+                    <div style={{ colspan: '4' }}>
                      <DropDownListComponent
                        id="EventType"
                        placeholder='Service(s)'
@@ -304,11 +303,11 @@ class myAvailabilities extends React.Component {
                        dataSource={['Tous', 'Service A', 'Service B']}
                        value={props.EventType || null}
                      />
-                    </td>
-                </tr>
-                <tr>
-                    <td className="e-textlabel">Du</td>
-                    <td>
+                    </div>
+                </div>
+                <div>
+                    <span className="e-textlabel">Du</span>
+                    <div style={{ colspan: '4' }}>
                          <DateTimePickerComponent
                            locale="fr-CH"
                            id="StartTime"
@@ -316,11 +315,11 @@ class myAvailabilities extends React.Component {
                            value={new Date(props.startTime || props.StartTime)}
                            className="e-field"
                          />
-                    </td>
-                </tr>
-                <tr>
-                    <td className="e-textlabel">Au</td>
-                    <td>
+                    </div>
+                </div>
+                <div>
+                    <span className="e-textlabel">Au</span>
+                    <div style={{ colspan: '4' }}>
                          <DateTimePickerComponent
                            locale="fr-CH"
                            id="EndTime"
@@ -328,23 +327,25 @@ class myAvailabilities extends React.Component {
                            value={new Date(props.endTime || props.EndTime)}
                            className="e-field"
                          />
-                    </td>
-                </tr>
-                <tr>
-                    <td className="e-textlabel">Récurrence :</td>
-                    <td>
+                    </div>
+                </div>
+                <div>
+                    <span className="e-textlabel">Récurrence :</span>
+                    <div style={{ colspan: '4' }}>
                         <RecurrenceEditorComponent
                           locale='fr-CH'
                           ref={recurrObject => this.recurrObject = recurrObject}
-                          id='RecurrenceEditor '
+                          id='RecurrenceEditor'
                           style={{ width: '100%' }}
+                          firstDayOfWeek={1}
+                          frequencies={['none', 'daily', 'weekly']}
+                          cssClass={"mainwrapper"}
                         />
-                </td>
-                </tr>
-            </tbody>
-          </table> : <div></div>);
+                    </div>
+                </div>
+          </div>:<div></div>
+        );
     }
-
 
     render() {
         const {classes} = this.props;
@@ -408,8 +409,8 @@ class myAvailabilities extends React.Component {
                   <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
                       <Grid item xs={12} md={7}>
                           <ScheduleComponent
+                            ref={schedule => this.scheduleObj = schedule}
                             locale='fr-CH'
-                            eventSettings={{ dataSource: this.data }}
                             width='100%'
                             height='550px'
                             firstDayOfWeek={1}

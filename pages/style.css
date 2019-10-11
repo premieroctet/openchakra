@@ -21,3 +21,11 @@
 .e-dialog .e-dlg-header-content + .e-dlg-content{
     padding:3%!important;
 }
+
+.e-btn.e-primary:hover, .e-css.e-btn.e-primary:hover{
+    background-color:#4fbdd7!important;
+}
+
+.e-btn.e-primary.e-active, .e-css.e-btn.e-primary.e-active{
+    background-color:#4fbdd7!important;
+}
