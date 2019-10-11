@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Prestation = require('../../models/Prestation');
+const _ = require('lodash');
 
 router.get('/test',(req, res) => res.json({msg: 'Prestation Works!'}) );
 
@@ -71,6 +72,29 @@ router.get('/:service',(req,res)=> {
 
         })
         .catch(err => res.status(404).json({ prestation: 'No prestation found' }));
+});
+
+// @Route POST /myAlfred/api/prestation/all/search
+// Search prestation by label
+router.post('/all/search', (req,res)=> {
+    const dat = req.body.label;
+    const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), "[eéèêaàoôuù]");
+    Prestation.find({$or:[{label:{ $regex : data, $options : 'i' } },{description:{$regex : data, $options : 'i'}}]})
+        .populate('service')
+        .populate('category')
+        .sort({label:1})
+        .then(prestation => {
+            if(typeof prestation !== 'undefined' && prestation.length > 0){
+
+                res.json(prestation);
+            } else {
+                return res.status(400).json({msg: 'No prestation found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ prestation: 'Error' }));
+
+
 });
 
 // @Route GET /myAlfred/api/prestation/:service/:filter

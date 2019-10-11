@@ -55,6 +55,10 @@ class testSearch extends React.Component {
             lat: null,
             lng: null,
             research: '',
+            prestations: [],
+            uniqCategory: [],
+            uniqService: [],
+            errorsPrestations: false,
 
 
         }
@@ -175,7 +179,102 @@ class testSearch extends React.Component {
     }
 
     searchWithWord(){
+        if(this.state.errorsPrestations){
+            this.setState({errorsPrestations:false});
+        }
+        const obj = {label:this.state.research};
+        axios.post(url+'myAlfred/api/prestation/all/search',obj)
+            .then(res => {
+
+                let prestations = res.data;
+                this.setState({prestations:prestations});
+                const arrayCategory = [];
+                const arrayService = [];
+                prestations.forEach(e => {
+                    arrayCategory.push(e.category);
+                    arrayService.push(e.service);
+                });
+                const uniqCategory = _.uniqBy(arrayCategory,'label');
+                const uniqService = _.uniqBy(arrayService,'label');
+                this.setState({uniqCategory:uniqCategory,uniqService:uniqService});
+
+                const address = this.state.addressSelected;
+                if(address.gps !== undefined) {
+                    this.setState({lat: address.gps.lat, lng: address.gps.lng});
+                    axios.get(url + 'myAlfred/api/serviceUser/near')
+                        .then(res => {
+                            let serviceUser = res.data;
+                            const sorted = _.orderBy(serviceUser, ['level', 'number_of_views', 'graduated', 'is_certified', 'user.creation_date'],
+                                ['desc', 'desc', 'desc', 'desc', 'desc']);
+                            this.setState({serviceUser: sorted});
+
+                        })
+                        .catch(err => console.log(err));
+                } else if(address==='all') {
+                    this.setState({lat:this.state.address.gps.lat, lng: this.state.address.gps.lng});
+                    axios.get(url+'myAlfred/api/serviceUser/all')
+                        .then(res => {
+                            let serviceUser = res.data;
+                            const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                ['desc','desc','desc','desc','desc']);
+                            this.setState({serviceUser:sorted});
+
+                        })
+                        .catch(err => console.log(err));
+                } else {
+                    this.setState({lat:address.lat,lng: address.lng});
+                    const id = address._id;
+                    axios.get(url+'myAlfred/api/serviceUser/nearOther/'+id)
+                        .then(res => {
+                            let serviceUser = res.data;
+                            const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                ['desc','desc','desc','desc','desc']);
+                            this.setState({serviceUser:sorted});
+
+                        })
+                        .catch(err => console.log(err));
+                }
+            })
+            .catch(err => {
+                this.setState({uniqCategory:[]});
+                if(err.response.status === 400){
+                    this.setState({errorsPrestations: true});
+                    const obj2 = {
+                      label: this.state.research
+                    };
+                    axios.post(url+'myAlfred/api/service/all/search',obj2)
+                        .then(response => {
+                            let service = response.data;
+                            const arrayCategory = [];
+
+                            service.forEach(e => {
+                                arrayCategory.push(e.category);
+                            });
+                            const uniqCategory = _.uniqBy(arrayCategory,'label');
+                            this.setState({uniqCategory:uniqCategory});
+                            const address = this.state.addressSelected;
+                            if(address.gps !== undefined) {
+                                this.setState({lat: address.gps.lat, lng: address.gps.lng});
+
+                                    axios.get(url+'myAlfred/api/serviceUser/near/'+service[0]._id)
+                                        .then(result => {
+                                            const serviceUser = result.data;
+                                            const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                                ['desc','desc','desc','desc','desc']);
+                                            this.setState({serviceUser: sorted});
+                                        })
+                                        .catch(err => console.log(err));
+
+
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                }
+            });
         this.setState({click: false, click2: true});
+
     }
 
 
@@ -365,12 +464,124 @@ class testSearch extends React.Component {
 
                             : null}
 
-                        {this.state.click2 ?
-
+                        {this.state.click2 && !this.state.errorsPrestations ?
+                            <>
                             <p>Résultat pour la recherche : {this.state.research}</p>
+                                {this.state.addressSelected === 'all' ?
 
+                                    this.state.uniqCategory.map((e, index) => (
+                                        <Grid key={index} container>
+                                            <Grid item xs={12}>
+                                                <h4>{e.label}</h4>
+                                                {this.state.serviceUser.map(s => (
+                                                    this.state.prestations.map(p => {
+                                                        const index = s.prestations.findIndex(i => i.prestation == p._id);
+                                                        if (index !== -1) {
+                                                            return (
+                                                                <Grid item xs={3}>
+                                                                    <Card>
+                                                                        <p>{s.service.label} par {s.user.firstname}</p>
+
+                                                                        <p>{s.service_address.city}</p>
+                                                                    </Card>
+                                                                </Grid>
+                                                            )
+                                                        } else return null
+                                                    })
+                                                ))}
+                                            </Grid>
+                                        </Grid>
+                                    ))
+                                    :
+
+                                        this.state.uniqCategory.map((e, index) => (
+                                            <Grid key={index} container>
+                                                <Grid item xs={12}>
+                                                    <h4>{e.label}</h4>
+                                                    {this.state.serviceUser.map(s => (
+                                                        this.state.prestations.map(p => {
+                                                            const index = s.prestations.findIndex(i => i.prestation == p._id);
+                                                            if (index !== -1) {
+                                                                return (
+                                                                    <Grid item xs={3}>
+                                                                        <Card>
+                                                                            <p>{s.service.label} par {s.user.firstname}</p>
+
+                                                                            <p>{s.service_address.city}
+                                                                                ({Math.round((geolib.convertDistance(
+                                                                                    geolib.getDistance({
+                                                                                            latitude: s.service_address.gps.lat,
+                                                                                            longitude: s.service_address.gps.lng
+                                                                                        },
+                                                                                        {
+                                                                                            latitude: this.state.lat,
+                                                                                            longitude: this.state.lng
+                                                                                        })
+                                                                                    , 'km') + Number.EPSILON) * 100) / 100} kms)
+
+                                                                            </p>
+                                                                        </Card>
+                                                                    </Grid>
+                                                                )
+                                                            } else return null
+                                                        })
+                                                    ))}
+                                                </Grid>
+                                            </Grid>
+                                        ))
+
+                                }
+
+
+                            </>
 
                             : null}
+                        {this.state.click2 && this.state.errorsPrestations ?
+
+                                    <>
+                                        {this.state.uniqCategory.map((e, index) => (
+                                            <Grid key={index} container>
+                                                <Grid item xs={12}>
+                                                    <h4>{e.label}</h4>
+                                                </Grid>
+                                                    {this.state.serviceUser.map(s => {
+                                                        if (s.service.category === e._id) {
+                                                            return (
+                                                                <Grid item xs={3}>
+                                                                    <Card>
+                                                                        <p>{s.service.label} par {s.user.firstname}</p>
+
+                                                                        <p>{s.service_address.city}
+                                                                            ({Math.round((geolib.convertDistance(
+                                                                                geolib.getDistance({
+                                                                                        latitude: s.service_address.gps.lat,
+                                                                                        longitude: s.service_address.gps.lng
+                                                                                    },
+                                                                                    {
+                                                                                        latitude: this.state.lat,
+                                                                                        longitude: this.state.lng
+                                                                                    })
+                                                                                , 'km') + Number.EPSILON) * 100) / 100} kms)
+
+                                                                        </p>
+                                                                    </Card>
+                                                                </Grid>
+                                                            )
+                                                        } else {
+                                                            return null
+                                                        }
+                                                    })}
+
+                                            </Grid>
+                                        ))}
+
+                                    </>
+
+
+
+                                    : null}
+
+
 
                     </Grid>
                 </Layout>

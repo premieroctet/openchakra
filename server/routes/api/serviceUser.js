@@ -346,8 +346,6 @@ router.get('/all',(req,res)=> {
     ServiceUser.find()
         .populate('user')
         .populate('service')
-        .populate('prestations.prestation')
-        .populate('equipments')
         .then(service => {
             if(typeof service !== 'undefined' && service.length > 0){
                 res.json(service);
@@ -426,6 +424,44 @@ router.get('/near',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/serviceUser/near/:service
+// View all serviceUser by address and servie
+// @Access private
+router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,res)=> {
+
+    User.findById(req.user.id)
+        .then(user => {
+            ServiceUser.find({service:req.params.service})
+                .populate('user')
+                .populate('service')
+                .then(service => {
+                    const gps = user.billing_address.gps;
+                    const latUser = gps.lat;
+                    const lngUser = gps.lng;
+
+                    service.forEach(e => {
+                        const gpsAlfred = e.service_address.gps;
+                        const latAlfred = gpsAlfred.lat;
+                        const lngAlfred = gpsAlfred.lng;
+
+                        const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+
+                        if(!isNear) {
+                            const removeIndex = service.findIndex(i => i._id === e._id);
+                            service.splice(removeIndex, 1);
+                        }
+
+
+                    });
+
+                    res.json(service);
+
+                })
+                .catch(err => res.status(404).json({ service: 'No service found' }));
+        });
+
+});
+
 // @Route GET /myAlfred/api/serviceUser/nearOther
 // View all service around other address
 // @Access private
@@ -434,6 +470,45 @@ router.get('/nearOther/:id',passport.authenticate('jwt',{session:false}),(req,re
     User.findById(req.user.id)
         .then(user => {
             ServiceUser.find()
+                .populate('user')
+                .populate('service')
+                .then(service => {
+                    const addressIndex = user.service_address.findIndex(i =>i._id == req.params.id);
+                    const gps = user.service_address[addressIndex];
+                    const latUser = gps.lat;
+                    const lngUser = gps.lng;
+
+                    service.forEach(e => {
+                        const gpsAlfred = e.service_address.gps;
+                        const latAlfred = gpsAlfred.lat;
+                        const lngAlfred = gpsAlfred.lng;
+
+                        const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+
+                        if(!isNear) {
+                            const removeIndex = service.findIndex(i => i._id === e._id);
+                            service.splice(removeIndex, 1);
+                        }
+
+
+                    });
+
+                    res.json(service);
+
+                })
+                .catch(err => res.status(404).json({ service: 'No service found' }));
+        });
+
+});
+
+// @Route GET /myAlfred/api/serviceUser/all/:service
+// View all serviceUser by service
+// @Access private
+router.get('/all/nearOther/:id/:service',passport.authenticate('jwt',{session:false}),(req,res)=> {
+
+    User.findById(req.user.id)
+        .then(user => {
+            ServiceUser.find({service: req.params.service})
                 .populate('user')
                 .populate('service')
                 .then(service => {
