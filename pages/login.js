@@ -121,7 +121,7 @@ class login extends React.Component {
                 <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
                   <Typography style={{ fontSize: 30 }}>Connexion</Typography>
                 </Grid>
-                <form onSubmit={this.onSubmit}>
+                <form onSubmit={this.onSubmit} style={{marginBottom:15}}>
                   <Grid item>
                     <TextField
                         label="Email"
