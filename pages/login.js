@@ -17,13 +17,13 @@ const { config } = require('../config/config');
 const url = config.apiUrl;
 const styles = {
   fullContainer: {
-    backgroundImage: 'url(../static/background/connexion_inscription.png)',
+    backgroundImage: 'url(../static/background/connexion.svg)',
     backgroundPosition: 'center',
-    backgroundSize: 'cover',
     alignItems: 'center',
     height: '100vh',
     justifyContent: 'top',
     flexDirection: 'column',
+    backgroundRepeat:'no-repeat'
 },
   loginContainer: {
     backgroundColor: 'rgba(0,0,0, 0.15)',
