@@ -89,7 +89,7 @@ const styles = theme => ({
     display: 'none',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
-    },  
+    },
   },
   sectionMobile: {
     display: 'flex',
@@ -255,18 +255,18 @@ class NavBar extends Component {
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
               Déconnexion
           </a>
-        </Link> 
+        </Link>
       </Typography>
     </MenuItem>
   </React.Fragment>;
 
-    const logoutAvatar = 
+    const logoutAvatar =
     <React.Fragment>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>
         <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
-            Profil  
+            Profil
           </a>
         </Link>
       </Typography>
@@ -286,7 +286,7 @@ class NavBar extends Component {
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
               Déconnexion
           </a>
-        </Link> 
+        </Link>
       </Typography>
     </MenuItem>
   </React.Fragment>;
@@ -313,15 +313,6 @@ class NavBar extends Component {
         open={isAvatarMenuOpen}
         onClose={this.handleMenuClose}
       >
-        {/*<MenuItem onClick={this.handleAvatarMenuClose}>
-          <Typography>
-            <Link href='/aide'>
-              <a className={classes.navbarLinkAvatar}>
-                Aide
-              </a>
-            </Link>
-          </Typography>
-        </MenuItem>*/}
         {test ? logoutAvatar : <React.Fragment>
         <MenuItem onClick={this.handleAvatarMenuOpen}>
           <Typography>
@@ -357,26 +348,17 @@ class NavBar extends Component {
         becomealfred
         }
         {test ?<React.Fragment>
-              <MenuItem onClick={this.handleMobileMenuOpen}>
-                <Typography>
-                    <Link href='/myShop/messages'>
-                      <a className={classes.navbarLinkMobile}>
-                        Messages
-                      </a>
-                    </Link>
-                </Typography>
-              </MenuItem>
-            </React.Fragment> : null }
-              <MenuItem onClick={this.handleMobileMenuOpen}>
-              <Typography>
-                <Link href='/aide'>
+          <MenuItem onClick={this.handleMobileMenuOpen}>
+            <Typography>
+                <Link href='/myShop/messages'>
                   <a className={classes.navbarLinkMobile}>
-                    Aide
+                    Messages
                   </a>
                 </Link>
-              </Typography>
-              </MenuItem>
-        {/*<MenuItem onClick={this.handleMobileMenuClose}>
+            </Typography>
+          </MenuItem>
+        </React.Fragment> : null }
+          <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
             <Link href='/aide'>
               <a className={classes.navbarLinkMobile}>
@@ -384,7 +366,7 @@ class NavBar extends Component {
               </a>
             </Link>
           </Typography>
-        </MenuItem>*/}
+          </MenuItem>
         {test ? logoutMobile : <React.Fragment>
         <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
@@ -428,7 +410,7 @@ class NavBar extends Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              {alfred ? 
+              {alfred ?
               <Typography className={classes.navbarItem}>
                 <Link href={'/myShop/services'}>
                   <a className={classes.navbarLink}>
@@ -439,7 +421,7 @@ class NavBar extends Component {
               <Typography className={classes.navbarItem}>
                 <Link href={'/becomeAlfredForm'}>
                   <a className={classes.navbarLink}>
-                    Devenir Alfred
+                    Créer ma boutique
                   </a>
                 </Link>
               </Typography>}
@@ -475,15 +457,15 @@ class NavBar extends Component {
                 </React.Fragment>}
                 {test ?<React.Fragment>
 
-                
+
                   {picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>}
-                
+
                 </React.Fragment> : null  }
             </div>
             <div className={classes.sectionMobile}>
-              
+
                 {test ? mobileavatar : <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}><MoreIcon className={classes.bigIcon} /></IconButton></React.Fragment>}
-              
+
             </div>
           </Toolbar>
         </AppBar>
@@ -494,24 +476,4 @@ class NavBar extends Component {
     );
   }
 }
-
-/*<IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton color="inherit">
-                <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>*/
-
 export default withStyles(styles)(NavBar);
