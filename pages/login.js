@@ -17,9 +17,11 @@ const url = config.apiUrl;
 const styles = {
 
   fullContainer: {
+    display:'flex',
     backgroundColor:'green',
     flexDirection:'row',
-    width: '100%'
+    width: '100%',
+    height:'100vh'
 },
   loginContainer: {
     backgroundColor: 'blue',
@@ -40,7 +42,8 @@ const styles = {
   },
   secondContainer:{
     backgroundColor: 'orange',
-    width: '60%'
+    width: '60%',
+    heigh:'100vh'
   }
 };
 
@@ -73,27 +76,26 @@ class login extends React.Component {
   };
 
   axios.post(url+'myAlfred/api/users/login',user)
-  .then(res => {
-    const {token} = res.data;
-    localStorage.setItem('token',token);
-    setAuthToken(token);
-    axios.put(url+'myAlfred/api/users/account/lastLogin')
-        .then(data => {
-          let path = localStorage.getItem('path');
-          Router.push({pathname:path});
-        })
-        .catch(err=> console.log(err));
-  })
-  .catch(err => {
-    console.log(err);
-    this.setState({errors: err.response.data});
-  })
+    .then(res => {
+      const {token} = res.data;
+      localStorage.setItem('token',token);
+      setAuthToken(token);
+      axios.put(url+'myAlfred/api/users/account/lastLogin')
+          .then(data => {
+            let path = localStorage.getItem('path');
+            Router.push({pathname:path});
+          })
+          .catch(err=> console.log(err));
+    })
+    .catch(err => {
+      console.log(err);
+      this.setState({errors: err.response.data});
+    })
 };
 
   render()  {
     const { classes } = this.props;
     const {errors} = this.state;
-
 
     return (
       <Layout>
@@ -145,7 +147,7 @@ class login extends React.Component {
               </Card>
             </Grid>
             <Grid className={classes.secondContainer}>
-              <img src={'../static/background/connexion.svg'} style={{width:200, height:200}} alt={'test'}/>
+              <img src={'../static/background/connexion.svg'} style={{width:'auto',height:500, backgroundColor:'red'}} alt={'test'}/>
             </Grid>
           </Grid>
         <Footer/>
