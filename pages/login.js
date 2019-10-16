@@ -18,19 +18,20 @@ const styles = {
 
   fullContainer: {
     display:'flex',
-    backgroundColor:'green',
     flexDirection:'row',
     width: '100%',
     height:'100vh'
 },
   loginContainer: {
-    backgroundColor: 'blue',
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center',
     width: '40%',
   },
   card: {
     padding: '1.5rem 3rem',
     width: 400,
-    marginTop: '15%'
+    marginTop: '15%',
   },
   cardContant: {
     flexDirection: 'column',
@@ -41,9 +42,13 @@ const styles = {
     fontSize: 12,
   },
   secondContainer:{
-    backgroundColor: 'orange',
     width: '60%',
-    heigh:'100vh'
+    heigh:'100vh',
+    textAlign:'center'
+  },
+  hrStyle:{
+    borderWidth: 0.5,
+    color:'lightgray'
   }
 };
 
@@ -101,13 +106,14 @@ class login extends React.Component {
       <Layout>
           <Grid className={classes.fullContainer}>
             <Grid container className={classes.loginContainer}>
-              <Card className={classes.card} style={{backgroundColor:'yellow'}}>
-                <Grid style={{backgroundColor:'black'}}>
-                  <Grid item style={{ display: 'flex', justifyContent: 'center',backgroundColor:'pink' }}>
+              <Card className={classes.card}>
+                <Grid>
+                  <Grid item style={{textAlign:'center'}}>
                     <Typography style={{ fontSize: 30 }}>Connexion</Typography>
+                    <img src={'../static/background/connexion.svg'} alt={'bienvenu'} style={{width:100, height:100}}/>
                   </Grid>
                   <form onSubmit={this.onSubmit} style={{marginBottom:15}}>
-                    <Grid item style={{backgroundColor:'purple'}}>
+                    <Grid item>
                       <TextField
                           label="Email"
                           placeholder="Email"
@@ -136,18 +142,22 @@ class login extends React.Component {
                       />
                       <em>{errors.password}</em>
                     </Grid>
-                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30, backgroundColor:'grey' }}>
+                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30}}>
                       <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
                         Connexion
                       </Button>
                     </Grid>
                   </form>
-                  <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
+                  <Grid item style={{display:'flex',flexDirection:'column'}}>
+                    <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
+                    <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Pas encore inscrit ? Inscrivez-vous !</a></Link>
+                  </Grid>
                 </Grid>
               </Card>
             </Grid>
+            <hr className={classes.hrStyle}/>
             <Grid className={classes.secondContainer}>
-              <img src={'../static/background/connexion.svg'} style={{width:'auto',height:500, backgroundColor:'red'}} alt={'test'}/>
+              <img src={'../static/background/connexion.svg'} style={{height:'100vh'}} alt={'test'}/>
             </Grid>
           </Grid>
         <Footer/>
