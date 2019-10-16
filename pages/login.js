@@ -7,36 +7,23 @@ import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import setAuthToken from '../utils/setAuthToken';
-
 import Footer from '../hoc/Layout/Footer/Footer';
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
-
 const { config } = require('../config/config');
 const url = config.apiUrl;
+
 const styles = {
+
   fullContainer: {
-    backgroundImage: 'url(../static/background/connexion.svg)',
-    backgroundPosition: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    justifyContent: 'top',
-    flexDirection: 'column',
-    backgroundRepeat:'no-repeat'
+    backgroundColor:'green',
+    flexDirection:'row',
+    width: '100%'
 },
   loginContainer: {
-    backgroundColor: 'rgba(0,0,0, 0.15)',
-    backgroundPosition: 'center',
-    backgroundSize: 'cover',
-    alignItems: 'center',
-    height: '100vh',
-    flexDirection: 'column',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    zIndex: '2',
+    backgroundColor: 'blue',
+    width: '40%',
   },
   card: {
     padding: '1.5rem 3rem',
@@ -51,6 +38,10 @@ const styles = {
     color: 'black',
     fontSize: 12,
   },
+  secondContainer:{
+    backgroundColor: 'orange',
+    width: '60%'
+  }
 };
 
 class login extends React.Component {
@@ -62,7 +53,6 @@ class login extends React.Component {
       username: '',
       password: '',
       errors: {}
-
     };
   }
 
@@ -75,36 +65,29 @@ class login extends React.Component {
   };
 
   onSubmit = e => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const user = {
-      username: this.state.username,
-      password: this.state.password
-    };
+  const user = {
+    username: this.state.username,
+    password: this.state.password
+  };
 
-    axios.post(url+'myAlfred/api/users/login',user)
-        .then(res => {
-          const {token} = res.data;
-          localStorage.setItem('token',token);
-          setAuthToken(token);
-          axios.put(url+'myAlfred/api/users/account/lastLogin')
-              .then(data => {
-                let path = localStorage.getItem('path');
-                Router.push({pathname:path});
-              })
-              .catch(err=> console.log(err));
-
-
-
-
-
+  axios.post(url+'myAlfred/api/users/login',user)
+  .then(res => {
+    const {token} = res.data;
+    localStorage.setItem('token',token);
+    setAuthToken(token);
+    axios.put(url+'myAlfred/api/users/account/lastLogin')
+        .then(data => {
+          let path = localStorage.getItem('path');
+          Router.push({pathname:path});
         })
-        .catch(err => {
-          console.log(err);
-          this.setState({errors: err.response.data});
-        })
-
-
+        .catch(err=> console.log(err));
+  })
+  .catch(err => {
+    console.log(err);
+    this.setState({errors: err.response.data});
+  })
 };
 
   render()  {
@@ -113,62 +96,62 @@ class login extends React.Component {
 
 
     return (
-        <Layout>
-          <Grid className={classes.fullContainer}></Grid>
-          <Grid container className={classes.loginContainer}>
-            <Card className={classes.card}>
-              <Grid>
-                <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                  <Typography style={{ fontSize: 30 }}>Connexion</Typography>
+      <Layout>
+          <Grid className={classes.fullContainer}>
+            <Grid container className={classes.loginContainer}>
+              <Card className={classes.card} style={{backgroundColor:'yellow'}}>
+                <Grid style={{backgroundColor:'black'}}>
+                  <Grid item style={{ display: 'flex', justifyContent: 'center',backgroundColor:'pink' }}>
+                    <Typography style={{ fontSize: 30 }}>Connexion</Typography>
+                  </Grid>
+                  <form onSubmit={this.onSubmit} style={{marginBottom:15}}>
+                    <Grid item style={{backgroundColor:'purple'}}>
+                      <TextField
+                          label="Email"
+                          placeholder="Email"
+                          margin="normal"
+                          style={{ width: '100%' }}
+                          type="email"
+                          name="username"
+                          value={this.state.username}
+                          onChange={this.onChange}
+                          error={errors.username}
+                      />
+                      <em>{errors.username}</em>
+                    </Grid>
+                    <Grid item style={{backgroundColor:'borwn'}}>
+                      <TextField
+                          id="standard-with-placeholder"
+                          label="Mot de passe"
+                          placeholder="Mot de passe"
+                          margin="normal"
+                          style={{ width: '100%' }}
+                          type="password"
+                          name="password"
+                          value={this.state.password}
+                          onChange={this.onChange}
+                          error={errors.password}
+                      />
+                      <em>{errors.password}</em>
+                    </Grid>
+                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30, backgroundColor:'grey' }}>
+                      <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
+                        Connexion
+                      </Button>
+                    </Grid>
+                  </form>
+                  <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
                 </Grid>
-                <form onSubmit={this.onSubmit} style={{marginBottom:15}}>
-                  <Grid item>
-                    <TextField
-                        label="Email"
-                        placeholder="Email"
-                        margin="normal"
-                        style={{ width: '100%' }}
-                        type="email"
-                        name="username"
-                        value={this.state.username}
-                        onChange={this.onChange}
-                        error={errors.username}
-
-                    />
-                    <em>{errors.username}</em>
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                        id="standard-with-placeholder"
-                        label="Mot de passe"
-                        placeholder="Mot de passe"
-                        margin="normal"
-                        style={{ width: '100%' }}
-                        type="password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={this.onChange}
-                        error={errors.password}
-
-                    />
-                    <em>{errors.password}</em>
-                  </Grid>
-                  <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
-                      Connexion
-                    </Button>
-                  </Grid>
-                </form>
-                <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
-              </Grid>
-            </Card>
+              </Card>
+            </Grid>
+            <Grid className={classes.secondContainer}>
+              <img src={'../static/background/connexion.svg'} style={{width:200, height:200}} alt={'test'}/>
+            </Grid>
           </Grid>
-          <Footer/>
-        </Layout>
+        <Footer/>
+      </Layout>
     );
   };
 }
-
-
 
 export default withStyles(styles)(login);
