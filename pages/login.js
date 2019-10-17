@@ -14,8 +14,7 @@ import Router from "next/router";
 const { config } = require('../config/config');
 const url = config.apiUrl;
 
-const styles = {
-
+const styles = theme => ({
   fullContainer: {
     display:'flex',
     flexDirection:'row',
@@ -24,6 +23,7 @@ const styles = {
 },
   loginContainer: {
     display:'flex',
+    flexDirection:'column',
     alignItems:'center',
     justifyContent:'center',
     width: '40%',
@@ -41,16 +41,40 @@ const styles = {
     color: 'black',
     fontSize: 12,
   },
-  secondContainer:{
-    width: '60%',
-    heigh:'100vh',
-    textAlign:'center'
+
+  [theme.breakpoints.between('sm','xl')]: {
+    secondContainer: {
+      width: '60%',
+      heigh: '100vh',
+      textAlign: 'center',
+      backgroundColor: 'green',
+    }
   },
+  [theme.breakpoints.down('sm')]: {
+    secondContainer: {
+      display:'none'
+    },
+    hrStyle:{
+      display:'none'
+    },
+    fullContainer: {
+      flexDirection:'column',
+    },
+    loginContainer:{
+      width : 'inherit'
+    }
+  },
+  [theme.breakpoints.only('xs')]:{
+    loginContainer:{
+      marginTop:'2%'
+    }
+  },
+
   hrStyle:{
     borderWidth: 0.5,
     color:'lightgray'
   }
-};
+});
 
 class login extends React.Component {
 
@@ -157,7 +181,7 @@ class login extends React.Component {
             </Grid>
             <hr className={classes.hrStyle}/>
             <Grid className={classes.secondContainer}>
-              <img src={'../static/background/connexion.svg'} style={{height:'100vh'}} alt={'test'}/>
+              <img src={'../static/background/Illustration Inscription-connexion_Plan de travail 1 copie-01.svg'} style={{height:'100vh', width:'90%'}} alt={'test'}/>
             </Grid>
           </Grid>
         <Footer/>
