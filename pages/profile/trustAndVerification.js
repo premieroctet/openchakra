@@ -58,12 +58,10 @@ const styles = theme => ({
             display:'none'
         }
     }
-
     ,hidelg: {
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-
     },
     trigger:{
         [theme.breakpoints.down('sm')]: {
@@ -72,35 +70,33 @@ const styles = theme => ({
             marginLeft:'0px',
             height:'30px',
             backgroundColor:'#2FBCD3',
-
             display:'block',
             transition: 'display 0.7s',
             borderRadius:'5px',
             '&:focus': {
                 display:'none',
                 transition: 'display 0.7s',
-
             }
         }
-
-    },divresp: {
+    },
+    divresp: {
         [theme.breakpoints.down('sm')]: {
             width:'171%!important'
         }
-
-    },buttresp: {
+    },
+    buttresp: {
         [theme.breakpoints.down('sm')]: {
             width:'86%!important',
             fontSize:'0.7rem'
         }
-
-    },buttresp2: {
+    },
+    buttresp2: {
         [theme.breakpoints.down('sm')]: {
             width:'168%!important',
             fontSize:'0.7rem'
         }
-
-    },respenr:{
+    },
+    respenr:{
         [theme.breakpoints.down('sm')]: {
             justifyContent:'flex-start!important',
         }
@@ -110,16 +106,13 @@ const styles = theme => ({
             fontSize:'0.7rem'
         }
     }
-
     ,toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
             transition: 'margin-left 0.7s',
-
             '&:hover': {
                 marginLeft:'0px',
                 transition: 'margin-left 0.7s',
                 boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
             }
         }
     },
@@ -269,8 +262,6 @@ class trustAndVerification extends React.Component {
         this.setState({
             file:
                 URL.createObjectURL(e.target.files[0])    })
-
-
     };
 
     onChangeVerso = e => {
@@ -295,7 +286,6 @@ class trustAndVerification extends React.Component {
 
     handleSiret() {
         const code = this.state.siret;
-
         axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siret/${code}`)
             .then(res => {
                 const data = res.data;
@@ -306,7 +296,6 @@ class trustAndVerification extends React.Component {
                 const day = date.substring(6,8);
                 const result = day+'/'+month+'/'+year;
                 this.setState({creation_date: result});
-
             })
             .catch(err => {
                 console.log(err);
@@ -315,7 +304,6 @@ class trustAndVerification extends React.Component {
 
     onSubmit = e => {
         e.preventDefault();
-
         const formData = new FormData();
         formData.append('myCardR',this.state.id_recto);
         formData.append('myCardV',this.state.id_verso);
@@ -413,10 +401,8 @@ class trustAndVerification extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-
                         <Grid className={classes.toggle}  item xs={3} style={{}}>
-
-                            <div className={classes.trigger}></div>
+                            <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
@@ -428,13 +414,11 @@ class trustAndVerification extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
                                             </a>
                                         </div>
                                     </Link>
@@ -449,7 +433,6 @@ class trustAndVerification extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
@@ -479,7 +462,6 @@ class trustAndVerification extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
@@ -490,7 +472,6 @@ class trustAndVerification extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -584,15 +565,12 @@ class trustAndVerification extends React.Component {
                                     <form className={classes.formresp} onSubmit={this.onSubmit}>
                                         {this.state.haveCard ?
                                             <Grid item xs={12}>
-
                                                 <Grid container style={{alignItems:"center"}}>
                                                     <Grid item xs={9}>
                                                         <Grid container className={classes.divresp} style={{border:'1px solid lightgrey',marginTop:20,alignItems:"center"}}>
                                                             <Grid item xs={8}>
-
                                                                 {ext ==='pdf' ?
                                                                     <Document
-
                                                                         file={`../${this.state.card.recto}`}
                                                                         onLoadSuccess={this.onDocumentLoadSuccess}
                                                                     >
@@ -603,7 +581,6 @@ class trustAndVerification extends React.Component {
                                                                 }
                                                             </Grid>
                                                             <Grid item xs={4}>
-
                                                                 <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                                     <Edit style={{cursor:"pointer"}}/>
                                                                     <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
@@ -652,12 +629,10 @@ class trustAndVerification extends React.Component {
                                             )}
                                         {this.state.haveCard && this.state.haveCardV ?
                                             <Grid item xs={12}>
-
                                                 <Grid container style={{alignItems:"center"}}>
                                                     <Grid item xs={9}>
                                                         <Grid container style={{border:'1px solid lightgrey',marginTop:20,alignItems:"center"}}>
                                                             <Grid item xs={8}>
-
                                                                 {ext2 ==='pdf' ?
                                                                     <Document
                                                                         file={`../${this.state.card.verso}`}
@@ -670,7 +645,6 @@ class trustAndVerification extends React.Component {
                                                                 }
                                                             </Grid>
                                                             <Grid item xs={4}>
-
                                                                 <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                                     <Edit style={{cursor:"pointer"}}/>
                                                                     <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
@@ -714,7 +688,6 @@ class trustAndVerification extends React.Component {
                                                             </label>
                                                             <Delete style={{cursor:"pointer"}} color={"secondary"} onClick={()=>this.setState({file2:null})}/>
                                                         </Grid>
-
                                                     </Grid>
                                             )}
                                         {this.state.id_recto === null && this.state.id_verso !==null ?
@@ -722,11 +695,10 @@ class trustAndVerification extends React.Component {
                                                 <Button className={classes.respenr2} onClick={()=>this.addVerso()} color={"primary"} variant={"contained"} style={{color:"white"}}>Enregistrer verso</Button>
                                             </Grid>
                                             :
-                                            <Grid item xs={9} className={classes.respenr} style={{marginTop:20,display:"flex",justifyContent:"flex-end"}}>
-                                                <Button className={classes.respenr2} type={"submit"} color={"primary"} variant={"contained"} style={{color:"white"}}>Enregistrer</Button>
+                                            <Grid item xs={9} className={classes.respenr} style={{marginTop:20,display:"flex",justifyContent:"flex-start"}}>
+                                                <Button className={classes.respenr2} type={"submit"} color={"secondary"} variant={"contained"} style={{color:"white"}}>Enregistrer</Button>
                                             </Grid>
                                         }
-
                                     </form>
                                 </Grid>
                             </Grid>
@@ -780,7 +752,6 @@ class trustAndVerification extends React.Component {
                                                         margin="normal"
                                                         name={'siret'}
                                                         variant={'outlined'}
-
                                                     />
                                                     <Grid item xs={3} style={{marginTop:8,marginLeft:5}}>
                                                         <Button onClick={()=>this.handleSiret()} type="submit" variant="contained" color="primary" style={{ width: '80%',color:'white',marginTop:15 }}>
@@ -790,7 +761,6 @@ class trustAndVerification extends React.Component {
                                                 </Grid>
                                             </Grid>
                                             <Grid container style={{width:'70%',marginTop:20,backgroundColor:'whitesmoke',paddingLeft:10}}>
-
                                                 <Grid item xs={6}>
                                                     <p style={{marginBottom:0}}>Siret : {this.state.siret}</p>
                                                 </Grid>
@@ -799,7 +769,6 @@ class trustAndVerification extends React.Component {
                                                 </Grid>
                                             </Grid>
                                             <Grid container style={{width:'70%',backgroundColor:'whitesmoke',paddingLeft:10}}>
-
                                                 <Grid item xs={6}>
                                                     <p style={{marginBottom:0,marginTop: 10}}>Dénomination : {this.state.name}</p>
                                                 </Grid>
