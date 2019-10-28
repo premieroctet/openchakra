@@ -114,7 +114,6 @@ class myAddresses extends React.Component {
             edit_address: '',
             edit_city: '',
             edit_zip_code: '',
-            //edit_floor: '',
             edit_note: '',
             edit_phone: '',
             edit_lat: '',
