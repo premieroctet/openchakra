@@ -3,12 +3,14 @@ const Schema = mongoose.Schema;
 
 const ChatRoomsSchema = new Schema({
     name: String,
-    attendees: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'users'
-      }
-    ],
+    emitter: {
+      type: Schema.Types.ObjectId,
+      ref: 'users'
+    },
+    recipient: {
+      type: Schema.Types.ObjectId,
+      ref: 'users'
+    },
     messages: [{
         user: String,
         content: String,

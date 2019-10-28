@@ -11,8 +11,9 @@ router.get('/test',(req, res) => res.json({msg: 'ChatRooms Works!'}) );
 // Get chatrooms for one user
 router.get('/userChatRooms', passport.authenticate('jwt',{session:false}), (req, res) => {
   const user = mongoose.Types.ObjectId(req.user.id);
-  ChatRooms.find({ attendees: {$in: [ user ]}})
-    .populate("attendees")
+  ChatRooms.find()
+    .populate("emitter")
+    .populate("recipient")
     .then(chatrooms => {
       if (!chatrooms) {
         res.status(404).json({msg: 'Aucun chat trouvé'})
@@ -49,10 +50,8 @@ router.post('/addAndConnect', (req, res) => {
       if (!users) {
         chatRoomFields = {};
         chatRoomFields.name = 'room-' + random;
-        chatRoomFields.attendees = [
-          emitter,
-          recipient
-        ];
+        chatRoomFields.emitter = req.body.emitter;
+        chatRoomFields.recipient = req.body.recipient;
 
         const newChat = new ChatRooms(chatRoomFields);
         newChat.save().then(chat => res.json(chat)).catch(err => console.log(err));

@@ -267,6 +267,3 @@ class Messages extends React.Component {
 
 
 export default withStyles(styles)(Messages);
-
-
-
