@@ -47,7 +47,6 @@ const styles = theme => ({
       width: '60%',
       heigh: '100vh',
       textAlign: 'center',
-      backgroundColor: 'green',
     }
   },
   [theme.breakpoints.down('sm')]: {
