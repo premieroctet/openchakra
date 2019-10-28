@@ -68,6 +68,7 @@ const styles = theme => ({
   buttonAddAddress: {
       display:'inline-block',
       marginTop: 15,
+      marginBottom: 15,
       color:'#4fbdd7',
       borderColor:'#4fbdd7',
       backgroundColor: 'white',
@@ -273,12 +274,11 @@ class paymentPreference extends React.Component {
                                 <Grid container>
                                     <Grid item xs={3}>
                                       {haveAccount ?
-                                        <h2 style={{
-                                          color: '#2FBCD3',
-                                          fontWeight: '100',
-                                          cursor: 'pointer'
-                                        }}
-                                            onClick={this.handleClick2}>Modifier le RIB</h2>
+                                        <Button size={'large'} type={'submit'} variant="contained"
+                                                className={classes.buttonAddAddress}
+                                                onClick={this.handleClick}>
+                                          Modifier le RIB
+                                        </Button>
                                         :
                                         <Button size={'large'} type={'submit'} variant="contained"
                                                 className={classes.buttonAddAddress}
@@ -344,9 +344,9 @@ class paymentPreference extends React.Component {
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12} style={{display: "flex", justifyContent: "flex-end"}}>
-                                                    <Button size={'large'} type={'submit'} variant="contained" color="primary"
+                                                    <Button size={'large'} type={'submit'} variant="contained" color="secondary"
                                                             style={{color: 'white',marginTop: 15}}>
-                                                        Ajouter un rib
+                                                        Enregistrer
                                                     </Button>
                                                 </Grid>
                                             </form>
