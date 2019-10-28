@@ -76,6 +76,7 @@ const styles = theme => ({
     borderColor: '#4fbdd7',
     backgroundColor: 'white',
     border: '1px solid',
+    boxShadow: 'inherit',
     '&:hover': {
       backgroundColor: '#4fbdd7',
       color:'white'
