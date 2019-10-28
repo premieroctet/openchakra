@@ -51,8 +51,7 @@ const styles = theme => ({
     transition: 'display 0.7s',
 
        }
-     }
-
+     },
 },
   toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
@@ -65,7 +64,18 @@ const styles = theme => ({
 
              }
       }
+    },
+  buttonAddAddress: {
+      display:'inline-block',
+      color:' #47fbdd7',
+      borderColor:' #47fbdd7',
+      backgroundColor: 'white',
+      border: '1 px solid',
+      '&:hover' : {
+          backgroundColor: '#47fbdd7',
+        color: 'white'
     }
+  }
 });
 
 class paymentPreference extends React.Component {
@@ -81,8 +91,6 @@ class paymentPreference extends React.Component {
             iban: '',
             account: {},
             haveAccount: false,
-
-
         };
     }
 
@@ -262,12 +270,20 @@ class paymentPreference extends React.Component {
                                 </Grid>
                                 <Grid container>
                                     <Grid item xs={3}>
-                                        {haveAccount ?
-                                            <h2 style={{color: '#2FBCD3', fontWeight: '100', cursor: 'pointer'}}
-                                                onClick={this.handleClick2}>Modifier le RIB</h2>
-                                            :
-                                        <h2 style={{color: '#2FBCD3', fontWeight: '100', cursor: 'pointer'}}
-                                            onClick={this.handleClick}>Ajouter un RIB</h2>}
+                                      {haveAccount ?
+                                        <h2 style={{
+                                          color: '#2FBCD3',
+                                          fontWeight: '100',
+                                          cursor: 'pointer'
+                                        }}
+                                            onClick={this.handleClick2}>Modifier le RIB</h2>
+                                        :
+                                        <Button size={'large'} type={'submit'} variant="contained"
+                                                class={classes.buttonAddAddress}
+                                                onClick={this.handleClick}>
+                                          Ajouter un RIB
+                                        </Button>
+                                      }
                                     </Grid>
                                     {clickAdd ?
                                         <Grid container>
