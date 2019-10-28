@@ -123,7 +123,6 @@ class security extends React.Component {
             this.setState({newPassword2: e.target.value});
             this.setState({check: false});
             this.setState({checkbuttonvalidate : true});
-
         } else {
             this.setState({check: true});
             this.setState({checkbuttonvalidate : false});
