@@ -67,12 +67,14 @@ const styles = theme => ({
     },
   buttonAddAddress: {
       display:'inline-block',
-      color:' #47fbdd7',
-      borderColor:' #47fbdd7',
+      marginTop: 15,
+      color:'#4fbdd7',
+      borderColor:'#4fbdd7',
       backgroundColor: 'white',
-      border: '1 px solid',
+      border: '1px solid',
+      boxShadow: 'inherit',
       '&:hover' : {
-          backgroundColor: '#47fbdd7',
+          backgroundColor: '#4fbdd7',
         color: 'white'
     }
   }
@@ -279,7 +281,7 @@ class paymentPreference extends React.Component {
                                             onClick={this.handleClick2}>Modifier le RIB</h2>
                                         :
                                         <Button size={'large'} type={'submit'} variant="contained"
-                                                class={classes.buttonAddAddress}
+                                                className={classes.buttonAddAddress}
                                                 onClick={this.handleClick}>
                                           Ajouter un RIB
                                         </Button>
