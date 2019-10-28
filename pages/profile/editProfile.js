@@ -8,35 +8,17 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import {FormLabel} from "@material-ui/core";
 import Select2 from 'react-select';
-import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
-import Birthday from '@material-ui/icons/CakeOutlined'
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
-import {number} from "prop-types";
 registerLocale('fr', fr);
-
-
-
-
-
 moment.locale('fr');
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
-
-const ExampleCustomInput = ({ value,onClick}) => (
-    <TextField style={{width:'100%'}} value={value} label={'Date de naissance'} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
-
-);
 
 const styles = theme => ({
     bigContainer: {
@@ -56,13 +38,11 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             display:'none'
         }
-    }
-
-   ,hidelg: {
+    },
+   hidelg: {
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-
     },
     trigger:{
     [theme.breakpoints.down('sm')]: {
@@ -71,28 +51,21 @@ const styles = theme => ({
     marginLeft:'0px',
     height:'30px',
     backgroundColor:'#2FBCD3',
-
     display:'block',
     transition: 'display 0.7s',
     borderRadius:'5px',
     '&:focus': {
     display:'none',
     transition: 'display 0.7s',
-
        }
      },
-
-
-
 },
     responsiveContainer: {
         [theme.breakpoints.down('sm')]: {
-            width:'148%!important',
+            width: '148%!important',
         }
-    }
-
-
-    ,toggle: {
+    },
+    toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
         transition: 'margin-left 0.7s',
 
@@ -100,14 +73,9 @@ const styles = theme => ({
             marginLeft:'0px',
             transition: 'margin-left 0.7s',
             boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
              }
       }
     },
-
-
-
-
 });
 
 const options = [
@@ -135,17 +103,8 @@ class editProfile extends React.Component {
             birthday: null,
             dpDate: moment().toDate(),
             ipDate: moment().format(momentDateFormat)
-
-
-
-
-
-
         };
         this.handleChangeLanguages = this.handleChangeLanguages.bind(this);
-
-
-
     }
 
     componentDidMount() {
@@ -163,9 +122,6 @@ class editProfile extends React.Component {
                         label: b,
                         value: b
                     })) });
-
-
-
             })
             .catch(err => {
                     console.log(err);
@@ -192,17 +148,12 @@ class editProfile extends React.Component {
 
     };
 
-
-
-
     onSubmit = e => {
         e.preventDefault();
         let arrayLanguages = [];
         if(this.state.selectedLanguages != null){
             this.state.selectedLanguages.forEach(w => {
-
                 arrayLanguages.push(w.value);
-
             });
         }
         const languages = arrayLanguages;
@@ -219,30 +170,17 @@ class editProfile extends React.Component {
             .catch(err => console.log(err))
     };
 
-
-
-
-
-
-
-
-
-
-
     render() {
         const {classes} = this.props;
         const {user} = this.state;
         const {birthday} = this.state;
 
-
         return (
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer} style={{overflowX:"hidden"}}>
-
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
-
-                         <div className={classes.trigger}></div>
+                         <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
@@ -254,7 +192,6 @@ class editProfile extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
@@ -276,7 +213,6 @@ class editProfile extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
@@ -306,7 +242,6 @@ class editProfile extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
@@ -317,7 +252,6 @@ class editProfile extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -328,59 +262,8 @@ class editProfile extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
-                                {/*<Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/reviews'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/reviews'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Commentaires
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-
-                                {/*<Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/recommandations'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/recommandations'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Recommandations
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-
-
                             </Grid>
                         </Grid>
-
-
-
-
                         <Grid item xs={9} style={{paddingLeft: 20}}>
                             <h1 style={{color: 'dimgray',fontWeight: '100'}}>Modifier votre profil</h1>
                             <form>
@@ -388,7 +271,6 @@ class editProfile extends React.Component {
                             <Grid container className={classes.responsiveContainer}>
                                 <Grid container>
                                 <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 20}}>
-
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
@@ -399,14 +281,11 @@ class editProfile extends React.Component {
                                         placeholder={'Prénom'}
                                         variant={"outlined"}
                                         label={'Prénom'}
-
                                     />
-
                                 </Grid>
                                 </Grid>
                                 <Grid container>
                                 <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 20}}>
-
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
@@ -417,15 +296,10 @@ class editProfile extends React.Component {
                                         placeholder={'Nom'}
                                         variant={"outlined"}
                                         label={'Nom'}
-
                                     />
-
                                 </Grid>
                                 </Grid>
-
                                 <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 20}}>
-
-                                    {/*<InputLabel style={{color: 'black'}}>A propos de moi</InputLabel>*/}
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
@@ -437,9 +311,7 @@ class editProfile extends React.Component {
                                         margin="normal"
                                         name={'description'}
                                         label={'A propos de moi'}
-
                                     />
-
                                 </Grid>
                             </Grid>
                             <Grid container className={classes.responsiveContainer}>
@@ -448,7 +320,6 @@ class editProfile extends React.Component {
                                 </Grid>
                                 <Grid container style={{marginTop:10}}>
                                 <Grid item lg={2} xs={10} sm={5} md={3} >
-
                                     <TextField
                                         id="standard-name"
                                         style={{width: '100%'}}
@@ -460,9 +331,7 @@ class editProfile extends React.Component {
                                         name={'gender'}
                                         placeholder={'Sexe'}
                                         label={'Sexe'}
-
                                     >
-
                                         <MenuItem  value={'Homme'}>
                                             Homme
                                         </MenuItem>
@@ -470,10 +339,8 @@ class editProfile extends React.Component {
                                             Femme
                                         </MenuItem>
                                     </TextField>
-
                                 </Grid>
-                                    <Grid item xs={1}></Grid>
-
+                                    <Grid item xs={1}/>
                                 <Grid item lg={3} xs={10} sm={6} md={3}  style={{marginTop:15}}>
                                     <DatePicker
                                         selected={Date.parse(birthday)}
@@ -486,7 +353,6 @@ class editProfile extends React.Component {
                                         dateFormat="dd/MM/yyyy"
                                         maxDate={new Date()}
                                     />
-
                                 </Grid>
                                 </Grid>
                                 <Grid container>
@@ -632,7 +498,5 @@ class editProfile extends React.Component {
         );
     };
 }
-
-
 
 export default withStyles(styles)(editProfile);

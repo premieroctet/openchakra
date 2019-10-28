@@ -29,11 +29,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-
-
-
-
-
 moment.locale('fr');
 
 const { config } = require('../../config/config');
@@ -133,8 +128,6 @@ const styles = theme => ({
             width:'250%'
         }
     }
-
-
 });
 
 class Thumb extends React.Component {
@@ -224,11 +217,7 @@ class trustAndVerification extends React.Component {
                         const extVerso = this.state.card.verso.split('.').pop();
                         this.setState({extVerso:extVerso,haveCardV:true});
                     }
-
                 }
-
-
-
                 if(user.is_alfred) {
                     this.setState({alfred: true});
                     axios.get(url+'myAlfred/api/shop/currentAlfred')
@@ -240,14 +229,8 @@ class trustAndVerification extends React.Component {
                                 this.setState({siret: result.company.siret,name: result.company.name,naf_ape: result.company.naf_ape,
                                     creation_date: result.company.creation_date, status: result.company.status})
                             }
-
                         })
                 }
-
-
-
-
-
             })
             .catch(err => {
                     console.log(err);
@@ -272,7 +255,6 @@ class trustAndVerification extends React.Component {
     };
 
     onChange2 = event => {
-
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -280,7 +262,6 @@ class trustAndVerification extends React.Component {
         this.setState({
             [name]: value
         });
-
     };
 
     onChangeRecto = e => {
@@ -330,7 +311,6 @@ class trustAndVerification extends React.Component {
             .catch(err => {
                 console.log(err);
             })
-
     }
 
     onSubmit = e => {
@@ -397,8 +377,6 @@ class trustAndVerification extends React.Component {
             creation_date: this.state.creation_date,
             siret: this.state.siret,
             naf_ape: this.state.naf_ape,
-
-
         };
         axios
             .put(url+'myAlfred/api/shop/editStatus', newStatus)
@@ -430,8 +408,6 @@ class trustAndVerification extends React.Component {
         const {ext2} = this.state;
         const {professional} = this.state;
         const {alfred} = this.state;
-        const {company} = this.state;
-
 
         return (
             <Fragment>
@@ -525,57 +501,8 @@ class trustAndVerification extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
-                                {/*<Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/reviews'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} height={70} alt={'comment'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/reviews'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} height={70} alt={'comment'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Commentaires
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/recommandations'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} height={70} width={33} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/recommandations'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/megaphone.svg'} alt={'speaker'} height={70} width={33} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Recommandations
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-
-
                             </Grid>
                         </Grid>
-
-
                         <Grid item xs={9} style={{paddingLeft: 55, }}>
                             <Grid container className={classes.divresp}>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Confiance & vérification</h1>
@@ -600,19 +527,13 @@ class trustAndVerification extends React.Component {
                                             <img src={'../static/success.svg'} alt={'check'} height={80} width={28} style={{marginLeft: 5}}/>
                                         }
                                     </Grid>
-
-
                                 </Grid>
                                 {user.is_confirmed ?
                                     null
                                     : <Grid container> <Grid item xs={7}> <Button className={classes.buttresp} type="submit" onClick={()=>this.sendEmail()} variant="contained" color="primary" style={{width:'50%',color:'white',marginTop:15 }}>
                                         Envoyer email de vérification
                                     </Button></Grid></Grid>}
-
-
-
                                 <Grid item xs={12} style={{marginTop: 20}}>
-
                                     <InputLabel style={{color: 'black'}}>Téléphone</InputLabel>
                                 </Grid>
                                 <Grid container>
@@ -628,11 +549,8 @@ class trustAndVerification extends React.Component {
                                         {user.phone_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} height={80} width={28} style={{marginLeft: 5}}/> :
                                             <img src={'../static/success.svg'} alt={'check'} height={80} width={28} style={{marginLeft: 5}}/>
                                         }
-
-
                                     </Grid>
                                 </Grid>
-
                                 {user.phone_confirmed ?
                                     null
                                     :
@@ -643,8 +561,6 @@ class trustAndVerification extends React.Component {
                                             </Button>
                                         </Grid>
                                     </Grid>}
-
-
                                 <Grid item xs={6}>
                                     <h2 style={{fontWeight:'100'}}>Pièce d'identité</h2>
                                     <p className={classes.divresp} style={{color:'#2FBCD3'}}>Vous pouvez ajouter ou modifier une pièce d’identité en sélectionnant le type de pièce et télécharger le document.  Un recto pour le passeport et le recto/verso pour la pièce d’identité</p>
@@ -658,17 +574,14 @@ class trustAndVerification extends React.Component {
                                             startAdornment: <InputAdornment position="start">Type</InputAdornment>,
                                         }}
                                     >
-
                                         <MenuItem value={'passeport'}>
                                             Passeport
                                         </MenuItem>
                                         <MenuItem value={'identite'}>
                                             Carte d'identité
                                         </MenuItem>
-
                                     </TextField>
                                     <form className={classes.formresp} onSubmit={this.onSubmit}>
-
                                         {this.state.haveCard ?
                                             <Grid item xs={12}>
 
@@ -687,7 +600,6 @@ class trustAndVerification extends React.Component {
                                                                     </Document>
                                                                     :
                                                                     <img src={`../${this.state.card.recto}`} alt={'recto'} width={200}/>
-
                                                                 }
                                                             </Grid>
                                                             <Grid item xs={4}>
@@ -708,18 +620,9 @@ class trustAndVerification extends React.Component {
                                                             <img src={'../static/success.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
                                                         }
                                                     </Grid>
-
-
-
                                                 </Grid>
-
-
-
-
-
                                             </Grid>
                                             :(
-
                                                 this.state.file===null ?<Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
                                                     }}>
                                                         <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
@@ -729,14 +632,10 @@ class trustAndVerification extends React.Component {
                                                                    className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                                             />
                                                         </label>
-
-
-
                                                     </Grid> :
                                                     <Grid container style={{marginTop: 20,alignItems:"center"}}>
                                                         <Grid item xs={6} style={{height:115,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
                                                             backgroundImage:`url('${this.state.file}')`,backgroundPosition:"center",backgroundSize:"cover"}}>
-
                                                         </Grid>
                                                         <Grid item xs={3}>
                                                             <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
@@ -751,23 +650,6 @@ class trustAndVerification extends React.Component {
 
                                                     </Grid>
                                             )}
-
-                                        {/*<Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center"}}>
-                                        <label style={{display: 'inline-block',textAlign:"center" }} className="forminputs">
-                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
-                                            <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
-                                                   onChange={this.onChangeVerso}
-                                                   className="form-control" accept=".jpg,.jpeg,.png,.pdf"
-                                            />
-                                        </label>
-
-                                    </Grid>
-                                        <Thumb file={this.state.id_verso} />
-                                        <Grid item xs={6}>
-                                            <Button type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
-                                            Enregistrer
-                                            </Button>
-                                        </Grid>*/}
                                         {this.state.haveCard && this.state.haveCardV ?
                                             <Grid item xs={12}>
 
@@ -785,7 +667,6 @@ class trustAndVerification extends React.Component {
                                                                     </Document>
                                                                     :
                                                                     <img src={`../${this.state.card.verso}`} alt={'verso'} width={200}/>
-
                                                                 }
                                                             </Grid>
                                                             <Grid item xs={4}>
@@ -806,18 +687,9 @@ class trustAndVerification extends React.Component {
                                                             <img src={'../static/success.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
                                                         }
                                                     </Grid>
-
-
-
                                                 </Grid>
-
-
-
-
-
                                             </Grid>
                                             :(
-
                                                 this.state.file2===null ?<Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
                                                     }}>
                                                         <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
@@ -827,14 +699,10 @@ class trustAndVerification extends React.Component {
                                                                    className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                                             />
                                                         </label>
-
-
-
                                                     </Grid> :
                                                     <Grid container style={{marginTop: 20,alignItems:"center"}}>
                                                         <Grid item xs={6} style={{height:115,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
                                                             backgroundImage:`url('${this.state.file2}')`,backgroundPosition:"center",backgroundSize:"cover"}}>
-
                                                         </Grid>
                                                         <Grid item xs={3}>
                                                             <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
@@ -861,32 +729,6 @@ class trustAndVerification extends React.Component {
 
                                     </form>
                                 </Grid>
-
-                                {/*<Grid item xs={6} style={{borderLeft:'0.2px solid lightgrey',height:"max-content",paddingLeft:20}}>
-
-                                    {this.state.haveCard ?
-                                        <div style={{marginTop: 20,width:'80%',display:'flex'}}>
-                                            {ext ==='pdf' ?
-                                                <Document
-                                                file={`../${this.state.card.recto}`}
-                                                onLoadSuccess={this.onDocumentLoadSuccess}
-                                                >
-                                                <Page pageNumber={this.state.pageNumber} width={250} />
-                                                </Document>
-                                                :
-                                                <img src={`../${this.state.card.recto}`} alt={'recto'} width={200}/>
-
-                                            }
-                                            {user.id_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :
-                                                <img src={'../static/success.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
-                                            }
-                                        </div>
-
-                                        : null}
-
-
-
-                                </Grid>*/}
                             </Grid>
                             {alfred ?
                                 <React.Fragment><Grid container>
@@ -946,7 +788,6 @@ class trustAndVerification extends React.Component {
                                                         </Button>
                                                     </Grid>
                                                 </Grid>
-
                                             </Grid>
                                             <Grid container style={{width:'70%',marginTop:20,backgroundColor:'whitesmoke',paddingLeft:10}}>
 
@@ -956,7 +797,6 @@ class trustAndVerification extends React.Component {
                                                 <Grid item xs={6}>
                                                     <p style={{marginBottom:0}}>Date de creation : {this.state.creation_date}</p>
                                                 </Grid>
-
                                             </Grid>
                                             <Grid container style={{width:'70%',backgroundColor:'whitesmoke',paddingLeft:10}}>
 
@@ -966,15 +806,12 @@ class trustAndVerification extends React.Component {
                                                 <Grid item xs={6}>
                                                     <p style={{marginBottom:0,marginTop: 10}}>NAF/APE : {this.state.naf_ape}</p>
                                                 </Grid>
-
                                             </Grid>
                                             <Grid container style={{width:'70%',backgroundColor:'whitesmoke',paddingLeft:10}}>
 
                                                 <Grid item xs={12}>
                                                     <p style={{marginTop: 10}}>Status juridique : {this.state.status}</p>
                                                 </Grid>
-
-
                                             </Grid>
                                         </React.Fragment>
                                         : null}
@@ -983,8 +820,6 @@ class trustAndVerification extends React.Component {
                                             Enregistrer
                                         </Button>
                                     </Grid>
-
-
                                 </React.Fragment>
                                 : null
                             }
@@ -992,7 +827,6 @@ class trustAndVerification extends React.Component {
                     </Grid>
                 </Layout>
                 <Footer/>
-
                 <Dialog
                     open={this.state.open}
                     onClose={()=>this.handleClose()}
@@ -1019,7 +853,4 @@ class trustAndVerification extends React.Component {
         );
     };
 }
-
-
-
 export default withStyles(styles)(trustAndVerification);
