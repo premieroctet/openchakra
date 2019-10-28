@@ -59,6 +59,9 @@ class testSearch extends React.Component {
             uniqCategory: [],
             uniqService: [],
             errorsPrestations: false,
+            errorsService: false,
+            show1: true,
+
 
 
         }
@@ -256,20 +259,99 @@ class testSearch extends React.Component {
                             if(address.gps !== undefined) {
                                 this.setState({lat: address.gps.lat, lng: address.gps.lng});
 
-                                    axios.get(url+'myAlfred/api/serviceUser/near/'+service[0]._id)
+                                    axios.get(url+'myAlfred/api/serviceUser/near')
                                         .then(result => {
                                             const serviceUser = result.data;
                                             const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
                                                 ['desc','desc','desc','desc','desc']);
-                                            this.setState({serviceUser: sorted});
+
+                                            this.setState({serviceUser:sorted});
                                         })
                                         .catch(err => console.log(err));
+                            } else if(address==='all') {
+                                this.setState({lat:this.state.address.gps.lat, lng: this.state.address.gps.lng});
+                                const shuffleService = _.shuffle(service);
+                                axios.get(url+'myAlfred/api/serviceUser/all')
+                                    .then(res => {
+                                        let serviceUser = res.data;
+                                        const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                            ['desc','desc','desc','desc','desc']);
+                                        this.setState({serviceUser:sorted});
 
+                                    })
+                                    .catch(err => console.log(err));
+                            } else {
+                                this.setState({lat:address.lat,lng: address.lng});
+                                const id = address._id;
+                                axios.get(url+'myAlfred/api/serviceUser/nearOther/'+id)
+                                    .then(res => {
+                                        let serviceUser = res.data;
+                                        const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                            ['desc','desc','desc','desc','desc']);
+                                        this.setState({serviceUser:sorted});
 
+                                    })
+                                    .catch(err => console.log(err));
                             }
                         })
                         .catch(error => {
-                            console.log(error)
+                            this.setState({uniqCategory:[]});
+                            if(error.response.status === 400){
+                                this.setState({errorsService: true,errorsPrestations: false,show1:false});
+                                const obj3 = {
+                                    label: this.state.research
+                                };
+                                axios.post(url+'myAlfred/api/category/all/search',obj3)
+                                    .then(responseCategory => {
+                                        let category = responseCategory.data;
+                                        const arrayCategory = [];
+
+                                        category.forEach(e => {
+                                            arrayCategory.push(e);
+                                        });
+                                        const uniqCategory = _.uniqBy(arrayCategory,'label');
+                                        this.setState({uniqCategory:uniqCategory});
+                                        const address = this.state.addressSelected;
+
+                                        if(address.gps !== undefined) {
+                                            this.setState({lat: address.gps.lat, lng: address.gps.lng});
+
+                                            axios.get(url+'myAlfred/api/serviceUser/near')
+                                                .then(result => {
+                                                    const serviceUser = result.data;
+                                                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                                        ['desc','desc','desc','desc','desc']);
+
+                                                    this.setState({serviceUser:sorted});
+                                                })
+                                                .catch(err => console.log(err));
+                                        } else if(address==='all') {
+                                            this.setState({lat:this.state.address.gps.lat, lng: this.state.address.gps.lng});
+
+                                            axios.get(url+'myAlfred/api/serviceUser/all')
+                                                .then(res => {
+                                                    let serviceUser = res.data;
+                                                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                                        ['desc','desc','desc','desc','desc']);
+                                                    this.setState({serviceUser:sorted});
+
+                                                })
+                                                .catch(err => console.log(err));
+                                        } else {
+                                            this.setState({lat:address.lat,lng: address.lng});
+                                            const id = address._id;
+                                            axios.get(url+'myAlfred/api/serviceUser/nearOther/'+id)
+                                                .then(res => {
+                                                    let serviceUser = res.data;
+                                                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                                        ['desc','desc','desc','desc','desc']);
+                                                    this.setState({serviceUser:sorted});
+
+                                                })
+                                                .catch(err => console.log(err));
+                                        }
+                                    })
+                            }
                         })
                 }
             });
@@ -464,7 +546,7 @@ class testSearch extends React.Component {
 
                             : null}
 
-                        {this.state.click2 && !this.state.errorsPrestations ?
+                        {this.state.click2 && !this.state.errorsPrestations &&this.state.show1 ?
                             <>
                             <p>Résultat pour la recherche : {this.state.research}</p>
                                 {this.state.addressSelected === 'all' ?
@@ -544,33 +626,39 @@ class testSearch extends React.Component {
                                                 <Grid item xs={12}>
                                                     <h4>{e.label}</h4>
                                                 </Grid>
-                                                    {this.state.serviceUser.map(s => {
-                                                        if (s.service.category === e._id) {
-                                                            return (
-                                                                <Grid item xs={3}>
-                                                                    <Card>
-                                                                        <p>{s.service.label} par {s.user.firstname}</p>
 
-                                                                        <p>{s.service_address.city}
-                                                                            ({Math.round((geolib.convertDistance(
-                                                                                geolib.getDistance({
-                                                                                        latitude: s.service_address.gps.lat,
-                                                                                        longitude: s.service_address.gps.lng
-                                                                                    },
-                                                                                    {
-                                                                                        latitude: this.state.lat,
-                                                                                        longitude: this.state.lng
-                                                                                    })
-                                                                                , 'km') + Number.EPSILON) * 100) / 100} kms)
 
-                                                                        </p>
-                                                                    </Card>
-                                                                </Grid>
-                                                            )
-                                                        } else {
-                                                            return null
-                                                        }
-                                                    })}
+                                                {this.state.serviceUser.map(s => {
+                                                    if (s.service.category === e._id) {
+                                                        return (
+                                                            <Grid item xs={3}>
+                                                                <Card>
+                                                                    <p>{s.service.label} par {s.user.firstname}</p>
+
+                                                                    <p>{s.service_address.city}
+                                                                        ({Math.round((geolib.convertDistance(
+                                                                            geolib.getDistance({
+                                                                                    latitude: s.service_address.gps.lat,
+                                                                                    longitude: s.service_address.gps.lng
+                                                                                },
+                                                                                {
+                                                                                    latitude: this.state.lat,
+                                                                                    longitude: this.state.lng
+                                                                                })
+                                                                            , 'km') + Number.EPSILON) * 100) / 100} kms)
+
+                                                                    </p>
+                                                                </Card>
+                                                            </Grid>
+                                                        )
+                                                    } else {
+                                                        return null
+                                                    }
+                                                })
+
+
+                                                }
+
 
                                             </Grid>
                                         ))}
@@ -580,6 +668,78 @@ class testSearch extends React.Component {
 
 
                                     : null}
+
+                        {this.state.click2 && this.state.errorsService ?
+                            this.state.addressSelected === 'all' ?
+
+                                    this.state.uniqCategory.map((e, index) => (
+                                        <Grid key={index} container>
+                                            <Grid item xs={12}>
+                                                <h4>{e.label}</h4>
+                                                {this.state.serviceUser.map(s => {
+                                                    if (s.service.category === e._id) {
+                                                        return (
+                                                            <Grid item xs={3}>
+                                                                <Card>
+                                                                    <p>{s.service.label} par {s.user.firstname}</p>
+
+                                                                </Card>
+                                                            </Grid>
+                                                        )
+                                                    } else {
+                                                        return null
+                                                    }
+                                                })
+
+
+                                                }
+                                            </Grid>
+                                        </Grid>
+                                    )) :
+
+                            this.state.uniqCategory.map((e, index) => (
+                                    <Grid key={index} container>
+                                        <Grid item xs={12}>
+                                            <h4>{e.label}</h4>
+                                        </Grid>
+
+
+                                        {this.state.serviceUser.map(s => {
+                                            if (s.service.category === e._id) {
+                                                return (
+                                                    <Grid item xs={3}>
+                                                        <Card>
+                                                            <p>{s.service.label} par {s.user.firstname}</p>
+
+                                                            <p>{s.service_address.city}
+                                                                ({Math.round((geolib.convertDistance(
+                                                                    geolib.getDistance({
+                                                                            latitude: s.service_address.gps.lat,
+                                                                            longitude: s.service_address.gps.lng
+                                                                        },
+                                                                        {
+                                                                            latitude: this.state.lat,
+                                                                            longitude: this.state.lng
+                                                                        })
+                                                                    , 'km') + Number.EPSILON) * 100) / 100} kms)
+
+                                                            </p>
+                                                        </Card>
+                                                    </Grid>
+                                                )
+                                            } else {
+                                                return null
+                                            }
+                                        })
+
+
+                                        }
+
+
+                                    </Grid>
+                                ))
+
+                            :null}
 
 
 

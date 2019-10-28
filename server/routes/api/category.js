@@ -25,6 +25,27 @@ router.get('/all', (req,res)=> {
 
 });
 
+// @Route POST /myAlfred/api/category/all/search
+// Search category by label or description
+router.post('/all/search', (req,res)=> {
+    const dat = req.body.label;
+    const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), "[eéèêaàoôuù]");
+    Category.find({$or:[{label:{ $regex : data, $options : 'i' } },{description:{$regex : data, $options : 'i'}}]})
+        .sort({label:1})
+        .then(category => {
+            if(typeof category !== 'undefined' && category.length > 0){
+
+                res.json(category);
+            } else {
+                return res.status(400).json({msg: 'No category found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ category: 'Error' }));
+
+
+});
+
 // @Route GET /myAlfred/api/category/all/sort
 // View all categories sort by name
 router.get('/all/sort', (req,res)=> {
