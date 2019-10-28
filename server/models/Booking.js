@@ -33,13 +33,18 @@ const BookingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    prestation: {
+    prestation: [{
         type: Schema.Types.ObjectId,
         ref: 'prestation'
+    }],
+    chatroom: {
+        type: Schema.Types.ObjectId,
+        ref: 'chatroom'
     },
+    photoVideo: [{}],
     status: {
         type: String,
-        enum: ['Acceptée','Refusée','En attente']
+        enum: ['Confirmée','Refusée', 'Annulée', 'Terminée', 'Expirée','En attente de confirmation', 'Demande d\'infos', ]
     }
 
 
