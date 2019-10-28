@@ -62,16 +62,16 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-        
+
     },
-    trigger:{ 
+    trigger:{
     [theme.breakpoints.down('sm')]: {
     marginTop: -10,
-    width: '100%', 
+    width: '100%',
     marginLeft:'0px',
-    height:'30px', 
+    height:'30px',
     backgroundColor:'#2FBCD3',
-    
+
     display:'block',
     transition: 'display 0.7s',
     borderRadius:'5px',
@@ -95,14 +95,14 @@ const styles = theme => ({
     ,toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
         transition: 'margin-left 0.7s',
-       
+
         '&:hover': {
             marginLeft:'0px',
             transition: 'margin-left 0.7s',
             boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
 
              }
-      }  
+      }
     },
 
 
@@ -241,7 +241,7 @@ class editProfile extends React.Component {
                     <Grid container className={classes.bigContainer} style={{overflowX:"hidden"}}>
 
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
-                         
+
                          <div className={classes.trigger}></div>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
@@ -260,7 +260,7 @@ class editProfile extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/user-2.svg'} alt={'user'} width={27} height={70} style={{marginRight: 4}}/>
                                             <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -282,7 +282,7 @@ class editProfile extends React.Component {
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/sign.svg'} alt={'sign'} height={70} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -312,7 +312,7 @@ class editProfile extends React.Component {
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/success.svg'} alt={'check'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                
+
                                             </a>
                                         </div>
                                     </Link>
@@ -334,7 +334,7 @@ class editProfile extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
@@ -357,7 +357,7 @@ class editProfile extends React.Component {
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/megaphone.svg'} alt={'speaker'} width={33} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -382,7 +382,7 @@ class editProfile extends React.Component {
 
 
                         <Grid item xs={9} style={{paddingLeft: 20}}>
-                            <h1 style={{color: 'dimgray',fontWeight: '100'}}>Modifier le profil</h1>
+                            <h1 style={{color: 'dimgray',fontWeight: '100'}}>Modifier votre profil</h1>
                             <form>
 
                             <Grid container className={classes.responsiveContainer}>
