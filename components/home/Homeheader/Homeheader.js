@@ -4,10 +4,8 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { Typography } from '@material-ui/core';
-import Link from 'next/link';
 import MenuItem from "@material-ui/core/MenuItem";
-import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 registerLocale('fr', fr);
 
@@ -30,7 +28,6 @@ const styles = theme => ({
   minHeight: '122vh',
   },
   headerhomevid: {
-
     [theme.breakpoints.down('md')]: { // medium: 960px or larger
       backgroundAttachment: "fixed",
      display: 'none',
@@ -38,13 +35,10 @@ const styles = theme => ({
   /* Full height */
   height: '100vh!important',
   width: '100%!important',
-
   /* Center and scale the image nicely */
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
-
-
   },
   headeroverlay: {
     [theme.breakpoints.up('lg')]: { // medium: 960px or larger
@@ -74,8 +68,6 @@ const styles = theme => ({
     minHeight:'520px',
     bottom:50,
     marginTop:-10,
-
-
     [theme.breakpoints.down('xs')]: { // extra-large: 1920px or larger
       width: '88%',
       left: '45%',
@@ -138,24 +130,6 @@ const styles = theme => ({
       left: '75%',
     },
   },
-  input: {
-    display: 'none',
-
-  },
-  locationcity: {
-    color: 'black',
-    width:'100%',
-  },
-  formlabel: {
-    //display: 'inline-block',
-    textAlign: 'center',
-    width:'100%',
-    marginBottom: '-60px',
-
-  },
-  homepunchline: {
-    color: 'lightgrey!important',
-  },
   homeform: {
     color: '#505050!important',
     textAlign: 'left',
@@ -165,11 +139,6 @@ const styles = theme => ({
     letterSpacing: '-1px',
     lineHeight: '39px!important',
     paddingLeft: '20px',
-  },
-  selecthomecategory:{
-    marginBottom: '-15px',
-    marginTop: '-30px',
-    marginLeft: '-9px',
   },
   pickerhomelocation: {
     width:'100%',
@@ -183,7 +152,6 @@ const styles = theme => ({
     '&:hover': {
       backgroundColor: 'darkgray'
     }
-
   },
   paper: {
     zIndex:'99999',
@@ -196,7 +164,6 @@ const styles = theme => ({
     left: '0%',
     right: '0%',
     margin:'auto',
-
   },
 });
 
@@ -238,7 +205,7 @@ class Homeheader extends React.Component {
 
     return (
         <Fragment>
-          <div className={classes.headerimg}></div>
+          <div className={classes.headerimg}/>
           <div className={classes.headerhomevid}>
             <video id="background-video" loop autoPlay muted playsInline style={{width: '100%'}}>
               <source src="../../../static/newVideoLight.mp4" type="video/mp4"/>
@@ -246,7 +213,7 @@ class Homeheader extends React.Component {
               Your browser does not support the video tag.
             </video>
           </div>
-          <div className={classes.headeroverlay}></div>
+          <div className={classes.headeroverlay}/>
           <div className={classes.headerhome} onClick={()=>this.handleClick1()}>
             <Grid container>
               <Grid item xs={12}>
@@ -379,22 +346,22 @@ class Homeheader extends React.Component {
           {popopen ? <React.Fragment>
                 <div className={classes.paper}>
                   <Grid container style={{padding:'5%'}}>
-                    <Grid item xs={4} style={{height: '1px'}}></Grid>
+                    <Grid item xs={4} style={{height: '1px'}}/>
                     <Grid item xs={4}><img src={'../../../static/popupResa.svg'} style={{width: 110,}} alt={'Logo Bleu'}/></Grid>
-                    <Grid item xs={3} style={{height: '1px'}}></Grid>
+                    <Grid item xs={3} style={{height: '1px'}}/>
                     <Grid item xs={1} style={{height: '4px', zIndex: '10'}}>
                       <p onClick={this.handleClose} style={{color: '#F8727F', cursor: 'pointer'}}>x</p>
                     </Grid>
                     <Grid item xs={12}>
                       <h2 style={{textAlign: 'center',color: 'rgba(84,89,95,0.95)',letterSpacing: -2, fontWeight: 'bold',}}>Les réservations ne seront disponibles qu'en Décembre !</h2>
                     </Grid>
-                    <Grid item xs={5}></Grid>
+                    <Grid item xs={5}/>
                     <Grid item xs={2} style={{marginTop: '-10px'}}><hr className={classes.grosHR}/></Grid>
-                    <Grid item xs={5}></Grid>
+                    <Grid item xs={5}/>
                   </Grid>
                 </div>
 
-                <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '9999px', zIndex: '99998'}}></div>
+                <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '9999px', zIndex: '99998'}}/>
               </React.Fragment>
               : null}
         </Fragment>

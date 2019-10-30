@@ -2,25 +2,17 @@ import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-//import SerenityNeedCard from './SerenityNeedCard/SerenityNeedCard';
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
-import Chip from "@material-ui/core/Chip";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
-import Link from 'next/link';
 const {config} = require('../../config/config');
 const url = config.apiUrl;
 
 
 const styles = theme => ({
     container: {
-        paddingRight: 15,
-        paddingLeft: 15,
         marginRight: 'auto',
         marginLeft: 'auto',
         width: '100%',
@@ -36,19 +28,7 @@ const styles = theme => ({
             width: 1366,
         },
     },
-    hideSM: {
-        [theme.breakpoints.down('md')]: { // medium: 960px or larger
-            display: 'none',
-        },
-    },
-    media: {
-        height: 0,
-        borderRadius: '20px',
-        paddingTop: '118.25%', // 16:9
-        maxWidth: 345,
-    },
     card: {
-
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('xs')]: { // xs: 600px or larger
             maxWidth: 450,
@@ -64,11 +44,6 @@ const styles = theme => ({
         },
 
     },
-    textdesc: {
-        [theme.breakpoints.down('sm')]: {
-            marginTop: '10%!important',
-        },
-    },
     media2: {
         height: 200
     },
@@ -77,34 +52,21 @@ const styles = theme => ({
         letterSpacing: -2,
         fontWeight: 'bold',
         textAlign: 'center',
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 15,
-        marginTop: 80,
-    },
-    textBox2: {
-        color: 'rgba(84,89,95,0.95)',
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 15,
-        fontSize: 27,
-        fontWeight: 570,
-        marginTop: 10,
-    },
-    textBox3: {
-        color: 'rgba(84,89,95,0.95)',
-        fontSize: 16,
+        marginBottom: '3%',
+        marginTop: '10%',
+        [theme.breakpoints.down('xs')]: { // xs: 600px or larger
+            marginTop: '15%',
+        },
     },
     textBox: {
         fontFamily: 'Helvetica',
         textAlign: 'center',
         fontSize: 15,
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 60,
-
+        marginBottom: '3%',
     },
-
+    separatorBlue:{
+        width: '50px'
+    }
 });
 
 function shuffleArray(array) {
@@ -136,9 +98,7 @@ class section3 extends React.Component {
                     axios.get(url + 'myAlfred/api/service/all/tags/' + data._id)
                         .then(res => {
                             let service = res.data;
-
                             this.setState({service: service})
-
                         })
                         .catch(err => console.log(err))
                 }
@@ -169,17 +129,14 @@ class section3 extends React.Component {
                             style={{height:'280px'}}
                         />
                         <CardContent>
-
                             <Typography gutterBottom variant="h5" component="p" style={{fontSize:15, fontWeight:100, textAlign:'center'}}>
                                 {e.label}
                             </Typography>
                             <Typography component="p">
                                 {e.description}
                             </Typography>
-
                         </CardContent>
                     </CardActionArea>
-
                 </Card>
             </Grid>
         ));
@@ -187,37 +144,29 @@ class section3 extends React.Component {
         return (
             <Fragment>
                 <Grid container className={classes.container}>
-                    <Grid item xs={2}></Grid>
-
+                    <Grid item xs={2}/>
                     <Grid item xs={8}>
                         <div>
                             <Typography variant="h4" className={classes.textBox1}>
                                 {tags.title}
                             </Typography>
                             <Grid container>
-                                <Grid item xs={5}></Grid>
-                                <Grid item xs={2} style={{padding:'2%'}}>
-                                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} style={{height:'15px'}}/>
+                                <Grid item xs={4}/>
+                                <Grid item xs={2} lg={5} style={{margin:'auto'}}>
+                                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
                                 </Grid>
-                                <Grid item xs={5}></Grid>
+                                <Grid item xs={5}/>
                             </Grid>
                             <Typography className={classes.textBox}>
                             {tags.description}
                         </Typography>
                         </div>
                     </Grid>
-                    <Grid item xs={2}></Grid>
+                    <Grid item xs={2}/>
                     <Grid container>
                         {services}
                     </Grid>
                 </Grid>
-
-
-
-
-
-
-
             </Fragment>
         );
     }

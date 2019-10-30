@@ -11,11 +11,8 @@ const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
-    paddingRight: 15,
-    paddingLeft: 15,
     marginRight: 'auto',
     marginLeft: 'auto',
-    marginTop: '30px',
     width: '100%',
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
