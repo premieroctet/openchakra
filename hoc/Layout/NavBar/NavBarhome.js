@@ -405,7 +405,7 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(255, 255, 255)'}} position="fixed">
+        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(255, 255, 255)', boxShadow:'inherit'}} position="fixed">
           <Toolbar>
             <Link href={'/'}>
               <img src={this.state.isTop ? '../../../static/assets/img/logo.png' : '../../../static/blueLogo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
@@ -434,7 +434,7 @@ class NavBar extends Component {
               </Typography> :
               <Typography className={classes.navbarItem}>
                 <Link href={'/becomeAlfredForm'}>
-                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#4fbdd7' }}>
+                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Devenir Alfred
                   </a>
                 </Link>
@@ -449,7 +449,7 @@ class NavBar extends Component {
               </Typography></React.Fragment> : null }
               <Typography className={classes.navbarItem}>
                 <Link href={'/faq'}>
-                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#4fbdd7' }}>
+                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Aide
                   </a>
                 </Link>
