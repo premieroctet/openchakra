@@ -8,8 +8,9 @@ import PopularCategoriesCard from './PoplarCategoriesCard/PopularCategoriesCard'
 import Head from 'next/head';
 import axios from 'axios';
 import Link from 'next/link';
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 
-const url = "https://myalfred.hausdivision.com/";
 const styles = theme => ({
 
   container: {

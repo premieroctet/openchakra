@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -180,7 +179,6 @@ class NavBar extends Component {
     localStorage.removeItem('path');
     // Remove auth header for future requests
     setAuthToken(false);
-    //document.location.href="https://myalfred.hausdivision.com/";
     window.location.reload();
   };
 
