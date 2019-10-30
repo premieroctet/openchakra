@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import NearbyYouCard from './NearbyYou/NearbyYouCard';
 import axios from 'axios';
-
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
 
@@ -26,31 +25,24 @@ const styles = theme => ({
       width: 1366,
     },
   },
-  media: {
-    height: 0,
-    borderRadius: '20px',
-    paddingTop: '118.25%', // 16:9
-    maxWidth: 345,
-  },
   textBox1: {
     color: 'rgba(84,89,95,0.95)',
     letterSpacing: -2,
     fontWeight: 'bold',
     textAlign: 'center',
-    paddingRight: 15,
-    paddingLeft: 15,
-    marginBottom: 15,
-    marginTop: 80,
+    marginBottom: '3%',
+    marginTop: '3%',
   },
   textBox: {
     fontFamily: 'Helvetica',
     textAlign: 'center',
     fontSize: 15,
-    paddingRight: 15,
-    paddingLeft: 15,
-    marginBottom: 60,
-    marginTop: 15,
+    marginBottom: '3%',
+    marginTop: '3%',
   },
+  separatorRed:{
+    width: '50px'
+  }
 });
 
 function shuffleArray(array) {
@@ -75,23 +67,17 @@ class nearbyYou extends React.Component{
   }
 
   componentDidMount() {
-    const token = localStorage.getItem('token');
-      //axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.get(url+'myAlfred/api/serviceUser/home')
           .then(response => {
             let service = response.data;
-
             this.setState({service:service})
           })
     }
 
   render() {
-
-
     const {classes} = this.props;
     const {service} = this.state;
     const resdata = shuffleArray(service);
-
     const cards = resdata.slice(0, 6).map(e => (
         <Grid item xs={12} sm={6} md={4} key={e._id}>
           <NearbyYouCard img={e.service.picture} title={e.service.label} alfred={e.user.firstname}
@@ -102,18 +88,18 @@ class nearbyYou extends React.Component{
     return (
         <Fragment>
           <Grid container className={classes.container}>
-          <Grid item xs={2}></Grid>
+          <Grid item xs={2}/>
             <Grid item xs={8}>
               <div>
                 <Typography variant="h4" className={classes.textBox1}>
                   Nous sommes tous des Alfred !!!
                 </Typography>
                 <Grid container>
-                  <Grid item xs={5}></Grid>
-                  <Grid item xs={2} style={{padding:'2%'}}>
-                    <img alt={"séparateur"} src={'../../../static/separateur-rouge.svg'} style={{height:'15px'}}/>
+                  <Grid item xs={4}/>
+                  <Grid item xs={2} lg={5} style={{margin:'auto'}}>
+                    <img alt={"séparateur"} src={'../../../static/separateur-rouge.svg'} className={classes.separatorRed}/>
                   </Grid>
-                  <Grid item xs={5}></Grid>
+                  <Grid item xs={5}/>
                 </Grid>
                 <Typography className={classes.textBox}>
                   <span>Nous sommes tous des Alfred en puissance !!!<br/>
@@ -122,10 +108,8 @@ class nearbyYou extends React.Component{
                 </Typography>
               </div>
             </Grid>
-            <Grid item xs={2}></Grid>
-
+            <Grid item xs={2}/>
             {cards}
-
           </Grid>
         </Fragment>
     );
