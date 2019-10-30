@@ -83,7 +83,7 @@ const styles = theme => ({
     display: 'none',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
-    },  
+    },
   },
   sectionMobile: {
     display: 'flex',
@@ -256,13 +256,13 @@ class NavBar extends Component {
     </MenuItem>
   </React.Fragment>;
 
-    const logoutAvatar = 
+    const logoutAvatar =
     [
     <MenuItem key={1} onClick={this.handleMenuClose}>
       <Typography>
         <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
-            Profil  
+            Profil
           </a>
         </Link>
       </Typography>
@@ -405,10 +405,10 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(47, 188, 211)'}} position="fixed">
+        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(255, 255, 255)'}} position="fixed">
           <Toolbar>
             <Link href={'/'}>
-              <img src={'../../../static/assets/img/logo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
+              <img src={this.state.isTop ? '../../../static/assets/img/logo.png' : '../../../static/blueLogo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
             </Link>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
@@ -424,7 +424,7 @@ class NavBar extends Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              {alfred ? 
+              {alfred ?
               <Typography className={classes.navbarItem}>
                 <Link href={'/myShop/services'}>
                   <a className={classes.navbarLink}>
@@ -434,7 +434,7 @@ class NavBar extends Component {
               </Typography> :
               <Typography className={classes.navbarItem}>
                 <Link href={'/becomeAlfredForm'}>
-                  <a className={classes.navbarLink}>
+                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#4fbdd7' }}>
                     Devenir Alfred
                   </a>
                 </Link>
@@ -449,13 +449,13 @@ class NavBar extends Component {
               </Typography></React.Fragment> : null }
               <Typography className={classes.navbarItem}>
                 <Link href={'/faq'}>
-                  <a className={classes.navbarLink}>
+                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#4fbdd7' }}>
                     Aide
                   </a>
                 </Link>
               </Typography>
               {test ? null : <React.Fragment><Link href={'/login'}>
-                    <Button variant="outlined" color={'primary'} style={{color:this.state.isTop ? '' : 'white' , marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
+                    <Button variant="outlined" color={'primary'} style={{marginRight: '20px', border:this.state.isTop ? '1px solid rgba(255, 255, 255, 1)' : '1px solid #4fbdd7'}}>
                       Connexion
                     </Button>
                   </Link>
@@ -471,15 +471,15 @@ class NavBar extends Component {
                 </React.Fragment>}
                 {test ?<React.Fragment>
 
-                
+
                   {picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>}
-                
+
                 </React.Fragment> : null  }
             </div>
             <div className={classes.sectionMobile}>
-              
+
                 {test ? mobileavatar : <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}><MoreIcon className={classes.bigIcon} /></IconButton></React.Fragment>}
-              
+
             </div>
           </Toolbar>
         </AppBar>
