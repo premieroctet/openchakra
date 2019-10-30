@@ -13,7 +13,7 @@ router.get('/test',(req, res) => res.json({msg: 'Booking Works!'}) );
 // @Route POST /myAlfred/booking/add
 // Add a booking
 // @Access private
-router.post('/add',passport.authenticate('jwt',{session: false}), (req,res,) => {
+/*router.post('/add',passport.authenticate('jwt',{session: false}), (req,res,) => {
     const idUser = req.user.id;
     const idAlfred = mongoose.Types.ObjectId(req.body.alfred);
 
@@ -44,10 +44,10 @@ router.post('/add',passport.authenticate('jwt',{session: false}), (req,res,) => 
             bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred);
             bookingFields.user = req.user.id;
             bookingFields.prestation = mongoose.Types.ObjectId(req.body.prestation);
+            bookingFields.chatroom = mongoose.Types.ObjectId(req.body.chatroom);
 
-            bookingFields.date_prestation = {};
-            bookingFields.date_prestation.beginning = req.body.beginning;
-            bookingFields.date_prestation.end = req.body.end;
+            bookingFields.date_prestation = req.body.beginning;
+            bookingFields.time_prestation.end = req.body.time;
             bookingFields.reference = reference;
 
 
@@ -57,7 +57,26 @@ router.post('/add',passport.authenticate('jwt',{session: false}), (req,res,) => 
 
         });
 
-});
+});*/
+router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const random = crypto.randomBytes(Math.ceil(5/2)).toString('hex').slice(0,5);
+    console.log(req.body);
+    const bookingFields = {};
+    bookingFields.reference = req.body.reference + '_' + random;
+    bookingFields.amount = req.body.amount;
+    bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred);
+    bookingFields.user = mongoose.Types.ObjectId(req.body.user);
+    bookingFields.chatroom = mongoose.Types.ObjectId(req.body.chatroom);
+    bookingFields.date_prestation = req.body.date_prestation;
+    bookingFields.time_prestation = req.body.time_prestation;
+    bookingFields.prestations = req.body.prestations;
+    bookingFields.fees = req.body.fees;
+    bookingFields.status = req.body.status;
+
+    const newBooking = new Booking(bookingFields);
+
+    newBooking.save().then(booking => res.json(booking)).catch(err => console.log(err));
+})
 
 // @Route GET /myAlfred/booking/all
 // View all booking

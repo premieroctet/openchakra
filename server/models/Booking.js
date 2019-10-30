@@ -16,14 +16,12 @@ const BookingSchema = new Schema({
         required: true
     },
     date_prestation: {
-        beginning: {
-            type: Date,
-            required: true
-        },
-        end: {
-            type: Date,
-            required: true
-        }
+        type: String,
+        required: true
+    },
+    time_prestation: {
+        type: String,
+        required: true
     },
     alfred: {
         type: Schema.Types.ObjectId,
@@ -33,18 +31,20 @@ const BookingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    prestation: [{
-        type: Schema.Types.ObjectId,
-        ref: 'prestation'
-    }],
+    prestations: [{}],
     chatroom: {
         type: Schema.Types.ObjectId,
         ref: 'chatroom'
     },
-    photoVideo: [{}],
+    fileUpload: [{
+        type: Schema.Types.Mixed
+    }],
+    fees: {
+        type: Number
+    },
     status: {
         type: String,
-        enum: ['Confirmée','Refusée', 'Annulée', 'Terminée', 'Expirée','En attente de confirmation', 'Demande d\'infos', ]
+        enum: ['Confirmée','Refusée', 'Annulée', 'Terminée', 'Expirée', 'En attente de confirmation', 'Demande d\'infos', ]
     }
 
 
