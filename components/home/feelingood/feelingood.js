@@ -38,7 +38,7 @@ const styles = theme => ({
     borderRadius: '20px',
     paddingTop: '118.25%', // 16:9
     maxWidth: 345,
-  },  
+  },
   textBox1: {
     color: 'rgba(84,89,95,0.95)',
     letterSpacing: -2,
@@ -56,11 +56,6 @@ const styles = theme => ({
     paddingRight: 15,
     paddingLeft: 15,
     marginBottom: 60,
-  },
-  grosHR: {
-    height: '10px',
-    backgroundColor: '#2FBCD3',
-    marginBottom: 30,
   },
 });
 
@@ -130,7 +125,9 @@ class feelingood extends React.Component{
                 </Typography>
                 <Grid container>
                   <Grid item xs={5}></Grid>
-                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                  <Grid item xs={2} style={{padding:'2%'}}>
+                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} style={{height:'15px'}}/>
+                  </Grid>
                   <Grid item xs={5}></Grid>
                 </Grid>
                 <Typography className={classes.textBox}>

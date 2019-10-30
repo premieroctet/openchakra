@@ -1,17 +1,13 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
-import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import NearbyYouCard from './NearbyYou/NearbyYouCard';
 import axios from 'axios';
 
-
-
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
-
 
 const styles = theme => ({
   container: {
@@ -57,10 +53,6 @@ const styles = theme => ({
     paddingLeft: 15,
     marginBottom: 60,
     marginTop: 15,
-  },
-  grosHR: {
-    height: '10px',
-    backgroundColor: '#2FBCD3',
   },
 });
 
@@ -121,9 +113,8 @@ class nearbyYou extends React.Component{
                 </Typography>
                 <Grid container>
                   <Grid item xs={5}></Grid>
-                  <Grid item xs={2}>
-
-                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'}/>
+                  <Grid item xs={2} style={{padding:'2%'}}>
+                    <img alt={"séparateur"} src={'../../../static/separateur-rouge.svg'} style={{height:'15px'}}/>
                   </Grid>
                   <Grid item xs={5}></Grid>
                 </Grid>

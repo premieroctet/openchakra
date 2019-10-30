@@ -214,10 +214,6 @@ const styles = theme => ({
         fontWeight: 570,
         marginTop: 10,
     },
-    grosHR: {
-        height: '10px',
-        backgroundColor: '#2FBCD3',
-    },
     textdesc: {
         [theme.breakpoints.down('sm')]: {
             marginTop: '10%!important',
@@ -255,7 +251,9 @@ class facon extends React.Component{
                             </Typography>
                             <Grid container>
                                 <Grid item xs={5}></Grid>
-                                <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                                <Grid item xs={2} style={{padding:'2%'}}>
+                                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} style={{height:'15px'}}/>
+                                </Grid>
                                 <Grid item xs={5}></Grid>
                             </Grid>
                         </div>

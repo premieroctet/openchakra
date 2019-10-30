@@ -57,11 +57,6 @@ const styles = theme => ({
         paddingLeft: 15,
         marginBottom: 60,
     },
-    grosHR: {
-        height: '10px',
-        backgroundColor: '#2FBCD3',
-        marginBottom: 30,
-    },
 });
 
 function shuffleArray(array) {
@@ -130,7 +125,9 @@ class section18 extends React.Component{
                             </Typography>
                             <Grid container>
                                 <Grid item xs={5}></Grid>
-                                <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                                <Grid item xs={2} style={{padding:'2%'}}>
+                                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} style={{height:'15px'}}/>
+                                </Grid>
                                 <Grid item xs={5}></Grid>
                             </Grid>
                             <Typography className={classes.textBox}>

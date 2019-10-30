@@ -217,10 +217,6 @@ const styles = theme => ({
         fontWeight: 570,
         marginTop: 10,
     },
-    grosHR: {
-        height: '10px',
-        backgroundColor: '#6ec1e4',
-    },
     textdesc: {
         [theme.breakpoints.down('sm')]: {
             marginTop: '10%!important',

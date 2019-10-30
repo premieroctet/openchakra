@@ -51,7 +51,7 @@ const styles = theme => ({
     textAlign:'center',
     margin:10,
     boxShadow: `1px 3px 1px transparent`,
-    
+
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('xs')]: { // xs: 600px or larger
       maxWidth: 450,
@@ -89,12 +89,6 @@ const styles = theme => ({
     marginBottom: 60,
     marginTop: 15,
   },
-  grosHR: {
-    height: '10px',
-    backgroundColor: '#2FBCD3',
-  },
-
-
 });
 
 function shuffleArray(array) {
@@ -154,7 +148,7 @@ class Wellbeing extends React.Component {
                   title={e.label}
               />
               <CardContent>
-                
+
                 <p style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.25rem',}}>
                   {e.label}
                 </p>
@@ -164,7 +158,7 @@ class Wellbeing extends React.Component {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              
+
             </CardActions>
           </Card>
         </Grid>
@@ -181,7 +175,9 @@ class Wellbeing extends React.Component {
                 </Typography>
                 <Grid container>
                   <Grid item xs={5}></Grid>
-                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                  <Grid item xs={2} style={{padding:'2%'}}>
+                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} style={{height:'15px'}}/>
+                  </Grid>
                   <Grid item xs={5}></Grid>
                 </Grid>
                 <Typography className={classes.textBox}>

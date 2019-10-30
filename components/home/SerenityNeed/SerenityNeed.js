@@ -66,7 +66,7 @@ const styles = theme => ({
     textAlign:'center',
     margin:10,
     boxShadow: `1px 3px 1px transparent`,
-    
+
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('xs')]: { // xs: 600px or larger
       maxWidth: 450,
@@ -85,10 +85,10 @@ const styles = theme => ({
   media2: {
     height: 200,
 
-    [theme.breakpoints.down('md')]: { 
+    [theme.breakpoints.down('md')]: {
       width: '200px!important',
     },
-    [theme.breakpoints.down('xs')]: { 
+    [theme.breakpoints.down('xs')]: {
       width: '200px!important',
     },
     [theme.breakpoints.down('sm')]: {
@@ -114,11 +114,6 @@ const styles = theme => ({
     marginBottom: 60,
     marginTop: 15,
   },
-  grosHR: {
-    height: '10px',
-    backgroundColor: '#2FBCD3',
-  },
-
 });
 
 function shuffleArray(array) {
@@ -173,14 +168,14 @@ class serenityNeed extends React.Component {
         <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
           <Card className={classes.card}>
             <CardActionArea>
-              
+
               <CardMedia
                   className={classes.media2}
                   image={e.picture}
                   title={e.label}
               />
               <CardContent>
-                
+
                 <Typography gutterBottom variant="p" component="p" style={{fontSize:16}}>
                 {e.label}
                 </Typography>
@@ -190,7 +185,7 @@ class serenityNeed extends React.Component {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              
+
             </CardActions>
           </Card>
         </Grid>
@@ -208,7 +203,9 @@ class serenityNeed extends React.Component {
                 </Typography>
                 <Grid container>
                   <Grid item xs={5}></Grid>
-                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                  <Grid item xs={2} style={{padding:'2%'}}>
+                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} style={{height:'15px'}}/>
+                  </Grid>
                   <Grid item xs={5}></Grid>
                 </Grid>
                 <Typography className={classes.textBox}>
@@ -217,7 +214,7 @@ class serenityNeed extends React.Component {
               </div>
             </Grid>
             <Grid item xs={2}></Grid>
-            
+
             <div className="thewrap">
             <section className="sectioncard">
 
@@ -229,7 +226,7 @@ class serenityNeed extends React.Component {
           </div>
             <Grid container className="thewrap2">
 
-            
+
             {services}
             </Grid>
           </Grid>

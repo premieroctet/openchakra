@@ -204,7 +204,7 @@ const styles = theme => ({
   },
   petitpaddingpers: {
     marginLeft: '-20%',
-  },  
+  },
   textBox1: {
     color: 'rgba(84,89,95,0.95)',
     letterSpacing: -2,
@@ -214,7 +214,7 @@ const styles = theme => ({
     paddingLeft: 15,
     marginBottom: 15,
     marginTop: 80,
-  },  
+  },
   textBox2: {
     color: 'rgba(84,89,95,0.95)',
     paddingRight: 15,
@@ -224,15 +224,11 @@ const styles = theme => ({
     fontWeight: 570,
     marginTop: 10,
   },
-  grosHR: {
-    height: '10px',
-    backgroundColor: '#6ec1e4',
-  },
   textdesc: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: '10%!important',    
+      marginTop: '10%!important',
     },
-    marginTop: '2%',  
+    marginTop: '2%',
   },
 });
 
@@ -271,16 +267,16 @@ class Assureback extends React.Component{
                 <Grid container>
                   <Grid item xs={12}>
                     <Typography className={classes.personName}>{e.name} {e.firstname}</Typography>
-                  </Grid>  
-                  <Grid item xs={3}></Grid>  
+                  </Grid>
+                  <Grid item xs={3}></Grid>
                   <Grid item xs={6}>
                     <Typography className={classes.personName2}>{e.job}</Typography>
                   </Grid>
-                  <Grid item xs={3}></Grid>  
+                  <Grid item xs={3}></Grid>
                 </Grid>
               </Grid>
               <Grid item xs={2}></Grid>
-           
+
             </Grid>
           </CardContent>
           </CardActionArea>
@@ -290,7 +286,7 @@ class Assureback extends React.Component{
 
     return (
         <Fragment>
-          
+
           {/*Nous assurons vos arrière*/}
           <Grid container className={classes.container}>
           </Grid>
@@ -310,8 +306,8 @@ class Assureback extends React.Component{
                     </Typography>
                     <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
                                 className={classes.padding2}>
-                        Proposez vos services en toute sérénité, My-Alfred s’occupe de tout ! 
-                        Une assurance en responsabilité vous est offerte pour toutes réalisations de services ! 
+                        Proposez vos services en toute sérénité, My-Alfred s’occupe de tout !
+                        Une assurance en responsabilité vous est offerte pour toutes réalisations de services !
                     </Typography>
                   </CardContent>
                 </Grid>
@@ -329,8 +325,8 @@ class Assureback extends React.Component{
                         Nous assurons vos arrières !
                       </Typography>
                       <Typography variant="body1" color="textSecondary" className={classes.padding2}>
-                      Proposez vos services en toute sérénité, My-Alfred s’occupe de tout ! 
-                      Une assurance en responsabilité vous est offerte pour toutes réalisations de services ! 
+                      Proposez vos services en toute sérénité, My-Alfred s’occupe de tout !
+                      Une assurance en responsabilité vous est offerte pour toutes réalisations de services !
                       </Typography>
                     </CardContent>
                   </CardActionArea>

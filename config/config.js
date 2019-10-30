@@ -3,8 +3,8 @@ const databaseName = 'test-myAlfred'
 //const serverPort = process.env.PORT || 3122;
 const serverPort = 80;
 
-//const apiUrl = "http://localhost:3122/";
-const apiUrl = "/";
+const apiUrl = "http://localhost:3122/";
+//const apiUrl = "/";
 
 const completeConfig = {
 
