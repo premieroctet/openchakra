@@ -15,6 +15,8 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 
 const geolib = require('geolib');
 const _ = require('lodash');
@@ -50,9 +52,13 @@ class testSearch2 extends React.Component {
             uniqCategory: [],
             uniqCategoryService: [],
             uniqService: [],
+            uniqShop: [],
             categoryFinal: [],
             prestationOk: false,
             serviceOk: false,
+            idAlfred: [],
+            checkedB: false,
+            checkedParticulier: false,
 
 
 
@@ -84,6 +90,10 @@ class testSearch2 extends React.Component {
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
+    };
+
+    handleChange = event => {
+        this.setState({[event.target.name]: event.target.checked} );
     };
 
     search() {
@@ -404,12 +414,116 @@ class testSearch2 extends React.Component {
 
     }
 
-    filter(){
+      async filter(){
+
+        const arrayShop = [];
         const serviceUser = this.state.finalServiceUser;
         serviceUser.forEach(s => {
             axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
-                .then()
-        })
+                .then( res => {
+                    let shop = res.data;
+                    const index = arrayShop.findIndex(i=>i._id == shop._id);
+                    if(index === -1){
+                     arrayShop.push(shop);
+
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        });
+          await this.setState({uniqShop: arrayShop});
+
+
+
+            setTimeout(()=>{
+                const arrayService = this.state.finalServiceUser;
+                this.state.uniqShop.forEach(u => {
+                    if(u.is_particular){
+                        this.state.idAlfred.push(u.alfred._id)
+                    }
+                });
+                this.state.finalServiceUser.forEach((f,index) => {
+                    this.state.idAlfred.forEach(i => {
+                        if(f.user._id === i){
+                            arrayService.splice(index,1);
+
+
+
+
+
+                        }
+
+
+                    })
+                });
+                this.setState({finalServiceUser:arrayService});
+
+
+
+
+            },2000)
+
+
+
+
+
+
+    }
+
+    async filterParticulier(){
+
+        const arrayShop = [];
+        const serviceUser = this.state.finalServiceUser;
+        serviceUser.forEach(s => {
+            axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
+                .then( res => {
+                    let shop = res.data;
+                    const index = arrayShop.findIndex(i=>i._id == shop._id);
+                    if(index === -1){
+                        arrayShop.push(shop);
+
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        });
+        await this.setState({uniqShop: arrayShop});
+
+
+
+        setTimeout(()=>{
+            const arrayService = this.state.finalServiceUser;
+            this.state.uniqShop.forEach(u => {
+                if(u.is_professional){
+                    this.state.idAlfred.push(u.alfred._id)
+                }
+            });
+            this.state.finalServiceUser.forEach((f,index) => {
+                this.state.idAlfred.forEach(i => {
+                    if(f.user._id === i){
+                        arrayService.splice(index,1);
+
+                        this.setState({finalServiceUser:arrayService});
+
+
+
+                    }
+
+                })
+            });
+
+
+
+
+        },2000)
+
+
+
+
+
+
     }
 
 
@@ -490,6 +604,34 @@ class testSearch2 extends React.Component {
                                         Rechercher avec un mot
                                     </Button>
                                 }
+                            </Grid>
+                            <Grid item xs={3}>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={this.state.checkedB}
+                                            onChange={e=>{this.handleChange(e);this.filter()}}
+                                            value={this.state.checkedB}
+                                            color="primary"
+                                            name={'checkedB'}
+                                        />
+                                    }
+                                    label="Pro"
+                                />
+                            </Grid>
+                            <Grid item xs={3}>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={this.state.checkedParticulier}
+                                            onChange={e=>{this.handleChange(e);this.filterParticulier()}}
+                                            value={this.state.checkedParticulier}
+                                            color="primary"
+                                            name={'checkedParticulier'}
+                                        />
+                                    }
+                                    label="Particulier"
+                                />
                             </Grid>
                         </Grid>
                         {click ?
