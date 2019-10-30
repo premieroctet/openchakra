@@ -405,7 +405,7 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(255, 255, 255)', boxShadow:'inherit'}} position="fixed">
+        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(255, 255, 255)', boxShadow:'inherit', borderBottom:'1px solid rgba(80,80,80,0.2)'}} position="fixed">
           <Toolbar>
             <Link href={'/'}>
               <img src={this.state.isTop ? '../../../static/assets/img/logo.png' : '../../../static/blueLogo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>

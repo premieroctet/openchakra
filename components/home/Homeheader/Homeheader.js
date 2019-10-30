@@ -371,7 +371,7 @@ class Homeheader extends React.Component {
               fontSize: '1.5rem',
               textShadow: '0px 0.5px 2px #696969'
             }}>
-              Créez dès aujourd’hui votre boutique, proposez vos services et dans 1 mois les clients vous supplieront et vos banquiers vous applaudiront
+              Particuliers ou indépendants ?  Créez dès aujourd’hui votre boutique, proposez vos services et arrondissez vos fins de mois avec My-Alfred !
             </h4>
           </div>
 
