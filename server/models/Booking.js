@@ -6,6 +6,10 @@ const BookingSchema = new Schema({
         type: String,
         required: true
     },
+    service: {
+        type: String,
+        required: true
+    },
     amount: {
         type: String,
         required: true

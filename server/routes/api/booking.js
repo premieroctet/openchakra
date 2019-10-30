@@ -10,59 +10,42 @@ const User = require('../../models/User');
 
 router.get('/test',(req, res) => res.json({msg: 'Booking Works!'}) );
 
-// @Route POST /myAlfred/booking/add
-// Add a booking
-// @Access private
-/*router.post('/add',passport.authenticate('jwt',{session: false}), (req,res,) => {
-    const idUser = req.user.id;
-    const idAlfred = mongoose.Types.ObjectId(req.body.alfred);
+// @Route GET /myAlfred/api/booking/alfredBooking
+router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const userId = mongoose.Types.ObjectId(req.user.id);
+    Booking.find({ alfred: userId })
+        .then(alfred => {
+            if (!alfred) {
+                res.status(404).json({ msg: 'No booking found' })
+            }
 
-    let reference;
-    Promise.all([User.findById(idUser),User.findById(idAlfred)])
-        .then(([user,alfred]) => {
-            let name= user.name;
-            let firstLetterNameUser = name.charAt(0).toUpperCase();
-            let firstname = user.firstname;
-            let firstLetterFirstnameUser = firstname.charAt(0).toUpperCase();
+            if (alfred) {
+                res.json(alfred);
+            }
+        })
+})
 
-            let nameAlfred = alfred.name;
-            let firstLetterNameAlfred = nameAlfred.charAt(0).toUpperCase();
-            let firstnameAlfred = alfred.firstname;
-            let firstLetterFirstnameAlfred = firstnameAlfred.charAt(0).toUpperCase();
+router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const userId = mongoose.Types.ObjectId(req.user.id);
+    Booking.find({ user: userId })
+        .populate('alfred')
+        .then(alfred => {
+            if (!alfred) {
+                res.status(404).json({ msg: 'No booking found' })
+            }
 
-            const letter = firstLetterNameUser + firstLetterFirstnameUser + firstLetterNameAlfred + firstLetterFirstnameAlfred;
-            const day = new Date().getDate();
-            const month = new Date().getMonth();
-            const year = new Date().getFullYear();
+            if (alfred) {
+                res.json(alfred);
+            }
+        })
+})
 
-            const random = crypto.randomBytes(Math.ceil(5/2)).toString('hex').slice(0,5);
-
-            reference = letter + '_' + day+month+year + '_' + random;
-
-            const bookingFields = {};
-            bookingFields.amount = req.body.amount;
-            bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred);
-            bookingFields.user = req.user.id;
-            bookingFields.prestation = mongoose.Types.ObjectId(req.body.prestation);
-            bookingFields.chatroom = mongoose.Types.ObjectId(req.body.chatroom);
-
-            bookingFields.date_prestation = req.body.beginning;
-            bookingFields.time_prestation.end = req.body.time;
-            bookingFields.reference = reference;
-
-
-            const newBooking = new Booking(bookingFields);
-
-            newBooking.save().then(booking=> res.json(booking)).catch(err => console.log(err));
-
-        });
-
-});*/
 router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
     const random = crypto.randomBytes(Math.ceil(5/2)).toString('hex').slice(0,5);
     console.log(req.body);
     const bookingFields = {};
     bookingFields.reference = req.body.reference + '_' + random;
+    bookingFields.service = req.body.service;
     bookingFields.amount = req.body.amount;
     bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred);
     bookingFields.user = mongoose.Types.ObjectId(req.body.user);
