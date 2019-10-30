@@ -11,7 +11,7 @@ import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 registerLocale('fr', fr);
 
-   
+
 const styles = theme => ({
   headerimg: {
     [theme.breakpoints.up('lg')]: { // medium: 960px or larger
@@ -43,8 +43,8 @@ const styles = theme => ({
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
-    
-    
+
+
   },
   headeroverlay: {
     [theme.breakpoints.up('lg')]: { // medium: 960px or larger
@@ -72,7 +72,7 @@ const styles = theme => ({
     boxShadow: '6px 6px 5px -6px black',
     padding:'2%',
     minHeight:'520px',
-    bottom:50, 
+    bottom:50,
     marginTop:-10,
 
 
@@ -140,7 +140,7 @@ const styles = theme => ({
   },
   input: {
     display: 'none',
-   
+
   },
   locationcity: {
     color: 'black',
@@ -151,7 +151,7 @@ const styles = theme => ({
     textAlign: 'center',
     width:'100%',
     marginBottom: '-60px',
-    
+
   },
   homepunchline: {
     color: 'lightgrey!important',
@@ -378,15 +378,15 @@ class Homeheader extends React.Component {
 
           {popopen ? <React.Fragment>
                 <div className={classes.paper}>
-                  <Grid container>
+                  <Grid container style={{padding:'5%'}}>
                     <Grid item xs={4} style={{height: '1px'}}></Grid>
-                    <Grid item xs={4} style={{height: '35px'}}><img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110,}} alt={'Logo Bleu'}/></Grid>
+                    <Grid item xs={4}><img src={'../../../static/popupResa.svg'} style={{width: 110,}} alt={'Logo Bleu'}/></Grid>
                     <Grid item xs={3} style={{height: '1px'}}></Grid>
                     <Grid item xs={1} style={{height: '4px', zIndex: '10'}}>
                       <p onClick={this.handleClose} style={{color: '#F8727F', cursor: 'pointer'}}>x</p>
                     </Grid>
                     <Grid item xs={12}>
-                      <h2 style={{textAlign: 'center',color: 'rgba(84,89,95,0.95)',letterSpacing: -2, fontWeight: 'bold',}}>Les réservations ne seront disponible qu'à partir de Novembre</h2>
+                      <h2 style={{textAlign: 'center',color: 'rgba(84,89,95,0.95)',letterSpacing: -2, fontWeight: 'bold',}}>Les réservations ne seront disponibles qu'en Décembre !</h2>
                     </Grid>
                     <Grid item xs={5}></Grid>
                     <Grid item xs={2} style={{marginTop: '-10px'}}><hr className={classes.grosHR}/></Grid>
