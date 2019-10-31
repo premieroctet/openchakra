@@ -1,21 +1,8 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
-import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-//import SerenityNeedCard from './SerenityNeedCard/SerenityNeedCard';
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import Chip from "@material-ui/core/Chip";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import axios from 'axios';
-import Link from 'next/link';
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
 
 const styles = theme => ({
   container: {
@@ -41,60 +28,54 @@ const styles = theme => ({
       display: 'none',
     },
   },
-  media: {
-    height: 0,
-    borderRadius: '20px',
-    paddingTop: '118.25%', // 16:9
-    maxWidth: 345,
-  },
-  card: {
-
-    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
-    [theme.breakpoints.up('xs')]: { // xs: 600px or larger
-      maxWidth: 450,
-    },
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: 400,
-    },
-    [theme.breakpoints.up('md')]: { // medium: 960px or larger
-      maxWidth: 350,
-    },
-    [theme.breakpoints.up('lg')]: {
-      maxWidth: 300
-    },
-
-  },
   textdesc: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: '10%!important',
+      marginTop: '3%!important',
     },
-  },
-  media2: {
-    height: 200
+    [theme.breakpoints.down('lg')]: {
+      marginTop: '3%!important',
+    },
+    [theme.breakpoints.down('md')]: {
+      marginTop: '3%!important',
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginTop: '3%!important',
+    },
   },
   textBox1: {
     color: 'rgba(84,89,95,0.95)',
     letterSpacing: -2,
     fontWeight: 'bold',
     textAlign: 'center',
-    paddingRight: 15,
-    paddingLeft: 15,
-    marginBottom: 15,
-    marginTop: 80,
+    marginBottom: '3%',
+    marginTop: '10%',
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: '10%',
+      marginTop: '10%',
+    },
+    [theme.breakpoints.down('sm')]: { // medium: 960px or larger
+      marginTop: '5%',
+      marginBottom: '5%',
+    },
+    [theme.breakpoints.down('md')]: { // medium: 960px or larger
+      marginTop: '5%',
+      marginBottom: '5%',
+    },
   },
   textBox2: {
     color: 'rgba(84,89,95,0.95)',
-    paddingRight: 15,
-    paddingLeft: 15,
-    marginBottom: 15,
+    marginBottom: '3%',
     fontSize: 27,
     fontWeight: 570,
-    marginTop: 10,
+    marginTop: '3%',
   },
   textBox3: {
     color: 'rgba(84,89,95,0.95)',
     fontSize: 16,
   },
+  separatorBlue:{
+    width: '50px'
+  }
 });
 
 function shuffleArray(array) {
@@ -129,24 +110,25 @@ class profiteandlearn extends React.Component {
     return (
         <Fragment>
           <Grid container className={classes.container}>
-            <Grid item xs={2}></Grid>
+            <Grid item xs={2}/>
             <Grid item xs={8}>
               <div>
                 <Typography variant="h4" className={classes.textBox1}>
                   Proposez vos services, en 3 étapes !
                 </Typography>
                 <Grid container>
-                  <Grid item xs={5}></Grid>
-                  <Grid item xs={2} style={{padding:'2%'}}>
-                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} style={{height:'15px'}}/>
+                  <Grid item xs={4}/>
+                  <Grid item xs={2} lg={5} md={5} sm={4} style={{margin:'auto'}}>
+                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
                   </Grid>
-                  <Grid item xs={5}></Grid>
+                  <Grid item xs={5}/>
                 </Grid>
               </div>
             </Grid>
-            <Grid item xs={2}></Grid>
+            <Grid item xs={2}/>
 
             {/*Partie 1*/}
+
             <Grid item md={6} xs={12} className={classes.textdesc}>
               <Grid container>
                 <Grid item xs={12}>

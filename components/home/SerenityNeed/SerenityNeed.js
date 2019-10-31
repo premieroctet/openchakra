@@ -176,7 +176,7 @@ class serenityNeed extends React.Component {
                 </Typography>
                 <Grid container>
                   <Grid item xs={4}/>
-                  <Grid item xs={2} lg={5} style={{margin:'auto'}}>
+                  <Grid item xs={2} lg={5} md={5} sm={4} style={{margin:'auto'}}>
                     <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
                   </Grid>
                   <Grid item xs={5}/>
