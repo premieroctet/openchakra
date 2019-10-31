@@ -17,6 +17,7 @@ const styles = theme => ({
   container: {
     margin: 'auto',
     width: '100%',
+    textAlign:'center',
 
     [theme.breakpoints.up('lg')]: { // large: 1280px or larger
       width: 1170,
@@ -147,11 +148,11 @@ class Wellbeing extends React.Component {
                 {tags.title}
                 </Typography>
                 <Grid container>
-                  <Grid item xs={4}/>
-                    <Grid item xs={2} lg={5} md={5} sm={4} style={{margin:'auto'}}>
-                      <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
-                    </Grid>
-                  <Grid item xs={5}/>
+                  <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                  <Grid item xs={2} sm={4} md={4}  lg={4} xl={4} style={{margin:'auto'}}>
+                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
+                  </Grid>
+                  <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
                 </Grid>
                 <Typography className={classes.textBox}>
                   {tags.description}
