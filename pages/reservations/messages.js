@@ -124,6 +124,7 @@ class Messages extends React.Component {
         axios.get('http://localhost:3122/myAlfred/api/chatRooms/userChatRooms')
             .then(res => {
                 this.setState({ chatrooms: res.data })
+                console.log(res.data);
             })
     }
 
@@ -148,9 +149,9 @@ class Messages extends React.Component {
                 {this.state.chatrooms.length ?
                     this.state.chatrooms.map(chatroom => {
                         return (
-                            <Link href={`/myShop/messagesDetails?id=${chatroom._id}`}>
+                            <Link href={`/reservations/messagesDetails?id=${chatroom._id}`}>
                                 <div>
-                                    <p>Conversation entre vous et {chatroom.recipient}</p>
+                                    <p>Conversation entre vous et {chatroom.recipient.firstname}</p>
                                     <p>{chatroom.name}</p>
                                 </div>
                             </Link>

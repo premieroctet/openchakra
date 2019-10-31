@@ -50,8 +50,8 @@ router.post('/addAndConnect', (req, res) => {
       if (!users) {
         chatRoomFields = {};
         chatRoomFields.name = 'room-' + random;
-        chatRoomFields.emitter = req.body.emitter;
-        chatRoomFields.recipient = req.body.recipient;
+        chatRoomFields.emitter = emitter;
+        chatRoomFields.recipient = recipient;
 
         const newChat = new ChatRooms(chatRoomFields);
         newChat.save().then(chat => res.json(chat)).catch(err => console.log(err));
