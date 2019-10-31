@@ -9,6 +9,7 @@ import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import axios from 'axios';
 
 /*var Rating = require('react-rating');*/
 const { config } = require('../../config/config');
@@ -184,8 +185,27 @@ class detailsReservation extends React.Component {
             modal1: false,
             modal2: false,
             modal3: false,
-            modal4: false
+            modal4: false,
+
+            bookingObj: null
         }
+    }
+
+    static getInitialProps({ query: { id, user } }) {
+      return {
+        booking_id: id,
+        is_user: user
+      }
+    }
+
+    componentDidMount() {
+      const booking_id = this.props.booking_id;
+      console.log(this.props.is_user)
+      
+      axios.get(url + 'myAlfred/api/booking/' + booking_id)
+        .then(res => {
+          this.setState({ bookingObj: res.data })
+        })
     }
 
     handleOpen1(){
@@ -216,6 +236,8 @@ class detailsReservation extends React.Component {
         const {modal2} = this.state;
         const {modal3} = this.state;
         const {modal4} = this.state;
+        const {bookingObj} = this.state;
+        const {is_user} = this.props;
 
     
 
@@ -303,16 +325,16 @@ class detailsReservation extends React.Component {
                             </Grid> 
 
                             <Grid className={classes.Rightcontent} item xs={9} sm={9} md={7}>
-                                <Typography style={{fontSize: '1.5rem',marginTop: '4%', color: '#89CE2C'}}>Confirmée</Typography>
+                                <Typography style={{fontSize: '1.5rem',marginTop: '4%', color: '#89CE2C'}}>{bookingObj === null ? null : bookingObj.status}</Typography>
                                 
                                 <Grid container className={classes.mobilerow} style={{borderBottom: '1.5px #8281813b solid', marginTop:'5%'}}>
                                     <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
                                         <img src={`../../static/profile/ui.png`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover', marginBottom: '20px'}}></img>
                                     </Grid>
                                     <Grid item xs={5} md={7}>
-                                        <Typography style={{marginTop: '-3%', fontSize: '1.7rem'}}>Nom User</Typography>
-                                        <Typography style={{marginTop: '2%', fontSize: '0.8rem'}}>Réservation coiffure le 07/06/2019</Typography>
-                                        <Typography style={{color: '#4FBDD7', fontWeight: '600', fontSize: '1.1rem'}}>28€</Typography>
+                                        <Typography style={{marginTop: '-3%', fontSize: '1.7rem'}}>{bookingObj === null ? null : is_user ? <span>{`${bookingObj.alfred.firstname} ${bookingObj.alfred.name}`}</span> : null}</Typography>
+                                        <Typography style={{marginTop: '2%', fontSize: '0.8rem'}}>Réservation coiffure le {bookingObj === null ? null : bookingObj.date_prestation}</Typography>
+                                        <Typography style={{color: '#4FBDD7', fontWeight: '600', fontSize: '1.1rem'}}>{bookingObj === null ? null : bookingObj.amount}€</Typography>
 
                                     </Grid>
                                     <Grid item xs={1} style={{}}>
@@ -330,7 +352,7 @@ class detailsReservation extends React.Component {
                                 
                                 <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'5%', paddingBottom: '7%'}}>
                                     <Grid item xs={5} md={7}>
-                                        <Typography style={{marginTop: '-3%', fontSize: '1.7rem'}}>A propos de "Nom User"</Typography>
+                                        <Typography style={{marginTop: '-3%', fontSize: '1.7rem'}}>A propos de {bookingObj === null ? null : is_user ? <span>{`${bookingObj.alfred.firstname} ${bookingObj.alfred.name}`}</span> : <span>{`${bookingObj.user.firstname} ${bookingObj.user.name}`}</span>}</Typography>
                                         <div style={{marginLeft: '3%'}}>
                                         <img style={{width:'20px', marginRight: '3px', marginBottom: '5px'}} src='../../static/stars/star-solid.png'></img>
                                         <img style={{width:'20px', marginRight: '3px', marginBottom: '5px'}} src='../../static/stars/star-solid.png'></img>
@@ -391,7 +413,7 @@ class detailsReservation extends React.Component {
                                     <Grid item xs={2} style={{textAlign: 'center'}}>
 
                                         <div style={{textAlign: 'center', height: '40px', width: '200px', backgroundColor: '#4FBDD7', lineHeight: 2.5, borderRadius: '50px', marginTop: '20%'}}>
-                                            <Link href="#envoyer">
+                                            <Link href={{ pathname: "/reservations/messagesDetails", query: { id: bookingObj === null ? null : bookingObj.chatroom}}}>
                                                 <a style={{textDecoration:'none', color: 'white' }}>Envoyer un message</a>
                                             </Link>
                                         </div>
@@ -441,7 +463,7 @@ class detailsReservation extends React.Component {
                                                 </svg>
                                             </Grid>
                                             <Grid item xs={11} style={{paddingLeft: '3%',}}>
-                                                <Typography>07/06/2019 - 17h</Typography>
+                                                <Typography>{bookingObj === null ? null : `${bookingObj.date_prestation} - ${bookingObj.time_prestation}`}</Typography>
                                             </Grid>
 
                                             <Grid item xs={1} style={{textAlign: 'center', marginTop: '3%'}}>
@@ -466,7 +488,7 @@ class detailsReservation extends React.Component {
                                                 <div style={{width: '30px', height: '30px', backgroundColor: '#A7D571', borderRadius: '100%', border:'0.4px solid rgba(112,112,112,0.26)', marginTop: '15%'}}></div>
                                             </Grid>
                                             <Grid item xs={8}>
-                                                <Typography style={{color: '#A7D571'}}>Réservation confirmée</Typography>
+                                                <Typography style={{color: '#A7D571'}}>{bookingObj === null ? null : bookingObj.status}</Typography>
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -521,7 +543,7 @@ class detailsReservation extends React.Component {
                                     <Grid item xs={9}>
                                         <Grid container>
                                             <Grid item xs={2}>
-                                                <Typography style={{fontSize: '1.4rem'}}>Coiffure</Typography>
+                                                <Typography style={{fontSize: '1.4rem'}}>{bookingObj === null ? null : bookingObj.service}</Typography>
                                             </Grid>
                                             <Grid item xs={7}></Grid>
                                             <Grid item xs={1}>
@@ -535,24 +557,41 @@ class detailsReservation extends React.Component {
                                         <Grid container>
                                             <Grid item xs={1}></Grid>
                                             <Grid item xs={2}>
-                                                <Typography style={{fontSize: '1.1rem'}}>Shampoing</Typography>
-                                                <Typography style={{fontSize: '1.1rem'}}>Mèches</Typography>
-                                                <Typography style={{fontSize: '1.1rem'}}>Coupe</Typography>
+                                              {bookingObj === null ?
+                                                null
+                                                :
+                                                bookingObj.prestations.map(prestation => {
+                                                  return <Typography style={{fontSize: '1.1rem'}}>{prestation.name}</Typography>
+                                                })
+                                              }
+                      
                                             </Grid>
                                             <Grid item xs={6}>
-                                                <Grid style={{height: '25px', borderBottom: '1.5px #8281813b solid', width: '100%'}}></Grid>
-                                                <Grid style={{height: '25px', borderBottom: '1.5px #8281813b solid', width: '100%'}}></Grid>
-                                                <Grid style={{height: '25px', borderBottom: '1.5px #8281813b solid', width: '100%'}}></Grid>
+                                              {bookingObj === null ?
+                                                null
+                                                :
+                                                bookingObj.prestations.map(prestation => {
+                                                  return <Grid style={{height: '25px', borderBottom: '1.5px #8281813b solid', width: '100%'}}></Grid>
+                                                })
+                                              }
                                             </Grid>
                                             <Grid item xs={1}>
-                                                <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>1 x</Typography>
-                                                <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>1 x</Typography>
-                                                <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>1 x</Typography>
+                                              {bookingObj === null ?
+                                                null
+                                                :
+                                                bookingObj.prestations.map(prestation => {
+                                                  return <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>{prestation.value} x</Typography>
+                                                })
+                                              }
                                             </Grid>
                                             <Grid item xs={2}>
-                                                <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>5€</Typography>
-                                                <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>13€</Typography>
-                                                <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>9€</Typography>
+                                              {bookingObj === null ?
+                                                null
+                                                :
+                                                bookingObj.prestations.map(prestation => {
+                                                  return <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>{prestation.price} x</Typography>
+                                                })
+                                              }
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -616,7 +655,7 @@ class detailsReservation extends React.Component {
                                 <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'5%', paddingBottom: '7%'}}>
                                     <Grid item xs={12}><Typography style={{fontSize: '1.4rem'}}>Paiement si acceptation</Typography></Grid>
                                     <Grid item xs={12}><Typography style={{fontSize: '1.4rem'}}>Total (EUR)</Typography></Grid>
-                                    <Grid item xs={12}><Typography style={{fontSize: '1.4rem'}}>30€</Typography></Grid>
+                                    <Grid item xs={12}><Typography style={{fontSize: '1.4rem'}}>{bookingObj === null ? null : bookingObj.amount}€</Typography></Grid>
                                     <ExpansionPanel defaultExpanded className={classes.exp1}
                                         style={{ border: "none", boxShadow: "none", width: "60%" }}
                                     >
@@ -628,24 +667,36 @@ class detailsReservation extends React.Component {
                                         <ExpansionPanelDetails>
                                             <Grid container>
                                                 <Grid item xs={4}>
-                                                    <Typography style={{fontSize: '1.1rem'}}>Shampoing</Typography>
-                                                    <Typography style={{fontSize: '1.1rem'}}>Mèches</Typography>
-                                                    <Typography style={{fontSize: '1.1rem'}}>Coupe</Typography>
+                                                  {bookingObj === null ?
+                                                    null
+                                                    :
+                                                    bookingObj.prestations.map(prestation => {
+                                                      return <Typography style={{fontSize: '1.1rem'}}>{prestation.name}</Typography>
+                                                    })
+                                                  }
                                                     <Typography style={{fontSize: '1.1rem', marginTop: '10px'}}>Frais du service</Typography>
                                                     <Typography style={{fontSize: '1.5rem',fontWeight: 'bold', color: 'rgb(47, 188, 211)', marginTop: '10px'}}>Revenu total</Typography>
                                                 </Grid>
                                                 <Grid item xs={6}>
-                                                    <Grid style={{height: '25px', borderBottom: '1.5px #8281813b solid', width: '100%'}}></Grid>
-                                                    <Grid style={{height: '25px', borderBottom: '1.5px #8281813b solid', width: '100%'}}></Grid>
-                                                    <Grid style={{height: '25px', borderBottom: '1.5px #8281813b solid', width: '100%'}}></Grid>
+                                                  {bookingObj === null ?
+                                                    null
+                                                    :
+                                                    bookingObj.prestations.map(prestation => {
+                                                      return <Grid style={{height: '25px', borderBottom: '1.5px #8281813b solid', width: '100%'}}></Grid>
+                                                    })
+                                                  }
                                                     <Grid style={{height: '25px', borderBottom: '1.5px #8281813b solid', width: '100%', marginTop: '10px'}}></Grid>
                                                 </Grid>
                                                 <Grid item xs={2}>
-                                                    <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>1x5€</Typography>
-                                                    <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>1x13€</Typography>
-                                                    <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>1x9€</Typography>
-                                                    <Typography style={{fontSize: '1.1rem', textAlign:'center', marginTop: '10px'}}>+ 2€</Typography>
-                                                    <Typography style={{fontSize: '1.5rem',fontWeight: 'bold', color: 'rgb(47, 188, 211)', textAlign:'center', marginTop: '10px'}}>30€</Typography>
+                                                  {bookingObj === null ?
+                                                    null
+                                                    :
+                                                    bookingObj.prestations.map(prestation => {
+                                                      return <Typography style={{fontSize: '1.1rem', textAlign:'center'}}>{prestation.value}x{prestation.price}€</Typography>
+                                                    })
+                                                  }
+                                                    <Typography style={{fontSize: '1.1rem', textAlign:'center', marginTop: '10px'}}>+ {bookingObj === null ? null : bookingObj.fees}€</Typography>
+                                                    <Typography style={{fontSize: '1.5rem',fontWeight: 'bold', color: 'rgb(47, 188, 211)', textAlign:'center', marginTop: '10px'}}>{bookingObj === null ? null : bookingObj.amount}€</Typography>
                                                 </Grid>
                                             </Grid> 
                                         </ExpansionPanelDetails>

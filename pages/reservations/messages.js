@@ -150,7 +150,7 @@ class Messages extends React.Component {
                         return (
                             <Link href={`/myShop/messagesDetails?id=${chatroom._id}`}>
                                 <div>
-                                    <p>Conversation entre vous et {chatroom.attendees[1].firstname}</p>
+                                    <p>Conversation entre vous et {chatroom.recipient}</p>
                                     <p>{chatroom.name}</p>
                                 </div>
                             </Link>

@@ -374,7 +374,7 @@ class AllReservations extends React.Component {
                                           <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{booking.amount}€</Typography>
                                         </Grid>
                                         <Grid item xs={2} style={{}}>
-                                          <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href="/myshop/statut"><a style={{textDecoration: 'none', color: 'white'}}>Voir la réservation</a></Link></Typography>
+                                          <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true } }}><a style={{textDecoration: 'none', color: 'white'}}>Voir la réservation</a></Link></Typography>
                                         </Grid>
                                       </Grid>
                                     )
