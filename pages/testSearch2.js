@@ -185,7 +185,8 @@ class testSearch2 extends React.Component {
     }
 
    async searchWithWord(){
-         await this.setState({categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[]});
+         await this.setState({categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+                                    checkedParticulier:false,idAlfred:[]});
         const obj = {label:this.state.research};
         await axios.post(url+'myAlfred/api/prestation/all/search',obj)
             .then(res => {
@@ -435,34 +436,43 @@ class testSearch2 extends React.Component {
           await this.setState({uniqShop: arrayShop});
 
 
+            if(this.state.checkedB){
+                setTimeout(()=>{
 
-            setTimeout(()=>{
-                const arrayService = this.state.finalServiceUser;
-                this.state.uniqShop.forEach(u => {
-                    if(u.is_particular){
-                        this.state.idAlfred.push(u.alfred._id)
-                    }
-                });
-                this.state.finalServiceUser.forEach((f,index) => {
-                    this.state.idAlfred.forEach(i => {
-                        if(f.user._id === i){
-                            arrayService.splice(index,1);
-
-
-
-
-
+                    const arrayService = this.state.finalServiceUser;
+                    const arrayIndex = [];
+                    this.state.uniqShop.forEach(u => {
+                        if(u.is_particular){
+                            this.state.idAlfred.push(u.alfred._id)
                         }
+                    });
+                    this.state.finalServiceUser.forEach((f,index) => {
+                        this.state.idAlfred.forEach(i => {
+                            if(f.user._id === i){
+                                arrayIndex.push(index);
 
 
-                    })
-                });
-                this.setState({finalServiceUser:arrayService});
+
+
+
+                            }
+
+
+                        })
+                    });
+                    for (let t = arrayIndex.length -1; t >= 0; t--)
+                        arrayService.splice(arrayIndex[t],1);
+
+                    this.setState({finalServiceUser:arrayService});
 
 
 
 
-            },2000)
+                },2000)
+            } else {
+                setTimeout(()=>this.searchWithWord(),2000)
+            }
+
 
 
 
@@ -473,51 +483,60 @@ class testSearch2 extends React.Component {
 
     async filterParticulier(){
 
-        const arrayShop = [];
-        const serviceUser = this.state.finalServiceUser;
-        serviceUser.forEach(s => {
-            axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
-                .then( res => {
-                    let shop = res.data;
-                    const index = arrayShop.findIndex(i=>i._id == shop._id);
-                    if(index === -1){
-                        arrayShop.push(shop);
+            const arrayShop = [];
+            const serviceUser = this.state.finalServiceUser;
+            serviceUser.forEach(s => {
+                axios.get(url + 'myAlfred/api/shop/alfred/' + s.user._id)
+                    .then(res => {
+                        let shop = res.data;
+                        const index = arrayShop.findIndex(i => i._id == shop._id);
+                        if (index === -1) {
+                            arrayShop.push(shop);
 
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        });
-        await this.setState({uniqShop: arrayShop});
-
-
-
-        setTimeout(()=>{
-            const arrayService = this.state.finalServiceUser;
-            this.state.uniqShop.forEach(u => {
-                if(u.is_professional){
-                    this.state.idAlfred.push(u.alfred._id)
-                }
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             });
-            this.state.finalServiceUser.forEach((f,index) => {
-                this.state.idAlfred.forEach(i => {
-                    if(f.user._id === i){
-                        arrayService.splice(index,1);
+            await this.setState({uniqShop: arrayShop});
 
-                        this.setState({finalServiceUser:arrayService});
+            if(this.state.checkedParticulier){
+                setTimeout(() => {
+
+                    const arrayService = this.state.finalServiceUser;
+                    const arrayIndex = [];
+                    this.state.uniqShop.forEach(u => {
+                        if (u.is_professional) {
+                            this.state.idAlfred.push(u.alfred._id)
+                        }
+                    });
+                    this.state.finalServiceUser.forEach((f, index) => {
+                        this.state.idAlfred.forEach(i => {
+                            if (f.user._id === i) {
+                                arrayIndex.push(index);
+
+
+                            }
+
+
+                        })
+                    });
+                    for (let t = arrayIndex.length - 1; t >= 0; t--)
+                        arrayService.splice(arrayIndex[t], 1);
+
+                    this.setState({finalServiceUser: arrayService});
+
+
+                }, 2000)
+            } else {
+                setTimeout(() => this.searchWithWord(),2000);
+
+            }
 
 
 
-                    }
 
-                })
-            });
-
-
-
-
-        },2000)
 
 
 
@@ -605,34 +624,44 @@ class testSearch2 extends React.Component {
                                     </Button>
                                 }
                             </Grid>
-                            <Grid item xs={3}>
+                            {this.state.checkedParticulier ? <Grid item xs={3}></Grid> :
+
+                                <Grid item xs={3}>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={this.state.checkedB}
+                                                onChange={e=>{this.handleChange(e);this.filter()}}
+                                                value={this.state.checkedB}
+                                                color="primary"
+                                                name={'checkedB'}
+                                            />
+                                        }
+                                        label="Pro"
+                                    />
+                                </Grid>
+                            }
+
+                            {this.state.checkedB ? null : <Grid item xs={3}>
+
+
+
                                 <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={this.state.checkedB}
-                                            onChange={e=>{this.handleChange(e);this.filter()}}
-                                            value={this.state.checkedB}
-                                            color="primary"
-                                            name={'checkedB'}
-                                        />
-                                    }
-                                    label="Pro"
+                                control={
+                                <Switch
+                                    checked={this.state.checkedParticulier}
+                                    onChange={e=>{this.handleChange(e);this.filterParticulier()}}
+                                    value={this.state.checkedParticulier}
+                                    color="primary"
+                                    name={'checkedParticulier'}
                                 />
-                            </Grid>
-                            <Grid item xs={3}>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={this.state.checkedParticulier}
-                                            onChange={e=>{this.handleChange(e);this.filterParticulier()}}
-                                            value={this.state.checkedParticulier}
-                                            color="primary"
-                                            name={'checkedParticulier'}
-                                        />
-                                    }
-                                    label="Particulier"
+                            }
+                                label="Particulier"
                                 />
-                            </Grid>
+
+
+                                </Grid>}
+
                         </Grid>
                         {click ?
                             <>
