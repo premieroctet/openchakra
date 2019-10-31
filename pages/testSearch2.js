@@ -17,13 +17,17 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import 'react-dates/initialize';
+import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
+import moment from "moment";
+import 'react-dates/lib/css/_datepicker.css';
 
 const geolib = require('geolib');
 const _ = require('lodash');
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
-
+moment.locale('fr');
 const styles = theme => ({
     bigContainer: {
         marginTop: 80
@@ -59,6 +63,9 @@ class testSearch2 extends React.Component {
             idAlfred: [],
             checkedB: false,
             checkedParticulier: false,
+            startDate: null,
+            endDate: null,
+            focusedInput: null,
 
 
 
@@ -533,14 +540,102 @@ class testSearch2 extends React.Component {
                 setTimeout(() => this.searchWithWord(),2000);
 
             }
+    }
 
+    filterDate(){
+        const begin = this.state.startDate;
+        const end = this.state.endDate;
+        const beginDay =  moment(begin).format('dddd');
+        const endDay =  moment(end).format('dddd');
+        const diff = end.diff(begin,'days')+1;
 
-
-
-
-
-
-
+        if(diff > 8){
+            console.log('Plus de une semaine')
+        } else if(diff===8){
+            console.log('Une semaine')
+        } else {
+            switch (beginDay) {
+                case 'lundi' :
+                    switch (diff) {
+                        case 1 : console.log('Lundi');break;
+                        case 2 : console.log('Lundi, mardi');break;
+                        case 3 : console.log('Lundi, mardi, mercredi');break;
+                        case 4 : console.log('Lundi, mardi, mercredi, jeudi');break;
+                        case 5 : console.log('Lundi, mardi, mercredi, jeudi, vendredi');break;
+                        case 6 : console.log('Lundi, mardi, mercredi, jeudi, vendredi, samedi');break;
+                        case 7 : console.log('Lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche');break;
+                    }
+                break;
+                case 'mardi' :
+                    switch (diff) {
+                        case 1 : console.log('Mardi');break;
+                        case 2 : console.log('Mardi, mercredi');break;
+                        case 3 : console.log('Mardi, mercredi, jeudi');break;
+                        case 4 : console.log('Mardi, mercredi, jeudi, vendredi');break;
+                        case 5 : console.log('Mardi, mercredi, jeudi, vendredi, samedi');break;
+                        case 6 : console.log('Mardi, mercredi, jeudi, vendredi, samedi, dimanche');break;
+                        case 7 : console.log('Mardi, mercredi, jeudi, vendredi, samedi, dimanche, lundi');break;
+                    }
+                break;
+                case 'mercredi' :
+                    switch (diff) {
+                        case 1 : console.log('Mercredi');break;
+                        case 2 : console.log('Mercredi, jeudi');break;
+                        case 3 : console.log('Mercredi, jeudi, vendredi');break;
+                        case 4 : console.log('Mercredi, jeudi, vendredi, samedi');break;
+                        case 5 : console.log('Mercredi, jeudi, vendredi, samedi, dimanche');break;
+                        case 6 : console.log('Mercredi, jeudi, vendredi, samedi, dimanche, lundi');break;
+                        case 7 : console.log('Mercredi, jeudi, vendredi, samedi, dimanche, lundi, mardi');break;
+                    }
+                    break;
+                case 'jeudi' :
+                    switch (diff) {
+                        case 1 : console.log('Jeudi');break;
+                        case 2 : console.log('Jeudi, vendredi');break;
+                        case 3 : console.log('Jeudi, vendredi, samedi');break;
+                        case 4 : console.log('Jeudi, vendredi, samedi, dimache');break;
+                        case 5 : console.log('Jeudi, vendredi, samedi, dimanche, lundi');break;
+                        case 6 : console.log('Jeudi, vendredi, samedi, dimanche, lundi, mardi');break;
+                        case 7 : console.log('Jeudi, vendredi, samedi, dimanche, lundi, mardi, mercredi');break;
+                    }
+                    break;
+                case 'vendredi' :
+                    switch (diff) {
+                        case 1 : console.log('Vendredi');break;
+                        case 2 : console.log('Vendredi, samedi');break;
+                        case 3 : console.log('Vendredi, samedi, dimanche');break;
+                        case 4 : console.log('Vendredi, samedi, dimache, lundi');break;
+                        case 5 : console.log('Vendredi, samedi, dimanche, lundi, mardi');break;
+                        case 6 : console.log('Vendredi, samedi, dimanche, lundi, mardi, mercredi');break;
+                        case 7 : console.log('Vendredi, samedi, dimanche, lundi, mardi, mercredi, jeudi');break;
+                    }
+                    break;
+                case 'samedi' :
+                    switch (diff) {
+                        case 1 : console.log('Samedi');break;
+                        case 2 : console.log('Samedi, dimanche');break;
+                        case 3 : console.log('Samedi, dimanche, lundi');break;
+                        case 4 : console.log('Samedi, dimache, lundi, mardi');break;
+                        case 5 : console.log('Samedi, dimanche, lundi, mardi, mercredi');break;
+                        case 6 : console.log('Samedi, dimanche, lundi, mardi, mercredi, jeudi');break;
+                        case 7 : console.log('Samedi, dimanche, lundi, mardi, mercredi, jeudi, vendredi');break;
+                    }
+                    break;
+                case 'dimanche' :
+                    switch (diff) {
+                        case 1 : console.log('Dimanche');break;
+                        case 2 : console.log('Dimanche, lundi');break;
+                        case 3 : console.log('Dimanche, lundi, mardi');break;
+                        case 4 : console.log('Dimache, lundi, mardi, mercredi');break;
+                        case 5 : console.log('Dimanche, lundi, mardi, mercredi, jeudi');break;
+                        case 6 : console.log('Dimanche, lundi, mardi, mercredi, jeudi, vendredi');break;
+                        case 7 : console.log('Dimanche, lundi, mardi, mercredi, jeudi, vendredi, samedi');break;
+                    }
+                    break;
+                default:
+                    console.log('error');
+            }
+        }
 
 
     }
@@ -662,6 +757,28 @@ class testSearch2 extends React.Component {
 
                                 </Grid>}
 
+
+
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={4}>
+                                <DateRangePicker
+                                    startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+                                    startDatePlaceholderText={'Début'}
+                                    endDatePlaceholderText={'Fin'}
+                                    startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                                    endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+                                    endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                                    onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
+                                    focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                                    onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+                                    minimumNights={0}
+
+                                />
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Button onClick={()=>this.filterDate()}>Valider</Button>
+                            </Grid>
                         </Grid>
                         {click ?
                             <>
