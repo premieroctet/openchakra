@@ -86,6 +86,7 @@ class bio extends React.Component {
       currentCountry: '',
       user: [],
       description: '',
+      addressCity: {}
     };
   }
 
@@ -99,16 +100,19 @@ class bio extends React.Component {
 
 
     axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
-        .then(function (response) {
+        .then( (response) =>  {
 
           let shop = response.data;
 
 
-          self.setState({
+          this.setState({
             shop: shop,
-            alfred: shop.alfred
+            alfred: shop.alfred,
           })
 
+          this.setState({
+            addressCity : this.state.alfred.billing_address,
+          })
 
 
 
@@ -151,6 +155,7 @@ class bio extends React.Component {
 
     const {classes} = this.props;
     const {alfred} = this.state;
+    const {addressCity} = this.state;
     const {shop} = this.state;
 
     return (
@@ -160,7 +165,7 @@ class bio extends React.Component {
               <Grid item xs={12} md={4} className={classes.avatarContainer}>
                 <Avatar alt="John Doe" src={`../../../../${alfred.picture}`} className={classes.avatar} />
                 <Typography className={classes.text}>{alfred.name} {alfred.firstname}</Typography>
-                <Typography>{this.state.currentAddress}, {this.state.currentCity} </Typography>
+                <Typography> {addressCity.city} </Typography>
               </Grid>
               <Grid item xs={12} md={8} className={classes.biographyContainer}>
                 <Card className={classes.biography}>

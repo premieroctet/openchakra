@@ -2,9 +2,8 @@ const appName = 'myalfred'
 const databaseName = 'test-myAlfred'
 const serverPort = process.env.PORT || 3122;
 
-const apiUrl = "http://localhost:3122/";
-
-//const apiUrl = "https://myalfred.hausdivision.com/";
+//const apiUrl = "http://localhost:3122/";
+const apiUrl = "/";
 
 const completeConfig = {
 
@@ -21,11 +20,11 @@ const completeConfig = {
     },
 
     development: {
-        appUrl: `https://myalfred.hausdivision.com/`
+	    appUrl: `http://localhost:${serverPort}`
     },
 
     production: {
-        appUrl: `https://myalfred.hausdivision.com/`
+	appUrl: `http://localhost:${serverPort}`
     }
 
 }

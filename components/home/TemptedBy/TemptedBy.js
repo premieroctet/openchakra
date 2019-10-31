@@ -10,7 +10,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import {RestaurantMenu} from "@material-ui/icons";
 import Card from "@material-ui/core/Card";
 
-const url = "https://myalfred.hausdivision.com/";
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
