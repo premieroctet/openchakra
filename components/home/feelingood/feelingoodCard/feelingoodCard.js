@@ -28,8 +28,14 @@ const styles = theme => ({
     margin:10,
     boxShadow: '1px 3px 1px transparent',
     height: '90%',
-    [theme.breakpoints.down('xs')]: { // medium: 960px or larger
-      maxWidth: 'inherit',
+    [theme.breakpoints.down('xs')]: { // tel
+      maxWidth: '100%',
+    },
+    [theme.breakpoints.down('sm')]: { // medium: 960px or larger
+      maxWidth: '100%',
+    },
+    [theme.breakpoints.down('md')]: { // ipad
+      maxWidth: '100%',
     },
   },
   gridContainer: {
