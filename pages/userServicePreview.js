@@ -497,6 +497,7 @@ class userServices extends React.Component {
                     const bookingObj = {
                         reference: reference,
                         service: this.state.service.label,
+                        equipments: this.state.serviceUser.equipments,
                         amount: this.state.grandTotal,
                         date_prestation: moment(this.state.date).format('DD/MM/YYYY'),
                         time_prestation: moment(this.state.hour).format('HH:mm'),

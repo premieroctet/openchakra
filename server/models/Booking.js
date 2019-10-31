@@ -10,6 +10,9 @@ const BookingSchema = new Schema({
         type: String,
         required: true
     },
+    equipments: {
+        type: Array
+    },
     amount: {
         type: String,
         required: true
@@ -48,7 +51,7 @@ const BookingSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['Confirmée','Refusée', 'Annulée', 'Terminée', 'Expirée', 'En attente de confirmation', 'Demande d\'infos', ]
+        enum: ['Confirmée','Refusée', 'Annulée', 'Terminée', 'Expirée', 'En attente de confirmation', 'Demande d\'infos', 'Invitation à réserver' ]
     }
 
 

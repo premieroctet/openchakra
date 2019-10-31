@@ -200,7 +200,6 @@ class detailsReservation extends React.Component {
 
     componentDidMount() {
       const booking_id = this.props.booking_id;
-      console.log(this.props.is_user)
       
       axios.get(url + 'myAlfred/api/booking/' + booking_id)
         .then(res => {
@@ -238,8 +237,6 @@ class detailsReservation extends React.Component {
         const {modal4} = this.state;
         const {bookingObj} = this.state;
         const {is_user} = this.props;
-
-    
 
         return (
             <Fragment>
@@ -411,22 +408,30 @@ class detailsReservation extends React.Component {
                                         </div> 
                                     </Grid>
                                     <Grid item xs={2} style={{textAlign: 'center'}}>
-
                                         <div style={{textAlign: 'center', height: '40px', width: '200px', backgroundColor: '#4FBDD7', lineHeight: 2.5, borderRadius: '50px', marginTop: '20%'}}>
                                             <Link href={{ pathname: "/reservations/messagesDetails", query: { id: bookingObj === null ? null : bookingObj.chatroom}}}>
                                                 <a style={{textDecoration:'none', color: 'white' }}>Envoyer un message</a>
                                             </Link>
                                         </div>
 
-                                        <div style={{textAlign: 'center', height: '40px', width: '200px', backgroundColor: '#4FBDD7', lineHeight: 2.5, borderRadius: '50px', marginTop: '5%'}}>
-                                            <Link href="#appeler">
-                                                <a style={{textDecoration:'none', color: 'white' }}>Appeler</a>
-                                            </Link>
-                                        </div>
+                                        {bookingObj === null ?
+                                          null
+                                          :
+                                          bookingObj.status === 'Confirmée' ?
+                                            <>
+                                              <div style={{textAlign: 'center', height: '40px', width: '200px', backgroundColor: '#4FBDD7', lineHeight: 2.5, borderRadius: '50px', marginTop: '5%'}}>
+                                                <Link href="#appeler">
+                                                  <a style={{textDecoration:'none', color: 'white' }}>Appeler</a>
+                                                </Link>
+                                              </div>
 
-                                        <div style={{textAlign: 'center', width: '200px'}}>
-                                            <Typography>+33 6 44 24 57 67</Typography>
-                                        </div>
+                                              <div style={{textAlign: 'center', width: '200px'}}>
+                                                <Typography>+33 6 44 24 57 67</Typography>
+                                              </div>
+                                            </>
+                                          :
+                                          null
+                                        }
                                     </Grid>
 
                                 </Grid>
@@ -484,12 +489,71 @@ class detailsReservation extends React.Component {
                                     </Grid>
                                     <Grid item xs={2}>
                                         <Grid container style={{marginTop: '50%'}}>
-                                            <Grid item xs={4}>
-                                                <div style={{width: '30px', height: '30px', backgroundColor: '#A7D571', borderRadius: '100%', border:'0.4px solid rgba(112,112,112,0.26)', marginTop: '15%'}}></div>
-                                            </Grid>
-                                            <Grid item xs={8}>
-                                                <Typography style={{color: '#A7D571'}}>{bookingObj === null ? null : bookingObj.status}</Typography>
-                                            </Grid>
+                                          {bookingObj === null ?
+                                            null
+                                            :
+                                            bookingObj.status === 'En attente de confirmation' ?
+                                              <p>En attente de confirmation</p>
+                                            :
+                                            bookingObj.status === 'Demande d\'infos' || bookingObj.status === 'Invitation à réserver' ?
+                                              <div style={{textAlign: 'center', height: '40px', minWidth: '250px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px', marginTop: '20%'}}>
+                                                <Link href='#'>
+                                                  <a style={{textDecoration:'none', color: 'white' }}>Envoyer un message</a>
+                                                </Link>
+                                              </div>
+                                            :
+                                            bookingObj.status === 'Confirmée' ?
+                                              <>
+                                                <Grid item xs={4}>
+                                                  <div style={{width: '30px', height: '30px', backgroundColor: '#A7D571', borderRadius: '100%', border:'0.4px solid rgba(112,112,112,0.26)', marginTop: '15%'}}></div>
+                                                </Grid>
+                                                <Grid item xs={8}>
+                                                  <Typography style={{color: '#A7D571'}}>Réservation confirmée</Typography>
+                                                </Grid>
+                                              </>
+                                            :
+                                            bookingObj.status === 'Expirée' ?
+                                            <>
+                                              <Grid item xs={4}>
+                                                <div style={{width: '30px', height: '30px', backgroundColor: '#C4C4C4', borderRadius: '100%', border:'0.4px solid rgba(112,112,112,0.26)', marginTop: '15%'}}></div>
+                                              </Grid>
+                                              <Grid item xs={8}>
+                                                <Typography style={{color: '#C4C4C4'}}>Réservation expirée</Typography>
+                                              </Grid>
+                                            </>
+                                            :
+                                            bookingObj.status === 'Terminée' ?
+                                            <>
+                                              <Grid item xs={4}>
+                                                <div style={{width: '30px', height: '30px', backgroundColor: '##C4C4C4', borderRadius: '100%', border:'0.4px solid rgba(112,112,112,0.26)', marginTop: '15%'}}></div>
+                                              </Grid>
+                                              <Grid item xs={8}>
+                                                <Typography style={{color: '##C4C4C4'}}>Réservation terminée</Typography>
+                                              </Grid>
+                                            </>
+                                            :
+                                            bookingObj.status === 'Annulée' ?
+                                            <>
+                                              <Grid item xs={4}>
+                                                <div style={{width: '30px', height: '30px', backgroundColor: '#C4C4C4', borderRadius: '100%', border:'0.4px solid rgba(112,112,112,0.26)', marginTop: '15%'}}></div>
+                                              </Grid>
+                                              <Grid item xs={8}>
+                                                <Typography style={{color: '##C4C4C4'}}>Réservation annulée</Typography>
+                                              </Grid>
+                                            </>
+                                            :
+                                            bookingObj.status === 'Refusée' ?
+                                            <>
+                                              <Grid item xs={4}>
+                                                <div style={{width: '30px', height: '30px', backgroundColor: '#C4C4C4', borderRadius: '100%', border:'0.4px solid rgba(112,112,112,0.26)', marginTop: '15%'}}></div>
+                                              </Grid>
+                                              <Grid item xs={8}>
+                                                <Typography style={{color: '##C4C4C4'}}>Réservation refusée</Typography>
+                                              </Grid>
+                                            </>
+                                            :
+                                            null
+                                          }
                                         </Grid>
                                     </Grid>
 
@@ -600,24 +664,20 @@ class detailsReservation extends React.Component {
                                     <Grid item xs={12}>
                                         <Typography style={{fontSize: '1.4rem'}}>Matériels Fournis</Typography>
                                     </Grid>
-                                    <Grid item xs={1} style={{textAlign: 'center'}}>
-                                        <img style={{width: '98%'}} src="../../static/equipments/Accordeon_Selected.svg"/>
-                                    </Grid>
-                                    <Grid item xs={1} style={{textAlign: 'center'}}>
-                                        <img style={{width: '98%'}} src="../../static/equipments/Arrosoir_Selected.svg"/>
-                                    </Grid>
-                                    <Grid item xs={1} style={{textAlign: 'center'}}>
-                                        <img style={{width: '98%'}} src="../../static/equipments/Aspirateur_Selected.svg"/>
-                                    </Grid>
-                                    <Grid item xs={1} style={{textAlign: 'center'}}>
-                                        <img style={{width: '98%'}} src="../../static/equipments/Aviron.svg"/>
-                                    </Grid>
-                                    <Grid item xs={1} style={{textAlign: 'center'}}>
-                                        <img style={{width: '98%'}} src="../../static/equipments/Bache_de_protection.svg"/>
-                                    </Grid>
-                                    <Grid item xs={1} style={{textAlign: 'center'}}>
-                                        <img style={{width: '98%'}} src="../../static/equipments/Batterie.svg"/>
-                                    </Grid>
+                                    {bookingObj === null ?
+                                      null
+                                      :
+                                      bookingObj.equipments.length ?
+                                        bookingObj.equipments.map(equipment => {
+                                          return (
+                                            <Grid item xs={1} style={{textAlign: 'center'}}>
+                                              <img style={{width: '98%'}} src="../../static/equipments/Accordeon_Selected.svg"/>
+                                            </Grid>
+                                          )
+                                        })
+                                        :
+                                        <p>Aucun équipement fourni</p>
+                                    }
                                 </Grid>
                                 <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'5%', paddingBottom: '7%'}}>
                                     <Grid item xs={12}>

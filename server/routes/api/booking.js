@@ -46,6 +46,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
     const bookingFields = {};
     bookingFields.reference = req.body.reference + '_' + random;
     bookingFields.service = req.body.service;
+    bookingFields.equipments = req.body.equipments;
     bookingFields.amount = req.body.amount;
     bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred);
     bookingFields.user = mongoose.Types.ObjectId(req.body.user);
