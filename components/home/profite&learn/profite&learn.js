@@ -6,10 +6,8 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   container: {
-    paddingRight: 15,
-    paddingLeft: 15,
-    marginRight: 'auto',
-    marginLeft: 'auto',
+    margin: 'auto',
+    textAlign: 'center',
     width: '100%',
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
@@ -75,6 +73,14 @@ const styles = theme => ({
   },
   separatorBlue:{
     width: '50px'
+  },
+  contentTextBox: {
+    paddingRight: 15,
+    paddingLeft: 10,
+    [theme.breakpoints.down('xs')]: { // medium: 960px or larger
+      padding:'5%'
+    },
+
   }
 });
 
@@ -117,10 +123,11 @@ class profiteandlearn extends React.Component {
                   Proposez vos services, en 3 étapes !
                 </Typography>
                 <Grid container>
-                  <Grid item xs={4}/>
-                  <Grid item xs={2} lg={5} md={5} sm={4} style={{margin:'auto'}}>
+                  <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                  <Grid item xs={2} sm={4} md={4}  lg={4} xl={4} style={{margin:'auto'}}>
                     <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
                   </Grid>
+                  <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
                   <Grid item xs={5}/>
                 </Grid>
               </div>
@@ -139,7 +146,7 @@ class profiteandlearn extends React.Component {
                     Proposez vos services
                   </Typography>
                 </Grid>
-                <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 10}}>
+                <Grid item xs={12} className={classes.contentTextBox}>
                   <Typography className={classes.textBox3}>
                     Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement les prestations que vous souhaitez réaliser en vous appuyant sur une liste de plus de 2000 services
                      proposées sur My-Alfred. Un service n'apparait pas ? Proposez-le à nos équipes !
@@ -172,7 +179,7 @@ class profiteandlearn extends React.Component {
                     Fixez vos conditions
                   </Typography>
                 </Grid>
-                <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 10}}>
+                <Grid item xs={12} className={classes.contentTextBox}>
                   <Typography className={classes.textBox3}>
                     Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Et si vous avez besoin d'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences !                  </Typography>
                 </Grid>
@@ -191,7 +198,7 @@ class profiteandlearn extends React.Component {
                     Réalisez vos premiers services
                   </Typography>
                 </Grid>
-                <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 10}}>
+                <Grid item xs={12} className={classes.contentTextBox}>
                   <Typography className={classes.textBox3}>
                     Une fois votre boutique en ligne, les personnes intéressées par vos prestations pourront réserver en ligne vos services. Si vous avez des questions avant la prestation, vous pourrez les contacter !                  </Typography>
                 </Grid>

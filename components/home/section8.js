@@ -45,13 +45,15 @@ const styles = theme => ({
         fontWeight: 570,
         marginTop: '5%',
     },
-    textdesc: {
-        [theme.breakpoints.down('sm')]: {
-            marginTop: '10%!important',
-        },
-    },
     separatorBlue:{
         width: '50px'
+    },
+    contentTextbox:{
+        lineHeight: 2,
+        fontSize: 18,
+        [theme.breakpoints.down('xs')]: {
+            padding: '10%'
+        },
     }
 });
 
@@ -96,7 +98,7 @@ class section8 extends React.Component{
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography style={{lineHeight: 2, fontSize: 18}}>
+                                <Typography className={classes.contentTextbox}>
                                     My-Alfred vous permet de manière simple et sécurisée, de mettre vos services à disposition de tout à chacun.
                                     Un talent pour la décoration ? Une passion pour la cuisine ? Ou tout simplement du temps :
                                     proposez vos services et complétez vos revenus.
@@ -113,7 +115,7 @@ class section8 extends React.Component{
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography style={{lineHeight: 2, fontSize: 18}}>
+                                <Typography className={classes.contentTextbox}>
                                     Nous sommes tous des Alfred dès l'âge de 16 ans. Chacun d'entre nous doit pouvoir partager ses savoir faire,
                                     ses compétences, ses passions...
                                     Tantôt consommateur d'Alfred, tantôt Alfred, rejoignez la communauté Alfred en quelques clics !

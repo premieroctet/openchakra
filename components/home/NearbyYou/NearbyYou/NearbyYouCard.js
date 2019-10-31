@@ -8,13 +8,9 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import CardMedia from '@material-ui/core/CardMedia';
-import Fab from '@material-ui/core/Fab';
-// eslint-disable-next-line object-curly-newline
-import { StarRate, FavoriteBorderOutlined, LocationOn, PermContactCalendar } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 
-// eslint-disable-next-line no-unused-vars
 const styles = theme => ({
   card: {
     maxWidth: 300,
@@ -100,13 +96,13 @@ const nearbyYouCard = (props) => {
   const { classes, img, desc, title,alfred,avatar,score,shop } = props;
 
   return (
-   
-    
+
+
 
     <Card className={classes.card}>
       <Link href={`/shop?id_alfred=${shop}`}>
       <CardActionArea>
-      
+
         <CardMedia className={classes.media} image={img} title={alfred}>
           <div className={classes.darkOverlay}>
             <Grid container className={classes.avatarContainer}>
@@ -123,22 +119,22 @@ const nearbyYouCard = (props) => {
           <Typography variant="h6" component="h2">
             {alfred}
           </Typography>
-         
+
           <Typography variant="body2" component="p" style={{textAlign:'center'}}>
                {title}
             </Typography>
-            
+
           <Grid container>
-           
-           
-            
+
+
+
           </Grid>
-         
+
         </CardContent>
 
       </CardActionArea>
       </Link>
-    
+
     </Card>
   );
 };

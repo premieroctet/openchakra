@@ -55,7 +55,20 @@ const styles = theme => ({
     },
     separatorBlue:{
         width: '50px'
+    },
+    contentBox:{
+        lineHeight: 2,
+        fontSize: 18,
+        padding: '5%',
+        [theme.breakpoints.down('md')]: {
+            padding: 'padding: 1%',
+        },
+        [theme.breakpoints.down('sm')]: {
+            padding: 'padding: 1%',
+        },
+
     }
+
 
 });
 
@@ -106,8 +119,8 @@ class facon extends React.Component{
                                     Vous proposez vos services
                                 </Typography>
                             </Grid>
-                            <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 16}}>
-                                <Typography style={{paddingLeft:15,lineHeight: 2, fontSize: 18}}>
+                            <Grid item xs={12}>
+                                <Typography className={classes.contentBox}>
                                     A travers la création de votre boutique vous proposez vos services en
                                     décrivant l'ensemble de vos prestations. Vous pouvez à tout moment
                                     revenir sur votre boutique, ajouter ou supprimer des services. Les
@@ -124,8 +137,8 @@ class facon extends React.Component{
                                     Vous affichez vos disponibilités
                                 </Typography>
                             </Grid>
-                            <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 16}}>
-                                <Typography style={{paddingLeft:15,lineHeight: 2, fontSize: 18}}>
+                            <Grid item xs={12}>
+                                <Typography className={classes.contentBox}>
                                     Vous indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et
                                     tous les critères pour définir votre prestations. Vous pouvez synchroniser
                                     votre calendrier My-Alfred avec vos autres calendriers et éviter de manquer
@@ -144,8 +157,8 @@ class facon extends React.Component{
                                     Vous fixez vos prix
                                 </Typography>
                             </Grid>
-                            <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 16}}>
-                                <Typography style={{paddingLeft:15,lineHeight: 2, fontSize: 18}}>
+                            <Grid item xs={12}>
+                                <Typography className={classes.contentBox}>
                                     C'est à vous de fixer les prix de vos services et nos outils de tarifications
                                     sont la  pour vous aider à proposer le meilleur prix pour être sélectionné.
                                     Vous pouvez facilement ajouter des éléments personnalisés, notamment : - des tarifs de week end - des tarifs de nuit -
@@ -161,8 +174,8 @@ class facon extends React.Component{
                                     Vous déterminez vos règles
                                 </Typography>
                             </Grid>
-                            <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 16}}>
-                                <Typography style={{paddingLeft:15,lineHeight: 2, fontSize: 18}}>
+                            <Grid item xs={12}>
+                                <Typography className={classes.contentBox}>
                                     Pour que les utilisateurs  de My-Alfred puissent facilement comprendre
                                     vos services, vous définissez vos règles avant qu'ils puissent réserver.
                                     Si ils enfreignent les règles après avoir réserver, vous pourrez annuler

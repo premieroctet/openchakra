@@ -39,6 +39,10 @@ const styles = theme => ({
     fontSize: 15,
     marginBottom: '3%',
     marginTop: '3%',
+    [theme.breakpoints.down('xs')]: { // extra-large: 1920px or larger
+      marginBottom: '7%',
+    },
+
   },
   separatorRed:{
     width: '50px'
@@ -78,6 +82,7 @@ class nearbyYou extends React.Component{
     const {classes} = this.props;
     const {service} = this.state;
     const resdata = shuffleArray(service);
+
     const cards = resdata.slice(0, 6).map(e => (
         <Grid item xs={12} sm={6} md={4} key={e._id}>
           <NearbyYouCard img={e.service.picture} title={e.service.label} alfred={e.user.firstname}

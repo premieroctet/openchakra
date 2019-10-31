@@ -1,10 +1,7 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
-import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 const {config} = require('../../config/config');
@@ -15,6 +12,7 @@ const styles = theme => ({
     container: {
         margin:'auto',
         width: '100%',
+        textAlign:'center',
 
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -28,7 +26,6 @@ const styles = theme => ({
         },
     },
     card: {
-
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('xs')]: { // xs: 600px or larger
             maxWidth: 450,
@@ -42,7 +39,6 @@ const styles = theme => ({
         [theme.breakpoints.up('lg')]: {
             maxWidth: 300
         },
-
     },
     media2: {
         height: 200
@@ -67,7 +63,7 @@ const styles = theme => ({
         fontFamily: 'Helvetica',
         textAlign: 'center',
         fontSize: 15,
-        marginBottom: '5%',
+        marginBottom: '3%',
         marginTop:'3%'
     },
     separatorBlue:{
@@ -122,33 +118,10 @@ class section6 extends React.Component {
         const {category} = this.state;
         const {tags} = this.state;
         const resdata = shuffleArray(category);
+
         const services = resdata.slice(0, 4).map(e => (
-            <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
-                <Card className={classes.card} style={{
-                    backgroundColor:'transparent',
-                    textAlign:'center',
-                    margin:10,
-                    boxShadow: '1px 3px 1px transparent'}}>
-                    <CardActionArea>
-                        <CardMedia
-                            className={classes.media2}
-                            image={e.picture}
-                            title={e.label}
-                            style={{height:'530px', width: '100%',}}
-                        />
-                        <CardContent>
-
-                            <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center'}}>
-                                {e.label}
-                            </Typography>
-                            <Typography component="p">
-                                {e.description}
-                            </Typography>
-
-                        </CardContent>
-                    </CardActionArea>
-
-                </Card>
+            <Grid item xs={12} sm={6} md={4} key={e._id}>
+                <Card className={classes.card}/>
             </Grid>
         ));
 
@@ -162,10 +135,11 @@ class section6 extends React.Component {
                                 {tags.title}
                             </Typography>
                             <Grid container>
-                                <Grid item xs={4}/>
-                                <Grid item xs={2} lg={5} md={5} sm={4} style={{margin:'auto'}}>
+                                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                                <Grid item xs={2} sm={4} md={4}  lg={4} xl={4} style={{margin:'auto'}}>
                                     <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
                                 </Grid>
+                                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
                                 <Grid item xs={5}/>
                             </Grid>
                             <Typography className={classes.textBox}>
@@ -173,7 +147,7 @@ class section6 extends React.Component {
                             </Typography>
                         </div>
                     </Grid>
-                    <Grid item xs={2}></Grid>
+                    <Grid item xs={2}/>
                     {services}
                 </Grid>
             </Fragment>

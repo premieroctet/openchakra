@@ -58,7 +58,6 @@ const styles = theme => ({
     },
     media2: {
         height: 200,
-
         [theme.breakpoints.down('md')]: {
             width: '200px!important',
         },

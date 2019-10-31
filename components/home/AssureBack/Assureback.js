@@ -31,6 +31,9 @@ const styles = theme => ({
     height: 400,
     borderRadius: '20px',
     paddingTop: '30.25%', // 16:9
+    [theme.breakpoints.down('xs')]: { // medium: 960px or larger
+      width: '95%',
+    },
   },
   card1: {
     marginTop: '10%',

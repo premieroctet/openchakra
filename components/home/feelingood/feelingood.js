@@ -94,7 +94,7 @@ class feelingood extends React.Component{
 
     const cards = resdata.slice(0, 4).map((e,index) => (
         <Grid key={index} item xs={12} sm={6} md={3}>
-          <FeelingoodCard img={e.picture} title={e.label} />
+          <FeelingoodCard img={e.picture} title={e.label}/>
         </Grid>
     ));
 

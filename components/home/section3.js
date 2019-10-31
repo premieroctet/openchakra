@@ -13,8 +13,8 @@ const url = config.apiUrl;
 
 const styles = theme => ({
     container: {
-        marginRight: 'auto',
-        marginLeft: 'auto',
+        margin: 'auto',
+        textAlign: 'center',
         width: '100%',
 
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
@@ -151,10 +151,11 @@ class section3 extends React.Component {
                                 {tags.title}
                             </Typography>
                             <Grid container>
-                                <Grid item xs={4}/>
-                                <Grid item xs={2} lg={5} md={5} sm={4} style={{margin:'auto'}}>
+                                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                                <Grid item xs={2} sm={4} md={4}  lg={4} xl={4} style={{margin:'auto'}}>
                                     <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
                                 </Grid>
+                                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
                                 <Grid item xs={5}/>
                             </Grid>
                             <Typography className={classes.textBox}>
