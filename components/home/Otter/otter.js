@@ -273,8 +273,8 @@ class Otter extends React.Component{
                                                 className={classes.padding2}>
                                         My-Alfred vous permet de mettre à disposition votre boutique de
                                         services en vous assistant dans toutes les étapes. Grâce à notre
-                                        aide et nos outils, nous somme présent à chaque instant pour vous
-                                        aider à proposer vos prestations dans les meilleurs conditions.
+                                        aide et à nos outils, nous sommes présents à chaque instant pour vous
+                                        aider à proposer vos prestations dans les meilleures conditions.
                                         Nous vous assistons 24h/24 par téléphone, par email et par chat,
                                         pour répondre à toutes vos questions ou vous aider sur le moindre
                                         problème.

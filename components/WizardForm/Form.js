@@ -574,8 +574,8 @@ class Wizard extends React.Component {
                 render={({ values, handleSubmit, isSubmitting, setFieldValue, handleReset }) => (
                     <React.Fragment>
                         {page !== 0 && <div style={{backgroundColor: 'white'}}>
-                            {page === 1 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez vos catégories et services</h3> : null}
-                            {page === 2 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de vos services</h3> : null}
+                            {page === 1 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez votre catégorie puis votre service</h3> : null}
+                            {page === 2 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de votre service</h3> : null}
                             {page === 3 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
                             {page === 4 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
                             {page === 5 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
@@ -1171,20 +1171,21 @@ class Form extends React.Component {
                                 <div className="step1">
                                     <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 1</Typography>
                                     <hr style={{border: '4px solid grey', marginRight: '10%'}} />
-                                    <Typography style={{fontSize: 18}}>Créez votre boutique de service</Typography>
-                                    <Typography>Sélectionnez les services que vous souhaitez offrir</Typography>
+                                    <Typography style={{fontSize: 18}}>Créez le premier service de votre boutique</Typography>
+                                    <Typography>Sélectionnez le premier service que vous souhaitez offrir. Vous pourrez ajouter
+                                    autant de services que vous le souhaitez dans votre boutique.</Typography>
                                 </div>
                                 <div className="step2">
                                     <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 2</Typography>
                                     <hr style={{border: '4px solid grey', marginRight: '10%'}} />
                                     <Typography style={{fontSize: 18}}>Indiquez vos disponiblités & conditions</Typography>
-                                    <Typography>Indiquez vos disponibilités, paramètres de réservation et vos conditions d’annulation</Typography>
+                                    <Typography>Indiquez vos disponibilités, paramètres de réservation et vos conditions d’annulation.</Typography>
                                 </div>
                                 <div className="step3">
                                     <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 3</Typography>
                                     <hr style={{border: '4px solid grey', marginRight: '10%'}} />
                                     <Typography style={{fontSize: 18}}>Présentez-vous !</Typography>
-                                    <Typography>Renseignez votre profil Alfred, partagez vos réalisations, et décrivez vous !</Typography>
+                                    <Typography>Renseignez votre profil Alfred, partagez vos réalisations et décrivez-vous !</Typography>
                                 </div>
                             </div> 
                             
@@ -1193,9 +1194,9 @@ class Form extends React.Component {
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', overflow: 'hidden'}}>
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
-                                    <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Vos catégories de service</Typography>
+                                    <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Votre catégorie de service</Typography>
                                     <Typography>
-                                        Commencez par sélectionner vos catégories de services. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être». Ne vous limitez pas ! Vous pouvez sélectionner plusieurs catégories.
+                                        Commencez par sélectionner votre catégorie de service. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être». Ne vous limitez pas ! Vous pouvez sélectionner plusieurs catégories.
                                     </Typography>
                                 </div>
                                 <FieldArray
@@ -1243,12 +1244,12 @@ class Form extends React.Component {
                                                             this.handleCategorieChange(arrayHelpers.form.values.categories, arrayHelpers);
                                                         }
                                                     }}>
-                                                    Je valide mes catégories
+                                                    Je valide cette catégorie
                                                 </Button>
                                                 <div>
-                                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>Vos services</Typography>
+                                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>Votre service</Typography>
                                                     <Typography>
-                                                        Identifiez maintenant les services que vous souhaitez réaliser dans chacune des catégories sélectionnées. Ne vous limitez pas ! Plusieurs services peuvent être sélectionnés. Vous pourrez choisir le type de prestation que vous souhaitez réaliser dans chacun de vos services dès la prochaine étape !
+                                                        Identifiez maintenant le service que vous souhaitez réaliser dans la catégorie sélectionnée. Vous pourrez choisir les prestations que vous souhaitez réaliser dès la prochaine étape !
                                                     </Typography>
                                                     <Typography>
                                                         Un service n'apparaît pas ? Contactez l’équipe My-Alfred à l’adresse <a href="mailto:unservicedeplus@my-alfred.io">unservicedeplus@my-alfred.io</a>
@@ -1324,7 +1325,7 @@ class Form extends React.Component {
                                                             style={{textAlign: 'center'}}
                                                         />
                                                         :
-                                                        <Typography align="center" style={{fontSize: 15, marginTop: '2rem', color: '#F8727F'}}>Afin d'afficher la sélection des services, veuillez sélectionner vos catégories...</Typography>)}
+                                                        <Typography align="center" style={{fontSize: 15, marginTop: '2rem', color: '#F8727F'}}>Sélectionnez votre catégorie pour afficher les services disponibles</Typography>)}
                                                 </div>
                                             </div>
                                         ): (<p style={{padding: '0 2rem'}}>Chargement...</p>)
@@ -1430,7 +1431,7 @@ class Form extends React.Component {
                                                         });
                                                     }}
                                                 >
-                                                    Je valide mes services
+                                                    Je valide ce service
                                                 </Button>
                                             </div> 
                                                 : 
@@ -1442,7 +1443,7 @@ class Form extends React.Component {
                                                     type="button"
                                                     disabled={true}
                                                 >
-                                                    Je valide mes services
+                                                    Je valide ce service
                                                 </Button>
                                             </div>
                                     }}
@@ -1458,9 +1459,9 @@ class Form extends React.Component {
                                         return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
                                             <React.Fragment>
                                                 <div style={{padding: '2rem 2rem 1rem 2rem'}}>
-                                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>Paramétrez vos services & prestations <span style={{color: '#F8727F' }}>*</span></Typography>
+                                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>Paramétrez vos prestations<span style={{color: '#F8727F' }}>*</span></Typography>
                                                     <Typography>
-                                                        Indiquez les prestations que vous souhaitez réaliser dans chacun de vos services. Indiquez vos tarifs et vos éventuelles majorations sur les services éligibles.
+                                                        Indiquez les prestations que vous souhaitez réaliser. Pour chacune, indiquez votre tarif et le mode de facturation que vous souhaitez appliquer.
                                                     </Typography>
                                                 </div>
                                                 <Tabs>
@@ -1603,10 +1604,10 @@ class Form extends React.Component {
                                                                         </Grid>
                                                                         <hr style={{margin: '1rem 0'}}></hr>
                                                                         <div>
-                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Options</Typography>
+                                                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Options et suppléments</Typography>
                                                                             <Typography style={{marginBottom: '1rem'}}>
-                                                                                Les options permettent de proposer des services complémentaires à vos prestations. 
-                                                                                Une liste d’option possible pour vos services vous est proposée par My-Alfred. Si vous souhaitez utiliser votre propre option, vous pouvez en ajouter une à tout moment. 
+                                                                                Les options permettent de proposer des services complémentaires à vos prestations (par exemple : transport ou fourniture de matériel, cheveux longs...). 
+                                                                                Une liste d’options vous est proposée par My-Alfred, vous pouvez également en ajouter.
                                                                             </Typography>
                                                                             <Field render={({form}) => {
                                                                                 const array_option = this.state.all_options.map(e =>(
@@ -1836,7 +1837,7 @@ class Form extends React.Component {
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Renseignez votre périmètre d’intervention <span style={{color: '#F8727F' }}>*</span></Typography>
                                                                             <Typography>
-                                                                                Votre périmètre d’intervention est la zone dans laquelle vous souhaitez réaliser vos services. Par défaut, nous utiliserons la ville de l’adresse renseignée dans votre profil comme base de référence. Cette adresse ne vous convient pas ? Vous pouvez changer votre ville de référence à tout moment !
+                                                                                Votre périmètre d’intervention est la zone dans laquelle vous souhaitez réaliser vos services. Par défaut, nous utilisons la ville de votre profil comme référence. Cette adresse ne vous convient pas ? Vous pouvez changer votre ville de référence à tout moment !
                                                                             </Typography>
                                                                             <FormControlLabel
                                                                                 control={

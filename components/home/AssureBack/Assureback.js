@@ -311,7 +311,7 @@ class Assureback extends React.Component{
                     <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
                                 className={classes.padding2}>
                         Proposez vos services en toute sérénité, My-Alfred s’occupe de tout ! 
-                        Une assurance en responsabilité vous est offerte pour toutes réalisations de services ! 
+                        Une assurance en responsabilité vous est offerte pour toute réalisation de service ! 
                     </Typography>
                   </CardContent>
                 </Grid>
@@ -330,7 +330,7 @@ class Assureback extends React.Component{
                       </Typography>
                       <Typography variant="body1" color="textSecondary" className={classes.padding2}>
                       Proposez vos services en toute sérénité, My-Alfred s’occupe de tout ! 
-                      Une assurance en responsabilité vous est offerte pour toutes réalisations de services ! 
+                      Une assurance en responsabilité vous est offerte pour toute réalisation de service ! 
                       </Typography>
                     </CardContent>
                   </CardActionArea>

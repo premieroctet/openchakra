@@ -285,7 +285,7 @@ class Façon extends React.Component{
                     décrivant l'ensemble de vos prestations. vous pouvez à tout moment
                     revenir sur votre boutique, ajouter ou supprimer des services. Les
                     différentes étapes de création de votre boutique sont extrêmement 
-                    simple. À vous de jouer !
+                    simples. À vous de jouer !
                   </Typography>
                 </Grid>
               </Grid>
@@ -300,9 +300,9 @@ class Façon extends React.Component{
                 <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 16}}>
                   <Typography style={{paddingLeft:15,lineHeight: 2, fontSize: 18}}>
                     Vous indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et
-                    tous les critères pour définir votre prestations. Vous pouvez synchroniser 
-                    votre calendrier My-Alfred avec vos autres calendriers et éviter de manquer
-                    un rendez-vous. Tous vos calendriers sont mis à jour automatiquement               
+                    tous les critères pour définir vos prestations. Votre calendrier My-Alfred
+                    est mis à jour automatiquement et vous pouvez ajouter, supprimer 
+                    et modifier vos disponibilités à tout moment!
                   </Typography>
                 </Grid>
               </Grid>
@@ -338,8 +338,8 @@ class Façon extends React.Component{
                   <Typography style={{paddingLeft:15,lineHeight: 2, fontSize: 18}}>
                     Pour que les utilisateurs  de My-Alfred puissent facilement comprendre 
                     vos services, vous définissez vos règles avant qu'ils puissent réserver.
-                    Si ils enfreignent les règles après avoir réserver, vous pourrez annuler 
-                    leur réservation sans aucune pénalités.               
+                    S'ils enfreignent les règles après avoir réservé, vous pourrez annuler 
+                    leur réservation sans aucune pénalité.
                   </Typography>
                 </Grid>
               </Grid>

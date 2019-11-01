@@ -381,7 +381,7 @@ class faq extends React.Component {
                                         <Grid container>
                                             <p>
                                                 Votre périmètre d’intervention correspond à la zone dans laquelle vous souhaitez réaliser votre service.
-                                                Par défaut, nous utiliserons la ville de l’adresse renseignée dans votre profil comme base de référence.
+                                                Par défaut, nous utilisons la ville de votre profil comme référence.
                                                 Cette adresse ne vous convient pas ? Vous pouvez changer votre ville de référence à tout moment !
                                                 Le périmètre que vous indiquez va permettre à la plateforme My-Alfred de proposer votre service si le
                                                 périmètre d’intervention correspond à l’adresse du client.  Si le client se trouve à 5km de votre
@@ -2093,7 +2093,7 @@ class faq extends React.Component {
                                             <p style={{width:'100%'}}>
                                                 Lorsque vous souhaitez réserver un service, notre plateforme vous propose des Alfred en fonction
                                                 de leur périmètre d’intervention.  Dans ce cadre, nous utiliserons l’adresse de prestation que vous
-                                                aurez indiqué pour la prestation de service commandée.  Vous pouvez à tout moment ajouter ou modifier
+                                                aurez indiquée pour la prestation de service commandée.  Vous pouvez à tout moment ajouter ou modifier
                                                 vos adresses de prestations.
 
 

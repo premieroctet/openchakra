@@ -881,9 +881,7 @@ class addService extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <p>
-                                    Votre périmètre d’intervention est la zone dans laquelle vous souhaitez réaliser vos services. Par défaut, nous utiliserons la
-                                    ville de l’adresse renseignée dans votre profil comme base de référence. Cette adresse ne vous convient pas ? Vous pouvez changer
-                                    votre ville de référence à tout moment !
+                                    Votre périmètre d’intervention est la zone dans laquelle vous souhaitez réaliser vos services. Par défaut, nous utilisons la ville de votre                                     profil comme référence. Cette adresse ne vous convient pas ? Vous pouvez changer votre ville de référence à tout moment !
                                 </p>
                             </Grid>
                             <Grid item xs={12}>
@@ -993,7 +991,7 @@ class addService extends React.Component {
                                 : null}
                             <Grid container>
                                 <Grid item xs={12}>
-                                    <p>Définissez à présent le périmètre que vous souhaitez couvrir :</p>
+                                    <p>Définissez le périmètre que vous souhaitez couvrir :</p>
                                 </Grid>
                                 <Grid item xs={10}>
                                     <InputRange

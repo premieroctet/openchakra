@@ -355,7 +355,7 @@ class Homeheader extends React.Component {
               textAlign: 'left',
               fontSize: '2rem',
               textShadow: '0px 0.5px 2px #696969'
-            }}>Vous avez du talent, de l’or entre vos mains. Qu’attendez-vous pour le mettre à profit ? </h2>
+            }}>Vous avez du talent, de l’or entre les mains. Qu’attendez-vous pour le mettre à profit ? </h2>
             <hr style={{
               float: 'left',
               width: '60px',
