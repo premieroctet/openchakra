@@ -1,26 +1,18 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
-import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import FeelingoodCard from './feelingood/feelingoodCard/feelingoodCard';
 import axios from 'axios';
 
-
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 
-
-
 const styles = theme => ({
     container: {
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginRight: 'auto',
-        marginLeft: 'auto',
-        marginTop: '30px',
+        margin: 'auto',
         width: '100%',
+        textAlign:'center',
 
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -33,35 +25,23 @@ const styles = theme => ({
             width: 1366,
         },
     },
-    media: {
-        height: 0,
-        borderRadius: '20px',
-        paddingTop: '118.25%', // 16:9
-        maxWidth: 345,
-    },
     textBox1: {
         color: 'rgba(84,89,95,0.95)',
         letterSpacing: -2,
         fontWeight: 'bold',
         textAlign: 'center',
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 15,
-        marginTop: 80,
+        marginBottom: '3%',
+        marginTop: '10%',
     },
     textBox: {
         fontFamily: 'Helvetica',
         textAlign: 'center',
         fontSize: 15,
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 60,
+        marginBottom: '3%',
     },
-    grosHR: {
-        height: '10px',
-        backgroundColor: '#2FBCD3',
-        marginBottom: 30,
-    },
+    separatorBlue:{
+        width: '50px'
+    }
 });
 
 function shuffleArray(array) {
@@ -106,8 +86,6 @@ class section18 extends React.Component{
     }
 
     render() {
-
-
         const {classes} = this.props;
         const {service} = this.state;
         const {tags} = this.state;
@@ -122,26 +100,27 @@ class section18 extends React.Component{
         return (
             <Fragment>
                 <Grid container className={classes.container}>
-                    <Grid item xs={2}></Grid>
+                    <Grid item xs={2}/>
                     <Grid item xs={8}>
                         <div>
                             <Typography variant="h4" className={classes.textBox1}>
                                 {tags.title}
                             </Typography>
                             <Grid container>
-                                <Grid item xs={5}></Grid>
-                                <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
-                                <Grid item xs={5}></Grid>
+                                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                                <Grid item xs={2} sm={4} md={4}  lg={4} xl={4} style={{margin:'auto'}}>
+                                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
+                                </Grid>
+                                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                                <Grid item xs={5}/>
                             </Grid>
                             <Typography className={classes.textBox}>
                                 {tags.description}
                             </Typography>
                         </div>
                     </Grid>
-                    <Grid item xs={2}></Grid>
-
+                    <Grid item xs={2}/>
                     {cards}
-
                 </Grid>
             </Fragment>
         );

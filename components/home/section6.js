@@ -1,29 +1,18 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
-import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-//import SerenityNeedCard from './SerenityNeedCard/SerenityNeedCard';
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import Chip from "@material-ui/core/Chip";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
-import Link from 'next/link';
 const {config} = require('../../config/config');
 const url = config.apiUrl;
 
 
 const styles = theme => ({
     container: {
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginRight: 'auto',
-        marginLeft: 'auto',
+        margin:'auto',
         width: '100%',
+        textAlign:'center',
 
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -36,14 +25,7 @@ const styles = theme => ({
             width: 1366,
         },
     },
-    media: {
-        height: 0,
-        borderRadius: '20px',
-        paddingTop: '118.25%', // 16:9
-        maxWidth: 345,
-    },
     card: {
-
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('xs')]: { // xs: 600px or larger
             maxWidth: 450,
@@ -57,12 +39,6 @@ const styles = theme => ({
         [theme.breakpoints.up('lg')]: {
             maxWidth: 300
         },
-
-    },
-    textdesc: {
-        [theme.breakpoints.down('sm')]: {
-            marginTop: '10%!important',
-        },
     },
     media2: {
         height: 200
@@ -72,34 +48,27 @@ const styles = theme => ({
         letterSpacing: -2,
         fontWeight: 'bold',
         textAlign: 'center',
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 15,
-        marginTop: 80,
-    },
-    textBox2: {
-        color: 'rgba(0, 0, 0, 0.87)', 
-        fontSize: '1.25rem',
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 15,
-        fontWeight: 570,
-        marginTop: 10,
-    },
-    grosHR: {
-        height: '10px',
-        backgroundColor: '#2FBCD3',
-        marginBottom: 30,
+        marginBottom: '3%',
+        [theme.breakpoints.up('xs')]: {
+            marginTop: '20%',
+        },
+        [theme.breakpoints.up('sm')]: {
+            marginTop: '10%',
+        },
+        [theme.breakpoints.up('md')]: { // medium: 960px or larger
+            marginTop: '10%',
+        },
     },
     textBox: {
         fontFamily: 'Helvetica',
         textAlign: 'center',
         fontSize: 15,
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 60,
-
+        marginBottom: '3%',
+        marginTop:'3%'
     },
+    separatorBlue:{
+        width: '50px'
+    }
 
 });
 
@@ -149,56 +118,36 @@ class section6 extends React.Component {
         const {category} = this.state;
         const {tags} = this.state;
         const resdata = shuffleArray(category);
+
         const services = resdata.slice(0, 4).map(e => (
-            <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
-                <Card className={classes.card} style={{
-                    backgroundColor:'transparent',
-                    textAlign:'center',
-                    margin:10,
-                    boxShadow: '1px 3px 1px transparent'}}>
-                    <CardActionArea>
-                        <CardMedia
-                            className={classes.media2}
-                            image={e.picture}
-                            title={e.label}
-                            style={{height:'530px', width: '100%',}}
-                        />
-                        <CardContent>
-
-                            <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center'}}>
-                                {e.label}
-                            </Typography>
-                            <Typography component="p">
-                                {e.description}
-                            </Typography>
-
-                        </CardContent>
-                    </CardActionArea>
-
-                </Card>
+            <Grid item xs={12} sm={6} md={4} key={e._id}>
+                <Card className={classes.card}/>
             </Grid>
         ));
 
         return (
             <Fragment>
                 <Grid container className={classes.container}>
-                    <Grid item xs={2}></Grid>
+                    <Grid item xs={2}/>
                     <Grid item xs={8}>
                         <div>
                             <Typography variant="h4" className={classes.textBox1}>
                                 {tags.title}
                             </Typography>
                             <Grid container>
-                                <Grid item xs={5}></Grid>
-                                <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
-                                <Grid item xs={5}></Grid>
+                                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                                <Grid item xs={2} sm={4} md={4}  lg={4} xl={4} style={{margin:'auto'}}>
+                                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
+                                </Grid>
+                                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                                <Grid item xs={5}/>
                             </Grid>
                             <Typography className={classes.textBox}>
                                 {tags.description}
                             </Typography>
                         </div>
                     </Grid>
-                    <Grid item xs={2}></Grid>
+                    <Grid item xs={2}/>
                     {services}
                 </Grid>
             </Fragment>
