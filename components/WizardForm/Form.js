@@ -1205,8 +1205,8 @@ class Form extends React.Component {
                                         this.state.categories && this.state.categories.length > 0 ? (
                                             <div style={{padding: '.5rem 2rem'}}>
                                                 <MultipleSelect
-                                                    placeholder="Sélectionnez vos catégories..."
-                                                    noOption='Pas de catégories disponibles'
+                                                    placeholder="Sélectionnez votre catégorie..."
+                                                    noOption='Pas de catégorie disponible'
                                                     option={this.state.categories}
                                                     value={arrayHelpers.form.values.categories}
                                                     //disabled={this.state.isDisabledCategoryInput}
