@@ -177,7 +177,6 @@ class NavBar extends Component {
     localStorage.removeItem('path');
     // Remove auth header for future requests
     setAuthToken(false);
-    //document.location.href="https://myalfred.hausdivision.com/";
     window.location.reload();
   };
 
