@@ -386,10 +386,10 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(47, 188, 211)'}} position="fixed">
+        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(255, 255, 255)', boxShadow:'inherit'}} position="fixed">
           <Toolbar>
             <Link href={'/'}>
-              <img src={'../../../static/assets/img/logo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
+              <img src={this.state.isTop ? '../../../static/assets/img/logo.png' : '../../../static/blueLogo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
             </Link>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
@@ -415,7 +415,7 @@ class NavBar extends Component {
               </Typography> :
               <Typography className={classes.navbarItem}>
                 <Link href={'/becomeAlfredForm'}>
-                  <a className={classes.navbarLink}>
+                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Créer ma boutique
                   </a>
                 </Link>
@@ -423,20 +423,20 @@ class NavBar extends Component {
 
               {test ?<React.Fragment><Typography className={classes.navbarItem}>
                 <Link href={'/myShop/messages'}>
-                  <a className={classes.navbarLink}>
+                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Messages
                   </a>
                 </Link>
               </Typography></React.Fragment> : null }
               <Typography className={classes.navbarItem}>
                 <Link href={'/faq'}>
-                  <a className={classes.navbarLink}>
+                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Aide
                   </a>
                 </Link>
               </Typography>
               {test ? null : <React.Fragment><Link href={'/login'}>
-                    <Button variant="outlined" color={'primary'} style={{color:this.state.isTop ? '' : 'white' , marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
+                  <Button variant="outlined" color={'primary'} style={{marginRight: '20px', border:this.state.isTop ? '1px solid rgba(255, 255, 255, 1)' : '1px solid #4fbdd7'}}>
                       Connexion
                     </Button>
                   </Link>
