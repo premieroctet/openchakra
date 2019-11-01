@@ -3,20 +3,10 @@ import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
-
-
-
-
-
 
 moment.locale('fr');
 
@@ -33,22 +23,20 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             display:'none'
         }
-    }
-
-   ,hidelg: {
+    },
+   hidelg: {
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-        
+
     },
-    trigger:{ 
+    trigger:{
     [theme.breakpoints.down('sm')]: {
     marginTop: -10,
-    width: '100%', 
+    width: '100%',
     marginLeft:'0px',
-    height:'30px', 
+    height:'30px',
     backgroundColor:'#2FBCD3',
-    
     display:'block',
     transition: 'display 0.7s',
     borderRadius:'5px',
@@ -58,20 +46,18 @@ const styles = theme => ({
 
        }
      }
-
-}
-
-    ,toggle: {
+},
+    toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
         transition: 'margin-left 0.7s',
-       
+
         '&:hover': {
             marginLeft:'0px',
             transition: 'margin-left 0.7s',
             boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
 
              }
-      }  
+      }
     }
 
 });
@@ -82,11 +68,9 @@ class paymentMethod extends React.Component {
         this.state = {
             user: {},
         }
-
     }
 
     componentDidMount() {
-
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
@@ -104,21 +88,15 @@ class paymentMethod extends React.Component {
             );
     }
 
-
-
     render() {
         const {classes} = this.props;
-        const {user} = this.state;
-
 
         return (
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
-                         
-                         <div className={classes.trigger}></div>
+                         <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/notifications'}>
@@ -135,12 +113,11 @@ class paymentMethod extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} width={27} style={{marginRight: 4}}/>
                                             <a s style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10}}className={classes.hidesm}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -156,12 +133,11 @@ class paymentMethod extends React.Component {
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/credit-card-2.svg'} alt={'credit-card'} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -181,7 +157,6 @@ class paymentMethod extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/transactions'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -197,12 +172,11 @@ class paymentMethod extends React.Component {
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                                
+
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -218,12 +192,11 @@ class paymentMethod extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/applications'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -239,12 +212,11 @@ class paymentMethod extends React.Component {
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -260,12 +232,11 @@ class paymentMethod extends React.Component {
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/sponsors'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -281,7 +252,7 @@ class paymentMethod extends React.Component {
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
@@ -289,8 +260,6 @@ class paymentMethod extends React.Component {
 
                             </Grid>
                         </Grid>
-
-
                         <Grid item xs={9} style={{paddingLeft: 55}}>
                             <Grid container>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Mode de paiement</h1>
@@ -299,12 +268,9 @@ class paymentMethod extends React.Component {
                     </Grid>
                 </Layout>
                 <Footer/>
-
             </Fragment>
         );
     };
 }
-
-
 
 export default withStyles(styles)(paymentMethod);
