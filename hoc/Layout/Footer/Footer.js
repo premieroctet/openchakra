@@ -7,21 +7,19 @@ import Typography from '@material-ui/core/Typography';
 import Link from 'next/link';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
- 
 
 const styles = theme => ({
         responsive:{
-            [theme.breakpoints.up('md')]: { 
+            [theme.breakpoints.up('md')]: {
                 display: 'none'
             },
         },
         normal:{
-            [theme.breakpoints.down('sm')]: { 
+            [theme.breakpoints.down('sm')]: {
                 display: 'none'
             },
         }
-    })
-
+    });
 
 class Footer extends Component {
     constructor(props) {
@@ -32,8 +30,8 @@ class Footer extends Component {
         const {classes} = this.props;
         return(
             <React.Fragment>
-                
-                <Grid container style={{backgroundColor: '#747474', width: '100%',}}>
+
+                <Grid container style={{backgroundColor: '#747474'}}>
                     <Grid item md={3} sm={6} xs={12} style={{textAlign: 'center', margin: '2% 0px'}}>
 
                         {/*Responsive */}
@@ -49,11 +47,11 @@ class Footer extends Component {
                                 <Grid container>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
                                         <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Devenir Alfred</Typography></a></Link>
-                                    </Grid>    
+                                    </Grid>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
                                         <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Comment ça marche ?</Typography></a></Link>
                                     </Grid>
-                                    <Grid item xs={12} style={{textAlign: 'left'}}>    
+                                    <Grid item xs={12} style={{textAlign: 'left'}}>
                                     <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Nous contacter</Typography></a></Link>
                                     </Grid>
                                 </Grid>
@@ -65,11 +63,11 @@ class Footer extends Component {
                                 <Grid container className={classes.normal} style={{marginTop: '4%'}}>
                                     <Grid item xs={12}>
                                         <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Devenir Alfred</Typography></a></Link>
-                                    </Grid>    
+                                    </Grid>
                                     <Grid item xs={12}>
                                         <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Comment ça marche ?</Typography></a></Link>
                                     </Grid>
-                                    <Grid item xs={12}>    
+                                    <Grid item xs={12}>
                                     <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Nous contacter</Typography></a></Link>
                                     </Grid>
                                 </Grid>
@@ -91,7 +89,7 @@ class Footer extends Component {
                                 <Grid container style={{marginTop: '4%'}}>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
                                         <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Utilisateurs</Typography></a></Link>
-                                    </Grid>    
+                                    </Grid>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
                                         <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Alfred</Typography></a></Link>
                                     </Grid>
@@ -104,7 +102,7 @@ class Footer extends Component {
                             <Grid container className={classes.normal} style={{marginTop: '4%'}}>
                                 <Grid item xs={12}>
                                     <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Utilisateurs</Typography></a></Link>
-                                </Grid>    
+                                </Grid>
                                 <Grid item xs={12}>
                                     <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Alfred</Typography></a></Link>
                                 </Grid>
@@ -127,7 +125,7 @@ class Footer extends Component {
                                 <Grid container style={{marginTop: '4%'}}>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
                                         <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Les Catégories</Typography></a></Link>
-                                    </Grid>    
+                                    </Grid>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
                                         <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Les Services</Typography></a></Link>
                                     </Grid>
@@ -140,7 +138,7 @@ class Footer extends Component {
                             <Grid container className={classes.normal} style={{marginTop: '4%'}}>
                                 <Grid item xs={12}>
                                     <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Les Catégories</Typography></a></Link>
-                                </Grid>    
+                                </Grid>
                                 <Grid item xs={12}>
                                     <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Les Services</Typography></a></Link>
                                 </Grid>
@@ -152,15 +150,14 @@ class Footer extends Component {
                         {/*Responsive */}
                         <ExpansionPanel className={classes.responsive} style={{backgroundColor: '#747474',border: 'none', boxShadow: 'none'}}>
                             <ExpansionPanelSummary
-                             style={{textAlign: 'center'}} 
+                             style={{textAlign: 'center'}}
                             expandIcon={<ExpandMoreIcon style={{color:'white'}} />}
                             aria-controls="panel1bh-content"
                             id="panel1bh-header"
                             >
-                                
+
                                 <Typography style={{fontSize: '1rem', color: 'white', fontWeight: 'bold'}}>
                                     <Link href="https://www.facebook.com/myalfred1/"><a style={{textDecoration: 'none', color: 'white'}} target="_blank">
-                                    {/*<img width={'20px'} style={{marginLeft: '3%', cursor: 'pointer'}} src="../../../../static/socialicons/facebook.png"/>*/}
                                     <svg aria-hidden="true" focusable="false" data-prefix="fab"
                                          style={{cursor: 'pointer', width: '20px'}}
                                          data-icon="facebook" role="img" xmlns="http://www.w3.org/2000/svg"
@@ -171,7 +168,6 @@ class Footer extends Component {
                                     </svg>
                                         </a></Link>
                                         <Link href="https://www.instagram.com/my_alfred_/"><a style={{textDecoration: 'none', color: 'white'}} target="_blank">
-                                    {/*<img width={'20px'} style={{marginLeft: '3%', cursor: 'pointer'}} src="../../../../static/socialicons/instagram.png"/>*/}
                                     <svg aria-hidden="true" focusable="false" style={{
                                         cursor: 'pointer',
                                         width: '20px',
@@ -190,10 +186,10 @@ class Footer extends Component {
                                 <Grid container style={{marginTop: '4%'}}>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
                                         <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Mentions Légales</Typography></a></Link>
-                                    </Grid>    
+                                    </Grid>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
                                         <Link href="/footer/cgu"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Conditions générales d'utilisation</Typography></a></Link>
-                                    </Grid>    
+                                    </Grid>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
                                         <Link href="/footer/privacypolicy"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Politique de confidentialité</Typography></a></Link>
                                     </Grid>
@@ -206,10 +202,10 @@ class Footer extends Component {
                             <Grid container className={classes.normal} style={{marginTop: '4%'}}>
                                     <Grid item xs={12}>
                                         <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Mentions Légales</Typography></a></Link>
-                                    </Grid>    
+                                    </Grid>
                                     <Grid item xs={12}>
                                         <Link href="/footer/cgu"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Conditions générales d'utilisation</Typography></a></Link>
-                                    </Grid>    
+                                    </Grid>
                                     <Grid item xs={12}>
                                         <Link href="/footer/privacypolicy"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Politique de confidentialité</Typography></a></Link>
                                     </Grid>
@@ -219,7 +215,7 @@ class Footer extends Component {
                     <Grid item xs={4}></Grid><Grid item xs={4}><hr style={{border:'none', backgroundColor: 'white', height: '1px'}}/></Grid><Grid item xs={4}></Grid>
                     <Grid item xs={4}></Grid><Grid item xs={4}><Typography style={{color: 'white', textAlign: 'center', marginBottom: 15}}>© 2019 My-Alfred. All rights reserved.</Typography></Grid><Grid item xs={4}></Grid>
                 </Grid>
-                
+
             </React.Fragment>
         )
     }

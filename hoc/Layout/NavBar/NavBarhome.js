@@ -9,12 +9,11 @@ import axios from "axios";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
-import Router from "next/router";
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -83,7 +82,7 @@ const styles = theme => ({
     display: 'none',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
-    },  
+    },
   },
   sectionMobile: {
     display: 'flex',
@@ -256,13 +255,13 @@ class NavBar extends Component {
     </MenuItem>
   </React.Fragment>;
 
-    const logoutAvatar = 
+    const logoutAvatar =
     [
     <MenuItem key={1} onClick={this.handleMenuClose}>
       <Typography>
         <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
-            Profil  
+            Profil
           </a>
         </Link>
       </Typography>
@@ -309,15 +308,6 @@ class NavBar extends Component {
         open={isAvatarMenuOpen}
         onClose={this.handleMenuClose}
       >
-        {/*<MenuItem onClick={this.handleAvatarMenuClose}>
-          <Typography>
-            <Link href='/aide'>
-              <a className={classes.navbarLinkAvatar}>
-                Aide
-              </a>
-            </Link>
-          </Typography>
-        </MenuItem>*/}
         {test ? logoutAvatar : <React.Fragment>
         <MenuItem onClick={this.handleAvatarMenuOpen}>
           <Typography>
@@ -353,34 +343,25 @@ class NavBar extends Component {
         becomealfred
         }
         {test ?<React.Fragment>
-              <MenuItem onClick={this.handleMobileMenuOpen}>
-                <Typography>
-                    <Link href={'/myShop/messages'}>
-                      <a className={classes.navbarLinkMobile}>
-                        Messages
-                      </a>
-                    </Link>
-                </Typography>
-              </MenuItem>
-            </React.Fragment> : null }
-              <MenuItem onClick={this.handleMobileMenuOpen}>
-              <Typography>
-                <Link href={'/faq'}>
-                  <a className={classes.navbarLinkMobile}>
-                    Aide
-                  </a>
-                </Link>
-              </Typography>
-              </MenuItem>
-        {/*<MenuItem onClick={this.handleMobileMenuClose}>
+        <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
-            <Link href='/aide'>
-              <a className={classes.navbarLinkMobile}>
-                Aide
-              </a>
-            </Link>
+              <Link href={'/myShop/messages'}>
+                <a className={classes.navbarLinkMobile}>
+                  Messages
+                </a>
+              </Link>
           </Typography>
-        </MenuItem>*/}
+        </MenuItem>
+      </React.Fragment> : null }
+        <MenuItem onClick={this.handleMobileMenuOpen}>
+        <Typography>
+          <Link href={'/faq'}>
+            <a className={classes.navbarLinkMobile}>
+              Aide
+            </a>
+          </Link>
+        </Typography>
+        </MenuItem>
         {test ? logoutMobile : <React.Fragment>
         <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
@@ -405,10 +386,10 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(47, 188, 211)'}} position="fixed">
+        <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(255, 255, 255)', boxShadow:'inherit'}} position="fixed">
           <Toolbar>
             <Link href={'/'}>
-              <img src={'../../../static/assets/img/logo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
+              <img src={this.state.isTop ? '../../../static/assets/img/logo.png' : '../../../static/blueLogo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
             </Link>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
@@ -424,7 +405,7 @@ class NavBar extends Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              {alfred ? 
+              {alfred ?
               <Typography className={classes.navbarItem}>
                 <Link href={'/myShop/services'}>
                   <a className={classes.navbarLink}>
@@ -434,28 +415,28 @@ class NavBar extends Component {
               </Typography> :
               <Typography className={classes.navbarItem}>
                 <Link href={'/becomeAlfredForm'}>
-                  <a className={classes.navbarLink}>
-                    Devenir Alfred
+                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
+                    Créer ma boutique
                   </a>
                 </Link>
               </Typography>}
 
               {test ?<React.Fragment><Typography className={classes.navbarItem}>
                 <Link href={'/myShop/messages'}>
-                  <a className={classes.navbarLink}>
+                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Messages
                   </a>
                 </Link>
               </Typography></React.Fragment> : null }
               <Typography className={classes.navbarItem}>
                 <Link href={'/faq'}>
-                  <a className={classes.navbarLink}>
+                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Aide
                   </a>
                 </Link>
               </Typography>
               {test ? null : <React.Fragment><Link href={'/login'}>
-                    <Button variant="outlined" color={'primary'} style={{color:this.state.isTop ? '' : 'white' , marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
+                  <Button variant="outlined" color={'primary'} style={{marginRight: '20px', border:this.state.isTop ? '1px solid rgba(255, 255, 255, 1)' : '1px solid #4fbdd7'}}>
                       Connexion
                     </Button>
                   </Link>
@@ -471,15 +452,14 @@ class NavBar extends Component {
                 </React.Fragment>}
                 {test ?<React.Fragment>
 
-                
                   {picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>}
-                
+
                 </React.Fragment> : null  }
             </div>
             <div className={classes.sectionMobile}>
-              
+
                 {test ? mobileavatar : <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}><MoreIcon className={classes.bigIcon} /></IconButton></React.Fragment>}
-              
+
             </div>
           </Toolbar>
         </AppBar>
@@ -490,24 +470,5 @@ class NavBar extends Component {
     );
   }
 }
-
-/*<IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton color="inherit">
-                <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>*/
 
 export default withStyles(styles)(NavBar);

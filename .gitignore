@@ -12,7 +12,6 @@
 /dist
 /.next
 
-
 # misc
 .DS_Store
 .env
@@ -41,7 +40,6 @@ yarn-error.log*
 
 ### macOS ###
 # General
-.DS_Store
 .AppleDouble
 .LSOverride
 
@@ -162,6 +160,7 @@ modules.xml
 .idea/misc.xml
 *.ipr
 
+static/
 # Sonarlint plugin
 .idea/sonarlint
 
@@ -191,3 +190,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/linux,macos,windows,webstorm+all,visualstudiocode
+
+static

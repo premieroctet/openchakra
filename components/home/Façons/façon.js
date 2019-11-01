@@ -195,7 +195,7 @@ const styles = theme => ({
   },
   petitpaddingpers: {
     marginLeft: '-20%',
-  },  
+  },
   textBox1: {
     color: 'rgba(84,89,95,0.95)',
     letterSpacing: -2,
@@ -205,7 +205,7 @@ const styles = theme => ({
     paddingLeft: 15,
     marginBottom: 15,
     marginTop: 80,
-  },  
+  },
   textBox2: {
     color: 'rgba(84,89,95,0.95)',
     paddingRight: 15,
@@ -215,15 +215,11 @@ const styles = theme => ({
     fontWeight: 570,
     marginTop: 10,
   },
-  grosHR: {
-    height: '10px',
-    backgroundColor: '#6ec1e4',
-  },
   textdesc: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: '10%!important',    
+      marginTop: '10%!important',
     },
-    marginTop: '2%',  
+    marginTop: '2%',
   },
 });
 
@@ -249,7 +245,7 @@ class Façon extends React.Component{
     const {classes} = this.props;
     const {alfred} = this.state;
 
-    
+
 
     return (
         <Fragment>
@@ -270,7 +266,7 @@ class Façon extends React.Component{
               </div>
             </Grid>
             <Grid item xs={3}></Grid>
-            
+
             <Grid item xs={2}></Grid>
             <Grid item md={4} xs={12} className={classes.textdesc}>
             <Grid container>
@@ -309,7 +305,7 @@ class Façon extends React.Component{
             </Grid>
             <Grid item xs={2}></Grid>
 
-            
+
             <Grid item md={4} xs={12} className={classes.textdesc}>
             <Grid container>
                 <Grid item xs={12}>
@@ -322,7 +318,7 @@ class Façon extends React.Component{
                     C'est à vous de fixer les prix de vos services et nos outils de tarifications
                     sont la  pour vous aider à proposer le meilleur prix pour être sélectionné.
                     Vous pouvez facilement ajouter des éléments personnalisés, notamment : - des tarifs de week end - des tarifs de nuit -
-                    des packages de services... 
+                    des packages de services...
                   </Typography>
                 </Grid>
               </Grid>
@@ -336,7 +332,7 @@ class Façon extends React.Component{
                 </Grid>
                 <Grid item xs={12} style={{paddingRight: 15, paddingLeft: 16}}>
                   <Typography style={{paddingLeft:15,lineHeight: 2, fontSize: 18}}>
-                    Pour que les utilisateurs  de My-Alfred puissent facilement comprendre 
+                    Pour que les utilisateurs  de My-Alfred puissent facilement comprendre
                     vos services, vous définissez vos règles avant qu'ils puissent réserver.
                     S'ils enfreignent les règles après avoir réservé, vous pourrez annuler 
                     leur réservation sans aucune pénalité.
@@ -345,7 +341,7 @@ class Façon extends React.Component{
               </Grid>
             </Grid>
             <Grid item xs={2}></Grid>
-            
+
             </Grid>
         </Fragment>
     );
