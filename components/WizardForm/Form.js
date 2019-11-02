@@ -1869,7 +1869,7 @@ class Form extends React.Component {
                                                                                 <AddressFinder formikCtx={arrayHelpers} index={index}/>
                                                                             : null}
                                                                             <div style={{padding: '1rem 0'}}>
-                                                                                <Typography style={{marginBottom: '1.5rem', fontSize: 17}}>Définissez à présent le périmètre que vous souhaitez couvrir :</Typography>
+                                                                                <Typography style={{marginBottom: '1.5rem', fontSize: 17}}>Définissez le périmètre que vous souhaitez couvrir :</Typography>
                                                                                 <InputRange
                                                                                     formatLabel={value => `${value}km`}
                                                                                     step={5}
