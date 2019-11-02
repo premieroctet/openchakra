@@ -224,7 +224,7 @@ class selectCategory extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <p>
-                                    Commencez par sélectionner votre catégories de service. Par exemple, si vous souhaitez réaliser un service
+                                    Commencez par sélectionner votre catégories de service. Par exemple, si vous souhaitez proposer un service
                                     de coiffure, sélectionnez la catégorie «Beauté et bien-être».
                                 </p>
                             </Grid>
@@ -261,10 +261,8 @@ class selectCategory extends React.Component {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <p>
-                                            Identifiez maintenant le service que vous souhaitez réaliser dans la catégorie sélectionnée.
-                                            Vous pourrez choisir le type de prestation que vous souhaitez réaliser dans ce service dès la prochaine étape !
-
-
+                                            Sélectionnez maintenant le service que vous souhaitez proposer dans la catégorie sélectionnée.
+                                            Vous pourrez choisir le type de prestation que vous souhaitez proposer dans ce service dès la prochaine étape !
                                         </p>
                                     </Grid>
 

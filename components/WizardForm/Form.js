@@ -1196,7 +1196,7 @@ class Form extends React.Component {
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Votre catégorie de service</Typography>
                                     <Typography>
-                                        Commencez par sélectionner votre catégorie de service. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être». Ne vous limitez pas ! Vous pouvez sélectionner plusieurs catégories.
+                                        Commencez par sélectionner votre catégorie de service. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être».
                                     </Typography>
                                 </div>
                                 <FieldArray
@@ -1249,7 +1249,7 @@ class Form extends React.Component {
                                                 <div>
                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Votre service</Typography>
                                                     <Typography>
-                                                        Identifiez maintenant le service que vous souhaitez réaliser dans la catégorie sélectionnée. Vous pourrez choisir les prestations que vous souhaitez réaliser dès la prochaine étape !
+                                                        Sélectionnez maintenant le service que vous souhaitez proposer dans la catégorie sélectionnée. Vous pourrez choisir les prestations que vous souhaitez proposer dès la prochaine étape !
                                                     </Typography>
                                                     <Typography>
                                                         Un service n'apparaît pas ? Contactez l’équipe My-Alfred à l’adresse <a href="mailto:unservicedeplus@my-alfred.io">unservicedeplus@my-alfred.io</a>
