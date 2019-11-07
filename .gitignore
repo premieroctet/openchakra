@@ -18,6 +18,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+yarn.lock
 
 
 # Created by https://www.gitignore.io/api/linux,macos,windows,webstorm+all,visualstudiocode
