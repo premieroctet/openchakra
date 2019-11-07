@@ -340,6 +340,7 @@ router.put('/profile/job',passport.authenticate('jwt',{session:false}),(req,res)
 // Add a picture profile
 // @Access private
 router.post('/profile/picture',upload.single('myImage'),passport.authenticate('jwt',{session:false}),(req,res) => {
+    console.log("Posted "+res);
     User.findByIdAndUpdate(req.user.id, {
         picture: req.file.path
     },{new:true})

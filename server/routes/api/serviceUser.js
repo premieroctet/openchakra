@@ -40,9 +40,11 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
     ServiceUser.findOne({user: req.user.id, service: req.body.service})
         .then(service => {
 
+                /*
                 if(service) {
                     return res.status(400).json({msg: "Ce service existe déjà"});
                 }
+                */
                 const fields = {};
                 fields.user= req.user.id;
                 fields.service = mongoose.Types.ObjectId(req.body.service);

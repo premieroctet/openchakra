@@ -14,11 +14,16 @@
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "@material-ui/pickers": "^3.0.0",
+    "@syncfusion/ej2-base": "^17.3.16",
+    "@syncfusion/ej2-react-calendars": "^17.3.14",
+    "@syncfusion/ej2-react-dropdowns": "^17.3.16",
+    "@syncfusion/ej2-react-schedule": "^17.3.16",
     "@zeit/next-css": "^1.0.1",
     "algolia-places-react": "^1.4.1",
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "cldr-data": "^35.1.0",
     "cors": "^2.8.5",
     "date-fns": "^2.0.0-alpha.27",
     "express": "^4.16.4",
@@ -39,6 +44,7 @@
     "nodemailer": "^6.2.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
+    "pm2": "^4.1.2",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-big-calendar": "^0.21.0",
@@ -78,6 +84,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.13.0",
     "jest": "^24.8.0",
-    "nodemon": "^1.19.0"
+    "nodemon": "^1.19.0",
+    "systemjs-plugin-json": "^0.3.0"
   }
 }
