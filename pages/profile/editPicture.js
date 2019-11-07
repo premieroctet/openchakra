@@ -297,13 +297,13 @@ class editPicture extends React.Component {
                                                 Téléchargez une photo de vous claire et lumineuse, de bonne qualité. Pour un rendu optimal,
                                                 la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif,
                                                 avec seulement vous sur la photo. </p><br />
-                                            <Button className={classes.buttonAddaddress}>
-                                                Téléchargez une photo depuis votre ordinateur
+                                           <label style={{display: 'inline-block', marginTop: 15,color:'#2FBCD3'}} className="forminputs">
+                                                <p style={{cursor:"pointer",fontSize:'0.8rem'}}>Téléchargez une photo depuis votre ordinateur</p>
                                                 <input id="file" style={{display: 'none'}} name="myImage" type="file"
                                                        onChange={this.onChange}
                                                        className="form-control" accept={'image/*'}
                                                 />
-                                            </Button>
+                                            </label>
                                         </Grid>
                                         </Grid>
                                         <Grid item style={{ display: 'flex', justifyContent: 'left', marginTop: 30 }}>
