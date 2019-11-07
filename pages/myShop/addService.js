@@ -95,7 +95,7 @@ class addService extends React.Component {
             description: '',
             level: '',
             deadline_before_booking_number: 0,
-            deadline_before_booking_string: '',
+            deadline_before_booking_string: 'jours',
             service_address: {},
             all_equipments: [],
             all_prestations: [],

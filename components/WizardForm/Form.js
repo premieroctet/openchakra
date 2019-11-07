@@ -1358,7 +1358,7 @@ class Form extends React.Component {
                                                                         serviceId: res.data._id, 
                                                                         serviceLabel: res.data.label,
                                                                         descService: '', 
-                                                                        minimumBasket: '', 
+                                                                        minimumBasket: '1', 
                                                                         diploma: { 
                                                                             label: null, 
                                                                             year: null, 
@@ -1369,7 +1369,7 @@ class Form extends React.Component {
                                                                             certification: null 
                                                                         }, perimeter: 50, 
                                                                         delayBeforeShop: 1, 
-                                                                        delayBeforeShopDWM: '',
+                                                                        delayBeforeShopDWM: 'jours',
                                                                         city: this.state.userCity, 
                                                                         address: this.state.userAddress, 
                                                                         postal_code: this.state.userZipCode, 
