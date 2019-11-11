@@ -1204,27 +1204,43 @@ class Form extends React.Component {
                                     render={(arrayHelpers) => (
                                         this.state.categories && this.state.categories.length > 0 ? (
                                             <div style={{padding: '.5rem 2rem'}}>
-                                                <MultipleSelect
-                                                    placeholder="Sélectionnez votre catégorie..."
-                                                    noOption='Pas de catégorie disponible'
-                                                    option={this.state.categories}
-                                                    value={arrayHelpers.form.values.categories}
-                                                    //disabled={this.state.isDisabledCategoryInput}
-                                                    update={categorie => {
+                                             <Select
+                                               noOptionsMessage="Pas de catégorie disponible"
+                                               className="indicator"
+                                               classNamePrefix="indicator"
+                                               closeMenuOnSelect={true}
+                                               placeholder="Sélectionnez votre catégorie..."
+                                               value={arrayHelpers.form.values.categories}
+                                               options={this.state.categories}
+                                               onChange={categorie => {
                                                         if (categorie === null) {
                                                             arrayHelpers.form.setFieldValue('categories', []);
                                                         } else {
-                                                            arrayHelpers.form.setFieldValue('categories', categorie);
+                                                            arrayHelpers.form.setFieldValue('categories', [categorie]);
                                                         }
                                                         arrayHelpers.form.setFieldValue('submission', []);
                                                         arrayHelpers.form.setFieldValue('services', []);
                                                         this.setState({ isDisabledExpansionPanels: true });
-                                                        /*if (arrayHelpers.form.values.categories === null) {
-                                                            console.log('kzrngenf')
-                                                            arrayHelpers.form.setFieldValue('categories', [])
-                                                        }*/
                                                     }}
-                                                />
+
+                                               theme={theme => ({
+                                                   ...theme,
+                                                   colors: {
+                                                       ...theme.colors,
+                                                       primary: '#2FBCD3',
+                                                   }
+                                               })}
+                                               styles={{
+                                                   indicatorsContainer: (styles) => {
+                                                       return {
+                                                           ...styles,
+                                                           ':nth-child(1)': {
+                                                               color: '#F8727F !important',
+                                                           }
+                                                       }
+                                                   }
+                                               }}
+                                           />
                                                 {/*<Grid item xs={12}>
                                                     {arrayHelpers.form.values.categories.length ? arrayHelpers.form.values.categories.map(categorie => {
                                                         return <Chip 
