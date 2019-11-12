@@ -18,6 +18,7 @@ const styles = theme => ({
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: 920,
+      margin:'auto'
     },
     [theme.breakpoints.up('lg')]: { // large: 1280px or larger
       width: 1170,
@@ -127,9 +128,7 @@ class becomeAlfred extends React.Component{
 
     return (
         <Fragment>
-          <Grid container className={classes.container}>
-          </Grid>
-          <Grid container className={classes.container} spacing={24} wrap="wrap">
+          <Grid container className={classes.container} wrap="wrap">
             <Grid item xs={12}>
               <Card className={classes.card1}>
                 <CardMedia

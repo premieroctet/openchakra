@@ -4,26 +4,18 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import axios from "axios";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
+import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import Avatar from '@material-ui/core/Avatar';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
-import Router from "next/router";
-
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
-
 const jwt = require('jsonwebtoken');
 
 const styles = theme => ({
@@ -33,16 +25,6 @@ const styles = theme => ({
   },
   grow: {
     flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
   },
   search: {
     position: 'relative',
@@ -225,9 +207,6 @@ class NavBar extends Component {
     const picture = this.state.picture;
     const mobileavatar = picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>;
     const alfred = this.state.alfred;
-    const logout = <Button variant="outlined" color='primary' style={{ marginRight: '20px' }}
-                           onClick={()=>this.logout2()}>Déconnexion</Button>;
-
     const logoutMobile = <React.Fragment>
     <MenuItem onClick={this.handleMenuClose}>
       <Typography>

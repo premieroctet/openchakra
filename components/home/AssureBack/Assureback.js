@@ -148,7 +148,7 @@ class Assureback extends React.Component{
           {/*Nous assurons vos arrière*/}
           <Grid container className={classes.container}>
           </Grid>
-          <Grid container className={classes.container} style={{marginBottom:20}} spacing={24} wrap="wrap">
+          <Grid container className={classes.container} style={{marginBottom:20}} wrap="wrap">
             <Grid item xs={12}>
               <Card  className={classes.card1}>
               <CardMedia
@@ -164,8 +164,8 @@ class Assureback extends React.Component{
                     </Typography>
                     <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
                                 className={classes.padding2}>
-                        Proposez vos services en toute sérénité, My-Alfred s’occupe de tout ! 
-                        Une assurance en responsabilité vous est offerte pour toute réalisation de service ! 
+                        Proposez vos services en toute sérénité, My-Alfred s’occupe de tout !
+                        Une assurance en responsabilité vous est offerte pour toute réalisation de service !
                     </Typography>
                   </CardContent>
                 </Grid>
@@ -183,8 +183,8 @@ class Assureback extends React.Component{
                         Nous assurons vos arrières !
                       </Typography>
                       <Typography variant="body1" color="textSecondary" className={classes.padding2}>
-                      Proposez vos services en toute sérénité, My-Alfred s’occupe de tout ! 
-                      Une assurance en responsabilité vous est offerte pour toute réalisation de service ! 
+                      Proposez vos services en toute sérénité, My-Alfred s’occupe de tout !
+                      Une assurance en responsabilité vous est offerte pour toute réalisation de service !
                       </Typography>
                     </CardContent>
                   </CardActionArea>

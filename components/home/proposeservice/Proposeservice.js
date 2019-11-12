@@ -145,7 +145,7 @@ class Proposeservice extends React.Component{
         <Fragment>
           <Grid container className={classes.container}>
           </Grid>
-          <Grid container className={classes.container} spacing={24} wrap="wrap">
+          <Grid container className={classes.container} wrap="wrap">
             <Grid item xs={12}>
               <Card className={classes.card1}>
                 <Grid item xs={12} className={classes.details}>

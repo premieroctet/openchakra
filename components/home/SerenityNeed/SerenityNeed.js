@@ -29,21 +29,6 @@ const styles = theme => ({
       width: 1366,
     },
   },
-  container1: {
-
-    [theme.breakpoints.down('xs')]: { //  medium: 960px or larger
-      marginTop: '10px!important',
-    },
-    [theme.breakpoints.up('sm')]: { //  medium: 960px or larger
-      marginTop: '10px!important',
-    },
-    [theme.breakpoints.up('md')]: { //  medium: 960px or larger
-      marginTop: '10px!important',
-    },
-    [theme.breakpoints.up('lg')]: { //  medium: 960px or larger
-      marginTop: '180px!important',
-    },
-  },
   card: {
     backgroundColor:'transparent',
     textAlign:'center',

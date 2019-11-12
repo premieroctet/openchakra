@@ -15,7 +15,6 @@ const styles = theme => ({
     [theme.breakpoints.up('lg')]: { // medium: 960px or larger
      display: 'none',
     },
-
   /* Center and scale the image nicely */
   backgroundImage: 'url(../../../static/bg.jpg)',
   backgroundPosition: 'center',
@@ -32,9 +31,6 @@ const styles = theme => ({
       backgroundAttachment: "fixed",
      display: 'none',
     },
-  /* Full height */
-  height: '100vh!important',
-  width: '100%!important',
   /* Center and scale the image nicely */
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
@@ -66,7 +62,6 @@ const styles = theme => ({
     boxShadow: '6px 6px 5px -6px black',
     padding:'2%',
     minHeight:'520px',
-    bottom:50,
     marginTop:-10,
     [theme.breakpoints.down('xs')]: { // extra-large: 1920px or larger
       width: '88%',
