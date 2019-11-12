@@ -58,8 +58,8 @@ const styles = theme => ({
     textBox: {
         fontFamily: 'Helvetica',
         textAlign: 'center',
-        fontSize: '3%',
         marginBottom: '3%',
+        marginTop: '3%'
     },
     separatorBlue:{
         width: '50px'
@@ -147,7 +147,6 @@ class section12 extends React.Component {
             <Fragment>
                 <Grid container className={classes.container}>
                     <Grid item xs={2}/>
-
                     <Grid item xs={8}>
                         <div>
                             <Typography variant="h4" className={classes.textBox1}>
