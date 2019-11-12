@@ -1276,60 +1276,47 @@ class Form extends React.Component {
                                                         arrayHelpers.form.values.categories.map((categorie, index) => {
                                                             const servName = categorie.label.replace(/\s/g, '') + 'Services';
                                                             return (
-                                                                <ExpansionPanel
-                                                                    disabled={this.state.isDisabledExpansionPanels || categorie[servName].length < 0}
-                                                                    key={categorie.value}
-                                                                >
-                                                                    <ExpansionPanelSummary
-                                                                        expandIcon={<ExpandMoreIcon />}
-                                                                        aria-controls={`panel${index + 1}a-header`}
-                                                                        id={`panel${index + 1}a-header`}
-                                                                    >
-                                                                        <Typography>{categorie.label}</Typography>
-                                                                        {/*<Typography align="center" style={{marginLeft: 80, color: "grey"}}>Choisissez vos services pour {categorie.label}</Typography>*/}
-                                                                    </ExpansionPanelSummary>
-                                                                    <ExpansionPanelDetails>
-                                                                        <Grid container>
-                                                                            {categorie[categorie.label.replace(/\s/g, '') + 'Services'].map((service, index) => {
-                                                                                return (
-                                                                                    <Grid item xs={6} sm={6} md={3} key={service.value}>
-                                                                                        <FormControlLabel
-                                                                                            control={
-                                                                                                <Switch
-                                                                                                    color="primary"
-                                                                                                    type="checkbox"
-                                                                                                    checked={service.checked}
-                                                                                                    onChange={() => {
-                                                                                                        service.checked = !service.checked
-                                                                                                        if(service.checked === true) {
-                                                                                                            arrayHelpers.form.values.services.push(service.value);
-                                                                                                            const servicesLength = arrayHelpers.form.values.services.length;
-                                                                                                            this.setState({
-                                                                                                                servicesLength,
-                                                                                                                servicesValues: arrayHelpers.form.values.services
-                                                                                                            })
+                                              <Select
+                                                noOptionsMessage="Pas de service disponible"
+                                                className="indicator"
+                                                classNamePrefix="indicator"
+                                                closeMenuOnSelect={true}
+                                                placeholder="Sélectionnez votre Service..."
+                                                value={arrayHelpers.form.values.services[0]}
+                                                options={categorie[categorie.label.replace(/\s/g, '') + 'Services']}
+                                                onChange={service => {
+													if (service===null) {
+                                    					arrayHelpers.form.setFieldValue('services', []);
+													}
+													else {
+                                    					arrayHelpers.form.setFieldValue('services', [service.value]);
+													}
+                                    const servicesLength = arrayHelpers.form.values.services.length;
+                                    this.setState({
+                                        servicesLength,
+                                        servicesValues: arrayHelpers.form.values.services
+                                    })
 
-                                                                                                        } else if (service.checked === false) {
-                                                                                                            const index = arrayHelpers.form.values.services.indexOf(service.value);
-                                                                                                            arrayHelpers.form.values.services.splice(index, 1);
-                                                                                                            const servicesLength = arrayHelpers.form.values.services.length;
-                                                                                                            this.setState({
-                                                                                                                servicesLength,
-                                                                                                                servicesValues: arrayHelpers.form.values.services
-                                                                                                            })
-                                                                                                        }
-                                                                                                        arrayHelpers.form.setFieldValue(`categories[${categorie.label.replace(/\s/g, '') + 'Services'}].checked`, service.checked)
-                                                                                                    }}
-                                                                                                />
-                                                                                            }
-                                                                                            label={service.label}
-                                                                                        />
-                                                                                    </Grid>
-                                                                                )
-                                                                            })}
-                                                                        </Grid>
-                                                                    </ExpansionPanelDetails>
-                                                                </ExpansionPanel>
+                                                }}
+ 
+                                                theme={theme => ({
+                                                    ...theme,
+                                                    colors: {
+                                                        ...theme.colors,
+                                                        primary: '#2FBCD3',
+                                                    }
+                                                })}
+                                                styles={{
+                                                    indicatorsContainer: (styles) => {
+                                                        return {
+                                                            ...styles,
+                                                            ':nth-child(1)': {
+                                                                color: '#F8727F !important',
+                                                            }
+                                                        }
+                                                    }
+                                                }}
+                                            />
                                                             )
                                                         })
                                                     ):(this.state.loading === true
@@ -2648,10 +2635,10 @@ class Form extends React.Component {
                                                                                         }}
                                                                                         component="span"
                                                                                     >
-                                                                                        {form.values.alfredUpdate.profile_picture_user === null ? <img src={this.state.currentUser.picture} height="100" width="100" style={{borderRadius: '50%'}} /> : <Thumb file={form.values.alfredUpdate.profile_picture_user} />}
+                                                                                        {/* form.values.alfredUpdate.profile_picture_user === null ? <img src={this.state.currentUser.picture} height="100" width="100" style={{borderRadius: '50%'}} /> : <Thumb file={form.values.alfredUpdate.profile_picture_user */} />}
                                                                                     </IconButton>
                                                                                 </label>
-                                                                                {form.values.alfredUpdate.profile_picture_user === null ? null : <Clear color="secondary" style={{cursor: 'pointer', position: 'absolute', top: 0, right: -20}} onClick={() => form.setFieldValue(`alfredUpdate.profile_picture_user`, null)}/>}
+                                                                                {/* form.values.alfredUpdate.profile_picture_user === null ? null : <Clear color="secondary" style={{cursor: 'pointer', position: 'absolute', top: 0, right: -20}} onClick={() => form.setFieldValue(`alfredUpdate.profile_picture_user`, null)*/}/>}
                                                                             </div>
                                                                         </React.Fragment>
                                                                     )
