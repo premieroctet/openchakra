@@ -13,10 +13,8 @@ const url = config.apiUrl;
 
 const styles = theme => ({
     container: {
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginRight: 'auto',
-        marginLeft: 'auto',
+        textAlign: 'center',
+        margin: 'auto',
         width: '100%',
 
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
@@ -29,17 +27,6 @@ const styles = theme => ({
         [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
             width: 1366,
         },
-    },
-    hideSM: {
-        [theme.breakpoints.down('md')]: { // medium: 960px or larger
-            display: 'none',
-        },
-    },
-    media: {
-        height: 0,
-        borderRadius: '20px',
-        paddingTop: '118.25%', // 16:9
-        maxWidth: 345,
     },
     card: {
 
@@ -58,11 +45,6 @@ const styles = theme => ({
         },
 
     },
-    textdesc: {
-        [theme.breakpoints.down('sm')]: {
-            marginTop: '10%!important',
-        },
-    },
     media2: {
         height: 200
     },
@@ -71,39 +53,20 @@ const styles = theme => ({
         letterSpacing: -2,
         fontWeight: 'bold',
         textAlign: 'center',
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 15,
-        marginTop: 80,
-    },
-    textBox2: {
-        color: 'rgba(84,89,95,0.95)',
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 15,
-        fontSize: 27,
-        fontWeight: 570,
-        marginTop: 10,
-    },
-    textBox3: {
-        color: 'rgba(84,89,95,0.95)',
-        fontSize: 16,
-    },
-    grosHR: {
-        height: '10px',
-        backgroundColor: '#2FBCD3',
-        marginBottom: 30,
+        marginTop: '5%',
+        marginBottom: '3%'
     },
     textBox: {
         fontFamily: 'Helvetica',
         textAlign: 'center',
         fontSize: 15,
-        paddingRight: 15,
-        paddingLeft: 15,
-        marginBottom: 60,
+        marginBottom: '3%',
+        marginTop: '3%'
 
     },
-
+    separatorBlue:{
+        width: '50px'
+    }
 });
 
 function shuffleArray(array) {
@@ -193,8 +156,11 @@ class section3 extends React.Component {
                                 {tags.title}
                             </Typography>
                             <Grid container>
-                                <Grid item xs={5}/>
-                                <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                                <Grid item xs={2} sm={4} md={4}  lg={4} xl={4} style={{margin:'auto'}}>
+                                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
+                                </Grid>
+                                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
                                 <Grid item xs={5}/>
                             </Grid>
                             <Typography className={classes.textBox}>
