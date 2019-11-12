@@ -15,25 +15,23 @@ const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
-    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
+    margin:'auto',
+    fontFamily: 'Helvetica',
+      // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: 920,
-      margin:'auto'
     },
     [theme.breakpoints.up('lg')]: { // large: 1280px or larger
       width: 1170,
-      margin:'auto',
     },
     [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
       width: 1366,
-      margin:'auto',
-
     },
   },
   media: {
     height: 400,
     borderRadius: '20px',
-    paddingTop: '30.25%', // 16:9
+    margin: '1%'
   },
   card1: {
     marginTop: '3%',
@@ -91,7 +89,7 @@ const styles = theme => ({
   },
   cover: {
     width: '50%',
-    height: 'auto',
+    height: '300px',
   },
   padding: {
     padding: '0.7rem',
@@ -150,7 +148,7 @@ class becomeAlfred extends React.Component{
                     <Link href={'/becomeAlfredForm'}>
                       <a style={{textDecoration:'none'}}>
                     <Button variant="contained" color={"primary"} className={classes.margin}>
-                      Créer mon shop
+                      Créer ma boutique
                     </Button>
                       </a>
                     </Link>
@@ -178,7 +176,7 @@ class becomeAlfred extends React.Component{
                     <Link href={'/becomeAlfredForm'}>
                       <a style={{textDecoration:'none'}}>
                         <Button variant="contained" color={"primary"} className={classes.margin}>
-                          Créer mon shop
+                          Créer ma boutique
                         </Button>
                       </a>
                     </Link>

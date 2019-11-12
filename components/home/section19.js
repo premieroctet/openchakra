@@ -16,7 +16,7 @@ const styles = theme => ({
     container: {
         margin: 'auto',
         textAlign:'center',
-
+        fontFamily: 'Helvetica',
         width: '100%',
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -86,7 +86,6 @@ const styles = theme => ({
         marginTop: '10%',
     },
     textBox: {
-        fontFamily: 'Helvetica',
         textAlign: 'center',
         fontSize: 15,
         marginBottom: '3%',

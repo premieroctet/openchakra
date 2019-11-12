@@ -16,7 +16,7 @@ const styles = theme => ({
         textAlign: 'center',
         margin: 'auto',
         width: '100%',
-
+        fontFamily: 'Helvetica',
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('md')]: { // medium: 960px or larger
             width: 920,
@@ -49,7 +49,6 @@ const styles = theme => ({
         height: 200
     },
     textBox1: {
-        color: 'rgba(84,89,95,0.95)',
         letterSpacing: -2,
         fontWeight: 'bold',
         textAlign: 'center',
@@ -57,7 +56,6 @@ const styles = theme => ({
         marginBottom: '3%'
     },
     textBox: {
-        fontFamily: 'Helvetica',
         textAlign: 'center',
         fontSize: 15,
         marginBottom: '3%',

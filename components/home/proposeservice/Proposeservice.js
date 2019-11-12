@@ -13,8 +13,8 @@ const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
+    fontFamily: 'Helvetica',
     margin: 'auto',
-
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: 920,
@@ -29,10 +29,8 @@ const styles = theme => ({
   media: {
     height: 400,
     borderRadius: '20px',
-    paddingTop: '30.25%', // 16:9
-    [theme.breakpoints.down('xs')]: { // medium: 960px or larger
-      width: '95%',
-    },
+    margin: '1%'
+
   },
   card1: {
     marginTop: '3%',
@@ -90,7 +88,7 @@ const styles = theme => ({
   },
   cover: {
     width: '50%',
-    height: 'auto',
+    height: '300px',
   },
   padding: {
     padding: '0.7rem',
@@ -104,7 +102,6 @@ const styles = theme => ({
   },
   padding2: {
     padding: '0.7rem',
-    fontFamily: 'Helvetica',
     textAlign: 'left',
     fontSize: 15,
   },
@@ -143,8 +140,6 @@ class Proposeservice extends React.Component{
     const {classes} = this.props;
     return (
         <Fragment>
-          <Grid container className={classes.container}>
-          </Grid>
           <Grid container className={classes.container} wrap="wrap">
             <Grid item xs={12}>
               <Card className={classes.card1}>

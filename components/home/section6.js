@@ -7,7 +7,6 @@ import axios from 'axios';
 const {config} = require('../../config/config');
 const url = config.apiUrl;
 
-
 const styles = theme => ({
     container: {
         margin:'auto',
@@ -44,6 +43,7 @@ const styles = theme => ({
         height: 200
     },
     textBox1: {
+        fontFamily: 'Helvetica',
         color: 'rgba(84,89,95,0.95)',
         letterSpacing: -2,
         fontWeight: 'bold',
@@ -153,6 +153,6 @@ class section6 extends React.Component {
             </Fragment>
         );
     }
-};
+}
 
 export default withStyles(styles)(section6);

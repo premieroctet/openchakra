@@ -27,6 +27,7 @@ const styles = theme => ({
     },
   },
   textdesc: {
+    fontFamily: 'Helvetica',
     [theme.breakpoints.down('sm')]: {
       marginTop: '3%!important',
     },
@@ -41,6 +42,7 @@ const styles = theme => ({
     },
   },
   textBox1: {
+    fontFamily: 'Helvetica',
     color: 'rgba(84,89,95,0.95)',
     letterSpacing: -2,
     fontWeight: 'bold',
@@ -61,6 +63,7 @@ const styles = theme => ({
     },
   },
   textBox2: {
+    fontFamily: 'Helvetica',
     color: 'rgba(84,89,95,0.95)',
     marginBottom: '3%',
     fontSize: 27,
@@ -68,6 +71,7 @@ const styles = theme => ({
     marginTop: '3%',
   },
   textBox3: {
+    fontFamily: 'Helvetica',
     color: 'rgba(84,89,95,0.95)',
     fontSize: 16,
   },
@@ -75,6 +79,7 @@ const styles = theme => ({
     width: '50px'
   },
   contentTextBox: {
+    fontFamily: 'Helvetica',
     paddingRight: 15,
     paddingLeft: 10,
     [theme.breakpoints.down('xs')]: { // medium: 960px or larger
@@ -104,14 +109,8 @@ class profiteandlearn extends React.Component {
     }
   }
 
-  componentDidMount() {
-
-  }
-
   render() {
     const {classes} = this.props;
-
-
 
     return (
         <Fragment>
@@ -215,7 +214,7 @@ class profiteandlearn extends React.Component {
         </Fragment>
     );
   }
-};
+}
 
 profiteandlearn.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,

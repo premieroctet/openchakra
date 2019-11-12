@@ -69,6 +69,7 @@ const styles = theme => ({
         },
     },
     textBox1: {
+        fontFamily: 'Helvetica',
         color: 'rgba(84,89,95,0.95)',
         letterSpacing: -2,
         fontWeight: 'bold',

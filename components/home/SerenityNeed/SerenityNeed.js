@@ -18,6 +18,7 @@ const styles = theme => ({
     margin: 'auto',
     width: '100%',
     textAlign: 'center',
+    fontFamily: 'Helvetica',
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: 920,
@@ -70,7 +71,6 @@ const styles = theme => ({
     marginTop: '3%',
   },
   textBox: {
-    fontFamily: 'Helvetica',
     textAlign: 'center',
     fontSize: 15,
     marginBottom: '3%',
@@ -81,7 +81,7 @@ const styles = theme => ({
   }
 });
 
-function shuffleArray(array) {
+function shuffleArray(array){
   let i = array.length - 1;
   for (; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -186,7 +186,7 @@ class serenityNeed extends React.Component {
         </Fragment>
     );
   }
-};
+}
 
 serenityNeed.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,

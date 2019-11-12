@@ -31,6 +31,7 @@ const styles = theme => ({
         margin: '0.7rem',
     },
     textBox1: {
+        fontFamily: 'Helvetica',
         color: 'rgba(84,89,95,0.95)',
         letterSpacing: -2,
         fontWeight: 'bold',
@@ -54,6 +55,7 @@ const styles = theme => ({
         width: '50px'
     },
     contentTextbox:{
+        fontFamily: 'Helvetica',
         lineHeight: 2,
         fontSize: 18,
         [theme.breakpoints.down('xs')]: {

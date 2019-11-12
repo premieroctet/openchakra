@@ -10,7 +10,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 const styles = theme => ({
     container: {
         margin: 'auto',
-
+        fontFamily: 'Helvetica',
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('md')]: { // medium: 960px or larger
             width: 920,
@@ -54,7 +54,7 @@ const styles = theme => ({
     },
     cover: {
         width: '50%',
-        height: 'auto',
+        height: '300px',
     },
     padding: {
         padding: '0.7rem',
@@ -68,7 +68,6 @@ const styles = theme => ({
     },
     padding2: {
         padding: '0.7rem',
-        fontFamily: 'Helvetica',
         textAlign: 'left',
         fontSize: 15,
     },

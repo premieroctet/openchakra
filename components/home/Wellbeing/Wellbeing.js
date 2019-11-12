@@ -18,18 +18,15 @@ const styles = theme => ({
     margin: 'auto',
     width: '100%',
     textAlign:'center',
-
     [theme.breakpoints.up('lg')]: { // large: 1280px or larger
       width: 1170,
     },
   },
   card: {
-
     backgroundColor:'transparent',
     textAlign:'center',
     margin:10,
     boxShadow: `1px 3px 1px transparent`,
-
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('xs')]: { // xs: 600px or larger
       maxWidth: 450,
@@ -46,6 +43,7 @@ const styles = theme => ({
     height: 200
   },
   textBox1: {
+    fontFamily: 'Helvetica',
     color: 'rgba(84,89,95,0.95)',
     letterSpacing: -2,
     fontWeight: 'bold',
@@ -116,13 +114,11 @@ class Wellbeing extends React.Component {
           <Card className={classes.card}>
             <CardActionArea>
               <CardMedia
-
                   className={classes.media2}
                   image={e.picture}
                   title={e.label}
               />
               <CardContent>
-
                 <p style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.25rem',}}>
                   {e.label}
                 </p>
@@ -165,7 +161,7 @@ class Wellbeing extends React.Component {
         </Fragment>
     );
   }
-};
+}
 
 Wellbeing.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,

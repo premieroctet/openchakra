@@ -8,6 +8,7 @@ const styles = theme => ({
     container: {
         margin: 'auto',
         textAlign:'center',
+        fontFamily: 'Helvetica',
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('md')]: { // medium: 960px or larger
             width: 920,

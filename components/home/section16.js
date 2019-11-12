@@ -17,14 +17,13 @@ const styles = theme => ({
         margin: 'auto',
         width: '100%',
         textAlign:'center',
-
+        fontFamily: 'Helvetica',
         // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
         [theme.breakpoints.up('md')]: { // medium: 960px or larger
             width: 920,
         },
     },
     card: {
-
         backgroundColor:'transparent',
         textAlign:'center',
         margin:10,
@@ -57,7 +56,6 @@ const styles = theme => ({
         marginTop: '10%',
     },
     textBox: {
-        fontFamily: 'Helvetica',
         textAlign: 'center',
         fontSize: 15,
         marginBottom: '3%',
