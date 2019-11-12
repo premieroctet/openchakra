@@ -40,10 +40,15 @@ const styles = theme => ({
     },
     textBox2: {
         color: 'rgba(84,89,95,0.95)',
-        marginBottom: '3%',
         fontSize: 28,
         fontWeight: 570,
         marginTop: '5%',
+        [theme.breakpoints.down('lg')]: {
+            padding: '5%'
+        },
+        [theme.breakpoints.down('xl')]: {
+            padding: '5%'
+        },
     },
     separatorBlue:{
         width: '50px'
@@ -52,7 +57,16 @@ const styles = theme => ({
         lineHeight: 2,
         fontSize: 18,
         [theme.breakpoints.down('xs')]: {
-            padding: '10%'
+            padding: '3%'
+        },
+        [theme.breakpoints.down('sm')]: {
+            padding: '1%'
+        },
+        [theme.breakpoints.down('lg')]: {
+            padding: '5%'
+        },
+        [theme.breakpoints.down('xl')]: {
+            padding: '5%'
         },
     }
 });

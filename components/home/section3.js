@@ -62,7 +62,6 @@ const styles = theme => ({
         fontSize: 15,
         marginBottom: '3%',
         marginTop: '3%'
-
     },
     separatorBlue:{
         width: '50px'

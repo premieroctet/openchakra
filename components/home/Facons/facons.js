@@ -27,7 +27,6 @@ const styles = theme => ({
         letterSpacing: 2,
         fontSize: 40,
         lineHeight: 1.5,
-
     },
     margin: {
         margin: '0.7rem',
@@ -42,16 +41,17 @@ const styles = theme => ({
     },
     textBox2: {
         color: 'rgba(84,89,95,0.95)',
-        marginBottom: '5%',
-        fontSize: 28,
         fontWeight: 570,
-        marginTop: '3%',
-    },
-    textdesc: {
-        [theme.breakpoints.down('sm')]: {
-            marginTop: '10%!important',
+        [theme.breakpoints.up('lg')]: {
+            fontSize:28,
+            marginBottom: '5%',
+            marginTop: '3%',
         },
-        marginTop: '2%',
+        [theme.breakpoints.between('xs', 'lg')]: {
+            fontSize:20,
+            margin: 'inherit',
+            marginTop: '3%'
+        },
     },
     separatorBlue:{
         width: '50px'
@@ -59,17 +59,16 @@ const styles = theme => ({
     contentBox:{
         lineHeight: 2,
         fontSize: 18,
-        padding: '5%',
         [theme.breakpoints.down('md')]: {
-            padding: 'padding: 1%',
+            padding: '5%',
         },
-        [theme.breakpoints.down('sm')]: {
-            padding: 'padding: 1%',
+        [theme.breakpoints.up('sm')]: {
+            padding: '5%',
         },
-
+        [theme.breakpoints.up('xl')]: {
+            padding: '5%',
+        },
     }
-
-
 });
 
 class facon extends React.Component{
