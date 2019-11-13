@@ -1213,6 +1213,7 @@ class Form extends React.Component {
                                                value={arrayHelpers.form.values.categories}
                                                options={this.state.categories}
                                                onChange={categorie => {
+							console.log("Catégories:"+this.state.categories);
                                                         if (categorie === null) {
                                                             arrayHelpers.form.setFieldValue('categories', []);
                                                         } else {
@@ -1282,15 +1283,16 @@ class Form extends React.Component {
                                                 classNamePrefix="indicator"
                                                 closeMenuOnSelect={true}
                                                 placeholder="Sélectionnez votre Service..."
-                                                value={arrayHelpers.form.values.services[0]}
+                                                value={arrayHelpers.form.values.services}
                                                 options={categorie[categorie.label.replace(/\s/g, '') + 'Services']}
                                                 onChange={service => {
-													if (service===null) {
-                                    					arrayHelpers.form.setFieldValue('services', []);
-													}
-													else {
-                                    					arrayHelpers.form.setFieldValue('services', [service.value]);
-													}
+							console.log("Service:"+Object.keys(service));
+							if (service===null) {
+                               					arrayHelpers.form.setFieldValue('services', []);
+							}
+							else {
+                               					arrayHelpers.form.setFieldValue('services', [service]);
+							}
                                     const servicesLength = arrayHelpers.form.values.services.length;
                                     this.setState({
                                         servicesLength,
@@ -1354,7 +1356,8 @@ class Form extends React.Component {
                                                                 [`userCityClicked${index}`]: false,
                                                                 [`otherOptionChecked${index}`]: false
                                                             })
-                                                            axios.get(`${url}myAlfred/api/service/${service}`)
+							    console.log('Service:'+service.value);
+                                                            axios.get(`${url}myAlfred/api/service/${service.value}`)
                                                                 .then(res => {
                                                                     let servCompObj = { 
                                                                         CategoryLabel : res.data.category.label, 
@@ -1394,7 +1397,7 @@ class Form extends React.Component {
                                                                     })
                                                                     this.state.arrServicesLabel.push(res.data)
 
-                                                                    axios.get(`${url}myAlfred/api/prestation/${service}`)
+                                                                    axios.get(`${url}myAlfred/api/prestation/${service.value}`)
                                                                         .then(res => {
                                                                             res.data.map(filters => {
                                                                                 const filterObj = { id: filters.filter_presentation._id, label: filters.filter_presentation.label, prestations : [] }
@@ -1405,7 +1408,7 @@ class Form extends React.Component {
                                                                                     })
                                                                                 servCompObj.filters = uniqueIdFilters;
 
-                                                                                axios.get(`${url}myAlfred/api/prestation/${service}/${filterObj.id}`)
+                                                                                axios.get(`${url}myAlfred/api/prestation/${service.value}/${filterObj.id}`)
                                                                                     .then(res => {
                                                                                         res.data.map(prestation => {
                                                                                             const prestationObj = { id: prestation._id, label: prestation.label, filterId: prestation.filter_presentation, price: null, billingChoice: prestation.billing, billing: null, checked: false };
