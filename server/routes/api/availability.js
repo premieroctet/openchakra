@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const moment = require('moment');
 
 const Availability = require('../../models/Availability');
-
+moment.locale('fr');
 router.get('/test',(req, res) => res.json({msg: 'Availability Works!'}) );
 
 
@@ -68,6 +69,54 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
         })
 
 
+});
+
+// @Route POST /myAlfred/api/availability/filterDate
+// Return availability between 2 dates
+router.post('/filterDate',passport.authenticate('jwt',{session:false}),(req,res)=>{
+    const allAvailability = [];
+    const dateBegin = req.body.begin;
+    const dateEnd = req.body.end;
+    const beginDay = req.body.beginDay;
+    const endDay = req.body.endDay;
+    let newBeginDay;
+    let newEndDay;
+    switch (beginDay) {
+        case 'lundi': newBeginDay = beginDay.replace(beginDay,'monday');break;
+        case 'mardi': newBeginDay = beginDay.replace(beginDay,'tuesday');break;
+        case 'mercredi': newBeginDay = beginDay.replace(beginDay,'wednesday');break;
+        case 'jeudi': newBeginDay = beginDay.replace(beginDay,'thursday');break;
+        case 'vendredi': newBeginDay = beginDay.replace(beginDay,'friday');break;
+        case 'samedi': newBeginDay = beginDay.replace(beginDay,'saturday');break;
+        case 'dimanche': newBeginDay = beginDay.replace(beginDay,'sunday');break;
+    }
+    switch (endDay) {
+        case 'lundi': newEndDay = endDay.replace(endDay,'monday');break;
+        case 'mardi': newEndDay = endDay.replace(endDay,'tuesday');break;
+        case 'mercredi': newEndDay = endDay.replace(endDay,'wednesday');break;
+        case 'jeudi': newEndDay = endDay.replace(endDay,'thursday');break;
+        case 'vendredi': newEndDay = endDay.replace(endDay,'friday');break;
+        case 'samedi': newEndDay = endDay.replace(endDay,'saturday');break;
+        case 'dimanche': newEndDay = endDay.replace(endDay,'sunday');break;
+    }
+   Availability.find()
+       .then(availability => {
+           availability.forEach(e => {
+               if(!e.period.active && (e[newBeginDay].event.length || e[newEndDay].event.length)){
+                   allAvailability.push(e)
+               } else {
+                   let begin = e.period.month_begin;
+                   let end = e.period.month_end;
+                   const betweenBegin = moment(dateBegin).isBetween(begin,end);
+                   const betweenEnd = moment(dateEnd).isBetween(begin,end);
+                   if(betweenBegin && betweenEnd && (e[newBeginDay].event.length || e[newEndDay].event.length)){
+                       allAvailability.push(e);
+                   }
+               }
+           });
+           res.json(allAvailability)
+       })
+       .catch(err => console.log(err));
 });
 
 // @Route GET /myAlfred/api/availability/:id

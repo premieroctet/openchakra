@@ -48,6 +48,7 @@ class testSearch2 extends React.Component {
             categories: [],
             serviceUser: [],
             finalServiceUser: [],
+            finalServiceUserCopy: [],
             lat: null,
             lng: null,
             research: '',
@@ -104,6 +105,7 @@ class testSearch2 extends React.Component {
     };
 
     search() {
+        this.setState({finalServiceUser:[]});
         const address = this.state.addressSelected;
         if(address.gps !== undefined){
             this.setState({lat:address.gps.lat, lng: address.gps.lng});
@@ -192,7 +194,7 @@ class testSearch2 extends React.Component {
     }
 
    async searchWithWord(){
-         await this.setState({categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+         await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
                                     checkedParticulier:false,idAlfred:[]});
         const obj = {label:this.state.research};
         await axios.post(url+'myAlfred/api/prestation/all/search',obj)
@@ -279,7 +281,7 @@ class testSearch2 extends React.Component {
                                 }
 
                         });
-                            this.setState({finalServiceUser:finalServiceUser});
+                            this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
 
                     })
                     .catch(err => console.log(err));
@@ -319,7 +321,7 @@ class testSearch2 extends React.Component {
                             }
 
                         });
-                        this.setState({finalServiceUser:finalServiceUser});
+                        this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
 
                     })
                     .catch(err => console.log(err));
@@ -360,7 +362,7 @@ class testSearch2 extends React.Component {
                             }
 
                         });
-                        this.setState({finalServiceUser:finalServiceUser});
+                        this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
                     })
                     .catch(err => console.log(err));
             }
@@ -387,7 +389,7 @@ class testSearch2 extends React.Component {
                                 const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
                                     ['desc','desc','desc','desc','desc']);
 
-                                this.setState({finalServiceUser:sorted});
+                                this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
                             })
                             .catch(err => console.log(err));
                     } else if(address==='all') {
@@ -398,7 +400,7 @@ class testSearch2 extends React.Component {
                                 let serviceUser = res.data;
                                 const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
                                     ['desc','desc','desc','desc','desc']);
-                                this.setState({finalServiceUser:sorted});
+                                this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
 
                             })
                             .catch(err => console.log(err));
@@ -410,7 +412,7 @@ class testSearch2 extends React.Component {
                                 let serviceUser = res.data;
                                 const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
                                     ['desc','desc','desc','desc','desc']);
-                                this.setState({finalServiceUser:sorted});
+                                this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
 
                             })
                             .catch(err => console.log(err));
@@ -424,23 +426,24 @@ class testSearch2 extends React.Component {
 
       async filter(){
 
-        const arrayShop = [];
-        const serviceUser = this.state.finalServiceUser;
-        serviceUser.forEach(s => {
-            axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
-                .then( res => {
-                    let shop = res.data;
-                    const index = arrayShop.findIndex(i=>i._id == shop._id);
-                    if(index === -1){
-                     arrayShop.push(shop);
+        if(this.state.serviceUser.length && this.state.finalServiceUser.length){
+            const arrayShop = [];
+            const serviceUser = this.state.finalServiceUser;
+            serviceUser.forEach(s => {
+                axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
+                    .then( res => {
+                        let shop = res.data;
+                        const index = arrayShop.findIndex(i=>i._id == shop._id);
+                        if(index === -1){
+                            arrayShop.push(shop);
 
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        });
-          await this.setState({uniqShop: arrayShop});
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            });
+            await this.setState({uniqShop: arrayShop});
 
 
             if(this.state.checkedB){
@@ -479,6 +482,64 @@ class testSearch2 extends React.Component {
             } else {
                 setTimeout(()=>this.searchWithWord(),2000)
             }
+        } else {
+            const arrayShop = [];
+            const serviceUser = this.state.serviceUser;
+            serviceUser.forEach(s => {
+                axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
+                    .then( res => {
+                        let shop = res.data;
+                        const index = arrayShop.findIndex(i=>i._id == shop._id);
+                        if(index === -1){
+                            arrayShop.push(shop);
+
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            });
+            await this.setState({uniqShop: arrayShop});
+
+
+            if(this.state.checkedB){
+                setTimeout(()=>{
+
+                    const arrayService = this.state.serviceUser;
+                    const arrayIndex = [];
+                    this.state.uniqShop.forEach(u => {
+                        if(u.is_particular){
+                            this.state.idAlfred.push(u.alfred._id)
+                        }
+                    });
+                    this.state.serviceUser.forEach((f,index) => {
+                        this.state.idAlfred.forEach(i => {
+                            if(f.user._id === i){
+                                arrayIndex.push(index);
+
+
+
+
+
+                            }
+
+
+                        })
+                    });
+                    for (let t = arrayIndex.length -1; t >= 0; t--)
+                        arrayService.splice(arrayIndex[t],1);
+
+                    this.setState({serviceUser:arrayService});
+
+
+
+
+                },2000)
+            } else {
+                setTimeout(()=>this.search(),2000)
+            }
+        }
+
 
 
 
@@ -489,7 +550,7 @@ class testSearch2 extends React.Component {
     }
 
     async filterParticulier(){
-
+        if(this.state.serviceUser.length && this.state.finalServiceUser.length){
             const arrayShop = [];
             const serviceUser = this.state.finalServiceUser;
             serviceUser.forEach(s => {
@@ -540,102 +601,94 @@ class testSearch2 extends React.Component {
                 setTimeout(() => this.searchWithWord(),2000);
 
             }
+        } else {
+            const arrayShop = [];
+            const serviceUser = this.state.serviceUser;
+            serviceUser.forEach(s => {
+                axios.get(url + 'myAlfred/api/shop/alfred/' + s.user._id)
+                    .then(res => {
+                        let shop = res.data;
+                        const index = arrayShop.findIndex(i => i._id == shop._id);
+                        if (index === -1) {
+                            arrayShop.push(shop);
+
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            });
+            await this.setState({uniqShop: arrayShop});
+
+            if(this.state.checkedParticulier){
+                setTimeout(() => {
+
+                    const arrayService = this.state.serviceUser;
+                    const arrayIndex = [];
+                    this.state.uniqShop.forEach(u => {
+                        if (u.is_professional) {
+                            this.state.idAlfred.push(u.alfred._id)
+                        }
+                    });
+                    this.state.serviceUser.forEach((f, index) => {
+                        this.state.idAlfred.forEach(i => {
+                            if (f.user._id === i) {
+                                arrayIndex.push(index);
+
+
+                            }
+
+
+                        })
+                    });
+                    for (let t = arrayIndex.length - 1; t >= 0; t--)
+                        arrayService.splice(arrayIndex[t], 1);
+
+                    this.setState({serviceUser: arrayService});
+
+
+                }, 2000)
+            } else {
+                setTimeout(() => this.search(),2000);
+
+            }
+        }
+
     }
 
-    filterDate(){
+
+   async filterDate(){
+        await this.setState({finalServiceUser:this.state.finalServiceUserCopy});
+        const serviceUser = this.state.finalServiceUser;
         const begin = this.state.startDate;
         const end = this.state.endDate;
         const beginDay =  moment(begin).format('dddd');
         const endDay =  moment(end).format('dddd');
         const diff = end.diff(begin,'days')+1;
+        const obj = {begin,end,beginDay,endDay};
 
-        if(diff > 8){
-            console.log('Plus de une semaine')
-        } else if(diff===8){
-            console.log('Une semaine')
-        } else {
-            switch (beginDay) {
-                case 'lundi' :
-                    switch (diff) {
-                        case 1 : console.log('Lundi');break;
-                        case 2 : console.log('Lundi, mardi');break;
-                        case 3 : console.log('Lundi, mardi, mercredi');break;
-                        case 4 : console.log('Lundi, mardi, mercredi, jeudi');break;
-                        case 5 : console.log('Lundi, mardi, mercredi, jeudi, vendredi');break;
-                        case 6 : console.log('Lundi, mardi, mercredi, jeudi, vendredi, samedi');break;
-                        case 7 : console.log('Lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche');break;
+        axios.post(url+'myAlfred/api/availability/filterDate',obj)
+            .then(response => {
+                let availability = response.data;
+                const idAlfred = [];
+                const services = [];
+                availability.forEach(a => {
+                    idAlfred.push(a.user);
+                });
+                serviceUser.forEach(w => {
+
+                    const index = idAlfred.findIndex(i => i == w.user._id);
+                    if(index !== -1){
+                        services.push(w);
                     }
-                break;
-                case 'mardi' :
-                    switch (diff) {
-                        case 1 : console.log('Mardi');break;
-                        case 2 : console.log('Mardi, mercredi');break;
-                        case 3 : console.log('Mardi, mercredi, jeudi');break;
-                        case 4 : console.log('Mardi, mercredi, jeudi, vendredi');break;
-                        case 5 : console.log('Mardi, mercredi, jeudi, vendredi, samedi');break;
-                        case 6 : console.log('Mardi, mercredi, jeudi, vendredi, samedi, dimanche');break;
-                        case 7 : console.log('Mardi, mercredi, jeudi, vendredi, samedi, dimanche, lundi');break;
-                    }
-                break;
-                case 'mercredi' :
-                    switch (diff) {
-                        case 1 : console.log('Mercredi');break;
-                        case 2 : console.log('Mercredi, jeudi');break;
-                        case 3 : console.log('Mercredi, jeudi, vendredi');break;
-                        case 4 : console.log('Mercredi, jeudi, vendredi, samedi');break;
-                        case 5 : console.log('Mercredi, jeudi, vendredi, samedi, dimanche');break;
-                        case 6 : console.log('Mercredi, jeudi, vendredi, samedi, dimanche, lundi');break;
-                        case 7 : console.log('Mercredi, jeudi, vendredi, samedi, dimanche, lundi, mardi');break;
-                    }
-                    break;
-                case 'jeudi' :
-                    switch (diff) {
-                        case 1 : console.log('Jeudi');break;
-                        case 2 : console.log('Jeudi, vendredi');break;
-                        case 3 : console.log('Jeudi, vendredi, samedi');break;
-                        case 4 : console.log('Jeudi, vendredi, samedi, dimache');break;
-                        case 5 : console.log('Jeudi, vendredi, samedi, dimanche, lundi');break;
-                        case 6 : console.log('Jeudi, vendredi, samedi, dimanche, lundi, mardi');break;
-                        case 7 : console.log('Jeudi, vendredi, samedi, dimanche, lundi, mardi, mercredi');break;
-                    }
-                    break;
-                case 'vendredi' :
-                    switch (diff) {
-                        case 1 : console.log('Vendredi');break;
-                        case 2 : console.log('Vendredi, samedi');break;
-                        case 3 : console.log('Vendredi, samedi, dimanche');break;
-                        case 4 : console.log('Vendredi, samedi, dimache, lundi');break;
-                        case 5 : console.log('Vendredi, samedi, dimanche, lundi, mardi');break;
-                        case 6 : console.log('Vendredi, samedi, dimanche, lundi, mardi, mercredi');break;
-                        case 7 : console.log('Vendredi, samedi, dimanche, lundi, mardi, mercredi, jeudi');break;
-                    }
-                    break;
-                case 'samedi' :
-                    switch (diff) {
-                        case 1 : console.log('Samedi');break;
-                        case 2 : console.log('Samedi, dimanche');break;
-                        case 3 : console.log('Samedi, dimanche, lundi');break;
-                        case 4 : console.log('Samedi, dimache, lundi, mardi');break;
-                        case 5 : console.log('Samedi, dimanche, lundi, mardi, mercredi');break;
-                        case 6 : console.log('Samedi, dimanche, lundi, mardi, mercredi, jeudi');break;
-                        case 7 : console.log('Samedi, dimanche, lundi, mardi, mercredi, jeudi, vendredi');break;
-                    }
-                    break;
-                case 'dimanche' :
-                    switch (diff) {
-                        case 1 : console.log('Dimanche');break;
-                        case 2 : console.log('Dimanche, lundi');break;
-                        case 3 : console.log('Dimanche, lundi, mardi');break;
-                        case 4 : console.log('Dimache, lundi, mardi, mercredi');break;
-                        case 5 : console.log('Dimanche, lundi, mardi, mercredi, jeudi');break;
-                        case 6 : console.log('Dimanche, lundi, mardi, mercredi, jeudi, vendredi');break;
-                        case 7 : console.log('Dimanche, lundi, mardi, mercredi, jeudi, vendredi, samedi');break;
-                    }
-                    break;
-                default:
-                    console.log('error');
-            }
-        }
+
+                })
+                this.setState({finalServiceUser:services});
+
+
+            })
+            .catch(err => console.log(err));
+
 
 
     }
