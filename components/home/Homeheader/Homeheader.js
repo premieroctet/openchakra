@@ -61,7 +61,6 @@ const styles = theme => ({
     borderRadius: '10px',
     boxShadow: '6px 6px 5px -6px black',
     padding:'2%',
-    minHeight:'520px',
     marginTop:-10,
     [theme.breakpoints.down('xs')]: { // extra-large: 1920px or larger
       width: '88%',
@@ -84,7 +83,7 @@ const styles = theme => ({
       left: '20%',
     },
     [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
-      width: '28%',
+      width: '31%',
       top: '50%',
       left: '20%',
     },

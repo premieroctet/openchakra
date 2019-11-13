@@ -54,7 +54,7 @@ const styles = theme => ({
         fontWeight: 'bold',
         textAlign: 'center',
         marginBottom: '3%',
-        marginTop: '3%',
+        marginTop: '10%',
     },
     textBox: {
         textAlign: 'center',
