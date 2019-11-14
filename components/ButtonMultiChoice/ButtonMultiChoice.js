@@ -5,28 +5,11 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-
-
-const styles = theme => ({
-
-  contentWarper: {
-    display: 'flex',
-    flexDirection:'row',
-    backgroundColor: '#4fbdd7',
-    borderRadius: '50px',
-    justifyContent: 'space-around'
-  },
-  contentCheckBox: {
-    display:'flex',
-    alignItems:'center',
-    backgroundColor: 'green'
-  }
-
-});
+import './ButtonMultiChoice.css';
 
 const GreenCheckbox = withStyles({
   root: {
-    color: 'green',
+    color: '#B0B0B0',
     '&$checked': {
       color: 'green',
     },
@@ -34,50 +17,38 @@ const GreenCheckbox = withStyles({
   checked: {},
 })(props => <Checkbox color="default" {...props} />);
 
-
-
-
-class ButtonMultiChoice extends React.Component{
+class ButtonMultiChoice extends React.Component {
   constructor(props){
-    super(props)
+    super(props);
+    this.state = {
+      checkedG: false
+    }
   }
 
   setSelected(){
-    console.log('bonjour')
+    this.checkedG = !this.checkedG;
+    console.log('bonjour');
   }
 
   render() {
-    const {classes} = this.props;
-
-    {/*const [state, setState] = React.useState({
-      checkedG: true,
-    });
-
-    const handleChange = name => event => {
-      setState({ ...state, [name]: event.target.checked });
-    };*/}
-
-
-    return (
-      <div className={classes.contentWarper}>
-        <div className={classes.contentCheckBox}>
+    return(
+      <div className={"contentWarper"}>
+        <div className={"contentCheckBox"}>
           <FormControlLabel
             control={
               <GreenCheckbox
-                checked={state.checkedG}
-                onChange={handleChange('checkedG')}
+                onChange={this.setSelected()}
                 value="checkedG"
               />
             }
-            label="Custom color"
           />
         </div>
-        <div style={{backgroundColor:'red'}}>
+        <div style={{ backgroundColor: 'red' }}>
           <label style={{ padding: '1%' }}>
             Frais de déplacement (montant forfaitaire)
           </label>
         </div>
-        <div style={{backgroundColor:'purple'}}>
+        <div style={{ backgroundColor: 'purple' }}>
           <TextField
             id="standard-basic"
             label="Standard"
@@ -88,5 +59,4 @@ class ButtonMultiChoice extends React.Component{
     )
   }
 }
-
-export default  withStyles(styles)(ButtonMultiChoice);
+export default ButtonMultiChoice;

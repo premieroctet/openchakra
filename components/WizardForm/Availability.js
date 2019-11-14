@@ -126,15 +126,11 @@ class Availability extends React.Component {
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
 
-    /*this.setState({
-            [name]: value
-        });*/
     this.props.formikCtx.setFieldValue(`servicesAvailability.${name}`, value);
 
   }
 
   handleChangeSelectRecurrent = recurrent_service => {
-    //this.setState({recurrent_service});
     this.props.formikCtx.setFieldValue(
       `servicesAvailability.recurrent_service`,
       recurrent_service
@@ -208,8 +204,6 @@ class Availability extends React.Component {
 
       toast.info("Créneau ajouté");
 
-      /*this.setState({monday:false, tuesday:false, wednesday:false, thursday:false, friday:false, saturday:false, sunday:false,
-                            all_begin: '', all_end: '', recurrent_service: null, recurrent_all_service: false})*/
       this.props.formikCtx.setFieldValue(`servicesAvailability.monday`, false);
       this.props.formikCtx.setFieldValue(`servicesAvailability.tuesday`, false);
       this.props.formikCtx.setFieldValue(
@@ -240,7 +234,6 @@ class Availability extends React.Component {
   }
 
   handleChangeSelectMonday = monday_service => {
-    //this.setState({monday_service})
     this.props.formikCtx.setFieldValue(
       `servicesAvailability.monday_service`,
       monday_service
@@ -248,7 +241,6 @@ class Availability extends React.Component {
   };
 
   handleChangeSelectTuesday = tuesday_service => {
-    //this.setState({tuesday_service})
     this.props.formikCtx.setFieldValue(
       `servicesAvailability.tuesday_service`,
       tuesday_service
@@ -256,7 +248,6 @@ class Availability extends React.Component {
   };
 
   handleChangeSelectWednesday = wednesday_service => {
-    //this.setState({wednesday_service})
     this.props.formikCtx.setFieldValue(
       `servicesAvailability.wednesday_service`,
       wednesday_service
@@ -264,7 +255,6 @@ class Availability extends React.Component {
   };
 
   handleChangeSelectThursday = thursday_service => {
-    //this.setState({thursday_service})
     this.props.formikCtx.setFieldValue(
       `servicesAvailability.thursday_service`,
       thursday_service
@@ -272,7 +262,6 @@ class Availability extends React.Component {
   };
 
   handleChangeSelectFriday = friday_service => {
-    //this.setState({friday_service})
     this.props.formikCtx.setFieldValue(
       `servicesAvailability.friday_service`,
       friday_service
@@ -280,7 +269,6 @@ class Availability extends React.Component {
   };
 
   handleChangeSelectSaturday = saturday_service => {
-    //this.setState({saturday_service})
     this.props.formikCtx.setFieldValue(
       `servicesAvailability.saturday_service`,
       saturday_service
@@ -288,7 +276,6 @@ class Availability extends React.Component {
   };
 
   handleChangeSelectSunday = sunday_service => {
-    //this.setState({sunday_service})
     this.props.formikCtx.setFieldValue(
       `servicesAvailability.sunday_service`,
       sunday_service
@@ -326,7 +313,6 @@ class Availability extends React.Component {
       this.props.formikCtx.values.servicesAvailability.monday_event.push(obj);
       toast.info("Créneau ajouté");
 
-      //this.setState({monday_begin: '',monday_end: '',monday_service: null,monday_all_service: false})
       this.props.formikCtx.setFieldValue(
         `servicesAvailability.monday_begin`,
         ""
@@ -429,7 +415,6 @@ class Availability extends React.Component {
 
       toast.info("Créneau ajouté");
 
-      //this.setState({wednesday_begin: '',wednesday_end: '',wednesday_service: null,wednesday_all_service: false})
       this.props.formikCtx.setFieldValue(
         `servicesAvailability.wednesday_begin`,
         ""
@@ -481,7 +466,6 @@ class Availability extends React.Component {
       this.props.formikCtx.values.servicesAvailability.thursday_event.push(obj);
       toast.info("Créneau ajouté");
 
-      //this.setState({thursday_begin: '',thursday_end: '',thursday_service: null,thursday_all_service: false})
       this.props.formikCtx.setFieldValue(
         `servicesAvailability.thursday_begin`,
         ""
@@ -532,7 +516,6 @@ class Availability extends React.Component {
       this.props.formikCtx.values.servicesAvailability.friday_event.push(obj);
       toast.info("Créneau ajouté");
 
-      //this.setState({friday_begin: '',friday_end: '',friday_service: null,friday_all_service: false})
       this.props.formikCtx.setFieldValue(
         `servicesAvailability.friday_begin`,
         ""
@@ -581,7 +564,6 @@ class Availability extends React.Component {
       this.props.formikCtx.values.servicesAvailability.saturday_event.push(obj);
       toast.info("Créneau ajouté");
 
-      //this.setState({saturday_begin: '',saturday_end: '',saturday_service: null,saturday_all_service: false})
       this.props.formikCtx.setFieldValue(
         `servicesAvailability.saturday_begin`,
         ""
@@ -632,7 +614,6 @@ class Availability extends React.Component {
       this.props.formikCtx.values.servicesAvailability.sunday_event.push(obj);
       toast.info("Créneau ajouté");
 
-      //this.setState({sunday_begin: '',sunday_end: '',sunday_service: null,sunday_all_service: false})
       this.props.formikCtx.setFieldValue(
         `servicesAvailability.sunday_begin`,
         ""
@@ -650,58 +631,12 @@ class Availability extends React.Component {
   }
 
   onChange = (name, date) => {
-    //this.setState({ [e.target.name]: e.target.value });
     this.props.formikCtx.setFieldValue(`servicesAvailability.${name}`, date);
   };
 
-  /*onSubmit = e => {
-    const data = {
-      active: this.props.formikCtx.values.servicesAvailability.active,
-      month_begin: this.props.formikCtx.values.servicesAvailability.month_begin,
-      month_end: this.props.formikCtx.values.servicesAvailability.month_end,
-      monday_event: this.props.formikCtx.values.servicesAvailability
-        .monday_event,
-      tuesday_event: this.props.formikCtx.values.servicesAvailability
-        .tuesday_event,
-      wednesday_event: this.props.formikCtx.values.servicesAvailability
-        .wednesday_event,
-      thursday_event: this.props.formikCtx.values.servicesAvailability
-        .thursday_event,
-      friday_event: this.props.formikCtx.values.servicesAvailability
-        .friday_event,
-      saturday_event: this.props.formikCtx.values.servicesAvailability
-        .saturday_event,
-      sunday_event: this.props.formikCtx.values.servicesAvailability
-        .sunday_event
-    };
-
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-      "token"
-    );
-
-    axios
-      .post(url + "myAlfred/api/availability/add", data)
-      .then(() => {
-        alert("Disponibilité ajoutée");
-      })
-      .catch(err => console.log(err));
-  };*/
-
   render() {
-    const { monday } = this.state;
-    const { tuesday } = this.state;
-    const { wednesday } = this.state;
-    const { thursday } = this.state;
-    const { friday } = this.state;
-    const { saturday } = this.state;
-    const { sunday } = this.state;
-    const { active } = this.state;
-    const { all_service } = this.state;
     const formik = this.props.formikCtx.values;
-
     const services = this.props.formikCtx.values.submission;
-
-
     const optionsService = services.map(service => ({
       label: service.serviceLabel,
       value: service.serviceId

@@ -36,6 +36,11 @@ import Clear from '@material-ui/icons/Clear';
 import CheckIcon from '@material-ui/icons/Check';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ButtonMultiChoice from '../ButtonMultiChoice/ButtonMultiChoice';
+import { makeStyles } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -98,14 +103,21 @@ const styles = theme => ({
             padding: '0!important',
         }
     },
-    buttonPricePresta: {
-        display: 'flex',
-        alignItems: 'baseline',
-        backgroundColor: '#4fbdd7',
-        borderRadius : '50px',
+    contentCheckBox: {
+        display:'flex',
+        alignItems: 'center',
+        fontFamily: 'helveticaNeue',
+    },
+    textField: {
+        width: '100px',
+        color: 'white',
+        fontFamily: 'helveticaNeue',
+    },
+    inputTextField: {
+        color:'white'
     }
-
 });
+
 
 class Wizard extends React.Component {
     static Page = ({ children }) => children;
@@ -410,7 +422,7 @@ class Wizard extends React.Component {
         })
     })
 
-    schemaArray =[this.Step0Schema, this.Step1Schema, this.Step2Schema, this.Step3Schema, this.Step4Schema, this.Step5Schema]
+    schemaArray =[this.Step0Schema, this.Step1Schema, this.Step2Schema, this.Step3Schema, this.Step4Schema, this.Step5Schema];
 
     render() {
         const { schemaArray } = this;
@@ -698,6 +710,28 @@ class Thumb extends React.Component {
     }
 }
 
+
+const GreenCheckbox = withStyles({
+    root: {
+        color: '#1C2022',
+        '&$checked': {
+            color: '#f9ccc7',
+        },
+    },
+    checked: {},
+})(props => <Checkbox color="default" {...props} />);
+
+const CssTextField = withStyles({
+    root: {
+        '& .MuiInput-underline': {
+            borderBottomColor: 'white',
+        },
+        '& .MuiInput-underline:after': {
+            borderBottomColor: '#f87280',
+        },
+    },
+})(TextField);
+
 class Form extends React.Component {
     constructor(props) {
         super(props);
@@ -765,7 +799,9 @@ class Form extends React.Component {
             certifName: null,
             certifYear: null,
             certifObj: null,
-        }
+
+            checkedB: false,
+        };
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
 
@@ -892,6 +928,10 @@ class Form extends React.Component {
         this.setState({
             [name]: value
         });
+    }
+
+    setSelected(){
+
     }
 
     render() {
@@ -1466,7 +1506,65 @@ class Form extends React.Component {
                                                                                 ils seront automatiquement appliqués lors de la réservation.
                                                                             </Typography>
                                                                             <form noValidate autoComplete="off">
-                                                                                <ButtonMultiChoice/>
+                                                                                <div style={{
+                                                                                    display: 'flex',
+                                                                                    width: '100%',
+                                                                                    flexDirection:'row',
+                                                                                    backgroundColor: this.state.checkedB ? '#47bdd7' : '#B0B0B0',
+                                                                                    borderRadius: '50px',
+                                                                                    color: 'white',
+                                                                                }}>
+                                                                                    <div className={classes.contentCheckBox} style={{marginLeft: '5%', width:'10%'}}>
+                                                                                        <FormControlLabel
+                                                                                          control={
+                                                                                              <GreenCheckbox
+                                                                                                checked={this.checkedB}
+                                                                                                onChange={() => {
+                                                                                                    this.setState({ checkedB: !this.state.checkedB });
+                                                                                                }}
+                                                                                                value="checkedG"
+                                                                                              />
+                                                                                          }
+                                                                                        />
+                                                                                    </div>
+                                                                                    <div className={classes.contentCheckBox} style={{ width: '50%'}}>
+                                                                                        <label style={{ padding: '1%'}}>
+                                                                                            Frais de déplacement (montant forfaitaire)
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    <div style={{display:'flex'}}>
+                                                                                        <div style={{
+                                                                                            display: this.state.checkedB ? '' : 'none',
+                                                                                            width:'100px',
+                                                                                            marginRight: '1px'
+                                                                                        }}>
+                                                                                            <CssTextField
+                                                                                              InputProps={{
+                                                                                                  className: classes.inputTextField
+                                                                                              }}
+                                                                                              id="standard-adornment-weight"
+                                                                                              endAdornment={<InputAdornment position="end">€</InputAdornment>}
+                                                                                              aria-describedby="standard-weight-helper-text"
+                                                                                            />
+                                                                                        </div>
+                                                                                        <div  style={{
+                                                                                            display: this.state.checkedB ? '' : 'none',
+                                                                                            marginLeft: '1px'
+                                                                                        }}>
+                                                                                            <CssTextField
+                                                                                              select
+                                                                                              className={classes.textField}
+                                                                                              InputProps={{
+                                                                                                  className: classes.inputTextField
+                                                                                              }}
+                                                                                            >
+                                                                                                <MenuItem value="prestaA">Presta A</MenuItem>
+                                                                                                <MenuItem value="prestaB">Presta B</MenuItem>
+                                                                                                <MenuItem value="prestaC">Presta C</MenuItem>
+                                                                                            </CssTextField>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
                                                                             </form>
                                                                         </div>
                                                                         <hr style={{ margin: '1rem 0' }}/>
