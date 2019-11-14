@@ -523,9 +523,13 @@ class detailsReservation extends React.Component {
                                           bookingObj.status === 'Confirmée' ?
                                             <>
                                               <div style={{textAlign: 'center', height: '40px', width: '200px', backgroundColor: '#4FBDD7', lineHeight: 2.5, borderRadius: '50px', marginTop: '5%'}}>
-                                                <Link href="#appeler">
-                                                  <a style={{textDecoration:'none', color: 'white' }}>Appeler</a>
-                                                </Link>
+                                                  <a href={`tel:${bookingObj === null || currentUser === null ?
+                                                    null
+                                                    :
+                                                    currentUser._id === bookingObj.alfred._id ?
+                                                        bookingObj.user.phone
+                                                        :
+                                                        bookingObj.alfred.phone}`} style={{textDecoration:'none', color: 'white' }}>Appeler</a>
                                               </div>
 
                                               <div style={{textAlign: 'center', width: '200px'}}>
@@ -971,12 +975,49 @@ class detailsReservation extends React.Component {
                                 {/*<Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}}>
                                     <Link href="#"><a style={{textDecoration: 'none', fontSize: '1.1rem', color: 'rgb(47, 188, 211)'}}>Modifier la reservation</a></Link>
                                 </Grid>*/}
-                                <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}} onClick={() => this.changeStatus('Annulée')}>
-                                    <Link href="#"><a style={{textDecoration: 'none', fontSize: '1.1rem', color: 'rgb(47, 188, 211)'}}>Annuler la réservation</a></Link>
+                                {bookingObj === null || currentUser === null ?
+                                    null
+                                    :
+                                    bookingObj.status === 'En attente de confirmation' && currentUser._id !== bookingObj.alfred._id || bookingObj.status === 'Confirmée' || bookingObj.status === 'Demande d\'infos' && currentUser._id !== bookingObj.alfred._id || bookingObj.status === 'Pré-approuvée' ?
+                                        <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}} onClick={() => this.changeStatus('Annulée')}>
+                                            <Link href="#">
+                                                <a 
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        this.changeStatus('Annulée')
+                                                    }} 
+                                                    style={{textDecoration: 'none', fontSize: '1.1rem', color: 'rgb(47, 188, 211)'}}
+                                                >
+                                                    Annuler la réservation
+                                                </a>
+                                            </Link>
+                                        </Grid>
+                                        :
+                                        null
+                                }
+                                <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}}>
+                                    <a 
+                                        href="mailto:contact@myalfred.io"
+                                        style={{textDecoration: 'none', fontSize: '1.1rem', color: 'rgb(47, 188, 211)'}}
+                                    >
+                                        Signaler l’utilisateur
+                                    </a>
                                 </Grid>
-                                {/*<Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}}>
-                                    <Link href="#"><a style={{textDecoration: 'none', fontSize: '1.1rem', color: 'rgb(47, 188, 211)'}}>Signaler l’utilisateur</a></Link>
-                                </Grid>*/}
+                                {bookingObj === null || currentUser === null ?
+                                    null
+                                    :
+                                    bookingObj.status === 'Terminée' ?
+                                        <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}}>
+                                            <a 
+                                                href="mailto:contact@myalfred.io"
+                                                style={{textDecoration: 'none', fontSize: '1.1rem', color: 'rgb(47, 188, 211)'}}
+                                            >
+                                                Réclamation
+                                            </a>
+                                        </Grid>
+                                        :
+                                        null
+                                }
                                 <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}}>
                                     <Link href="#"><a style={{textDecoration: 'none', fontSize: '1.1rem', color: 'rgb(47, 188, 211)'}}>Aide</a></Link>
                                 </Grid>

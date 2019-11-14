@@ -64,7 +64,6 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', { session: fa
     .then(booking => {
         booking.forEach(b => {
             if (!moment(b.date).isBetween(moment(b.date), moment(b.date).add(1, 'd'))) {
-                console.log('works');
                 Booking.findByIdAndUpdate(b._id, { status: 'Expirée' }, { new: true })
                     .then(newB => {
                         res.json(newB)
@@ -231,6 +230,10 @@ router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
 router.put('/modifyBooking/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     Booking.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true })
+        .populate('alfred')
+        .populate('user')
+        .populate('prestation')
+        .populate('equipments')
         .then(booking => {
             if (!booking) return res.status(404).json({msg: 'no booking found'});
             if (booking) return res.json(booking);
