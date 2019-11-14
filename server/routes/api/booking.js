@@ -3,10 +3,12 @@ const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+const moment = require('moment');
 
 const Booking = require('../../models/Booking');
 const User = require('../../models/User');
 
+moment.locale('fr');
 
 router.get('/test',(req, res) => res.json({msg: 'Booking Works!'}) );
 
@@ -38,6 +40,39 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
                 res.json(alfred);
             }
         })
+})
+
+router.get('/confirmPendingBookings', passport.authenticate('jwt', { session: false }), ( req, res ) => {
+    const userId = mongoose.Types.ObjectId(req.user.id);
+    Booking.find({ 
+        $and: [
+            { 
+                $or: [ 
+                    { 
+                        user: userId 
+                    }, 
+                    { 
+                        alfred: userId 
+                    } 
+                ] 
+            },
+            {
+                status: 'Pré-approuvée'
+            }
+        ]
+    })
+    .then(booking => {
+        booking.forEach(b => {
+            if (!moment(b.date).isBetween(moment(b.date), moment(b.date).add(1, 'd'))) {
+                console.log('works');
+                Booking.findByIdAndUpdate(b._id, { status: 'Expirée' }, { new: true })
+                    .then(newB => {
+                        res.json(newB)
+                    })
+            }
+        })
+    })
+    .catch(err => console.log(err))
 })
 
 router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {

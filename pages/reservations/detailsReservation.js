@@ -11,6 +11,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import axios from 'axios';
 import moment from 'moment';
+import getDistance from 'geolib/es/getDistance';
+import convertDistance from 'geolib/es/convertDistance';
 
 moment.locale('fr');
 
@@ -341,7 +343,7 @@ class detailsReservation extends React.Component {
                             </Grid> 
 
                             <Grid className={classes.Rightcontent} item xs={9} sm={9} md={7}>
-                                <Typography style={{fontSize: '1.5rem',marginTop: '4%', color: bookingObj === null ? null : bookingObj.status === 'Confirmée' ? '#89CE2C' : bookingObj.status === 'En attente de confirmation' || bookingObj.status === 'Demande d\'infos' ? '#F87280' : bookingObj.status === 'Invitation à réserver' || bookingObj.status === 'Pré-approuvée' ? '#F89672' : 'black'}}>{bookingObj === null ? null : bookingObj.status}</Typography>
+                                <Typography style={{fontSize: '1.5rem',marginTop: '4%', color: bookingObj === null || currentUser === null ? null : bookingObj.status === 'Confirmée' ? '#89CE2C' : bookingObj.status === 'En attente de confirmation' || bookingObj.status === 'Demande d\'infos' ? '#F87280' : bookingObj.status === 'Pré-approuvée' ? '#F89672' : 'black'}}>{bookingObj === null || currentUser === null ? null : bookingObj.status === 'Pré-approuvée' ? currentUser._id === bookingObj.alfred._id ? 'Pré-approuvée' : 'Invitation à réserver' : bookingObj.status}</Typography>
                                 
                                 <Grid container className={classes.mobilerow} style={{borderBottom: '1.5px #8281813b solid', marginTop:'5%'}}>
                                     <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
@@ -368,7 +370,19 @@ class detailsReservation extends React.Component {
                                                 <path id="Tracé_12517" data-name="Tracé 12517" d="M300.251,5274l-1.352.1-1.352.2-1.463.206-1.241.311-1.352.3-2.59.814-2.362,1.125-2.365,1.223-2.03,1.428-2.03,1.633-1.8,1.832-1.577,1.836-1.352,2.141-1.238,2.144-.9,2.34-.339,1.227-.339,1.121-.225,1.329-.228,1.222L274,5297.76v1.323l.111,1.835.228,1.833.336,1.942.567,1.831.564,1.839.788,1.832.788,1.836.9,1.838,1.016,1.731,1.124,1.832,2.368,3.365,2.476,3.267,2.593,3.061,2.59,2.851,2.479,2.552,2.365,2.344,2.14,1.936,3.04,2.653,1.241,1.018,1.241-1.018,3.04-2.653,2.141-1.936,2.365-2.344,2.479-2.552,2.59-2.851,2.593-3.061,2.476-3.267,2.368-3.365,1.124-1.832,1.016-1.731.9-1.838.788-1.836.788-1.832.564-1.839.567-1.831.336-1.942.228-1.833.111-1.835v-1.323l-.111-1.225-.228-1.222-.225-1.329-.339-1.121-.339-1.227-.9-2.34-1.238-2.144-1.352-2.141-1.577-1.836-1.8-1.832-2.03-1.633-2.03-1.428-2.365-1.223-2.362-1.125-2.59-.814-1.352-.3-1.241-.311-1.463-.206-1.352-.2-1.355-.1Zm2.707,14.378,1.124.2,1.127.206,1.124.4,1.016.41,1.013.61.9.611.788.714.792.715.678.813.671.919.453.919.453,1.018.225,1.021.222,1.023v2.24l-.222,1.02-.225,1.018-.453,1.023-.453.912-.671.919-.678.819-.792.713-.788.715-.9.609-1.013.613-1.016.4-1.124.41-1.127.206-1.124.2h-2.483l-1.124-.2-1.127-.206-1.124-.41-1.016-.4-1.013-.613-.9-.609-.788-.715-.792-.713-.678-.819-.671-.919-.453-.912-.453-1.023-.225-1.018-.222-1.02v-2.24l.222-1.023.225-1.021.453-1.018.453-.919.671-.919.678-.812.792-.715.788-.714.9-.611,1.013-.61,1.016-.41,1.124-.4,1.127-.206,1.124-.2Z" transform="translate(-274.001 -5274)" fill="#848484" fill-rule="evenodd"/>
                                             </svg>
                                         </div>
-                                        <Typography style={{fontSize: '0.8rem', color: '#9B9B9B'}}>6 kms</Typography>
+                                        <Typography style={{fontSize: '0.8rem', color: '#9B9B9B'}}>
+                                            {bookingObj === null || currentUser === null ?
+                                                null
+                                                :
+                                                convertDistance(
+                                                    getDistance(
+                                                        currentUser.billing_address.gps,
+                                                        bookingObj.address.gps
+                                                    ),
+                                                    'km'
+                                                ).toFixed(2)
+                                            } km
+                                        </Typography>
                                     </Grid>
 
                                 </Grid>
@@ -532,18 +546,37 @@ class detailsReservation extends React.Component {
                                     </Grid>
 
                                 </Grid>
-
-                                <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'5%', paddingBottom: '7%'}}>
-                                    <Typography style={{marginTop: '-3%', fontSize: '1.7rem', marginBottom: '5%'}}>Commentaires</Typography>
-                                    <div style={{display: 'flex', flexFlow: 'row'}}>
-                                        <Typography>Vous avez 15 jours pour évaluer votre Alfred. Une fois que votre Alfred aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !</Typography>
-                                        <div style={{textAlign: 'center', width: '400px', height: '40px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px'}}>
-                                            <Link href="#">
-                                                <a style={{textDecoration:'none', color: 'white' }}>Evaluer mon Alfred</a>
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </Grid>
+                                {bookingObj === null || currentUser === null ?
+                                    null
+                                    :
+                                    bookingObj.status === 'Terminée' ?
+                                        currentUser._id === bookingObj.alfred._id ?
+                                            <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'5%', paddingBottom: '7%'}}>
+                                                <Typography style={{marginTop: '-3%', fontSize: '1.7rem', marginBottom: '5%'}}>Commentaires</Typography>
+                                                <div style={{display: 'flex', flexFlow: 'row'}}>
+                                                    <Typography>Vous avez 15 jours pour évaluer votre Alfred. Une fois que votre Alfred aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !</Typography>
+                                                    <div style={{textAlign: 'center', width: '400px', height: '40px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px'}}>
+                                                        <Link href="#">
+                                                            <a style={{textDecoration:'none', color: 'white' }}>Evaluer mon client</a>
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </Grid>
+                                            :
+                                            <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'5%', paddingBottom: '7%'}}>
+                                                <Typography style={{marginTop: '-3%', fontSize: '1.7rem', marginBottom: '5%'}}>Commentaires</Typography>
+                                                <div style={{display: 'flex', flexFlow: 'row'}}>
+                                                    <Typography>Vous avez 15 jours pour évaluer votre Alfred. Une fois que votre Alfred aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !</Typography>
+                                                    <div style={{textAlign: 'center', width: '400px', height: '40px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px'}}>
+                                                        <Link href="#">
+                                                            <a style={{textDecoration:'none', color: 'white' }}>Evaluer mon Alfred</a>
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </Grid>
+                                        :
+                                        null
+                                }
                                 <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'5%', paddingBottom: '7%'}}>
                                     <Grid item xs={5} md={9}>
                                         <Typography style={{marginTop: '-3%', fontSize: '1.7rem', marginBottom: '5%'}}>A propos de votre réservation</Typography>
@@ -611,6 +644,7 @@ class detailsReservation extends React.Component {
                                             bookingObj.status === 'En attente de confirmation' ?
                                                 currentUser._id === bookingObj.alfred._id ?
                                                     <>
+                                                        <Typography style={{minWidth: '250px'}}>Votre réservation doit être confirmée avant le {moment(bookingObj.date).add(1, 'd').format('DD/MM/YYYY')} à {moment(bookingObj.date).format('HH:mm')}</Typography>
                                                         <div onClick={() => this.changeStatus('Pré-approuvée')} style={{textAlign: 'center', height: '40px', minWidth: '250px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px', marginTop: '20%'}}>
                                                             <Link href={{ pathname: '/reservations/detailsReservation', query: { id: this.state.booking_id } }}>
                                                                 <a style={{textDecoration:'none', color: 'white' }}>Confirmer la réservation</a>
@@ -705,16 +739,23 @@ class detailsReservation extends React.Component {
                                             </>
                                             :
                                             bookingObj.status === 'Pré-approuvée' ?
-                                            <>
-                                                <Grid item xs={4}>
-                                                    <div style={{width: '30px', height: '30px', backgroundColor: '#D5A771', borderRadius: '100%', border:'0.4px solid rgba(112,112,112,0.26)', marginTop: '15%'}}></div>
-                                                </Grid>
-                                                <Grid item xs={8}>
-                                                    <Typography style={{color: '#D5A771'}}>Réservation pré-approuvée</Typography>
-                                                </Grid>
-                                            </>
-                                            :
-                                            null
+                                                currentUser._id === bookingObj.alfred._id ?
+                                                    <>
+                                                        <Grid item xs={4}>
+                                                            <div style={{width: '30px', height: '30px', backgroundColor: '#D5A771', borderRadius: '100%', border:'0.4px solid rgba(112,112,112,0.26)', marginTop: '15%'}}></div>
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            <Typography style={{color: '#D5A771'}}>Réservation pré-approuvée</Typography>
+                                                        </Grid>
+                                                    </>
+                                                    :
+                                                    <div style={{textAlign: 'center', height: '40px', minWidth: '250px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px', marginTop: '20%'}}>
+                                                        <Link href='#'>
+                                                            <a style={{textDecoration:'none', color: 'white' }}>Réserver</a>
+                                                        </Link>
+                                                    </div>
+                                                :
+                                                null
                                           }
                                         </Grid>
                                     </Grid>
