@@ -33,13 +33,8 @@ import { FormControl, RadioGroup, Radio } from '@material-ui/core';
 import { toast, ToastContainer } from "react-toastify";
 import Loader from 'react-loader-spinner';
 import Clear from '@material-ui/icons/Clear';
-import CheckIcon from '@material-ui/icons/Check';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ButtonMultiChoice from '../ButtonMultiChoice/ButtonMultiChoice';
-import { makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
+
 
 
 const { config } = require('../../config/config');
@@ -114,7 +109,8 @@ const styles = theme => ({
         fontFamily: 'helveticaNeue',
     },
     inputTextField: {
-        color:'white'
+        color:'white',
+        fontSize: '1em',
     }
 });
 
@@ -711,26 +707,15 @@ class Thumb extends React.Component {
 }
 
 
-const GreenCheckbox = withStyles({
+const CheckboxCustom = withStyles({
     root: {
         color: '#1C2022',
         '&$checked': {
-            color: '#f9ccc7',
+            color: 'white',
         },
     },
     checked: {},
 })(props => <Checkbox color="default" {...props} />);
-
-const CssTextField = withStyles({
-    root: {
-        '& .MuiInput-underline': {
-            borderBottomColor: 'white',
-        },
-        '& .MuiInput-underline:after': {
-            borderBottomColor: '#f87280',
-        },
-    },
-})(TextField);
 
 class Form extends React.Component {
     constructor(props) {
@@ -801,6 +786,7 @@ class Form extends React.Component {
             certifObj: null,
 
             checkedB: false,
+            checkedC: false,
         };
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -1510,14 +1496,15 @@ class Form extends React.Component {
                                                                                     display: 'flex',
                                                                                     width: '100%',
                                                                                     flexDirection:'row',
-                                                                                    backgroundColor: this.state.checkedB ? '#47bdd7' : '#B0B0B0',
+                                                                                    backgroundColor: this.state.checkedB ? '#47bdd7' : 'white',
+                                                                                    border: '1px solid #47bdd7',
                                                                                     borderRadius: '50px',
-                                                                                    color: 'white',
+                                                                                    color: this.state.checkedB ? 'white' : '#47bdd7',
                                                                                 }}>
-                                                                                    <div className={classes.contentCheckBox} style={{marginLeft: '5%', width:'10%'}}>
+                                                                                    <div className={classes.contentCheckBox} style={{marginLeft: '2%', width:'5%'}}>
                                                                                         <FormControlLabel
                                                                                           control={
-                                                                                              <GreenCheckbox
+                                                                                              <CheckboxCustom
                                                                                                 checked={this.checkedB}
                                                                                                 onChange={() => {
                                                                                                     this.setState({ checkedB: !this.state.checkedB });
@@ -1527,41 +1514,25 @@ class Form extends React.Component {
                                                                                           }
                                                                                         />
                                                                                     </div>
-                                                                                    <div className={classes.contentCheckBox} style={{ width: '50%'}}>
+                                                                                    <div className={classes.contentCheckBox} style={{ width: '60%'}}>
                                                                                         <label style={{ padding: '1%'}}>
                                                                                             Frais de déplacement (montant forfaitaire)
                                                                                         </label>
                                                                                     </div>
-                                                                                    <div style={{display:'flex'}}>
+                                                                                    <div style={{display:'flex' , alignItems:'center', width:'35%'}}>
                                                                                         <div style={{
                                                                                             display: this.state.checkedB ? '' : 'none',
                                                                                             width:'100px',
                                                                                             marginRight: '1px'
                                                                                         }}>
-                                                                                            <CssTextField
-                                                                                              InputProps={{
-                                                                                                  className: classes.inputTextField
-                                                                                              }}
-                                                                                              id="standard-adornment-weight"
-                                                                                              endAdornment={<InputAdornment position="end">€</InputAdornment>}
-                                                                                              aria-describedby="standard-weight-helper-text"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div  style={{
-                                                                                            display: this.state.checkedB ? '' : 'none',
-                                                                                            marginLeft: '1px'
-                                                                                        }}>
-                                                                                            <CssTextField
-                                                                                              select
-                                                                                              className={classes.textField}
-                                                                                              InputProps={{
-                                                                                                  className: classes.inputTextField
-                                                                                              }}
-                                                                                            >
-                                                                                                <MenuItem value="prestaA">Presta A</MenuItem>
-                                                                                                <MenuItem value="prestaB">Presta B</MenuItem>
-                                                                                                <MenuItem value="prestaC">Presta C</MenuItem>
-                                                                                            </CssTextField>
+                                                                                            <FormControl>
+                                                                                                <Input
+                                                                                                  endAdornment={<InputAdornment position="end">€</InputAdornment>}
+                                                                                                  inputProps={{
+                                                                                                      className: classes.inputTextField
+                                                                                                  }}
+                                                                                                />
+                                                                                            </FormControl>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -1575,7 +1546,47 @@ class Form extends React.Component {
                                                                                 vous pouvez proposer à votre client de procéder au retrait et à la livraison du linge.
                                                                             </Typography>
                                                                             <form noValidate autoComplete="off">
-                                                                                <ButtonMultiChoice/>
+                                                                                <div style={{
+                                                                                    display: 'flex',
+                                                                                    width: '100%',
+                                                                                    flexDirection:'row',
+                                                                                    backgroundColor: this.state.checkedC ? '#47bdd7' : '#B0B0B0',
+                                                                                    borderRadius: '50px',
+                                                                                    color: 'white',
+                                                                                }}>
+                                                                                    <div className={classes.contentCheckBox} style={{marginLeft: '2%', width:'5%'}}>
+                                                                                        <FormControlLabel
+                                                                                          control={
+                                                                                              <CheckboxCustom
+                                                                                                checked={this.checkedB}
+                                                                                                onChange={() => {
+                                                                                                    this.setState({ checkedC: !this.state.checkedC });
+                                                                                                }}
+                                                                                                value="checkedG"
+                                                                                              />
+                                                                                          }
+                                                                                        />
+                                                                                    </div>
+                                                                                    <div className={classes.contentCheckBox} style={{ width: '60%'}}>
+                                                                                        <label style={{ padding: '1%'}}>
+                                                                                           Retrait & livraison
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    <div style={{display:'flex' , alignItems:'center', width: '35%'}}>
+                                                                                        <div style={{
+                                                                                            display: this.state.checkedC ? '' : 'none',
+                                                                                            width:'100px',
+                                                                                            marginRight: '1px',
+                                                                                        }}>
+                                                                                            <Input
+                                                                                              InputProps={{
+                                                                                                  className: classes.inputTextField
+                                                                                              }}
+                                                                                              placeholder="€"
+                                                                                            />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
                                                                             </form>
                                                                         </div>
                                                                         <hr style={{ margin: '1rem 0' }}/>
