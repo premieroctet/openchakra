@@ -46,6 +46,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
     const bookingFields = {};
     bookingFields.reference = req.body.reference + '_' + random;
     bookingFields.service = req.body.service;
+    bookingFields.address = req.body.address; 
     bookingFields.equipments = req.body.equipments;
     bookingFields.amount = req.body.amount;
     bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred);
@@ -159,6 +160,7 @@ router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
         .populate('alfred')
         .populate('user')
         .populate('prestation')
+        .populate('equipments')
         .then(booking => {
 
             if(booking){
@@ -191,6 +193,15 @@ router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
         })
         .catch(err => res.status(404).json({bookingnotfound: 'No booking found'}));
 });
+
+router.put('/modifyBooking/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
+    Booking.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true })
+        .then(booking => {
+            if (!booking) return res.status(404).json({msg: 'no booking found'});
+            if (booking) return res.json(booking);
+        })
+        .catch(err => console.log(err))
+})
 
 // pattern reference
 // premiere lettre nom user +  premiere lettre prenom user + premiere lettre nom alfred +  premiere lettre prenom alfred + date + 5 random
