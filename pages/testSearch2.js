@@ -47,8 +47,11 @@ class testSearch2 extends React.Component {
             click2: false,
             categories: [],
             serviceUser: [],
+            serviceUserCopy: [],
             finalServiceUser: [],
             finalServiceUserCopy: [],
+            copyFilterPro: [],
+            copyFilterParticulier: [],
             lat: null,
             lng: null,
             research: '',
@@ -64,6 +67,7 @@ class testSearch2 extends React.Component {
             idAlfred: [],
             checkedB: false,
             checkedParticulier: false,
+            filterDate: false,
             startDate: null,
             endDate: null,
             focusedInput: null,
@@ -104,8 +108,9 @@ class testSearch2 extends React.Component {
         this.setState({[event.target.name]: event.target.checked} );
     };
 
-    search() {
-        this.setState({finalServiceUser:[]});
+     async search() {
+         await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+             checkedParticulier:false,idAlfred:[]});
         const address = this.state.addressSelected;
         if(address.gps !== undefined){
             this.setState({lat:address.gps.lat, lng: address.gps.lng});
@@ -114,7 +119,7 @@ class testSearch2 extends React.Component {
                     let serviceUser = res.data;
                     const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
                         ['desc','desc','desc','desc','desc']);
-                    this.setState({serviceUser:sorted});
+                    this.setState({serviceUser:sorted,serviceUserCopy: sorted});
                     axios.get(url+'myAlfred/api/category/all/sort')
                         .then(res => {
                             let categories = res.data;
@@ -140,7 +145,7 @@ class testSearch2 extends React.Component {
                     let serviceUser = res.data;
                     const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
                         ['desc','desc','desc','desc','desc']);
-                    this.setState({serviceUser:sorted});
+                    this.setState({serviceUser:sorted,serviceUserCopy: sorted});
                     axios.get(url+'myAlfred/api/category/all/sort')
                         .then(res => {
                             let categories = res.data;
@@ -167,7 +172,7 @@ class testSearch2 extends React.Component {
                     let serviceUser = res.data;
                     const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
                         ['desc','desc','desc','desc','desc']);
-                    this.setState({serviceUser:sorted});
+                    this.setState({serviceUser:sorted,serviceUserCopy: sorted});
                     axios.get(url+'myAlfred/api/category/all/sort')
                         .then(res => {
                             let categories = res.data;
@@ -426,7 +431,7 @@ class testSearch2 extends React.Component {
 
       async filter(){
 
-        if(this.state.serviceUser.length && this.state.finalServiceUser.length){
+        if((this.state.serviceUser.length && this.state.finalServiceUser.length) || this.state.finalServiceUserCopy.length){
             const arrayShop = [];
             const serviceUser = this.state.finalServiceUser;
             serviceUser.forEach(s => {
@@ -447,6 +452,7 @@ class testSearch2 extends React.Component {
 
 
             if(this.state.checkedB){
+                this.setState({idAlfred:[]});
                 setTimeout(()=>{
 
                     const arrayService = this.state.finalServiceUser;
@@ -460,27 +466,20 @@ class testSearch2 extends React.Component {
                         this.state.idAlfred.forEach(i => {
                             if(f.user._id === i){
                                 arrayIndex.push(index);
-
-
-
-
-
                             }
-
-
                         })
                     });
                     for (let t = arrayIndex.length -1; t >= 0; t--)
                         arrayService.splice(arrayIndex[t],1);
 
-                    this.setState({finalServiceUser:arrayService});
-
-
-
-
-                },2000)
+                    this.setState({finalServiceUser:arrayService,copyFilterPro:arrayService});
+                    },2000)
             } else {
-                setTimeout(()=>this.searchWithWord(),2000)
+                setTimeout(()=>{if(this.state.filterDate){
+                    this.filterDate()
+                } else {
+                    this.searchWithWord()
+                }},2000)
             }
         } else {
             const arrayShop = [];
@@ -503,6 +502,7 @@ class testSearch2 extends React.Component {
 
 
             if(this.state.checkedB){
+                this.setState({idAlfred:[]});
                 setTimeout(()=>{
 
                     const arrayService = this.state.serviceUser;
@@ -516,27 +516,27 @@ class testSearch2 extends React.Component {
                         this.state.idAlfred.forEach(i => {
                             if(f.user._id === i){
                                 arrayIndex.push(index);
-
-
-
-
-
                             }
-
-
                         })
                     });
                     for (let t = arrayIndex.length -1; t >= 0; t--)
                         arrayService.splice(arrayIndex[t],1);
 
-                    this.setState({serviceUser:arrayService});
+                    this.setState({serviceUser:arrayService,copyFilterPro:arrayService});
 
 
 
 
                 },2000)
             } else {
-                setTimeout(()=>this.search(),2000)
+                setTimeout(() => {
+                        if(this.state.filterDate){
+                            this.filterDate()
+                        } else {
+                            this.search()
+                        }
+                    },
+                    2000);
             }
         }
 
@@ -570,6 +570,7 @@ class testSearch2 extends React.Component {
             await this.setState({uniqShop: arrayShop});
 
             if(this.state.checkedParticulier){
+                this.setState({idAlfred:[]});
                 setTimeout(() => {
 
                     const arrayService = this.state.finalServiceUser;
@@ -593,12 +594,16 @@ class testSearch2 extends React.Component {
                     for (let t = arrayIndex.length - 1; t >= 0; t--)
                         arrayService.splice(arrayIndex[t], 1);
 
-                    this.setState({finalServiceUser: arrayService});
+                    this.setState({finalServiceUser: arrayService,copyFilterParticulier:arrayService});
 
 
                 }, 2000)
             } else {
-                setTimeout(() => this.searchWithWord(),2000);
+                setTimeout(() => {if(this.state.filterDate){
+                    this.filterDate()
+                } else {
+                    this.searchWithWord()
+                }},2000);
 
             }
         } else {
@@ -621,6 +626,7 @@ class testSearch2 extends React.Component {
             await this.setState({uniqShop: arrayShop});
 
             if(this.state.checkedParticulier){
+                this.setState({idAlfred:[]});
                 setTimeout(() => {
 
                     const arrayService = this.state.serviceUser;
@@ -644,12 +650,19 @@ class testSearch2 extends React.Component {
                     for (let t = arrayIndex.length - 1; t >= 0; t--)
                         arrayService.splice(arrayIndex[t], 1);
 
-                    this.setState({serviceUser: arrayService});
+                    this.setState({serviceUser: arrayService,copyFilterParticulier:arrayService});
 
 
                 }, 2000)
             } else {
-                setTimeout(() => this.search(),2000);
+                setTimeout(() => {
+                    if(this.state.filterDate){
+                        this.filterDate()
+                    } else {
+                        this.search()
+                    }
+                },
+                    2000);
 
             }
         }
@@ -658,40 +671,93 @@ class testSearch2 extends React.Component {
 
 
    async filterDate(){
-        await this.setState({finalServiceUser:this.state.finalServiceUserCopy});
-        const serviceUser = this.state.finalServiceUser;
-        const begin = this.state.startDate;
-        const end = this.state.endDate;
-        const beginDay =  moment(begin).format('dddd');
-        const endDay =  moment(end).format('dddd');
-        const diff = end.diff(begin,'days')+1;
-        const obj = {begin,end,beginDay,endDay};
+        if((this.state.serviceUser.length && this.state.finalServiceUser.length) || this.state.finalServiceUserCopy.length){
+            await this.setState({finalServiceUser:this.state.finalServiceUserCopy});
+            const serviceUser = this.state.finalServiceUser;
+            const begin = this.state.startDate;
+            const end = this.state.endDate;
+            const beginDay =  moment(begin).format('dddd');
+            const endDay =  moment(end).format('dddd');
+            const diff = end.diff(begin,'days')+1;
+            const obj = {begin,end,beginDay,endDay};
 
-        axios.post(url+'myAlfred/api/availability/filterDate',obj)
-            .then(response => {
-                let availability = response.data;
-                const idAlfred = [];
-                const services = [];
-                availability.forEach(a => {
-                    idAlfred.push(a.user);
-                });
-                serviceUser.forEach(w => {
+            axios.post(url+'myAlfred/api/availability/filterDate',obj)
+                .then(response => {
+                    let availability = response.data;
+                    const idAlfred = [];
+                    const services = [];
+                    availability.forEach(a => {
+                        idAlfred.push(a.user);
+                    });
+                    serviceUser.forEach(w => {
 
-                    const index = idAlfred.findIndex(i => i == w.user._id);
-                    if(index !== -1){
-                        services.push(w);
-                    }
+                        const index = idAlfred.findIndex(i => i == w.user._id);
+                        if(index !== -1){
+                            services.push(w);
+                        }
+
+                    })
+                    this.setState({finalServiceUser:services,filterDate:true});
+
 
                 })
-                this.setState({finalServiceUser:services});
+                .catch(err => console.log(err));
+        } else {
+            await this.setState({serviceUser:this.state.serviceUserCopy});
+            const serviceUser = this.state.serviceUser;
+            const begin = this.state.startDate;
+            const end = this.state.endDate;
+            const beginDay =  moment(begin).format('dddd');
+            const endDay =  moment(end).format('dddd');
+            const diff = end.diff(begin,'days')+1;
+            const obj = {begin,end,beginDay,endDay};
+
+            axios.post(url+'myAlfred/api/availability/filterDate',obj)
+                .then(response => {
+                    let availability = response.data;
+                    const idAlfred = [];
+                    const services = [];
+                    availability.forEach(a => {
+                        idAlfred.push(a.user);
+                    });
+                    serviceUser.forEach(w => {
+
+                        const index = idAlfred.findIndex(i => i == w.user._id);
+                        if(index !== -1){
+                            services.push(w);
+                        }
+
+                    })
+                    this.setState({serviceUser:services,filterDate:true});
 
 
-            })
-            .catch(err => console.log(err));
+                })
+                .catch(err => console.log(err));
+        }
+     }
 
-
-
-    }
+     cancelDateFilter(){
+         this.setState({startDate:null,endDate:null,filterDate:false});
+         if(this.state.checkedB){
+             if((this.state.serviceUser.length && this.state.finalServiceUser.length) || this.state.finalServiceUserCopy.length){
+                 this.setState({finalServiceUser:this.state.copyFilterPro});
+             } else {
+                 this.setState({serviceUser:this.state.copyFilterPro});
+             }
+         } else if(this.state.checkedParticulier){
+             if((this.state.serviceUser.length && this.state.finalServiceUser.length) || this.state.finalServiceUserCopy.length){
+                 this.setState({finalServiceUser:this.state.copyFilterParticulier});
+             } else {
+                 this.setState({serviceUser:this.state.copyFilterParticulier});
+             }
+         } else {
+             if((this.state.serviceUser.length && this.state.finalServiceUser.length) || this.state.finalServiceUserCopy.length){
+                 this.searchWithWord();
+             } else {
+                 this.search();
+             }
+         }
+     }
 
 
 
@@ -828,6 +894,9 @@ class testSearch2 extends React.Component {
                                     minimumNights={0}
 
                                 />
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Button onClick={()=>this.cancelDateFilter()}>Annuler</Button>
                             </Grid>
                             <Grid item xs={3}>
                                 <Button onClick={()=>this.filterDate()}>Valider</Button>
