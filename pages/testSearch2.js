@@ -199,233 +199,236 @@ class testSearch2 extends React.Component {
     }
 
    async searchWithWord(){
-         await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
-                                    checkedParticulier:false,idAlfred:[]});
-        const obj = {label:this.state.research};
-        await axios.post(url+'myAlfred/api/prestation/all/search',obj)
-            .then(res => {
+         if(this.state.research !== ""){
+             await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+                 checkedParticulier:false,idAlfred:[]});
+             const obj = {label:this.state.research.trim()};
+             await axios.post(url+'myAlfred/api/prestation/all/search',obj)
+                 .then(res => {
 
-                let prestations = res.data;
-                this.setState({prestations:prestations});
-                const arrayCategory = [];
-                const arrayService = [];
-                prestations.forEach(e => {
-                    arrayCategory.push(e.category);
-                    arrayService.push(e.service);
-                });
-                const uniqCategory = _.uniqBy(arrayCategory,'label');
-                const uniqService = _.uniqBy(arrayService,'label');
-                this.setState({uniqCategory:uniqCategory,uniqService:uniqService});
-                this.setState({prestationOk: true});
+                     let prestations = res.data;
+                     this.setState({prestations:prestations});
+                     const arrayCategory = [];
+                     const arrayService = [];
+                     prestations.forEach(e => {
+                         arrayCategory.push(e.category);
+                         arrayService.push(e.service);
+                     });
+                     const uniqCategory = _.uniqBy(arrayCategory,'label');
+                     const uniqService = _.uniqBy(arrayService,'label');
+                     this.setState({uniqCategory:uniqCategory,uniqService:uniqService});
+                     this.setState({prestationOk: true});
 
-            })
-            .catch(err => {
-                console.log(err)
-            });
+                 })
+                 .catch(err => {
+                     console.log(err)
+                 });
 
-        await axios.post(url+'myAlfred/api/service/all/search',obj)
-            .then(res => {
-                let services = res.data;
-                this.setState({services: services});
-                const arrayCategory = [];
+             await axios.post(url+'myAlfred/api/service/all/search',obj)
+                 .then(res => {
+                     let services = res.data;
+                     this.setState({services: services});
+                     const arrayCategory = [];
 
-                services.forEach(e => {
-                    arrayCategory.push(e.category);
-                });
-                const uniqCategory = _.uniqBy(arrayCategory,'label');
-                this.setState({uniqCategoryService:uniqCategory});
-                this.setState({serviceOk: true});
-            })
-            .catch(err => {
-                console.log(err);
-            });
+                     services.forEach(e => {
+                         arrayCategory.push(e.category);
+                     });
+                     const uniqCategory = _.uniqBy(arrayCategory,'label');
+                     this.setState({uniqCategoryService:uniqCategory});
+                     this.setState({serviceOk: true});
+                 })
+                 .catch(err => {
+                     console.log(err);
+                 });
 
-        if(this.state.serviceOk || this.state.prestationOk){
-            const uniqCategoryPrestation = this.state.uniqCategory;
-            const uniqCategoryService = this.state.uniqCategoryService;
+             if(this.state.serviceOk || this.state.prestationOk){
+                 const uniqCategoryPrestation = this.state.uniqCategory;
+                 const uniqCategoryService = this.state.uniqCategoryService;
 
-            const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService);
-            const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
-            this.setState({categoryFinal: uniqCategoryFinal});
+                 const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService);
+                 const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
+                 this.setState({categoryFinal: uniqCategoryFinal});
 
-            const address = this.state.addressSelected;
-            if(address.gps !== undefined) {
-                this.setState({lat: address.gps.lat, lng: address.gps.lng});
+                 const address = this.state.addressSelected;
+                 if(address.gps !== undefined) {
+                     this.setState({lat: address.gps.lat, lng: address.gps.lng});
 
-                axios.get(url+'myAlfred/api/serviceUser/near')
-                    .then(result => {
-                        const finalServiceUser = [];
-                        const serviceUser = result.data;
-                        const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
-                            ['desc','desc','desc','desc','desc']);
+                     axios.get(url+'myAlfred/api/serviceUser/near')
+                         .then(result => {
+                             const finalServiceUser = [];
+                             const serviceUser = result.data;
+                             const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                 ['desc','desc','desc','desc','desc']);
 
-                        this.setState({serviceUser:sorted});
-                            this.state.serviceUser.forEach((s,index) => {
-                                if(this.state.prestations.length){
-                                    this.state.prestations.forEach(p => {
-                                        const index1 = s.prestations.findIndex(i => i.prestation == p._id);
+                             this.setState({serviceUser:sorted});
+                             this.state.serviceUser.forEach((s,index) => {
+                                 if(this.state.prestations.length){
+                                     this.state.prestations.forEach(p => {
+                                         const index1 = s.prestations.findIndex(i => i.prestation == p._id);
 
-                                        if(index1 !== -1){
-                                            finalServiceUser.push(sorted[index])
+                                         if(index1 !== -1){
+                                             finalServiceUser.push(sorted[index])
 
-                                        } else {
-                                            this.state.services.forEach(r => {
-                                                if(s.service._id == r._id){
-                                                    finalServiceUser.push(sorted[index])
-                                                }
-                                            })
-                                        }
+                                         } else {
+                                             this.state.services.forEach(r => {
+                                                 if(s.service._id == r._id){
+                                                     finalServiceUser.push(sorted[index])
+                                                 }
+                                             })
+                                         }
 
-                                    })
-                                } else {
-                                    this.state.services.forEach(r => {
-                                        if(s.service._id == r._id){
-                                            finalServiceUser.push(sorted[index])
-                                        }
-                                    })
-                                }
+                                     })
+                                 } else {
+                                     this.state.services.forEach(r => {
+                                         if(s.service._id == r._id){
+                                             finalServiceUser.push(sorted[index])
+                                         }
+                                     })
+                                 }
 
-                        });
-                            this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
+                             });
+                             this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
 
-                    })
-                    .catch(err => console.log(err));
-            } else if(address==='all'){
-                this.setState({lat:this.state.address.gps.lat, lng: this.state.address.gps.lng});
-                axios.get(url+'myAlfred/api/serviceUser/all')
-                    .then(result => {
-                        const finalServiceUser = [];
-                        const serviceUser = result.data;
-                        const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
-                            ['desc','desc','desc','desc','desc']);
+                         })
+                         .catch(err => console.log(err));
+                 } else if(address==='all'){
+                     this.setState({lat:this.state.address.gps.lat, lng: this.state.address.gps.lng});
+                     axios.get(url+'myAlfred/api/serviceUser/all')
+                         .then(result => {
+                             const finalServiceUser = [];
+                             const serviceUser = result.data;
+                             const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                 ['desc','desc','desc','desc','desc']);
 
-                        this.setState({serviceUser:sorted});
-                        this.state.serviceUser.forEach((s,index) => {
-                            if(this.state.prestations.length){
-                                this.state.prestations.forEach(p => {
-                                    const index1 = s.prestations.findIndex(i => i.prestation == p._id);
+                             this.setState({serviceUser:sorted});
+                             this.state.serviceUser.forEach((s,index) => {
+                                 if(this.state.prestations.length){
+                                     this.state.prestations.forEach(p => {
+                                         const index1 = s.prestations.findIndex(i => i.prestation == p._id);
 
-                                    if(index1 !== -1){
-                                        finalServiceUser.push(sorted[index])
+                                         if(index1 !== -1){
+                                             finalServiceUser.push(sorted[index])
 
-                                    } else {
-                                        this.state.services.forEach(r => {
-                                            if(s.service._id == r._id){
-                                                finalServiceUser.push(sorted[index])
-                                            }
-                                        })
-                                    }
+                                         } else {
+                                             this.state.services.forEach(r => {
+                                                 if(s.service._id == r._id){
+                                                     finalServiceUser.push(sorted[index])
+                                                 }
+                                             })
+                                         }
 
-                                })
-                            } else {
-                                this.state.services.forEach(r => {
-                                    if(s.service._id == r._id){
-                                        finalServiceUser.push(sorted[index])
-                                    }
-                                })
-                            }
+                                     })
+                                 } else {
+                                     this.state.services.forEach(r => {
+                                         if(s.service._id == r._id){
+                                             finalServiceUser.push(sorted[index])
+                                         }
+                                     })
+                                 }
 
-                        });
-                        this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
+                             });
+                             this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
 
-                    })
-                    .catch(err => console.log(err));
-            } else {
-                this.setState({lat:address.lat,lng: address.lng});
-                const id = address._id;
-                axios.get(url+'myAlfred/api/serviceUser/nearOther/'+id)
-                    .then(res => {
-                        const finalServiceUser = [];
-                        const serviceUser = res.data;
-                        const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
-                            ['desc','desc','desc','desc','desc']);
+                         })
+                         .catch(err => console.log(err));
+                 } else {
+                     this.setState({lat:address.lat,lng: address.lng});
+                     const id = address._id;
+                     axios.get(url+'myAlfred/api/serviceUser/nearOther/'+id)
+                         .then(res => {
+                             const finalServiceUser = [];
+                             const serviceUser = res.data;
+                             const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                 ['desc','desc','desc','desc','desc']);
 
-                        this.setState({serviceUser:sorted});
-                        this.state.serviceUser.forEach((s,index) => {
-                            if(this.state.prestations.length){
-                                this.state.prestations.forEach(p => {
-                                    const index1 = s.prestations.findIndex(i => i.prestation == p._id);
+                             this.setState({serviceUser:sorted});
+                             this.state.serviceUser.forEach((s,index) => {
+                                 if(this.state.prestations.length){
+                                     this.state.prestations.forEach(p => {
+                                         const index1 = s.prestations.findIndex(i => i.prestation == p._id);
 
-                                    if(index1 !== -1){
-                                        finalServiceUser.push(sorted[index])
+                                         if(index1 !== -1){
+                                             finalServiceUser.push(sorted[index])
 
-                                    } else {
-                                        this.state.services.forEach(r => {
-                                            if(s.service._id == r._id){
-                                                finalServiceUser.push(sorted[index])
-                                            }
-                                        })
-                                    }
+                                         } else {
+                                             this.state.services.forEach(r => {
+                                                 if(s.service._id == r._id){
+                                                     finalServiceUser.push(sorted[index])
+                                                 }
+                                             })
+                                         }
 
-                                })
-                            } else {
-                                this.state.services.forEach(r => {
-                                    if(s.service._id == r._id){
-                                        finalServiceUser.push(sorted[index])
-                                    }
-                                })
-                            }
+                                     })
+                                 } else {
+                                     this.state.services.forEach(r => {
+                                         if(s.service._id == r._id){
+                                             finalServiceUser.push(sorted[index])
+                                         }
+                                     })
+                                 }
 
-                        });
-                        this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
-                    })
-                    .catch(err => console.log(err));
-            }
-        }
-        if(!this.state.prestations.length && !this.state.services.length){
-            axios.post(url+'myAlfred/api/category/all/search',obj)
-                .then(responseCategory => {
-                    let category = responseCategory.data;
-                    const arrayCategory = [];
+                             });
+                             this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
+                         })
+                         .catch(err => console.log(err));
+                 }
+             }
+             if(!this.state.prestations.length && !this.state.services.length){
+                 axios.post(url+'myAlfred/api/category/all/search',obj)
+                     .then(responseCategory => {
+                         let category = responseCategory.data;
+                         const arrayCategory = [];
 
-                    category.forEach(e => {
-                        arrayCategory.push(e);
-                    });
-                    const uniqCategory = _.uniqBy(arrayCategory,'label');
-                    this.setState({categoryFinal:uniqCategory});
-                    const address = this.state.addressSelected;
+                         category.forEach(e => {
+                             arrayCategory.push(e);
+                         });
+                         const uniqCategory = _.uniqBy(arrayCategory,'label');
+                         this.setState({categoryFinal:uniqCategory});
+                         const address = this.state.addressSelected;
 
-                    if(address.gps !== undefined) {
-                        this.setState({lat: address.gps.lat, lng: address.gps.lng});
+                         if(address.gps !== undefined) {
+                             this.setState({lat: address.gps.lat, lng: address.gps.lng});
 
-                        axios.get(url+'myAlfred/api/serviceUser/near')
-                            .then(result => {
-                                const serviceUser = result.data;
-                                const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
-                                    ['desc','desc','desc','desc','desc']);
+                             axios.get(url+'myAlfred/api/serviceUser/near')
+                                 .then(result => {
+                                     const serviceUser = result.data;
+                                     const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                         ['desc','desc','desc','desc','desc']);
 
-                                this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
-                            })
-                            .catch(err => console.log(err));
-                    } else if(address==='all') {
-                        this.setState({lat:this.state.address.gps.lat, lng: this.state.address.gps.lng});
+                                     this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
+                                 })
+                                 .catch(err => console.log(err));
+                         } else if(address==='all') {
+                             this.setState({lat:this.state.address.gps.lat, lng: this.state.address.gps.lng});
 
-                        axios.get(url+'myAlfred/api/serviceUser/all')
-                            .then(res => {
-                                let serviceUser = res.data;
-                                const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
-                                    ['desc','desc','desc','desc','desc']);
-                                this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
+                             axios.get(url+'myAlfred/api/serviceUser/all')
+                                 .then(res => {
+                                     let serviceUser = res.data;
+                                     const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                         ['desc','desc','desc','desc','desc']);
+                                     this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
 
-                            })
-                            .catch(err => console.log(err));
-                    } else {
-                        this.setState({lat:address.lat,lng: address.lng});
-                        const id = address._id;
-                        axios.get(url+'myAlfred/api/serviceUser/nearOther/'+id)
-                            .then(res => {
-                                let serviceUser = res.data;
-                                const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
-                                    ['desc','desc','desc','desc','desc']);
-                                this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
+                                 })
+                                 .catch(err => console.log(err));
+                         } else {
+                             this.setState({lat:address.lat,lng: address.lng});
+                             const id = address._id;
+                             axios.get(url+'myAlfred/api/serviceUser/nearOther/'+id)
+                                 .then(res => {
+                                     let serviceUser = res.data;
+                                     const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                         ['desc','desc','desc','desc','desc']);
+                                     this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
 
-                            })
-                            .catch(err => console.log(err));
-                    }
-                })
-        }
+                                 })
+                                 .catch(err => console.log(err));
+                         }
+                     })
+             }
 
-        this.setState({click: false, click2: true});
+             this.setState({click: false, click2: true});
+         }
+
 
     }
 
@@ -832,7 +835,7 @@ class testSearch2 extends React.Component {
                                         Rechercher
                                     </Button> :
 
-                                    <Button onClick={()=>this.searchWithWord()} variant="contained" color="primary"
+                                    <Button disabled={(this.state.research.length === 0 || !this.state.research.trim())} onClick={()=>this.searchWithWord()} variant="contained" color="primary"
                                             style={{width: '100%', color: 'white'}}>
                                         Rechercher avec un mot
                                     </Button>
