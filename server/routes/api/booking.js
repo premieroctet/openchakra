@@ -16,6 +16,7 @@ router.get('/test',(req, res) => res.json({msg: 'Booking Works!'}) );
 router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
     const userId = mongoose.Types.ObjectId(req.user.id);
     Booking.find({ alfred: userId })
+        .populate('user')
         .then(alfred => {
             if (!alfred) {
                 res.status(404).json({ msg: 'No booking found' })
