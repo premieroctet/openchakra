@@ -101,14 +101,19 @@ class searchNotLogin extends React.Component {
                             let categories = res.data;
                             this.setState({categories:categories});
                             categories.forEach(e => {
+                                this.setState({[e.label+'Array']:[]});
                                 this.setState({[e.label]:0});
                                 this.state.serviceUser.forEach(a => {
+                                    let array = this.state[e.label+'Array'];
                                     if(a.service.category === e._id){
                                         this.setState(prevState => {
                                             return {[e.label]: prevState[e.label] + 1}
                                         })
+                                        array.push(a);
+                                        this.setState({[e.label+'Array']:array})
                                     }
                                 })
+
                             })
                         })
                         .catch(err => console.log(err));
@@ -152,55 +157,55 @@ class searchNotLogin extends React.Component {
     }
 
     async searchWithWord(){
-        if(this.state.research !== ""){
-            await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
-                checkedParticulier:false,idAlfred:[]});
-            const obj = {label:this.state.research.trim()};
-            await axios.post(url+'myAlfred/api/prestation/all/search',obj)
-                .then(res => {
+        if(this.state.searchCity.length === 0 || !this.state.searchCity.trim()){
+                await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+                    checkedParticulier:false,idAlfred:[]});
+                const obj = {label:this.state.research.trim()};
+                await axios.post(url+'myAlfred/api/prestation/all/search',obj)
+                    .then(res => {
 
-                    let prestations = res.data;
-                    this.setState({prestations:prestations});
-                    const arrayCategory = [];
-                    const arrayService = [];
-                    prestations.forEach(e => {
-                        arrayCategory.push(e.category);
-                        arrayService.push(e.service);
+                        let prestations = res.data;
+                        this.setState({prestations:prestations});
+                        const arrayCategory = [];
+                        const arrayService = [];
+                        prestations.forEach(e => {
+                            arrayCategory.push(e.category);
+                            arrayService.push(e.service);
+                        });
+                        const uniqCategory = _.uniqBy(arrayCategory,'label');
+                        const uniqService = _.uniqBy(arrayService,'label');
+                        this.setState({uniqCategory:uniqCategory,uniqService:uniqService});
+                        this.setState({prestationOk: true});
+
+                    })
+                    .catch(err => {
+                        console.log(err)
                     });
-                    const uniqCategory = _.uniqBy(arrayCategory,'label');
-                    const uniqService = _.uniqBy(arrayService,'label');
-                    this.setState({uniqCategory:uniqCategory,uniqService:uniqService});
-                    this.setState({prestationOk: true});
 
-                })
-                .catch(err => {
-                    console.log(err)
-                });
+                await axios.post(url+'myAlfred/api/service/all/search',obj)
+                    .then(res => {
+                        let services = res.data;
+                        this.setState({services: services});
+                        const arrayCategory = [];
 
-            await axios.post(url+'myAlfred/api/service/all/search',obj)
-                .then(res => {
-                    let services = res.data;
-                    this.setState({services: services});
-                    const arrayCategory = [];
-
-                    services.forEach(e => {
-                        arrayCategory.push(e.category);
+                        services.forEach(e => {
+                            arrayCategory.push(e.category);
+                        });
+                        const uniqCategory = _.uniqBy(arrayCategory,'label');
+                        this.setState({uniqCategoryService:uniqCategory});
+                        this.setState({serviceOk: true});
+                    })
+                    .catch(err => {
+                        console.log(err);
                     });
-                    const uniqCategory = _.uniqBy(arrayCategory,'label');
-                    this.setState({uniqCategoryService:uniqCategory});
-                    this.setState({serviceOk: true});
-                })
-                .catch(err => {
-                    console.log(err);
-                });
 
-            if(this.state.serviceOk || this.state.prestationOk){
-                const uniqCategoryPrestation = this.state.uniqCategory;
-                const uniqCategoryService = this.state.uniqCategoryService;
+                if(this.state.serviceOk || this.state.prestationOk){
+                    const uniqCategoryPrestation = this.state.uniqCategory;
+                    const uniqCategoryService = this.state.uniqCategoryService;
 
-                const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService);
-                const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
-                this.setState({categoryFinal: uniqCategoryFinal});
+                    const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService);
+                    const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
+                    this.setState({categoryFinal: uniqCategoryFinal});
 
                     axios.get(url+'myAlfred/api/serviceUser/all')
                         .then(result => {
@@ -237,42 +242,201 @@ class searchNotLogin extends React.Component {
 
                             });
                             this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
+                            this.state.categoryFinal.forEach(e => {
+                                this.setState({[e.label+'Final']:0});
+                                this.state.finalServiceUser.forEach(a => {
+                                    if(a.service.category === e._id){
+                                        this.setState(prevState => {
+                                            return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                        })
+                                    }
+                                })
+                            })
 
                         })
                         .catch(err => console.log(err));
 
-            }
-            if(!this.state.prestations.length && !this.state.services.length){
-                axios.post(url+'myAlfred/api/category/all/search',obj)
-                    .then(responseCategory => {
-                        let category = responseCategory.data;
-                        const arrayCategory = [];
+                }
+                if(!this.state.prestations.length && !this.state.services.length) {
+                    axios.post(url + 'myAlfred/api/category/all/search', obj)
+                        .then(responseCategory => {
+                            let category = responseCategory.data;
+                            const arrayCategory = [];
 
-                        category.forEach(e => {
-                            arrayCategory.push(e);
-                        });
-                        const uniqCategory = _.uniqBy(arrayCategory,'label');
-                        this.setState({categoryFinal:uniqCategory});
-                        const address = this.state.addressSelected;
+                            category.forEach(e => {
+                                arrayCategory.push(e);
+                            });
+                            const uniqCategory = _.uniqBy(arrayCategory, 'label');
+                            this.setState({categoryFinal: uniqCategory});
+                            const address = this.state.addressSelected;
 
 
-                            axios.get(url+'myAlfred/api/serviceUser/all')
+                            axios.get(url + 'myAlfred/api/serviceUser/all')
                                 .then(res => {
                                     let serviceUser = res.data;
-                                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
-                                        ['desc','desc','desc','desc','desc']);
-                                    this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
+                                    const sorted = _.orderBy(serviceUser, ['level', 'number_of_views', 'graduated', 'is_certified', 'user.creation_date'],
+                                        ['desc', 'desc', 'desc', 'desc', 'desc']);
+                                    this.setState({finalServiceUser: sorted, finalServiceUserCopy: sorted});
+                                    this.state.categoryFinal.forEach(e => {
+                                        this.setState({[e.label+'Final']:0});
+                                        this.state.finalServiceUser.forEach(a => {
+                                            if(a.service.category === e._id){
+                                                this.setState(prevState => {
+                                                    return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                                })
+                                            }
+                                        })
+                                    })
 
                                 })
                                 .catch(err => console.log(err));
-                    })
+                        })
+                }
+
+
+                this.setState({click: false, click2: true});
+            } else {
+
+                    await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+                        checkedParticulier:false,idAlfred:[]});
+                    const obj = {label:this.state.research.trim()};
+                    await axios.post(url+'myAlfred/api/prestation/all/search',obj)
+                        .then(res => {
+
+                            let prestations = res.data;
+                            this.setState({prestations:prestations});
+                            const arrayCategory = [];
+                            const arrayService = [];
+                            prestations.forEach(e => {
+                                arrayCategory.push(e.category);
+                                arrayService.push(e.service);
+                            });
+                            const uniqCategory = _.uniqBy(arrayCategory,'label');
+                            const uniqService = _.uniqBy(arrayService,'label');
+                            this.setState({uniqCategory:uniqCategory,uniqService:uniqService});
+                            this.setState({prestationOk: true});
+
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        });
+
+                    await axios.post(url+'myAlfred/api/service/all/search',obj)
+                        .then(res => {
+                            let services = res.data;
+                            this.setState({services: services});
+                            const arrayCategory = [];
+
+                            services.forEach(e => {
+                                arrayCategory.push(e.category);
+                            });
+                            const uniqCategory = _.uniqBy(arrayCategory,'label');
+                            this.setState({uniqCategoryService:uniqCategory});
+                            this.setState({serviceOk: true});
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+
+                    if(this.state.serviceOk || this.state.prestationOk){
+                        const uniqCategoryPrestation = this.state.uniqCategory;
+                        const uniqCategoryService = this.state.uniqCategoryService;
+
+                        const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService);
+                        const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
+                        this.setState({categoryFinal: uniqCategoryFinal});
+                        const obj = {city:this.state.searchCity};
+                        axios.post(url+'myAlfred/api/serviceUser/nearCity',obj)
+                            .then(result => {
+                                const finalServiceUser = [];
+                                const serviceUser = result.data;
+                                const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                                    ['desc','desc','desc','desc','desc']);
+
+                                this.setState({serviceUser:sorted});
+                                this.state.serviceUser.forEach((s,index) => {
+                                    if(this.state.prestations.length){
+                                        this.state.prestations.forEach(p => {
+                                            const index1 = s.prestations.findIndex(i => i.prestation == p._id);
+
+                                            if(index1 !== -1){
+                                                finalServiceUser.push(sorted[index])
+
+                                            } else {
+                                                this.state.services.forEach(r => {
+                                                    if(s.service._id == r._id){
+                                                        finalServiceUser.push(sorted[index])
+                                                    }
+                                                })
+                                            }
+
+                                        })
+                                    } else {
+                                        this.state.services.forEach(r => {
+                                            if(s.service._id == r._id){
+                                                finalServiceUser.push(sorted[index])
+                                            }
+                                        })
+                                    }
+
+                                });
+                                this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
+                                this.state.categoryFinal.forEach(e => {
+                                    this.setState({[e.label+'Final']:0});
+                                    this.state.finalServiceUser.forEach(a => {
+                                        if(a.service.category === e._id){
+                                            this.setState(prevState => {
+                                                return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                            })
+                                        }
+                                    })
+                                })
+
+                            })
+                            .catch(err => console.log(err));
+
+                    }
+                    if(!this.state.prestations.length && !this.state.services.length) {
+                        axios.post(url + 'myAlfred/api/category/all/search', obj)
+                            .then(responseCategory => {
+                                let category = responseCategory.data;
+                                const arrayCategory = [];
+
+                                category.forEach(e => {
+                                    arrayCategory.push(e);
+                                });
+                                const uniqCategory = _.uniqBy(arrayCategory, 'label');
+                                this.setState({categoryFinal: uniqCategory});
+                                const address = this.state.addressSelected;
+
+                                const obj = {city: this.state.searchCity};
+                                axios.post(url + 'myAlfred/api/serviceUser/nearCity', obj)
+                                    .then(res => {
+                                        let serviceUser = res.data;
+                                        const sorted = _.orderBy(serviceUser, ['level', 'number_of_views', 'graduated', 'is_certified', 'user.creation_date'],
+                                            ['desc', 'desc', 'desc', 'desc', 'desc']);
+                                        this.setState({finalServiceUser: sorted, finalServiceUserCopy: sorted});
+                                        this.state.categoryFinal.forEach(e => {
+                                            this.setState({[e.label+'Final']:0});
+                                            this.state.finalServiceUser.forEach(a => {
+                                                if(a.service.category === e._id){
+                                                    this.setState(prevState => {
+                                                        return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                                    })
+                                                }
+                                            })
+                                        })
+
+                                    })
+                                    .catch(err => console.log(err));
+                            })
+                    }
+
+                    this.setState({click: false, click2: true});
+                }
             }
 
-            this.setState({click: false, click2: true});
-        }
 
-
-    }
 
     async filter(){
 
@@ -318,6 +482,17 @@ class searchNotLogin extends React.Component {
                         arrayService.splice(arrayIndex[t],1);
 
                     this.setState({finalServiceUser:arrayService,copyFilterPro:arrayService});
+                    this.state.categoryFinal.forEach(e => {
+                        this.setState({[e.label+'Final']:0});
+                        this.state.finalServiceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label+'Final']: prevState[e.label] + 1}
+                                })
+                            }
+                        })
+                    })
+
                 },2000)
             } else {
                 setTimeout(()=>{if(this.state.filterDate){
@@ -368,6 +543,16 @@ class searchNotLogin extends React.Component {
                         arrayService.splice(arrayIndex[t],1);
 
                     this.setState({serviceUser:arrayService,copyFilterPro:arrayService});
+                    this.state.categories.forEach(e => {
+                        this.setState({[e.label]:0});
+                        this.state.serviceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label]: prevState[e.label] + 1}
+                                })
+                            }
+                        })
+                    })
 
 
 
@@ -440,6 +625,16 @@ class searchNotLogin extends React.Component {
                         arrayService.splice(arrayIndex[t], 1);
 
                     this.setState({finalServiceUser: arrayService,copyFilterParticulier:arrayService});
+                    this.state.categoryFinal.forEach(e => {
+                        this.setState({[e.label+'Final']:0});
+                        this.state.finalServiceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                })
+                            }
+                        })
+                    })
 
 
                 }, 2000)
@@ -496,6 +691,16 @@ class searchNotLogin extends React.Component {
                         arrayService.splice(arrayIndex[t], 1);
 
                     this.setState({serviceUser: arrayService,copyFilterParticulier:arrayService});
+                    this.state.categories.forEach(e => {
+                        this.setState({[e.label]:0});
+                        this.state.serviceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label]: prevState[e.label] + 1}
+                                })
+                            }
+                        })
+                    })
 
 
                 }, 2000)
@@ -543,6 +748,16 @@ class searchNotLogin extends React.Component {
 
                     })
                     this.setState({finalServiceUser:services,filterDate:true});
+                    this.state.categoryFinal.forEach(e => {
+                        this.setState({[e.label+'Final']:0});
+                        this.state.finalServiceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                })
+                            }
+                        })
+                    })
 
 
                 })
@@ -574,6 +789,16 @@ class searchNotLogin extends React.Component {
 
                     })
                     this.setState({serviceUser:services,filterDate:true});
+                    this.state.categories.forEach(e => {
+                        this.setState({[e.label]:0});
+                        this.state.serviceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label]: prevState[e.label] + 1}
+                                })
+                            }
+                        })
+                    })
 
 
                 })
@@ -655,6 +880,7 @@ class searchNotLogin extends React.Component {
 
 
                                     onChange={(suggestion) =>this.onChangeAddress(suggestion)}
+                                    onClear={()=>this.setState({searchCity:''})}
                                 />
 
                             </Grid>
@@ -829,6 +1055,7 @@ class searchNotLogin extends React.Component {
                                                     } else return null
 
                                                 })}
+                                                {this.state[e.label+'Final'] !== 0 ? <p>Voir les {this.state[e.label+'Final']} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
                                             </Grid>
                                         </Grid>
                                     ))}
