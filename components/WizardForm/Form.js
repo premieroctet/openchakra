@@ -27,12 +27,12 @@ import MultipleSelect from './MultipleSelect';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import AddressFinder from './AddressFinder';
 import Siret from './Siret';
-import Availability from './Availability';
 import { FormControl, RadioGroup, Radio } from '@material-ui/core';
 import { toast } from "react-toastify";
 import Loader from 'react-loader-spinner';
 import Clear from '@material-ui/icons/Clear';
 import Input from '@material-ui/core/Input';
+import Schedule from '../Schedule/Schedule';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -431,11 +431,11 @@ class Wizard extends React.Component {
                 render={({ values, handleSubmit }) => (
                     <React.Fragment>
                         {page !== 0 && <div style={{backgroundColor: 'white'}}>
-                            {page === 1 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez votre catégorie puis votre service </h3> : null}
-                            {page === 2 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de votre service - {textLabel}</h3> : null}
-                            {page === 3 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
-                            {page === 4 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
-                            {page === 5 ? <h3 style={{fontFamily: 'helveticaNeue', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
+                            {page === 1 ? <h3 style={{fontFamily: 'helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez votre catégorie puis votre service </h3> : null}
+                            {page === 2 ? <h3 style={{fontFamily: 'helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de votre service - {textLabel}</h3> : null}
+                            {page === 3 ? <h3 style={{fontFamily: 'helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+                            {page === 4 ? <h3 style={{fontFamily: 'helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+                            {page === 5 ? <h3 style={{fontFamily: 'helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
                             <div>
                                 <Bar style={{backgroundColor: '#cacfe4'}}>
                                     {page === 1 ? <Fill width={'20%'} /> : null}
@@ -448,7 +448,7 @@ class Wizard extends React.Component {
                         </div>}
                         <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh'}}>
                             <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%', overflow: 'hidden'}}>
-                                <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative'}}>
+                                <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative' }}>
                                     {activePage}
                                 </div>
                                 <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '999'}}>
@@ -659,42 +659,6 @@ class Wizard extends React.Component {
                 )}
             />
         );
-    }
-}
-
-class Thumb extends React.Component {
-    state = {
-        loading: false,
-        thumb: undefined,
-    };
-
-    componentWillReceiveProps(nextProps) {
-        if (!nextProps.file) { return; }
-
-        this.setState({ loading: true }, () => {
-            let reader = new FileReader();
-
-            reader.onloadend = () => {
-                this.setState({ loading: false, thumb: reader.result });
-            };
-
-            reader.readAsDataURL(nextProps.file);
-        });
-    }
-
-    render() {
-        const { file } = this.props;
-        const { loading, thumb } = this.state;
-
-        if (!file) { return null; }
-
-        if (loading) { return <p>loading...</p>; }
-
-        return (<img src={thumb}
-                     alt={file.name}
-                     height={100}
-                     width={100}
-                     style={{borderRadius: '50%'}} />);
     }
 }
 
@@ -1086,7 +1050,7 @@ class Form extends React.Component {
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', overflow: 'hidden'}}>
+                        <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', overflow: 'hidden', height:'100%'}}>
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Votre catégorie de service</Typography>
                                     <Typography>
@@ -1107,16 +1071,16 @@ class Form extends React.Component {
                                                value={arrayHelpers.form.values.categories}
                                                options={this.state.categories}
                                                onChange={categorie => {
-							console.log("Catégories:"+this.state.categories);
-                                                        if (categorie === null) {
-                                                            arrayHelpers.form.setFieldValue('categories', []);
-                                                        } else {
-                                                            arrayHelpers.form.setFieldValue('categories', [categorie]);
-                                                        }
-                                                        arrayHelpers.form.setFieldValue('submission', []);
-                                                        arrayHelpers.form.setFieldValue('services', []);
-                                                        this.setState({ isDisabledExpansionPanels: true });
-                                                    }}
+							                                    console.log("Catégories:"+this.state.categories);
+                                                      if (categorie === null) {
+                                                          arrayHelpers.form.setFieldValue('categories', []);
+                                                      } else {
+                                                          arrayHelpers.form.setFieldValue('categories', [categorie]);
+                                                      }
+                                                      arrayHelpers.form.setFieldValue('submission', []);
+                                                      arrayHelpers.form.setFieldValue('services', []);
+                                                      this.setState({ isDisabledExpansionPanels: true });
+                                                  }}
 
                                                theme={theme => ({
                                                    ...theme,
@@ -2047,7 +2011,9 @@ class Form extends React.Component {
                     <Wizard.Page>
                         <FieldArray render={({form}) => {
                             return (
-                                <Availability formikCtx={form} />
+                              <Grid item xs={12} md={7}>
+                                <Schedule/>
+                              </Grid>
                             )
                         }} />
                     </Wizard.Page>
