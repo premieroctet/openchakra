@@ -73,7 +73,7 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
 
 // @Route POST /myAlfred/api/availability/filterDate
 // Return availability between 2 dates
-router.post('/filterDate',passport.authenticate('jwt',{session:false}),(req,res)=>{
+router.post('/filterDate',(req,res)=>{
     const allAvailability = [];
     const dateBegin = req.body.begin;
     const dateEnd = req.body.end;

@@ -425,7 +425,7 @@ router.get('/near',passport.authenticate('jwt',{session:false}),(req,res)=> {
 });
 
 // @Route GET /myAlfred/api/serviceUser/near/:service
-// View all serviceUser by address and servie
+// View all serviceUser by address and service
 // @Access private
 router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
@@ -459,6 +459,23 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
                 })
                 .catch(err => res.status(404).json({ service: 'No service found' }));
         });
+
+});
+
+// @Route GET /myAlfred/api/serviceUser/near/:city
+// View all serviceUser by city
+router.get('/nearCity/:city',(req,res)=> {
+    const dat = req.params.city;
+    const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), "[eéèêaàoôuù]");
+            ServiceUser.find({'service_address.city':{ $regex : data, $options : 'i' }})
+                .populate('user')
+                .populate('service')
+                .then(service => {
+
+                    res.json(service);
+
+                })
+                .catch(err => res.status(404).json({ service: 'No service found' }));
 
 });
 
