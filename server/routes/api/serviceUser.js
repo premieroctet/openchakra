@@ -464,8 +464,8 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
 
 // @Route GET /myAlfred/api/serviceUser/near/:city
 // View all serviceUser by city
-router.get('/nearCity/:city',(req,res)=> {
-    const dat = req.params.city;
+router.post('/nearCity',(req,res)=> {
+    const dat = req.body.city;
     const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), "[eéèêaàoôuù]");
             ServiceUser.find({'service_address.city':{ $regex : data, $options : 'i' }})
                 .populate('user')

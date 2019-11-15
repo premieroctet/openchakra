@@ -21,6 +21,7 @@ import 'react-dates/initialize';
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
 import moment from "moment";
 import 'react-dates/lib/css/_datepicker.css';
+import AlgoliaPlaces from "algolia-places-react";
 
 const geolib = require('geolib');
 const _ = require('lodash');
@@ -117,9 +118,33 @@ class searchNotLogin extends React.Component {
             this.setState({click: true, click2:false});
         } else {
             const city = this.state.searchCity;
-            axios.get(url+'myAlfred/api/serviceUser/nearCity/'+city)
-                .then()
-                .catch();
+            const obj = {city:city};
+            axios.post(url+'myAlfred/api/serviceUser/nearCity',obj)
+                .then(res => {
+                    let serviceUser = res.data;
+                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
+                    this.setState({serviceUser:sorted,serviceUserCopy: sorted});
+                    axios.get(url+'myAlfred/api/category/all/sort')
+                        .then(res => {
+                            let categories = res.data;
+                            this.setState({categories:categories});
+                            categories.forEach(e => {
+                                this.setState({[e.label]:0});
+                                this.state.serviceUser.forEach(a => {
+                                    if(a.service.category === e._id){
+                                        this.setState(prevState => {
+                                            return {[e.label]: prevState[e.label] + 1}
+                                        })
+                                    }
+                                })
+                            })
+                    })
+                    .catch(err => console.log(err));
+                })
+                .catch(err => console.log(err));
+
+            this.setState({click: true, click2:false});
         }
 
 
@@ -579,6 +604,12 @@ class searchNotLogin extends React.Component {
         }
     }
 
+    onChangeAddress({suggestion}) {
+        this.setState({searchCity: suggestion.name});
+
+
+    }
+
 
 
     render() {
@@ -608,13 +639,22 @@ class searchNotLogin extends React.Component {
                                 />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField
-                                    style={{width:'100%'}}
-                                    value={this.state.searchCity}
-                                    name={'searchCity'}
-                                    onChange={this.onChange}
-                                    margin="normal"
-                                    variant="outlined"
+                                <AlgoliaPlaces
+                                    placeholder='Recherchez une ville'
+
+                                    options={{
+                                        appId: 'plKATRG826CP',
+                                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                                        language: 'fr',
+                                        countries: ['fr'],
+                                        type: 'city',
+                                        useDeviceLocation: 'true'
+
+
+                                    }}
+
+
+                                    onChange={(suggestion) =>this.onChangeAddress(suggestion)}
                                 />
 
                             </Grid>
