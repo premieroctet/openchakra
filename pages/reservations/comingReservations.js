@@ -359,118 +359,67 @@ class ComingReservations extends React.Component {
 
                                 </Grid>
                                 {tabs ? <React.Fragment>
-                                  {this.state.userReservations.map(booking => {
-                                    return (
-                                      <Grid container className={classes.mobilerow} style={{borderBottom: '1px #8281813b solid'}}>
-                                        <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
-                                          <img src={`../../${booking.alfred.picture}`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
-                                        </Grid>
-                                        <Grid item xs={5} md={7}>
-                                          <Typography style={{marginTop: '2%', color: '#419F41'}}>{booking.status} - {booking.alfred.firstname}</Typography>
-                                          <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
-                                          <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
-                                        </Grid>
-                                        <Grid item xs={1} style={{}}>
-                                          <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{booking.amount}€</Typography>
-                                        </Grid>
-                                        <Grid item xs={2} style={{}}>
-                                          <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href="/myshop/statut"><a style={{textDecoration: 'none', color: 'white'}}>Voir la réservation</a></Link></Typography>
-                                        </Grid>
-                                      </Grid>
-                                    )
-                                  })}
-                                </React.Fragment>: <React.Fragment>
-                                <Grid container className={classes.mobilerow} style={{borderBottom: '1px #8281813b solid'}}>
-                                    <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
-                                        <img src={`../../static/profile/ui.png`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
-                                    </Grid>
-                                    <Grid item xs={5} md={7}>
-                                        <Typography style={{marginTop: '2%', color: '#419F41'}}>Confirmée - Prénom</Typography>
-                                        <Typography style={{color: '#9B9B9B'}}>Date - Heure</Typography>
-                                        <Typography style={{color: '#9B9B9B'}}>Service</Typography>
-                                    </Grid>
-                                    <Grid item xs={1} style={{}}>
-                                        <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>28€</Typography>
-                                    </Grid>
-                                    <Grid item xs={2} style={{}}>
-                                        <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href="/myshop/statut"><a style={{textDecoration: 'none', color: 'white'}}>Voir la réservation</a></Link></Typography>
-                                    </Grid>
-
-                                </Grid>
-                                
-                                <Grid container className={classes.mobilerow} style={{borderBottom: '1px #8281813b solid'}}>
-                                    <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
-                                        <img src={`../../static/profile/62.jpg`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
-                                    </Grid>
-                                    <Grid item xs={5} md={7}>
-                                        <Typography style={{marginTop: '2%', color: '#A30808'}}>En attente de confirmation - Prénom</Typography>
-                                        <Typography style={{color: '#955E5E'}}><span style={{cursor:'pointer'}}>Accepter</span> ou <span style={{cursor:'pointer'}}>refuser</span></Typography>
-                                        <Typography style={{color: '#9B9B9B'}}>Date - Heure</Typography>
-                                        <Typography style={{color: '#9B9B9B'}}>Service</Typography>
-                                    </Grid>
-                                    <Grid item xs={1} style={{}}>
-                                        <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>28€</Typography>
-                                    </Grid>
-                                    <Grid item xs={2} style={{}}>
-                                        <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href="/myshop/statut"><a style={{textDecoration: 'none', color: 'white'}}>Voir la</a></Link></Typography>
-                                    </Grid>
-
-                                </Grid>
-                                
-                                <Grid container className={classes.mobilerow} style={{borderBottom: '1px #8281813b solid'}}>
-                                    <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
-                                        <img src={`../../static/profile/256.jpg`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
-                                    </Grid>
-                                    <Grid item xs={5} md={7}>
-                                        <Typography style={{marginTop: '2%', color: '#747474'}}>Expirée  - Prénom</Typography>
-                                        <Typography style={{color: '#9B9B9B'}}>Date - Heure</Typography>
-                                        <Typography style={{color: '#9B9B9B'}}>Service</Typography>
-                                    </Grid>
-                                    <Grid item xs={1} style={{}}>
-                                        <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>28€</Typography>
-                                    </Grid>
-                                    <Grid item xs={2} style={{}}>
-                                        <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href="/myshop/statut"><a style={{textDecoration: 'none', color: 'white'}}>Voir la</a></Link></Typography>
-                                    </Grid>
-
-                                </Grid>
-                                
-                                <Grid container className={classes.mobilerow} style={{borderBottom: '1px #8281813b solid'}}>
-                                    <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
-                                        <img src={`../../static/profile/leslie_morales.jpg`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
-                                    </Grid>
-                                    <Grid item xs={5} md={7}>
-                                        <Typography style={{marginTop: '2%', color: '#747474'}}>Annulée - Prénom</Typography>
-                                        <Typography style={{color: '#9B9B9B'}}>Date - Heure</Typography>
-                                        <Typography style={{color: '#9B9B9B'}}>Service</Typography>
-                                    </Grid>
-                                    <Grid item xs={1} style={{}}>
-                                        <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>28€</Typography>
-                                    </Grid>
-                                    <Grid item xs={2} style={{}}>
-                                        <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href="/myshop/statut"><a style={{textDecoration: 'none', color: 'white'}}>Voir la</a></Link></Typography>
-                                    </Grid>
-
-                                </Grid>
-                                
-                                <Grid container className={classes.mobilerow} style={{borderBottom: '1px #8281813b solid'}}>
-                                    <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
-                                        <img src={`../../static/profile/owl-login.png`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
-                                    </Grid>
-                                    <Grid item xs={5} md={7}>
-                                        <Typography style={{marginTop: '2%', color: '#747474'}}>Terminée - Prénom</Typography>
-                                        <Typography style={{color: '#9B9B9B'}}>Date - Heure</Typography>
-                                        <Typography style={{color: '#9B9B9B'}}>Service</Typography>
-                                    </Grid>
-                                    <Grid item xs={1} style={{}}>
-                                        <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>28€</Typography>
-                                    </Grid>
-                                    <Grid item xs={2} style={{}}>
-                                        <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href="/myshop/statut"><a style={{textDecoration: 'none', color: 'white'}}>Voir la</a></Link></Typography>
-                                    </Grid>
-
-                                </Grid>
-                                </React.Fragment>}
+                                  {this.state.userReservations.length ?
+                                    this.state.userReservations.map((booking, i) => {
+                                        if (booking.status === 'Confirmée' || booking.status === 'En attente de confirmation' || booking.status === 'Demande d\'infos' || booking.status === 'Pré-approuvée') {
+                                            return (
+                                                <Grid container className={classes.mobilerow} style={{borderBottom: '1px #8281813b solid'}}>
+                                                    <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
+                                                        <img src={`../../${booking.alfred.picture}`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
+                                                    </Grid>
+                                                    <Grid item xs={5} md={7}>
+                                                        <Typography style={{marginTop: '2%', color: '#419F41'}}>{booking.status} - {booking.alfred.firstname}</Typography>
+                                                        <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
+                                                        <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={1} style={{}}>
+                                                        <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{booking.amount}€</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={2} style={{}}>
+                                                        <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true } }}><a style={{textDecoration: 'none', color: 'white'}}>Voir la réservation</a></Link></Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            )
+                                        } else if (this.state.userReservations.length === i + 1) {
+                                            return <p>Vous n'avez aucune réservation en tant qu'utilisateur</p>
+                                        } else {
+                                            return null;
+                                        }
+                                        
+                                  })
+                                :
+                                <p>Vous n'avez aucune réservation en tant qu'utilisateur</p>}
+                                </React.Fragment>: 
+                                this.state.alfredReservations.length ?
+                                  this.state.alfredReservations.map((booking, i) => {
+                                    if (booking.status === 'Confirmée' || booking.status === 'En attente de confirmation' || booking.status === 'Demande d\'infos' || booking.status === 'Pré-approuvée') {
+                                        return (
+                                            <Grid container className={classes.mobilerow} style={{borderBottom: '1px #8281813b solid'}}>
+                                                <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
+                                                    <img src={`../../${booking.user.picture}`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
+                                                </Grid>
+                                                <Grid item xs={5} md={7}>
+                                                    <Typography style={{marginTop: '2%', color: '#419F41'}}>{booking.status === 'Pré-approuvée' ? 'Invitation à réserver' : booking.status} - {booking.user.firstname}</Typography>
+                                                    <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
+                                                    <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
+                                                </Grid>
+                                                <Grid item xs={1} style={{}}>
+                                                    <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{booking.amount}€</Typography>
+                                                </Grid>
+                                                <Grid item xs={2} style={{}}>
+                                                    <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true } }}><a style={{textDecoration: 'none', color: 'white'}}>Voir la réservation</a></Link></Typography>
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    } else if (this.state.alfredReservations.length === i + 1) {
+                                        return <p>Vous n'avez aucune réservation en tant qu'Alfred</p>
+                                    } else {
+                                        return null;
+                                    }
+                                  })
+                                  :
+                                  <p>Vous n'avez aucune réservation en tant qu'Alfred</p>
+                                }
                             </Grid> 
                         </Grid>
 
