@@ -90,7 +90,6 @@ const styles = theme => ({
         },
     },
     prestationsPres: {
-        padding: '0 2rem',
         [theme.breakpoints.down('sm')]: {
             padding: '0!important',
         }
@@ -709,6 +708,59 @@ const CheckboxCustom = withStyles({
     checked: {},
 })(props => <Checkbox color="default" {...props} />);
 
+const IOSSwitch = withStyles(theme => ({
+    root: {
+        width: 42,
+        height: 26,
+        padding: 0,
+        margin: theme.spacing(1),
+    },
+    switchBase: {
+        padding: 1,
+        '&$checked': {
+            transform: 'translateX(16px)',
+            color: theme.palette.common.white,
+            '& + $track': {
+                backgroundColor: '#52d869',
+                opacity: 1,
+                border: 'none',
+            },
+        },
+        '&$focusVisible $thumb': {
+            color: '#52d869',
+            border: '6px solid #fff',
+        },
+    },
+    thumb: {
+        width: 24,
+        height: 24,
+    },
+    track: {
+        borderRadius: 26 / 2,
+        border: `1px solid ${theme.palette.grey[400]}`,
+        backgroundColor: theme.palette.grey[50],
+        opacity: 1,
+        transition: theme.transitions.create(['background-color', 'border']),
+    },
+    checked: {},
+    focusVisible: {},
+}))(({ classes, ...props }) => {
+    return (
+      <Switch
+        focusVisibleClassName={classes.focusVisible}
+        disableRipple
+        classes={{
+            root: classes.root,
+            switchBase: classes.switchBase,
+            thumb: classes.thumb,
+            track: classes.track,
+            checked: classes.checked,
+        }}
+        {...props}
+      />
+    );
+});
+
 class Form extends React.Component {
     constructor(props) {
         super(props);
@@ -1293,7 +1345,7 @@ class Form extends React.Component {
                                                         return(
                                                             <div style={{padding: '0 2rem'}}>
                                                                 <div style={{paddingBottom: '1rem'}}>
-                                                                    <Grid container spacing={8}>
+                                                                    <Grid>
                                                                         {s.filters.map((f, indexf) => {
                                                                             return (
                                                                                 <Grid
@@ -1302,14 +1354,14 @@ class Form extends React.Component {
                                                                                     key={f.id}
                                                                                     className={classes.prestationsPres}
                                                                                 >
-                                                                                    <p>{f.label === "Aucun" ? null : f.label}</p>
-                                                                                    <Grid container>
+                                                                                    <Grid>
                                                                                     {f.prestations.map((p, indexp) => {
                                                                                         return(
-                                                                                            <Grid item xs={6} sm={6} md={3} key={p.id}>
+                                                                                            <Grid key={p.id} style={{width:'100%', display:'flex' /*backgroundColor:'blue'*/ , alignItems: 'center' , height:'50px'}}>
+                                                                                              <div style={{width: '70%', /*backgroundColor:'purple'*/ }}>
                                                                                                 <FormControlLabel
                                                                                                     control={
-                                                                                                        <Switch
+                                                                                                        <IOSSwitch
                                                                                                             color="primary"
                                                                                                             type="checkbox"
                                                                                                             checked={p.checked}
@@ -1326,86 +1378,92 @@ class Form extends React.Component {
                                                                                                     }
                                                                                                     label={p.label}
                                                                                                 />
+                                                                                              </div>
+                                                                                              <div style={{display:'flex', flexDirection:'row', width:'30%', alignItems: 'end', marginBottom: '2%' /*backgroundColor:'grey'*/}}>
                                                                                                 {p.checked === true ?
-                                                                                                    <React.Fragment><Field
-                                                                                                        name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`}
-                                                                                                        placeholder="prix"
-                                                                                                        render={({field}) => {
-                                                                                                            return (
-                                                                                                                <React.Fragment>
-                                                                                                                    <TextField
-                                                                                                                        {...field}
-                                                                                                                        value={field.value}
-                                                                                                                        style={{width: '90%'}}
-                                                                                                                        label={`Prix`}
-                                                                                                                        type="number"
-                                                                                                                        disabled={!p.checked}
-                                                                                                                        margin="none"
-                                                                                                                        InputProps={{
-                                                                                                                            inputProps: {
-                                                                                                                                min: 0
-                                                                                                                            },
-                                                                                                                            endAdornment: <InputAdornment position="start">€</InputAdornment>,
-
-                                                                                                                        }}
-                                                                                                                    />
-                                                                                                                    <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                                                                                </React.Fragment>
-                                                                                                            )
-                                                                                                        }}
-                                                                                                    />
+                                                                                                    <React.Fragment>
                                                                                                         <Field
-                                                                                                            name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`}
-                                                                                                            placeholder="méthode de facturation"
-                                                                                                            render={({field, form}) => {
-                                                                                                                return (
-                                                                                                                    <React.Fragment>
-                                                                                                                        <MaterialSelect
-                                                                                                                            {...field}
-                                                                                                                            style={{width: '90%'}}
-                                                                                                                            helperText={`Méthode de facturation`}
-                                                                                                                            disabled={!p.checked}
-                                                                                                                            margin="none"
-                                                                                                                            onChange={event => {
-                                                                                                                                this.setState({
-                                                                                                                                    [`billingChoice${index}${indexf}${indexp}`]: event.target.value
-                                                                                                                                });
-                                                                                                                                form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, event.target.value);
-                                                                                                                            }}
-                                                                                                                            value={p.billingChoice.map((option, indexc) => {
-                                                                                                                                if (indexc === 0) {
-                                                                                                                                    if (typeof this.state[`billingChoice${index}${indexf}${indexp}`] === 'undefined' || this.state[`billingChoice${index}${indexf}${indexp}`] === null) {
-                                                                                                                                        this.setState({
-                                                                                                                                            [`billingChoice${index}${indexf}${indexp}`]: option.label
-                                                                                                                                        });
-                                                                                                                                        form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, option.label);
-                                                                                                                                    }
-                                                                                                                                    return this.state[`billingChoice${index}${indexf}${indexp}`];
-                                                                                                                                }
-                                                                                                                            })}
-                                                                                                                        >
-                                                                                                                            {p.billingChoice.map(option => {
-                                                                                                                                return (
-                                                                                                                                <MenuItem key={option._id} value={option.label}>
-                                                                                                                                    {option.label}
-                                                                                                                                </MenuItem>
-                                                                                                                                )
+                                                                                                          name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`}
+                                                                                                          placeholder="prix"
+                                                                                                          render={({field}) => {
+                                                                                                              return (
+                                                                                                                  <React.Fragment>
+                                                                                                                      <TextField
+                                                                                                                          {...field}
+                                                                                                                          value={field.value}
+                                                                                                                          style={{width: '200px'}}
+                                                                                                                          label={`Prix`}
+                                                                                                                          type="number"
+                                                                                                                          disabled={!p.checked}
+                                                                                                                          margin="none"
+                                                                                                                          InputProps={{
+                                                                                                                              inputProps: {
+                                                                                                                                  min: 0
+                                                                                                                              },
+                                                                                                                              endAdornment: <InputAdornment position="start">€</InputAdornment>,
 
-                                                                                                                            })}
-                                                                                                                        </MaterialSelect>
-                                                                                                                        <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                                                                                    </React.Fragment>
-                                                                                                                )
-                                                                                                            }}
+                                                                                                                          }}
+                                                                                                                      />
+                                                                                                                      <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                                                  </React.Fragment>
+                                                                                                              )
+                                                                                                          }}
                                                                                                         />
-                                                                                                    </React.Fragment> : null}
+                                                                                                          <Field
+                                                                                                              name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`}
+                                                                                                              placeholder="méthode de facturation"
+                                                                                                              render={({field, form}) => {
+                                                                                                                  return (
+                                                                                                                      <React.Fragment>
+                                                                                                                          <MaterialSelect
+                                                                                                                              {...field}
+                                                                                                                              style={{width: '200px'}}
+                                                                                                                              helperText={`Méthode de facturation`}
+                                                                                                                              disabled={!p.checked}
+                                                                                                                              margin="none"
+                                                                                                                              onChange={event => {
+                                                                                                                                  this.setState({
+                                                                                                                                      [`billingChoice${index}${indexf}${indexp}`]: event.target.value
+                                                                                                                                  });
+                                                                                                                                  form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, event.target.value);
+                                                                                                                              }}
+                                                                                                                              value={p.billingChoice.map((option, indexc) => {
+                                                                                                                                  if (indexc === 0) {
+                                                                                                                                      if (typeof this.state[`billingChoice${index}${indexf}${indexp}`] === 'undefined' || this.state[`billingChoice${index}${indexf}${indexp}`] === null) {
+                                                                                                                                          this.setState({
+                                                                                                                                              [`billingChoice${index}${indexf}${indexp}`]: option.label
+                                                                                                                                          });
+                                                                                                                                          form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, option.label);
+                                                                                                                                      }
+                                                                                                                                      return this.state[`billingChoice${index}${indexf}${indexp}`];
+                                                                                                                                  }
+                                                                                                                              })}
+                                                                                                                          >
+                                                                                                                              {p.billingChoice.map(option => {
+                                                                                                                                  return (
+                                                                                                                                  <MenuItem key={option._id} value={option.label}>
+                                                                                                                                      {option.label}
+                                                                                                                                  </MenuItem>
+                                                                                                                                  )
+                                                                                                                              })}
+                                                                                                                          </MaterialSelect>
+                                                                                                                          <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                                                      </React.Fragment>
+                                                                                                                  )
+                                                                                                              }}
+
+                                                                                                          />
+                                                                                                    </React.Fragment>
+                                                                                                  : null}
+                                                                                              </div>
                                                                                             </Grid>
                                                                                         )
                                                                                     })}
                                                                                     </Grid>
                                                                                 </Grid>
                                                                             )
-                                                                        })}
+                                                                        })
+                                                                        }
                                                                     </Grid>
                                                                     <hr style={{margin: '1rem 0'}}/>
                                                                     <div>
