@@ -668,8 +668,8 @@ class detailsReservation extends React.Component {
                                             :
                                             bookingObj.status === 'Demande d\'infos' && currentUser._id === bookingObj.alfred._id ?
                                               <>
-                                                <div onClick={() => this.changeStatus('Pré-approuvée')} style={{textAlign: 'center', height: '40px', minWidth: '250px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px', marginTop: '20%'}}>
-                                                    <Link href={{ pathname: '/reservations/detailsReservation', query: { id: this.state.booking_id } }}>
+                                                <div style={{textAlign: 'center', height: '40px', minWidth: '250px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px', marginTop: '20%'}}>
+                                                    <Link href={{ pathname: '/reservations/preapprouve', query: { id: this.state.booking_id } }}>
                                                         <a style={{textDecoration:'none', color: 'white' }}>Pré-approuver</a>
                                                     </Link>
                                                 </div>
