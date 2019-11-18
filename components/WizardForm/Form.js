@@ -46,7 +46,7 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             padding: '0'
         },
-        fontFamily: 'helveticaNeue',
+        fontFamily: 'helvetica',
         overflow: 'scroll',
         height: 'auto',
     },
@@ -97,12 +97,12 @@ const styles = theme => ({
     contentCheckBox: {
         display:'flex',
         alignItems: 'center',
-        fontFamily: 'helveticaNeue',
+        fontFamily: 'helvetica',
     },
     inputTextField: {
         color:'white',
         fontSize: '1em',
-        fontFamily: 'helveticaNeue',
+        fontFamily: 'helvetica',
     }
 });
 
@@ -724,6 +724,18 @@ const IOSSwitch = withStyles(theme => ({
     );
 });
 
+const marks = [
+  {
+    value: 0,
+    label: '0 km',
+  },
+
+  {
+    value: 200,
+    label: '200km et +',
+  },
+];
+
 class Form extends React.Component {
     constructor(props) {
         super(props);
@@ -1218,7 +1230,7 @@ class Form extends React.Component {
                                                                             label : null,
                                                                             year: null,
                                                                             certification: null
-                                                                        }, perimeter: 50,
+                                                                        }, perimeter: 5,
                                                                         delayBeforeShop: 1,
                                                                         delayBeforeShopDWM: 'jours',
                                                                         city: this.state.userCity,
@@ -1327,11 +1339,12 @@ class Form extends React.Component {
                                                                                     key={f.id}
                                                                                     className={classes.prestationsPres}
                                                                                 >
+                                                                                  <p>{f.label === "Aucun" ? null : f.label}</p>
                                                                                     <Grid>
                                                                                     {f.prestations.map((p, indexp) => {
                                                                                         return(
-                                                                                            <Grid key={p.id} style={{width:'100%', display:'flex' /*backgroundColor:'blue'*/ , alignItems: 'center' , height:'50px'}}>
-                                                                                              <div style={{width: '70%', /*backgroundColor:'purple'*/ }}>
+                                                                                            <Grid key={p.id} style={{width:'100%', display:'flex', alignItems: 'center' , height:'50px'}}>
+                                                                                              <div style={{width: '70%'}}>
                                                                                                 <FormControlLabel
                                                                                                     control={
                                                                                                         <IOSSwitch
@@ -1451,7 +1464,7 @@ class Form extends React.Component {
                                                                                 />
                                                                             }
                                                                             label={<React.Fragment>
-                                                                                <p style={{fontFamily: 'helveticaNeue'}}>A l'adresse de prestation de mon client</p>
+                                                                                <p style={{fontFamily: 'helvetica'}}>A l'adresse de prestation de mon client</p>
                                                                             </React.Fragment>}
                                                                           />
                                                                         </Grid>
@@ -1465,7 +1478,7 @@ class Form extends React.Component {
                                                                                 />
                                                                             }
                                                                             label={<React.Fragment>
-                                                                                <p style={{fontFamily: 'helveticaNeue'}}>A mon domicile</p>
+                                                                                <p style={{fontFamily: 'helvetica'}}>A mon domicile</p>
                                                                             </React.Fragment>}
                                                                           />
                                                                         </Grid>
@@ -1692,9 +1705,9 @@ class Form extends React.Component {
                                                                             <Typography style={{marginBottom: '1.5rem', fontSize: 17}}>Définissez le périmètre que vous souhaitez couvrir :</Typography>
                                                                             <InputRange
                                                                                 formatLabel={value => `${value}km`}
-                                                                                step={5}
-                                                                                maxValue={500}
-                                                                                minValue={5}
+                                                                                step={1}
+                                                                                maxValue={200}
+                                                                                minValue={1}
                                                                                 value={arrayHelpers.form.values.submission[index].perimeter}
                                                                                 onChange={inputRangeValue => arrayHelpers.form.setFieldValue(`submission[${index}].perimeter`, inputRangeValue)}
                                                                             />
@@ -2014,7 +2027,7 @@ class Form extends React.Component {
                         <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
                             <div className={classes.newContainer}>
                                     <Grid container>
-                                            <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                            <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                 Comment les utilisateurs peuvent réserver ? <span style={{color: '#F8727F' }}>*</span>
                                             </h6>
                                         <Grid item style={{marginLeft: 20}}>
@@ -2035,12 +2048,12 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.booking_request}
                                                                 color="primary"
                                                                 name={"booking_request"}
-                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<FilledButton />}
+                                                                icon={<CircleUnchecked/>}
+                                                                checkedIcon={<RadioButtonCheckedIcon />}
 
                                                             />
                                                         }
-                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helveticaNeue'}}>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.</Typography>}
+                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helvetica'}}>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.</Typography>}
                                                     />
                                                 )
                                             }} />
@@ -2063,12 +2076,12 @@ class Form extends React.Component {
                                                             value={form.values.createShop.no_booking_request}
                                                             color="primary"
                                                             name={"no_booking_request"}
-                                                            icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                            checkedIcon={<FilledButton />}
+                                                            icon={<CircleUnchecked/>}
+                                                            checkedIcon={<RadioButtonCheckedIcon />}
 
                                                         />
                                                     }
-                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helveticaNeue'}}>Les utilisateurs peuvent réserver mes services directement sans demande de réservation.</Typography>}
+                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helvetica'}}>Les utilisateurs peuvent réserver mes services directement sans demande de réservation.</Typography>}
 
                                                     />
                                                 )
@@ -2077,11 +2090,11 @@ class Form extends React.Component {
                                     </Grid>
                                     <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                     <Grid container>
-                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                             Vos conditions de réservations
                                         </h6>
 
-                                        <Typography style={{marginBottom: 20,fontFamily: 'helveticaNeue'}}>
+                                        <Typography style={{marginBottom: 20,fontFamily: 'helvetica'}}>
                                         Il se peut que vous ayez moins de réservations si vous ajoutez des conditions. Les personnes qui ne répondent pas à vos critères peuvent quand même envoyer une demande.
                                         </Typography>
 
@@ -2099,14 +2112,14 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.my_alfred_conditions}
                                                                 color="primary"
                                                                 name={"my_alfred_conditions"}
-                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<FilledButton />}
+                                                                icon={<CircleUnchecked/>}
+                                                                checkedIcon={<RadioButtonCheckedIcon />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Conditions My-Alfred</p>
-                                                    <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Conditions My-Alfred</p>
+                                                    <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
                                                         Numéro de téléphone confirmé, adresse e-mail, informations de paiement et acceptation du règlement intérieur.
                                                 </p>
                                             </React.Fragment>}
@@ -2128,14 +2141,14 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.profile_picture_user}
                                                                 color="primary"
                                                                 name={"profile_picture_user"}
-                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<FilledButton />}
+                                                                icon={<CircleUnchecked/>}
+                                                                checkedIcon={<RadioButtonCheckedIcon />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Photo de profil</p>
-                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Photo de profil</p>
+                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
                                                             Si vous activez cette condition, vous ne pourrez voir les photos de profil des utilisateurs qu'une fois la réservation confirmée.
                                                         </p>
                                                     </React.Fragment>}
@@ -2157,14 +2170,14 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.identity_card}
                                                                 color="primary"
                                                                 name={"identity_card"}
-                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<FilledButton />}
+                                                                icon={<CircleUnchecked/>}
+                                                                checkedIcon={<RadioButtonCheckedIcon />}
                                                                 style={{marginTop: -11}}
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Pièce d'identité officielle</p>
-                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Pièce d'identité officielle</p>
+                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
                                                             Ces utilisateurs ont vérifié leur identité.
                                                         </p>
                                                     </React.Fragment>}
@@ -2186,14 +2199,14 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.recommandations}
                                                                 color="primary"
                                                                 name={"recommandations"}
-                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<FilledButton />}
+                                                                icon={<CircleUnchecked/>}
+                                                                checkedIcon={<RadioButtonCheckedIcon />}
                                                                 style={{marginTop: -39}}
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Recommandations d'autres Alfred</p>
-                                                            <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Recommandations d'autres Alfred</p>
+                                                            <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
                                                                 Ces utilisateurs ont déjà utilisé des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commentaires négatifs.
                                                             </p>
                                                         </React.Fragment>}
@@ -2205,7 +2218,7 @@ class Form extends React.Component {
                                     </Grid>
                                     <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                     <Grid container>
-                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                             Votre message de bienvenue validant votre
                                             réservation <span style={{color: '#F8727F' }}>*</span>
                                         </h6>
@@ -2234,10 +2247,10 @@ class Form extends React.Component {
                                     <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                     <Grid container>
 
-                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                             Conditions d’annulation <span style={{color: '#F8727F' }}>*</span>
                                         </h6>
-                                        <Typography style={{fontFamily: 'helveticaNeue', width: '100%'}}>
+                                        <Typography style={{fontFamily: 'helvetica', width: '100%'}}>
                                             Choisissez vos conditions en cas d'annulation de la part
                                             des utilisateurs.
                                         </Typography>
@@ -2263,16 +2276,16 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.flexible_cancel}
                                                                 color="primary"
                                                                 name={"flexible_cancel"}
-                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<FilledButton />}
+                                                                icon={<CircleUnchecked/>}
+                                                                checkedIcon={<RadioButtonCheckedIcon />}
                                                                 style={{marginTop: -20}}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Flexibles</p>
+                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Flexibles</p>
 
-                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
                                                                     Remboursement intégral jusqu’à un jour avant la prestation
                                                                 </p>
                                                             </React.Fragment>
@@ -2300,15 +2313,15 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.moderate_cancel}
                                                                 color="primary"
                                                                 name={"moderate_cancel"}
-                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<FilledButton />}
+                                                                icon={<CircleUnchecked/>}
+                                                                checkedIcon={<RadioButtonCheckedIcon />}
                                                                 style={{marginTop: -20}}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue'}}>Modérées</p>
-                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Modérées</p>
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
                                                                     Remboursement intégral jusqu’à 5 jours avant la prestation
                                                                 </p>
                                                             </React.Fragment>
@@ -2336,15 +2349,15 @@ class Form extends React.Component {
                                                                 value={form.values.createShop.strict_cancel}
                                                                 color="primary"
                                                                 name={"strict_cancel"}
-                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                checkedIcon={<FilledButton />}
+                                                                icon={<CircleUnchecked/>}
+                                                                checkedIcon={<RadioButtonCheckedIcon />}
                                                                 style={{ marginTop: -20 }}
                                                             />
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                <p style={{ marginBottom: 0,fontSize: 18, fontFamily: 'helveticaNeue' }}>Strictes</p>
-                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helveticaNeue'}}>
+                                                                <p style={{ marginBottom: 0,fontSize: 18, fontFamily: 'helvetica' }}>Strictes</p>
+                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
                                                                     Remboursement intégral jusqu’à 10 jours avant la prestation
                                                                 </p>
                                                             </React.Fragment>
@@ -2363,10 +2376,10 @@ class Form extends React.Component {
                                 <React.Fragment>
                                     <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
                                             <div className={classes.newContainer}>
-                                                <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                     Téléchargez une photo de profil
                                                 </h6>
-                                                <Typography style={{fontFamily: 'helveticaNeue', marginBottom: '1rem'}}>
+                                                <Typography style={{fontFamily: 'helvetica', marginBottom: '1rem'}}>
                                                     Téléchargez une photo de claire et lumineuse, de bonne qualité. Pour un rendu optimal, la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif, avec seulement vous sur la photo.
                                                 </Typography>
                                                 <Grid container style={{ marginBottom: 15 }}>
@@ -2418,10 +2431,10 @@ class Form extends React.Component {
                                                 </Grid>
                                                 <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                                 <Grid container>
-                                                    <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10, width: '100%'}}>
+                                                    <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10, width: '100%'}}>
                                                         Vérifiez votre identité <span style={{color: '#F8727F' }}>*</span>
                                                     </h6>
-                                                    <Typography style={{fontFamily: 'helveticaNeue'}}>
+                                                    <Typography style={{fontFamily: 'helvetica'}}>
                                                         Ces informations ne seront pas visibles par les utilisateurs. Un profil vérifié est plus engageant pour les utilisateurs !
                                                     </Typography>
                                                     <Grid item xs={12}>
@@ -2631,11 +2644,11 @@ class Form extends React.Component {
                                                                                 name={"isParticular"}
                                                                                 color="primary"
                                                                                 value={form.values.createShop.is_particular}
-                                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                                checkedIcon={<FilledButton />}
+                                                                                icon={<CircleUnchecked/>}
+                                                                                checkedIcon={<RadioButtonCheckedIcon />}
                                                                             />
                                                                         }
-                                                                        label={<h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                        label={<h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                                         Je suis un particulier
                                                                 </h6>}
                                                                     />
@@ -2673,11 +2686,11 @@ class Form extends React.Component {
                                                                                 name={"isProfessional"}
                                                                                 color="primary"
                                                                                 value={form.values.createShop.is_professional}
-                                                                                icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                                                checkedIcon={<FilledButton />}
+                                                                                icon={<CircleUnchecked/>}
+                                                                                checkedIcon={<RadioButtonCheckedIcon />}
                                                                             />
                                                                         }
-                                                                        label={<h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                        label={<h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                                         Je suis un professionnel
                                                                 </h6>}
                                                                     />
@@ -2730,7 +2743,7 @@ class Form extends React.Component {
                                                 <hr style={{margin: '1rem 0'}}/>
                                                 <Grid container>
                                                     <Grid item xs={12}>
-                                                        <h6 style={{fontFamily: 'helveticaNeue', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
                                                             Vos obligations légales <span style={{color: '#F8727F' }}>*</span>
                                                         </h6>
                                                     </Grid>
