@@ -989,13 +989,9 @@ class detailsReservation extends React.Component {
                                     null
                                     :
                                     bookingObj.status === 'En attente de confirmation' && currentUser._id !== bookingObj.alfred._id || bookingObj.status === 'Confirmée' || bookingObj.status === 'Demande d\'infos' && currentUser._id !== bookingObj.alfred._id || bookingObj.status === 'Pré-approuvée' ?
-                                        <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}} onClick={() => this.changeStatus('Annulée')}>
-                                            <Link href="#">
+                                        <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}}>
+                                            <Link href={{ pathname: 'cancel', query: { id: this.state.booking_id }}}>
                                                 <a 
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        this.changeStatus('Annulée')
-                                                    }} 
                                                     style={{textDecoration: 'none', fontSize: '1.1rem', color: 'rgb(47, 188, 211)'}}
                                                 >
                                                     Annuler la réservation
