@@ -18,7 +18,7 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Card from "@material-ui/core/Card";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 import FormControl from "@material-ui/core/FormControl";
 import Select2 from "react-select";
@@ -185,6 +185,7 @@ class userServices extends React.Component {
             optionPrice: null,
             date: Date.now(),
             hour: Date.now(),
+            selectedOption: null
         };
 
         this.handleclick1 = this.handleclick1.bind(this);
@@ -444,7 +445,7 @@ class userServices extends React.Component {
 
     }
 
-    async handleCheckedOption(price) {
+    async handleCheckedOption(label, price) {
         await this.setState({ checkedOption: !this.state.checkedOption });
 
         if (this.state.checkedOption === true) {
@@ -455,6 +456,7 @@ class userServices extends React.Component {
             grandTotalTrue = parseFloat(grandTotalTrue.toFixed(2));
             this.setState({ fees: feesTrue })
             this.setState({ optionPrice: price });
+            this.setState({ selectedOption: { label: label, price: price }});
             this.setState({ grandTotal: grandTotalTrue });
         } 
         if (this.state.checkedOption === false) {
@@ -465,6 +467,7 @@ class userServices extends React.Component {
             grandTotalFalse = parseFloat(grandTotalFalse.toFixed(2));
             this.setState({ fees: feesFalse })
             this.setState({ optionPrice: null });
+            this.setState({ selectedOption: null })
             this.setState({ grandTotal: grandTotalFalse });
         } 
 
@@ -494,7 +497,7 @@ class userServices extends React.Component {
 
                     reference = letter + '_' + day+month+year;
 
-                    const bookingObj = {
+                    let bookingObj = {
                         reference: reference,
                         service: this.state.service.label,
                         address: this.state.serviceUser.service_address,
@@ -508,6 +511,10 @@ class userServices extends React.Component {
                         chatroom: res.data._id,
                         fees: this.state.fees,
                         status: 'Demande d\'infos'
+                    }
+
+                    if (this.state.selectedOption !== null) {
+                        bookingObj.option = this.state.selectedOption;
                     }
 
                     console.log(bookingObj);
@@ -1536,8 +1543,6 @@ class userServices extends React.Component {
                                             locale='fr'
                                             showMonthDropdown
                                             dateFormat="dd/MM/yyyy"
-
-
                                         />
                                           </Grid>
                                         </Grid>
@@ -1559,9 +1564,6 @@ class userServices extends React.Component {
                                                 timeCaption="Heure"
                                                 dateFormat="HH:mm"
                                                 locale='fr'
-
-
-
                                             />
                                           </Grid>
                                         </Grid>
@@ -1659,7 +1661,7 @@ class userServices extends React.Component {
 
                                                     <Grid container className={classes.prestationlist} style={{backgroundColor:'white',padding:'0px', paddingBottom:'15px',  paddingTop:'15px', minHeight:'50px', minWidth:'120px',}}>
                                                     <Grid item xs={1} className={classes.prestationside} >
-                                                        <input type="checkbox" checked={this.state.checkedOption} onChange={() => this.handleCheckedOption(options.price)} />
+                                                        <input type="checkbox" checked={this.state.checkedOption} onChange={() => this.handleCheckedOption(options.label, options.price)} />
                                                    </Grid>
 
                                             <Grid item xs={5} className={classes.prestationheader} style={{backgroundColor:'white', color:'black', borderBottom:'1px solid white'}}>

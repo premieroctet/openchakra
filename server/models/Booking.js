@@ -49,6 +49,12 @@ const BookingSchema = new Schema({
         type: String,
         required: true
     },
+    end_date: {
+        type: String
+    },
+    end_time: {
+        type: String
+    },
     alfred: {
         type: Schema.Types.ObjectId,
         ref: 'users'
@@ -58,6 +64,14 @@ const BookingSchema = new Schema({
         ref: 'users'
     },
     prestations: [{}],
+    option: {
+        label: {
+            type: String
+        },
+        price: {
+            type: Number
+        }
+    },
     chatroom: {
         type: Schema.Types.ObjectId,
         ref: 'chatroom'

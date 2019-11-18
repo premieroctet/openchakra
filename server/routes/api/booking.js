@@ -81,6 +81,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
     const bookingFields = {};
     bookingFields.reference = req.body.reference + '_' + random;
     bookingFields.service = req.body.service;
+    if (req.body.option) bookingFields.option = req.body.option;
     bookingFields.address = req.body.address; 
     bookingFields.equipments = req.body.equipments;
     bookingFields.amount = req.body.amount;
@@ -230,7 +231,11 @@ router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
 });
 
 router.put('/modifyBooking/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
-    Booking.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true })
+    const obj = { status: req.body.status };
+    if (req.body.end_date) obj.end_date = req.body.end_date;
+    if (req.body.end_time) obj.end_time = req.body.end_time;
+
+    Booking.findByIdAndUpdate(req.params.id, obj, { new: true })
         .populate('alfred')
         .populate('user')
         .populate('prestation')

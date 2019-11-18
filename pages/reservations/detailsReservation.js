@@ -209,6 +209,8 @@ class detailsReservation extends React.Component {
       const booking_id = this.props.booking_id;
 
       this.setState({ booking_id: this.props.booking_id });
+
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       
       axios.get(url + 'myAlfred/api/users/current')
         .then(res => {
@@ -649,8 +651,8 @@ class detailsReservation extends React.Component {
                                                 currentUser._id === bookingObj.alfred._id ?
                                                     <>
                                                         <Typography style={{minWidth: '250px'}}>Votre réservation doit être confirmée avant le {moment(bookingObj.date).add(1, 'd').format('DD/MM/YYYY')} à {moment(bookingObj.date).format('HH:mm')}</Typography>
-                                                        <div onClick={() => this.changeStatus('Pré-approuvée')} style={{textAlign: 'center', height: '40px', minWidth: '250px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px', marginTop: '20%'}}>
-                                                            <Link href={{ pathname: '/reservations/detailsReservation', query: { id: this.state.booking_id } }}>
+                                                        <div style={{textAlign: 'center', height: '40px', minWidth: '250px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px', marginTop: '20%'}}>
+                                                            <Link href={{ pathname: '/reservations/confirm', query: { id: this.state.booking_id } }}>
                                                                 <a style={{textDecoration:'none', color: 'white' }}>Confirmer la réservation</a>
                                                             </Link>
                                                         </div>
@@ -971,6 +973,14 @@ class detailsReservation extends React.Component {
                                 </Grid>
                                 <Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}}>
                                     <Typography style={{fontSize: '1rem'}}>Début le {bookingObj === null ? null : bookingObj.date_prestation} à {bookingObj === null ? null : bookingObj.time_prestation}</Typography>
+                                    {bookingObj === null ?
+                                        null
+                                        :
+                                        bookingObj.status === 'Confirmée' ?
+                                            <Typography style={{fontSize: '1rem'}}>Fin le {bookingObj === null ? null : bookingObj.end_date} à {bookingObj === null ? null : bookingObj.end_time}</Typography>
+                                            :
+                                            null
+                                    }
                                 </Grid>
                                 {/*<Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}}>
                                     <Link href="#"><a style={{textDecoration: 'none', fontSize: '1.1rem', color: 'rgb(47, 188, 211)'}}>Modifier la reservation</a></Link>
