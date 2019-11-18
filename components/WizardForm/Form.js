@@ -686,7 +686,7 @@ const IOSSwitch = withStyles(theme => ({
             color: '#47bdd7',
             '& + $track': {
                 backgroundColor: 'white',
-              
+
             },
         },
         '&$focusVisible $thumb': {
@@ -1049,7 +1049,7 @@ class Form extends React.Component {
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', overflow: 'hidden', height:'100%'}}>
+                        <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', height:'100%'}}>
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Votre catégorie de service</Typography>
                                     <Typography>
