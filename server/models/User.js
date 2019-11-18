@@ -203,7 +203,15 @@ const UserSchema = new Schema({
         type: Number,
         default: 0
     },
+    score_client: {
+        type: Number,
+        default: 0
+    },
     number_of_reviews: {
+        type: Number,
+        default: 0
+    },
+    number_of_reviews_client: {
         type: Number,
         default: 0
     },

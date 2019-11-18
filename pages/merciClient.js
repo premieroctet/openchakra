@@ -21,7 +21,7 @@ const styles = theme => ({
 
 });
 
-class merci extends React.Component {
+class merciClient extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -55,6 +55,9 @@ class merci extends React.Component {
 
                         {/*Le Contenu */}
                         <Grid container>
+
+                        </Grid>
+                        <Grid container>
                             <br></br>
                             {/*Contenu à Gauche*/}
 
@@ -77,9 +80,9 @@ class merci extends React.Component {
                                     <Grid container>
 
                                         <Grid item xs={12} style={{textAlign:'center'}}>
-                                            <p style={{fontSize:'30px'}}>Toute l’équipe de My-Alfred vous remercie d’avoir procéder à l’évaluation de votre Alfred. </p>
+                                            <p style={{fontSize:'30px'}}>Toute l’équipe de My-Alfred vous remercie d’avoir procéder à l’évaluation de votre client. </p>
 
-                                            <p style={{fontSize:'30px'}}>Une fois que votre Alfred aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !</p>
+                                            <p style={{fontSize:'30px'}}>Une fois que votre client aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !</p>
 
 
                                             <br></br>
@@ -117,4 +120,4 @@ class merci extends React.Component {
 
 
 
-export default withStyles(styles)(merci);
+export default withStyles(styles)(merciClient);

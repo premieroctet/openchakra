@@ -10,8 +10,8 @@ const User = require('../../models/User');
 
 router.get('/test',(req, res) => res.json({msg: 'Reviews Works!'}) );
 
-// @Route POST /myAlfred/api/reviews/add
-// Add a review
+// @Route POST /myAlfred/api/reviews/add/alfred
+// Add a review for an alfred
 // @Access private
 router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res) => {
 
@@ -53,6 +53,51 @@ router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res
                         }
                     )
                     .catch(err => console.log(err));
+});
+
+// @Route POST /myAlfred/api/reviews/add/client
+// Add a review for a client
+// @Access private
+router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res) => {
+
+
+    const reviewFields = {};
+    reviewFields.alfred = req.user.id;
+    reviewFields.user = mongoose.Types.ObjectId(req.body.client);
+    reviewFields.content = req.body.content;
+    reviewFields.serviceUser = req.body.service;
+
+    reviewFields.note_client = {};
+    reviewFields.note_client.reception = req.body.accueil;
+    reviewFields.note_client.accuracy= req.body.accuracy;
+    reviewFields.note_client.relational = req.body.relational;
+
+    let reception = parseInt(req.body.accueil,10);
+    let accuracy = parseInt(req.body.accuracy,10);
+    let relational = parseInt(req.body.relational,10);
+
+
+    reviewFields.note_client.global = (reception + relational + accuracy)/3;
+
+    const newReviews = new Reviews(reviewFields);
+    newReviews.save().then(reviews => res.json(reviews)).catch(err => console.log(err));
+
+    User.findByIdAndUpdate(req.body.client, {
+        $inc: {number_of_reviews_client: 1}
+    })
+        .then(() => {
+                User.findById(req.body.client)
+                    .then(user => {
+                        const score = (reception + relational + accuracy)/3;
+                        user.score_client = ((user.score_client + score)/2).toFixed(2);
+                        user.save().then(users => console.log('reviews update')).catch(err => console.log(err));
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            }
+        )
+        .catch(err => console.log(err));
 
 
 
