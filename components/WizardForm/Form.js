@@ -683,15 +683,14 @@ const IOSSwitch = withStyles(theme => ({
         padding: 1,
         '&$checked': {
             transform: 'translateX(16px)',
-            color: theme.palette.common.white,
+            color: '#47bdd7',
             '& + $track': {
-                backgroundColor: '#52d869',
-                opacity: 1,
-                border: 'none',
+                backgroundColor: 'white',
+              
             },
         },
         '&$focusVisible $thumb': {
-            color: '#52d869',
+            color: 'white',
             border: '6px solid #fff',
         },
     },
@@ -2009,13 +2008,7 @@ class Form extends React.Component {
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
-                        <FieldArray render={({form}) => {
-                            return (
-                              <Grid item xs={12} md={7}>
-                                <Schedule/>
-                              </Grid>
-                            )
-                        }} />
+                         <Schedule/>
                     </Wizard.Page>
                     <Wizard.Page>
                         <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
