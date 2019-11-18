@@ -288,6 +288,16 @@ class testSearch2 extends React.Component {
 
                              });
                              this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
+                             this.state.categoryFinal.forEach(e => {
+                                 this.setState({[e.label+'Final']:0});
+                                 this.state.finalServiceUser.forEach(a => {
+                                     if(a.service.category === e._id){
+                                         this.setState(prevState => {
+                                             return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                         })
+                                     }
+                                 })
+                             })
 
                          })
                          .catch(err => console.log(err));
@@ -328,6 +338,16 @@ class testSearch2 extends React.Component {
 
                              });
                              this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
+                             this.state.categoryFinal.forEach(e => {
+                                 this.setState({[e.label+'Final']:0});
+                                 this.state.finalServiceUser.forEach(a => {
+                                     if(a.service.category === e._id){
+                                         this.setState(prevState => {
+                                             return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                         })
+                                     }
+                                 })
+                             })
 
                          })
                          .catch(err => console.log(err));
@@ -369,6 +389,16 @@ class testSearch2 extends React.Component {
 
                              });
                              this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
+                             this.state.categoryFinal.forEach(e => {
+                                 this.setState({[e.label+'Final']:0});
+                                 this.state.finalServiceUser.forEach(a => {
+                                     if(a.service.category === e._id){
+                                         this.setState(prevState => {
+                                             return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                         })
+                                     }
+                                 })
+                             })
                          })
                          .catch(err => console.log(err));
                  }
@@ -396,6 +426,16 @@ class testSearch2 extends React.Component {
                                          ['desc','desc','desc','desc','desc']);
 
                                      this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
+                                     this.state.categoryFinal.forEach(e => {
+                                         this.setState({[e.label+'Final']:0});
+                                         this.state.finalServiceUser.forEach(a => {
+                                             if(a.service.category === e._id){
+                                                 this.setState(prevState => {
+                                                     return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                                 })
+                                             }
+                                         })
+                                     })
                                  })
                                  .catch(err => console.log(err));
                          } else if(address==='all') {
@@ -407,6 +447,16 @@ class testSearch2 extends React.Component {
                                      const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
                                          ['desc','desc','desc','desc','desc']);
                                      this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
+                                     this.state.categoryFinal.forEach(e => {
+                                         this.setState({[e.label+'Final']:0});
+                                         this.state.finalServiceUser.forEach(a => {
+                                             if(a.service.category === e._id){
+                                                 this.setState(prevState => {
+                                                     return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                                 })
+                                             }
+                                         })
+                                     })
 
                                  })
                                  .catch(err => console.log(err));
@@ -419,6 +469,16 @@ class testSearch2 extends React.Component {
                                      const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
                                          ['desc','desc','desc','desc','desc']);
                                      this.setState({finalServiceUser:sorted,finalServiceUserCopy:sorted});
+                                     this.state.categoryFinal.forEach(e => {
+                                         this.setState({[e.label+'Final']:0});
+                                         this.state.finalServiceUser.forEach(a => {
+                                             if(a.service.category === e._id){
+                                                 this.setState(prevState => {
+                                                     return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                                 })
+                                             }
+                                         })
+                                     })
 
                                  })
                                  .catch(err => console.log(err));
@@ -476,6 +536,16 @@ class testSearch2 extends React.Component {
                         arrayService.splice(arrayIndex[t],1);
 
                     this.setState({finalServiceUser:arrayService,copyFilterPro:arrayService});
+                    this.state.categoryFinal.forEach(e => {
+                        this.setState({[e.label+'Final']:0});
+                        this.state.finalServiceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                })
+                            }
+                        })
+                    })
                     },2000)
             } else {
                 setTimeout(()=>{if(this.state.filterDate){
@@ -526,6 +596,16 @@ class testSearch2 extends React.Component {
                         arrayService.splice(arrayIndex[t],1);
 
                     this.setState({serviceUser:arrayService,copyFilterPro:arrayService});
+                    this.state.categories.forEach(e => {
+                        this.setState({[e.label]:0});
+                        this.state.serviceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label]: prevState[e.label] + 1}
+                                })
+                            }
+                        })
+                    })
 
 
 
@@ -598,6 +678,16 @@ class testSearch2 extends React.Component {
                         arrayService.splice(arrayIndex[t], 1);
 
                     this.setState({finalServiceUser: arrayService,copyFilterParticulier:arrayService});
+                    this.state.categoryFinal.forEach(e => {
+                        this.setState({[e.label+'Final']:0});
+                        this.state.finalServiceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                })
+                            }
+                        })
+                    })
 
 
                 }, 2000)
@@ -654,6 +744,16 @@ class testSearch2 extends React.Component {
                         arrayService.splice(arrayIndex[t], 1);
 
                     this.setState({serviceUser: arrayService,copyFilterParticulier:arrayService});
+                    this.state.categories.forEach(e => {
+                        this.setState({[e.label]:0});
+                        this.state.serviceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label]: prevState[e.label] + 1}
+                                })
+                            }
+                        })
+                    })
 
 
                 }, 2000)
@@ -701,6 +801,16 @@ class testSearch2 extends React.Component {
 
                     })
                     this.setState({finalServiceUser:services,filterDate:true});
+                    this.state.categoryFinal.forEach(e => {
+                        this.setState({[e.label+'Final']:0});
+                        this.state.finalServiceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
+                                })
+                            }
+                        })
+                    })
 
 
                 })
@@ -732,6 +842,16 @@ class testSearch2 extends React.Component {
 
                     })
                     this.setState({serviceUser:services,filterDate:true});
+                    this.state.categories.forEach(e => {
+                        this.setState({[e.label]:0});
+                        this.state.serviceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label]: prevState[e.label] + 1}
+                                })
+                            }
+                        })
+                    })
 
 
                 })
@@ -1035,6 +1155,7 @@ class testSearch2 extends React.Component {
                                                     } else return null
 
                                                 })}
+                                                {this.state[e.label+'Final'] !== 0 ? <p>Voir les {this.state[e.label+'Final']} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
                                             </Grid>
                                         </Grid>
                                     ))
@@ -1071,6 +1192,7 @@ class testSearch2 extends React.Component {
                                                     } else return null
 
                                                 })}
+                                                {this.state[e.label+'Final'] !== 0 ? <p>Voir les {this.state[e.label+'Final']} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
                                             </Grid>
                                         </Grid>
                                     ))
