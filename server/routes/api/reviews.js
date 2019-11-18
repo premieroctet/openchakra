@@ -10,30 +10,29 @@ const User = require('../../models/User');
 
 router.get('/test',(req, res) => res.json({msg: 'Reviews Works!'}) );
 
-// @Route POST /myAlfred/api/reviews/add
-// Add a review
+// @Route POST /myAlfred/api/reviews/add/alfred
+// Add a review for an alfred
 // @Access private
-router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
+router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res) => {
 
 
                 const reviewFields = {};
                 reviewFields.user = req.user.id;
                 reviewFields.alfred = mongoose.Types.ObjectId(req.body.alfred);
                 reviewFields.content = req.body.content;
-                reviewFields.title = req.body.title;
-                reviewFields.booking =  mongoose.Types.ObjectId(req.body.booking);
+                reviewFields.serviceUser = req.body.service;
 
-                reviewFields.note = {};
-                reviewFields.note.quality_price = req.body.quality_price;
-                reviewFields.note.punctuality = req.body.punctuality;
-                reviewFields.note.prestation = req.body.prestation;
+                reviewFields.note_alfred = {};
+                reviewFields.note_alfred.prestation_quality = req.body.prestation_quality;
+                reviewFields.note_alfred.quality_price= req.body.quality_price;
+                reviewFields.note_alfred.relational = req.body.relational;
 
                 let quality = parseInt(req.body.quality_price,10);
-                let punctuality = parseInt(req.body.punctuality,10);
-                let prestation = parseInt(req.body.prestation,10);
+                let prestation = parseInt(req.body.prestation_quality,10);
+                let relational = parseInt(req.body.relational,10);
 
 
-                reviewFields.note.global = (quality + punctuality + prestation)/3;
+                reviewFields.note_alfred.global = (quality + relational + prestation)/3;
 
                 const newReviews = new Reviews(reviewFields);
                 newReviews.save().then(reviews => res.json(reviews)).catch(err => console.log(err));
@@ -41,17 +40,66 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
                 User.findByIdAndUpdate(req.body.alfred, {
                     $inc: {number_of_reviews: 1}
                 })
-                    .then(data => console.log('update ok'))
+                    .then(() => {
+                        User.findById(req.body.alfred)
+                            .then(user => {
+                                const score = (quality + relational + prestation)/3;
+                                user.score = ((user.score + score)/2).toFixed(2);
+                                user.save().then(users => console.log('reviews update')).catch(err => console.log(err));
+                            })
+                            .catch(error => {
+                                console.log(error)
+                            })
+                        }
+                    )
                     .catch(err => console.log(err));
+});
 
-                User.findById(req.body.alfred)
+// @Route POST /myAlfred/api/reviews/add/client
+// Add a review for a client
+// @Access private
+router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res) => {
+
+
+    const reviewFields = {};
+    reviewFields.alfred = req.user.id;
+    reviewFields.user = mongoose.Types.ObjectId(req.body.client);
+    reviewFields.content = req.body.content;
+    reviewFields.serviceUser = req.body.service;
+
+    reviewFields.note_client = {};
+    reviewFields.note_client.reception = req.body.accueil;
+    reviewFields.note_client.accuracy= req.body.accuracy;
+    reviewFields.note_client.relational = req.body.relational;
+
+    let reception = parseInt(req.body.accueil,10);
+    let accuracy = parseInt(req.body.accuracy,10);
+    let relational = parseInt(req.body.relational,10);
+
+
+    reviewFields.note_client.global = (reception + relational + accuracy)/3;
+
+    const newReviews = new Reviews(reviewFields);
+    newReviews.save().then(reviews => res.json(reviews)).catch(err => console.log(err));
+
+    User.findByIdAndUpdate(req.body.client, {
+        $inc: {number_of_reviews_client: 1}
+    })
+        .then(() => {
+                User.findById(req.body.client)
                     .then(user => {
-                        user.score = (user.score+(quality + punctuality + prestation))/user.number_of_reviews;
+                        const score = (reception + relational + accuracy)/3;
+                        user.score_client = ((user.score_client + score)/2).toFixed(2);
                         user.save().then(users => console.log('reviews update')).catch(err => console.log(err));
                     })
                     .catch(error => {
                         console.log(error)
                     })
+            }
+        )
+        .catch(err => console.log(err));
+
+
 
 
 
@@ -157,5 +205,28 @@ router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
         .catch(err => res.status(404).json({reviewsnotfound: 'No reviews found'}));
 });
 
+router.get('/customerReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
+    const userId = mongoose.Types.ObjectId(req.user.id);
+    Reviews.find({ alfred: userId })
+    .populate('user')
+    .populate('serviceUser')
+    .populate({path: 'serviceUser', populate: { path: 'service' }})
+    .then(review => {
+        res.status(200).json(review);
+    })
+    .catch(err => res.status(404).json(err))
+})
+
+router.get('/alfredReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
+    const userId = mongoose.Types.ObjectId(req.user.id);
+    Reviews.find({ user: userId })
+    .populate('alfred')
+    .populate('serviceUser')
+    .populate({path: 'serviceUser', populate: { path: 'service' }})
+    .then(review => {
+        res.status(200).json(review);
+    })
+    .catch(err => res.status(404).json(err))
+})
 
 module.exports = router;

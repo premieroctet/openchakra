@@ -313,7 +313,7 @@ class detailsReservation extends React.Component {
                             
                                 <Grid container style={{justifyContent: 'center', position: 'sticky', top: 100,}}>
                                     <Grid item style={{marginTop: 30,width: 281, height: 70}} className={classes.hidesm}>
-                                        <Link href={'#'}>
+                                        <Link href={'allReservations'}>
                                             <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', height: 70}}>
                                                 <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                     Toutes mes réservations
@@ -323,7 +323,7 @@ class detailsReservation extends React.Component {
                                     </Grid>
 
                                     <Grid item style={{marginTop: 10,width: 281, height: 70}} className={classes.hidesm}>
-                                        <Link href={'#'}>
+                                        <Link href={'comingReservations'}>
                                             <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', height: 70}}>
                                                 <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                     Mes réservations à venir
@@ -333,7 +333,7 @@ class detailsReservation extends React.Component {
                                     </Grid>
 
                                     <Grid item style={{marginTop: 10,width: 281, height: 70}} className={classes.hidesm}>
-                                        <Link href={'#'}>
+                                        <Link href={'finishedReservations'}>
                                             <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', height: 70}}>
                                                 <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                     Mes réservations terminées
@@ -415,7 +415,14 @@ class detailsReservation extends React.Component {
                                                     <img style={{width:'15px'}} src='../../static/stars/star-solid.png'></img>
                                                 </Grid>
                                                 <Grid item xs={11}>
-                                                    <Typography style={{color: 'rgb(47, 188, 211)', fontSize: '0.8rem', marginLeft: '-5%', cursor: 'pointer'}}>10 Commentaires</Typography>
+                                                    <Typography style={{color: 'rgb(47, 188, 211)', fontSize: '0.8rem', marginLeft: '-5%', cursor: 'pointer'}}>
+                                                        {bookingObj === null || currentUser === null ? null : (
+                                                            currentUser._id === bookingObj.alfred._id ?
+                                                                bookingObj.user.number_of_reviews
+                                                                :
+                                                                bookingObj.alfred.number_of_reviews
+                                                        )} Commentaires
+                                                    </Typography>
                                                 </Grid>
 
                                                 {bookingObj === null || currentUser === null ?
@@ -508,7 +515,18 @@ class detailsReservation extends React.Component {
                                                             </Grid>
                                                         </>
                                                 }
-                                                <Typography style={{color: 'rgb(47, 188, 211)', fontSize: '0.8rem', cursor: 'pointer'}}>Voir le profil</Typography>
+                                                {bookingObj === null || currentUser == null ?
+                                                    null
+                                                    :
+                                                    currentUser._id === bookingObj.alfred._id ?
+                                                        <Link href={{ pathname: '../viewProfile', query: { id: bookingObj.user._id } }}>
+                                                            <Typography style={{color: 'rgb(47, 188, 211)', fontSize: '0.8rem', cursor: 'pointer'}}>Voir le profil</Typography>
+                                                        </Link>
+                                                        :
+                                                        <Link href={{ pathname: '../viewProfile', query: { id: bookingObj.alfred._id } }}>
+                                                            <Typography style={{color: 'rgb(47, 188, 211)', fontSize: '0.8rem', cursor: 'pointer'}}>Voir le profil</Typography>
+                                                        </Link>
+                                                }
                                             </Grid>
                                         </div> 
                                     </Grid>

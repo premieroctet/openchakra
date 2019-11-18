@@ -7,46 +7,46 @@ const ReviewsSchema = new Schema({
         required: true
     },
     note_alfred: {
-        reception:{
+        prestation_quality:{
             type: Number,
-            max: 4,
+            max: 5,
             min: 0
         },
         quality_price: {
             type: Number,
-            max: 4,
+            max: 5,
             min: 0
         },
-        communication: {
+        relational: {
             type: Number,
-            max: 4,
+            max: 5,
             min: 0
         },
         global: {
           type: Number,
-          max: 4,
+          max: 5,
           min: 0
         }
     },
     note_client: {
         reception:{
             type: Number,
-            max: 4,
+            max: 5,
             min: 0
         },
         accuracy: {
             type: Number,
-            max: 4,
+            max: 5,
             min: 0
         },
-        communication: {
+        relational: {
             type: Number,
-            max: 4,
+            max: 5,
             min: 0
         },
         global: {
             type: Number,
-            max: 4,
+            max: 5,
             min: 0
         }
     },
