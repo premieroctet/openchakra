@@ -1061,7 +1061,7 @@ class Form extends React.Component {
                         </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
-                        <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', height:'100%'}}>
+                        <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', height:'100%', overflow:'hidden'}}>
                                 <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Votre catégorie de service</Typography>
                                     <Typography>
@@ -1134,8 +1134,7 @@ class Form extends React.Component {
                                                 </div>
                                                 <div style={{marginTop: '1rem'}}>
                                                     {arrayHelpers.form.values.categories && arrayHelpers.form.values.categories.length > 0 && this.state.loading === false ? (
-                                                        arrayHelpers.form.values.categories.map((categorie, index) => {
-                                                            const servName = categorie.label.replace(/\s/g, '') + 'Services';
+                                                        arrayHelpers.form.values.categories.map((categorie) => {
                                                             return (
 
                                               <Select
@@ -1147,7 +1146,6 @@ class Form extends React.Component {
                                                 value={arrayHelpers.form.values.services}
                                                 options={categorie[categorie.label.replace(/\s/g, '') + 'Services']}
                                                 onChange={service => {
-                                                  console.log("Service:"+Object.keys(service));
                                                   if (service===null) {
                                					            arrayHelpers.form.setFieldValue('services', []);
                                                   }
@@ -1213,7 +1211,6 @@ class Form extends React.Component {
                                                                 [`userCityClicked${index}`]: false,
                                                                 [`otherOptionChecked${index}`]: false
                                                             });
-							                                              console.log('Service:'+service.value);
                                                             axios.get(`${url}myAlfred/api/service/${service.value}`)
                                                                 .then(res => {
                                                                     let servCompObj = {
@@ -2897,15 +2894,6 @@ export function CheckboxSelect(props) {
     }
 }
 
-// STYLE
-export const FirstStep = styled.div`
-  width: 75%;
-  margin: 0 auto;
-  padding: 2rem;
-  height: 500px;
-  border: 1px solid black;
-`;
-
 const Bar = styled.div`
   position: relative;
   height: 10px;
@@ -2919,15 +2907,6 @@ const Fill = styled.div`
   border-radius: inherit;
   transition: width .2s ease-in;
   width: ${props => props.width};
-`;
-
-const FilledButton = styled.div`
-    display: inline-block;
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    background-color: #2FBCD3;
-    margin-right: 5px;
 `;
 
 export default withStyles(styles)(Form);
