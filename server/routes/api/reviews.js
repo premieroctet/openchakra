@@ -13,27 +13,26 @@ router.get('/test',(req, res) => res.json({msg: 'Reviews Works!'}) );
 // @Route POST /myAlfred/api/reviews/add
 // Add a review
 // @Access private
-router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
+router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res) => {
 
 
                 const reviewFields = {};
                 reviewFields.user = req.user.id;
                 reviewFields.alfred = mongoose.Types.ObjectId(req.body.alfred);
                 reviewFields.content = req.body.content;
-                reviewFields.title = req.body.title;
-                reviewFields.booking =  mongoose.Types.ObjectId(req.body.booking);
+                reviewFields.serviceUser = req.body.service;
 
-                reviewFields.note = {};
-                reviewFields.note.quality_price = req.body.quality_price;
-                reviewFields.note.punctuality = req.body.punctuality;
-                reviewFields.note.prestation = req.body.prestation;
+                reviewFields.note_alfred = {};
+                reviewFields.note_alfred.prestation_quality = req.body.prestation_quality;
+                reviewFields.note_alfred.quality_price= req.body.quality_price;
+                reviewFields.note_alfred.relational = req.body.relational;
 
                 let quality = parseInt(req.body.quality_price,10);
-                let punctuality = parseInt(req.body.punctuality,10);
-                let prestation = parseInt(req.body.prestation,10);
+                let prestation = parseInt(req.body.prestation_quality,10);
+                let relational = parseInt(req.body.relational,10);
 
 
-                reviewFields.note.global = (quality + punctuality + prestation)/3;
+                reviewFields.note_alfred.global = (quality + relational + prestation)/3;
 
                 const newReviews = new Reviews(reviewFields);
                 newReviews.save().then(reviews => res.json(reviews)).catch(err => console.log(err));
@@ -41,17 +40,21 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
                 User.findByIdAndUpdate(req.body.alfred, {
                     $inc: {number_of_reviews: 1}
                 })
-                    .then(data => console.log('update ok'))
+                    .then(() => {
+                        User.findById(req.body.alfred)
+                            .then(user => {
+                                const score = (quality + relational + prestation)/3;
+                                user.score = ((user.score + score)/2).toFixed(2);
+                                user.save().then(users => console.log('reviews update')).catch(err => console.log(err));
+                            })
+                            .catch(error => {
+                                console.log(error)
+                            })
+                        }
+                    )
                     .catch(err => console.log(err));
 
-                User.findById(req.body.alfred)
-                    .then(user => {
-                        user.score = (user.score+(quality + punctuality + prestation))/user.number_of_reviews;
-                        user.save().then(users => console.log('reviews update')).catch(err => console.log(err));
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
+
 
 
 

@@ -7,7 +7,7 @@ const ReviewsSchema = new Schema({
         required: true
     },
     note_alfred: {
-        reception:{
+        prestation_quality:{
             type: Number,
             max: 5,
             min: 0
@@ -17,7 +17,7 @@ const ReviewsSchema = new Schema({
             max: 5,
             min: 0
         },
-        communication: {
+        relational: {
             type: Number,
             max: 5,
             min: 0
@@ -39,7 +39,7 @@ const ReviewsSchema = new Schema({
             max: 5,
             min: 0
         },
-        communication: {
+        relational: {
             type: Number,
             max: 5,
             min: 0
