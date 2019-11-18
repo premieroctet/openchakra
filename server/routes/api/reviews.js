@@ -98,12 +98,6 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
             }
         )
         .catch(err => console.log(err));
-
-
-
-
-
-
 });
 
 // @Route GET /myAlfred/api/reviews/all
@@ -117,8 +111,6 @@ router.get('/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
         Reviews.find()
             .populate('alfred')
             .populate('user')
-            .populate('booking')
-            .populate({path:'booking',populate:{path: 'prestation',select:'label'}})
             .then(reviews => {
                 if(typeof reviews !== 'undefined' && reviews.length > 0){
                     res.json(reviews);
@@ -135,23 +127,28 @@ router.get('/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
     }
 });
 
-// @Route GET /myAlfred/api/reviews/myReviews
-// View the reviews list for the current user
-// @Access private
-router.get('/myReviews',passport.authenticate('jwt',{session: false}),(req,res) => {
-    Reviews.find({user: req.user.id})
-        .populate('alfred')
+router.get('/customerReviewsCurrent', passport.authenticate('jwt', { session: false }), ( req, res ) => {
+    const userId = mongoose.Types.ObjectId(req.user.id);
+    Reviews.find({ alfred: userId })
         .populate('user')
-        .populate('booking')
-        .populate({path:'booking',populate:{path: 'prestation',select:'label'}})
-        .then(reviews => {
-            if(typeof reviews !== 'undefined' && reviews.length > 0){
-                res.json(reviews);
-            } else {
-                return res.status(400).json({msg: 'No reviews found'});
-            }
+        .populate('serviceUser')
+        .populate({path: 'serviceUser', populate: { path: 'service' }})
+        .then(review => {
+            res.status(200).json(review);
         })
-        .catch(err => res.status(404).json({ reviews: 'No reviews found' }));
+        .catch(err => res.status(404).json(err))
+});
+
+router.get('/alfredReviewsCurrent', passport.authenticate('jwt', { session: false }), ( req, res ) => {
+    const userId = mongoose.Types.ObjectId(req.user.id);
+    Reviews.find({ user: userId })
+        .populate('alfred')
+        .populate('serviceUser')
+        .populate({path: 'serviceUser', populate: { path: 'service' }})
+        .then(review => {
+            res.status(200).json(review);
+        })
+        .catch(err => res.status(404).json(err))
 });
 
 // @Route GET /myAlfred/api/reviews/alfred/:id
@@ -160,8 +157,6 @@ router.get('/alfred/:id',(req,res) => {
     Reviews.find({alfred: req.params.id})
         .populate('alfred')
         .populate('user')
-        .populate('booking')
-        .populate({path:'booking',populate:{path: 'prestation',select:'label'}})
         .then(reviews => {
             if(typeof reviews !== 'undefined' && reviews.length > 0){
                 res.json(reviews);
@@ -180,8 +175,6 @@ router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
     Reviews.findById(req.params.id)
         .populate('alfred')
         .populate('user')
-        .populate('booking')
-        .populate({path:'booking',populate:{path: 'prestation',select:'label'}})
         .then(reviews => {
             if(Object.keys(reviews).length === 0 && reviews.constructor === Object){
                 return res.status(400).json({msg: 'No reviews found'});

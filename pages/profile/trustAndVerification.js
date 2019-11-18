@@ -526,7 +526,7 @@ class trustAndVerification extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                {/*<Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/reviews'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} height={70} alt={'comment'} width={27} style={{marginRight: 4}}/>
@@ -549,7 +549,7 @@ class trustAndVerification extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
+                                {/*<Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/recommandations'}>
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/megaphone.svg'} alt={'speaker'} height={70} width={33} style={{marginRight: 4}}/>
