@@ -261,7 +261,7 @@ class FinishedReservations extends React.Component {
                             
                                 <Grid container style={{justifyContent: 'center', position: 'sticky', top: 100,}}>
                                     <Grid item style={{marginTop: 30,width: 281, height: 70}} className={classes.hidesm}>
-                                        <Link href={'#'}>
+                                        <Link href={'allReservations'}>
                                             <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', height: 70}}>
                                                 <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                     Toutes mes réservations
@@ -271,7 +271,7 @@ class FinishedReservations extends React.Component {
                                     </Grid>
 
                                     <Grid item style={{marginTop: 10,width: 281, height: 70}} className={classes.hidesm}>
-                                        <Link href={'#'}>
+                                        <Link href={'comingReservations'}>
                                             <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', height: 70}}>
                                                 <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                     Mes réservations à venir
@@ -281,7 +281,7 @@ class FinishedReservations extends React.Component {
                                     </Grid>
 
                                     <Grid item style={{marginTop: 10,width: 281, height: 70}} className={classes.hidesm}>
-                                        <Link href={'#'}>
+                                        <Link href={'finishedReservations'}>
                                             <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', height: 70}}>
                                                 <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                     Mes réservations terminées
@@ -293,7 +293,7 @@ class FinishedReservations extends React.Component {
                             </Grid> 
 
                             <Grid className={classes.Rightcontent} item xs={9} sm={9} md={7}>
-                                <Typography style={{fontSize: '2rem',marginTop: '4%'}}>Mes reservations</Typography>
+                                <Typography style={{fontSize: '2rem',marginTop: '4%'}}>Mes reservations terminées</Typography>
                                 <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}}>vous avez N messages non lus</Typography>
                                 <Grid container className={classes.tabweb}>
                                     <Grid item xs={6} style={{textAlign:"center"}}>

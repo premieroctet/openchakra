@@ -206,7 +206,7 @@ router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
 });
 
 router.get('/customerReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
-    const userId = mongoose.Types.ObjectId(req.user.id);
+    const userId = mongoose.Types.ObjectId(req.params.id);
     Reviews.find({ alfred: userId })
     .populate('user')
     .populate('serviceUser')
@@ -218,7 +218,7 @@ router.get('/customerReviewsCurrent/:id', passport.authenticate('jwt', { session
 })
 
 router.get('/alfredReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
-    const userId = mongoose.Types.ObjectId(req.user.id);
+    const userId = mongoose.Types.ObjectId(req.params.id);
     Reviews.find({ user: userId })
     .populate('alfred')
     .populate('serviceUser')
