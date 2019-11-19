@@ -19,7 +19,10 @@ const styles = theme => ({
     display:'flex',
     flexDirection:'row',
     width: '100%',
-    height:'100vh'
+    height:'100vh',
+    [theme.breakpoints.down('sm')]: {
+      height:'65vh',
+    }
 },
   loginContainer: {
     display:'flex',
@@ -173,7 +176,7 @@ class login extends React.Component {
                   </form>
                   <Grid item style={{display:'flex',flexDirection:'column'}}>
                     <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
-                    <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Pas encore inscrit ? Inscrivez-vous !</a></Link>
+                    <Link href={"/signup"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Pas encore inscrit ? Inscrivez-vous !</a></Link>
                   </Grid>
                 </Grid>
               </Card>
