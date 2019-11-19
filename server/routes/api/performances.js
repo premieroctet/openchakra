@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 
 const Booking = require('../../models/Booking');
+const ServiceUser = require('../../models/ServiceUser');
+const Reviews = require('../../models/Reviews');
 const User = require('../../models/User');
 
 moment.locale('fr');
@@ -84,6 +86,59 @@ router.get('/incomes/totalComing/:year',passport.authenticate('jwt',{session:fal
 
         })
         .catch(err => res.status(404).json({ booking: 'No booking found' }));
+});
+
+// @Route GET /myAlfred/performances/statistics/totalBookings
+// Get all bookings for an alfred
+// @Access private
+router.get('/statistics/totalBookings',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    let totalIncomes = 0;
+    let totalPrestations = 0;
+    Booking.find({alfred: req.user.id,status:'Terminée'})
+        .then(booking => {
+
+            booking.forEach(b => {
+                totalIncomes += parseInt(b.amount);
+                totalPrestations += b.prestations.length
+
+            });
+            res.json({incomes:totalIncomes,prestations: totalPrestations})
+
+        })
+        .catch(err => res.status(404).json({ booking: 'No booking found' }));
+});
+
+// @Route GET /myAlfred/performances/statistics/totalViewsServices
+// Get all services views for an alfred
+// @Access private
+router.get('/statistics/totalViewsServices',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    let totalViews = 0;
+    ServiceUser.find({user: req.user.id})
+        .then(service => {
+
+            service.forEach(s => {
+                totalViews += s.number_of_views
+
+            });
+            res.json(totalViews)
+
+        })
+        .catch(err => res.status(404).json({ services: 'No services found' }));
+});
+
+// @Route GET /myAlfred/performances/statistics/totalReviews
+// Get reviews for an alfred
+// @Access private
+router.get('/statistics/totalReviews',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    let totalReviews = 0;
+    Reviews.find({alfred: req.user.id,note_client:undefined})
+        .then(reviews => {
+
+            totalReviews = reviews.length;
+            res.json(totalReviews)
+
+        })
+        .catch(err => res.status(404).json({ services: 'No services found' }));
 });
 
 
