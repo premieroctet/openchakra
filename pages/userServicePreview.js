@@ -25,11 +25,6 @@ import Select2 from "react-select";
 import Tooltip from '@material-ui/core/Tooltip';
 registerLocale('fr', fr);
 
-
-
-
-
-
 moment.locale('fr');
 const _ = require('lodash');
 const { config } = require('../config/config');
@@ -147,7 +142,7 @@ class userServices extends React.Component {
         this.state = {
             user: {},
             shop: {},
-            serviceUser: [],
+            serviceUser: null,
             uniqFilter: [],
             drops: false,
             dropsoption: false,
@@ -190,9 +185,6 @@ class userServices extends React.Component {
 
         this.handleclick1 = this.handleclick1.bind(this);
         this.handleclick2 = this.handleclick2.bind(this);
-
-
-
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -239,125 +231,6 @@ class userServices extends React.Component {
             );
 
         axios
-            .get(url+`myAlfred/api/availability/currentAlfred`)
-            .then(res => {
-                let availability = res.data;
-                this.setState({availability: availability});
-                
-                availability.forEach(d => {
-                    this.setState({monday: d.monday});
-                    this.setState({tuesday: d.tuesday});
-                    this.setState({wednesday: d.wednesday});
-                    this.setState({thursday: d.thursday});
-                    this.setState({friday: d.friday});
-                    this.setState({saturday: d.saturday});
-                    this.setState({sunday: d.sunday});
-                });
-                
-                /*Lundi*/
-                this.state.monday.event.forEach(i  => {
-                        i.services.forEach(d =>{
-                            if(d.value === id){
-                                this.setState({monday_event: [...this.state.monday_event, i]})  
-                            }
-                        })
-                });
-                this.state.monday.event.forEach(e => {
-                    if(e.all_services === true){
-                       this.setState({monday_event: [...this.state.monday_event, e]}) 
-                    }
-                });
-
-                /*mardi*/
-                this.state.tuesday.event.forEach(i  => {
-                    i.services.forEach(d =>{
-                        if(d.value === id){
-                            this.setState({tuesday_event: [...this.state.tuesday_event, i]})  
-                        }
-                    })
-                })
-                this.state.tuesday.event.forEach(e => {
-                    if(e.all_services === true){
-                    this.setState({tuesday_event: [...this.state.tuesday_event, e]}) 
-                    }
-                })
-
-                /*Mercredi*/
-                this.state.wednesday.event.forEach(i  => {
-                    i.services.forEach(d =>{
-                        if(d.value === id){
-                            this.setState({wednesday_event: [...this.state.wednesday_event, i]})  
-                        }
-                    })
-                })
-                this.state.wednesday.event.forEach(e => {
-                    if(e.all_services === true){
-                    this.setState({wednesday_event: [...this.state.wednesday_event, e]}) 
-                    }
-                })
-
-                /*Jeudi*/
-                this.state.thursday.event.forEach(i  => {
-                    i.services.forEach(d =>{
-                        if(d.value === id){
-                            this.setState({thursday_event: [...this.state.thursday_event, i]})  
-                        }
-                    })
-                })
-                this.state.thursday.event.forEach(e => {
-                    if(e.all_services === true){
-                    this.setState({thursday_event: [...this.state.thursday_event, e]}) 
-                    }
-                })
-
-                /*Vendredi*/
-                this.state.friday.event.forEach(i  => {
-                    i.services.forEach(d =>{
-                        if(d.value === id){
-                            this.setState({friday_event: [...this.state.friday_event, i]})  
-                        }
-                    })
-                })
-                this.state.friday.event.forEach(e => {
-                    if(e.all_services === true){
-                    this.setState({friday_event: [...this.state.friday_event, e]}) 
-                    }
-                })
-
-                /*Samedi*/
-                this.state.saturday.event.forEach(i  => {
-                    i.services.forEach(d =>{
-                        if(d.value === id){
-                            this.setState({saturday_event: [...this.state.saturday_event, i]})  
-                        }
-                    })
-                })
-                this.state.saturday.event.forEach(e => {
-                    if(e.all_services === true){
-                    this.setState({saturday_event: [...this.state.saturday_event, e]})
-                    }
-                })
-
-                /*Dimanche*/
-                this.state.sunday.event.forEach(i  => {
-                    i.services.forEach(d =>{
-                        if(d.value === id){
-                            this.setState({sunday_event: [...this.state.sunday_event, i]})  
-                        }
-                    })
-                })
-                this.state.sunday.event.forEach(e => {
-                    if(e.all_services === true){
-                    this.setState({sunday_event: [...this.state.sunday_event, e]}) 
-                    }
-                })
-
-            })
-            .catch(err =>
-                console.log(err)
-            );
-
-        axios
             .get(url+`myAlfred/api/serviceUser/${id}`)
             .then(res => {
                 let serviceUser = res.data;
@@ -383,7 +256,128 @@ class userServices extends React.Component {
                 const lat = serviceUser.service_address.gps.lat;
                 const lng = serviceUser.service_address.gps.lng;
                 this.setState({position: [lat,lng]})
-            })
+                console.log(this.state.serviceUser);
+
+                axios
+                    .get(url+`myAlfred/api/availability/userAvailabilities/${this.state.serviceUser.user._id}`)
+                    .then(res => {
+                        console.log(this.state.serviceUser.user._id)
+                        let availability = res.data;
+                        this.setState({availability: availability});
+                
+                        availability.forEach(d => {
+                            this.setState({monday: d.monday});
+                            this.setState({tuesday: d.tuesday});
+                            this.setState({wednesday: d.wednesday});
+                            this.setState({thursday: d.thursday});
+                            this.setState({friday: d.friday});
+                            this.setState({saturday: d.saturday});
+                            this.setState({sunday: d.sunday});
+                        });
+                
+                        /*Lundi*/
+                        this.state.monday.event.forEach(i  => {
+                                i.services.forEach(d =>{
+                                    if(d.value === id){
+                                        this.setState({monday_event: [...this.state.monday_event, i]})  
+                                    }
+                                })
+                        });
+                        this.state.monday.event.forEach(e => {
+                            if(e.all_services === true){
+                            this.setState({monday_event: [...this.state.monday_event, e]}) 
+                            }
+                        });
+
+                        /*mardi*/
+                        this.state.tuesday.event.forEach(i  => {
+                            i.services.forEach(d =>{
+                                if(d.value === id){
+                                    this.setState({tuesday_event: [...this.state.tuesday_event, i]})  
+                                }
+                            })
+                        })
+                        this.state.tuesday.event.forEach(e => {
+                            if(e.all_services === true){
+                                this.setState({tuesday_event: [...this.state.tuesday_event, e]}) 
+                            }
+                        })
+
+                        /*Mercredi*/
+                        this.state.wednesday.event.forEach(i  => {
+                            i.services.forEach(d =>{
+                                if(d.value === id){
+                                    this.setState({wednesday_event: [...this.state.wednesday_event, i]})  
+                                }
+                            })
+                        })
+                        this.state.wednesday.event.forEach(e => {
+                            if(e.all_services === true){
+                                this.setState({wednesday_event: [...this.state.wednesday_event, e]}) 
+                            }
+                        })
+
+                        /*Jeudi*/
+                        this.state.thursday.event.forEach(i  => {
+                            i.services.forEach(d =>{
+                                if(d.value === id){
+                                    this.setState({thursday_event: [...this.state.thursday_event, i]})  
+                                }
+                            })
+                        })
+                        this.state.thursday.event.forEach(e => {
+                            if(e.all_services === true){
+                                this.setState({thursday_event: [...this.state.thursday_event, e]}) 
+                            }
+                        })
+
+                        /*Vendredi*/
+                        this.state.friday.event.forEach(i  => {
+                            i.services.forEach(d =>{
+                                if(d.value === id){
+                                    this.setState({friday_event: [...this.state.friday_event, i]})  
+                                }
+                            })
+                        })
+                        this.state.friday.event.forEach(e => {
+                            if(e.all_services === true){
+                                this.setState({friday_event: [...this.state.friday_event, e]}) 
+                            }
+                        })
+
+                        /*Samedi*/
+                        this.state.saturday.event.forEach(i  => {
+                            i.services.forEach(d =>{
+                                if(d.value === id){
+                                    this.setState({saturday_event: [...this.state.saturday_event, i]})  
+                                }
+                            })
+                        })
+                        this.state.saturday.event.forEach(e => {
+                            if(e.all_services === true){
+                                this.setState({saturday_event: [...this.state.saturday_event, e]})
+                            }
+                        })
+
+                        /*Dimanche*/
+                        this.state.sunday.event.forEach(i  => {
+                            i.services.forEach(d =>{
+                                if(d.value === id){
+                                    this.setState({sunday_event: [...this.state.sunday_event, i]})  
+                                }
+                            })
+                        })
+                        this.state.sunday.event.forEach(e => {
+                            if(e.all_services === true){
+                                this.setState({sunday_event: [...this.state.sunday_event, e]}) 
+                            }
+                        })
+
+                    })
+                    .catch(err =>
+                        console.log(err)
+                    );
+                    })
             .catch(err =>
                 console.log(err)
             );
@@ -429,7 +423,6 @@ class userServices extends React.Component {
         if (!_.isEmpty(sumArr)) {
             fees = 0.09 * (sumArr.reduce(reducer) + this.state.optionPrice);    
             fees = parseFloat(fees.toFixed(2));
-            console.log(fees);
 
             this.setState({ total: sumArr.reduce(reducer) + this.state.optionPrice });
             this.setState({ fees: fees });
@@ -562,7 +555,11 @@ class userServices extends React.Component {
 
         return (
             <Fragment>
-                <Layout>
+                {serviceUser === null ?
+                    null
+                    :
+                    <>
+                    <Layout>
                     <Grid container className={classes.bigContainer}>
 
                         {/*Le Header */}
@@ -575,11 +572,11 @@ class userServices extends React.Component {
                         </Grid>
                         <Grid item>
 
-                            <img src={'../'+user.picture} style={{borderRadius: '50%',position:'absolute',top:'20%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',}} alt={'picture'}/>
+                            <img src={'../'+serviceUser.user.picture} style={{borderRadius: '50%',position:'absolute',top:'20%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',}} alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'0',right:'0',marginLeft:'auto',marginRight:'auto',top:'38%',zIndex:502,textAlign: 'center'}}>
                         <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.35rem'}}>{service.label}</p>
-                            <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.1rem'}}>par {user.firstname} ({serviceUser.perimeter} kms)</p>
+                            <p style={{color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.1rem'}}>par {serviceUser.user.firstname} ({serviceUser.perimeter} kms)</p>
                         </Grid>
 
                         {/*Le Contenu */}
@@ -614,9 +611,13 @@ class userServices extends React.Component {
                                         <Grid item xs={5}></Grid>
                                     </Grid>
                                     <Grid container>
-                                        {equipments.map((e,index)=>(<React.Fragment key={index}>
-                                            <Grid item xs={1} style={{ marginLeft: '1.5%'}}><img src={'../'+ e.logo2}/></Grid>
-                                        </React.Fragment>))}
+                                        {equipments.length ?
+                                            equipments.map((e,index)=>(<React.Fragment key={index}>
+                                                <Grid item xs={1} style={{ marginLeft: '1.5%'}}><img src={'../'+ e.logo2}/></Grid>
+                                            </React.Fragment>))
+                                            :
+                                            <p>Aucun équipement fournis</p>
+                                        }
                                         <Grid item xs={1}></Grid>
                                     </Grid>
                                 </div>
@@ -1738,8 +1739,9 @@ class userServices extends React.Component {
                     </Grid>
                 </Layout>
                 <Footer/>
-
-            </Fragment>
+                </>
+                }
+                </Fragment>
         );
     };
 }
