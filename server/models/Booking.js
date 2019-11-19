@@ -6,6 +6,32 @@ const BookingSchema = new Schema({
         type: String,
         required: true
     },
+    address: {
+        address: {
+            type: String
+        },
+        city: {
+            type: String
+        },
+        zip_code: {
+            type: String
+        },
+        country: {
+            type: String
+        },
+        gps : {
+            lat: Number,
+            lng: Number
+        }
+    },
+    service: {
+        type: String,
+        required: true
+    },
+    equipments: [{
+        type: Schema.Types.ObjectId,
+        ref: 'equipment'
+    }],
     amount: {
         type: String,
         required: true
@@ -16,14 +42,18 @@ const BookingSchema = new Schema({
         required: true
     },
     date_prestation: {
-        beginning: {
-            type: Date,
-            required: true
-        },
-        end: {
-            type: Date,
-            required: true
-        }
+        type: String,
+        required: true
+    },
+    time_prestation: {
+        type: String,
+        required: true
+    },
+    end_date: {
+        type: String
+    },
+    end_time: {
+        type: String
     },
     alfred: {
         type: Schema.Types.ObjectId,
@@ -33,13 +63,25 @@ const BookingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    prestation: {
+    prestations: [{}],
+    option: {
+        label: {
+            type: String
+        },
+        price: {
+            type: Number
+        }
+    },
+    chatroom: {
         type: Schema.Types.ObjectId,
-        ref: 'prestation'
+        ref: 'chatroom'
+    },
+    fees: {
+        type: Number
     },
     status: {
         type: String,
-        enum: ['Acceptée','Refusée','En attente']
+        enum: ['Confirmée','Refusée', 'Annulée', 'Terminée', 'Expirée', 'En attente de confirmation', 'Demande d\'infos', 'Invitation à réserver', 'Pré-approuvée' ]
     }
 
 
