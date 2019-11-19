@@ -1261,7 +1261,7 @@ class Form extends React.Component {
                                                                         const equipObj = { id: e._id, label: e.label, logo: e.logo, name_logo: e.name_logo, checked: false };
                                                                         servCompObj.equipments.push(equipObj);
                                                                     });
-                                                                    this.state.arrServicesLabel.push(res.data)
+                                                                    this.state.arrServicesLabel.push(res.data);
 
                                                                     axios.get(`${url}myAlfred/api/prestation/${service.value}`)
                                                                         .then(res => {
@@ -1814,7 +1814,7 @@ class Form extends React.Component {
                                                                         </Typography>
                                                                         <Grid container style={{marginTop: '.5rem'}}>
                                                                             <Grid item xs={12}>
-                                                                                <Typography>Nombre d'années d'expériences</Typography>
+                                                                                <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Nombre d'années d'expériences</Typography>
                                                                                 <Select
                                                                                     isClearable={true}
                                                                                     placeholder="Vos années d'expériences"
@@ -2036,7 +2036,7 @@ class Form extends React.Component {
                         <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
                             <div className={classes.newContainer}>
                                     <Grid container>
-                                            <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                            <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
                                                 Comment les utilisateurs peuvent réserver ? <span style={{color: '#F8727F' }}>*</span>
                                             </h6>
                                         <Grid item style={{marginLeft: 20}}>
@@ -2062,7 +2062,7 @@ class Form extends React.Component {
 
                                                             />
                                                         }
-                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helvetica'}}>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.</Typography>}
+                                                        label={<Typography style={{fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.</Typography>}
                                                     />
                                                 )
                                             }} />
@@ -2090,7 +2090,7 @@ class Form extends React.Component {
 
                                                         />
                                                     }
-                                                        label={<Typography style={{fontSize: 18, fontFamily: 'helvetica'}}>Les utilisateurs peuvent réserver mes services directement sans demande de réservation.</Typography>}
+                                                        label={<Typography style={{fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>Les utilisateurs peuvent réserver mes services directement sans demande de réservation.</Typography>}
 
                                                     />
                                                 )
@@ -2099,11 +2099,11 @@ class Form extends React.Component {
                                     </Grid>
                                     <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                     <Grid container>
-                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
                                             Vos conditions de réservations
                                         </h6>
 
-                                        <Typography style={{marginBottom: 20,fontFamily: 'helvetica'}}>
+                                        <Typography style={{marginBottom: 20,fontFamily: 'helvetica',fontSize: '1rem', fontWeight:400}}>
                                         Il se peut que vous ayez moins de réservations si vous ajoutez des conditions. Les personnes qui ne répondent pas à vos critères peuvent quand même envoyer une demande.
                                         </Typography>
 
@@ -2127,8 +2127,8 @@ class Form extends React.Component {
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Conditions My-Alfred</p>
-                                                    <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
+                                                            <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Conditions My-Alfred</p>
+                                                    <p style={{marginTop: 0, fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                         Numéro de téléphone confirmé, adresse e-mail, informations de paiement et acceptation du règlement intérieur.
                                                 </p>
                                             </React.Fragment>}
@@ -2156,8 +2156,8 @@ class Form extends React.Component {
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Photo de profil</p>
-                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
+                                                        <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Photo de profil</p>
+                                                        <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                             Si vous activez cette condition, vous ne pourrez voir les photos de profil des utilisateurs qu'une fois la réservation confirmée.
                                                         </p>
                                                     </React.Fragment>}
@@ -2185,8 +2185,8 @@ class Form extends React.Component {
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                        <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Pièce d'identité officielle</p>
-                                                        <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
+                                                        <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Pièce d'identité officielle</p>
+                                                        <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                             Ces utilisateurs ont vérifié leur identité.
                                                         </p>
                                                     </React.Fragment>}
@@ -2214,8 +2214,8 @@ class Form extends React.Component {
                                                             />
                                                         }
                                                         label={<React.Fragment>
-                                                            <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Recommandations d'autres Alfred</p>
-                                                            <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
+                                                            <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Recommandations d'autres Alfred</p>
+                                                            <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                                 Ces utilisateurs ont déjà utilisé des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commentaires négatifs.
                                                             </p>
                                                         </React.Fragment>}
@@ -2227,7 +2227,7 @@ class Form extends React.Component {
                                     </Grid>
                                     <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                     <Grid container>
-                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
                                             Votre message de bienvenue validant votre
                                             réservation <span style={{color: '#F8727F' }}>*</span>
                                         </h6>
@@ -2256,10 +2256,10 @@ class Form extends React.Component {
                                     <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                     <Grid container>
 
-                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
                                             Conditions d’annulation <span style={{color: '#F8727F' }}>*</span>
                                         </h6>
-                                        <Typography style={{fontFamily: 'helvetica', width: '100%'}}>
+                                        <Typography style={{fontFamily: 'helvetica',fontSize: '1rem', fontWeight:400, width: '100%'}}>
                                             Choisissez vos conditions en cas d'annulation de la part
                                             des utilisateurs.
                                         </Typography>
@@ -2292,9 +2292,9 @@ class Form extends React.Component {
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Flexibles</p>
+                                                                <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Flexibles</p>
 
-                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
+                                                                <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                                     Remboursement intégral jusqu’à un jour avant la prestation
                                                                 </p>
                                                             </React.Fragment>
@@ -2329,8 +2329,8 @@ class Form extends React.Component {
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                <p style={{marginBottom: 0,fontSize: 18, fontFamily: 'helvetica'}}>Modérées</p>
-                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
+                                                                <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Modérées</p>
+                                                                <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                                     Remboursement intégral jusqu’à 5 jours avant la prestation
                                                                 </p>
                                                             </React.Fragment>
@@ -2365,8 +2365,8 @@ class Form extends React.Component {
                                                         }
                                                         label={
                                                             <React.Fragment>
-                                                                <p style={{ marginBottom: 0,fontSize: 18, fontFamily: 'helvetica' }}>Strictes</p>
-                                                                <p style={{marginTop: 0,fontSize: 16, fontFamily: 'helvetica'}}>
+                                                                <p style={{ marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica' }}>Strictes</p>
+                                                                <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                                     Remboursement intégral jusqu’à 10 jours avant la prestation
                                                                 </p>
                                                             </React.Fragment>
@@ -2385,10 +2385,10 @@ class Form extends React.Component {
                                 <React.Fragment>
                                     <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
                                             <div className={classes.newContainer}>
-                                                <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
                                                     Téléchargez une photo de profil
                                                 </h6>
-                                                <Typography style={{fontFamily: 'helvetica', marginBottom: '1rem'}}>
+                                                <Typography style={{fontFamily: 'helvetica',fontSize: '1rem', fontWeight:400, marginBottom: '1rem'}}>
                                                     Téléchargez une photo de claire et lumineuse, de bonne qualité. Pour un rendu optimal, la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif, avec seulement vous sur la photo.
                                                 </Typography>
                                                 <Grid container style={{ marginBottom: 15 }}>
@@ -2440,14 +2440,14 @@ class Form extends React.Component {
                                                 </Grid>
                                                 <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                                 <Grid container>
-                                                    <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10, width: '100%'}}>
+                                                    <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10, width: '100%'}}>
                                                         Vérifiez votre identité <span style={{color: '#F8727F' }}>*</span>
                                                     </h6>
-                                                    <Typography style={{fontFamily: 'helvetica'}}>
+                                                    <Typography style={{fontFamily: 'helvetica',fontSize: '1rem', fontWeight:400,}}>
                                                         Ces informations ne seront pas visibles par les utilisateurs. Un profil vérifié est plus engageant pour les utilisateurs !
                                                     </Typography>
                                                     <Grid item xs={12}>
-                                                        <Typography>
+                                                        <Typography style={{fontSize: '1rem', fontWeight:400, fontFamily:'helvetica'}}>
                                                             Vos informations ne seront pas visibles par les
                                                             autres utilisateurs
                                                         </Typography>
@@ -2491,10 +2491,10 @@ class Form extends React.Component {
                                                                 {this.state.passportid === 'id' ?
                                                                 <React.Fragment>
                                                                     <Grid item xs={12} style={{ marginBottom: 10 }}>
-                                                                        <Field render={({field, form}) => {
+                                                                        <Field render={({form}) => {
                                                                             return (
                                                                                 <React.Fragment>
-                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                    <label style={{display: 'inline-block', marginTop: 15, fontSize: '1rem', fontWeight:400, fontFamily:'helvetica'}} className="forminputs">
                                                                                         Carte identité recto
                                                                                         <input id="file" accept="image/*, application/pdf" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
                                                                                             if (typeof event.currentTarget.files[0] === 'undefined') {
@@ -2538,7 +2538,7 @@ class Form extends React.Component {
                                                                         <Field render={({form}) => {
                                                                             return (
                                                                                 <React.Fragment>
-                                                                                    <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                    <label style={{display: 'inline-block', marginTop: 15, fontSize: '1rem', fontWeight:400, fontFamily:'helvetica'}} className="forminputs">
                                                                                         Carte identité verso
                                                                                         <input id="file" accept="image/*, application/pdf" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardV" type="file" onChange={(event) => {
                                                                                             if (typeof event.currentTarget.files[0] === 'undefined') {
@@ -2578,10 +2578,10 @@ class Form extends React.Component {
                                                                 </React.Fragment>
                                                                 :
                                                                 <Grid item xs={12} style={{ marginBottom: 10 }}>
-                                                                    <Field render={({field, form}) => {
+                                                                    <Field render={({form}) => {
                                                                         return (
                                                                             <React.Fragment>
-                                                                                <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                                                                <label style={{display: 'inline-block', marginTop: 15, fontSize: '1rem', fontWeight:400, fontFamily:'helvetica'}} className="forminputs">
                                                                                     Passeport
                                                                                     <input id="file" accept="image/*, application/pdf" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="myCardR" type="file" onChange={(event) => {
                                                                                         if (typeof event.currentTarget.files[0] === 'undefined') {
@@ -2657,7 +2657,7 @@ class Form extends React.Component {
                                                                                 checkedIcon={<RadioButtonCheckedIcon />}
                                                                             />
                                                                         }
-                                                                        label={<h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                        label={<h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
                                                                         Je suis un particulier
                                                                 </h6>}
                                                                     />
@@ -2665,7 +2665,7 @@ class Form extends React.Component {
                                                             }} />
                                                         </Grid>
                                                         <Grid item xs={11}>
-                                                            <Typography style={{marginLeft: '2.5rem'}}>
+                                                            <Typography style={{marginLeft: '2.5rem',fontSize: '1rem', fontWeight:400, fontFamily:'helvetica'}}>
                                                                 En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés.
                                                             </Typography>
                                                         </Grid>
@@ -2699,7 +2699,7 @@ class Form extends React.Component {
                                                                                 checkedIcon={<RadioButtonCheckedIcon />}
                                                                             />
                                                                         }
-                                                                        label={<h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                                        label={<h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
                                                                         Je suis un professionnel
                                                                 </h6>}
                                                                     />
@@ -2707,7 +2707,7 @@ class Form extends React.Component {
                                                             }} />
                                                         </Grid>
                                                         <Grid item xs={11}>
-                                                            <Typography style={{marginLeft: '2.5rem'}}>
+                                                            <Typography style={{marginLeft: '2.5rem',fontSize: '1rem', fontWeight:400, fontFamily:'helvetica'}}>
                                                                 Un statut professionnel est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière.
                                                             </Typography>
                                                             {isProfessional ? (
@@ -2752,11 +2752,11 @@ class Form extends React.Component {
                                                 <hr style={{margin: '1rem 0'}}/>
                                                 <Grid container>
                                                     <Grid item xs={12}>
-                                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.5rem',fontWeight: 100, marginTop: 15, marginBottom: 10}}>
+                                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
                                                             Vos obligations légales <span style={{color: '#F8727F' }}>*</span>
                                                         </h6>
                                                     </Grid>
-                                                    <Typography>
+                                                    <Typography style={{fontSize: '1rem', fontWeight:400, fontFamily:'helvetica'}}>
                                                         Dans le cadre des prestations effectuées via My-Alfred, vous devez respecter toutes les obligations légales et réglementaires (fiscales, sociales, comptables, administratives etc...) liées à votre statut.
                                                     </Typography>
                                                     <Grid container>
