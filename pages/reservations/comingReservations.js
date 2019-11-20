@@ -380,8 +380,6 @@ class ComingReservations extends React.Component {
                                                     </Grid>
                                                 </Grid>
                                             )
-                                        } else if (this.state.userReservations.length === i + 1) {
-                                            return <p>Vous n'avez aucune réservation en tant qu'utilisateur</p>
                                         } else {
                                             return null;
                                         }

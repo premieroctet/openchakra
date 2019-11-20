@@ -360,7 +360,7 @@ class FinishedReservations extends React.Component {
                                 </Grid>
                                 {tabs ? <React.Fragment>
                                   {this.state.userReservations.length ?
-                                    this.state.userReservations.map(booking => {
+                                    this.state.userReservations.map((booking, i) => {
                                         if (booking.status === 'Refusée' || booking.status === 'Annulée' || booking.status === 'Terminée' || booking.status === 'Expirée') {
                                             return (
                                                 <Grid container className={classes.mobilerow} style={{borderBottom: '1px #8281813b solid'}}>
@@ -380,8 +380,6 @@ class FinishedReservations extends React.Component {
                                                     </Grid>
                                                 </Grid>
                                             )
-                                        } else if (this.state.userReservations.length === i + 1) {
-                                            return <p>Vous n'avez aucune réservation en tant qu'utilisateur</p>
                                         } else {
                                             return null;
                                         }
