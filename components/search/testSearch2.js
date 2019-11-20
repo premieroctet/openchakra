@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import Layout from '../hoc/Layout/Layout';
+import Layout from '../../hoc/Layout/Layout';
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
@@ -25,7 +25,7 @@ import 'react-dates/lib/css/_datepicker.css';
 const geolib = require('geolib');
 const _ = require('lodash');
 
-const { config } = require('../config/config');
+const { config } = require('../../config/config');
 const url = config.apiUrl;
 moment.locale('fr');
 const styles = theme => ({

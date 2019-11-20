@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import Layout from '../hoc/Layout/Layout';
+import Layout from '../../hoc/Layout/Layout';
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
@@ -21,17 +21,43 @@ import 'react-dates/initialize';
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
 import moment from "moment";
 import 'react-dates/lib/css/_datepicker.css';
+import '../../static/overridedate.css';
 import AlgoliaPlaces from "algolia-places-react";
 
 const geolib = require('geolib');
 const _ = require('lodash');
 
-const { config } = require('../config/config');
+const { config } = require('../../config/config');
 const url = config.apiUrl;
 moment.locale('fr');
 const styles = theme => ({
     bigContainer: {
         marginTop: 80
+    },
+    card: {
+        margin: 20,
+    },
+    media: {
+      height: "250px!important",
+      position: 'relative',
+      objectFit: 'cover',
+    },
+    DateInput_input__focused:{
+        borderBottom: '1px solid #fb1515!important',
+    },
+    algol: {
+        fontFamily: 'Helvetica Neue, Helvetica,sans-serif',
+        '::placeholder':{
+            color: '#cfcfcf',
+        },
+        '&:hover':{
+            border: '1px solid black!important',
+            transition: 'border 0.5s',
+        },
+        '&:focus':{
+            border: '2px solid #2FBCD3!important',
+            transition: 'border 0.5s',
+        }
     }
 });
 
@@ -67,6 +93,9 @@ class searchNotLogin extends React.Component {
             startDate: null,
             endDate: null,
             focusedInput: null,
+            clickedstatut:false,
+            clickeddate:false,
+
 
 
 
@@ -163,7 +192,7 @@ class searchNotLogin extends React.Component {
                 const obj = {label:this.state.research.trim()};
                 await axios.post(url+'myAlfred/api/prestation/all/search',obj)
                     .then(res => {
-
+                        clickedfilter
                         let prestations = res.data;
                         this.setState({prestations:prestations});
                         const arrayCategory = [];
@@ -176,7 +205,6 @@ class searchNotLogin extends React.Component {
                         const uniqService = _.uniqBy(arrayService,'label');
                         this.setState({uniqCategory:uniqCategory,uniqService:uniqService});
                         this.setState({prestationOk: true});
-
                     })
                     .catch(err => {
                         console.log(err)
@@ -493,13 +521,13 @@ class searchNotLogin extends React.Component {
                         })
                     })
 
-                },2000)
+                },1000)
             } else {
                 setTimeout(()=>{if(this.state.filterDate){
                     this.filterDate()
                 } else {
                     this.searchWithWord()
-                }},2000)
+                }},1000)
             }
         } else {
             const arrayShop = [];
@@ -557,7 +585,7 @@ class searchNotLogin extends React.Component {
 
 
 
-                },2000)
+                },1000)
             } else {
                 setTimeout(() => {
                         if(this.state.filterDate){
@@ -566,7 +594,7 @@ class searchNotLogin extends React.Component {
                             this.search()
                         }
                     },
-                    2000);
+                    1000);
             }
         }
 
@@ -637,13 +665,13 @@ class searchNotLogin extends React.Component {
                     })
 
 
-                }, 2000)
+                }, 1000)
             } else {
                 setTimeout(() => {if(this.state.filterDate){
                     this.filterDate()
                 } else {
                     this.searchWithWord()
-                }},2000);
+                }},1000);
 
             }
         } else {
@@ -703,7 +731,7 @@ class searchNotLogin extends React.Component {
                     })
 
 
-                }, 2000)
+                }, 1000)
             } else {
                 setTimeout(() => {
                         if(this.state.filterDate){
@@ -712,7 +740,7 @@ class searchNotLogin extends React.Component {
                             this.search()
                         }
                     },
-                    2000);
+                    1000);
 
             }
         }
@@ -806,6 +834,24 @@ class searchNotLogin extends React.Component {
         }
     }
 
+    yes(){
+        if(this.state.clickedstatut == true)
+        {
+            this.setState({clickedstatut: false});
+        } else {
+            this.setState({clickedstatut: true});
+        }
+    }
+
+    yes2(){
+        if(this.state.clickeddate == true)
+        {
+            this.setState({clickeddate: false});
+        } else {
+            this.setState({clickeddate: true});
+        }
+    }
+
     cancelDateFilter(){
         this.setState({startDate:null,endDate:null,filterDate:false});
         if(this.state.checkedB){
@@ -847,9 +893,9 @@ class searchNotLogin extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid container>
-                            <Grid item xs={6}>
+                            <Grid item xs={4} style={{textAlign: 'center'}}>
                                 <TextField
-                                    id="input-with-icon-textfield"
+                                    id="input-with-icon-textfield" 
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
@@ -860,13 +906,15 @@ class searchNotLogin extends React.Component {
                                     placeholder={'Quel service ?'}
                                     variant={"outlined"}
                                     value={this.state.research}
+                                    style={{width: '90%', margin: 'auto'}}
                                     onChange={(event)=>this.setState({research: event.target.value,click2:false})}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={4} style={{textAlign: 'center',width: '90%', margin: 'auto'}}>
                                 <AlgoliaPlaces
+                                    className={classes.algol}
+                                    style={{height: '55px'}}
                                     placeholder='Recherchez une ville'
-
                                     options={{
                                         appId: 'plKATRG826CP',
                                         apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -874,8 +922,6 @@ class searchNotLogin extends React.Component {
                                         countries: ['fr'],
                                         type: 'city',
                                         useDeviceLocation: 'true'
-
-
                                     }}
 
 
@@ -885,85 +931,140 @@ class searchNotLogin extends React.Component {
 
                             </Grid>
 
-                        </Grid>
-                        <Grid container>
-                            <Grid item xs={3}>
+                        
+                            <Grid item xs={3} style={{margin: 'auto'}}>
                                 {this.state.research === '' ?
                                     <Button onClick={() => this.search()} variant="contained" color="primary"
-                                            style={{width: '100%', color: 'white'}}>
+                                            style={{width: '80%', color: 'white', margin: 'auto', height: '55px', fontSize: '0.8rem'}}>
                                         Rechercher
                                     </Button> :
 
                                     <Button disabled={(this.state.research.length === 0 || !this.state.research.trim())} onClick={()=>this.searchWithWord()} variant="contained" color="primary"
-                                            style={{width: '100%', color: 'white'}}>
+                                            style={{width: '80%', color: 'white', margin: 'auto', height: '55px', fontSize: '0.8rem'}}>
                                         Rechercher avec un mot
                                     </Button>
                                 }
                             </Grid>
-                            {this.state.checkedParticulier ? <Grid item xs={3}></Grid> :
 
-                                <Grid item xs={3}>
-                                    <FormControlLabel
-                                        control={
-                                            <Switch
-                                                checked={this.state.checkedB}
-                                                onChange={e=>{this.handleChange(e);this.filter()}}
-                                                value={this.state.checkedB}
-                                                color="primary"
-                                                name={'checkedB'}
-                                            />
-                                        }
-                                        label="Pro"
-                                    />
+                            </Grid>
+
+                            <Grid container>
+
+                            {this.state.click2 ?<Fragment>
+                            <Grid container>
+                                {this.state.clickedstatut ?
+                                    <Grid item xs={6} sm={4} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', padding: 20, height: '65px', margin: 10}}>
+                                        <Typography style={{textAlign: 'center', color:'white'}}>Statut</Typography>
+                                    </Grid> 
+                                : 
+                                    <Grid item xs={6} sm={4} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', padding: 20, height: '65px', margin: 10}}>
+                                        <Typography style={{textAlign: 'center'}}>Statut</Typography>
+                                    </Grid> 
+                                }
+                                {this.state.clickeddate ?
+                                    <Grid item xs={6} sm={4} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', padding: 20, height: '65px', margin: 10}}>
+                                        <Typography style={{textAlign: 'center', color:'white'}}>Quelle(s) date(s) ?</Typography>
+                                    </Grid>
+                                :
+                                    <Grid item xs={6} sm={4} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', padding: 20, height: '65px', margin: 10}}>
+                                        <Typography style={{textAlign: 'center'}}>Quelle(s) date(s) ?</Typography>
+                                    </Grid>
+                                }
+                            </Grid>
+                            <Grid container  style={{height: '10px'}}>
+                                {this.state.clickedstatut ?
+                                
+                                <Grid item xs={6} sm={4} md={3} style={{borderRadius: '15px', backgroundColor: 'white', border: '1px solid #dbdbdb', height: '100px', margin: 10,zIndex: 1}}>
+                                    <Grid container>
+                                        <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                            {this.state.checkedParticulier ? <Grid item xs={3}></Grid> :
+                                                
+                                                <Grid item xs={6} sm={4} md={3} style={{textAlign:'center', margin: 'auto'}}>
+                                                    {this.state.click2 ?
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Switch
+                                                                checked={this.state.checkedB}
+                                                                onChange={e=>{this.handleChange(e);this.filter()}}
+                                                                value={this.state.checkedB}
+                                                                color="primary"
+                                                                name={'checkedB'}
+                                                            />
+                                                        }
+                                                        label="Pro"
+                                                    />
+                                                    :null}
+                                                </Grid>
+                                            }
+                                        </Grid>
+
+                                        <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                            {this.state.checkedB ? null : 
+
+                                            <Grid item xs={6} sm={4} md={3} style={{textAlign:'center', margin: 'auto'}}>
+                                                {this.state.click2 ?
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Switch
+                                                                checked={this.state.checkedParticulier}
+                                                                onChange={e=>{this.handleChange(e);this.filterParticulier()}}
+                                                                value={this.state.checkedParticulier}
+                                                                color="primary"
+                                                                name={'checkedParticulier'}
+                                                            />
+                                                        }
+                                                        label="Particulier"
+                                                    />
+                                                    : null}
+                                                </Grid>
+
+                                            }
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
-                            }
+                                : null}
+                                {this.state.clickeddate ?
+                                <Fragment>
+                                    {this.state.clickedstatut ? null : <Grid item xs={6} sm={4} md={3} style={{margin: 10}}></Grid> }
+                                    <Grid item xs={6} sm={4} md={3} style={{borderRadius: '15px', backgroundColor: 'white', border: '1px solid #dbdbdb', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
+                                        <Grid container>
+                                            <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                                <DateRangePicker
+                                                    style={{width: '50px'}}
+                                                    startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+                                                    startDatePlaceholderText={'Début'}
+                                                    endDatePlaceholderText={'Fin'}
+                                                    startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                                                    endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+                                                    endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                                                    onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
+                                                    focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                                                    onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+                                                    minimumNights={0}
 
-                            {this.state.checkedB ? null : <Grid item xs={3}>
-
-
-
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={this.state.checkedParticulier}
-                                            onChange={e=>{this.handleChange(e);this.filterParticulier()}}
-                                            value={this.state.checkedParticulier}
-                                            color="primary"
-                                            name={'checkedParticulier'}
-                                        />
-                                    }
-                                    label="Particulier"
-                                />
-
-
-                            </Grid>}
-
-
-
+                                                />
+                                            </Grid>
+                                            
+                                            <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                                <Grid container>
+                                                    <Grid item xs={6}>
+                                                        <Button onClick={()=>this.cancelDateFilter()}>Annuler</Button>
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <Button onClick={()=>this.filterDate()}>Valider</Button>
+                                                    </Grid> 
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    
+                                </Fragment>
+                                : null}
+                            </Grid>
+                            </Fragment>: null}
+                            
                         </Grid>
-                        <Grid container>
-                            <Grid item xs={4}>
-                                <DateRangePicker
-                                    startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                                    startDatePlaceholderText={'Début'}
-                                    endDatePlaceholderText={'Fin'}
-                                    startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                                    endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-                                    endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                                    onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
-                                    focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                                    onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
-                                    minimumNights={0}
 
-                                />
-                            </Grid>
-                            <Grid item xs={3}>
-                                <Button onClick={()=>this.cancelDateFilter()}>Annuler</Button>
-                            </Grid>
-                            <Grid item xs={3}>
-                                <Button onClick={()=>this.filterDate()}>Valider</Button>
-                            </Grid>
-                        </Grid>
                         {click ?
                             <>
                                 <Grid container>
@@ -1034,31 +1135,88 @@ class searchNotLogin extends React.Component {
 
                         {this.state.click2 ?
                             <>
-                                <p>Résultat pour la recherche : {this.state.research}</p>
-
+                            <Grid container>
+                                <Typography style={{fontSize: '1.1rem', color: '#A3A3A3'}}>Résultat pour la recherche : <i style={{fontWeight: 'bold'}}>{this.state.research}</i></Typography>
+                            </Grid>
 
                                 {this.state.categoryFinal.map((e, index) => (
                                         <Grid key={index} container>
                                             <Grid item xs={12}>
                                                 <h4>{e.label}</h4>
-                                                {this.state.finalServiceUser.map(s => {
 
-                                                    if (s.service.category === e._id) {
-                                                        return (
-                                                            <Grid item xs={3}>
-                                                                <Card>
-                                                                    <p>{s.service.label} par {s.user.firstname}</p>
+                                                <Grid container>
+                                                    {this.state.finalServiceUser.map(s => {
 
-                                                                </Card>
-                                                            </Grid>
-                                                        )
-                                                    } else return null
+                                                        if (s.service.category === e._id) {
+                                                            return (
+                                                                <Grid item md={3} sm={6} xs={12}>
+                                                                    <Card className={classes.card}>
+                                                                            <CardMedia
+                                                                                className={classes.media}
+                                                                                style={{height:150}}
+                                                                                image={s.service.picture}
+                                                                                title={s.service.label}
+                                                                            >
+                                                                                <img style={{position: 'absolute', width: '130px', height: '130px', borderRadius: '50%', objectFit: 'cover', top: '60px', left: 0, right: 0, margin: 'auto'}} src={"../"+s.user.picture}/>
+                                                                                {s.city != null ? 
+                                                                                <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'rgb(228, 226, 226)', bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16.057" height="20.521" viewBox="0 0 16.057 20.521">
+                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="rgb(228, 226, 226)" fill-rule="evenodd"/>
+                                                                                    </svg> 
+                                                                                     {' ' + s.city}
+                                                                                </Typography>: null}
+                                                                            </CardMedia>
+                                                                            <CardContent style={{height: '105px'}}>
+                                                                                <Grid container>
+                                                                                    <Grid item xs={7}>
+                                                                                        <Typography style={{fontSize: '0.9rem', color: '#A3A3A3'}}>{e.label}</Typography>
+                                                                                        <Typography style={{fontSize: '1rem'}}>
+                                                                                            {s.service.label} par {s.user.firstname} <img src="../static/checkboxes/roundBlue2Checked.png" style={{width: '13px', height: '13px'}}/>
+                                                                                        </Typography>
+                                                                                    </Grid>
+                                                                                    <Grid item xs={5}>
+                                                                                        <Link href={"/userServicePreview?id="+ s.service._id}>
+                                                                                            <Button alt={s.service._id} variant="contained" color="primary"
+                                                                                                    style={{width: '80%', color: 'white', margin: '20px auto auto'}}>
+                                                                                                Réserver
+                                                                                            </Button>
+                                                                                        </Link>
+                                                                                    </Grid>
+                                                                                </Grid>
+                                                                            </CardContent>
+                                                                    </Card>
+                                                                </Grid>
+                                                            )
+                                                        } else null
 
-                                                })}
+                                                    })}
+                                                </Grid>
+                                                
+                                                
                                                 {this.state[e.label+'Final'] !== 0 ? <p>Voir les {this.state[e.label+'Final']} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
                                             </Grid>
                                         </Grid>
-                                    ))}
+                                    ))}{/*<br/>
+                                    <Grid container>
+                                        <Grid item xs={3}>
+                                            <Card>
+                                                <Card media>
+
+                                                </Card>
+                                                <p>test</p>
+                                            </Card>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Card>
+                                                <p>test</p>
+                                            </Card>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Card>
+                                                <p>test</p>
+                                            </Card>
+                                        </Grid>
+                                    </Grid>*/}
 
 
 
