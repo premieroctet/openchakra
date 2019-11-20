@@ -503,7 +503,8 @@ class userServices extends React.Component {
                         prestations: this.state.selectedPrestations,
                         chatroom: res.data._id,
                         fees: this.state.fees,
-                        status: 'Demande d\'infos'
+                        status: 'Demande d\'infos',
+                        serviceUserId: this.state.serviceUser._id
                     }
 
                     if (this.state.selectedOption !== null) {

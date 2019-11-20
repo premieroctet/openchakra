@@ -93,6 +93,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
     bookingFields.prestations = req.body.prestations;
     bookingFields.fees = req.body.fees;
     bookingFields.status = req.body.status;
+    bookingFields.serviceUserId = req.body.serviceUserId;
 
     const newBooking = new Booking(bookingFields);
 

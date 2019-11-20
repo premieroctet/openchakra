@@ -580,7 +580,7 @@ class detailsReservation extends React.Component {
                                                 <div style={{display: 'flex', flexFlow: 'row'}}>
                                                     <Typography>Vous avez 15 jours pour évaluer votre Alfred. Une fois que votre Alfred aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !</Typography>
                                                     <div style={{textAlign: 'center', width: '400px', height: '40px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px'}}>
-                                                        <Link href="#">
+                                                        <Link href="/evaluateClient">
                                                             <a style={{textDecoration:'none', color: 'white' }}>Evaluer mon client</a>
                                                         </Link>
                                                     </div>
@@ -592,7 +592,7 @@ class detailsReservation extends React.Component {
                                                 <div style={{display: 'flex', flexFlow: 'row'}}>
                                                     <Typography>Vous avez 15 jours pour évaluer votre Alfred. Une fois que votre Alfred aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !</Typography>
                                                     <div style={{textAlign: 'center', width: '400px', height: '40px', backgroundColor: '#F8727F', lineHeight: 2.5, borderRadius: '50px'}}>
-                                                        <Link href="#">
+                                                        <Link href={`/evaluate?=${bookingObj.serviceUserId}`}>
                                                             <a style={{textDecoration:'none', color: 'white' }}>Evaluer mon Alfred</a>
                                                         </Link>
                                                     </div>

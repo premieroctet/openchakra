@@ -85,6 +85,9 @@ const BookingSchema = new Schema({
     status: {
         type: String,
         enum: ['Confirmée','Refusée', 'Annulée', 'Terminée', 'Expirée', 'En attente de confirmation', 'Demande d\'infos', 'Invitation à réserver', 'Pré-approuvée' ]
+    },
+    serviceUserId: {
+        type: String
     }
 
 
