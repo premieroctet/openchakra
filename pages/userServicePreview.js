@@ -486,6 +486,8 @@ class userServices extends React.Component {
   }
 
   moreInfos() {
+    this.setState({ errorsPresta: null });
+
     if (!this.state.selectedPrestations.length) {
       this.setState({
         errorsPresta: "Veuillez sélectionner au moins une prestation"
@@ -578,50 +580,63 @@ class userServices extends React.Component {
         localStorage.setItem('hour', this.state.hour);
         localStorage.setItem('grandTotal', this.state.grandTotal);*/
 
-    let reference;
+    this.setState({ errorsPresta: null });
 
-    let name = this.state.user.name;
-    let firstLetterNameUser = name.charAt(0).toUpperCase();
-    let firstname = this.state.user.firstname;
-    let firstLetterFirstnameUser = firstname.charAt(0).toUpperCase();
+    if (!this.state.selectedPrestations.length) {
+      this.setState({
+        errorsPresta: "Veuillez sélectionner au moins une prestation"
+      });
+    } else {
+      let reference;
 
-    let nameAlfred = this.state.serviceUser.user.name;
-    let firstLetterNameAlfred = nameAlfred.charAt(0).toUpperCase();
-    let firstnameAlfred = this.state.serviceUser.user.firstname;
-    let firstLetterFirstnameAlfred = firstnameAlfred.charAt(0).toUpperCase();
+      let name = this.state.user.name;
+      let firstLetterNameUser = name.charAt(0).toUpperCase();
+      let firstname = this.state.user.firstname;
+      let firstLetterFirstnameUser = firstname.charAt(0).toUpperCase();
 
-    const letter =
-      firstLetterNameUser +
-      firstLetterFirstnameUser +
-      firstLetterNameAlfred +
-      firstLetterFirstnameAlfred;
-    const day = new Date().getDate();
-    const month = new Date().getMonth();
-    const year = new Date().getFullYear();
+      let nameAlfred = this.state.serviceUser.user.name;
+      let firstLetterNameAlfred = nameAlfred.charAt(0).toUpperCase();
+      let firstnameAlfred = this.state.serviceUser.user.firstname;
+      let firstLetterFirstnameAlfred = firstnameAlfred.charAt(0).toUpperCase();
 
-    reference = letter + "_" + day + month + year;
+      const letter =
+        firstLetterNameUser +
+        firstLetterFirstnameUser +
+        firstLetterNameAlfred +
+        firstLetterFirstnameAlfred;
+      const day = new Date().getDate();
+      const month = new Date().getMonth();
+      const year = new Date().getFullYear();
 
-    let bookingObj = {
-      reference: reference,
-      service: this.state.service.label,
-      address: this.state.serviceUser.service_address,
-      equipments: this.state.serviceUser.equipments,
-      amount: this.state.grandTotal,
-      date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
-      time_prestation: moment(this.state.hour).format("HH:mm"),
-      alfred: this.state.serviceUser.user._id,
-      user: this.state.user._id,
-      prestations: this.state.selectedPrestations,
-      fees: this.state.fees,
-      status: "En attente de confirmation",
-      serviceUserId: this.state.serviceUser._id
-    };
+      reference = letter + "_" + day + month + year;
 
-    if (this.state.selectedOption !== null) {
-      bookingObj.option = this.state.selectedOption;
+      let bookingObj = {
+        reference: reference,
+        service: this.state.service.label,
+        address: this.state.serviceUser.service_address,
+        equipments: this.state.serviceUser.equipments,
+        amount: this.state.grandTotal,
+        date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
+        time_prestation: moment(this.state.hour).format("HH:mm"),
+        alfred: this.state.serviceUser.user._id,
+        user: this.state.user._id,
+        prestations: this.state.selectedPrestations,
+        fees: this.state.fees,
+        status: "En attente de confirmation",
+        serviceUserId: this.state.serviceUser._id
+      };
+
+      if (this.state.selectedOption !== null) {
+        bookingObj.option = this.state.selectedOption;
+      }
+
+      localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
+
+      Router.push({
+          pathname: "/confirmPayement",
+          query: { id: this.props.service_id }
+      })
     }
-
-    localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
   }
 
   render() {
@@ -2648,17 +2663,14 @@ class userServices extends React.Component {
                           >
                             Demande d'infos
                           </button>
-                          <Link
-                            href={{
-                              pathname: "/confirmPayement",
-                              query: { id: this.props.service_id }
-                            }}
-                          >
                             <button onClick={() => this.reservationPage()}>
                               Réserver
                             </button>
-                          </Link>
-                        {this.state.errorsPresta !== null ? <p style={{color: 'red'}}>{this.state.errorsPresta}</p> : null}
+                          {this.state.errorsPresta !== null ? (
+                            <p style={{ color: "red" }}>
+                              {this.state.errorsPresta}
+                            </p>
+                          ) : null}
                         </Grid>
                       </Grid>
                     </Grid>
