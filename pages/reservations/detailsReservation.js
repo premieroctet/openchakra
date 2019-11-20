@@ -1535,7 +1535,7 @@ class DetailsReservation extends React.Component {
                                 borderRadius: "50px"
                               }}
                             >
-                              <Link href="/evaluateClient">
+                              <Link href={`/evaluateClient?id=${bookingObj.serviceUserId}&client=${bookingObj.user._id}`}>
                                 <a
                                   style={{
                                     textDecoration: "none",
@@ -1984,7 +1984,7 @@ class DetailsReservation extends React.Component {
                                 marginTop: "20%"
                               }}
                             >
-                              <Link href="#">
+                              <Link href={`reserve?id=${bookingObj._id}`}>
                                 <a
                                   style={{
                                     textDecoration: "none",

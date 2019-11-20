@@ -10,18 +10,12 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
 import dynamic from 'next/dynamic';
-import { border } from 'polished';
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpandMoreIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import Card from "@material-ui/core/Card";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
-import FormControl from "@material-ui/core/FormControl";
-import Select2 from "react-select";
 import Tooltip from '@material-ui/core/Tooltip';
 registerLocale('fr', fr);
 
@@ -197,11 +191,13 @@ class userServices extends React.Component {
         localStorage.removeItem('fees');
         localStorage.removeItem('date');
         localStorage.removeItem('hour');
-
-
+    
         const id = this.props.service_id;
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.put(url + `myAlfred/api/serviceUser/views/${id}`)
+            .then(res => res)
+            .catch(err => console.log(err))
         axios
             .get(url+'myAlfred/api/users/current')
             .then(res => {
