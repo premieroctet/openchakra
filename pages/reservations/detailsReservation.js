@@ -1949,19 +1949,12 @@ class DetailsReservation extends React.Component {
                                   lineHeight: 2.5,
                                   borderRadius: "50px",
                                   border: "1px solid black",
-                                  marginTop: "20%"
+                                  marginTop: "20%",
+                                  cursor: 'pointer'
                                 }}
+                                onClick={() => this.changeStatus('Refusée')}
                               >
-                                <Link href="#">
-                                  <a
-                                    style={{
-                                      textDecoration: "none",
-                                      color: "black"
-                                    }}
-                                  >
                                     Refuser
-                                  </a>
-                                </Link>
                               </div>
                             </>
                           ) : bookingObj.status === "Demande d'infos" &&
@@ -2000,16 +1993,23 @@ class DetailsReservation extends React.Component {
                                 marginTop: "20%"
                               }}
                             >
-                              <Link href="#">
-                                <a
-                                  style={{
-                                    textDecoration: "none",
-                                    color: "white"
-                                  }}
+                                <Link
+                                    href={{
+                                    pathname: "/reservations/messagesDetails",
+                                    query: {
+                                        id:
+                                        bookingObj === null
+                                            ? null
+                                            : bookingObj.chatroom
+                                    }
+                                    }}
                                 >
-                                  Envoyer un message
-                                </a>
-                              </Link>
+                                    <a
+                                    style={{ textDecoration: "none", color: "white" }}
+                                    >
+                                        Envoyer un message
+                                    </a>
+                                </Link>
                             </div>
                           ) : bookingObj.status === "Confirmée" ? (
                             <>
@@ -2060,7 +2060,7 @@ class DetailsReservation extends React.Component {
                                   style={{
                                     width: "30px",
                                     height: "30px",
-                                    backgroundColor: "##C4C4C4",
+                                    backgroundColor: "#C4C4C4",
                                     borderRadius: "100%",
                                     border:
                                       "0.4px solid rgba(112,112,112,0.26)",
@@ -2069,7 +2069,7 @@ class DetailsReservation extends React.Component {
                                 ></div>
                               </Grid>
                               <Grid item xs={8}>
-                                <Typography style={{ color: "##C4C4C4" }}>
+                                <Typography style={{ color: "#C4C4C4" }}>
                                   Réservation terminée
                                 </Typography>
                               </Grid>
@@ -2090,7 +2090,7 @@ class DetailsReservation extends React.Component {
                                 ></div>
                               </Grid>
                               <Grid item xs={8}>
-                                <Typography style={{ color: "##C4C4C4" }}>
+                                <Typography style={{ color: "#C4C4C4" }}>
                                   Réservation annulée
                                 </Typography>
                               </Grid>
@@ -2111,7 +2111,7 @@ class DetailsReservation extends React.Component {
                                 ></div>
                               </Grid>
                               <Grid item xs={8}>
-                                <Typography style={{ color: "##C4C4C4" }}>
+                                <Typography style={{ color: "#C4C4C4" }}>
                                   Réservation refusée
                                 </Typography>
                               </Grid>
@@ -2150,7 +2150,7 @@ class DetailsReservation extends React.Component {
                                   marginTop: "20%"
                                 }}
                               >
-                                <Link href="#">
+                                <Link href={`reserve?id=${bookingObj._id}`}>
                                   <a
                                     style={{
                                       textDecoration: "none",
@@ -2866,7 +2866,7 @@ class DetailsReservation extends React.Component {
                         paddingBottom: "3%"
                       }}
                     >
-                      <Link href="#">
+                      <Link href="/faq">
                         <a
                           style={{
                             textDecoration: "none",
