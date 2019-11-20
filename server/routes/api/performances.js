@@ -178,6 +178,22 @@ router.get('/statistics/reviews/:service',passport.authenticate('jwt',{session:f
         .catch(err => res.status(404).json({ services: 'No services found' }));
 });
 
+// @Route GET /myAlfred/performances/evaluations/allReviews
+// Get all reviews for an alfred
+// @Access private
+router.get('/evaluations/allReviews',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    Reviews.find({alfred: req.user.id,note_client:undefined})
+        .populate('user')
+        .populate('serviceUser')
+        .populate({path: 'serviceUser', populate: { path: 'service' }})
+        .then(reviews => {
+
+            res.json(reviews)
+
+        })
+        .catch(err => res.status(404).json({ reviews: 'No reviews found' }));
+});
+
 
 
 

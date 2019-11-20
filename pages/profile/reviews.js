@@ -357,7 +357,7 @@ class reviews extends React.Component {
                                                     <StarRatings
                                                         rating={e.note_alfred.prestation_quality}
                                                         starRatedColor={"#2FBCD3"}
-                                                        numberOfStars={e.note_alfred.prestation_quality}
+                                                        numberOfStars={5}
                                                         name='rating'
                                                         starDimension={'20px'}
                                                         starHoverColor={'#2FBCD3'}
@@ -374,7 +374,7 @@ class reviews extends React.Component {
                                                     <StarRatings
                                                         rating={e.note_alfred.quality_price}
                                                         starRatedColor={"#2FBCD3"}
-                                                        numberOfStars={e.note_alfred.quality_price}
+                                                        numberOfStars={5}
                                                         name='rating'
                                                         starDimension={'20px'}
                                                         starHoverColor={'#2FBCD3'}
@@ -391,7 +391,7 @@ class reviews extends React.Component {
                                                     <StarRatings
                                                         rating={e.note_alfred.relational}
                                                         starRatedColor={"#2FBCD3"}
-                                                        numberOfStars={e.note_alfred.quality_price}
+                                                        numberOfStars={5}
                                                         name='rating'
                                                         starDimension={'20px'}
                                                         starHoverColor={'#2FBCD3'}
@@ -443,7 +443,7 @@ class reviews extends React.Component {
                                                 <StarRatings
                                                     rating={e.note_client.reception}
                                                     starRatedColor={"#2FBCD3"}
-                                                    numberOfStars={e.note_client.reception}
+                                                    numberOfStars={5}
                                                     name='rating'
                                                     starDimension={'20px'}
                                                     starHoverColor={'#2FBCD3'}
@@ -460,7 +460,7 @@ class reviews extends React.Component {
                                                 <StarRatings
                                                     rating={e.note_client.accuracy}
                                                     starRatedColor={"#2FBCD3"}
-                                                    numberOfStars={e.note_client.accuracy}
+                                                    numberOfStars={5}
                                                     name='rating'
                                                     starDimension={'20px'}
                                                     starHoverColor={'#2FBCD3'}
@@ -477,7 +477,7 @@ class reviews extends React.Component {
                                                 <StarRatings
                                                     rating={e.note_client.relational}
                                                     starRatedColor={"#2FBCD3"}
-                                                    numberOfStars={e.note_client.relational}
+                                                    numberOfStars={5}
                                                     name='rating'
                                                     starDimension={'20px'}
                                                     starHoverColor={'#2FBCD3'}
