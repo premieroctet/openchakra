@@ -1900,19 +1900,12 @@ class DetailsReservation extends React.Component {
                                     lineHeight: 2.5,
                                     borderRadius: "50px",
                                     border: "1px solid black",
-                                    marginTop: "20%"
+                                    marginTop: "20%",
+                                    cursor: "pointer"
                                   }}
+                                  onClick={() => this.changeStatus('Refusée')}
                                 >
-                                  <Link href="#">
-                                    <a
-                                      style={{
-                                        textDecoration: "none",
-                                        color: "black"
-                                      }}
-                                    >
-                                      Refuser
-                                    </a>
-                                  </Link>
+                                    Refuser
                                 </div>
                               </>
                             ) : (

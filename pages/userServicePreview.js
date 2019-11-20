@@ -1,11 +1,11 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
+import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
@@ -191,6 +191,7 @@ class userServices extends React.Component {
         localStorage.removeItem('fees');
         localStorage.removeItem('date');
         localStorage.removeItem('hour');
+        localStorage.removeItem('bookingObj');
     
         const id = this.props.service_id;
         localStorage.setItem('path',Router.pathname);
@@ -511,6 +512,7 @@ class userServices extends React.Component {
                     axios.post(url + 'myAlfred/api/booking/add', bookingObj)
                         .then(res => {
                             console.log(res.data);
+                            Router.push({pathname: '/reservations/detailsReservation', query: { id: res.data._id }})
                         })
                         .catch(err => console.log(err))
                 })
@@ -521,11 +523,52 @@ class userServices extends React.Component {
     }
 
     reservationPage() {
-        localStorage.setItem('prestations', JSON.stringify(this.state.selectedPrestations));
+        /*localStorage.setItem('prestations', JSON.stringify(this.state.selectedPrestations));
         localStorage.setItem('fees', this.state.fees);
         localStorage.setItem('date', this.state.date);
         localStorage.setItem('hour', this.state.hour);
-        localStorage.setItem('grandTotal', this.state.grandTotal);
+        localStorage.setItem('grandTotal', this.state.grandTotal);*/
+
+        let reference;
+
+        let name= this.state.user.name;
+        let firstLetterNameUser = name.charAt(0).toUpperCase();
+        let firstname = this.state.user.firstname;
+        let firstLetterFirstnameUser = firstname.charAt(0).toUpperCase();
+
+        let nameAlfred = this.state.serviceUser.user.name;
+        let firstLetterNameAlfred = nameAlfred.charAt(0).toUpperCase();
+        let firstnameAlfred = this.state.serviceUser.user.firstname;
+        let firstLetterFirstnameAlfred = firstnameAlfred.charAt(0).toUpperCase();
+
+        const letter = firstLetterNameUser + firstLetterFirstnameUser + firstLetterNameAlfred + firstLetterFirstnameAlfred;
+        const day = new Date().getDate();
+        const month = new Date().getMonth();
+        const year = new Date().getFullYear();
+
+        reference = letter + '_' + day+month+year;
+
+        let bookingObj = {
+            reference: reference,
+            service: this.state.service.label,
+            address: this.state.serviceUser.service_address,
+            equipments: this.state.serviceUser.equipments,
+            amount: this.state.grandTotal,
+            date_prestation: moment(this.state.date).format('DD/MM/YYYY'),
+            time_prestation: moment(this.state.hour).format('HH:mm'),
+            alfred: this.state.serviceUser.user._id,
+            user: this.state.user._id,
+            prestations: this.state.selectedPrestations,
+            fees: this.state.fees,
+            status: 'En attente de confirmation',
+            serviceUserId: this.state.serviceUser._id
+        }
+
+        if (this.state.selectedOption !== null) {
+            bookingObj.option = this.state.selectedOption;
+        }
+
+        localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
     }
 
     render() {

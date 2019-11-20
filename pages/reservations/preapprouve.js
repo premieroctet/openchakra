@@ -278,7 +278,7 @@ class Preapprouve extends React.Component {
                               </>
                             )
                           })}
-                          {typeof bookingObj.option === null ?
+                          {typeof bookingObj.option === 'undefined' ?
                             null
                             :
                             <>
