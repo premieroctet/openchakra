@@ -95,11 +95,6 @@ class searchNotLogin extends React.Component {
             focusedInput: null,
             clickedstatut:false,
             clickeddate:false,
-
-
-
-
-
         }
     }
 
@@ -893,7 +888,7 @@ class searchNotLogin extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid container>
-                            <Grid item xs={4} style={{textAlign: 'center'}}>
+                            <Grid item xs={6}>
                                 <TextField
                                     id="input-with-icon-textfield" 
                                     InputProps={{
