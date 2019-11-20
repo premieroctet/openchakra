@@ -14,7 +14,20 @@ const ChatRoomsSchema = new Schema({
     messages: [{
         user: String,
         content: String,
-        date: Date
+        date: Date,
+        thepicture: String,
+        idsender: {
+          type: Schema.Types.ObjectId,
+          ref: 'users'
+        },
+        lusender: {
+          type: Boolean,
+          default: false
+        },
+        lurecipient: {
+          type: Boolean,
+          default: false
+        }
     }]
 });
 

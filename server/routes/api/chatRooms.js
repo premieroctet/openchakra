@@ -41,7 +41,7 @@ router.get('/userChatRoom/:id', passport.authenticate('jwt', {session: false}), 
 })
 
 // Add chatRoom and connect users to it
-router.post('/addAndConnect', (req, res) => {
+/*router.post('/addAndConnect', (req, res) => {
   const emitter = mongoose.Types.ObjectId(req.body.emitter);
   const recipient = mongoose.Types.ObjectId(req.body.recipient);
   const random = uuidv4();
@@ -71,6 +71,41 @@ router.put('/saveMessages/:id', (req, res) => {
       if (chatroom) return res.json();
     })
     .catch(err => console.log(err));
+})*/
+
+// Add chatRoom and connect users to it
+router.post('/addAndConnect', (req, res) => {
+  const emitter = mongoose.Types.ObjectId(req.body.emitter);
+  const recipient = mongoose.Types.ObjectId(req.body.recipient);
+  const random = uuidv4();
+  ChatRooms.findOne({ attendees: {$all: [ req.body.emitter, req.body.recipient ]}})
+    .then(users => {
+      if (!users) {
+        chatRoomFields = {};
+        chatRoomFields.name = 'room-' + random;
+        chatRoomFields.lu = req.body.lu;
+        chatRoomFields.emitter = emitter;
+        chatRoomFields.recipient = recipient;
+
+        const newChat = new ChatRooms(chatRoomFields);
+        newChat.save().then(chat => res.json(chat)).catch(err => console.log(err));
+      }
+
+      if (users) {
+        return res.status(400).json({msg: 'chat déjà existant'})
+      }
+    })
+    .catch(err => console.log(err));
 })
+
+router.put('/saveMessages/:id', (req, res) => {
+  ChatRooms.findByIdAndUpdate(req.params.id, { lusender: req.body.messages.lusender, lurecipient: req.body.messages.lurecipient,messages: req.body.messages })
+    .then(chatroom => {
+      if (!chatroom) return res.status(404).json({msg: 'no chatroom found'})
+      if (chatroom) return res.json();
+    })
+    .catch(err => console.log(err));
+})
+
 
 module.exports = router;
