@@ -5,18 +5,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import axios from "axios";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+import { withStyles} from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
@@ -217,8 +211,6 @@ class NavBar extends Component {
     const picture = this.state.picture;
     const mobileavatar = picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>;
     const alfred = this.state.alfred;
-    const logout = <Button variant="outlined" color='primary' style={{ marginRight: '20px' }}
-                           onClick={()=>this.logout2()}>Déconnexion</Button>;
 
     const logoutMobile = <React.Fragment>
     <MenuItem onClick={this.handleMenuClose}>
@@ -304,15 +296,6 @@ class NavBar extends Component {
         open={isAvatarMenuOpen}
         onClose={this.handleMenuClose}
       >
-        {/*<MenuItem onClick={this.handleAvatarMenuClose}>
-          <Typography>
-            <Link href='/aide'>
-              <a className={classes.navbarLinkAvatar}>
-                Aide
-              </a>
-            </Link>
-          </Typography>
-        </MenuItem>*/}
         {test ? logoutAvatar : <React.Fragment>
         <MenuItem onClick={this.handleAvatarMenuOpen}>
           <Typography>
@@ -369,15 +352,6 @@ class NavBar extends Component {
                 </Link>
               </Typography>
               </MenuItem>
-        {/*<MenuItem onClick={this.handleMobileMenuClose}>
-          <Typography>
-            <Link href='/aide'>
-              <a className={classes.navbarLinkMobile}>
-                Aide
-              </a>
-            </Link>
-          </Typography>
-        </MenuItem>*/}
         {test ? logoutMobile : <React.Fragment>
         <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
@@ -433,7 +407,7 @@ class NavBar extends Component {
               <Typography className={classes.navbarItem}>
                 <Link href={'/becomeAlfredForm'}>
                   <a className={classes.navbarLink}>
-                    Devenir Alfred
+                    Créer ma boutique
                   </a>
                 </Link>
               </Typography>}
@@ -488,24 +462,5 @@ class NavBar extends Component {
     );
   }
 }
-
-/*<IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton color="inherit">
-                <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>*/
 
 export default withStyles(styles)(NavBar);

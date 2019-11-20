@@ -67,7 +67,19 @@ const styles = theme => ({
         display:"flex",
         justifyContent:"center",
         width:'50%',
-        height:'auto'
+        height:'auto',
+        [theme.breakpoints.down('sm')]: {
+            display:'none'
+        },
+        [theme.breakpoints.down('md')]: {
+            display:'none'
+        }
+    },
+    formClasse:{
+        width:'100%',
+          [theme.breakpoints.down('lg')]: {
+            width:'50%'
+         }
     }
 });
 
@@ -257,7 +269,7 @@ class security extends React.Component {
                                 </p>
                                 </Grid>
                                 <Grid style={{display:"flex"}}>
-                                    <form onSubmit={this.onSubmit} style={{width:"50%"}} >
+                                    <form onSubmit={this.onSubmit} className={classes.formClasse}>
                                         <Grid item xs={12} md={4}>
                                             <TextField
                                                 margin="normal"

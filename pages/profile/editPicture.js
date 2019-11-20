@@ -307,7 +307,7 @@ class editPicture extends React.Component {
                                         </Grid>
                                         </Grid>
                                         <Grid item style={{ display: 'flex', justifyContent: 'left', marginTop: 30 }}>
-                                            <Button type="submit" variant="contained" color="secondary" style={{ width: '20%',color: 'white' }}>
+                                            <Button type="submit" variant="contained" color="secondary" style={{color: 'white' }}>
                                                 Enregistrer
                                             </Button>
                                         </Grid>
