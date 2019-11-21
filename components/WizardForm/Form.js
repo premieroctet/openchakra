@@ -461,7 +461,7 @@ class Wizard extends React.Component {
                         </div>}
                         <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh'}}>
                             <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%'}}>
-                                <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '100%' : '81%', overflowY: 'scroll', position: 'relative' }}>
+                                <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '100%' : '81%', overflowY: page === 2 ? 'scroll' : 'none', position: 'relative' }}>
                                     {activePage}
                                 </div>
                                 <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '999'}}>
@@ -1341,11 +1341,11 @@ class Form extends React.Component {
                                                                               {s.filters.map((f, indexf) => {
                                                                                   return (
                                                                                         <Grid
-                                                             item
+                                                                                          item
                                                                                         xs={12}
                                                                                         key={f.id}
                                                                                         className={classes.prestationsPres}
-                                                                                    >
+                                                                                        >
                                                                                       <p>{f.label === "Aucun" ? null : f.label}</p>
                                                                                         <Grid>
                                                                                         {f.prestations.map((p, indexp) => {
