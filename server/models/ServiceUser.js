@@ -107,6 +107,10 @@ const ServiceUserSchema = new Schema({
         type: Number,
         default : 0
     },
+    status: {
+        type: String,
+        enum: ['Pro','Particulier']
+    }
 });
 
 module.exports = ServiceUser = mongoose.model('serviceUser',ServiceUserSchema);

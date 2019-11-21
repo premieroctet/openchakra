@@ -129,7 +129,7 @@ router.get('/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
 router.get('/customerReviewsCurrent', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.user.id);
-    Reviews.find({ alfred: userId })
+    Reviews.find({ alfred: userId,note_client:undefined })
         .populate('user')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
@@ -141,7 +141,7 @@ router.get('/customerReviewsCurrent', passport.authenticate('jwt', { session: fa
 
 router.get('/alfredReviewsCurrent', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.user.id);
-    Reviews.find({ user: userId })
+    Reviews.find({ user: userId, note_alfred:undefined })
         .populate('alfred')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
