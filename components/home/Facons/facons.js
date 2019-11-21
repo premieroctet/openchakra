@@ -60,6 +60,7 @@ const styles = theme => ({
     contentBox:{
         lineHeight: 2,
         fontSize: 18,
+        textAlign: 'justify',
         [theme.breakpoints.down('md')]: {
             padding: '5%',
         },

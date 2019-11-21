@@ -116,6 +116,22 @@ const styles = theme => ({
         color:'white',
         fontSize: '1em',
         fontFamily: 'helvetica',
+    },
+    responsiveIOSswitch:{
+      width: '30%',
+        [theme.breakpoints.down('xs')]: {
+         // backgroundColor: 'green',
+}
+    },
+    responsiveIOSswitchContent:{
+      display:'flex',
+      flexDirection:'row',
+      width:'70%',
+      alignItems: 'end',
+      justifyContent:'end',
+        [theme.breakpoints.down('xs')]: {
+         //backgroundColor: 'purple',
+      }
     }
 });
 
@@ -737,18 +753,6 @@ const IOSSwitch = withStyles(theme => ({
     );
 });
 
-const marks = [
-  {
-    value: 0,
-    label: '0 km',
-  },
-
-  {
-    value: 200,
-    label: '200km et +',
-  },
-];
-
 class Form extends React.Component {
     constructor(props) {
         super(props);
@@ -809,6 +813,9 @@ class Form extends React.Component {
             certifObj: null,
             checkedB: false,
             checkedC: false,
+            radioValueA: true,
+            radioValueB: true,
+
         };
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -1350,8 +1357,8 @@ class Form extends React.Component {
                                                                                         <Grid>
                                                                                         {f.prestations.map((p, indexp) => {
                                                                                             return(
-                                                                                                <Grid key={p.id} style={{width:'100%', display:'flex', alignItems: 'center' , height:'50px'}}>
-                                                                                                  <div style={{width: '70%'}}>
+                                                                                                <Grid key={p.id} style={{width:'100%', display:'flex', alignItems: 'center' , height:'50px', marginBottom:'2%'}}>
+                                                                                                  <div className={classes.responsiveIOSswitch}>
                                                                                                     <FormControlLabel
                                                                                                         control={
                                                                                                             <IOSSwitch
@@ -1372,7 +1379,7 @@ class Form extends React.Component {
                                                                                                         label={p.label}
                                                                                                     />
                                                                                                   </div>
-                                                                                                 <div style={{display:'flex', flexDirection:'row', width:'30%', alignItems: 'end', marginBottom: '2%' /*backgroundColor:'grey'*/}}>
+                                                                                                 <div className={classes.responsiveIOSswitchContent}>
                                                                                                     {p.checked === true ?
                                                                                                         <React.Fragment>
                                                                                                             <Field
@@ -1381,10 +1388,10 @@ class Form extends React.Component {
                                                                                                               render={({field}) => {
                                                                                                                   return (
                                                                                                                       <React.Fragment>
-                                                                                                                          <TextField
+                                                                                                                        <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                                                                                                        <TextField
                                                                                                                               {...field}
                                                                                                                               value={field.value}
-                                                                                                                              style={{width: '200px'}}
                                                                                                                               label={`Prix`}
                                                                                                                               type="number"
                                                                                                                               disabled={!p.checked}
@@ -1397,7 +1404,6 @@ class Form extends React.Component {
 
                                                                                                                               }}
                                                                                                                           />
-                                                                                                                          <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                                                       </React.Fragment>
                                                                                                                   )
                                                                                                               }}
@@ -1468,6 +1474,11 @@ class Form extends React.Component {
                                                                                       color="primary"
                                                                                       icon={<CircleUnchecked/>}
                                                                                       checkedIcon={<RadioButtonCheckedIcon/>}
+                                                                                      checked={this.radioValueA}
+                                                                                      onChange={() => {
+                                                                                        this.setState({ radioValueA: !this.state.radioValueA });
+                                                                                      }}
+                                                                                      value="radioValueA"
                                                                                     />
                                                                                 }
                                                                                 label={<React.Fragment>
@@ -1482,6 +1493,11 @@ class Form extends React.Component {
                                                                                       color="primary"
                                                                                       icon={<CircleUnchecked/>}
                                                                                       checkedIcon={<RadioButtonCheckedIcon />}
+                                                                                      checked={this.radioValueB}
+                                                                                      onChange={() => {
+                                                                                        this.setState({ radioValueB: !this.state.radioValueB });
+                                                                                      }}
+                                                                                      value="radioValueB"
                                                                                     />
                                                                                 }
                                                                                 label={<React.Fragment>
@@ -1508,7 +1524,7 @@ class Form extends React.Component {
                                                                                     borderRadius: '50px',
                                                                                     color: this.state.checkedB ? 'white' : '#47bdd7',
                                                                                 }}>
-                                                                                    <div className={classes.contentCheckBox} style={{marginLeft: '2%', width:'5%'}}>
+                                                                                    <div className={classes.contentCheckBox} style={{marginLeft: '2%', width:'10%'}}>
                                                                                         <FormControlLabel
                                                                                           control={
                                                                                               <CheckboxCustom
@@ -1562,7 +1578,7 @@ class Form extends React.Component {
                                                                                     borderRadius: '50px',
                                                                                     color: this.state.checkedC ? 'white' : '#47bdd7',
                                                                                 }}>
-                                                                                    <div className={classes.contentCheckBox} style={{marginLeft: '2%', width:'5%'}}>
+                                                                                    <div className={classes.contentCheckBox} style={{marginLeft: '2%', width:'10%'}}>
                                                                                         <FormControlLabel
                                                                                           control={
                                                                                               <CheckboxCustom

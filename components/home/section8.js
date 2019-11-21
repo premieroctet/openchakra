@@ -55,6 +55,7 @@ const styles = theme => ({
         width: '50px'
     },
     contentTextbox:{
+        textAlign: 'justify',
         fontFamily: 'Helvetica',
         lineHeight: 2,
         fontSize: 18,
