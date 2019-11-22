@@ -118,21 +118,36 @@ const styles = theme => ({
         fontFamily: 'helvetica',
     },
     responsiveIOSswitch:{
-      width: '30%',
+      width: '70%',
         [theme.breakpoints.down('xs')]: {
-         // backgroundColor: 'green',
-}
+          width: '50%',
+        }
     },
     responsiveIOSswitchContent:{
       display:'flex',
       flexDirection:'row',
-      width:'70%',
+      width:'30%',
       alignItems: 'end',
       justifyContent:'end',
         [theme.breakpoints.down('xs')]: {
-         //backgroundColor: 'purple',
+          width:'50%',
       }
-    }
+    },
+    contentFiltre:{
+      width:'100%',
+      display:'flex',
+      alignItems: 'last baseline',
+      height:'50px',
+      marginBottom:'2%',
+      [theme.breakpoints.down('xs')]: {
+        height:'90px',
+      }
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: '70px',
+    },
 });
 
 
@@ -475,7 +490,7 @@ class Wizard extends React.Component {
                                 </Bar>
                             </div>
                         </div>}
-                        <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh'}}>
+                        <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh', padding:'1%'}}>
                             <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%'}}>
                                 <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '90%' : '81%', overflowY: page === 2 ? 'scroll' : 'none', position: 'relative' }}>
                                     {activePage}
@@ -752,6 +767,14 @@ const IOSSwitch = withStyles(theme => ({
       />
     );
 });
+
+const CssTextField = withStyles({
+  root: {
+    '& label': {
+      fontSize: '0.8rem',
+    },
+  },
+})(TextField);
 
 class Form extends React.Component {
     constructor(props) {
@@ -1049,35 +1072,35 @@ class Form extends React.Component {
                         });
                     }}
                 >
-                    <Wizard.Page>
-                        <Grid container className={classes.cardContainer} style={{justifyContent: 'start', overflow: 'hidden'}}>
+                  <Wizard.Page>
+                      <Grid container className={classes.cardContainer} style={{justifyContent: 'start', overflow: 'hidden'}}>
 
-                            <div style={{padding: '0rem 2rem 1rem 2rem', width: '100%'}}>
-                                <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
-                                <hr style={{margin: '1rem 0'}} />
-                            </div>
-                            <div className="steps">
-                                <div className="step1">
-                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 1</Typography>
-                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
-                                    <Typography style={{fontSize: 18}}>Créez le premier service de votre boutique</Typography>
-                                    <Typography>Sélectionnez le premier service que vous souhaitez offrir. Vous pourrez ajouter
-                                    autant de services que vous le souhaitez dans votre boutique.</Typography>
-                                </div>
-                                <div className="step2">
-                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 2</Typography>
-                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
-                                    <Typography style={{fontSize: 18}}>Indiquez vos disponiblités & conditions</Typography>
-                                    <Typography>Indiquez vos disponibilités, paramètres de réservation et vos conditions d’annulation.</Typography>
-                                </div>
-                                <div className="step3">
-                                    <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 3</Typography>
-                                    <hr style={{border: '4px solid grey', marginRight: '10%'}} />
-                                    <Typography style={{fontSize: 18}}>Présentez-vous !</Typography>
-                                    <Typography>Renseignez votre profil Alfred, partagez vos réalisations et décrivez-vous !</Typography>
-                                </div>
-                            </div>
-                        </Grid>
+                          <div style={{padding: '0rem 2rem 1rem 2rem', width: '100%'}}>
+                              <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
+                              <hr style={{margin: '1rem 0'}} />
+                          </div>
+                          <div className="steps">
+                              <div className="step1">
+                                  <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 1</Typography>
+                                  <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                  <Typography style={{fontSize: 18}}>Créez le premier service de votre boutique</Typography>
+                                  <Typography>Sélectionnez le premier service que vous souhaitez offrir. Vous pourrez ajouter
+                                  autant de services que vous le souhaitez dans votre boutique.</Typography>
+                              </div>
+                              <div className="step2">
+                                  <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 2</Typography>
+                                  <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                  <Typography style={{fontSize: 18}}>Indiquez vos disponiblités & conditions</Typography>
+                                  <Typography>Indiquez vos disponibilités, paramètres de réservation et vos conditions d’annulation.</Typography>
+                              </div>
+                              <div className="step3">
+                                  <Typography style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 20, color: 'grey'}}>Etape 3</Typography>
+                                  <hr style={{border: '4px solid grey', marginRight: '10%'}} />
+                                  <Typography style={{fontSize: 18}}>Présentez-vous !</Typography>
+                                  <Typography>Renseignez votre profil Alfred, partagez vos réalisations et décrivez-vous !</Typography>
+                              </div>
+                          </div>
+                      </Grid>
                     </Wizard.Page>
                   <Wizard.Page>
                    <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', overflowX: 'hidden', height:'100%'}}>
@@ -1334,7 +1357,7 @@ class Form extends React.Component {
                                   render={(arrayHelpers) => {
                                       return this.state.allInOneServ && this.state.allInOneServ.length > 0 ?
                                             <React.Fragment>
-                                                 <div style={{padding: '2rem 2rem 1rem 2rem'}}>
+                                                 <div style={{textAlign: 'justify'}}>
                                                       <Typography variant="h6" style={{marginBottom: '.5rem'}}>Paramétrez vos prestations<span style={{color: '#F8727F' }}>*</span></Typography>
                                                       <Typography>
                                                           Indiquez les prestations que vous souhaitez réaliser. Pour chacune, indiquez votre tarif et le mode de facturation que vous souhaitez appliquer.
@@ -1342,8 +1365,8 @@ class Form extends React.Component {
                                                   </div>
                                                       {this.state.allInOneServ.map((s, index) => {
                                                           return(
-                                                                <div style={{padding: '0 2rem'}}>
-                                                                      <div style={{paddingBottom: '1rem'}}>
+                                                                <div>
+                                                                      <div>
                                                                           <Grid>
                                                                               {s.filters.map((f, indexf) => {
                                                                                   return (
@@ -1357,7 +1380,7 @@ class Form extends React.Component {
                                                                                         <Grid>
                                                                                         {f.prestations.map((p, indexp) => {
                                                                                             return(
-                                                                                                <Grid key={p.id} style={{width:'100%', display:'flex', alignItems: 'center' , height:'50px', marginBottom:'2%'}}>
+                                                                                                <Grid key={p.id} className={classes.contentFiltre}>
                                                                                                   <div className={classes.responsiveIOSswitch}>
                                                                                                     <FormControlLabel
                                                                                                         control={
@@ -1388,20 +1411,18 @@ class Form extends React.Component {
                                                                                                               render={({field}) => {
                                                                                                                   return (
                                                                                                                       <React.Fragment>
-                                                                                                                        <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].price`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
-                                                                                                                        <TextField
+                                                                                                                        <CssTextField
                                                                                                                               {...field}
                                                                                                                               value={field.value}
                                                                                                                               label={`Prix`}
                                                                                                                               type="number"
+                                                                                                                              className={classes.textField}
                                                                                                                               disabled={!p.checked}
-                                                                                                                              margin="none"
                                                                                                                               InputProps={{
                                                                                                                                   inputProps: {
                                                                                                                                       min: 0
                                                                                                                                   },
                                                                                                                                   endAdornment: <InputAdornment position="start">€</InputAdornment>,
-
                                                                                                                               }}
                                                                                                                           />
                                                                                                                       </React.Fragment>
@@ -1416,7 +1437,7 @@ class Form extends React.Component {
                                                                                                                           <React.Fragment>
                                                                                                                               <MaterialSelect
                                                                                                                                   {...field}
-                                                                                                                                  style={{width: '200px'}}
+                                                                                                                                  style={{width: '100px', fontSize: '0.8rem'}}
                                                                                                                                   helperText={`Méthode de facturation`}
                                                                                                                                   disabled={!p.checked}
                                                                                                                                   margin="none"
@@ -1440,17 +1461,15 @@ class Form extends React.Component {
                                                                                                                               >
                                                                                                                                   {p.billingChoice.map(option => {
                                                                                                                                       return (
-                                                                                                                                      <MenuItem key={option._id} value={option.label}>
+                                                                                                                                      <MenuItem style={{fontSize:'0.8'}} key={option._id} value={option.label}>
                                                                                                                                           {option.label}
                                                                                                                                       </MenuItem>
                                                                                                                                       )
                                                                                                                                   })}
                                                                                                                               </MaterialSelect>
-                                                                                                                              <ErrorMessage name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                                                                                                                           </React.Fragment>
                                                                                                                       )
                                                                                                                   }}
-
                                                                                                               />
                                                                                                         </React.Fragment>
                                                                                                       : null}
