@@ -278,7 +278,7 @@ class Confirm extends React.Component {
                               </>
                             )
                           })}
-                          {typeof bookingObj.option === null ?
+                          {typeof bookingObj.option === 'undefined' ?
                             null
                             :
                             <>

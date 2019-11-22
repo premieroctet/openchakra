@@ -111,6 +111,7 @@ class Reserve extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentUser: null,
       booking_id: null,
       bookingObj: null,
       date: Date.now(),
@@ -127,6 +128,9 @@ class Reserve extends React.Component {
     this.setState({booking_id: booking_id});
 
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.get(url + "myAlfred/api/users/current").then(res => {
+      this.setState({ currentUser: res.data });
+    });
     axios.get(url + 'myAlfred/api/booking/' + booking_id)
         .then(res => {
           this.setState({ bookingObj: res.data })
@@ -136,8 +140,13 @@ class Reserve extends React.Component {
   changeStatus() {
     const endDate = moment(this.state.date).format('DD/MM/YYYY');
     const endHour = moment(this.state.hour).format('HH:mm');
+    let dateObj;
 
-    const dateObj = { end_date: endDate, end_time: endHour, status: 'Pré-approuvée' };
+    if (this.state.currentUser._id === this.state.bookingObj.alfred._id) {
+      dateObj = { end_date: endDate, end_time: endHour, status: 'Pré-approuvée' };
+    } else {
+      dateObj = { end_date: endDate, end_time: endHour, status: 'En attente de confirmation' };
+    }
     console.log(endDate, endHour)
 
     axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
@@ -379,7 +388,7 @@ class Reserve extends React.Component {
                           marginRight: 20
                         }}
                       >
-                        Payer
+                        Réserver
                       </Button>
                     </Link>
                   </Grid>

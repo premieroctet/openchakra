@@ -1437,7 +1437,11 @@ class DetailsReservation extends React.Component {
                                 id:
                                   bookingObj === null
                                     ? null
-                                    : bookingObj.chatroom
+                                    : bookingObj.chatroom,
+                                booking:
+                                  bookingObj === null
+                                    ? null
+                                    : bookingObj._id
                               }
                             }}
                           >
@@ -2000,7 +2004,11 @@ class DetailsReservation extends React.Component {
                                         id:
                                         bookingObj === null
                                             ? null
-                                            : bookingObj.chatroom
+                                            : bookingObj.chatroom,
+                                        booking:
+                                        bookingObj === null
+                                            ? null
+                                            : bookingObj._id
                                     }
                                     }}
                                 >

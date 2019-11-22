@@ -7,6 +7,11 @@ import Grid from "@material-ui/core/Grid";
 import Layout from "../../hoc/Layout/Layout";
 import moment from "moment";
 import { withStyles } from "@material-ui/core/styles";
+import getDistance from "geolib/es/getDistance";
+import convertDistance from "geolib/es/convertDistance";
+
+const { config } = require("../../config/config");
+const url = config.apiUrl;
 
 moment.locale("fr");
 
@@ -97,7 +102,8 @@ class MessagesDetails extends React.Component {
       oldMessagesDisplay: [],
       oldMessages: [],
       roomData: {},
-      emitter: ""
+      emitter: "",
+      bookingObj: null
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -120,6 +126,10 @@ class MessagesDetails extends React.Component {
       this.setState({ emitter: res.data._id });
       this.setState({ recipientpic: res.data.picture });
     });
+    axios
+      .get(url + "myAlfred/api/booking/" + this.props.bookingId)
+      .then(res => this.setState({ bookingObj: res.data }))
+      .catch(err => console.log(err));
     axios
       .get(`http://localhost:3122/myAlfred/api/chatRooms/userChatRoom/${id}`)
       .then(res => {
@@ -158,7 +168,7 @@ class MessagesDetails extends React.Component {
 
   handleSubmit(event) {
     console.log(this.state.message.length);
-    if (this.state.message.length != 0 && this.state.message.trim() != "") {
+    if (this.state.message.length !== 0 && this.state.message.trim() !== "") {
       this.setState({ lurecipient: true });
       this.setState({ lusender: false });
       const messObj = {
@@ -175,18 +185,24 @@ class MessagesDetails extends React.Component {
       this.socket.emit("message", messObj);
       this.setState({ message: "" });
       const div = document.getElementById("chat");
-      this.componentDidMount();
+      setTimeout(function() {
+        div.scrollTop = 99999;
+      }, 50);
     } else {
       event.preventDefault();
     }
   }
 
-  static getInitialProps({ query: id }) {
-    return { chatroomId: id.id };
+  static getInitialProps({ query: { id, booking } }) {
+    return {
+      chatroomId: id,
+      bookingId: booking
+    };
   }
 
   render() {
     const { classes } = this.props;
+    const { bookingObj } = this.state;
     return (
       <Fragment>
         <Layout>
@@ -295,10 +311,16 @@ class MessagesDetails extends React.Component {
                       color: "#89CE2C"
                     }}
                   >
-                    Confirmée
+                    {bookingObj === null ? null : bookingObj.status}
                   </Typography>
                   <img
-                    src={`../../static/profile/pic04.jpg`}
+                    src={`../../${
+                      bookingObj === null
+                        ? null
+                        : this.state.userData._id === bookingObj.alfred._id
+                        ? bookingObj.user.picture
+                        : bookingObj.alfred.picture
+                    }`}
                     alt={"picture"}
                     style={{
                       width: "80px",
@@ -313,7 +335,8 @@ class MessagesDetails extends React.Component {
                     {this.state.userData.firstname} {this.state.userData.name}
                   </Typography>
                   <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
-                    Réservation coiffure le 07/06/2019{" "}
+                    Réservation coiffure le{" "}
+                    {bookingObj === null ? null : bookingObj.date_prestation}{" "}
                   </Typography>
                 </Grid>
                 <Grid item xs={1} style={{}}>
@@ -339,7 +362,16 @@ class MessagesDetails extends React.Component {
                     />
                   </svg>
                   <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
-                    6kms
+                    {bookingObj === null || typeof this.state.userData.billing_address === 'undefined'
+                      ? null
+                      : convertDistance(
+                          getDistance(
+                            this.state.userData.billing_address.gps,
+                            bookingObj.address.gps
+                          ),
+                          "km"
+                        ).toFixed(2)}{" "}
+                    km
                   </Typography>
                 </Grid>
               </Grid>

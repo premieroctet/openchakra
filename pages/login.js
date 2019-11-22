@@ -89,6 +89,8 @@ class login extends React.Component {
           setAuthToken(token);
           axios.get(url+'myAlfred/api/booking/confirmPendingBookings')
             .then()
+          axios.get(url + 'myAlfred/api/booking/endConfirmedBookings')
+            .then()
           axios.put(url+'myAlfred/api/users/account/lastLogin')
               .then(data => {
                 let path = localStorage.getItem('path');
