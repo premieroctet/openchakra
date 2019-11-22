@@ -8,6 +8,8 @@ import Footer from "../../hoc/Layout/Footer/Footer";
 import { toast } from "react-toastify";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
+import _ from 'lodash';
+import moment from 'moment';
 
 const { config } = require("../../config/config");
 const url = config.apiUrl;
@@ -614,10 +616,10 @@ class Messages extends React.Component {
                               {booking.chatroom.recipient.firstname}
                             </Typography>
                             <Typography style={{ color: "#9B9B9B" }}>
-                              Date - Heure
+                                {_.last(booking.chatroom.messages).content}
                             </Typography>
                             <Typography style={{ color: "#9B9B9B" }}>
-                              Service
+                                {moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY')} - {moment(_.last(booking.chatroom.messages).date).format('HH:mm')}
                             </Typography>
                           </Grid>
                           <Grid item xs={1} style={{}}>
@@ -638,7 +640,13 @@ class Messages extends React.Component {
                               }}
                             >
                               <Link
-                                href={`/reservations/messagesDetails?id=${booking.chatroom._id}`}
+                                href={{
+                                    pathname: '/reservations/messagesDetails',
+                                    query: {
+                                        id: booking.chatroom._id,
+                                        booking: booking._id
+                                    }
+                                }}
                               >
                                 <a
                                   style={{
@@ -691,10 +699,10 @@ class Messages extends React.Component {
                                   {booking.chatroom.recipient.firstname}
                                 </Typography>
                                 <Typography style={{ color: "#9B9B9B" }}>
-                                  Date -Heure
+                                    {_.last(booking.chatroom.messages).content}
                                 </Typography>
                                 <Typography style={{ color: "#9B9B9B" }}>
-                                  Service
+                                    {moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY')} - {moment(_.last(booking.chatroom.messages).date).format('HH:mm')}
                                 </Typography>
                               </Grid>
                               <Grid item xs={1} style={{}}>
@@ -718,7 +726,13 @@ class Messages extends React.Component {
                                   }}
                                 >
                                   <Link
-                                    href={`/reservations/messagesDetails?id=${booking.chatroom._id}`}
+                                    href={{
+                                        pathname: '/reservations/messagesDetails',
+                                        query: {
+                                            id: booking.chatroom._id,
+                                            booking: booking._id
+                                        }
+                                    }}
                                   >
                                     <a
                                       style={{
@@ -735,9 +749,6 @@ class Messages extends React.Component {
                           );
                         })
                       : null}
-                    <button type="button" onClick={() => this.createChat()}>
-                      Créer un chat
-                    </button>
                   </React.Fragment>
                 )}
               </Grid>
