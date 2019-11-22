@@ -167,7 +167,6 @@ class MessagesDetails extends React.Component {
   }
 
   handleSubmit(event) {
-    console.log(this.state.message.length);
     if (this.state.message.length !== 0 && this.state.message.trim() !== "") {
       this.setState({ lurecipient: true });
       this.setState({ lusender: false });
@@ -180,7 +179,6 @@ class MessagesDetails extends React.Component {
         lusender: this.state.lusender,
         lurecipient: this.state.lurecipient
       };
-      console.log(this.state.userData.idsender);
       event.preventDefault();
       this.socket.emit("message", messObj);
       this.setState({ message: "" });
