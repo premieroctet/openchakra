@@ -44,6 +44,11 @@ const styles = theme => ({
       position: 'relative',
       objectFit: 'cover',
     },
+    respfilter:{
+        [theme.breakpoints.down('sm')]: {
+            top: 200,
+        }
+    },
     DateInput_input__focused:{
         borderBottom: '1px solid #fb1515!important',
     },
@@ -192,7 +197,6 @@ class searchNotLogin extends React.Component {
                 const obj = {label:this.state.research.trim()};
                 await axios.post(url+'myAlfred/api/prestation/all/search',obj)
                     .then(res => {
-                        clickedfilter
                         let prestations = res.data;
                         this.setState({prestations:prestations});
                         const arrayCategory = [];
@@ -521,13 +525,13 @@ class searchNotLogin extends React.Component {
                         })
                     })
 
-                },1000)
+                },2000)
             } else {
                 setTimeout(()=>{if(this.state.filterDate){
                     this.filterDate()
                 } else {
                     this.searchWithWord()
-                }},1000)
+                }},2000)
             }
         } else {
             const arrayShop = [];
@@ -585,7 +589,7 @@ class searchNotLogin extends React.Component {
 
 
 
-                },1000)
+                },2000)
             } else {
                 setTimeout(() => {
                         if(this.state.filterDate){
@@ -594,7 +598,7 @@ class searchNotLogin extends React.Component {
                             this.search()
                         }
                     },
-                    1000);
+                    2000);
             }
         }
 
@@ -665,13 +669,13 @@ class searchNotLogin extends React.Component {
                     })
 
 
-                }, 1000)
+                }, 2000)
             } else {
                 setTimeout(() => {if(this.state.filterDate){
                     this.filterDate()
                 } else {
                     this.searchWithWord()
-                }},1000);
+                }},2000);
 
             }
         } else {
@@ -731,7 +735,7 @@ class searchNotLogin extends React.Component {
                     })
 
 
-                }, 1000)
+                }, 2000)
             } else {
                 setTimeout(() => {
                         if(this.state.filterDate){
@@ -740,7 +744,7 @@ class searchNotLogin extends React.Component {
                             this.search()
                         }
                     },
-                    1000);
+                    2000);
 
             }
         }
@@ -888,14 +892,12 @@ class searchNotLogin extends React.Component {
         const {click} = this.state;
         const categories = this.state.categories;
         const serviceUser = this.state.serviceUser;
-        const height= 40;
-        const labelOffset = -6 ;
         return (
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid container style={{boxShadow: 'rgba(51, 51, 51, 0.31) 0px 5px 7px -5px', paddingBottom: '10px', paddingTop: '10px', position: 'sticky', top: '50px', backgroundColor: 'white', zIndex: 11}}>
-                            <Grid item xs={3} style={{textAlign: 'center',width: '90%', margin: 'auto', }}>
+                            <Grid item xs={3} style={{textAlign: 'center',width: '100%', margin: 'auto', }}>
                                 <TextField
                                     id="input-with-icon-textfield" 
                                     InputProps={{
@@ -909,11 +911,11 @@ class searchNotLogin extends React.Component {
                                     placeholder={'Quel service ?'}
                                     variant={"outlined"}
                                     value={this.state.research}
-                                    style={{width: '90%', margin: 'auto'}}
+                                    style={{width: '100%', margin: 'auto'}}
                                     onChange={(event)=>{this.setState({research: event.target.value,click2:false});  this.searchWithWord()}}
                                 />
                             </Grid>
-                            <Grid item xs={3} style={{fontFamily: 'Helvetica Neue, Helvetica,sans-serif',width: '90%', margin: 'auto'}}>
+                            <Grid item xs={3} style={{fontFamily: 'Helvetica Neue, Helvetica,sans-serif',width: '100%', margin: 'auto'}}>
                                 <AlgoliaPlaces
                                     className={classes.algol}
                                     style={{height: '40px'}}
@@ -937,20 +939,20 @@ class searchNotLogin extends React.Component {
                                 <Grid container>
                                     {this.state.clickedstatut ?
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white'}}>Statut</Typography>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem'}}>Statut</Typography>
                                         </Grid> 
                                     : 
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center'}}>Statut</Typography>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem'}}>Statut</Typography>
                                         </Grid> 
                                     }
                                     {this.state.clickeddate ?
                                         <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white'}}>Quelle(s) date(s) ?</Typography>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     :
                                         <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center'}}>Quelle(s) date(s) ?</Typography>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     }
                                 </Grid>
@@ -972,10 +974,11 @@ class searchNotLogin extends React.Component {
 
                             </Grid>
 
-                            <Grid container style={{position: 'sticky', top: '145px', zIndex: 10}}>                            
+                            <Grid container className={classes.respfilter} style={{position: 'sticky', top: '145px', zIndex: 10}}>                            
                             <Grid container  style={{height: '10px'}}>
+                            {this.state.clickedstatut ?<Grid item xs={1} sm={2} md={7}></Grid>:<Grid style={{margin: 10}} item xs={6} sm={6} md={9}></Grid>}
                                 {this.state.clickedstatut ?
-                                <Grid item xs={6} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1}}>
+                                <Grid item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1}}>
                                     <Grid container>
                                         <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
                                             {this.state.checkedParticulier ? <Grid item xs={3}></Grid> :
@@ -1022,7 +1025,7 @@ class searchNotLogin extends React.Component {
                                 : null}
                                 {this.state.clickeddate ?
                                 <Fragment>
-                                    <Grid item xs={6} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
+                                    <Grid item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
                                         <Grid container>
                                             <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
                                                 <DateRangePicker
@@ -1037,7 +1040,6 @@ class searchNotLogin extends React.Component {
                                                     focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
                                                     onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
                                                     minimumNights={0}
-
                                                 />
                                             </Grid>
                                             
