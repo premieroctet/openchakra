@@ -107,5 +107,14 @@ router.put('/saveMessages/:id', (req, res) => {
     .catch(err => console.log(err));
 })
 
+router.put('/viewMessages/:id', (req, res) => {
+  ChatRooms.findById(req.params.id)
+    .then(chatroom => {
+      chatroom.messages.forEach(message => {
+        message.viewed = true;
+      })
+      chatroom.save().then(() => console.log(chatroom)).catch(err => console.log(err))
+    })
+})
 
 module.exports = router;

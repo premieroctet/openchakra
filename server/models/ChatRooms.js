@@ -20,14 +20,18 @@ const ChatRoomsSchema = new Schema({
           type: Schema.Types.ObjectId,
           ref: 'users'
         },
-        lusender: {
+        viewed: {
+          type: Boolean,
+          default: false
+        }
+        /*lusender: {
           type: Boolean,
           default: false
         },
         lurecipient: {
           type: Boolean,
           default: false
-        }
+        }*/
     }]
 });
 

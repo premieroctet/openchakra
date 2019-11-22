@@ -121,6 +121,8 @@ class MessagesDetails extends React.Component {
     axios.defaults.headers.common["Authorization"] = localStorage.getItem(
       "token"
     );
+    axios.put(url + 'myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
+      .then()
     axios.get("http://localhost:3122/myAlfred/api/users/current").then(res => {
       this.setState({ userData: res.data });
       this.setState({ emitter: res.data._id });
@@ -168,16 +170,16 @@ class MessagesDetails extends React.Component {
 
   handleSubmit(event) {
     if (this.state.message.length !== 0 && this.state.message.trim() !== "") {
-      this.setState({ lurecipient: true });
-      this.setState({ lusender: false });
+      //this.setState({ lurecipient: true });
+      //this.setState({ lusender: false });
       const messObj = {
         user: this.state.userData.firstname,
         idsender: this.state.userData._id,
         content: this.state.message,
         date: Date.now(),
         thepicture: this.state.recipientpic,
-        lusender: this.state.lusender,
-        lurecipient: this.state.lurecipient
+        //lusender: this.state.lusender,
+        //lurecipient: this.state.lurecipient
       };
       event.preventDefault();
       this.socket.emit("message", messObj);
