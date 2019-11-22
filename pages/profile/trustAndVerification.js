@@ -403,7 +403,17 @@ class trustAndVerification extends React.Component {
         axios
             .put(url+'myAlfred/api/shop/editStatus', newStatus)
             .then(res => {
-                toast.info('Statut modifié')
+                toast.info('Statut modifié');
+                let status;
+                if(this.state.professional === true){
+                    status = 'Pro'
+                } else {
+                    status = 'Particulier'
+                }
+                const data = {status:status};
+                axios.put(url+'myAlfred/api/serviceUser/editStatus',data)
+                    .then()
+                    .catch()
 
             })
             .catch(err =>

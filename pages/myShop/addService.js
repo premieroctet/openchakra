@@ -143,6 +143,7 @@ class addService extends React.Component {
             numPages: null,
             extDiploma: '',
             extCertification: '',
+            statusPro: false,
 
 
 
@@ -234,6 +235,16 @@ class addService extends React.Component {
                         .catch(error => {
                             console.log(error);
                         });
+
+                    axios.get(url+'myAlfred/api/shop/currentAlfred')
+                        .then(data => {
+                            let shop = data.data;
+                            if(shop.is_professional === true){
+                                this.setState({statusPro: true})
+                            } else {
+                                this.setState({statusPro: false})
+                            }
+                        })
                 }
 
 
@@ -368,7 +379,7 @@ class addService extends React.Component {
 
     onSubmit = e => {
         e.preventDefault();
-
+        let status;
         const service = this.props.service_id;
         const prestations = this.state.prestations;
         const options = this.state.options;
@@ -390,6 +401,11 @@ class addService extends React.Component {
         const name_certification = this.state.name_certification;
         const year_certification = this.state.year_certification;
         let certification = this.state.file_certification;
+        if(this.state.statusPro === true){
+             status = 'Pro'
+        } else {
+             status = 'Particulier'
+        }
 
         const formData = new FormData();
         formData.append('service',service);
@@ -407,6 +423,7 @@ class addService extends React.Component {
         formData.append('minimum_basket',minimum_basket);
         formData.append('description',description);
         formData.append('level',level);
+        formData.append('status',status);
         formData.append('name_diploma',name_diploma);
         formData.append('year_diploma',year_diploma);
         formData.append('file_diploma',diploma);

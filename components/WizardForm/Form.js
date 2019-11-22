@@ -354,6 +354,12 @@ class Wizard extends React.Component {
 
                 let active = false;
                 let price = 0;
+                let status;
+                if(values.createShop.is_professional){
+                    status = 'Pro'
+                } else {
+                    status = 'Particulier'
+                }
                 if(e.increases.checked === true) {
                      active = true;
                      price = e.increases.price;
@@ -362,6 +368,7 @@ class Wizard extends React.Component {
                 formData.append('service',service);
                 formData.append('option', JSON.stringify(option));
                 formData.append('level', experienceYears);
+                formData.append('status',status);
                 formData.append('prestations',JSON.stringify(arrayPrestations));
                 formData.append('equipments',JSON.stringify(arrayEquipments));
                 formData.append('city',city);

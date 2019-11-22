@@ -58,6 +58,7 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
                 fields.prestations = JSON.parse(req.body.prestations);
                 fields.option = JSON.parse(req.body.option);
                 fields.level = parseInt(req.body.level);
+                fields.status = req.body.status;
                 /*if(req.body.graduated === 'true') {
                     fields.graduated = true;
                 } else {
@@ -208,6 +209,17 @@ router.post('/myShop/add',upload.fields([{name: 'file_diploma',maxCount: 1}, {na
 
 
 
+});
+
+// @Route PUT /myAlfred/api/serviceUser/editStatus
+// Update status serviceUser
+// @Access private
+router.put('/editStatus',passport.authenticate('jwt',{session:false}),(req,res) => {
+    ServiceUser.updateMany({user: req.user.id},{status:req.body.status})
+        .then(serviceUser => {
+            res.json(serviceUser)
+        })
+        .catch(err => console.log(err))
 });
 
 // @Route PUT /myAlfred/api/serviceUser/edit/:id
