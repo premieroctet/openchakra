@@ -1274,7 +1274,7 @@ class searchNotLogin extends React.Component {
                                                 })}
                                                 </Grid>
                                                 {this.state[e.label] !== 0 ? <p style={{marginLeft: '15px'}}>Voir les {this.state[e.label]} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
-                                                <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '75px', marginTop: '50px', backgroundColor: '#2FBCD3'}} />
+                                                <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '80px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
                                             </Grid>
                                         ))}
 
@@ -1477,7 +1477,7 @@ class searchNotLogin extends React.Component {
                                                     })}
                                                 </Grid>
                                                 {this.state[e.label+'Final'] !== 0 ? <p style={{marginLeft: '15px'}}>Voir les {this.state[e.label+'Final']} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
-                                                <hr style={{width: '10%', margin: 'auto', border:'none', backgroundColor: '#2FBCD3', height: '10px', marginBottom: '75px', marginTop: '50px'}} />
+                                                <hr style={{width: '10%', margin: 'auto', border:'none', backgroundColor: '#2FBCD3', height: '10px', marginBottom: '80px', marginTop: '55px'}} />
                                             </Grid>
                                         </Grid>
                                     ))}{/*<br/>
