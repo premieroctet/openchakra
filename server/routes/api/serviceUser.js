@@ -198,17 +198,6 @@ router.post('/myShop/add',upload.fields([{name: 'file_diploma',maxCount: 1}, {na
         .catch(error => {
             console.log(error)
         });
-
-
-
-
-
-
-
-
-
-
-
 });
 
 // @Route PUT /myAlfred/api/serviceUser/editStatus
