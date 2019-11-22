@@ -11,6 +11,7 @@ import { Typography } from '@material-ui/core';
 import dynamic from 'next/dynamic'
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import '../../static/charts.css';
 const Chart = dynamic(import('react-apexcharts'), {
     ssr: false,
 })
@@ -95,6 +96,18 @@ const styles = theme => ({
             width:'100%!important'
         }
     },
+    shopbar:{
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
+        }
+    },
+    bottombar:{visibility:'hidden', [theme.breakpoints.down('sm')]: {
+            visibility:'visible',
+            boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
+        }},
+    topbar:{visibility:'visible', position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
+            visibility:'hidden',
+        }},
 
 
 });
@@ -373,7 +386,46 @@ class revenus extends React.Component {
         return (
             <Fragment>
                 <Layout>
-                    <Grid container className={classes.bigContainer} style={{overflowX:"hidden"}}>
+                    <Grid container className={classes.bigContainer}>
+                        <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
+                            <Grid item xs={1} className={classes.shopbar}></Grid>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/services'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
+                                    </a>
+                                </Link>
+                            </Grid>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/messages'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                                    </a>
+                                </Link>
+                            </Grid>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/mesreservations'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                                    </a>
+                                </Link>
+                            </Grid>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                <Link href={'/myShop/myAvailabilities'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
+                                    </a>
+                                </Link>
+                            </Grid>
+                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
+                                <Link href={'/performances/revenus'}>
+                                    <a style={{textDecoration:'none'}}>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Performances</p>
+                                    </a>
+                                </Link>
+                            </Grid>
+
+                        </Grid>
 
                         <Grid className={classes.toggle}  item xs={3} style={{}}>
 
@@ -525,6 +577,39 @@ class revenus extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
+                <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
+
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                        </Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                        <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
+                        <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
+
+                </Grid>
                 <Footer/>
 
 

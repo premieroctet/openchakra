@@ -686,9 +686,9 @@ class addAvailability extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/performances'}>
+                                <Link href={'/performances/revenus'}>
                                     <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                                        <p style={{color: "white",cursor: 'pointer'}}>Performances</p>
                                     </a>
                                 </Link>
                             </Grid>
@@ -2165,7 +2165,7 @@ class addAvailability extends React.Component {
                     </Grid>
 
                     <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                        <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
                             <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                         </a></Link>
                     </Grid>
