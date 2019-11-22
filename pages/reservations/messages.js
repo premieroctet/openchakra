@@ -691,7 +691,7 @@ class Messages extends React.Component {
                                   {booking.chatroom.recipient.firstname}
                                 </Typography>
                                 <Typography style={{ color: "#9B9B9B" }}>
-                                  Date - Heure
+                                  Date -Heure
                                 </Typography>
                                 <Typography style={{ color: "#9B9B9B" }}>
                                   Service
