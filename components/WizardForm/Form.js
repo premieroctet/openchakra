@@ -127,7 +127,7 @@ const styles = theme => ({
       display:'flex',
       flexDirection:'row',
       width:'30%',
-      alignItems: 'end',
+      alignItems: 'flex-end',
       justifyContent:'end',
         [theme.breakpoints.down('xs')]: {
           width:'50%',
