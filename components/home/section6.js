@@ -4,6 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
 const {config} = require('../../config/config');
 const url = config.apiUrl;
 
@@ -118,11 +121,34 @@ class section6 extends React.Component {
         const {category} = this.state;
         const {tags} = this.state;
         const resdata = shuffleArray(category);
-
         const services = resdata.slice(0, 4).map(e => (
-            <Grid item xs={12} sm={6} md={4} key={e._id}>
-                <Card className={classes.card}/>
-            </Grid>
+          <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
+              <Card className={classes.card} style={{
+                  backgroundColor:'transparent',
+                  textAlign:'center',
+                  margin:10,
+                  boxShadow: '1px 3px 1px transparent'}}>
+                  <CardActionArea >
+                      <CardMedia
+                        className={classes.media2}
+                        image={e.picture}
+                        title={e.label}
+                        style={{height:'530px', width: '100%',}}
+                      />
+                      <CardContent>
+
+                          <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center'}}>
+                              {e.label}
+                          </Typography>
+                          <Typography component="p">
+                              {e.description}
+                          </Typography>
+
+                      </CardContent>
+                  </CardActionArea>
+
+              </Card>
+          </Grid>
         ));
 
         return (
