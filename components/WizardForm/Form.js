@@ -2069,9 +2069,9 @@ class Form extends React.Component {
                     <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
                         <div className={classes.newContainer}>
                                 <Grid container>
-                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
+                                        <Typography variant="h6" style={{marginBottom: '.5rem'}}>
                                             Comment les utilisateurs peuvent réserver ? <span style={{color: '#F8727F' }}>*</span>
-                                        </h6>
+                                        </Typography>
                                     <Grid item style={{marginLeft: 20}}>
                                         <Field render={({form}) => {
                                             return (
@@ -2132,9 +2132,9 @@ class Form extends React.Component {
                                 </Grid>
                                 <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                 <Grid container>
-                                    <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
+                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>
                                         Vos conditions de réservations
-                                    </h6>
+                                    </Typography>
 
                                     <Typography style={{marginBottom: 20,fontFamily: 'helvetica',fontSize: '1rem', fontWeight:400}}>
                                     Il se peut que vous ayez moins de réservations si vous ajoutez des conditions. Les personnes qui ne répondent pas à vos critères peuvent quand même envoyer une demande.
@@ -2160,7 +2160,7 @@ class Form extends React.Component {
                                                         />
                                                     }
                                                     label={<React.Fragment>
-                                                        <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Conditions My-Alfred</p>
+                                                        <p style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Conditions My-Alfred</p>
                                                 <p style={{marginTop: 0, fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                     Numéro de téléphone confirmé, adresse e-mail, informations de paiement et acceptation du règlement intérieur.
                                             </p>
@@ -2189,7 +2189,7 @@ class Form extends React.Component {
                                                         />
                                                     }
                                                     label={<React.Fragment>
-                                                    <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Photo de profil</p>
+                                                    <p style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Photo de profil</p>
                                                     <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                         Si vous activez cette condition, vous ne pourrez voir les photos de profil des utilisateurs qu'une fois la réservation confirmée.
                                                     </p>
@@ -2218,7 +2218,7 @@ class Form extends React.Component {
                                                         />
                                                     }
                                                     label={<React.Fragment>
-                                                    <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Pièce d'identité officielle</p>
+                                                    <p style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Pièce d'identité officielle</p>
                                                     <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                         Ces utilisateurs ont vérifié leur identité.
                                                     </p>
@@ -2247,10 +2247,10 @@ class Form extends React.Component {
                                                         />
                                                     }
                                                     label={<React.Fragment>
-                                                        <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Recommandations d'autres Alfred</p>
-                                                        <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
+                                                        <Typography style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Recommandations d'autres Alfred</Typography>
+                                                        <Typography style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                             Ces utilisateurs ont déjà utilisé des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commentaires négatifs.
-                                                        </p>
+                                                        </Typography>
                                                     </React.Fragment>}
 
                                                 />
@@ -2260,10 +2260,10 @@ class Form extends React.Component {
                                 </Grid>
                                 <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                 <Grid container>
-                                    <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
+                                    <Typography variant="h6" style={{marginBottom: '10'}}>
                                         Votre message de bienvenue validant votre
                                         réservation <span style={{color: '#F8727F' }}>*</span>
-                                    </h6>
+                                    </Typography>
                                     <Typography>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation.</Typography>
                                     <Grid item style={{ marginTop: 15, width: "100%" }}>
                                         <Field name="createShop.welcome_message" render={({field, form}) => {
@@ -2289,10 +2289,10 @@ class Form extends React.Component {
                                <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                 <Grid container>
 
-                                    <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
+                                    <Typography variant="h6" style={{marginBottom: '10'}}>
                                         Conditions d’annulation <span style={{color: '#F8727F' }}>*</span>
-                                    </h6>
-                                    <Typography style={{fontFamily: 'helvetica',fontSize: '1rem', fontWeight:400, width: '100%'}}>
+                                    </Typography>
+                                    <Typography style={{fontFamily: 'helvetica', width:'100%'}}>
                                         Choisissez vos conditions en cas d'annulation de la part
                                         des utilisateurs.
                                     </Typography>
@@ -2325,11 +2325,11 @@ class Form extends React.Component {
                                                     }
                                                     label={
                                                         <React.Fragment>
-                                                            <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Flexibles</p>
+                                                            <Typography style={{marginBottom: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>Flexibles</Typography>
 
-                                                            <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
+                                                            <Typography style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                                 Remboursement intégral jusqu’à un jour avant la prestation
-                                                            </p>
+                                                            </Typography>
                                                         </React.Fragment>
                                                     }
                                                 />
@@ -2362,10 +2362,10 @@ class Form extends React.Component {
                                                     }
                                                     label={
                                                         <React.Fragment>
-                                                            <p style={{marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica'}}>Modérées</p>
-                                                            <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
+                                                            <Typography style={{marginBottom: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>Modérées</Typography>
+                                                            <Typography style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                                 Remboursement intégral jusqu’à 5 jours avant la prestation
-                                                            </p>
+                                                            </Typography>
                                                         </React.Fragment>
                                                     }
                                                 />
@@ -2398,7 +2398,7 @@ class Form extends React.Component {
                                                     }
                                                     label={
                                                         <React.Fragment>
-                                                            <p style={{ marginBottom: 0,fontSize: '1.25rem', fontWeight:500, fontFamily: 'helvetica' }}>Strictes</p>
+                                                            <p style={{ marginBottom: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica' }}>Strictes</p>
                                                             <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
                                                                 Remboursement intégral jusqu’à 10 jours avant la prestation
                                                             </p>
@@ -2422,9 +2422,9 @@ class Form extends React.Component {
 
 
 
-                                                <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
+                                                <Typography variant="h6" style={{marginBottom: '.5rem'}}>
                                                     Téléchargez une photo de profil
-                                                </h6>
+                                                </Typography>
 
                                                 <Typography style={{fontFamily: 'helvetica',fontSize: '1rem', fontWeight:400, marginBottom: '1rem'}}>
                                                     Téléchargez une photo de claire et lumineuse, de bonne qualité. Pour un rendu optimal, la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif, avec seulement vous sur la photo.
@@ -2479,9 +2479,9 @@ class Form extends React.Component {
                                                 </Grid>
                                                 <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                                 <Grid container>
-                                                    <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10, width: '100%'}}>
+                                                    <Typography variant="h6" style={{marginBottom: '.5rem'}}>
                                                         Vérifiez votre identité <span style={{color: '#F8727F' }}>*</span>
-                                                    </h6>
+                                                    </Typography>
                                                     <Typography style={{fontFamily: 'helvetica',fontSize: '1rem', fontWeight:400,}}>
                                                         Ces informations ne seront pas visibles par les utilisateurs. Un profil vérifié est plus engageant pour les utilisateurs !
                                                     </Typography>
@@ -2696,9 +2696,9 @@ class Form extends React.Component {
                                                                                 checkedIcon={<RadioButtonCheckedIcon />}
                                                                             />
                                                                         }
-                                                                        label={<h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
+                                                                        label={<Typography variant="h6" style={{fontSize: '1rem',fontWeight: 400, marginTop: 15, marginBottom: 10}}>
                                                                         Je suis un particulier
-                                                                </h6>}
+                                                                </Typography>}
                                                                     />
                                                                 )
                                                             }} />
@@ -2738,9 +2738,9 @@ class Form extends React.Component {
                                                                                 checkedIcon={<RadioButtonCheckedIcon />}
                                                                             />
                                                                         }
-                                                                        label={<h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
+                                                                        label={<Typography variant="h6" style={{marginBottom: '.5rem',fontSize: '1rem', fontWeight:400,}}>
                                                                         Je suis un professionnel
-                                                                </h6>}
+                                                                        </Typography>}
                                                                     />
                                                                 )
                                                             }} />
@@ -2791,9 +2791,9 @@ class Form extends React.Component {
                                                 <hr style={{margin: '1rem 0'}}/>
                                                 <Grid container>
                                                     <Grid item xs={12}>
-                                                        <h6 style={{fontFamily: 'helvetica', fontSize: '1.25rem',fontWeight: 500, marginTop: 15, marginBottom: 10}}>
+                                                        <Typography variant="h6" style={{marginBottom: '.5rem'}}>
                                                             Vos obligations légales <span style={{color: '#F8727F' }}>*</span>
-                                                        </h6>
+                                                        </Typography>
                                                     </Grid>
                                                     <Typography style={{fontSize: '1rem', fontWeight:400, fontFamily:'helvetica'}}>
                                                         Dans le cadre des prestations effectuées via My-Alfred, vous devez respecter toutes les obligations légales et réglementaires (fiscales, sociales, comptables, administratives etc...) liées à votre statut.
