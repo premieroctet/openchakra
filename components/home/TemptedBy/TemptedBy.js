@@ -45,7 +45,7 @@ const styles = theme => ({
   textUp: {
     textAlign: 'left',
     paddingTop: '1rem',
-    fontFamily: 'helvetica',
+    fontFamily: 'Helvetica',
     fontWeight: 'bold',
     fontSize: '20px',
     color: 'white',
@@ -56,7 +56,7 @@ const styles = theme => ({
   },
   textDown: {
     textAlign: 'left',
-    fontFamily: 'roboto',
+    fontFamily: 'Helvetica',
     fontSize: '17px',
     color: 'white',
   },

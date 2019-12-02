@@ -125,7 +125,7 @@ class section22 extends React.Component {
                             style={{height:'530px', width: '100%',}}
                         />
                         <CardContent>
-                            <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center'}}>
+                            <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center', color:'#505050'}}>
                                 {e.label}
                             </Typography>
                             <Typography component="p">

@@ -22,7 +22,7 @@ const styles = theme => ({
 
     },
     card: {
-        fontFamily: 'helveticaNeue',
+        fontFamily: 'Helvetica',
         width: 800,
         marginTop: '100px',
     },
@@ -45,7 +45,7 @@ const styles = theme => ({
         padding: 20,
     },
     title: {
-        fontFamily: 'helveticaNeue',
+        fontFamily: 'Helvetica',
         color: 'white',
         display: 'flex',
         justifyContent: 'center',

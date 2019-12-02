@@ -34,19 +34,6 @@ import Clear from '@material-ui/icons/Clear';
 import Input from '@material-ui/core/Input';
 import Schedule from '../Schedule/Schedule';
 
-
-//todo :fix thix
-import "../../node_modules/@syncfusion/ej2-base/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-buttons/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-calendars/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-dropdowns/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-inputs/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-lists/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-navigations/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-popups/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-react-schedule/styles/material.css";
-//
-
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -475,11 +462,11 @@ class Wizard extends React.Component {
                 render={({ values, handleSubmit }) => (
                     <React.Fragment>
                         {page !== 0 && <div style={{backgroundColor: 'white'}}>
-                            {page === 1 ? <h3 style={{fontFamily: 'helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez votre catégorie puis votre service </h3> : null}
-                            {page === 2 ? <h3 style={{fontFamily: 'helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de votre service - {textLabel}</h3> : null}
-                            {page === 3 ? <h3 style={{fontFamily: 'helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
-                            {page === 4 ? <h3 style={{fontFamily: 'helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
-                            {page === 5 ? <h3 style={{fontFamily: 'helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
+                            {page === 1 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez votre catégorie puis votre service </h3> : null}
+                            {page === 2 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de votre service - {textLabel}</h3> : null}
+                            {page === 3 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+                            {page === 4 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+                            {page === 5 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
                             <div>
                                 <Bar style={{backgroundColor: '#cacfe4'}}>
                                     {page === 1 ? <Fill width={'20%'} /> : null}
@@ -1501,7 +1488,7 @@ class Form extends React.Component {
                                                                                     />
                                                                                 }
                                                                                 label={<React.Fragment>
-                                                                                    <p style={{fontFamily: 'helvetica'}}>A l'adresse de prestation de mon client</p>
+                                                                                    <p style={{fontFamily: 'Helvetica'}}>A l'adresse de prestation de mon client</p>
                                                                                 </React.Fragment>}
                                                                              />
                                                                             </Grid>
@@ -1520,7 +1507,7 @@ class Form extends React.Component {
                                                                                     />
                                                                                 }
                                                                                 label={<React.Fragment>
-                                                                                    <p style={{fontFamily: 'helvetica'}}>A mon domicile</p>
+                                                                                    <p style={{fontFamily: 'Helvetica'}}>A mon domicile</p>
                                                                                 </React.Fragment>}
                                                                               />
                                                                             </Grid>
@@ -2069,7 +2056,7 @@ class Form extends React.Component {
                     <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
                         <div className={classes.newContainer}>
                                 <Grid container>
-                                        <Typography variant="h6" style={{marginBottom: '.5rem'}}>
+                                        <Typography variant="h6" style={{ marginTop: 15, marginBottom: 10}}>
                                             Comment les utilisateurs peuvent réserver ? <span style={{color: '#F8727F' }}>*</span>
                                         </Typography>
                                     <Grid item style={{marginLeft: 20}}>
@@ -2095,7 +2082,7 @@ class Form extends React.Component {
 
                                                         />
                                                     }
-                                                    label={<Typography style={{fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.</Typography>}
+                                                    label={<Typography style={{fontSize: '1rem', fontWeight:400, fontFamily: 'Helvetica'}}>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.</Typography>}
                                                 />
                                             )
                                         }} />
