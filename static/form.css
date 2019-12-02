@@ -1,7 +1,3 @@
-/*body {
-  overflow: hidden;
-}*/
-
 .noscrollbar::-webkit-scrollbar {
   width: 0px!important
 }
