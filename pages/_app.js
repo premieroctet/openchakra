@@ -30,21 +30,20 @@ class MyApp extends App {
     this.pageContext = getPageContext();
   }
 
-  componentDidMount() {
+  loadTawlkto(){
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
     (function(){
       var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
       s1.async=true;
-      s1.src='https://embed.tawk.to/5d7a092c9f6b7a4457e14b95/default';
+      s1.src='https://embed.tawk.to/5de4db8c43be710e1d201adc/default';
       s1.charset='UTF-8';
       s1.setAttribute('crossorigin','*');
       s0.parentNode.insertBefore(s1,s0);
     })();
-    // Remove the server-side injected CSS.
-    const jssStyles = document.querySelector('#jss-server-side');
-    if (jssStyles && jssStyles.parentNode) {
-      jssStyles.parentNode.removeChild(jssStyles);
-    }
+  }
+
+  componentDidMount() {
+    this.loadTawlkto()
   }
 
   render() {
@@ -58,6 +57,7 @@ class MyApp extends App {
                 crossOrigin=""/>
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
+
         <JssProvider
           registry={this.pageContext.sheetsRegistry}
           generateClassName={this.pageContext.generateClassName}
@@ -75,6 +75,7 @@ class MyApp extends App {
             <Component pageContext={this.pageContext} {...pageProps} />
           </MuiThemeProvider>
         </JssProvider>
+
       </Container>
     );
   }
