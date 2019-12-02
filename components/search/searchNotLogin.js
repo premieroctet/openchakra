@@ -939,20 +939,20 @@ class searchNotLogin extends React.Component {
                                 <Grid container>
                                     {this.state.clickedstatut ?
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem'}}>Statut</Typography>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
                                         </Grid> 
                                     : 
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem'}}>Statut</Typography>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
                                         </Grid> 
                                     }
                                     {this.state.clickeddate ?
                                         <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem'}}>Quelle(s) date(s) ?</Typography>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem', lineHeight: '1.9'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     :
                                         <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem'}}>Quelle(s) date(s) ?</Typography>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem', lineHeight: '1.9'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     }
                                 </Grid>

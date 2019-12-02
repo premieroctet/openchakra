@@ -20,6 +20,7 @@ import Switch from "@material-ui/core/Switch";
 import 'react-dates/initialize';
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
 import moment from "moment";
+import StarRatings from 'react-star-ratings';
 import 'react-dates/lib/css/_datepicker.css';
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -108,7 +109,7 @@ class testSearch2 extends React.Component {
     }
 
     componentDidMount() {
-        setTimeout(() => {this.searchWithWord()}, 1000);
+        setTimeout(() => {this.searchWithWord(); this.setState({click2:false})}, 1000);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
             .get(url+'myAlfred/api/users/current')
@@ -960,19 +961,18 @@ class testSearch2 extends React.Component {
                                     variant={"outlined"}
                                     value={this.state.research}
                                     style={{width: '100%', margin: 'auto'}}
-                                    onChange={(event)=>this.setState({research: event.target.value,click2:false})}
+                                    onChange={(event)=>{this.setState({research: event.target.value,click2:false}); this.searchWithWord()}}
                                 />
                             </Grid>
                             <Grid item xs={3} style={{fontFamily: 'Helvetica Neue, Helvetica,sans-serif',width: '100%', margin: 'auto'}}>
-                                <TextField
-                                    InputProps={{
-                                        style:{height: 40}
-                                    }}
+                            <TextField
                                     id="outlined-select-currency"
                                     select
+                                    style={{width:'100%'}}
                                     value={this.state.addressSelected}
                                     name={'addressSelected'}
-                                    onChange={() => this.onChange}
+                                    onChange={(e) => {this.onChange(e); this.search()}}
+                                    margin="normal"
                                     variant="outlined"
                                 >
                                     <MenuItem value={address}>
@@ -981,6 +981,7 @@ class testSearch2 extends React.Component {
                                     {otherAddress.map(e => (
                                         <MenuItem key={e._id} value={e}>
                                             {e.label+', '} <em> {' '+e.address},{e.zip_code} {e.city}</em>
+
                                         </MenuItem>
                                     ))}
                                     <MenuItem value={'all'}>
@@ -994,25 +995,26 @@ class testSearch2 extends React.Component {
                                         </a></Link>
                                     </MenuItem>
                                 </TextField>
+
                             </Grid>
                             <Grid item xs={4}>
                                 <Grid container>
                                     {this.state.clickedstatut ?
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem'}}>Statut</Typography>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
                                         </Grid> 
                                     : 
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem'}}>Statut</Typography>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
                                         </Grid> 
                                     }
                                     {this.state.clickeddate ?
                                         <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem'}}>Quelle(s) date(s) ?</Typography>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem', lineHeight: '1.9'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     :
                                         <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem'}}>Quelle(s) date(s) ?</Typography>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem', lineHeight: '1.9'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     }
                                 </Grid>
@@ -1144,7 +1146,7 @@ class testSearch2 extends React.Component {
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
-                                                            <Grid item xs={3} sm={6} xs={12}>
+                                                            <Grid item xs={6} sm={3} md={3}>
                                                                 <Card className={classes.card}>
                                                                             <CardMedia
                                                                                 className={classes.media}

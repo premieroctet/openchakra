@@ -246,7 +246,7 @@ class security extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/transactions'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -265,7 +265,7 @@ class security extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>*/}
+                                </Grid>
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>

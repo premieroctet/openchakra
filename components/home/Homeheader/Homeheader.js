@@ -6,12 +6,18 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
 import Link from 'next/link';
+import Router from 'next/router';
+import axios from 'axios';
 import MenuItem from "@material-ui/core/MenuItem";
 import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import AlgoliaPlaces from "algolia-places-react";
+import Select from 'react-select';
 import fr from 'date-fns/locale/fr';
+import moment from 'moment';
 registerLocale('fr', fr);
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 
-   
 const styles = theme => ({
   headerimg: {
     [theme.breakpoints.up('lg')]: { // medium: 960px or larger
@@ -180,9 +186,7 @@ const styles = theme => ({
     padding:15,
     borderRadius:10,
     border:'0px solid transparent',
-    '&:hover': {
-      backgroundColor: 'darkgray'
-    }
+
 
   },
   paper: {
@@ -212,29 +216,60 @@ class Homeheader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      allService: [],
+      serviceUser: [],
       service: '',
       place: '',
       date: Date.now(),
       hour: Date.now(),
-      popopen: false,
     };
+    this.handleChangeService=this.handleChangeService.bind(this);
   }
 
-  handleClick1 =() => {
-    this.setState({ popopen: true });
-  };
-
-  handleClose =() =>{
-    this.setState({ popopen: false });
+  componentDidMount() {
+    axios.get(url+'myAlfred/api/service/all')
+        .then(res => {
+          this.setState({allService: res.data})
+        })
+        .catch(err => console.log(err))
   }
+
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  onChangeCity({suggestion}) {
+    this.setState({place: suggestion.name});
+  };
+
+  handleChangeService = service => {
+    this.setState({ service });
+
+  };
+
+  search() {
+    const service = this.state.service.value;
+    const serviceLabel = this.state.service.label;
+    const city = this.state.place;
+    const date = moment(this.state.date).format('DD/MM/YYYY');
+    const dateISO = this.state.date;
+    const day = moment(this.state.date).format('dddd');
+    const hour = moment(this.state.hour).format('HH:mm');
+    Router.push({
+      pathname: '/searchHome',
+      query: { service: service,serviceLabel:serviceLabel,city:city,date:date,dateISO:dateISO,day:day,hour:hour }
+    })
+
+  }
+
   render() {
     const {classes} = this.props;
     const {popopen} = this.state;
+    const options = this.state.allService.map(service => ({
+      label: service.label,
+          value: service._id
+    }));
 
     return (
         <Fragment>
@@ -247,7 +282,7 @@ class Homeheader extends React.Component {
             </video>
           </div>
           <div className={classes.headeroverlay}></div>
-          <div className={classes.headerhome} onClick={()=>this.handleClick1()}>
+          <div className={classes.headerhome}>
             <Grid container>
               <Grid item xs={12}>
                 <h3 className={classes.homeform} style={{marginTop:0}}>Et si vous pouviez réserver n'importe quel service immédiatement ?</h3>
@@ -256,37 +291,43 @@ class Homeheader extends React.Component {
 
                 <Grid container alignItems="center">
                   <Grid item className={classes.pickerhomelocation}>
-                  <TextField
-                      id="outlined-select-currency"
-                      select
-                      label="Quel service ?"
-                      value={this.state.service}
-                      onChange={this.onChange}
-                      margin="normal"
-                      variant="outlined"
-                      style={{width:'100%'}}
-                      disabled={true}
-                  >
+                    <Select
+                        value={this.state.service}
+                        onChange={this.handleChangeService}
+                        options={options}
+                        styles={{
+                          menu: provided => ({ ...provided, zIndex: 9999 })
+                        }}
+                        isSearchable
+                        isClearable
+                        closeMenuOnSelect={true}
+                        placeholder={'Quel service ?'}
+                        noOptionsMessage={()=>'Aucun service'}
 
-                    <MenuItem value=''>
-                      Service
-                    </MenuItem>
-
-                  </TextField>
+                    />
                   </Grid>
                 </Grid>
 
 
                   <Grid container alignItems="center">
                     <Grid item className={classes.pickerhomelocation}>
-                      <TextField
-                          label="Lieu"
-                          value={this.state.place}
-                          onChange={this.onChange}
-                          margin="normal"
-                          variant="outlined"
-                          style={{width:'100%'}}
-                          disabled={true}
+                      <AlgoliaPlaces
+                          placeholder='Dans quelle ville ?'
+
+                          options={{
+                            appId: 'plKATRG826CP',
+                            apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                            language: 'fr',
+                            countries: ['fr'],
+                            type: 'city',
+                            useDeviceLocation: 'true'
+
+
+                          }}
+
+
+                          onChange={(suggestion) =>this.onChangeCity(suggestion)}
+                          onClear={()=>this.setState({place:''})}
                       />
                     </Grid>
                   </Grid>
@@ -306,7 +347,7 @@ class Homeheader extends React.Component {
                         locale='fr'
                         showMonthDropdown
                         dateFormat="dd/MM/yyyy"
-                        disabled
+
 
 
                     />
@@ -330,7 +371,7 @@ class Homeheader extends React.Component {
                             timeCaption="Heure"
                             dateFormat="HH:mm"
                             locale='fr'
-                            disabled
+
 
 
 
@@ -339,7 +380,7 @@ class Homeheader extends React.Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Button  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
+                <Button onClick={()=>this.search()}  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
                   Rechercher
                 </Button>
 

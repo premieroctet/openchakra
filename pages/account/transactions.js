@@ -12,10 +12,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
-
-
-
-
+import { Typography } from '@material-ui/core';
 
 
 moment.locale('fr');
@@ -28,6 +25,14 @@ const styles = theme => ({
         marginTop: 70,
         flexGrow: 1,
     },
+    exportSVG: {
+        fontFamily: 'sans-serif!important',
+        color: '#2FBCD3',
+    },
+    exportPNG: {
+        fontFamily: 'sans-serif!important',
+        color: '#2FBCD3',
+    },
     hidesm: {
         minWidth: '271px',
         [theme.breakpoints.down('sm')]: {
@@ -39,16 +44,16 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-        
+
     },
-    trigger:{ 
+    trigger:{
     [theme.breakpoints.down('sm')]: {
     marginTop: -10,
-    width: '100%', 
+    width: '100%',
     marginLeft:'0px',
-    height:'30px', 
+    height:'30px',
     backgroundColor:'#2FBCD3',
-    
+
     display:'block',
     transition: 'display 0.7s',
     borderRadius:'5px',
@@ -59,20 +64,74 @@ const styles = theme => ({
        }
      }
 
-}
+},
+    responsiveContainer: {
+        [theme.breakpoints.down('sm')]: {
+            width:'135%!important',
+
+        }
+    }
 
     ,toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
         transition: 'margin-left 0.7s',
-       
+
         '&:hover': {
             marginLeft:'0px',
             transition: 'margin-left 0.7s',
             boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
 
              }
-      }  
-    }
+      }
+    },
+    tabscontainer:{width:'60%',
+        [theme.breakpoints.down('sm')]: {
+            width:'100%',}},
+
+    tabweb:{width:'100%', position:'sticky', top:'35px', fontSize:15, backgroundColor:'white', zIndex:'20',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'}},
+
+
+    tabmobile:{
+        fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:20,
+        [theme.breakpoints.up('md')]: {
+            display: 'none',
+        }},
+        trait:{
+            width: '100%',
+            height: 4,
+            backgroundColor: 'rgb(47, 188, 211)',
+            borderColor: 'transparent',
+            [theme.breakpoints.down('sm')]: {
+            },
+        },
+        trait1:{
+            width: '100%',
+    
+            height: 4,
+            backgroundColor: 'lightgray',
+            borderColor: 'transparent'
+        },
+        trait2:{
+            width: '100%',
+            height: 4,
+            backgroundColor: 'lightgray',
+            borderColor: 'transparent',  
+        },
+        trait3:{
+            width: '100%',
+    
+            height: 4,
+            backgroundColor: 'rgb(47, 188, 211)',
+            borderColor: 'transparent'
+        },
+        historesp: {
+            [theme.breakpoints.down('sm')]: {
+                marginTop: '150px',
+            },
+        }
+
 
 });
 
@@ -81,6 +140,8 @@ class transactions extends React.Component {
         super(props);
         this.state = {
             user: {},
+            tabs: false,
+
         }
 
     }
@@ -103,13 +164,21 @@ class transactions extends React.Component {
                 }
             );
     }
+    handleClicktabs2 =() => {
+        this.setState({ tabs: true });
+    };
+
+    handleClicktabs =() => {
+        this.setState({ tabs: false });
+    };
+
 
 
 
     render() {
         const {classes} = this.props;
         const {user} = this.state;
-
+        const {tabs} = this.state;  
 
         return (
             <Fragment>
@@ -141,7 +210,7 @@ class transactions extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10}}className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10}}className={classes.hidesm}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/credit-card.svg'} alt={'credit-card'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -160,7 +229,7 @@ class transactions extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
                                 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
@@ -192,6 +261,7 @@ class transactions extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
+
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/transactions'}>
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
@@ -224,7 +294,7 @@ class transactions extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/applications'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -243,7 +313,7 @@ class transactions extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
@@ -266,7 +336,7 @@ class transactions extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                               {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/sponsors'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -285,15 +355,118 @@ class transactions extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>
+                                </Grid>*/}
 
                             </Grid>
                         </Grid>
 
 
-                        <Grid item xs={9} style={{paddingLeft: 55}}>
-                            <Grid container>
-                                <h1 style={{color: 'dimgray',fontWeight: '100'}}>Historique des transactions</h1>
+                        <Grid item xs={9} style={{paddingLeft: 20, borderLeft: '#9f919178 solid 1px', marginBottom: '20px'}}>
+                            <Grid container className={classes.tabweb}>
+                                <Grid item xs={12}>
+                                    <h1 style={{color: 'dimgray',fontWeight: '100'}}>Historique des transactions</h1>
+                                </Grid>
+                                <Grid item xs={6} style={{textAlign:"center"}}>
+                                    <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}>Commandes passées</h2>
+                                </Grid>
+                                <Grid item xs={6} style={{textAlign:"center"}}>
+                                    <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}>Commandes à venir</h2><br/>
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                    {tabs ?
+                                        <React.Fragment>
+                                            <hr className={classes.trait1} style={{marginTop:'-10px'}}/>
+                                        </React.Fragment>
+                                        :
+                                        <React.Fragment>
+                                            <hr className={classes.trait3} style={{marginTop:'-10px'}}/>
+                                        </React.Fragment>}
+                                </Grid>
+                                <Grid item xs={6}>
+                                    {tabs ?
+                                        <React.Fragment>
+                                            <hr className={classes.trait} style={{marginTop:'-10px'}}/>
+                                        </React.Fragment>
+                                        :
+                                        <React.Fragment>
+                                            <hr className={classes.trait2} style={{marginTop:'-10px'}}/>
+                                        </React.Fragment>}
+                                </Grid>
+
+                            </Grid>
+                            <Grid container className={classes.tabmobile}>
+                                <Grid item xs={6} style={{textAlign:"center"}}>
+                                    <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '25%'}}>Commandes passées</h2>
+                                </Grid>
+                                <Grid item xs={6} >
+                                    <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100', textAlign: 'center',cursor: 'pointer'}}>Commandes à venir</h2><br/>
+                                </Grid>
+
+                                <Grid item xs={6} style={{textAlign:"center"}}>
+                                    {tabs ?
+                                        <React.Fragment>
+                                            <hr className={classes.trait1}/>
+                                        </React.Fragment>
+                                        :
+                                        <React.Fragment>
+                                            <hr className={classes.trait3}/>
+                                        </React.Fragment>}
+                                </Grid>
+                                <Grid item xs={6} >
+                                    {tabs ?
+                                        <React.Fragment>
+                                            <hr className={classes.trait}/>
+                                        </React.Fragment>
+                                        :
+                                        <React.Fragment>
+                                            <hr className={classes.trait2}/>
+                                        </React.Fragment>}
+                                </Grid>
+
+
+                            </Grid>
+                            
+                            <Grid container style={{marginBottom:20, marginTop: '50px'}}>
+                                {tabs ? 
+                                <React.Fragment>
+                                    
+                                </React.Fragment>
+                                :
+                                <React.Fragment>
+                                    <Grid className={classes.historesp} container>
+                                        <Grid container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
+                                            <Grid item xs={8}>
+                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Date du versement</Typography>
+                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Prénom - Dates de prestation - Service</Typography>
+                                            </Grid> 
+                                            <Grid item xs={4}>
+                                                <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>XXX€</Typography>
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
+                                            <Grid item xs={8}>
+                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Date du versement</Typography>
+                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Prénom - Dates de prestation - Service</Typography>
+                                            </Grid> 
+                                            <Grid item xs={4}>
+                                                <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>XXX€</Typography>
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
+                                            <Grid item xs={8}>
+                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Date du versement</Typography>
+                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Prénom - Dates de prestation - Service</Typography>
+                                            </Grid> 
+                                            <Grid item xs={4}>
+                                                <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>XXX€</Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </React.Fragment>
+                                }
                             </Grid>
                         </Grid>
                     </Grid>
