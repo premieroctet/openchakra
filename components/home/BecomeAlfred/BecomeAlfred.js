@@ -131,7 +131,7 @@ class becomeAlfred extends React.Component{
               <Card className={classes.card1}>
                 <CardMedia
                     className={classes.cover}
-                    image='../../static/Devenir_ALfred.jpg'
+                    image='../../../static/becomeAlfred.jpg'
                     title="Live from space album cover"
                 />
                 <Grid item xs={12} className={classes.details}>
@@ -160,7 +160,7 @@ class becomeAlfred extends React.Component{
                   <CardActionArea className={classes.centercontent}>
                     <CardMedia
                         className={classes.media}
-                        image='../../static/Devenir_ALfred.jpg'
+                        image='../../../static/becomeAlfred.jpg'
                         title="Live from space album cover"
                     />
                     <CardContent>
