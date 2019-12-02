@@ -4,7 +4,6 @@
 }
 
 .fonts {
-<<<<<<< HEAD
     font-family: Helvetica,  sans-serif;
 }
 
@@ -30,33 +29,6 @@ h3 {
 
 a {
     font-family: Helvetica,  sans-serif;
-=======
-    font-family: Helvetica, sans-serif;
-}
-
-p {
-    font-family: Helvetica, sans-serif;
-}
-
-h2 {
-    font-family: Helvetica, sans-serif;
-}
-
-h4 {
-    font-family: Helvetica, sans-serif;
-}
-
-h1 {
-    font-family: Helvetica, sans-serif;
-}
-
-h3 {
-    font-family: Helvetica, sans-serif;
-}
-
-a {
-    font-family: Helvetica, sans-serif;
->>>>>>> 165a52274f60912361fa299296adbf05bffbd30d
 }
 
 body {
