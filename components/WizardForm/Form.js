@@ -34,19 +34,6 @@ import Clear from '@material-ui/icons/Clear';
 import Input from '@material-ui/core/Input';
 import Schedule from '../Schedule/Schedule';
 
-
-//todo :fix thix
-import "../../node_modules/@syncfusion/ej2-base/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-buttons/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-calendars/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-dropdowns/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-inputs/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-lists/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-navigations/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-popups/styles/material.css";
-import "../../node_modules/@syncfusion/ej2-react-schedule/styles/material.css";
-//
-
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));

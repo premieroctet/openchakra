@@ -6,6 +6,19 @@ import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
 import '../../static/i18n/FR'
 import './Schedule.css';
 
+
+//todo :fix thix
+import "../../node_modules/@syncfusion/ej2-base/styles/material.css";
+import "../../node_modules/@syncfusion/ej2-buttons/styles/material.css";
+import "../../node_modules/@syncfusion/ej2-calendars/styles/material.css";
+import "../../node_modules/@syncfusion/ej2-dropdowns/styles/material.css";
+import "../../node_modules/@syncfusion/ej2-inputs/styles/material.css";
+import "../../node_modules/@syncfusion/ej2-lists/styles/material.css";
+import "../../node_modules/@syncfusion/ej2-navigations/styles/material.css";
+import "../../node_modules/@syncfusion/ej2-popups/styles/material.css";
+import "../../node_modules/@syncfusion/ej2-react-schedule/styles/material.css";
+//
+
 loadCldr(
   require('../../node_modules/cldr-data/supplemental/numberingSystems.json'),
   require('../../node_modules/cldr-data/main/fr-CH/ca-gregorian.json'),
