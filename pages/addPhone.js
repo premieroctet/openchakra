@@ -22,7 +22,7 @@ const styles = theme => ({
 
     },
     card: {
-        fontFamily: 'helveticaNeue',
+        fontFamily: 'Helvetica',
         width: 800,
         marginTop: '100px',
     },
@@ -45,7 +45,7 @@ const styles = theme => ({
         padding: 20,
     },
     title: {
-        fontFamily: 'helveticaNeue',
+        fontFamily: 'Helvetica',
         color: 'white',
         display: 'flex',
         justifyContent: 'center',
@@ -101,7 +101,7 @@ class addPhone extends React.Component {
 
                         </div>
                             <div className={classes.newContainer}>
-                                <Typography style={{fontFamily: 'helveticaNeue'}}>L'ajout de votre numéro de téléphone permet aux membres My-Alfred
+                                <Typography style={{fontFamily: 'Helvetica'}}>L'ajout de votre numéro de téléphone permet aux membres My-Alfred
                                     de disposer d'un moyen pour vous contacter.</Typography>
                                 <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
                                     <img src='../static/smartphone.svg' style={{width: 100,height: 100}}/>
