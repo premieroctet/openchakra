@@ -257,6 +257,9 @@ const UserSchema = new Schema({
     resetToken: {
         type: Schema.Types.ObjectId,
         ref: 'resetToken'
+    },
+    id_mangopay: {
+        type: String
     }
 
 
