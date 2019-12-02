@@ -107,14 +107,66 @@ router.put('/saveMessages/:id', (req, res) => {
     .catch(err => console.log(err));
 })
 
-router.put('/viewMessages/:id', (req, res) => {
+router.put('/viewMessages/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   ChatRooms.findById(req.params.id)
     .then(chatroom => {
       chatroom.messages.forEach(message => {
-        message.viewed = true;
+        if (message.idsender != req.user.id) {
+          console.log(message.idsender, req.user.id);
+          message.viewed = true;
+        }
       })
-      chatroom.save().then(() => console.log(chatroom)).catch(err => console.log(err))
+      chatroom.save().then(() => res.json(chatroom)).catch(err => console.log(err))
     })
+})
+
+router.get('/nonViewedMessages', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const user = mongoose.Types.ObjectId(req.user.id);
+  ChatRooms.find({ $or: [
+    {
+      emitter: user
+    },
+    {
+      recipient: user
+    }
+  ] })
+  .populate('emitter')
+  .populate('recipient')
+  .populate({
+    path: 'booking',
+    populate: { path: 'alfred' }
+  })
+  .populate({
+    path: 'booking',
+    populate: { path: 'user' }
+  })
+  .then(chatrooms => {
+    console.log(chatrooms);
+    let nonReadChats = [[], []]
+    chatrooms.forEach(chatroom => {
+      for (let i = 0; i < chatroom.messages.length; i++) {
+        if (chatroom.messages[i].viewed === false && chatroom.messages[i].idsender != req.user.id) {
+          if (chatroom.booking.alfred._id == req.user.id) {
+            nonReadChats[0].push(chatroom);
+            break;
+          } else {
+            nonReadChats[1].push(chatroom);
+          }
+        }
+      }
+    })
+    res.status(200).json(nonReadChats);
+  })
+  .catch(err => console.log(err))
+})
+
+router.put('/addBookingId/:id', ( req, res ) => {
+  ChatRooms.findByIdAndUpdate(req.params.id, { booking: mongoose.Types.ObjectId(req.body.booking)})
+    .then(chatroom => {
+      if (!chatroom) return res.status(404).json({msg: 'error'})
+      if (chatroom) return res.json(chatroom);
+    })
+    .catch(err => console.log(err))
 })
 
 module.exports = router;

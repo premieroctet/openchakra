@@ -32,7 +32,12 @@ const ChatRoomsSchema = new Schema({
           type: Boolean,
           default: false
         }*/
-    }]
+    }],
+    booking: {
+      type: Schema.Types.ObjectId,
+      ref: 'booking',
+      required: false
+    }
 });
 
 module.exports = ChatRooms = mongoose.model('chatRooms', ChatRoomsSchema);

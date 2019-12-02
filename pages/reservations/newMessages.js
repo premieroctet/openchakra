@@ -197,7 +197,7 @@ const styles = theme => ({
   }
 });
 
-class Messages extends React.Component {
+class NewMessages extends React.Component {
   constructor(props) {
     super(props);
 
@@ -219,19 +219,14 @@ class Messages extends React.Component {
       console.log(res.data);
       this.setState({ idEmitter: res.data._id });
     });
-    axios
-      .get(url + "myAlfred/api/booking/alfredBooking")
+    axios.get(url + 'myAlfred/api/chatRooms/nonViewedMessages')
       .then(res => {
-        this.setState({ alfredReservations: res.data });
+        console.log(res.data)
+        this.setState({
+          alfredReservations: res.data[0],
+          userReservations: res.data[1]
+        })
       })
-      .catch(err => console.log(err));
-
-    axios
-      .get(url + "myAlfred/api/booking/userBooking")
-      .then(res => {
-        this.setState({ userReservations: res.data });
-      })
-      .catch(err => console.log(err));
     axios
       .get(
         "http://localhost:3122/myAlfred/api/users/users/5d384b49d06f1a2b5c1addd4"
@@ -436,7 +431,7 @@ class Messages extends React.Component {
                   Mes messages
                 </Typography>
                 <Typography style={{ fontSize: "0.8rem", marginBottom: "4%" }}>
-                  vous avez {this.state.chatrooms.length} conversations
+                  vous avez {this.state.alfredReservations.length + this.state.userReservations} nouveaux messages
                 </Typography>
                 <Grid container className={classes.tabweb}>
                   <Grid item xs={6} style={{ textAlign: "center" }}>
@@ -560,10 +555,10 @@ class Messages extends React.Component {
                 </Grid>
                 {tabs ? (
                   this.state.userReservations.length ? (
-                    this.state.userReservations.map(booking => {
+                    this.state.userReservations.map(chatroom => {
                       return (
                         <Grid
-                          alt={booking.chatroom.name}
+                          alt={chatroom.name}
                           container
                           className={classes.mobilerow}
                           style={{ borderBottom: "1px #8281813b solid" }}
@@ -575,7 +570,7 @@ class Messages extends React.Component {
                             style={{ marginRight: "5%" }}
                           >
                             <img
-                              src={`../../${booking.alfred.picture}`}
+                              src={`../../${chatroom.booking.alfred.picture}`}
                               alt={"picture"}
                               style={{
                                 width: "80px",
@@ -589,14 +584,14 @@ class Messages extends React.Component {
                             <Typography
                               style={{ marginTop: "2%", color: "#419F41" }}
                             >
-                              {booking.status} -{" "}
-                              {booking.alfred.firstname}
+                              {chatroom.booking.status} -{" "}
+                              {chatroom.recipient.firstname}
                             </Typography>
                             <Typography style={{ color: "#9B9B9B" }}>
-                                {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
+                                {typeof _.last(chatroom.messages) !== 'undefined' ? _.last(chatroom.messages).content : null}
                             </Typography>
                             <Typography style={{ color: "#9B9B9B" }}>
-                                {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
+                                {typeof _.last(chatroom.messages) !== 'undefined' ? moment(_.last(chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
                             </Typography>
                           </Grid>
                           <Grid item xs={1} style={{}}>
@@ -620,8 +615,8 @@ class Messages extends React.Component {
                                 href={{
                                     pathname: '/reservations/messagesDetails',
                                     query: {
-                                        id: booking.chatroom._id,
-                                        booking: booking._id
+                                        id: chatroom._id,
+                                        booking: chatroom.booking._id
                                     }
                                 }}
                               >
@@ -639,14 +634,14 @@ class Messages extends React.Component {
                         </Grid>
                       );
                     })
-                  ) : null
+                  ) : <p>Vous n'avez aucun message en tant qu'utilisateur</p>
                 ) : (
                   <React.Fragment>
                     {this.state.alfredReservations.length
-                      ? this.state.alfredReservations.map(booking => {
+                      ? this.state.alfredReservations.map(chatroom => {
                           return (
                             <Grid
-                              alt={booking.chatroom.name}
+                              alt={chatroom.name}
                               container
                               className={classes.mobilerow}
                               style={{ borderBottom: "1px #8281813b solid" }}
@@ -658,7 +653,7 @@ class Messages extends React.Component {
                                 style={{ marginRight: "5%" }}
                               >
                                 <img
-                                  src={`../../${booking.user.picture}`}
+                                  src={`../../${chatroom.booking.user.picture}`}
                                   alt={"picture"}
                                   style={{
                                     width: "80px",
@@ -672,14 +667,14 @@ class Messages extends React.Component {
                                 <Typography
                                   style={{ marginTop: "2%", color: "#419F41" }}
                                 >
-                                  {booking.status} -{" "}
-                                  {booking.user.firstname}
+                                  {chatroom.booking.status} -{" "}
+                                  {chatroom.recipient.firstname}
                                 </Typography>
                                 <Typography style={{ color: "#9B9B9B" }}>
-                                    {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
+                                    {_.last(chatroom.messages).content}
                                 </Typography>
                                 <Typography style={{ color: "#9B9B9B" }}>
-                                    {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
+                                    {moment(_.last(chatroom.messages).date).format('DD/MM/YYYY')} - {moment(_.last(chatroom.messages).date).format('HH:mm')}
                                 </Typography>
                               </Grid>
                               <Grid item xs={1} style={{}}>
@@ -706,8 +701,8 @@ class Messages extends React.Component {
                                     href={{
                                         pathname: '/reservations/messagesDetails',
                                         query: {
-                                            id: booking.chatroom._id,
-                                            booking: booking._id
+                                            id: chatroom._id,
+                                            booking: chatroom.booking._id
                                         }
                                     }}
                                   >
@@ -725,7 +720,7 @@ class Messages extends React.Component {
                             </Grid>
                           );
                         })
-                      : null}
+                      : <p>Vous n'avez aucune réservation en tant qu'Alfred</p>}
                   </React.Fragment>
                 )}
               </Grid>
@@ -830,4 +825,4 @@ class Messages extends React.Component {
   }
 }
 
-export default withStyles(styles)(Messages);
+export default withStyles(styles)(NewMessages);

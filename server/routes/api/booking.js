@@ -33,7 +33,14 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
     const userId = mongoose.Types.ObjectId(req.user.id);
     Booking.find({ user: userId })
         .populate('alfred')
-        .populate('chatroom')
+        .populate({
+            path: 'chatroom',
+            populate: { path: 'emitter' }
+        })
+        .populate({
+            path: 'chatroom',
+            populate: { path: 'recipient' }
+        })
         .then(alfred => {
             if (!alfred) {
                 res.status(404).json({ msg: 'No booking found' })
@@ -158,9 +165,6 @@ router.get('/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
             }
         })
         .catch(err => res.status(404).json({ booking: 'No booking found' }));
-
-
-
 });
 
 // @Route GET /myAlfred/booking/myBooking
