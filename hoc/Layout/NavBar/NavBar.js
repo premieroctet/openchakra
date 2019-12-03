@@ -353,7 +353,7 @@ class NavBar extends Component {
         {test ?<React.Fragment>
               <MenuItem onClick={this.handleMobileMenuOpen}>
                 <Typography>
-                    <Link href={'/myShop/messages'}>
+                    <Link href={'/reservations/messages'}>
                       <a className={classes.navbarLinkMobile}>
                         Messages
                       </a>
@@ -440,7 +440,7 @@ class NavBar extends Component {
               </Typography>}
 
               {test ?<React.Fragment><Typography className={classes.navbarItem}>
-                <Link href={'/myShop/messages'}>
+                <Link href={'/reservations/messages'}>
                   <a className={classes.navbarLink}>
                     Messages
                   </a>

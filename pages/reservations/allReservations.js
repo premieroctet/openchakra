@@ -294,7 +294,7 @@ class AllReservations extends React.Component {
 
                             <Grid className={classes.Rightcontent} item xs={9} sm={9} md={7}>
                                 <Typography style={{fontSize: '2rem',marginTop: '4%'}}>Toutes mes reservations</Typography>
-                                <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}}>vous avez N messages non lus</Typography>
+                                <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}}>vous avez {this.state.userReservations.length + this.state.alfredReservations.length} réservations</Typography>
                                 <Grid container className={classes.tabweb}>
                                     <Grid item xs={6} style={{textAlign:"center"}}>
                                         <div>
