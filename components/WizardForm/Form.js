@@ -763,6 +763,21 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
+const CssTextFieldOptions = withStyles({
+  root: {
+    '& label': {
+      color: 'white',
+      fontSize: '0.8rem',
+    },
+    '& label.Mui-focused': {
+      color: 'white',
+    },
+    '& .MuiInput-underline:before': {
+      borderBottomColor: 'white',
+    },
+  },
+})(TextField);
+
 class Form extends React.Component {
     constructor(props) {
         super(props);
@@ -1399,18 +1414,18 @@ class Form extends React.Component {
                                                                                                                   return (
                                                                                                                       <React.Fragment>
                                                                                                                         <CssTextField
-                                                                                                                              {...field}
-                                                                                                                              value={field.value}
-                                                                                                                              label={`Prix`}
-                                                                                                                              type="number"
-                                                                                                                              className={classes.textField}
-                                                                                                                              disabled={!p.checked}
-                                                                                                                              InputProps={{
-                                                                                                                                  inputProps: {
-                                                                                                                                      min: 0
-                                                                                                                                  },
-                                                                                                                                  endAdornment: <InputAdornment position="start">€</InputAdornment>,
-                                                                                                                              }}
+                                                                                                                            {...field}
+                                                                                                                            value={field.value}
+                                                                                                                            label={`Prix`}
+                                                                                                                            type="number"
+                                                                                                                            className={classes.textField}
+                                                                                                                            disabled={!p.checked}
+                                                                                                                            InputProps={{
+                                                                                                                                inputProps: {
+                                                                                                                                    min: 0
+                                                                                                                                },
+                                                                                                                                endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                                            }}
                                                                                                                           />
                                                                                                                       </React.Fragment>
                                                                                                                   )
@@ -1548,20 +1563,21 @@ class Form extends React.Component {
                                                                                             Frais de déplacement (montant forfaitaire)
                                                                                         </label>
                                                                                     </div>
-                                                                                    <div style={{display:'flex' , alignItems:'center', width:'35%'}}>
+                                                                                    <div style={{display:'flex' , alignItems:'center', width:'35%', justifyContent:'center',  marginTop: '-2%'}}>
                                                                                         <div style={{
                                                                                             display: this.state.checkedB ? '' : 'none',
                                                                                             width:'100px',
                                                                                             marginRight: '1px'
                                                                                         }}>
-                                                                                            <FormControl>
-                                                                                                <Input
-                                                                                                  endAdornment={<InputAdornment position="end">€</InputAdornment>}
-                                                                                                  inputProps={{
-                                                                                                      className: classes.inputTextField
-                                                                                                  }}
-                                                                                                />
-                                                                                            </FormControl>
+                                                                                          <CssTextFieldOptions
+                                                                                            label={`Prix`}
+                                                                                            type="number"
+                                                                                            className={classes.textField}
+                                                                                            inputProps={{
+                                                                                              endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                              className: classes.inputTextField
+                                                                                            }}
+                                                                                          />
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -1602,20 +1618,21 @@ class Form extends React.Component {
                                                                                             Retrait & livraison
                                                                                         </label>
                                                                                     </div>
-                                                                                    <div style={{display:'flex' , alignItems:'center', width:'35%'}}>
+                                                                                    <div style={{display:'flex' , alignItems:'center', width:'35%', justifyContent:'center', marginTop: '-2%'}}>
                                                                                         <div style={{
                                                                                             display: this.state.checkedC ? '' : 'none',
                                                                                             width:'100px',
                                                                                             marginRight: '1px'
                                                                                         }}>
-                                                                                            <FormControl>
-                                                                                                <Input
-                                                                                                  endAdornment={<InputAdornment position="end">€</InputAdornment>}
-                                                                                                  inputProps={{
-                                                                                                     className: classes.inputTextField
-                                                                                                  }}
-                                                                                                />
-                                                                                            </FormControl>
+                                                                                          <CssTextFieldOptions
+                                                                                            label={`Prix`}
+                                                                                            type="number"
+                                                                                            className={classes.textField}
+                                                                                            inputProps={{
+                                                                                             className: classes.inputTextField,
+                                                                                              endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                            }}
+                                                                                          />
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
