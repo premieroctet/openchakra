@@ -250,7 +250,7 @@ class MessagesDetails extends React.Component {
                   style={{ marginTop: 10, width: 281, height: 70 }}
                   className={classes.hidesm}
                 >
-                  <Link href={"#"}>
+                  <Link href={"/reservations/newMessages"}>
                     <div
                       style={{
                         border: "0.2px solid lightgrey",
@@ -264,30 +264,6 @@ class MessagesDetails extends React.Component {
                     >
                       <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
                         Messages non lus
-                      </a>
-                    </div>
-                  </Link>
-                </Grid>
-
-                <Grid
-                  item
-                  style={{ marginTop: 10, width: 281, height: 70 }}
-                  className={classes.hidesm}
-                >
-                  <Link href={"#"}>
-                    <div
-                      style={{
-                        border: "0.2px solid lightgrey",
-                        lineHeight: "4",
-                        paddingLeft: 5,
-                        paddingRight: 5,
-                        display: "flex",
-                        height: 70,
-                        cursor: "pointer"
-                      }}
-                    >
-                      <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                        Messages archivés
                       </a>
                     </div>
                   </Link>
@@ -308,7 +284,7 @@ class MessagesDetails extends React.Component {
                     style={{
                       fontSize: "1.3rem",
                       marginBottom: "15px",
-                      color: "#89CE2C"
+                      color: bookingObj === null ? null : bookingObj.status === 'Confirmée' ? "#419F41" : bookingObj.status === 'En attente de confirmation' || bookingObj.status === "Demande d'infos" ? "#F87280" : bookingObj.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"
                     }}
                   >
                     {bookingObj === null ? null : bookingObj.status}

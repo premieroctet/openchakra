@@ -314,7 +314,7 @@ class Messages extends React.Component {
                   zIndex: 999
                 }}
               >
-                <Link href={"/myShop/messages"}>
+                <Link href={"/reservations/messages"}>
                   <a style={{ textDecoration: "none" }}>
                     <p style={{ color: "white", cursor: "pointer" }}>
                       Messages
@@ -328,7 +328,7 @@ class Messages extends React.Component {
                 className={classes.shopbar}
                 style={{ textAlign: "center" }}
               >
-                <Link href={"/myShop/mesreservations"}>
+                <Link href={"/reservations/allReservations"}>
                   <a style={{ textDecoration: "none" }}>
                     <p style={{ color: "white", cursor: "pointer" }}>
                       Mes réservations
@@ -587,7 +587,7 @@ class Messages extends React.Component {
                           </Grid>
                           <Grid item xs={5} md={7}>
                             <Typography
-                              style={{ marginTop: "2%", color: "#419F41" }}
+                              style={{ marginTop: "2%", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"}}
                             >
                               {booking.status} -{" "}
                               {booking.alfred.firstname}
@@ -639,7 +639,7 @@ class Messages extends React.Component {
                         </Grid>
                       );
                     })
-                  ) : null
+                  ) : <p>Vous n'avez aucune conversation en tant qu'utilisateur</p> 
                 ) : (
                   <React.Fragment>
                     {this.state.alfredReservations.length
@@ -670,17 +670,22 @@ class Messages extends React.Component {
                               </Grid>
                               <Grid item xs={5} md={7}>
                                 <Typography
-                                  style={{ marginTop: "2%", color: "#419F41" }}
+                                  style={{ marginTop: "2%", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D" }}
                                 >
                                   {booking.status} -{" "}
                                   {booking.user.firstname}
                                 </Typography>
-                                <Typography style={{ color: "#9B9B9B" }}>
-                                    {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
-                                </Typography>
-                                <Typography style={{ color: "#9B9B9B" }}>
-                                    {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
-                                </Typography>
+                                {typeof _.last(booking.chatroom.messages) !== 'undefined' ? 
+                                  <>
+                                    <Typography style={{ color: "#9B9B9B" }}>
+                                      {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
+                                    </Typography>
+                                    <Typography style={{ color: "#9B9B9B" }}>
+                                      {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
+                                    </Typography>
+                                  </>
+                                : <Typography>Aucun message</Typography>}
+                                
                               </Grid>
                               <Grid item xs={1} style={{}}>
                                 <Typography
@@ -725,7 +730,7 @@ class Messages extends React.Component {
                             </Grid>
                           );
                         })
-                      : null}
+                      : <p>Vous n'avez aucune conversation en tant qu'Alfred</p>}
                   </React.Fragment>
                 )}
               </Grid>

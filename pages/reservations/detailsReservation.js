@@ -337,7 +337,7 @@ class DetailsReservation extends React.Component {
                     className={classes.shopbar}
                     style={{ textAlign: "center" }}
                   >
-                    <Link href={"/myShop/messages"}>
+                    <Link href={"/reservations/messages"}>
                       <a style={{ textDecoration: "none" }}>
                         <p style={{ color: "white", cursor: "pointer" }}>
                           Messages
@@ -355,7 +355,7 @@ class DetailsReservation extends React.Component {
                       zIndex: 999
                     }}
                   >
-                    <Link href={"/myShop/mesreservations"}>
+                    <Link href={"/reservations/allReservations"}>
                       <a style={{ textDecoration: "none" }}>
                         <p style={{ color: "white", cursor: "pointer" }}>
                           Mes réservations

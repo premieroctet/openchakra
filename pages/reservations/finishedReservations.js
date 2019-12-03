@@ -174,6 +174,7 @@ class FinishedReservations extends React.Component {
             user: null,
             alfredReservations: [],
             userReservations: [],
+            finishedReservations: 0
         }
 
     }
@@ -188,11 +189,23 @@ class FinishedReservations extends React.Component {
           axios.get(url + 'myAlfred/api/booking/alfredBooking')
             .then(res => {
               this.setState({ alfredReservations: res.data })
-            })
-          
-          axios.get(url + 'myAlfred/api/booking/userBooking')
-            .then(res => {
-              this.setState({ userReservations: res.data })
+
+              axios.get(url + 'myAlfred/api/booking/userBooking')
+                .then(res => {
+                    this.setState({ userReservations: res.data })
+
+                    this.state.alfredReservations.forEach(booking => {
+                        if (booking.status === 'Refusée' || booking.status === 'Annulée' || booking.status === 'Terminée' || booking.status === 'Expirée') {
+                            this.setState({ finishedReservations: this.state.finishedReservations + 1});
+                        }
+                    })
+        
+                    this.state.userReservations.forEach(booking => {
+                        if (booking.status === 'Refusée' || booking.status === 'Annulée' || booking.status === 'Terminée' || booking.status === 'Expirée') {
+                            this.setState({ finishedReservations: this.state.finishedReservations + 1});
+                        }
+                    })
+                })
             })
         })
     }
@@ -223,14 +236,14 @@ class FinishedReservations extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/messages'}>
+                                <Link href={'/reservations/messages'}>
                                     <a style={{textDecoration:'none'}}>
                                         <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
                                     </a>
                                 </Link>
                             </Grid>
                             <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
-                                <Link href={'/myShop/mesreservations'}>
+                                <Link href={'/reservations/allReservations'}>
                                     <a style={{textDecoration:'none'}}>
                                         <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                                     </a>
@@ -294,7 +307,7 @@ class FinishedReservations extends React.Component {
 
                             <Grid className={classes.Rightcontent} item xs={9} sm={9} md={7}>
                                 <Typography style={{fontSize: '2rem',marginTop: '4%'}}>Mes reservations terminées</Typography>
-                                <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}}>vous avez N messages non lus</Typography>
+                                <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}}>vous avez {this.state.finishedReservations} réservations terminées</Typography>
                                 <Grid container className={classes.tabweb}>
                                     <Grid item xs={6} style={{textAlign:"center"}}>
                                         <div>
@@ -368,7 +381,7 @@ class FinishedReservations extends React.Component {
                                                         <img src={`../../${booking.alfred.picture}`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
                                                     </Grid>
                                                     <Grid item xs={5} md={7}>
-                                                        <Typography style={{marginTop: '2%', color: '#419F41'}}>{booking.status} - {booking.alfred.firstname}</Typography>
+                                                        <Typography style={{marginTop: '2%', color: '#5D5D5D'}}>{booking.status} - {booking.alfred.firstname}</Typography>
                                                         <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
                                                         <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
                                                     </Grid>
@@ -396,7 +409,7 @@ class FinishedReservations extends React.Component {
                                                     <img src={`../../${booking.user.picture}`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
                                                 </Grid>
                                                 <Grid item xs={5} md={7}>
-                                                    <Typography style={{marginTop: '2%', color: '#419F41'}}>{booking.status} - {booking.user.firstname}</Typography>
+                                                    <Typography style={{marginTop: '2%', color: '#5D5D5D'}}>{booking.status} - {booking.user.firstname}</Typography>
                                                     <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
                                                     <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
                                                 </Grid>
@@ -409,7 +422,7 @@ class FinishedReservations extends React.Component {
                                             </Grid>
                                         )
                                     } else if (this.state.alfredReservations.length === i + 1) {
-                                        return <p>Vous n'avez aucune réservation en tant qu'Alfred</p>
+                                        return;
                                     } else {
                                         return null;
                                     }

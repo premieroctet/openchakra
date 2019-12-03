@@ -309,7 +309,7 @@ class NewMessages extends React.Component {
                   zIndex: 999
                 }}
               >
-                <Link href={"/myShop/messages"}>
+                <Link href={"/reservations/messages"}>
                   <a style={{ textDecoration: "none" }}>
                     <p style={{ color: "white", cursor: "pointer" }}>
                       Messages
@@ -323,7 +323,7 @@ class NewMessages extends React.Component {
                 className={classes.shopbar}
                 style={{ textAlign: "center" }}
               >
-                <Link href={"/myShop/mesreservations"}>
+                <Link href={"/reservations/allReservations"}>
                   <a style={{ textDecoration: "none" }}>
                     <p style={{ color: "white", cursor: "pointer" }}>
                       Mes réservations
@@ -431,7 +431,7 @@ class NewMessages extends React.Component {
                   Mes messages
                 </Typography>
                 <Typography style={{ fontSize: "0.8rem", marginBottom: "4%" }}>
-                  vous avez {this.state.alfredReservations.length + this.state.userReservations} nouveaux messages
+                  vous avez {this.state.alfredReservations.length + this.state.userReservations.length} nouveaux messages
                 </Typography>
                 <Grid container className={classes.tabweb}>
                   <Grid item xs={6} style={{ textAlign: "center" }}>
@@ -591,7 +591,7 @@ class NewMessages extends React.Component {
                                 {typeof _.last(chatroom.messages) !== 'undefined' ? _.last(chatroom.messages).content : null}
                             </Typography>
                             <Typography style={{ color: "#9B9B9B" }}>
-                                {typeof _.last(chatroom.messages) !== 'undefined' ? moment(_.last(chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
+                                {typeof _.last(chatroom.messages) !== 'undefined' ? moment(_.last(chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(chatroom.messages) !== 'undefined' ? moment(_.last(chatroom.messages).date).format('HH:mm') : null}
                             </Typography>
                           </Grid>
                           <Grid item xs={1} style={{}}>

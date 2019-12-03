@@ -282,7 +282,7 @@ class ComingReservations extends React.Component {
                 className={classes.shopbar}
                 style={{ textAlign: "center" }}
               >
-                <Link href={"/myShop/messages"}>
+                <Link href={"/reservations/messages"}>
                   <a style={{ textDecoration: "none" }}>
                     <p style={{ color: "white", cursor: "pointer" }}>
                       Messages
@@ -300,7 +300,7 @@ class ComingReservations extends React.Component {
                   zIndex: 999
                 }}
               >
-                <Link href={"/myShop/mesreservations"}>
+                <Link href={"/reservations/allReservations"}>
                   <a style={{ textDecoration: "none" }}>
                     <p style={{ color: "white", cursor: "pointer" }}>
                       Mes réservations
@@ -588,7 +588,7 @@ class ComingReservations extends React.Component {
                               </Grid>
                               <Grid item xs={5} md={7}>
                                 <Typography
-                                  style={{ marginTop: "2%", color: "#419F41" }}
+                                  style={{ marginTop: "2%", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"}}
                                 >
                                   {booking.status} - {booking.alfred.firstname}
                                 </Typography>
@@ -686,7 +686,7 @@ class ComingReservations extends React.Component {
                           </Grid>
                           <Grid item xs={5} md={7}>
                             <Typography
-                              style={{ marginTop: "2%", color: "#419F41" }}
+                              style={{ marginTop: "2%", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D" }}
                             >
                               {booking.status === "Pré-approuvée"
                                 ? "Invitation à réserver"

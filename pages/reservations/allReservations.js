@@ -223,14 +223,14 @@ class AllReservations extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/messages'}>
+                                <Link href={'/reservations/messages'}>
                                     <a style={{textDecoration:'none'}}>
                                         <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
                                     </a>
                                 </Link>
                             </Grid>
                             <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
-                                <Link href={'/myShop/mesreservations'}>
+                                <Link href={'/reservations/allReservations'}>
                                     <a style={{textDecoration:'none'}}>
                                         <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                                     </a>
@@ -391,7 +391,7 @@ class AllReservations extends React.Component {
                                                 <img src={`../../${booking.user.picture}`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
                                             </Grid>
                                             <Grid item xs={5} md={7}>
-                                                <Typography style={{marginTop: '2%', color: '#419F41'}}>{booking.status} - {booking.user.firstname}</Typography>
+                                                <Typography style={{marginTop: '2%', color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"}}>{booking.status} - {booking.user.firstname}</Typography>
                                                 <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
                                                 <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
                                             </Grid>
