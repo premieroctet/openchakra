@@ -288,6 +288,9 @@ class Wizard extends React.Component {
                             const creation_date = values.createShop.creationDate;
                             const naf_ape = values.createShop.nafape;
                             const siret = values.createShop.siret;
+                            const option_presta_user = values.createShop.option_presta_user;
+                            const option_presta_home = values.createShop.option_presta_home;
+
 
                             axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
                                 .then(response => {
@@ -302,7 +305,7 @@ class Wizard extends React.Component {
 
                                     axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
                                     , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
-                                    self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
+                                    self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService,option_presta_user,option_presta_home})
                                         .then(result => {
 
                                             const formDataIdProfile = new FormData();
@@ -838,8 +841,9 @@ class Form extends React.Component {
             certifObj: null,
             checkedB: false,
             checkedC: false,
-            radioValueA: true,
-            radioValueB: true,
+            option_presta_user: true,
+            option_presta_home: true,
+
 
         };
 
@@ -1007,6 +1011,8 @@ class Form extends React.Component {
                             nature_juridique: '',
                             isEngaged: false,
                             isCertified: false,
+                            option_presta_home: true,
+                            option_presta_user: true
                         },
                         alfredUpdate: {
                             phone: null,
@@ -1489,41 +1495,57 @@ class Form extends React.Component {
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Où acceptez-vous de réaliser vos prestations ?</Typography>
                                                                             <Grid item>
-                                                                              <FormControlLabel
-                                                                                control={
-                                                                                    <Checkbox
-                                                                                      color="primary"
-                                                                                      icon={<CircleUnchecked/>}
-                                                                                      checkedIcon={<RadioButtonCheckedIcon/>}
-                                                                                      checked={this.radioValueA}
-                                                                                      onChange={() => {
-                                                                                        this.setState({ radioValueA: !this.state.radioValueA });
-                                                                                      }}
-                                                                                      value="radioValueA"
-                                                                                    />
-                                                                                }
-                                                                                label={<React.Fragment>
-                                                                                    <p style={{fontFamily: 'Helvetica'}}>A l'adresse de prestation de mon client</p>
-                                                                                </React.Fragment>}
-                                                                             />
+                                                                              <Field render={({form}) => {
+                                                                                return(
+                                                                                  <FormControlLabel
+                                                                                    control={
+                                                                                        <Checkbox
+                                                                                          value={form.values.createShop.option_presta_user}
+                                                                                          color="primary"
+                                                                                          icon={<CircleUnchecked/>}
+                                                                                          checkedIcon={<RadioButtonCheckedIcon/>}
+                                                                                          checked={form.values.createShop.option_presta_user}
+                                                                                          name={"option_presta_user"}
+                                                                                          onChange={() => {
+                                                                                            form.values.createShop.option_presta_user = !form.values.createShop.option_presta_user;
+                                                                                            form.setFieldValue('createShop.option_presta_user', form.values.createShop.option_presta_user);
+                                                                                          }}
+                                                                                        />
+                                                                                    }
+                                                                                    label={<React.Fragment>
+                                                                                        <p style={{fontFamily: 'Helvetica'}}>A l'adresse de prestation de mon client</p>
+                                                                                    </React.Fragment>}
+                                                                                 />
+                                                                                 )
+                                                                              }
+                                                                              }
+                                                                              />
                                                                             </Grid>
                                                                             <Grid item>
+                                                                              <Field render={({form}) => {
+                                                                                return(
                                                                               <FormControlLabel
                                                                                 control={
                                                                                     <Checkbox
                                                                                       color="primary"
                                                                                       icon={<CircleUnchecked/>}
                                                                                       checkedIcon={<RadioButtonCheckedIcon />}
-                                                                                      checked={this.radioValueB}
+                                                                                      checked={form.values.createShop.option_presta_home}
+                                                                                      value={form.values.createShop.option_presta_home}
+                                                                                      name={"option_presta_home"}
                                                                                       onChange={() => {
-                                                                                        this.setState({ radioValueB: !this.state.radioValueB });
+                                                                                        form.values.createShop.option_presta_home = !form.values.createShop.option_presta_home;
+                                                                                        form.setFieldValue('createShop.option_presta_home', form.values.createShop.option_presta_home);
                                                                                       }}
-                                                                                      value="radioValueB"
                                                                                     />
                                                                                 }
                                                                                 label={<React.Fragment>
                                                                                     <p style={{fontFamily: 'Helvetica'}}>A mon domicile</p>
                                                                                 </React.Fragment>}
+                                                                              />
+                                                                                )
+                                                                              }
+                                                                              }
                                                                               />
                                                                             </Grid>
                                                                         </div>
