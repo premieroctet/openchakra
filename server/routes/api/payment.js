@@ -103,31 +103,189 @@ router.post('/createCard',passport.authenticate('jwt',{session:false}),(req,res)
 });
 
 // POST /myAlfred/api/payment/payIn
-router.post('/payIn',(req,res)=> {
-    api.PayIns.create({
-        AuthorId: '71994443',
-        DebitedFunds: {
-            Currency: 'EUR',
-            Amount: 1200
-        },
-        Fees: {
-            Currency: "EUR",
-            Amount: 12
-        },
-        ReturnURL: 'http://localhost:3122/paymentSuccess',
-        CardType: "CB_VISA_MASTERCARD",
-        PaymentType: "CARD",
-        ExecutionType: "WEB",
-        Culture: "FR",
-        CreditedWalletId: 71994445
-    })
-        .then(data => {
-            res.json(data)
+// @access private
+router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const amount = parseInt(req.body.amount)*100;
+    const fees = parseInt(req.body.fees)*100;
+    User.findById(req.user.id)
+        .then(user => {
+            const id_mangopay = user.id_mangopay;
+            api.Users.getWallets(id_mangopay)
+                .then(wallets => {
+                    const wallet_id = wallets[0].Id;
+                    api.PayIns.create({
+                        AuthorId: id_mangopay,
+                        DebitedFunds: {
+                            Currency: 'EUR',
+                            Amount: amount
+                        },
+                        Fees: {
+                            Currency: "EUR",
+                            Amount: fees
+                        },
+                        ReturnURL: 'http://localhost:3122/paymentSuccess',
+                        CardType: "CB_VISA_MASTERCARD",
+                        PaymentType: "CARD",
+                        ExecutionType: "WEB",
+                        Culture: "FR",
+                        CreditedWalletId: wallet_id
+                    })
+                        .then(data => {
+                            res.json(data)
+                        })
+                })
+        });
+});
+
+// POST /myAlfred/api/payment/payInDirect
+// @access private
+router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const amount = parseInt(req.body.amount)*100;
+    const fees = parseInt(req.body.fees)*100;
+    const id_card = req.body.id_card;
+    User.findById(req.user.id)
+        .then(user => {
+            const id_mangopay = user.id_mangopay;
+            api.Users.getWallets(id_mangopay)
+                .then(wallets => {
+                    const wallet_id = wallets[0].Id;
+                    api.PayIns.create({
+                        AuthorId: id_mangopay,
+                        DebitedFunds: {
+                            Currency: 'EUR',
+                            Amount: amount
+                        },
+                        Fees: {
+                            Currency: "EUR",
+                            Amount: fees
+                        },
+                        ReturnURL: 'http://localhost:3122/paymentSuccess',
+                        CardType: "CB_VISA_MASTERCARD",
+                        PaymentType: "CARD",
+                        ExecutionType: "DIRECT",
+                        CreditedWalletId: wallet_id,
+                        CardId: id_card,
+                        SecureModeReturnURL: 'http://localhost:3122/paymentSuccess'
+                    })
+                        .then(data => {
+                            res.json(data)
+                        })
+                })
+        })
+
+});
+
+// POST /myAlfred/api/payment/transfer
+// @access private
+router.post('/transfer',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const amount = parseInt(req.body.amount)*100;
+    const fees = parseInt(req.body.fees)*100;
+    const wallet_credited = req.body.wallet_credited;
+    User.findById(req.user.id)
+        .then(user => {
+            const id_mangopay = user.id_mangopay;
+            api.Users.getWallets(id_mangopay)
+                .then(wallets => {
+                    const wallet_id = wallets[0].Id;
+                    api.Transfers.create({
+                        AuthorId: id_mangopay,
+                        DebitedFunds: {
+                            Currency: 'EUR',
+                            Amount: amount
+                        },
+                        Fees: {
+                            Currency: "EUR",
+                            Amount: fees
+                        },
+                        DebitedWalletId: wallet_id,
+                        CreditedWalletId: wallet_credited,
+
+                    })
+                        .then(data => {
+                            res.json(data)
+                        })
+                })
         })
 });
 
-router.get('/cards',(req,res)=> {
-    api.Users.getCards(71994443).then(cards => res.json(cards))
+// POST /myAlfred/api/payment/bankAccount
+// @access private
+router.post('/bankAccount',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const iban = req.body.iban;
+
+    User.findById(req.user.id)
+        .then(user => {
+            const id_mangopay = user.id_mangopay;
+            const billing_address = user.billing_address;
+            const address = billing_address.address;
+            const city = billing_address.city;
+            const zip_code = billing_address.zip_code;
+
+            const account = {
+                OwnerAddress: {
+                    AddressLine1: address,
+                    City: city,
+                    PostalCode: zip_code,
+                    Country: "FR"
+                },
+                OwnerName: user.firstname + " "+ user.name,
+
+                IBAN: iban,
+                Type: "IBAN"
+            };
+
+            api.Users.createBankAccount(id_mangopay,account)
+                .then(newAccount => {
+                    user.id_account_mangopay = newAccount.Id;
+                    user.save().then().catch();
+                    res.json({msg: "Compte créé"})
+                })
+
+
+        })
+});
+
+
+// GET /myAlfred/api/payment/cards
+// View all credit cards for a user
+// @access private
+router.get('/cards',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    User.findById(req.user.id)
+        .then(user => {
+            api.Users.getCards(user.id_mangopay).then(cards => res.json(cards))
+        })
+        .catch(err => console.log(err))
+
+});
+
+// GET /myAlfred/api/payment/cardsActive
+// View all active credit cards for a user
+// @access private
+router.get('/cardsActive',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const allCards = [];
+    User.findById(req.user.id)
+        .then(user => {
+            api.Users.getCards(user.id_mangopay)
+                .then(cards => {
+                    cards.forEach(c => {
+                        if(c.Active){
+                            allCards.push(c);
+                        }
+                    })
+
+                    res.json(allCards);
+                })
+        })
+        .catch(err => console.log(err))
+
+});
+
+// PUT /myAlfred/api/payment/cards
+// Deactivate a card
+// @access private
+router.put('/cards',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const id_card = req.body.id_card;
+    api.Cards.update({Id:id_card,Active:false}).then().catch()
 });
 
 

@@ -81,6 +81,10 @@ class paymentMethod extends React.Component {
         super(props);
         this.state = {
             user: {},
+            cards: [],
+            card_number: '',
+            expiration_date: '',
+            csv: '',
         }
 
     }
@@ -102,6 +106,49 @@ class paymentMethod extends React.Component {
                     }
                 }
             );
+
+        axios.get(url+'myAlfred/api/payment/cards')
+            .then(response => {
+                let cards = response.data;
+                this.setState({cards:cards});
+            })
+    }
+
+    onChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+    };
+
+    addCard() {
+        const card_number = this.state.card_number;
+        const expiration_date = this.state.expiration_date;
+        const csv = this.state.csv;
+
+        const obj = {
+            card_number: card_number,
+            expiration_date: expiration_date,
+            csv: csv
+        };
+
+        axios.post(url+'myAlfred/api/payment/createCard',obj)
+            .then(() => {
+                axios.get(url+'myAlfred/api/payment/cards')
+                    .then(response => {
+                        let cards = response.data;
+                        this.setState({cards:cards});
+                    })
+            })
+    }
+
+    deleteCard(id) {
+        const obj = {id_card:id};
+        axios.put(url+'myAlfred/api/payment/cards',obj)
+            .then(() => {
+                axios.get(url+'myAlfred/api/payment/cards')
+                    .then(response => {
+                        let cards = response.data;
+                        this.setState({cards:cards});
+                    })
+            })
     }
 
 
@@ -109,6 +156,7 @@ class paymentMethod extends React.Component {
     render() {
         const {classes} = this.props;
         const {user} = this.state;
+        const {cards} = this.state;
 
 
         return (
@@ -123,7 +171,7 @@ class paymentMethod extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/notifications'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Notifications
                                             </a>
@@ -133,28 +181,28 @@ class paymentMethod extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/notifications'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} width={27} style={{marginRight: 4}}/>
-                                            <a s style={{fontSize: '1.1rem'}}>
+                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem'}}>
                                                
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10}}className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/credit-card-2.svg'} alt={'credit-card'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/credit-card-2.svg'} alt={'credit-card'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Mode de paiement
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10}}className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/credit-card-2.svg'} alt={'credit-card'} width={27} style={{marginleft: 4}}/>
+                                            <img src={'../static/credit-card-2.svg'} alt={'credit-card'} height={70} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                                
                                             </a>
@@ -165,7 +213,7 @@ class paymentMethod extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Préférence de versement
                                             </a>
@@ -175,7 +223,7 @@ class paymentMethod extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             </a>
                                         </div>
@@ -185,7 +233,7 @@ class paymentMethod extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/transactions'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Historique des transactions
                                             </a>
@@ -195,7 +243,7 @@ class paymentMethod extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/transactions'}>
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                                 
                                             </a>
@@ -206,7 +254,7 @@ class paymentMethod extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Sécurité
                                             </a>
@@ -216,7 +264,7 @@ class paymentMethod extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/security'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             
                                             </a>
@@ -224,31 +272,12 @@ class paymentMethod extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Applications connectées
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                               
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
+
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Paramètres
                                             </a>
@@ -258,7 +287,7 @@ class paymentMethod extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             
                                             </a>
@@ -266,26 +295,6 @@ class paymentMethod extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/sponsors'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Parrainage
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/sponsors'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                            
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
 
                             </Grid>
                         </Grid>
@@ -294,6 +303,46 @@ class paymentMethod extends React.Component {
                         <Grid item xs={9} style={{paddingLeft: 55}}>
                             <Grid container>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Mode de paiement</h1>
+                            </Grid>
+                            <Grid container>
+                                {cards.length ?
+
+                                    cards.map((e,index) => (
+                                        <Grid container key={index}>
+                                            <p>{e.Alias}</p>
+                                            <p>{e.Active.toString()}</p>
+                                            <Button onClick={()=>this.deleteCard(e.Id)} type="submit" variant="contained" style={{color: 'white'}} color="secondary">
+                                                Supprimer
+                                            </Button>
+                                        </Grid>
+                                    )) :
+
+                                    <p>Aucun mode de paiement enregistré</p>
+
+                                }
+                            </Grid>
+                            <Grid container>
+                                <TextField label="Numéro carte de crédit"
+                                           variant="outlined"
+                                           value={this.state.card_number}
+                                           onChange={this.onChange}
+                                           name={'card_number'}
+                                />
+                                <TextField label="Date d'expiration"
+                                           variant="outlined"
+                                           value={this.state.expiration_date}
+                                           onChange={this.onChange}
+                                           name={'expiration_date'}
+                                />
+                                <TextField label="Cryptogramme visuel"
+                                           variant="outlined"
+                                           value={this.state.csv}
+                                           onChange={this.onChange}
+                                           name={'csv'}
+                                />
+                                <Button onClick={()=>this.addCard()} type="submit" variant="contained" style={{color: 'white'}} color="primary">
+                                    Ajouter
+                                </Button>
                             </Grid>
                         </Grid>
                     </Grid>
