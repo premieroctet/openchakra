@@ -17,6 +17,7 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import DatePicker, { registerLocale } from "react-datepicker";
 import fr from "date-fns/locale/fr";
 import Tooltip from "@material-ui/core/Tooltip";
+import { toast, ToastContainer } from "react-toastify";
 registerLocale("fr", fr);
 
 moment.locale("fr");
@@ -494,10 +495,14 @@ class userServices extends React.Component {
       });
     } else {
       if (
-        this.state.prestations.length ||
-        this.state.fees !== null ||
-        this.state.hour !== null ||
-        this.state.grandTotal !== null
+        this.state.prestations.length &&
+        this.state.grandTotal >= this.state.serviceUser.minimum_basket ||
+        this.state.fees !== null &&
+        this.state.grandTotal >= this.state.serviceUser.minimum_basket ||
+        this.state.hour !== null &&
+        this.state.grandTotal >= this.state.serviceUser.minimum_basket ||
+        this.state.grandTotal !== null &&
+        this.state.grandTotal >= this.state.serviceUser.minimum_basket
       ) {
         axios.defaults.headers.common["Authorization"] = localStorage.getItem(
           "token"
@@ -554,11 +559,9 @@ class userServices extends React.Component {
               bookingObj.option = this.state.selectedOption;
             }
 
-            console.log(bookingObj);
             axios
               .post(url + "myAlfred/api/booking/add", bookingObj)
               .then(res => {
-                console.log(res.data);
                 axios.put(url + 'myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: res.data._id })
                   .then(() => {
                     Router.push({
@@ -571,17 +574,16 @@ class userServices extends React.Component {
           })
           .catch(err => console.log(err));
       } else {
-        console.log("res");
+        toast.error(
+        <div>Erreur : <br /> 
+          Vérifiez que le total de votre panier soit supérieur au montant minimum requis pour une réservation
+        </div>
+        );
       }
     }
   }
 
   reservationPage() {
-    /*localStorage.setItem('prestations', JSON.stringify(this.state.selectedPrestations));
-        localStorage.setItem('fees', this.state.fees);
-        localStorage.setItem('date', this.state.date);
-        localStorage.setItem('hour', this.state.hour);
-        localStorage.setItem('grandTotal', this.state.grandTotal);*/
 
     this.setState({ errorsPresta: null });
 
