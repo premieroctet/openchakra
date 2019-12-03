@@ -819,13 +819,13 @@ class services extends React.Component {
                                             <Grid  item xs={5}>
                                                 <Grid container>
                                                     <Grid item xs={2}>
-                                                        <Link href={'/myShop/selectCategory'}><a style={{textDecoration:'none'}}>
+                                                        <Link href={'/myShop/addService'}><a style={{textDecoration:'none'}}>
                                                             <img src={'../../static/plus-4.svg'} style={{marginTop: '27%'}} width={'42%'} alt={'plus'}/>
                                                         </a>
                                                         </Link>
                                                     </Grid>
                                                     <Grid item xs={10}>
-                                                        <Link href={'/myShop/selectCategory'}><a style={{textDecoration:'none'}}>
+                                                        <Link href={'/myShop/addService'}><a style={{textDecoration:'none'}}>
                                                             <h3 style={{color:'white',fontWeight: '100'}}>Ajouter un nouveau service</h3>
                                                         </a>
                                                         </Link>
@@ -847,7 +847,7 @@ class services extends React.Component {
                                             <Grid  item xs={5} style={{display:"flex",justifyContent:"center"}}>
                                                 <Grid container>
                                                     <Grid item xs={10}>
-                                                        <Link href={'/myShop/selectCategory'}><a style={{textDecoration:'none', padding:'2%'}}>
+                                                        <Link href={'/myShop/addService'}><a style={{textDecoration:'none', padding:'2%'}}>
                                                             <img src={'../../static/plus-5.svg'} style={{marginTop: '0%', padding:'10px', borderRadius:'50px', backgroundColor:'rgba(47, 188, 211, 1)'}} width={'50px'} alt={'plus'}/>
                                                         </a>
                                                         </Link>
