@@ -6,7 +6,6 @@ const path = require('path');
 const ServiceUser = require('../../models/ServiceUser');
 const Shop = require('../../models/Shop');
 const User = require('../../models/User');
-const axios = require('axios');
 const multer = require("multer");
 const crypto = require('crypto');
 
@@ -29,22 +28,12 @@ const upload = multer({ storage: storage,fileFilter: function (req, file, callba
         callback(null, true)
     } });
 
-
-
-router.get('/test',(req, res) => res.json({msg: 'Service user Works!'}) );
-
 // @Route POST /myAlfred/api/serviceUser/add
 // Connect an alfred to a service
 // @Access private
 router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certification',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req,res)=>{
     ServiceUser.findOne({user: req.user.id, service: req.body.service})
         .then(service => {
-
-                /*
-                if(service) {
-                    return res.status(400).json({msg: "Ce service existe déjà"});
-                }
-                */
                 const fields = {};
                 fields.user= req.user.id;
                 fields.service = mongoose.Types.ObjectId(req.body.service);
@@ -69,7 +58,7 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
                     fields.diploma.year = req.body.diplomaYear;
                     fields.diploma.file = req.files['diploma'][0].path;
                 } else {
-                    console.log(req.files)
+                    console.log(req.files);
                     console.log('No file uploaded');
                 }
             if(req.body.is_certified === 'true') {
@@ -85,15 +74,14 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
             } else {
                 console.log('No file uploaded');
             }
-
-                    fields.description = req.body.description;
-                    fields.equipments = JSON.parse(req.body.equipments);
-                    fields.majoration = {};
-                    if(req.body.active === 'true') {
-                        fields.majoration.active = true;
-                    } else {
-                        fields.majoration.active = false;
-                    }
+              fields.description = req.body.description;
+              fields.equipments = JSON.parse(req.body.equipments);
+              fields.majoration = {};
+              if(req.body.active === 'true') {
+                  fields.majoration.active = true;
+              } else {
+                  fields.majoration.active = false;
+              }
 
             fields.service_address = {};
             fields.service_address.address = req.body.address;
@@ -101,16 +89,14 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
             fields.service_address.city = req.body.city;
             fields.service_address.country = req.body.country;
 
-
-
             fields.service_address.gps = {};
             fields.service_address.gps.lat = req.body.lat;
             fields.service_address.gps.lng = req.body.lng;
 
-                    fields.majoration.price = parseInt(req.body.price);
-                    const newService = new ServiceUser(fields);
-                    console.log(newService);
-                    newService.save().then(service => res.json(service)).catch(err => console.log(err));
+            fields.majoration.price = parseInt(req.body.price);
+            const newService = new ServiceUser(fields);
+            console.log(newService);
+            newService.save().then(service => res.json(service)).catch(err => console.log(err));
 
                 })
         .catch(error => {
@@ -193,16 +179,6 @@ router.post('/myShop/add',upload.fields([{name: 'file_diploma',maxCount: 1}, {na
         .catch(error => {
             console.log(error)
         });
-
-
-
-
-
-
-
-
-
-
 
 });
 
@@ -367,18 +343,13 @@ router.get('/category/:id',(req,res)=> {
         .populate('service')
         .then(service => {
             if(typeof service !== 'undefined' && service.length > 0){
-
-
-                    service.forEach(e => {
-                        if (e.service.category == req.params.id) {
-                            res.json({length: service.length})
-                        } else {
-                            res.json({length: 0})
-                        }
-                    });
-
-
-
+              service.forEach(e => {
+                  if (e.service.category == req.params.id) {
+                      res.json({length: service.length})
+                  } else {
+                      res.json({length: 0})
+                  }
+              });
             } else {
                 return res.status(400).json({msg: 'No service found'});
             }
@@ -451,8 +422,6 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
         })
         .catch(err => res.status(404).json({ service: 'No service found' }));
 });
-
-
 
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser

@@ -17,7 +17,6 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import * as Yup from 'yup';
-import IconButton from "@material-ui/core/IconButton";
 import Switch from "@material-ui/core/Switch";
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
@@ -198,13 +197,13 @@ class Wizard extends React.Component {
 
                         }
                     })
-                })
+                });
                 e.equipments.forEach(c => {
 
                     if(c.checked === true) {
                         arrayEquipments.push(c.id);
                     }
-                })
+                });
                 let option = null;
                 if (e.option !== null) {
                     option = {label: e.option.label, price: e.option.price, unity: e.option.unity.value, type: e.option.type.value};
@@ -269,89 +268,70 @@ class Wizard extends React.Component {
                 axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
                 axios.post(url+'myAlfred/api/serviceUser/add',formData)
                     .then(res => {
+                        const booking_request = values.createShop.booking_request;
+                        const no_booking_request = values.createShop.no_booking_request;
+                        const my_alfred_conditions = values.createShop.my_alfred_conditions;
+                        const identity_card = values.createShop.identity_card;
+                        const recommandations = values.createShop.recommandations;
+                        const welcome_message = values.createShop.welcome_message;
+                        const flexible_cancel = values.createShop.flexible_cancel;
+                        const moderate_cancel = values.createShop.moderate_cancel;
+                        const strict_cancel = values.createShop.strict_cancel;
+                        const is_particular = values.createShop.is_particular;
+                        const is_professional = values.createShop.is_professional;
+                        const self_employed = values.createShop.is_microCompany;
+                        const individual_company = values.createShop.isIndividualCompany;
+                        const name = values.createShop.denomination;
+                        const creation_date = values.createShop.creationDate;
+                        const naf_ape = values.createShop.nafape;
+                        const siret = values.createShop.siret;
 
-                            const booking_request = values.createShop.booking_request;
-                            const no_booking_request = values.createShop.no_booking_request;
-                            const my_alfred_conditions = values.createShop.my_alfred_conditions;
-                            const profile_picture = values.createShop.profile_picture_user;
-                            const identity_card = values.createShop.identity_card;
-                            const recommandations = values.createShop.recommandations;
-                            const welcome_message = values.createShop.welcome_message;
-                            const flexible_cancel = values.createShop.flexible_cancel;
-                            const moderate_cancel = values.createShop.moderate_cancel;
-                            const strict_cancel = values.createShop.strict_cancel;
-                            const is_particular = values.createShop.is_particular;
-                            const is_professional = values.createShop.is_professional;
-                            const self_employed = values.createShop.is_microCompany;
-                            const individual_company = values.createShop.isIndividualCompany;
-                            const name = values.createShop.denomination;
-                            const creation_date = values.createShop.creationDate;
-                            const naf_ape = values.createShop.nafape;
-                            const siret = values.createShop.siret;
+                        axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
+                            .then(response => {
+                                let data = response.data;
+                                let arrayService = [];
 
-                            axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
-                                .then(response => {
-                                    let data = response.data;
-                                    let arrayService = [];
+                                data.forEach(q => {
 
-                                    data.forEach(q => {
+                                    arrayService.push(q._id);
 
-                                        arrayService.push(q._id);
+                                });
 
-                                    });
+                                axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,identity_card
+                                , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
+                                self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
+                                    .then(result => {
 
-                                    axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
-                                    , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
-                                    self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
-                                        .then(result => {
-
-                                            const formDataIdProfile = new FormData();
-                                            formDataIdProfile.append('myCardR',values.createShop.id_recto);
-                                            if (values.createShop.id_verso !== null) {
-                                                formDataIdProfile.append('myCardV',values.createShop.id_verso);
-                                            }
-                                            axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
-                                                .then(res => {
-
-                                                })
-                                                .catch(err => {
-                                                    console.log(err);
-                                                })
-
-                                            const profilePicture = values.alfredUpdate.profile_picture_user;
-                                            const formDataPicture = new FormData();
-                                            formDataPicture.append('myImage',profilePicture);
-                                            axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
-                                                .then(res => {
-
-                                                })
-                                                .catch(err => {
-                                                    console.log(err);
-                                                })
-                                            axios.put(url+'myAlfred/api/users/users/becomeAlfred')
-                                                .then(res => {
-                                                    toast.info('Boutique créée avec succès');
-                                                    Router.push('/myShop/services');
-
-                                                })
-                                                .catch(err => {
-                                                    console.log(err);
-                                                })
-
-                                            return console.log(values);
-
-
-                                        })
-                                        .catch(error => {
-                                            console.log(error);
-                                        })
-                                })
+                                        const formDataIdProfile = new FormData();
+                                        formDataIdProfile.append('myCardR',values.createShop.id_recto);
+                                        if (values.createShop.id_verso !== null) {
+                                            formDataIdProfile.append('myCardV',values.createShop.id_verso);
+                                        }
+                                        axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
+                                            .then(res => {
+                                            })
+                                            .catch(err => {
+                                                console.log(err);
+                                            });
+                                        axios.put(url+'myAlfred/api/users/users/becomeAlfred')
+                                            .then(res => {
+                                                toast.info('Boutique créée avec succès');
+                                                Router.push('/myShop/services');
+                                            })
+                                            .catch(err => {
+                                                console.log(err);
+                                            });
+                                        return console.log(values);
+                                    })
+                                    .catch(error => {
+                                        console.log(error);
+                                    })
+                            })
                     })
                     .catch(err => {
                         console.log(err);
                     })
             });
-
         } else {
             bag.setTouched({});
             bag.setSubmitting(false);
@@ -438,7 +418,7 @@ class Wizard extends React.Component {
                     otherwise: Yup.boolean(),
                 }),
         })
-    })
+    });
 
     schemaArray =[this.Step0Schema, this.Step1Schema, this.Step2Schema, this.Step3Schema, this.Step4Schema, this.Step5Schema];
 
@@ -450,7 +430,6 @@ class Wizard extends React.Component {
         const textLabel = values.submission.map(pc => {
             return pc.serviceLabel
         });
-
 
         return (
             <Formik
@@ -2404,67 +2383,7 @@ class Form extends React.Component {
                             {({ form }) => (
                                 <React.Fragment>
                                     <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
-
                                             <div className={classes.newContainer}>
-
-
-
-                                                <Typography variant="h6" style={{marginBottom: '.5rem'}}>
-                                                    Téléchargez une photo de profil
-                                                </Typography>
-
-                                                <Typography style={{fontFamily: 'helvetica',fontSize: '1rem', fontWeight:400, marginBottom: '1rem'}}>
-                                                    Téléchargez une photo de claire et lumineuse, de bonne qualité. Pour un rendu optimal, la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif, avec seulement vous sur la photo.
-                                                </Typography>
-                                                <Grid container style={{ marginBottom: 15 }}>
-                                                    <Grid item xs={1} />
-                                                    <Grid item xs={2}>
-                                                        <div>
-                                                            <div>
-                                                                <Field render={({form}) => {
-                                                                    return (
-                                                                        <React.Fragment>
-                                                                            <input
-                                                                                accept="image/*"
-                                                                                className="input"
-                                                                                style={{ display: "none" }}
-                                                                                id="icon-button-file"
-                                                                                type="file"
-                                                                                onChange={(event) => {
-                                                                                    if (typeof event.currentTarget.files[0] === 'undefined') {
-                                                                                    } else {
-                                                                                        form.setFieldValue("alfredUpdate.profile_picture_user", event.currentTarget.files[0]);
-                                                                                    }
-                                                                                }}
-                                                                                name={"myImage"}
-                                                                            />
-                                                                            <div style={{position: 'relative'}}>
-                                                                                <label htmlFor="icon-button-file">
-                                                                                    <IconButton
-                                                                                        color="primary"
-                                                                                        className={classes.button}
-                                                                                        style={{
-                                                                                            width: 100,
-                                                                                            height: 100,
-                                                                                            backgroundColor: "lightgrey",
-                                                                                            backgroundImage: "url('../../static/avatar.svg')"
-                                                                                        }}
-                                                                                        component="span"
-                                                                                    >
-                                                                                    </IconButton>
-                                                                                </label>
-                                                                            </div>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                }} />
-                                                            </div>
-                                                        </div>
-                                                    </Grid>
-                                                    <Grid item xs={1} />
-                                                    <Grid item xs={7}>
-                                                    </Grid>
-                                                </Grid>
-                                                <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                                 <Grid container>
                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>
                                                         Vérifiez votre identité <span style={{color: '#F8727F' }}>*</span>
