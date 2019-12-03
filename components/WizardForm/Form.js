@@ -1091,135 +1091,135 @@ class Form extends React.Component {
                     </Wizard.Page>
                   <Wizard.Page>
                    <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', overflowX: 'hidden', height:'100%'}}>
-                       <div style={{padding: '0rem 2rem 1rem 2rem'}}>
-                            <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Votre catégorie de service</Typography>
-                            <Typography>
-                                Commencez par sélectionner votre catégorie de service. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être».
-                            </Typography>
-                        </div>
-                            <FieldArray
-                                name="categories"
-                                render={(arrayHelpers) => (
-                                    this.state.categories && this.state.categories.length > 0 ? (
-                                         <div style={{padding: '.5rem 2rem'}}>
-                                            <Select
-                                              noOptionsMessage="Pas de catégorie disponible"
-                                               className="indicator"
-                                               classNamePrefix="indicator"
-                                               closeMenuOnSelect={true}
-                                               placeholder="Sélectionnez votre catégorie..."
-                                               value={arrayHelpers.form.values.categories}
-                                               options={this.state.categories}
-                                              onChange={categorie => {
-                                                  console.log("Catégories:"+this.state.categories);
-                                                      if (categorie === null) {
-                                                          arrayHelpers.form.setFieldValue('categories', []);
-                                                        } else {
-                                                            arrayHelpers.form.setFieldValue('categories', [categorie]);
-                                                        }
-                                                      arrayHelpers.form.setFieldValue('submission', []);
-                                                      arrayHelpers.form.setFieldValue('services', []);
-                                                      this.setState({ isDisabledExpansionPanels: true });
-                                                  }}
+                     <div style={{padding: '0rem 2rem 1rem 2rem'}}>
+                      <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Votre catégorie de service</Typography>
+                      <Typography>
+                          Commencez par sélectionner votre catégorie de service. Par exemple, si vous souhaitez réaliser un service de coiffure, sélectionnez la catégorie «Beauté et bien-être».
+                      </Typography>
+                      </div>
+                        <FieldArray
+                            name="categories"
+                            render={(arrayHelpers) => (
+                                this.state.categories && this.state.categories.length > 0 ? (
+                                     <div style={{padding: '.5rem 2rem'}}>
+                                        <Select
+                                          noOptionsMessage="Pas de catégorie disponible"
+                                           className="indicator"
+                                           classNamePrefix="indicator"
+                                           closeMenuOnSelect={true}
+                                           placeholder="Sélectionnez votre catégorie..."
+                                           value={arrayHelpers.form.values.categories}
+                                           options={this.state.categories}
+                                          onChange={categorie => {
+                                              console.log("Catégories:"+this.state.categories);
+                                                  if (categorie === null) {
+                                                      arrayHelpers.form.setFieldValue('categories', []);
+                                                    } else {
+                                                        arrayHelpers.form.setFieldValue('categories', [categorie]);
+                                                    }
+                                                  arrayHelpers.form.setFieldValue('submission', []);
+                                                  arrayHelpers.form.setFieldValue('services', []);
+                                                  this.setState({ isDisabledExpansionPanels: true });
+                                              }}
 
-                                               theme={theme => ({
-                                                   ...theme,
-                                                   colors: {
-                                                       ...theme.colors,
-                                                       primary: '#2FBCD3',
-                                                   }
-                                               })}
-                                               styles={{
-                                                 indicatorsContainer: (styles) => {
-                                                       return {
-                                                           ...styles,
-                                                           ':nth-child(1)': {
-                                                               color: '#F8727F !important',
-                                                           }
+                                           theme={theme => ({
+                                               ...theme,
+                                               colors: {
+                                                   ...theme.colors,
+                                                   primary: '#2FBCD3',
+                                               }
+                                           })}
+                                           styles={{
+                                             indicatorsContainer: (styles) => {
+                                                   return {
+                                                       ...styles,
+                                                       ':nth-child(1)': {
+                                                           color: '#F8727F !important',
                                                        }
                                                    }
-                                               }}
-                                           />
-                                            <Button
-                                                color="primary"
-                                                style={{marginTop: '1rem', marginBottom: '2rem', color: 'white', borderRadius: 8}}
-                                                type="button"
-                                                variant="contained"
-                                               onClick={() => {
-                                                      if (arrayHelpers.form.values.categories !== '' && arrayHelpers.form.values.categories != null) {
-                                                            this.handleCategorieChange(arrayHelpers.form.values.categories, arrayHelpers);
+                                               }
+                                           }}
+                                       />
+                                        <Button
+                                            color="primary"
+                                            style={{marginTop: '1rem', marginBottom: '2rem', color: 'white', borderRadius: 8}}
+                                            type="button"
+                                            variant="contained"
+                                           onClick={() => {
+                                                  if (arrayHelpers.form.values.categories !== '' && arrayHelpers.form.values.categories != null) {
+                                                        this.handleCategorieChange(arrayHelpers.form.values.categories, arrayHelpers);
+                                                    }
+                                              }}>
+                                            Je valide cette catégorie
+                                        </Button>
+                                        <div>
+                                            <Typography variant="h6" style={{marginBottom: '.5rem'}}>Votre service</Typography>
+                                            <Typography>
+                                                Sélectionnez maintenant le service que vous souhaitez proposer dans la catégorie sélectionnée. Vous pourrez choisir les prestations que vous souhaitez proposer dès la prochaine étape !
+                                            </Typography>
+                                            <Typography>
+                                                Un service n'apparaît pas ? Contactez l’équipe My-Alfred à l’adresse <a href="mailto:unservicedeplus@my-alfred.io">unservicedeplus@my-alfred.io</a>
+                                           </Typography>
+                                      </div>
+                                       <div style={{marginTop: '1rem'}}>
+                                            {arrayHelpers.form.values.categories && arrayHelpers.form.values.categories.length > 0 && this.state.loading === false ? (
+                                                  arrayHelpers.form.values.categories.map((categorie) => {
+                                                        return (
+                                              <Select
+                                                noOptionsMessage="Pas de service disponible"
+                                          className="indicator"
+                                          classNamePrefix="indicator"
+                                          closeMenuOnSelect={true}
+                                          placeholder="Sélectionnez votre Service..."
+                                          value={arrayHelpers.form.values.services}
+                                          options={categorie[categorie.label.replace(/\s/g, '') + 'Services']}
+                                          onChange={service => {
+                                              if (service===null) {
+                                                  arrayHelpers.form.setFieldValue('services', []);
+                                                }
+                                              else {
+                                                  arrayHelpers.form.setFieldValue('services', [service]);
+                                                }
+                                          const servicesLength = arrayHelpers.form.values.services.length;
+                                          this.setState({
+                                                servicesLength,
+                                                servicesValues: arrayHelpers.form.values.services
+                                          })
+                                            }}
+                                          theme={theme => ({
+                                                ...theme,
+                                                colors: {
+                                                    ...theme.colors,
+                                                    primary: '#2FBCD3',
+                                                }
+                                            })}
+                                         styles={{
+                                             indicatorsContainer: (styles) => {
+                                                    return {
+                                                        ...styles,
+                                                        ':nth-child(1)': {
+                                                            color: '#F8727F !important',
                                                         }
-                                                  }}>
-                                                Je valide cette catégorie
-                                            </Button>
-                                            <div>
-                                                <Typography variant="h6" style={{marginBottom: '.5rem'}}>Votre service</Typography>
-                                                <Typography>
-                                                    Sélectionnez maintenant le service que vous souhaitez proposer dans la catégorie sélectionnée. Vous pourrez choisir les prestations que vous souhaitez proposer dès la prochaine étape !
-                                                </Typography>
-                                                <Typography>
-                                                    Un service n'apparaît pas ? Contactez l’équipe My-Alfred à l’adresse <a href="mailto:unservicedeplus@my-alfred.io">unservicedeplus@my-alfred.io</a>
-                                               </Typography>
-                                          </div>
-                                           <div style={{marginTop: '1rem'}}>
-                                                {arrayHelpers.form.values.categories && arrayHelpers.form.values.categories.length > 0 && this.state.loading === false ? (
-                                                      arrayHelpers.form.values.categories.map((categorie) => {
-                                                            return (
-                                                  <Select
-                                                    noOptionsMessage="Pas de service disponible"
-                                              className="indicator"
-                                              classNamePrefix="indicator"
-                                              closeMenuOnSelect={true}
-                                              placeholder="Sélectionnez votre Service..."
-                                              value={arrayHelpers.form.values.services}
-                                              options={categorie[categorie.label.replace(/\s/g, '') + 'Services']}
-                                              onChange={service => {
-                                                  if (service===null) {
-                                                      arrayHelpers.form.setFieldValue('services', []);
                                                     }
-                                                  else {
-                                                      arrayHelpers.form.setFieldValue('services', [service]);
-                                                    }
-                                              const servicesLength = arrayHelpers.form.values.services.length;
-                                              this.setState({
-                                                    servicesLength,
-                                                    servicesValues: arrayHelpers.form.values.services
-                                              })
-                                                }}
-                                              theme={theme => ({
-                                                    ...theme,
-                                                    colors: {
-                                                        ...theme.colors,
-                                                        primary: '#2FBCD3',
-                                                    }
-                                                })}
-                                             styles={{
-                                                 indicatorsContainer: (styles) => {
-                                                        return {
-                                                            ...styles,
-                                                            ':nth-child(1)': {
-                                                                color: '#F8727F !important',
-                                                            }
-                                                        }
-                                                    }
-                                                }}
-                                          />
-                                            )})
-                                                 ):(this.state.loading === true
-                                                    ? <Loader
-                                                        type="TailSpin"
-                                                          color="#2FBCD3"
-                                                          height={100}
-                                                          width={100}
-                                                          style={{textAlign: 'center'}}
-                                                      />
-                                                      :
-                                                      <Typography align="center" style={{fontSize: 15, marginTop: '2rem', color: '#F8727F'}}>Sélectionnez votre catégorie pour afficher les services disponibles</Typography>)}
-                                            </div>
+                                                }
+                                            }}
+                                      />
+                                        )})
+                                             ):(this.state.loading === true
+                                                ? <Loader
+                                                    type="TailSpin"
+                                                      color="#2FBCD3"
+                                                      height={100}
+                                                      width={100}
+                                                      style={{textAlign: 'center'}}
+                                                  />
+                                                  :
+                                                  <Typography align="center" style={{fontSize: 15, marginTop: '2rem', color: '#F8727F'}}>Sélectionnez votre catégorie pour afficher les services disponibles</Typography>)}
                                         </div>
-                                    ): (<p style={{padding: '0 2rem'}}>Chargement...</p>)
-                                )}
-                            />
+                                    </div>
+                                ): (<p style={{padding: '0 2rem'}}>Chargement...</p>)
+                            )}
+                        />
                             <Field>
                                 {({form}) => {
                                     return form.values.services && form.values.services.length > 0 ?
