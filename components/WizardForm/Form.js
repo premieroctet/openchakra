@@ -1449,19 +1449,8 @@ class Form extends React.Component {
                                                                                                                                       });
                                                                                                                                       form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, event.target.value);
                                                                                                                                   }}
-                                                                                                                                  value={p.billingChoice.map((option, indexc) => {
-                                                                                                                                      console.log("Option:"+JSON.stringify(option))
-                                                                                                                                      console.log("Index:"+JSON.stringify(indexc))
-                                                                                                                                      if (indexc === 0) {
-                                                                                                                                          if (typeof this.state[`billingChoice${index}${indexf}${indexp}`] === 'undefined' || this.state[`billingChoice${index}${indexf}${indexp}`] === null) {
-                                                                                                                                              this.setState({
-                                                                                                                                                  [`billingChoice${index}${indexf}${indexp}`]: option.label
-                                                                                                                                              });
-                                                                                                                                              form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, option.label);
-                                                                                                                                          }
-                                                                                                                                          return option.label; //this.state[`billingChoice${index}${indexf}${indexp}`];
-                                                                                                                                      }
-                                                                                                                                  })}
+
+                                                                                                                                  value={ field.value || p.billingChoice[0].label }
                                                                                                                               >
                                                                                                                                   {p.billingChoice.map(option => {
                                                                                                                                       return (
