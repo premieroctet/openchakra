@@ -478,8 +478,7 @@ class Wizard extends React.Component {
     const textLabel = values.submission.map(pc => {
       return pc.serviceLabel
     });
-
-
+    
     return (
       <Formik
         initialValues={values}
