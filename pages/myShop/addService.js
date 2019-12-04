@@ -490,8 +490,8 @@ class Wizard extends React.Component {
         render={({ values, handleSubmit }) => (
           <React.Fragment>
             {page !== 0 && <div style={{backgroundColor: 'white'}}>
-              {page === 1 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem', backgroundColor: 'green'}}>Etape 1 - Configuration de votre service - {textLabel}</h3> : null}
-              {page === 2 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem', backgroundColor: 'purple'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+              {page === 1 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de votre service - {textLabel}</h3> : null}
+              {page === 2 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
               <div>
                 <Bar style={{backgroundColor: '#cacfe4'}}>
                   {page === 1 ? <Fill width={'20%'} /> : null}
@@ -518,16 +518,9 @@ class Wizard extends React.Component {
                     >
                       Retour
                     </Button>
-                    </React.Fragment>}
+                    </React.Fragment>
+                    }
                     {page === 0 && <Button
-                      type="submit"
-                      variant="contained"
-                      color="secondary"
-                      style={{color: 'white'}}
-                    >
-                      Suivant
-                    </Button>}
-                    {page === 1 && <Button
                       type="submit"
                       variant="contained"
                       color="secondary"
@@ -540,49 +533,89 @@ class Wizard extends React.Component {
                     >
                       Suivant
                     </Button>}
+                    {page === 1 &&
+                      <Field render={({form}) => {
+                        const checkArr = [];
+                        form.values.submission.map(pc => {
+                          if (pc.prestationsCount > 0) {
+                            return checkArr.push(true);
+                          } else {
+                            return checkArr.push(false);
+                          }
+                        });
+                        const check = el => {
+                          return el === false;
+                        };
+                        return (
+                          <React.Fragment>
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              color="secondary"
+                              style={{color: !checkArr.some(check) ? 'white' : null }}
+                              disabled={checkArr.some(check)}
+                              onClick={() => {
+                                if (typeof form.errors.submission === 'undefined') {
+                                  const div = document.getElementById('bigDiv');
+                                  div.scrollTop = 0;
+                                } else {
+                                  toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
+                                    if (typeof service === 'undefined') {
+                                      return null
+                                    } else {
+                                      return <p>{form.values.submission[i].serviceLabel}</p>
+                                    }
+                                  })}</div>)
+                                }
+                              }}
+                            >
+                              Envoyer
+                            </Button>
+                          </React.Fragment>
+                        )
+                      }}
+                    />}
                     {page === 2 &&
-                    <Field render={({form}) => {
-                      const checkArr = [];
-                      form.values.submission.map(pc => {
-                        if (pc.prestationsCount > 0) {
-                          return checkArr.push(true);
-                        } else {
-                          return checkArr.push(false);
-                        }
-                      });
-
-                      const check = el => {
-                        return el === false;
-                      };
-
-                      return (
-                        <React.Fragment>
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            color="secondary"
-                            style={{color: !checkArr.some(check) ? 'white' : null }}
-                            disabled={checkArr.some(check)}
-                            onClick={() => {
-                              if (typeof form.errors.submission === 'undefined') {
-                                const div = document.getElementById('bigDiv');
-                                div.scrollTop = 0;
-                              } else {
-                                toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
-                                  if (typeof service === 'undefined') {
-                                    return null
-                                  } else {
-                                    return <p>{form.values.submission[i].serviceLabel}</p>
-                                  }
-                                })}</div>)
-                              }
-                            }}
-                          >
-                            Suivant
-                          </Button>
-                        </React.Fragment>
-                      )
-                    }}
+                      <Field render={({form}) => {
+                        const checkArr = [];
+                        form.values.submission.map(pc => {
+                          if (pc.prestationsCount > 0) {
+                            return checkArr.push(true);
+                          } else {
+                            return checkArr.push(false);
+                          }
+                        });
+                        const check = el => {
+                          return el === false;
+                        };
+                        return (
+                          <React.Fragment>
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              color="secondary"
+                              style={{color: !checkArr.some(check) ? 'white' : null }}
+                              disabled={checkArr.some(check)}
+                              onClick={() => {
+                                if (typeof form.errors.submission === 'undefined') {
+                                  const div = document.getElementById('bigDiv');
+                                  div.scrollTop = 0;
+                                } else {
+                                  toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
+                                    if (typeof service === 'undefined') {
+                                      return null
+                                    } else {
+                                      return <p>{form.values.submission[i].serviceLabel}</p>
+                                    }
+                                  })}</div>)
+                                }
+                              }}
+                            >
+                              Envoyer
+                            </Button>
+                          </React.Fragment>
+                        )
+                      }}
                     />}
                   </div>
                 </div>
