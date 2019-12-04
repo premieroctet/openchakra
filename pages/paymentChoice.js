@@ -84,6 +84,7 @@ class paymentChoice extends React.Component {
             user: {},
             cards: [],
             id_card: '',
+            cardSelected: false,
         }
 
     }
@@ -110,6 +111,41 @@ class paymentChoice extends React.Component {
             .then(response => {
                 let cards = response.data;
                 this.setState({cards:cards});
+            })
+    }
+
+    payDirect() {
+        const data = {
+            id_card: this.state.id_card,
+            amount: 20,
+            fees: 0
+        };
+        axios.post(url+'myAlfred/api/payment/payInDirect',data)
+            .then(() => {
+                const obj = {
+                    amount: 20,
+                    fees: 0
+                };
+                axios.post(url+ 'myAlfred/api/payment/transfer',obj)
+                    .then(() => {
+                        Router.push('/paymentDirectSuccess')
+                    })
+                    .catch()
+            })
+            .catch()
+    }
+
+    pay(){
+        localStorage.setItem('amount','20');
+        localStorage.setItem('fees','0');
+        const data = {
+            amount: 20,
+            fees: 0
+        };
+        axios.post(url+'myAlfred/api/payment/payIn',data)
+            .then(res => {
+                let payIn = res.data;
+                Router.push(payIn.RedirectURL)
             })
     }
 
@@ -141,7 +177,7 @@ class paymentChoice extends React.Component {
                                             <p>{e.Alias}</p>
                                             <Radio
                                                 checked={this.state.id_card === e.Id}
-                                                onChange={()=> this.setState({id_card:e.Id})}
+                                                onChange={()=> this.setState({id_card:e.Id,cardSelected: !this.state.cardSelected})}
                                                 value={e.Id}
                                                 color={'primary'}
                                                 name="radio-button-demo"
@@ -155,9 +191,16 @@ class paymentChoice extends React.Component {
                                 }
                             </Grid>
                             <Grid container>
-                                <Button onClick={()=>this.addCard()} type="submit" variant="contained" style={{color: 'white'}} color="primary">
-                                    Payer
-                                </Button>
+                                {this.state.cardSelected ?
+                                    <Button onClick={()=>this.payDirect()} type="submit" variant="contained" style={{color: 'white'}} color="primary">
+                                        Payer en 1 clic
+                                    </Button>
+                                    :
+                                    <Button onClick={()=>this.pay()} type="submit" variant="contained" style={{color: 'white'}} color="primary">
+                                        Payer
+                                    </Button>
+                                }
+
                             </Grid>
                         </Grid>
                     </Grid>

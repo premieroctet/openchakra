@@ -11,6 +11,11 @@ import TextField from "@material-ui/core/TextField";
 import { toast } from 'react-toastify';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import Footer2 from '../../hoc/Layout/Footer/Footer2';
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
 
 
 
@@ -82,13 +87,11 @@ class paymentPreference extends React.Component {
         this.state = {
             user: {},
             clickAdd: false,
-            clickEdit: false,
-            name: '',
-            bank: '',
+            clickDelete: false,
+            accounts: [],
+            haveAccount: false,
             bic: '',
             iban: '',
-            account: {},
-            haveAccount: false,
 
 
         };
@@ -96,18 +99,13 @@ class paymentPreference extends React.Component {
 
         componentDidMount()
         {
-
             localStorage.setItem('path', Router.pathname);
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
             axios
                 .get(url + 'myAlfred/api/users/current')
                 .then(res => {
                     this.setState({user: res.data});
-                    if(typeof res.data.account != "undefined") {
-                        this.setState({haveAccount: true,account: res.data.account});
-                        this.setState({name: res.data.account.name,bank: res.data.account.bank,bic: res.data.account.bic,
-                                            iban: res.data.account.iban});
-                    }
+
                 })
                 .catch(err => {
                         console.log(err);
@@ -117,6 +115,13 @@ class paymentPreference extends React.Component {
                         }
                     }
                 );
+            axios.get(url+'myAlfred/api/payment/activeAccount')
+                .then(response => {
+                    let accounts = response.data;
+                    if(accounts.length){
+                        this.setState({haveAccount: true, accounts: accounts})
+                    }
+                })
         }
 
         handleClick = () => {
@@ -124,8 +129,12 @@ class paymentPreference extends React.Component {
         };
 
     handleClick2 = () => {
-        this.setState({clickEdit: !this.state.clickEdit});
+        this.setState({clickDelete: !this.state.clickDelete});
     };
+
+    handleClose() {
+        this.setState({clickDelete:false});
+    }
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
@@ -134,19 +143,23 @@ class paymentPreference extends React.Component {
     onSubmit = e => {
       e.preventDefault();
       const data = {
-        name: this.state.name,
-        bank: this.state.bank,
         bic: this.state.bic,
         iban: this.state.iban
       };
 
-      axios.put(url+'myAlfred/api/users/account/rib',data)
+      axios.post(url+'myAlfred/api/payment/bankAccount',data)
           .then(res => {
               toast.info('RIB ajouté');
-              this.setState({user: res.data});
-              this.setState({haveAccount: true,account: res.data.account});
+              this.setState({haveAccount: true});
 
               this.setState({clickAdd: false});
+              axios.get(url+'myAlfred/api/payment/activeAccount')
+                  .then(response => {
+                      let accounts = response.data;
+                      if(accounts.length){
+                          this.setState({haveAccount: true, accounts: accounts})
+                      }
+                  })
 
           })
           .catch(err => {
@@ -154,16 +167,31 @@ class paymentPreference extends React.Component {
           })
     };
 
+    deleteAccount(id){
+        const data = {
+            id_account: id
+        };
+        axios.put(url+'myAlfred/api/payment/account',data)
+            .then(() => {
+                this.handleClose();
+                this.setState({haveAccount: false})
+            })
+            .catch(() => {
+                toast.error('Un erreur est survenue')
+            })
+
+    }
+
 
         render()
         {
             const {classes} = this.props;
             const {user} = this.state;
-            const {account} = this.state;
+            const {accounts} = this.state;
             const {clickAdd} = this.state;
-            const {clickEdit} = this.state;
+            const {clickDelete} = this.state;
             const {haveAccount} = this.state;
-            const editfooter = clickEdit ? <Footer/> :<Footer2/>;
+            const editfooter = clickDelete ? <Footer/> :<Footer2/>;
             const addfooter = clickAdd ? <Footer/> :<Footer2/>;
 
 
@@ -197,10 +225,10 @@ class paymentPreference extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                {/*<Grid item style={{marginTop: 10}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Mode de paiement
                                             </a>
@@ -210,13 +238,13 @@ class paymentPreference extends React.Component {
                                 <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} width={27} style={{marginleft: 4}}/>
+                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                                
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>*/}
+                                </Grid>
                                 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
@@ -280,27 +308,6 @@ class paymentPreference extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Applications connectées
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                               
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -321,28 +328,6 @@ class paymentPreference extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
-                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/sponsors'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Parrainage
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/sponsors'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                            
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-
                             </Grid>
                         </Grid>
 
@@ -357,7 +342,7 @@ class paymentPreference extends React.Component {
                                     </Grid>
                                     <Grid item xs={9} style={{paddingLeft: 20, border: '1px solid lightgrey'}}>
                                         <p>Compte bancaire (par défaut)</p>
-                                        {haveAccount ?  <p>{account.name}, {account.iban}</p>:  <p>Aucun rib</p> }
+                                        {haveAccount ?  <p>{accounts[0].OwnerName}, {accounts[0].IBAN}</p>:  <p>Aucun rib</p> }
 
                                     </Grid>
                                 </Grid>
@@ -365,7 +350,7 @@ class paymentPreference extends React.Component {
                                     <Grid item xs={3}>
                                         {haveAccount ?
                                             <h2 style={{color: '#2FBCD3', fontWeight: '100', cursor: 'pointer'}}
-                                                onClick={this.handleClick2}>Modifier le RIB</h2>
+                                                onClick={this.handleClick2}>Supprimer le RIB</h2>
                                             :
                                         <h2 style={{color: '#2FBCD3', fontWeight: '100', cursor: 'pointer'}}
                                             onClick={this.handleClick}>Ajouter un RIB</h2>}
@@ -378,26 +363,13 @@ class paymentPreference extends React.Component {
                                                     <TextField
                                                         id="outlined-name"
                                                         style={{width: '100%'}}
-                                                        value={this.state.name}
-                                                        name={'name'}
+                                                        value={this.state.iban}
+                                                        name={'iban'}
                                                         onChange={this.onChange}
                                                         margin="normal"
                                                         variant="outlined"
-                                                        placeholder={'Nom et prénom du titulaire du compte'}
-                                                        label={'Nom et prénom du titulaire du compte'}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    <TextField
-                                                        id="outlined-name"
-                                                        style={{width: '100%'}}
-                                                        value={this.state.bank}
-                                                        name={'bank'}
-                                                        onChange={this.onChange}
-                                                        margin="normal"
-                                                        variant="outlined"
-                                                        placeholder={'Nom de la banque'}
-                                                        label={'Nom de la banque'}
+                                                        placeholder={'IBAN'}
+                                                        label={'IBAN'}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12}>
@@ -413,94 +385,39 @@ class paymentPreference extends React.Component {
                                                         label={'Code SWIFT / BIC'}
                                                     />
                                                 </Grid>
-                                                <Grid item xs={12}>
-                                                    <TextField
-                                                        id="outlined-name"
-                                                        style={{width: '100%'}}
-                                                        value={this.state.iban}
-                                                        name={'iban'}
-                                                        onChange={this.onChange}
-                                                        margin="normal"
-                                                        variant="outlined"
-                                                        placeholder={'IBAN'}
-                                                        label={'IBAN'}
-                                                    />
-                                                </Grid>
+
                                                 <Grid item xs={12} style={{display: "flex", justifyContent: "flex-end"}}>
                                                     <Button size={'large'} type={'submit'} variant="contained" color="primary"
                                                             style={{color: 'white',marginTop: 15}}>
-                                                        Ajouter un rib
+                                                        Ajouter le rib
                                                     </Button>
                                                 </Grid>
                                             </form>
                                         </Grid>
                                         </Grid>
                                         : null}
-                                    {clickEdit ?
-                                        <Grid container>
-                                        <Grid item xs={9} >
-                                            <form onSubmit={this.onSubmit}>
-                                                <Grid item xs={12}>
-                                                    <TextField
-                                                        id="outlined-name"
-                                                        style={{width: '100%'}}
-                                                        value={this.state.name}
-                                                        name={'name'}
-                                                        onChange={this.onChange}
-                                                        margin="normal"
-                                                        variant="outlined"
-                                                        placeholder={'Nom et prénom du titulaire du compte'}
-                                                        label={'Nom et prénom du titulaire du compte'}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    <TextField
-                                                        id="outlined-name"
-                                                        style={{width: '100%'}}
-                                                        value={this.state.bank}
-                                                        name={'bank'}
-                                                        onChange={this.onChange}
-                                                        margin="normal"
-                                                        variant="outlined"
-                                                        placeholder={'Nom de la banque'}
-                                                        label={'Nom de la banque'}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    <TextField
-                                                        id="outlined-name"
-                                                        style={{width: '100%'}}
-                                                        value={this.state.bic}
-                                                        name={'bic'}
-                                                        onChange={this.onChange}
-                                                        margin="normal"
-                                                        variant="outlined"
-                                                        placeholder={'Code SWIFT / BIC'}
-                                                        label={'Code SWIFT / BIC'}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    <TextField
-                                                        id="outlined-name"
-                                                        style={{width: '100%'}}
-                                                        value={this.state.iban}
-                                                        name={'iban'}
-                                                        onChange={this.onChange}
-                                                        margin="normal"
-                                                        variant="outlined"
-                                                        placeholder={'IBAN'}
-                                                        label={'IBAN'}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12} style={{display: "flex", justifyContent: "flex-end",marginBottom:20}}>
-                                                    <Button size={'large'} type={'submit'} variant="contained" color="primary"
-                                                            style={{color: 'white',marginTop: 15}}>
-                                                        Modifier
-                                                    </Button>
-                                                </Grid>
-                                            </form>
-                                        </Grid>
-                                        </Grid>
+                                    {clickDelete ?
+                                        <Dialog
+                                            open={this.state.clickDelete}
+                                            onClose={()=>this.handleClose()}
+                                            aria-labelledby="alert-dialog-title"
+                                            aria-describedby="alert-dialog-description"
+                                        >
+                                            <DialogTitle id="alert-dialog-title">{"Voulez-vous vraiment supprimer votre RIB ?"}</DialogTitle>
+                                            <DialogContent>
+                                                <DialogContentText id="alert-dialog-description">
+                                                    Si vous supprimez votre RIB vous ne pourrez plus l'utiliser par la suite sur ce site.
+                                                </DialogContentText>
+                                            </DialogContent>
+                                            <DialogActions>
+                                                <Button onClick={()=>this.handleClose()} color="primary">
+                                                    Annuler
+                                                </Button>
+                                                <Button onClick={()=>this.deleteAccount(accounts[0].Id)} color="secondary" autoFocus>
+                                                    Supprimer
+                                                </Button>
+                                            </DialogActions>
+                                        </Dialog>
                                         : null}
                                 </Grid>
                             </Grid>

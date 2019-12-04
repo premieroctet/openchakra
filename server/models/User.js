@@ -125,9 +125,6 @@ const UserSchema = new Schema({
             type: String
         }
     },
-    id_account_mangopay: {
-      type: String,
-    },
     notifications_message: {
       email: {
           type: Boolean,

@@ -180,7 +180,7 @@ router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res
 router.post('/transfer',passport.authenticate('jwt',{session:false}),(req,res)=> {
     const amount = parseInt(req.body.amount)*100;
     const fees = parseInt(req.body.fees)*100;
-    const wallet_credited = req.body.wallet_credited;
+    const wallet_credited = 72050324;
     User.findById(req.user.id)
         .then(user => {
             const id_mangopay = user.id_mangopay;
@@ -212,6 +212,7 @@ router.post('/transfer',passport.authenticate('jwt',{session:false}),(req,res)=>
 // @access private
 router.post('/bankAccount',passport.authenticate('jwt',{session:false}),(req,res)=> {
     const iban = req.body.iban;
+    const bic = req.body.bic;
 
     User.findById(req.user.id)
         .then(user => {
@@ -231,13 +232,12 @@ router.post('/bankAccount',passport.authenticate('jwt',{session:false}),(req,res
                 OwnerName: user.firstname + " "+ user.name,
 
                 IBAN: iban,
+                BIC: bic,
                 Type: "IBAN"
             };
 
             api.Users.createBankAccount(id_mangopay,account)
                 .then(newAccount => {
-                    user.id_account_mangopay = newAccount.Id;
-                    user.save().then().catch();
                     res.json({msg: "Compte créé"})
                 })
 
@@ -277,6 +277,39 @@ router.get('/cardsActive',passport.authenticate('jwt',{session:false}),(req,res)
                 })
         })
         .catch(err => console.log(err))
+
+});
+
+// GET /myAlfred/api/payment/activeAccount
+// View bank account for a user
+// @access private
+router.get('/activeAccount',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const allAccount = [];
+    User.findById(req.user.id)
+        .then(user => {
+            const id_mangopay = user.id_mangopay;
+            api.Users.getBankAccounts(id_mangopay)
+                .then(accounts => {
+                    accounts.forEach(a => {
+                        if(a.Active){
+                            allAccount.push(a)
+                        }
+                    });
+                    res.json(allAccount);
+                })
+        })
+});
+
+// PUT /myAlfred/api/payment/account
+// Deactivate an account
+// @access private
+router.put('/account',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const id_account = req.body.id_account;
+    User.findById(req.user.id)
+        .then(user => {
+            const id_mangopay = user.id_mangopay;
+            api.Users.deactivateBankAccount(id_mangopay,id_account).then().catch();
+        })
 
 });
 

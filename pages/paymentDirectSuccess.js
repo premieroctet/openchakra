@@ -8,7 +8,6 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
-import {toast} from 'react-toastify';
 
 
 const { config } = require('../config/config');
@@ -22,7 +21,7 @@ const styles = theme => ({
 
 });
 
-class paymentSuccess extends React.Component {
+class paymentDirectSuccess extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -36,21 +35,6 @@ class paymentSuccess extends React.Component {
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-
-        const amount = parseInt(localStorage.getItem('amount'));
-        const fees = parseInt(localStorage.getItem('fees'));
-
-        const data = {
-            amount: amount,
-            fees: fees
-        };
-        axios.post(url+'myAlfred/api/payment/transfer',data)
-            .then(() => {
-                toast.info('Paiement réussi')
-            })
-            .catch(() => {
-                toast.error('Une erreur est survenue lors du paiement')
-            })
 
     }
 
@@ -85,4 +69,4 @@ class paymentSuccess extends React.Component {
 
 
 
-export default withStyles(styles)(paymentSuccess);
+export default withStyles(styles)(paymentDirectSuccess);
