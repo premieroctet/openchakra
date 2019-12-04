@@ -153,7 +153,6 @@ class Wizard extends React.Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
-                console.log(res);
                 if (typeof res.data.id_card !== 'undefined') this.setState({ hasId: true });
             })
             .catch(error => {
@@ -1128,7 +1127,6 @@ class Form extends React.Component {
                                                value={arrayHelpers.form.values.categories}
                                                options={this.state.categories}
                                               onChange={categorie => {
-                                                  console.log("Catégories:"+this.state.categories);
                                                       if (categorie === null) {
                                                           arrayHelpers.form.setFieldValue('categories', []);
                                                         } else {
@@ -1937,7 +1935,7 @@ class Form extends React.Component {
                                                                                                             return (
                                                                                                                 <TextField
                                                                                                                     {...field}
-                                                                                                                    value={field.value}
+                                                                                                                    value={field.value || ''}
                                                                                                                     style={{width: '50%', marginRight: '5%'}}
                                                                                                                     className={classes.inputDiplomaCertifResp}
                                                                                                                     label="Année d'obtention"
@@ -2027,7 +2025,7 @@ class Form extends React.Component {
                                                                                                             return (
                                                                                                                 <TextField
                                                                                                                     {...field}
-                                                                                                                    value={field.value}
+                                                                                                                    value={field.value || '' } 
                                                                                                                     style={{width: '50%', marginRight: '5%'}}
                                                                                                                     className={classes.inputDiplomaCertifResp}
                                                                                                                     label="Année d'obtention"
