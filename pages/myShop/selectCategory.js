@@ -17,48 +17,41 @@ const { config } = require('../../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
 
-    bigContainer: {
-        marginTop: 68,
-        flexGrow: 1,
-    },
-    sidebg:{
-display:'block', 
-
-[theme.breakpoints.down('sm')]: {
-    display: 'none!important',
+bigContainer: {
+    marginTop: 68,
+    flexGrow: 1,
 },
- suivant:{
-    [theme.breakpoints.down('sm')]: {
-        right:10
+sidebg: {
+  display:'block',
+  [theme.breakpoints.down('sm')]: {
+      display: 'none!important',
+  },
+   suivant: {
+      [theme.breakpoints.down('sm')]: {
+          right:10
+      },
+   }
+     },
+    maincontainer: {
+      [theme.breakpoints.down('sm')]: {
+          width:'98% !important',
+          margin:'auto',
+      },
     },
-   
-
-
- }
-
-    },
-    maincontainer:{
-      
-        
-        [theme.breakpoints.down('sm')]: {
-            width:'98% !important',
-            margin:'auto',
-        },
-        
-            },
-            bottombar:{visibility:'hidden', [theme.breakpoints.down('sm')]: {
-                visibility:'visible',
-                boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
-            }},
-            topbar:{visibility:'visible', position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
-                visibility:'hidden',
-            }},
-
-
-
+    bottombar: {
+      visibility:'hidden',
+      [theme.breakpoints.down('sm')]: {
+        visibility:'visible',
+        boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
+    }},
+    topbar: {
+      visibility:'visible',
+      position: 'sticky',
+      top: 65,
+      zIndex:999,[theme.breakpoints.down('sm')]: {
+        visibility:'hidden',
+    }},
 });
-
-
 
 class selectCategory extends React.Component {
     constructor(props) {
@@ -188,35 +181,33 @@ class selectCategory extends React.Component {
             <Layout>
 
                 <Grid container className={classes.bigContainer}>
-                <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
-                            
-                            <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white'}}>
-                                <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
-                                <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Performance</p></a>
-                                </Link>
-                            </Grid>
-
-                        </Grid>
+                  <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
+                      <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white'}}>
+                          <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                          <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
+                          </Link>
+                      </Grid>
+                      <Grid item xs={2} style={{textAlign:"center"}}>
+                          <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                              <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
+                          </Link>
+                      </Grid>
+                      <Grid item xs={2} style={{textAlign:"center"}}>
+                          <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                              <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
+                          </Link>
+                      </Grid>
+                      <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                          <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                              <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
+                          </Link>
+                      </Grid>
+                      <Grid item xs={2} style={{textAlign:"center"}}>
+                          <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                              <p style={{color: "white",cursor: 'pointer'}}>Performance</p></a>
+                          </Link>
+                      </Grid>
+                  </Grid>
                     <Grid className={classes.maincontainer} item xs={12} md={7} style={{paddingLeft:20}}>
                         <Grid container>
                             <Grid item xs={12}>
