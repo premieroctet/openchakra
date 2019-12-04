@@ -316,6 +316,8 @@ class Wizard extends React.Component {
             const creation_date = values.createShop.creationDate;
             const naf_ape = values.createShop.nafape;
             const siret = values.createShop.siret;
+            const option_presta_user = values.createShop.option_presta_user;
+            const option_presta_home = values.createShop.option_presta_home;
 
             axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
               .then(response => {
@@ -330,7 +332,7 @@ class Wizard extends React.Component {
 
                 axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
                   , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
-                  self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
+                  self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService,option_presta_user,option_presta_home})
                   .then(result => {
 
                     const formDataIdProfile = new FormData();
@@ -700,6 +702,21 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
+const CssTextFieldOptions = withStyles({
+  root: {
+    '& label': {
+      color: 'white',
+      fontSize: '0.8rem',
+    },
+    '& label.Mui-focused': {
+      color: 'white',
+    },
+    '& .MuiInput-underline:before': {
+      borderBottomColor: 'white',
+    },
+  },
+})(TextField);
+
 class addService extends React.Component {
     constructor(props) {
       super(props);
@@ -751,8 +768,8 @@ class addService extends React.Component {
         certifObj: null,
         checkedB: false,
         checkedC: false,
-        radioValueA: true,
-        radioValueB: true,
+        option_presta_user: true,
+        option_presta_home: true,
       };
       this.toggleCheckbox = this.toggleCheckbox.bind(this);
       this.handleChecked = this.handleChecked.bind(this);
@@ -945,6 +962,8 @@ class addService extends React.Component {
                         nature_juridique: '',
                         isEngaged: false,
                         isCertified: false,
+                        option_presta_user: true,
+                        option_presta_home: true,
                       },
                       alfredUpdate: {
                         phone: null,
@@ -1343,41 +1362,57 @@ class addService extends React.Component {
                                         <div>
                                           <Typography variant="h6" style={{marginBottom: '.5rem'}}>Où acceptez-vous de réaliser vos prestations ?</Typography>
                                           <Grid item>
-                                            <FormControlLabel
-                                              control={
-                                                <Checkbox
-                                                  color="primary"
-                                                  icon={<CircleUnchecked/>}
-                                                  checkedIcon={<RadioButtonCheckedIcon/>}
-                                                  checked={this.radioValueA}
-                                                  onChange={() => {
-                                                    this.setState({ radioValueA: !this.state.radioValueA });
-                                                  }}
-                                                  value="radioValueA"
+                                            <Field render={({form}) => {
+                                              return(
+                                                <FormControlLabel
+                                                  control={
+                                                    <Checkbox
+                                                      value={form.values.createShop.option_presta_user}
+                                                      color="primary"
+                                                      icon={<CircleUnchecked/>}
+                                                      checkedIcon={<RadioButtonCheckedIcon/>}
+                                                      checked={form.values.createShop.option_presta_user}
+                                                      name={"option_presta_user"}
+                                                      onChange={() => {
+                                                        form.values.createShop.option_presta_user = !form.values.createShop.option_presta_user;
+                                                        form.setFieldValue('createShop.option_presta_user', form.values.createShop.option_presta_user);
+                                                      }}
+                                                    />
+                                                  }
+                                                  label={<React.Fragment>
+                                                    <p style={{fontFamily: 'Helvetica'}}>A l'adresse de prestation de mon client</p>
+                                                  </React.Fragment>}
                                                 />
-                                              }
-                                              label={<React.Fragment>
-                                                <p style={{fontFamily: 'Helvetica'}}>A l'adresse de prestation de mon client</p>
-                                              </React.Fragment>}
+                                              )
+                                            }
+                                            }
                                             />
                                           </Grid>
                                           <Grid item>
-                                            <FormControlLabel
-                                              control={
-                                                <Checkbox
-                                                  color="primary"
-                                                  icon={<CircleUnchecked/>}
-                                                  checkedIcon={<RadioButtonCheckedIcon />}
-                                                  checked={this.radioValueB}
-                                                  onChange={() => {
-                                                    this.setState({ radioValueB: !this.state.radioValueB });
-                                                  }}
-                                                  value="radioValueB"
+                                            <Field render={({form}) => {
+                                              return(
+                                                <FormControlLabel
+                                                  control={
+                                                    <Checkbox
+                                                      color="primary"
+                                                      icon={<CircleUnchecked/>}
+                                                      checkedIcon={<RadioButtonCheckedIcon />}
+                                                      checked={form.values.createShop.option_presta_home}
+                                                      value={form.values.createShop.option_presta_home}
+                                                      name={"option_presta_home"}
+                                                      onChange={() => {
+                                                        form.values.createShop.option_presta_home = !form.values.createShop.option_presta_home;
+                                                        form.setFieldValue('createShop.option_presta_home', form.values.createShop.option_presta_home);
+                                                      }}
+                                                    />
+                                                  }
+                                                  label={<React.Fragment>
+                                                    <p style={{fontFamily: 'Helvetica'}}>A mon domicile</p>
+                                                  </React.Fragment>}
                                                 />
-                                              }
-                                              label={<React.Fragment>
-                                                <p style={{fontFamily: 'Helvetica'}}>A mon domicile</p>
-                                              </React.Fragment>}
+                                              )
+                                            }
+                                            }
                                             />
                                           </Grid>
                                         </div>
@@ -1417,20 +1452,21 @@ class addService extends React.Component {
                                                   Frais de déplacement (montant forfaitaire)
                                                 </label>
                                               </div>
-                                              <div style={{display:'flex' , alignItems:'center', width:'35%'}}>
+                                              <div style={{display:'flex' , alignItems:'center', width:'35%', justifyContent:'center',  marginTop: '-2%'}}>
                                                 <div style={{
                                                   display: this.state.checkedB ? '' : 'none',
                                                   width:'100px',
                                                   marginRight: '1px'
                                                 }}>
-                                                  <FormControl>
-                                                    <Input
-                                                      endAdornment={<InputAdornment position="end">€</InputAdornment>}
-                                                      inputProps={{
-                                                        className: classes.inputTextField
-                                                      }}
-                                                    />
-                                                  </FormControl>
+                                                  <CssTextFieldOptions
+                                                    label={`Prix`}
+                                                    type="number"
+                                                    className={classes.textField}
+                                                    inputProps={{
+                                                      endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                      className: classes.inputTextField
+                                                    }}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1477,14 +1513,15 @@ class addService extends React.Component {
                                                   width:'100px',
                                                   marginRight: '1px'
                                                 }}>
-                                                  <FormControl>
-                                                    <Input
-                                                      endAdornment={<InputAdornment position="end">€</InputAdornment>}
-                                                      inputProps={{
-                                                        className: classes.inputTextField
-                                                      }}
-                                                    />
-                                                  </FormControl>
+                                                  <CssTextFieldOptions
+                                                    label={`Prix`}
+                                                    type="number"
+                                                    className={classes.textField}
+                                                    inputProps={{
+                                                      className: classes.inputTextField,
+                                                      endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                    }}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
