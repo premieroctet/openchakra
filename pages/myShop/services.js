@@ -60,7 +60,7 @@ const styles = theme => ({
             visibility:'visible',
             boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
         }},
-    topbar:{visibility:'visible', position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
+    topbar:{visibility:'visible', position: 'sticky', top: 64, zIndex:999,[theme.breakpoints.down('sm')]: {
             visibility:'hidden',
         }},
     containermain:{ paddingLeft:'5%', [theme.breakpoints.down('sm')]: {
