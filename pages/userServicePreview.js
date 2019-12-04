@@ -496,83 +496,209 @@ class userServices extends React.Component {
     } else {
       if (
         this.state.prestations.length &&
-        this.state.grandTotal >= this.state.serviceUser.minimum_basket ||
         this.state.fees !== null &&
-        this.state.grandTotal >= this.state.serviceUser.minimum_basket ||
+        this.state.date !== null &&
         this.state.hour !== null &&
-        this.state.grandTotal >= this.state.serviceUser.minimum_basket ||
-        this.state.grandTotal !== null &&
+        this.state.grandTotal !== null && 
         this.state.grandTotal >= this.state.serviceUser.minimum_basket
       ) {
-        axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-          "token"
-        );
-        axios
-          .post(url + "myAlfred/api/chatRooms/addAndConnect", {
-            emitter: this.state.user._id,
-            recipient: this.state.serviceUser.user._id
-          })
-          .then(res => {
-            let reference;
 
-            let name = this.state.user.name;
-            let firstLetterNameUser = name.charAt(0).toUpperCase();
-            let firstname = this.state.user.firstname;
-            let firstLetterFirstnameUser = firstname.charAt(0).toUpperCase();
+        let dateIsBetween = false;
+        const dayNumber = moment(this.state.date).day();
 
-            let nameAlfred = this.state.serviceUser.user.name;
-            let firstLetterNameAlfred = nameAlfred.charAt(0).toUpperCase();
-            let firstnameAlfred = this.state.serviceUser.user.firstname;
-            let firstLetterFirstnameAlfred = firstnameAlfred
-              .charAt(0)
-              .toUpperCase();
+        console.log(dayNumber);
+        const formatedDate = moment(this.state.date).format('YYYY-MM-DD');
+        const formatedHour = moment(this.state.hour).format('HH:mm');
 
-            const letter =
-              firstLetterNameUser +
-              firstLetterFirstnameUser +
-              firstLetterNameAlfred +
-              firstLetterFirstnameAlfred;
-            const day = new Date().getDate();
-            const month = new Date().getMonth();
-            const year = new Date().getFullYear();
+        const momentObj = moment(formatedDate + formatedHour, 'YYYY-MM-DDLT');
 
-            reference = letter + "_" + day + month + year;
+        const dateTime = moment(momentObj).format('YYYY-MM-DDTHH:mm');
 
-            let bookingObj = {
-              reference: reference,
-              service: this.state.service.label,
-              address: this.state.serviceUser.service_address,
-              equipments: this.state.serviceUser.equipments,
-              amount: this.state.grandTotal,
-              date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
-              time_prestation: moment(this.state.hour).format("HH:mm"),
-              alfred: this.state.serviceUser.user._id,
-              user: this.state.user._id,
-              prestations: this.state.selectedPrestations,
-              chatroom: res.data._id,
-              fees: this.state.fees,
-              status: "Demande d'infos",
-              serviceUserId: this.state.serviceUser._id
-            };
+        switch(dayNumber) {
+          case 0 :
+            this.state.sunday_event.forEach(event => {
+              const dateBegin = moment(event.begin).format('HH:mm');
+              const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
+              const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
 
-            if (this.state.selectedOption !== null) {
-              bookingObj.option = this.state.selectedOption;
-            }
+              const dateEnd = moment(event.end).format('HH:mm');
+              const momentEnd = moment(formatedDate + dateEnd, 'YYYY-MM-DDLT');
+              const dtEnd = moment(momentEnd).format('YYYY-MM-DDTHH:mm');
 
-            axios
-              .post(url + "myAlfred/api/booking/add", bookingObj)
-              .then(res => {
-                axios.put(url + 'myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: res.data._id })
-                  .then(() => {
-                    Router.push({
-                      pathname: "/reservations/detailsReservation",
-                      query: { id: res.data._id }
-                    });
-                  })
-              })
-              .catch(err => console.log(err));
-          })
-          .catch(err => console.log(err));
+              if (moment(dateTime).isBetween(dtBegin, dtEnd)) {
+                dateIsBetween = true;
+              }
+            })
+            break;
+          case 1 :
+            this.state.monday_event.forEach(event => {
+              const dateBegin = moment(event.begin).format('HH:mm');
+              const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
+              const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
+
+              const dateEnd = moment(event.end).format('HH:mm');
+              const momentEnd = moment(formatedDate + dateEnd, 'YYYY-MM-DDLT');
+              const dtEnd = moment(momentEnd).format('YYYY-MM-DDTHH:mm');
+
+              if (moment(dateTime).isBetween(dtBegin, dtEnd)) {
+                dateIsBetween = true;
+              }
+            })
+            break;
+          case 2 :
+            this.state.tuesday_event.forEach(event => {
+              const dateBegin = moment(event.begin).format('HH:mm');
+              const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
+              const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
+
+              const dateEnd = moment(event.end).format('HH:mm');
+              const momentEnd = moment(formatedDate + dateEnd, 'YYYY-MM-DDLT');
+              const dtEnd = moment(momentEnd).format('YYYY-MM-DDTHH:mm');
+
+              if (moment(dateTime).isBetween(dtBegin, dtEnd)) {
+                dateIsBetween = true;
+              }
+            })
+            break;
+          case 3 :
+            this.state.wednesday_event.forEach(event => {
+              const dateBegin = moment(event.begin).format('HH:mm');
+              const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
+              const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
+
+              const dateEnd = moment(event.end).format('HH:mm');
+              const momentEnd = moment(formatedDate + dateEnd, 'YYYY-MM-DDLT');
+              const dtEnd = moment(momentEnd).format('YYYY-MM-DDTHH:mm');
+
+              if (moment(dateTime).isBetween(dtBegin, dtEnd)) {
+                dateIsBetween = true;
+              }
+            }) 
+            break;
+          case 4 :
+            this.state.thursday_event.forEach(event => {
+              const dateBegin = moment(event.begin).format('HH:mm');
+              const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
+              const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
+
+              const dateEnd = moment(event.end).format('HH:mm');
+              const momentEnd = moment(formatedDate + dateEnd, 'YYYY-MM-DDLT');
+              const dtEnd = moment(momentEnd).format('YYYY-MM-DDTHH:mm');
+
+              if (moment(dateTime).isBetween(dtBegin, dtEnd)) {
+                dateIsBetween = true;
+              }
+            })
+            break;
+          case 5 :
+            this.state.friday_event.forEach(event => {
+              const dateBegin = moment(event.begin).format('HH:mm');
+              const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
+              const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
+
+              const dateEnd = moment(event.end).format('HH:mm');
+              const momentEnd = moment(formatedDate + dateEnd, 'YYYY-MM-DDLT');
+              const dtEnd = moment(momentEnd).format('YYYY-MM-DDTHH:mm');
+
+              if (moment(dateTime).isBetween(dtBegin, dtEnd)) {
+                dateIsBetween = true;
+              }
+            })
+            break;
+          case 6 :
+            this.state.saturday_event.forEach(event => {
+              const dateBegin = moment(event.begin).format('HH:mm');
+              const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
+              const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
+
+              const dateEnd = moment(event.end).format('HH:mm');
+              const momentEnd = moment(formatedDate + dateEnd, 'YYYY-MM-DDLT');
+              const dtEnd = moment(momentEnd).format('YYYY-MM-DDTHH:mm');
+
+              if (moment(dateTime).isBetween(dtBegin, dtEnd)) {
+                dateIsBetween = true;
+              }
+            })
+            break;
+          default :
+            dateIsBetween = false;
+        }
+
+        console.log(dateIsBetween);
+
+        if (dateIsBetween) {
+          axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+            "token"
+          );
+          axios
+            .post(url + "myAlfred/api/chatRooms/addAndConnect", {
+              emitter: this.state.user._id,
+              recipient: this.state.serviceUser.user._id
+            })
+            .then(res => {
+              let reference;
+  
+              let name = this.state.user.name;
+              let firstLetterNameUser = name.charAt(0).toUpperCase();
+              let firstname = this.state.user.firstname;
+              let firstLetterFirstnameUser = firstname.charAt(0).toUpperCase();
+  
+              let nameAlfred = this.state.serviceUser.user.name;
+              let firstLetterNameAlfred = nameAlfred.charAt(0).toUpperCase();
+              let firstnameAlfred = this.state.serviceUser.user.firstname;
+              let firstLetterFirstnameAlfred = firstnameAlfred
+                .charAt(0)
+                .toUpperCase();
+  
+              const letter =
+                firstLetterNameUser +
+                firstLetterFirstnameUser +
+                firstLetterNameAlfred +
+                firstLetterFirstnameAlfred;
+              const day = new Date().getDate();
+              const month = new Date().getMonth();
+              const year = new Date().getFullYear();
+  
+              reference = letter + "_" + day + month + year;
+  
+              let bookingObj = {
+                reference: reference,
+                service: this.state.service.label,
+                address: this.state.serviceUser.service_address,
+                equipments: this.state.serviceUser.equipments,
+                amount: this.state.grandTotal,
+                date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
+                time_prestation: moment(this.state.hour).format("HH:mm"),
+                alfred: this.state.serviceUser.user._id,
+                user: this.state.user._id,
+                prestations: this.state.selectedPrestations,
+                chatroom: res.data._id,
+                fees: this.state.fees,
+                status: "Demande d'infos",
+                serviceUserId: this.state.serviceUser._id
+              };
+  
+              if (this.state.selectedOption !== null) {
+                bookingObj.option = this.state.selectedOption;
+              }
+  
+              axios
+                .post(url + "myAlfred/api/booking/add", bookingObj)
+                .then(res => {
+                  axios.put(url + 'myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: res.data._id })
+                    .then(() => {
+                      Router.push({
+                        pathname: "/reservations/detailsReservation",
+                        query: { id: res.data._id }
+                      });
+                    })
+                })
+                .catch(err => console.log(err));
+            })
+            .catch(err => console.log(err));
+        } else {
+          toast.error(<div>L'horaire choisi ne correspond aux disponibilités de l'Alfred</div>)
+        }
       } else {
         toast.error(
         <div>Erreur : <br /> 
