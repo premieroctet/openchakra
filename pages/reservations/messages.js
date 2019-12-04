@@ -592,12 +592,16 @@ class Messages extends React.Component {
                               {booking.status} -{" "}
                               {booking.alfred.firstname}
                             </Typography>
-                            <Typography style={{ color: "#9B9B9B" }}>
-                                {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
-                            </Typography>
-                            <Typography style={{ color: "#9B9B9B" }}>
-                                {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
-                            </Typography>
+                            {typeof _.last(booking.chatroom.messages) !== 'undefined' ? 
+                                  <>
+                                    <Typography style={{ color: "#9B9B9B" }}>
+                                      {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
+                                    </Typography>
+                                    <Typography style={{ color: "#9B9B9B" }}>
+                                      {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
+                                    </Typography>
+                                  </>
+                                : <Typography>Aucun message</Typography>}
                           </Grid>
                           <Grid item xs={1} style={{}}>
                             <Typography
