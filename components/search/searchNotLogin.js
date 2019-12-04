@@ -106,7 +106,7 @@ class searchNotLogin extends React.Component {
     }
 
     componentDidMount() {
-        this.searchWithWord();
+        //this.searchWithWord();
     }
     
 
@@ -273,7 +273,7 @@ class searchNotLogin extends React.Component {
                                 }
 
                             });
-                            this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
+                            this.setState({finalServiceUser:_.uniqBy(finalServiceUser,'_id'),finalServiceUserCopy:finalServiceUser});
                             this.state.categoryFinal.forEach(e => {
                                 this.setState({[e.label+'Final']:0});
                                 this.state.finalServiceUser.forEach(a => {
@@ -958,19 +958,6 @@ class searchNotLogin extends React.Component {
                                 </Grid>
                             </Grid>
                         
-                            {/*<Grid item xs={3} style={{margin: 'auto', display: 'none'}}>
-                                {this.state.research === '' ?
-                                    <Button onClick={() => this.search()} variant="contained" color="primary"
-                                            style={{width: '80%', color: 'white', margin: 'auto', height: '55px', fontSize: '0.8rem'}}>
-                                        Rechercher
-                                    </Button> :
-
-                                    <Button disabled={(this.state.research.length === 0 || !this.state.research.trim())} onClick={()=>this.searchWithWord()} variant="contained" color="primary"
-                                            style={{width: '80%', color: 'white', margin: 'auto', height: '55px', fontSize: '0.8rem'}}>
-                                        Rechercher avec un mot
-                                    </Button>
-                                }
-                            </Grid>*/}
 
                             </Grid>
 
@@ -1482,39 +1469,10 @@ class searchNotLogin extends React.Component {
                                                 <hr style={{width: '10%', margin: 'auto', border:'none', backgroundColor: '#2FBCD3', height: '10px', marginBottom: '80px', marginTop: '55px'}} />
                                             </Grid>
                                         </Grid>
-                                    ))}{/*<br/>
-                                    <Grid container>
-                                        <Grid item xs={3}>
-                                            <Card>
-                                                <Card media>
-
-                                                </Card>
-                                                <p>test</p>
-                                            </Card>
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <Card>
-                                                <p>test</p>
-                                            </Card>
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <Card>
-                                                <p>test</p>
-                                            </Card>
-                                        </Grid>
-                                    </Grid>*/}
-
-
-
-                            </>
+                                    ))}
+                                    </>
 
                             : null}
-
-
-
-
-
-
                     </Grid>
                 </Layout>
             </Fragment>
