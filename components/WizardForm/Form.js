@@ -17,7 +17,6 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import * as Yup from 'yup';
-import IconButton from "@material-ui/core/IconButton";
 import Switch from "@material-ui/core/Switch";
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
@@ -198,13 +197,13 @@ class Wizard extends React.Component {
 
                         }
                     })
-                })
+                });
                 e.equipments.forEach(c => {
 
                     if(c.checked === true) {
                         arrayEquipments.push(c.id);
                     }
-                })
+                });
                 let option = null;
                 if (e.option !== null) {
                     option = {label: e.option.label, price: e.option.price, unity: e.option.unity.value, type: e.option.type.value};
@@ -269,7 +268,6 @@ class Wizard extends React.Component {
                 axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
                 axios.post(url+'myAlfred/api/serviceUser/add',formData)
                     .then(res => {
-
                             const booking_request = values.createShop.booking_request;
                             const no_booking_request = values.createShop.no_booking_request;
                             const my_alfred_conditions = values.createShop.my_alfred_conditions;
@@ -288,6 +286,9 @@ class Wizard extends React.Component {
                             const creation_date = values.createShop.creationDate;
                             const naf_ape = values.createShop.nafape;
                             const siret = values.createShop.siret;
+                            const option_presta_user = values.createShop.option_presta_user;
+                            const option_presta_home = values.createShop.option_presta_home;
+
 
                             axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
                                 .then(response => {
@@ -302,7 +303,7 @@ class Wizard extends React.Component {
 
                                     axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
                                     , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
-                                    self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService})
+                                    self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService,option_presta_user,option_presta_home})
                                         .then(result => {
 
                                             const formDataIdProfile = new FormData();
@@ -351,7 +352,6 @@ class Wizard extends React.Component {
                         console.log(err);
                     })
             });
-
         } else {
             bag.setTouched({});
             bag.setSubmitting(false);
@@ -438,7 +438,7 @@ class Wizard extends React.Component {
                     otherwise: Yup.boolean(),
                 }),
         })
-    })
+    });
 
     schemaArray =[this.Step0Schema, this.Step1Schema, this.Step2Schema, this.Step3Schema, this.Step4Schema, this.Step5Schema];
 
@@ -450,7 +450,6 @@ class Wizard extends React.Component {
         const textLabel = values.submission.map(pc => {
             return pc.serviceLabel
         });
-
 
         return (
             <Formik
@@ -763,6 +762,21 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
+const CssTextFieldOptions = withStyles({
+  root: {
+    '& label': {
+      color: 'white',
+      fontSize: '0.8rem',
+    },
+    '& label.Mui-focused': {
+      color: 'white',
+    },
+    '& .MuiInput-underline:before': {
+      borderBottomColor: 'white',
+    },
+  },
+})(TextField);
+
 class Form extends React.Component {
     constructor(props) {
         super(props);
@@ -823,8 +837,9 @@ class Form extends React.Component {
             certifObj: null,
             checkedB: false,
             checkedC: false,
-            radioValueA: true,
-            radioValueB: true,
+            option_presta_user: true,
+            option_presta_home: true,
+
 
         };
 
@@ -992,6 +1007,8 @@ class Form extends React.Component {
                             nature_juridique: '',
                             isEngaged: false,
                             isCertified: false,
+                            option_presta_home: true,
+                            option_presta_user: true
                         },
                         alfredUpdate: {
                             phone: null,
@@ -1399,18 +1416,18 @@ class Form extends React.Component {
                                                                                                                   return (
                                                                                                                       <React.Fragment>
                                                                                                                         <CssTextField
-                                                                                                                              {...field}
-                                                                                                                              value={field.value}
-                                                                                                                              label={`Prix`}
-                                                                                                                              type="number"
-                                                                                                                              className={classes.textField}
-                                                                                                                              disabled={!p.checked}
-                                                                                                                              InputProps={{
-                                                                                                                                  inputProps: {
-                                                                                                                                      min: 0
-                                                                                                                                  },
-                                                                                                                                  endAdornment: <InputAdornment position="start">€</InputAdornment>,
-                                                                                                                              }}
+                                                                                                                            {...field}
+                                                                                                                            value={field.value}
+                                                                                                                            label={`Prix`}
+                                                                                                                            type="number"
+                                                                                                                            className={classes.textField}
+                                                                                                                            disabled={!p.checked}
+                                                                                                                            InputProps={{
+                                                                                                                                inputProps: {
+                                                                                                                                    min: 0
+                                                                                                                                },
+                                                                                                                                endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                                                            }}
                                                                                                                           />
                                                                                                                       </React.Fragment>
                                                                                                                   )
@@ -1474,41 +1491,57 @@ class Form extends React.Component {
                                                                         <div>
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Où acceptez-vous de réaliser vos prestations ?</Typography>
                                                                             <Grid item>
-                                                                              <FormControlLabel
-                                                                                control={
-                                                                                    <Checkbox
-                                                                                      color="primary"
-                                                                                      icon={<CircleUnchecked/>}
-                                                                                      checkedIcon={<RadioButtonCheckedIcon/>}
-                                                                                      checked={this.radioValueA}
-                                                                                      onChange={() => {
-                                                                                        this.setState({ radioValueA: !this.state.radioValueA });
-                                                                                      }}
-                                                                                      value="radioValueA"
-                                                                                    />
-                                                                                }
-                                                                                label={<React.Fragment>
-                                                                                    <p style={{fontFamily: 'Helvetica'}}>A l'adresse de prestation de mon client</p>
-                                                                                </React.Fragment>}
-                                                                             />
+                                                                              <Field render={({form}) => {
+                                                                                return(
+                                                                                  <FormControlLabel
+                                                                                    control={
+                                                                                        <Checkbox
+                                                                                          value={form.values.createShop.option_presta_user}
+                                                                                          color="primary"
+                                                                                          icon={<CircleUnchecked/>}
+                                                                                          checkedIcon={<RadioButtonCheckedIcon/>}
+                                                                                          checked={form.values.createShop.option_presta_user}
+                                                                                          name={"option_presta_user"}
+                                                                                          onChange={() => {
+                                                                                            form.values.createShop.option_presta_user = !form.values.createShop.option_presta_user;
+                                                                                            form.setFieldValue('createShop.option_presta_user', form.values.createShop.option_presta_user);
+                                                                                          }}
+                                                                                        />
+                                                                                    }
+                                                                                    label={<React.Fragment>
+                                                                                        <p style={{fontFamily: 'Helvetica'}}>A l'adresse de prestation de mon client</p>
+                                                                                    </React.Fragment>}
+                                                                                 />
+                                                                                 )
+                                                                              }
+                                                                              }
+                                                                              />
                                                                             </Grid>
                                                                             <Grid item>
+                                                                              <Field render={({form}) => {
+                                                                                return(
                                                                               <FormControlLabel
                                                                                 control={
                                                                                     <Checkbox
                                                                                       color="primary"
                                                                                       icon={<CircleUnchecked/>}
                                                                                       checkedIcon={<RadioButtonCheckedIcon />}
-                                                                                      checked={this.radioValueB}
+                                                                                      checked={form.values.createShop.option_presta_home}
+                                                                                      value={form.values.createShop.option_presta_home}
+                                                                                      name={"option_presta_home"}
                                                                                       onChange={() => {
-                                                                                        this.setState({ radioValueB: !this.state.radioValueB });
+                                                                                        form.values.createShop.option_presta_home = !form.values.createShop.option_presta_home;
+                                                                                        form.setFieldValue('createShop.option_presta_home', form.values.createShop.option_presta_home);
                                                                                       }}
-                                                                                      value="radioValueB"
                                                                                     />
                                                                                 }
                                                                                 label={<React.Fragment>
                                                                                     <p style={{fontFamily: 'Helvetica'}}>A mon domicile</p>
                                                                                 </React.Fragment>}
+                                                                              />
+                                                                                )
+                                                                              }
+                                                                              }
                                                                               />
                                                                             </Grid>
                                                                         </div>
@@ -1548,20 +1581,21 @@ class Form extends React.Component {
                                                                                             Frais de déplacement (montant forfaitaire)
                                                                                         </label>
                                                                                     </div>
-                                                                                    <div style={{display:'flex' , alignItems:'center', width:'35%'}}>
+                                                                                    <div style={{display:'flex' , alignItems:'center', width:'35%', justifyContent:'center',  marginTop: '-2%'}}>
                                                                                         <div style={{
                                                                                             display: this.state.checkedB ? '' : 'none',
                                                                                             width:'100px',
                                                                                             marginRight: '1px'
                                                                                         }}>
-                                                                                            <FormControl>
-                                                                                                <Input
-                                                                                                  endAdornment={<InputAdornment position="end">€</InputAdornment>}
-                                                                                                  inputProps={{
-                                                                                                      className: classes.inputTextField
-                                                                                                  }}
-                                                                                                />
-                                                                                            </FormControl>
+                                                                                          <CssTextFieldOptions
+                                                                                            label={`Prix`}
+                                                                                            type="number"
+                                                                                            className={classes.textField}
+                                                                                            inputProps={{
+                                                                                              endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                              className: classes.inputTextField
+                                                                                            }}
+                                                                                          />
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -1602,20 +1636,21 @@ class Form extends React.Component {
                                                                                             Retrait & livraison
                                                                                         </label>
                                                                                     </div>
-                                                                                    <div style={{display:'flex' , alignItems:'center', width:'35%'}}>
+                                                                                    <div style={{display:'flex' , alignItems:'center', width:'35%', justifyContent:'center', marginTop: '-2%'}}>
                                                                                         <div style={{
                                                                                             display: this.state.checkedC ? '' : 'none',
                                                                                             width:'100px',
                                                                                             marginRight: '1px'
                                                                                         }}>
-                                                                                            <FormControl>
-                                                                                                <Input
-                                                                                                  endAdornment={<InputAdornment position="end">€</InputAdornment>}
-                                                                                                  inputProps={{
-                                                                                                     className: classes.inputTextField
-                                                                                                  }}
-                                                                                                />
-                                                                                            </FormControl>
+                                                                                          <CssTextFieldOptions
+                                                                                            label={`Prix`}
+                                                                                            type="number"
+                                                                                            className={classes.textField}
+                                                                                            inputProps={{
+                                                                                             className: classes.inputTextField,
+                                                                                              endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                                                                                            }}
+                                                                                          />
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -2404,67 +2439,7 @@ class Form extends React.Component {
                             {({ form }) => (
                                 <React.Fragment>
                                     <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
-
                                             <div className={classes.newContainer}>
-
-
-
-                                                <Typography variant="h6" style={{marginBottom: '.5rem'}}>
-                                                    Téléchargez une photo de profil
-                                                </Typography>
-
-                                                <Typography style={{fontFamily: 'helvetica',fontSize: '1rem', fontWeight:400, marginBottom: '1rem'}}>
-                                                    Téléchargez une photo de claire et lumineuse, de bonne qualité. Pour un rendu optimal, la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif, avec seulement vous sur la photo.
-                                                </Typography>
-                                                <Grid container style={{ marginBottom: 15 }}>
-                                                    <Grid item xs={1} />
-                                                    <Grid item xs={2}>
-                                                        <div>
-                                                            <div>
-                                                                <Field render={({form}) => {
-                                                                    return (
-                                                                        <React.Fragment>
-                                                                            <input
-                                                                                accept="image/*"
-                                                                                className="input"
-                                                                                style={{ display: "none" }}
-                                                                                id="icon-button-file"
-                                                                                type="file"
-                                                                                onChange={(event) => {
-                                                                                    if (typeof event.currentTarget.files[0] === 'undefined') {
-                                                                                    } else {
-                                                                                        form.setFieldValue("alfredUpdate.profile_picture_user", event.currentTarget.files[0]);
-                                                                                    }
-                                                                                }}
-                                                                                name={"myImage"}
-                                                                            />
-                                                                            <div style={{position: 'relative'}}>
-                                                                                <label htmlFor="icon-button-file">
-                                                                                    <IconButton
-                                                                                        color="primary"
-                                                                                        className={classes.button}
-                                                                                        style={{
-                                                                                            width: 100,
-                                                                                            height: 100,
-                                                                                            backgroundColor: "lightgrey",
-                                                                                            backgroundImage: "url('../../static/avatar.svg')"
-                                                                                        }}
-                                                                                        component="span"
-                                                                                    >
-                                                                                    </IconButton>
-                                                                                </label>
-                                                                            </div>
-                                                                        </React.Fragment>
-                                                                    )
-                                                                }} />
-                                                            </div>
-                                                        </div>
-                                                    </Grid>
-                                                    <Grid item xs={1} />
-                                                    <Grid item xs={7}>
-                                                    </Grid>
-                                                </Grid>
-                                                <hr style={{border: 0, borderTop: '1px solid lightgrey',marginTop: 20}}/>
                                                 <Grid container>
                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>
                                                         Vérifiez votre identité <span style={{color: '#F8727F' }}>*</span>
