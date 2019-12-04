@@ -478,7 +478,7 @@ class Wizard extends React.Component {
     const textLabel = values.submission.map(pc => {
       return pc.serviceLabel
     });
-    
+
     return (
       <Formik
         initialValues={values}
@@ -499,7 +499,7 @@ class Wizard extends React.Component {
               </div>
             </div>}
             <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh', padding:'1%'}}>
-              <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%'}}>
+              <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '81vh'}}>
                 <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '90%' : '81%', overflowY: page === 1 ? 'scroll' : 'none', position: 'relative' }}>
                   {activePage}
                 </div>
@@ -568,7 +568,7 @@ class Wizard extends React.Component {
                                 }
                               }}
                             >
-                              Envoyer
+                              Suivant
                             </Button>
                           </React.Fragment>
                         )
