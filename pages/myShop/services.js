@@ -402,12 +402,12 @@ class services extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                                <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
                                     <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
                                 </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                                <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
                                     <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
                                 </Link>
                             </Grid>
@@ -880,13 +880,13 @@ class services extends React.Component {
                         </Grid>
 
                         <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                            <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
                         </Grid>
 
                         <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                            <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
                         </Grid>
