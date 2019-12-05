@@ -37,10 +37,31 @@ const options = require('./routes/api/options');
 const availability = require('./routes/api/availability');
 const performances = require('./routes/api/performances');
 const payment = require('./routes/api/payment');
+const chatRooms = require('./routes/api/chatRooms');
 
 const admin = require('./routes/api/admin/dashboard');
 const path = require('path');
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
+server.listen(3000);
+
+let roomName = '';
+
+io.on('connection', socket => {
+    /*socket.on('chat message', msg => {
+        io.emit('chat message', msg);
+    })*/
+    socket.on('room', room => {
+        socket.join(room);
+        roomName = room
+    });
+    socket.on('message', msg => {
+        io.to(roomName).emit('displayMessage', msg);
+    })
+});
+
 nextApp.prepare().then(() => {
 
 
@@ -99,6 +120,7 @@ nextApp.prepare().then(() => {
     app.use('/myAlfred/api/shopBanner',shopBanner);
     app.use('/myAlfred/api/options',options);
     app.use('/myAlfred/api/availability',availability);
+    app.use('/myAlfred/api/chatRooms', chatRooms);
     app.use('/myAlfred/api/performances',performances);
     app.use('/myAlfred/api/payment',payment);
 

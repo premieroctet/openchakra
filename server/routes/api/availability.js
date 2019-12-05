@@ -40,26 +40,31 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
 
 });
 
-// @Route GET /myAlfred/api/availability/all
-// Get all availability
-router.get('/all',(req,res)=> {
-
+router.get('/userAvailabilities', (req, res) => {
     Availability.find()
-        .populate('services')
+        .then(availabilities => {
+            res.json(availabilities);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+})
+
+// @Route GET /myAlfred/api/availability/userAvailabilities/:id
+// Get all availability for one user
+router.get('/userAvailabilities/:id',(req,res)=> {
+    Availability.find({user: req.params.id})
         .then(availability => {
             res.json(availability);
         })
         .catch(err => {
             console.log(err);
         })
-
-
 });
 
 // @Route GET /myAlfred/api/availability/currentAlfred
 // Get all availability for one service
 router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,res)=> {
-
     Availability.find({user: req.user.id})
         .then(availability => {
             res.json(availability);

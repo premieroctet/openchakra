@@ -74,14 +74,20 @@ const BookingSchema = new Schema({
     },
     chatroom: {
         type: Schema.Types.ObjectId,
-        ref: 'chatroom'
+        ref: 'chatRooms'
     },
+    fileUpload: [{
+        type: Schema.Types.Mixed
+    }],
     fees: {
         type: Number
     },
     status: {
         type: String,
         enum: ['Confirmée','Refusée', 'Annulée', 'Terminée', 'Expirée', 'En attente de confirmation', 'Demande d\'infos', 'Invitation à réserver', 'Pré-approuvée' ]
+    },
+    serviceUserId: {
+        type: String
     }
 
 

@@ -258,6 +258,10 @@ const UserSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'resetToken'
     },
+    chatRooms: {
+        type: Schema.Types.ObjectId,
+        ref: 'chatRooms'
+    },
     id_mangopay: {
         type: String
     }
