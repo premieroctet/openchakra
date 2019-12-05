@@ -96,6 +96,27 @@ const styles = theme => ({
         alignItems: 'center',
         fontFamily: 'helvetica',
     },
+    responsiveGrade:{
+        width: '100%',
+        display:'flex',
+        [theme.breakpoints.down('sm')]: {
+            flexDirection : 'column'
+        }
+    },
+    responsiveGradeContent: {
+        width: '50%',
+        [theme.breakpoints.down('sm')]: {
+            width : '100%'
+        }
+    },
+    responsivePicsInfo: {
+        border: '1px solid #BABABA',
+        width:'90%',
+        [theme.breakpoints.down('sm')]: {
+            width : '100%'
+        }
+    }
+
 });
 
 function NumberFormatCustom(props) {
@@ -708,7 +729,7 @@ class editService extends React.Component {
                             </Grid>
 
                         </Grid>
-                    <Grid item sm={12} md={5} style={{padding:'2%'}}>
+                    <Grid item sm={12} md={5} lg={6} style={{padding:'2%'}}>
                         <h2 style={{fontWeight: '100'}}>Paramétrez votre service {service.label}</h2>
 
                         <Grid container>
@@ -1249,306 +1270,312 @@ class editService extends React.Component {
                                     <MenuItem value="MoreThanTen">Plus de 10 ans</MenuItem>
                                 </TextField>
                             </Grid>
+                            <Grid item xs={12} sm={12} lg={12} className={classes.responsiveGrade}>
+                                <Grid className={classes.responsiveGradeContent}>
+                                    <Grid item xs={12}>
+                                        <h3 style={{color:'#757575'}}>Diplômes</h3>
+                                    </Grid>
+                                    {haveDiploma ?
+                                        <React.Fragment>
+                                            <Grid container className={classes.responsivePicsInfo}>
+                                                <Grid item xs={7} style={{paddingLeft:15}}>
+                                                     <p style={{fontWeight:'bold'}}>{diploma.name}</p>
+                                                </Grid>
+                                                <hr style={{marginLeft:0,marginRight:0}}/>
+                                                <Grid item xs={1} style={{paddingLeft:15}}>
+                                                    <p>{diploma.year}</p>
+                                                </Grid>
+                                                <Grid item xs={3} style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
+                                                    <EditIcon onClick={()=>this.setState({editDiploma: true})} color={"primary"} style={{marginRight:20,cursor:"pointer"}}/>
+                                                    <DeleteIcon onClick={()=>this.deleteDiploma()} color={"secondary"} style={{cursor:"pointer"}}/>
+                                                </Grid>
+                                            </Grid>
+                                        </React.Fragment>
+                                        :
+                                        <React.Fragment>
+                                            <Grid container>
+                                                <Grid item xs={6}>
+                                                    <TextField
+                                                        style={{width: '100%'}}
+                                                        type={'text'}
+                                                        margin="normal"
+                                                        label={'Nom du diplôme'}
+                                                        variant="outlined"
+                                                        placeholder={'Nom du diplôme'}
+                                                        value={this.state.name_newDiploma}
+                                                        name={'name_newDiploma'}
+                                                        onChange={this.onChange2}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={6}>
+                                                    <TextField
+                                                        InputLabelProps={{ shrink: true }}
+                                                        style={{width: '100%'}}
+                                                        label="Année d'obtention"
+                                                        margin="normal"
+                                                        variant="outlined"
+                                                        select
+                                                        value={this.state.year_newDiploma}
+                                                        name={'year_newDiploma'}
+                                                        onChange={this.onChange2}
+                                                    >
+                                                        {dates.map(e => (
+                                                            <MenuItem value={e}>{e}</MenuItem>
+                                                        ))}
+                                                    </TextField>
 
-                            <Grid item xs={12}>
-                                <h3 style={{color:'#757575'}}>Diplômes</h3>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={4}>
+                                                    <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center", width:'200px', borderRadius:'5px'}}>
+                                                        <p style={{cursor:"pointer",textAlign:'center', color:'white'}}>Joindre mon diplôme</p>
+                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
+                                                               onChange={this.onChangeDiploma}
+                                                               className="form-control" accept={'image/*,.pdf'}
+                                                        />
+                                                    </label>
+                                                    <span>{this.state.file_diploma !== null ? this.state.file_diploma.name : null}</span>
+                                                </Grid>
+
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={12} style={{marginTop:'1%', marginBottom:'1%'}}>
+                                                    <p style={{fontStyle: 'italic'}}>
+                                                        En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des
+                                                        utilisateurs mais il ne sera jamais visible par ses derniers.
+                                                    </p>
+                                                </Grid>
+                                                <Grid item xs={3} style={{maxWidth: 'inherit', flexBasis:'inherit'}}>
+                                                    <Button className={classes.validerWeb} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
+                                                    <Button className={classes.validerMobile} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider</Button>
+
+                                                </Grid>
+                                            </Grid>
+                                        </React.Fragment>
+                                    }
+                                    {editDiploma ?
+
+                                        <React.Fragment>
+                                            <Grid container>
+                                                <Grid item xs={6}>
+                                                    <TextField
+                                                        style={{width: '100%'}}
+                                                        type={'text'}
+                                                        margin="normal"
+                                                        variant="outlined"
+                                                        placeholder={'Nom du diplôme'}
+                                                        value={this.state.name_diploma}
+                                                        name={'name_diploma'}
+                                                        onChange={this.onChange2}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={6}>
+                                                    <TextField
+                                                        style={{width: '100%'}}
+                                                        label="Année d'obtention"
+                                                        margin="normal"
+                                                        variant="outlined"
+                                                        select
+                                                        value={this.state.year_diploma}
+                                                        name={'year_diploma'}
+                                                        onChange={this.onChange2}
+                                                    >
+                                                        {dates.map(e => (
+                                                             <MenuItem value={e}>{e}</MenuItem>
+                                                            ))}
+                                                    </TextField>
+
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={4}>
+                                                    <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center", width:'200px', borderRadius:'5px'}}>
+                                                        <p style={{cursor:"pointer",textAlign:'center',color:'white'}}>Joindre mon diplôme</p>
+                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
+                                                               onChange={this.onChangeDiploma}
+                                                               className="form-control" accept={'image/*,.pdf'}
+                                                        />
+                                                    </label>
+                                                    <span>{this.state.file_diploma !== null ? this.state.file_diploma.name : null}</span>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid>
+                                                <Grid xs={12}>
+                                                    <p style={{fontStyle: 'italic'}}>
+                                                        En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des
+                                                        utilisateurs mais il ne sera jamais visible par ses derniers.
+                                                    </p>
+                                                </Grid>
+                                                <Grid item xs={3}>
+                                                    <Button className={classes.validerWeb} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
+                                                    <Button className={classes.validerMobile} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider</Button>
+
+                                                </Grid>
+                                            </Grid>
+                                        </React.Fragment>
+                                        : null}
+                                </Grid>
+                                <Grid className={classes.responsiveGradeContent}>
+                                    <Grid item xs={12}>
+                                        <h3 style={{color:'#757575'}}>Certifications</h3>
+                                    </Grid>
+                                    {haveCertification ?
+                                        <React.Fragment>
+                                            <Grid container className={classes.responsivePicsInfo}>
+                                                <Grid item xs={7} style={{paddingLeft:15}}>
+                                                    <p style={{fontWeight:'bold'}}>{certification.name}</p>
+                                                </Grid>
+                                                <hr style={{marginLeft:0,marginRight:0}}/>
+                                                <Grid item xs={1} style={{paddingLeft:15}}>
+                                                    <p>{certification.year}</p>
+                                                </Grid>
+                                                <Grid item xs={3} style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
+                                                    <EditIcon onClick={()=>this.setState({editCertification: true})} color={"primary"} style={{marginRight:20,cursor:"pointer"}}/>
+                                                    <DeleteIcon onClick={()=>this.deleteCertification()} color={"secondary"} style={{cursor:"pointer"}}/>
+                                                </Grid>
+                                            </Grid>
+                                        </React.Fragment>
+                                        :
+                                        <React.Fragment>
+                                            <Grid container>
+                                                <Grid item xs={6}>
+                                                    <TextField
+                                                        style={{width: '100%'}}
+                                                        type={'text'}
+                                                        margin="normal"
+                                                        label={'Nom de la certification'}
+                                                        variant="outlined"
+                                                        placeholder={'Nom de la certification'}
+                                                        value={this.state.name_newCertification}
+                                                        name={'name_newCertification'}
+                                                        onChange={this.onChange2}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={6}>
+                                                    <TextField
+                                                        InputLabelProps={{ shrink: true }}
+                                                        style={{width: '100%'}}
+                                                        label="Année d'obtention"
+                                                        margin="normal"
+                                                        variant="outlined"
+                                                        select
+                                                        value={this.state.year_newCertification}
+                                                        name={'year_newCertification'}
+                                                        onChange={this.onChange2}
+                                                    >
+                                                        {dates.map(e => (
+                                                            <MenuItem value={e}>{e}</MenuItem>
+                                                        ))}
+                                                    </TextField>
+
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={4}>
+                                                    <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center", width:'200px', borderRadius:'5px'}}>
+                                                        <p style={{cursor:"pointer",textAlign:'center',color:'white'}}>Joindre ma certification</p>
+                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
+                                                               onChange={this.onChangeCertification}
+                                                               className="form-control" accept={'image/*,.pdf'}
+                                                        />
+                                                    </label>
+                                                    <span>{this.state.file_certification !== null ? this.state.file_certification.name : null}</span>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={12} style={{marginBottom:'1%'}}>
+                                                    <p style={{fontStyle: 'italic'}}>
+                                                        En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des
+                                                        utilisateurs mais elle ne sera jamais visible par ces derniers.
+                                                    </p>
+                                                </Grid>
+                                                <Grid item xs={3} style={{maxWidth: 'inherit', flexBasis:'inherit'}}>
+                                                    <Button className={classes.validerWeb} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
+                                                    <Button className={classes.validerMobile} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
+
+                                                </Grid>
+                                            </Grid>
+                                        </React.Fragment>
+                                    }
+                                    {editCertification ?
+
+                                        <React.Fragment>
+                                            <Grid container>
+                                                <Grid item xs={6}>
+                                                    <TextField
+                                                        style={{width: '100%'}}
+                                                        type={'text'}
+                                                        margin="normal"
+                                                        variant="outlined"
+                                                        placeholder={'Nom de la certification'}
+                                                        value={this.state.name_certification}
+                                                        name={'name_certification'}
+                                                        onChange={this.onChange2}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={6}>
+                                                    <TextField
+                                                        style={{width: '100%'}}
+                                                        label="Année d'obtention"
+                                                        margin="normal"
+                                                        variant="outlined"
+                                                        select
+                                                        value={this.state.year_certification}
+                                                        name={'year_certification'}
+                                                        onChange={this.onChange2}
+                                                    >
+                                                        {dates.map(e => (
+                                                            <MenuItem value={e}>{e}</MenuItem>
+                                                        ))}
+                                                    </TextField>
+
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={4}>
+                                                    <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center"}}>
+                                                        <p style={{cursor:"pointer",textAlign:'center',color:'white'}}>Joindre ma certification</p>
+                                                        <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
+                                                               onChange={this.onChangeCertification}
+                                                               className="form-control" accept={'image/*,.pdf'}
+                                                        />
+                                                    </label>
+                                                    <span>{this.state.file_certification !== null ? this.state.file_certification.name : null}</span>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={12}>
+                                                    <p>
+                                                        En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des
+                                                        utilisateurs mais elle ne sera jamais visible par ces derniers.
+                                                    </p>
+                                                </Grid>
+                                                <Grid item xs={3} style={{maxWidth: 'inherit', width: 'inherit'}}>
+                                                    <Button className={classes.validerWeb} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
+                                                    <Button className={classes.validerMobile} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
+
+                                                </Grid>
+                                            </Grid>
+                                        </React.Fragment>
+                                        : null}
+                                </Grid>
                             </Grid>
-                            {haveDiploma ?
-                                <React.Fragment>
-                                    <Grid container style={{border: '1px solid #BABABA',width:'60%'}}>
-                                        <Grid item xs={7} style={{paddingLeft:15}}>
-                                             <p style={{fontWeight:'bold'}}>{diploma.name}</p>
-                                        </Grid>
-                                        <hr style={{marginLeft:0,marginRight:0}}/>
-                                        <Grid item xs={1} style={{paddingLeft:15}}>
-                                            <p>{diploma.year}</p>
-                                        </Grid>
-                                        <Grid item xs={3} style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
-                                            <EditIcon onClick={()=>this.setState({editDiploma: true})} color={"primary"} style={{marginRight:20,cursor:"pointer"}}/>
-                                            <DeleteIcon onClick={()=>this.deleteDiploma()} color={"secondary"} style={{cursor:"pointer"}}/>
-                                        </Grid>
-                                    </Grid>
-                                </React.Fragment>
-                                :
-                                <React.Fragment>
-                                    <Grid container>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                style={{width: '100%'}}
-                                                type={'text'}
-                                                margin="normal"
-                                                label={'Nom du diplôme'}
-                                                variant="outlined"
-                                                placeholder={'Nom du diplôme'}
-                                                value={this.state.name_newDiploma}
-                                                name={'name_newDiploma'}
-                                                onChange={this.onChange2}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                InputLabelProps={{ shrink: true }}
-                                                style={{width: '100%'}}
-                                                label="Année d'obtention"
-                                                margin="normal"
-                                                variant="outlined"
-                                                select
-                                                value={this.state.year_newDiploma}
-                                                name={'year_newDiploma'}
-                                                onChange={this.onChange2}
-                                            >
-                                                {dates.map(e => (
-                                                    <MenuItem value={e}>{e}</MenuItem>
-                                                ))}
-                                            </TextField>
-
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={4}>
-                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",textAlign:'center', color:'white'}}>Joindre mon diplôme</p>
-                                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
-                                                       onChange={this.onChangeDiploma}
-                                                       className="form-control" accept={'image/*,.pdf'}
-                                                />
-                                            </label>
-                                            <span>{this.state.file_diploma !== null ? this.state.file_diploma.name : null}</span>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={12} style={{marginTop:'1%', marginBottom:'1%'}}>
-                                            <p>
-                                                En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des
-                                                utilisateurs mais il ne sera jamais visible par ses derniers.
-                                            </p>
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <Button className={classes.validerWeb} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
-                                            <Button className={classes.validerMobile} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider</Button>
-
-                                        </Grid>
-                                    </Grid>
-                                </React.Fragment>
-                            }
-                            {editDiploma ?
-
-                                <React.Fragment>
-                                    <Grid container>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                style={{width: '100%'}}
-                                                type={'text'}
-                                                margin="normal"
-                                                variant="outlined"
-                                                placeholder={'Nom du diplôme'}
-                                                value={this.state.name_diploma}
-                                                name={'name_diploma'}
-                                                onChange={this.onChange2}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                style={{width: '100%'}}
-                                                label="Année d'obtention"
-                                                margin="normal"
-                                                variant="outlined"
-                                                select
-                                                value={this.state.year_diploma}
-                                                name={'year_diploma'}
-                                                onChange={this.onChange2}
-                                            >
-                                                {dates.map(e => (
-                                                     <MenuItem value={e}>{e}</MenuItem>
-                                                    ))}
-                                            </TextField>
-
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={4}>
-                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",textAlign:'center',color:'white'}}>Joindre mon diplôme</p>
-                                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_diploma" type="file"
-                                                       onChange={this.onChangeDiploma}
-                                                       className="form-control" accept={'image/*,.pdf'}
-                                                />
-                                            </label>
-                                            <span>{this.state.file_diploma !== null ? this.state.file_diploma.name : null}</span>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid>
-                                        <Grid xs={12}>
-                                            <p>
-                                                En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des
-                                                utilisateurs mais il ne sera jamais visible par ses derniers.
-                                            </p>
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <Button className={classes.validerWeb} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider ce diplôme</Button>
-                                            <Button className={classes.validerMobile} color={"primary"} onClick={()=>this.editDiploma()} variant={"contained"} style={{color:"white"}}>Valider</Button>
-
-                                        </Grid>
-                                    </Grid>
-                                </React.Fragment>
-                                : null}
-                            <Grid item xs={12}>
-                                <h3 style={{color:'#757575'}}>Certifications</h3>
-                            </Grid>
-                            {haveCertification ?
-                                <React.Fragment>
-                                    <Grid container style={{border: '1px solid #BABABA',width:'60%'}}>
-                                        <Grid item xs={7} style={{paddingLeft:15}}>
-                                            <p style={{fontWeight:'bold'}}>{certification.name}</p>
-                                        </Grid>
-                                        <hr style={{marginLeft:0,marginRight:0}}/>
-                                        <Grid item xs={1} style={{paddingLeft:15}}>
-                                            <p>{certification.year}</p>
-                                        </Grid>
-                                        <Grid item xs={3} style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
-                                            <EditIcon onClick={()=>this.setState({editCertification: true})} color={"primary"} style={{marginRight:20,cursor:"pointer"}}/>
-                                            <DeleteIcon onClick={()=>this.deleteCertification()} color={"secondary"} style={{cursor:"pointer"}}/>
-                                        </Grid>
-                                    </Grid>
-                                </React.Fragment>
-                                :
-                                <React.Fragment>
-                                    <Grid container>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                style={{width: '100%'}}
-                                                type={'text'}
-                                                margin="normal"
-                                                label={'Nom de la certification'}
-                                                variant="outlined"
-                                                placeholder={'Nom de la certification'}
-                                                value={this.state.name_newCertification}
-                                                name={'name_newCertification'}
-                                                onChange={this.onChange2}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                InputLabelProps={{ shrink: true }}
-                                                style={{width: '100%'}}
-                                                label="Année d'obtention"
-                                                margin="normal"
-                                                variant="outlined"
-                                                select
-                                                value={this.state.year_newCertification}
-                                                name={'year_newCertification'}
-                                                onChange={this.onChange2}
-                                            >
-                                                {dates.map(e => (
-                                                    <MenuItem value={e}>{e}</MenuItem>
-                                                ))}
-                                            </TextField>
-
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={4}>
-                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",textAlign:'center',color:'white'}}>Joindre ma certification</p>
-                                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
-                                                       onChange={this.onChangeCertification}
-                                                       className="form-control" accept={'image/*,.pdf'}
-                                                />
-                                            </label>
-                                            <span>{this.state.file_certification !== null ? this.state.file_certification.name : null}</span>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={12} style={{marginTop:'1%', marginBottom:'1%'}}>
-                                            <p>
-                                                En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des
-                                                utilisateurs mais elle ne sera jamais visible par ces derniers.
-                                            </p>
-                                        </Grid>
-                                        <Grid item xs={3} style={{maxWidth: 'inherit', flexBasis:'inherit'}}>
-                                            <Button className={classes.validerWeb} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
-                                            <Button className={classes.validerMobile} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
-
-                                        </Grid>
-                                    </Grid>
-                                </React.Fragment>
-                            }
-                            {editCertification ?
-
-                                <React.Fragment>
-                                    <Grid container>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                style={{width: '100%'}}
-                                                type={'text'}
-                                                margin="normal"
-                                                variant="outlined"
-                                                placeholder={'Nom de la certification'}
-                                                value={this.state.name_certification}
-                                                name={'name_certification'}
-                                                onChange={this.onChange2}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                style={{width: '100%'}}
-                                                label="Année d'obtention"
-                                                margin="normal"
-                                                variant="outlined"
-                                                select
-                                                value={this.state.year_certification}
-                                                name={'year_certification'}
-                                                onChange={this.onChange2}
-                                            >
-                                                {dates.map(e => (
-                                                    <MenuItem value={e}>{e}</MenuItem>
-                                                ))}
-                                            </TextField>
-
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={4}>
-                                            <label style={{display: 'flex', marginTop: 15,backgroundColor:'rgb(79, 189, 215)',justifyContent:"center"}}>
-                                                <p style={{cursor:"pointer",textAlign:'center',color:'white'}}>Joindre ma certification</p>
-                                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="file_certification" type="file"
-                                                       onChange={this.onChangeCertification}
-                                                       className="form-control" accept={'image/*,.pdf'}
-                                                />
-                                            </label>
-                                            <span>{this.state.file_certification !== null ? this.state.file_certification.name : null}</span>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={12}>
-                                            <p>
-                                                En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des
-                                                utilisateurs mais elle ne sera jamais visible par ces derniers.
-                                            </p>
-                                        </Grid>
-                                        <Grid item xs={3} style={{maxWidth: 'inherit', width: 'inherit'}}>
-                                            <Button className={classes.validerWeb} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
-                                            <Button className={classes.validerMobile} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
-
-                                        </Grid>
-                                    </Grid>
-                                </React.Fragment>
-                                : null}
                         </Grid>
                         <hr/>
                         <Grid container style={{display:"flex",justifyContent:"flex-end",width:'90%'}}>
                             <Button variant={"contained"} onClick={(event)=>this.onSubmit(event)} color={"secondary"} style={{color:"white", marginBottom: '10px'}}>Enregistrer</Button>
                         </Grid>
                         </Grid>
-                    <Grid item xs={7} className={classes.pasphone} >
+                    <Grid item xs={7} lg={6} className={classes.pasphone} >
                         <Grid container style={{position: 'sticky',height:'88vh', backgroundImage:'url(../../static/Creation_shop_step1.png)',backgroundRepeat:'no-repeat',top:100,backgroundSize: 'cover', backgroundPosition:'center'}}></Grid>
                     </Grid>
                     </Grid>
