@@ -4,11 +4,20 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const moment = require('moment');
+const axios = require('axios');
 
 const Booking = require('../../models/Booking');
 const User = require('../../models/User');
+const CronJob = require('cron').CronJob;
+const mangopay = require('mangopay2-nodejs-sdk');
 
 moment.locale('fr');
+
+const api = new mangopay({
+    clientId: 'test-myalfred-haus',
+    clientApiKey: 'Zcx9oZKnBBL31AEugBNrn13n6URvrSqtXCykH3ejBdDSmOYPU1',
+
+});
 
 router.get('/test',(req, res) => res.json({msg: 'Booking Works!'}) );
 
@@ -288,7 +297,113 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', { session: false }
             if (booking) return res.json(booking);
         })
         .catch(err => console.log(err))
-})
+});
+
+function getAccount(id){
+    const allAccount = [];
+    api.Users.getBankAccounts(id)
+                .then(accounts => {
+                    accounts.forEach(a => {
+                        if(a.Active){
+                            allAccount.push(a)
+                        }
+                    });
+                    return allAccount;
+                })
+
+}
+
+new CronJob('0 0 6 * * *', function() {
+    const date = moment().format('DD-MM-YYYY');
+    Booking.find({status: 'Confirmée'})
+        .populate('user')
+        .populate('alfred')
+        .then(booking => {
+            booking.forEach(b => {
+                const end_date = b.end_date.split('/');
+                const day = end_date[0];
+                const month = end_date[1];
+                const year = end_date[2];
+                const end = moment(year+'-'+month+'-'+day+'T00:00:00.000Z');
+                const newDate = moment(end).add(1,'days');
+                const isoDate = moment(newDate).format('DD-MM-YYYY');
+                if(moment(date).isSame(isoDate)){
+                   b.status = 'Terminée';
+                   b.save().then().catch();
+                   const amount = b.amount;
+                   const id_mangopay_user = b.user.id_mangopay;
+                   const id_mangopay_alfred = b.alfred.id_mangopay;
+
+
+                    api.Users.getWallets(id_mangopay_user)
+                        .then(wallets => {
+                            const wallet_id = wallets[0].Id;
+                            api.Users.getWallets(id_mangopay_alfred)
+                                .then(wallet_alfred => {
+                                    const id_wallet_alfred = wallet_alfred[0].Id;
+                                    api.Transfers.create({
+                                        AuthorId: id_mangopay_user,
+                                        DebitedFunds: {
+                                            Currency: 'EUR',
+                                            Amount: amount
+                                        },
+                                        Fees: {
+                                            Currency: "EUR",
+                                            Amount: 0
+                                        },
+                                        DebitedWalletId: wallet_id,
+                                        CreditedWalletId: id_wallet_alfred,
+
+                                    })
+                                        .then(()=>{
+                                                const accountAlfred = getAccount(id_mangopay_alfred);
+                                                api.PayOuts.create({
+                                                    AuthorId: id_wallet_alfred,
+                                                    DebitedFunds: {
+                                                        Currency: "EUR",
+                                                        Amount: amount
+                                                    },
+                                                    Fees: {
+                                                        Currency: "EUR",
+                                                        Amount: 0
+                                                    },
+                                                    BankAccountId: accountAlfred[0].Id,
+                                                    DebitedWalletId: id_wallet_alfred,
+                                                    BankWireRef: "My Alfred"
+
+                                                })
+                                                    .then()
+                                        }
+
+                                        )
+                                })
+
+                        })
+
+                }
+            })
+        })
+
+}, null, true, 'Europe/Paris');
+
+new CronJob('0 0 5 * * *', function() {
+    const currentDate = moment().format('DD-MM-YYYY');
+    Booking.find({status: 'En attente de confirmation'})
+        .populate('user')
+        .populate('alfred')
+        .then(booking => {
+            booking.forEach(b => {
+                const date = moment(b.date).add(2,'days');
+                const newDate = moment(date).format('DD-MM-YYYY');
+                if(moment(currentDate).isSame(newDate)){
+                    b.status = 'Expirée';
+                    b.save().then().catch();
+                }
+            })
+        })
+
+}, null, true, 'Europe/Paris');
+
 
 // pattern reference
 // premiere lettre nom user +  premiere lettre prenom user + premiere lettre nom alfred +  premiere lettre prenom alfred + date + 5 random

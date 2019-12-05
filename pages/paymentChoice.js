@@ -122,22 +122,13 @@ class paymentChoice extends React.Component {
         };
         axios.post(url+'myAlfred/api/payment/payInDirect',data)
             .then(() => {
-                const obj = {
-                    amount: 20,
-                    fees: 0
-                };
-                axios.post(url+ 'myAlfred/api/payment/transfer',obj)
-                    .then(() => {
-                        Router.push('/paymentDirectSuccess')
-                    })
-                    .catch()
+                Router.push('/paymentDirectSuccess')
+
             })
             .catch()
     }
 
     pay(){
-        localStorage.setItem('amount','20');
-        localStorage.setItem('fees','0');
         const data = {
             amount: 20,
             fees: 0

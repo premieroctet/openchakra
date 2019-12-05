@@ -37,20 +37,6 @@ class paymentSuccess extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        const amount = parseInt(localStorage.getItem('amount'));
-        const fees = parseInt(localStorage.getItem('fees'));
-
-        const data = {
-            amount: amount,
-            fees: fees
-        };
-        axios.post(url+'myAlfred/api/payment/transfer',data)
-            .then(() => {
-                toast.info('Paiement réussi')
-            })
-            .catch(() => {
-                toast.error('Une erreur est survenue lors du paiement')
-            })
 
     }
 

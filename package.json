@@ -21,6 +21,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "cron": "^1.7.2",
     "date-fns": "^2.0.0-alpha.27",
     "express": "^4.16.4",
     "fast-csv": "^3.0.1",

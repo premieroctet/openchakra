@@ -116,14 +116,11 @@ class ConfirmPayement extends React.Component {
     super(props);
     this.state = {
       user: {},
-      date: null,
-      hour: null,
       prestations: [],
       totalPrice: 0,
       total: null,
       grandTotal: null,
       fees: null,
-      grandTotal: null,
       checkedOption: false,
       optionPrice: null,
       date: Date.now(),
@@ -137,7 +134,7 @@ class ConfirmPayement extends React.Component {
 
   componentDidMount() {
     const prestations = JSON.parse(localStorage.getItem("prestations"));
-    const bookingObj = JSON.parse(localStorage.getItem("bookingObj"))
+    const bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
     console.log(prestations);
 
     this.setState({
