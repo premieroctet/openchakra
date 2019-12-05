@@ -196,7 +196,7 @@ class Reserve extends React.Component {
                           fontWeight: "100"
                         }}
                       >
-                        Confirmer la réservation de {`${bookingObj.alfred.firstname} ${bookingObj.alfred.name}`}{" "}
+                        Détails de votre réservation{" "}
                       </h2>
                       <hr
                         style={{

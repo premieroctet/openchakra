@@ -116,6 +116,12 @@ class ConfirmPayement extends React.Component {
     super(props);
     this.state = {
       user: {},
+      emitter: null,
+      recipient: null,
+      bookingObj: null,
+      city: null,
+      address: null,
+      zip_code: null,
       date: null,
       hour: null,
       prestations: [],
@@ -138,10 +144,15 @@ class ConfirmPayement extends React.Component {
   componentDidMount() {
     const prestations = JSON.parse(localStorage.getItem("prestations"));
     const bookingObj = JSON.parse(localStorage.getItem("bookingObj"))
-    console.log(prestations);
 
     this.setState({
+      emitter: localStorage.getItem("emitter"),
+      recipient: localStorage.getItem("recipient"),
       prestations: bookingObj.prestations,
+      bookingObj: bookingObj,
+      city: bookingObj.address.city,
+      address: bookingObj.address.address,
+      zip_code: bookingObj.address.zip_code,
       date: bookingObj.date_prestation,
       hour: bookingObj.time_prestation,
       fees: bookingObj.fees,
@@ -229,6 +240,34 @@ class ConfirmPayement extends React.Component {
       this.setState({ optionPrice: null });
       this.setState({ grandTotal: grandTotalFalse });
     }
+  }
+
+  handlePay() {
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+      "token"
+    );
+    axios
+      .post(url + "myAlfred/api/chatRooms/addAndConnect", {
+        emitter: this.state.emitter,
+        recipient: this.state.recipient
+      })
+      .then(res => {
+        let booking = this.state.bookingObj;
+        booking.chatroom = res.data._id;
+
+        axios
+          .post(url + "myAlfred/api/booking/add", booking)
+          .then(result => {
+            axios.put(url + 'myAlfred/api/chatRooms/addBookingId/' + booking.chatroom, { booking: result.data._id })
+              .then(() => {
+                Router.push({
+                  pathname: "/reservations/detailsReservation",
+                  query: { id: result.data._id }
+                });
+              })
+          })
+          .catch(err => console.log(err));
+      })
   }
 
   render() {
@@ -349,7 +388,7 @@ class ConfirmPayement extends React.Component {
                       </Grid>
                       <Grid item xs={9} style={{ width: "70%" }}>
                         <p>Adresse de la prestation:</p>{" "}
-                        <p>12 place cauchoise, Rouen 76000.</p>
+                        <p>{this.state.address}, {this.state.city} {this.state.zip_code}.</p>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -452,6 +491,9 @@ class ConfirmPayement extends React.Component {
                                 paddingRight: "20px",
                                 marginBottom: 50,
                                 marginRight: 20
+                              }}
+                              onClick={() => {
+                                this.handlePay();
                               }}
                             >
                               Payer
