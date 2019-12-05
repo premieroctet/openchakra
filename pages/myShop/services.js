@@ -23,9 +23,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-
-
-
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
 moment.locale('fr');
 
@@ -48,40 +46,83 @@ const styles = theme => ({
         flexGrow: 1,
     },
 
-    containerheader:{[theme.breakpoints.down('sm')]: {
+    containerheader:{
+        [theme.breakpoints.down('sm')]: {
             width:'100%!important',
             marginTop:'-79px',
         }},
-    containerheader2:{[theme.breakpoints.down('sm')]: {
+    containerheader2:{
+        [theme.breakpoints.down('sm')]: {
             width:'100%!important',
             marginTop:'-59px',
         }},
-    bottombar:{visibility:'hidden', [theme.breakpoints.down('sm')]: {
+    bottombar:{
+        visibility:'hidden',
+        [theme.breakpoints.down('sm')]: {
             visibility:'visible',
             boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
         }},
-    topbar:{visibility:'visible', position: 'sticky', top: 64, zIndex:999,[theme.breakpoints.down('sm')]: {
+    topbar:{
+        visibility:'visible',
+        position: 'sticky',
+        top: 64,
+        zIndex:999,
+        [theme.breakpoints.down('sm')]: {
             visibility:'hidden',
         }},
-    containermain:{ paddingLeft:'5%', [theme.breakpoints.down('sm')]: {
-            padding:'2%', paddingLeft:'2%'
+    containermain:{
+        paddingLeft:'5%',
+        [theme.breakpoints.down('sm')]: {
+            padding:'2%',
+            paddingLeft:'2%'
         }},
     tabscontainer:{width:'60%',
         [theme.breakpoints.down('sm')]: {
             width:'100%',}},
 
-    tabweb:{visibility:'visible', width:'100%', position:'sticky', top:'115px', fontSize:15, backgroundColor:'white', zIndex:'20',
+    tabweb:{
+        visibility:'visible',
+        width:'100%',
+        position:'sticky',
+        top:'115px',
+        fontSize:15,
+        backgroundColor:'white',
+        zIndex:'20',
         [theme.breakpoints.down('sm')]: {
             visibility:'hidden'}},
 
 
-    tabmobile:{visibility:'hidden',
+    tabmobile:{
+        visibility:'hidden',
         [theme.breakpoints.down('sm')]: {
-            visibility:'visible', fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:20}},
+            visibility:'visible',
+            fontSize:'10px',
+            fontWeight:'300',
+            marginTop:'-100px',
+            height:60,
+            backgroundColor:'white',
+            position:'sticky',
+            top:55,
+            zIndex:20}},
 
-    bgimage: {display:'block', width:'37%', backgroundColor:'transparent',  backgroundImage: "url('../../static/servicesbg.png')", backgroundSize:'contain', backgroundRepeat:'no-repeat', height:'68%',top:'71%',zIndex: -20, right:0, position:'absolute', [theme.breakpoints.down('sm')]: { display:'none'}},
+    bgimage: {
+        display:'block',
+        width:'37%',
+        backgroundColor:'transparent',
+        backgroundImage: "url('../../static/servicesbg.png')",
+        backgroundSize:'contain',
+        backgroundRepeat:'no-repeat',
+        height:'68%',
+        top:'71%',
+        zIndex: -20,
+        right:0,
+        position:'absolute',
+        [theme.breakpoints.down('sm')]: {
+            display:'none'
+        }},
 
     addweb:{
+        marginTop: '2%',
         [theme.breakpoints.down('sm')]: {
             display:'none'}},
 
@@ -97,7 +138,18 @@ const styles = theme => ({
     },
     addmobile:{display:'none',
         [theme.breakpoints.down('sm')]: {
-            display:'block', cursor:'pointer',marginBottom: 45,backgroundColor: 'transparent',width:'15%', padding:'2%',justifyContent:"center", borderRadius:'100%', bottom:'4%', right:'20px', position:'fixed', zIndex:'99999'}},
+            display:'block',
+            cursor:'pointer',
+            marginBottom: 45,
+            backgroundColor: 'transparent',
+            width:'15%',
+            padding:'2%',
+            justifyContent:"center",
+            borderRadius:'100%',
+            bottom:'4%',
+            right:'20px',
+            position:'fixed',
+            zIndex:'99999'}},
 
     marginbot: {
         marginBottom: '3.5%',
@@ -112,15 +164,6 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             display: 'none!important',
         },
-    },
-    triangle: {
-        width: 0,
-        height: 0,
-        borderLeft: '15px solid transparent',
-        borderRight: '15px solid transparent',
-        borderTop: '15px solid gray',
-        margin: '0 auto',
-        marginTop:-28
     },
     trait:{
         width: '100%',
@@ -158,11 +201,6 @@ const styles = theme => ({
         border: '2px solid #000',
 
     },
-    shopbar:{
-        [theme.breakpoints.down('md')]: {
-            display: 'none',
-        }
-    },
     resppic:{
         [theme.breakpoints.down('sm')]: {
             top: '17%!important',
@@ -172,9 +210,18 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             width:'100%',
         }
+    },
+    buttonAddService : {
+        color: 'white'
+    },
+    responsiveCard: {
+        border: '1px solid lightgray',
+        padding: '15px 15px 15px 15px',
+        width:'80%',
+        [theme.breakpoints.down('sm')]: {
+            width:'100%',
+        }
     }
-
-
 
 });
 
@@ -201,20 +248,12 @@ class services extends React.Component {
             open2: false,
             id_service: '',
         };
-
-
-
     }
 
     componentDidMount() {
         document.body.style.overflow = 'auto';
-
-
         localStorage.setItem('path',Router.pathname);
-
-
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-
 
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
@@ -254,7 +293,6 @@ class services extends React.Component {
                         .catch(err =>
                             console.log(err)
                         );
-
                 }
             })
             .catch(err => {
@@ -265,8 +303,6 @@ class services extends React.Component {
                     }
                 }
             );
-
-
     }
 
     handleClickOpen(id) {
@@ -284,8 +320,6 @@ class services extends React.Component {
     handleClose = () => {
         this.setState({open:false});
     };
-
-
 
     handleChange = name => event => {
         this.setState({ [name]: event.target.checked });
@@ -367,16 +401,13 @@ class services extends React.Component {
             .catch(err => {
                 console.log(err)
             })
-
     };
 
     render() {
         const {classes} = this.props;
         const {user} = this.state;
-        const {shop} = this.state;
         const {serviceUser} = this.state;
         const tabs = this.state.tabs;
-
         const {banner} = this.state;
 
         const image = banner.map((e,index) => (
@@ -388,7 +419,6 @@ class services extends React.Component {
                 </div>
             </div>
         ));
-
 
         return (
             <Fragment>
@@ -421,20 +451,13 @@ class services extends React.Component {
                                     <p style={{color: "white",cursor: 'pointer'}}>Performance</p></a>
                                 </Link>
                             </Grid>
-
                         </Grid>
-
                         <Grid container className={classes.containerheader} style={{backgroundImage: `url('../../${this.state.shop.picture}')`,backgroundPosition: "center", height:'42vh',
                             backgroundSize:"cover", backgroundRepeat:"no-repeat",justifyContent:"center",alignItems:"center"}}>
-
-
-
                         </Grid>
                         <Grid className={classes.containerheader2} item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
-
                         </Grid>
                         <Grid item>
-
                             <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto', minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',zIndex:501, objectFit: 'cover'}}  alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'3%',top:'20%',zIndex:502}}>
@@ -452,28 +475,26 @@ class services extends React.Component {
                             <Grid item xs={6} >
                                 <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100', textAlign: 'center',cursor: 'pointer'}}> Mes paramètres de réservation</h2><br/>
                             </Grid>
-
                             <Grid item xs={6}>
                                 {tabs ?
                                     <React.Fragment>
-                                        <hr className={classes.trait1} style={{marginTop:'-10px'}}/>
+                                        <hr className={classes.trait1}/>
                                     </React.Fragment>
                                     :
                                     <React.Fragment>
-                                        <hr className={classes.trait3} style={{marginTop:'-10px'}}/>
+                                        <hr className={classes.trait3}/>
                                     </React.Fragment>}
                             </Grid>
                             <Grid item xs={6}>
                                 {tabs ?
                                     <React.Fragment>
-                                        <hr className={classes.trait} style={{marginTop:'-10px'}}/>
+                                        <hr className={classes.trait} />
                                     </React.Fragment>
                                     :
                                     <React.Fragment>
-                                        <hr className={classes.trait2} style={{marginTop:'-10px'}}/>
+                                        <hr className={classes.trait2} />
                                     </React.Fragment>}
                             </Grid>
-
                         </Grid>
                         <Grid container className={classes.tabmobile}>
                             <Grid item xs={6} style={{textAlign:"center"}}>
@@ -482,7 +503,6 @@ class services extends React.Component {
                             <Grid item xs={6} >
                                 <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100', textAlign: 'center',cursor: 'pointer'}}>Réservation</h2><br/>
                             </Grid>
-
                             <Grid item xs={6} style={{textAlign:"center"}}>
                                 {tabs ?
                                     <React.Fragment>
@@ -503,34 +523,13 @@ class services extends React.Component {
                                         <hr className={classes.trait2}/>
                                     </React.Fragment>}
                             </Grid>
-
-
                         </Grid>
-                        <Grid container className={classes.containermain} style={{marginTop: 20}}>
-                            <Grid className={classes.bgimage} item style={{}}>
-
-
-                            </Grid>
-                            <Grid item style={{marginTop:'-9%'}}  className={classes.tabscontainer} >
-
-
-                                <Grid container style={{paddingLeft: 100}}>
-                                    <Grid item xs={2}>
-
-
-                                    </Grid>
-                                    <Grid item xs={10} style={{paddingTop:26}}>
-
-                                    </Grid>
-                                </Grid>
-
+                        <Grid container className={classes.containermain}>
+                            <Grid item   className={classes.tabscontainer}>
                                 {tabs ?
                                     <Grid container style={{}}>
                                         <Grid item xs={12}><h2 style={{fontWeight: '100'}}>Comment les utilisateurs peuvent réserver ? </h2></Grid>
-
                                         <Grid container>
-
-
                                             <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
@@ -543,17 +542,12 @@ class services extends React.Component {
                                                         }}
                                                         icon={<CircleUnchecked style={{fontSize: 30}} />}
                                                         checkedIcon={<FilledButton />}
-
                                                     />
                                                 </Grid>
-
                                                 <Grid item xs={9} sm={10} md={11}>
                                                     <p>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H. </p>
                                                 </Grid>
-
-
                                             </Grid>
-
                                             <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
@@ -572,15 +566,12 @@ class services extends React.Component {
                                                     <p>Les utilisateurs peuvent réserver mes services directement sans demande de réservation.  </p>
                                                 </Grid>
                                             </Grid>
-
                                         </Grid>
                                         <Grid item xs={12}>
                                             <hr style={{backgroundColor: 'darkgray'}}/>
                                         </Grid>
-
                                         <Grid item xs={12}><h2 style={{fontWeight: '100'}}>Vos conditions de réservation </h2></Grid>
-                                        <p style={{fontWeight: '100',marginTop: '-1%',}}>Il se peut que vous ayez moins de réservation si vous ajoutez des conditions. Les personnes qui ne répondent pas à vos critères peuvent quand même vous envoyer une demande. </p>
-
+                                        <p style={{fontWeight: '100'}}>Il se peut que vous ayez moins de réservation si vous ajoutez des conditions. Les personnes qui ne répondent pas à vos critères peuvent quand même vous envoyer une demande. </p>
                                         <Grid container style={{marginTop: '2%'}}>
                                             <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
@@ -601,8 +592,6 @@ class services extends React.Component {
                                                     <p>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H. </p>
                                                 </Grid>
                                             </Grid>
-
-
                                             <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
@@ -622,7 +611,6 @@ class services extends React.Component {
                                                     <p>Si vous activez cette condition, vous ne pourrez voir les photos de profil des voyageurs qu'une fois la réservation confirmée. En savoir plus</p>
                                                 </Grid>
                                             </Grid>
-
                                             <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
@@ -642,7 +630,6 @@ class services extends React.Component {
                                                     <p>Ces utilisateurs ont vérifié leur identité.</p>
                                                 </Grid>
                                             </Grid>
-
                                             <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
@@ -663,15 +650,11 @@ class services extends React.Component {
                                                 </Grid>
                                             </Grid>
                                         </Grid>
-
-
                                         <Grid item xs={12}>
                                             <hr style={{backgroundColor: 'darkgray'}}/>
                                         </Grid>
-
                                         <Grid item xs={12}><h2 style={{fontWeight: '100'}}>Votre message de bienvenue validant votre réservation </h2></Grid>
-                                        <p style={{fontWeight: '100',marginTop: '-1%',}}>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation. </p>
-
+                                        <p style={{fontWeight: '100'}}>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation. </p>
                                         <Grid item xs={12}>
                                             <TextField
                                                 id="outlined-multiline-static"
@@ -685,14 +668,11 @@ class services extends React.Component {
                                                 style={{ width: "100%" }}
                                             />
                                         </Grid>
-
                                         <Grid item xs={12}>
                                             <hr style={{backgroundColor: 'darkgray'}}/>
                                         </Grid>
-
                                         <Grid item xs={12}><h3 style={{fontWeight: '100'}}>Vos conditions d’annulation </h3></Grid>
-                                        <p style={{fontWeight: '100',marginTop: '-1%',}}>Choisissez vos conditions en cas d'annulation de la part des utilisateurs.</p>
-
+                                        <p style={{fontWeight: '100'}}>Choisissez vos conditions en cas d'annulation de la part des utilisateurs.</p>
                                         <Grid container style={{marginTop: '2%'}}>
                                             <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
@@ -713,8 +693,6 @@ class services extends React.Component {
                                                     <p>Remboursement intégral jusqu'à 1 jour avant la prestation</p>
                                                 </Grid>
                                             </Grid>
-
-
                                             <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
@@ -734,7 +712,6 @@ class services extends React.Component {
                                                     <p>Remboursement intégral jusqu'à 5 jours avant la prestation</p>
                                                 </Grid>
                                             </Grid>
-
                                             <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
@@ -755,17 +732,13 @@ class services extends React.Component {
                                                         Remboursement intégral jusqu'à 10 jours avant la prestation.
                                                     </p>
                                                 </Grid>
-
-
                                             </Grid>
-                                            <Grid item xs={1} style={{zIndex: 999}}></Grid>
-
                                             <Grid item xs={2} style={{zIndex: 999}}>
                                                 {tabs ?
                                                     <div style={{display:'flex',justifyContent:'flex-start',width:'100%',bottom:0,
                                                         alignItems:"center",height:60}}>
                                                         <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                                                style={{color: 'white',maxHeight:40,marginRight:-35, zIndex: '999'}}>
+                                                                style={{color: 'white',maxHeight:40, zIndex: '999'}}>
                                                             Enregistrer
                                                         </Button>
                                                     </div>: null}
@@ -776,15 +749,15 @@ class services extends React.Component {
                                     <React.Fragment>
                                         {serviceUser.map((e,index)=> (
                                             <React.Fragment key={index}>
-                                                <Grid className={classes.mobile} style={{padding: '8px',marginBottom: '-20px'}}>
+                                                <Grid className={classes.mobile} style={{padding: '8px'}}>
                                                     <h3 style={{color: '#505050'}}>{e.service.category.label}</h3>
                                                 </Grid>
                                                 <Grid container>
-                                                    <Grid className={classes.notmobile} style={{marginLeft: 10, backgroundColor: 'white',marginBottom: '-36px',padding: '8px',}}>
+                                                    <Grid className={classes.notmobile} style={{marginLeft: 10, backgroundColor: 'white',padding: '8px',}}>
                                                         <h3 style={{color: '#505050'}}>{e.service.category.label}</h3>
                                                     </Grid>
                                                 </Grid>
-                                                <Grid container style={{ border: '1px solid lightgray',padding: '15px 15px 15px 15px',}}>
+                                                <Grid container className={classes.responsiveCard}>
                                                     <Grid item md={3} xs={12} style={{ borderBottom : '150px', borderLeft : '150px', cursor: 'pointer'}}>
                                                         <Link href={'/myShop/previewService?id='+e._id}><img className={classes.respimg} src={'../../'+e.service.picture} alt={'picture'} width={'85%'}/></Link>
                                                     </Grid>
@@ -799,51 +772,27 @@ class services extends React.Component {
                                                                 <h4 style={{paddingRight: 7,fontWeight: 'bolder',fontSize: 16,color:'#3CBED4',marginTop:0,cursor:"pointer"}}><EditIcon  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
                                                             </a>
                                                         </Link>
-
                                                         <a style={{cursor: 'pointer',textDecoration:'none',height:'fit-content'}}>
                                                             <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}><DeleteIcon onClick={()=>this.handleClickOpen(e._id)}  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
                                                         </a>
-
                                                     </Grid>
-
                                                 </Grid>
                                             </React.Fragment>))}
-
-
-                                        <Grid container className={classes.addweb} style={{cursor:'pointer',marginBottom: 45,backgroundColor: 'rgb(47, 188, 211)',maxWidth:'100%',marginTop:30,height:70,justifyContent:"center"}}>
-
-                                            <Grid item xs={3} style={{justifyContent:"center"}}>
-
-                                            </Grid>
-
-                                            <Grid  item xs={5}>
-                                                <Grid container>
-                                                    <Grid item xs={2}>
-                                                        <Link href={'/myShop/addService'}><a style={{textDecoration:'none'}}>
-                                                            <img src={'../../static/plus-4.svg'} style={{marginTop: '27%'}} width={'42%'} alt={'plus'}/>
-                                                        </a>
-                                                        </Link>
-                                                    </Grid>
-                                                    <Grid item xs={10}>
-                                                        <Link href={'/myShop/addService'}><a style={{textDecoration:'none'}}>
-                                                            <h3 style={{color:'white',fontWeight: '100'}}>Ajouter un nouveau service</h3>
-                                                        </a>
-                                                        </Link>
-                                                    </Grid>
-                                                </Grid>
-                                            </Grid>
-
-
-                                            <Grid item xs={3} style={{justifyContent:"center"}}>
-
+                                        <Grid container className={classes.addweb}>
+                                            <Grid>
+                                                <Link href={'/myShop/addService'}>
+                                                    <Button
+                                                      variant="contained"
+                                                      className={classes.buttonAddService}
+                                                      color="primary"
+                                                      startIcon={<AddCircleOutlineIcon />}
+                                                    >
+                                                        Ajouter un nouveau service
+                                                    </Button>
+                                                </Link>
                                             </Grid>
                                         </Grid>
-
                                         <Grid container className={classes.addmobile} style={{}}>
-
-
-
-
                                             <Grid  item xs={5} style={{display:"flex",justifyContent:"center"}}>
                                                 <Grid container>
                                                     <Grid item xs={10}>
@@ -855,57 +804,49 @@ class services extends React.Component {
 
                                                 </Grid>
                                             </Grid>
-
-
-                                            <Grid item xs={3} style={{display:"flex",justifyContent:"center"}}>
-
-                                            </Grid>
                                         </Grid>
                                     </React.Fragment>
                                 }
                             </Grid>
-                            <Grid item xs={1} style={{zIndex: -999}}></Grid>
-
-
                         </Grid>
-
+                        <Grid item xs={7}>
+                            <Grid className={classes.bgimage}>
+                            </Grid>
+                        </Grid>
                     </Grid>
-
                     <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
 
                         <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
                             <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}/></p></a>
                             </Link>
                         </Grid>
 
                         <Grid item xs={2} style={{textAlign:"center"}}>
                             <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
                             </a></Link>
                         </Grid>
 
                         <Grid item xs={2} style={{textAlign:"center"}}>
                             <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
                             </a></Link>
                         </Grid>
 
                         <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
                             <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
                             </a></Link>
                         </Grid>
 
                         <Grid item xs={2} style={{textAlign:"center"}}>
                             <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
                             </a></Link>
                         </Grid>
 
                     </Grid>
-
-
                     <Modal
                         style={{zIndex: 9999}}
                         aria-labelledby="simple-modal-title"
@@ -917,16 +858,12 @@ class services extends React.Component {
                             left: `50%`,
                             transform: `translate(-50%, -50%)`,}} className={classes.paper}>
                             <Carousel>
-
                                 {image}
-
                             </Carousel>
-
                         </div>
                     </Modal>
                 </Layout>
                 <Footer2/>
-
                 <Dialog
                     open={this.state.open2}
                     onClose={()=>this.handleClose2()}
