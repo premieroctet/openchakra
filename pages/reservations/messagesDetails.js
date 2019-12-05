@@ -308,7 +308,15 @@ class MessagesDetails extends React.Component {
                 </Grid>
                 <Grid item xs={5} md={7}>
                   <Typography style={{ marginTop: "60px", fontSize: "1.3rem" }}>
-                    {this.state.userData.firstname} {this.state.userData.name}
+                    {bookingObj === null
+                        ? null
+                        : this.state.userData._id === bookingObj.alfred._id
+                            ? bookingObj.user.firstname
+                            : bookingObj.alfred.firstname} {bookingObj === null
+                      ? null
+                      : this.state.userData._id === bookingObj.alfred._id
+                          ? bookingObj.user.name
+                          : bookingObj.alfred.name}
                   </Typography>
                   <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
                     Réservation coiffure le{" "}

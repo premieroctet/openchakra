@@ -41,36 +41,6 @@ const styles = theme => ({
     margin: "0 auto",
     marginTop: -28
   },
-  trait: {
-    width: "87%",
-    marginTop: -18.5,
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
-  trait1: {
-    width: "100%",
-    marginTop: 2,
-    marginLeft: 110,
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait2: {
-    width: "87%",
-    marginTop: -18.5,
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait3: {
-    width: "100%",
-    marginTop: 2,
-    marginLeft: 110,
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
   shopbar: {
     [theme.breakpoints.down("md")]: {
       display: "none"
@@ -190,11 +160,6 @@ const styles = theme => ({
   Rightcontent: {
     marginLeft: "4%"
   },
-  toggle: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  }
 });
 
 class Messages extends React.Component {
@@ -203,6 +168,7 @@ class Messages extends React.Component {
 
     this.state = {
       idEmitter: "",
+      currentUser: {},
       idRecipient: "",
       chatrooms: [],
       tabs: false,
@@ -216,8 +182,7 @@ class Messages extends React.Component {
       "token"
     );
     axios.get("http://localhost:3122/myAlfred/api/users/current").then(res => {
-      console.log(res.data);
-      this.setState({ idEmitter: res.data._id });
+      this.setState({ idEmitter: res.data._id,currentUser: res.data });
     });
     axios
       .get(url + "myAlfred/api/booking/alfredBooking")
@@ -232,20 +197,13 @@ class Messages extends React.Component {
         this.setState({ userReservations: res.data });
       })
       .catch(err => console.log(err));
-    axios
-      .get(
-        "http://localhost:3122/myAlfred/api/users/users/5d384b49d06f1a2b5c1addd4"
-      )
-      .then(res => {
-        console.log(res.data);
-        this.setState({ idRecipient: res.data._id });
-      });
+
 
     axios
       .get("http://localhost:3122/myAlfred/api/chatRooms/userChatRooms")
       .then(res => {
         this.setState({ chatrooms: res.data });
-        console.log(res.data);
+
       });
   }
   handleClicktabs2 = () => {
@@ -279,92 +237,96 @@ class Messages extends React.Component {
       <Fragment>
         <Layout>
           <Grid container className={classes.bigContainer}>
-            <Grid
-              container
-              className={classes.topbar}
-              justify="center"
-              style={{
-                backgroundColor: "#4fbdd7",
-                marginTop: -3,
-                height: "52px"
-              }}
-            >
-              <Grid item xs={1} className={classes.shopbar}></Grid>
-              <Grid
-                item
-                xs={2}
-                className={classes.shopbar}
-                style={{ textAlign: "center" }}
-              >
-                <Link href={"/myShop/services"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      Ma boutique
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                className={classes.shopbar}
-                style={{
-                  textAlign: "center",
-                  borderBottom: "2px solid white",
-                  zIndex: 999
-                }}
-              >
-                <Link href={"/reservations/messages"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      Messages
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                className={classes.shopbar}
-                style={{ textAlign: "center" }}
-              >
-                <Link href={"/reservations/allReservations"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      Mes réservations
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                className={classes.shopbar}
-                style={{ textAlign: "center" }}
-              >
-                <Link href={"/myShop/myAvailabilities"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      Mon calendrier
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                className={classes.shopbar}
-                style={{ textAlign: "center" }}
-              >
-                <Link href={"/myShop/performances"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      Performance
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-            </Grid>
+            {this.state.currentUser.is_alfred === true?
+                <Grid
+                    container
+                    className={classes.topbar}
+                    justify="center"
+                    style={{
+                      backgroundColor: "#4fbdd7",
+                      marginTop: -3,
+                      height: "52px"
+                    }}
+                >
+                  <Grid item xs={1} className={classes.shopbar}></Grid>
+                  <Grid
+                      item
+                      xs={2}
+                      className={classes.shopbar}
+                      style={{ textAlign: "center" }}
+                  >
+                    <Link href={"/myShop/services"}>
+                      <a style={{ textDecoration: "none" }}>
+                        <p style={{ color: "white", cursor: "pointer" }}>
+                          Ma boutique
+                        </p>
+                      </a>
+                    </Link>
+                  </Grid>
+                  <Grid
+                      item
+                      xs={2}
+                      className={classes.shopbar}
+                      style={{
+                        textAlign: "center",
+                        borderBottom: "2px solid white",
+                        zIndex: 999
+                      }}
+                  >
+                    <Link href={"/reservations/messages"}>
+                      <a style={{ textDecoration: "none" }}>
+                        <p style={{ color: "white", cursor: "pointer" }}>
+                          Messages
+                        </p>
+                      </a>
+                    </Link>
+                  </Grid>
+                  <Grid
+                      item
+                      xs={2}
+                      className={classes.shopbar}
+                      style={{ textAlign: "center" }}
+                  >
+                    <Link href={"/reservations/allReservations"}>
+                      <a style={{ textDecoration: "none" }}>
+                        <p style={{ color: "white", cursor: "pointer" }}>
+                          Mes réservations
+                        </p>
+                      </a>
+                    </Link>
+                  </Grid>
+                  <Grid
+                      item
+                      xs={2}
+                      className={classes.shopbar}
+                      style={{ textAlign: "center" }}
+                  >
+                    <Link href={"/myShop/myAvailabilities"}>
+                      <a style={{ textDecoration: "none" }}>
+                        <p style={{ color: "white", cursor: "pointer" }}>
+                          Mon calendrier
+                        </p>
+                      </a>
+                    </Link>
+                  </Grid>
+                  <Grid
+                      item
+                      xs={2}
+                      className={classes.shopbar}
+                      style={{ textAlign: "center" }}
+                  >
+                    <Link href={"/myShop/performances"}>
+                      <a style={{ textDecoration: "none" }}>
+                        <p style={{ color: "white", cursor: "pointer" }}>
+                          Performance
+                        </p>
+                      </a>
+                    </Link>
+                  </Grid>
+                </Grid>
+
+                : null}
+
 
             {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
@@ -650,7 +612,6 @@ class Messages extends React.Component {
                       ? this.state.alfredReservations.map(booking => {
                           return (
                             <Grid
-                              alt={booking.chatroom.name}
                               container
                               className={classes.mobilerow}
                               style={{ borderBottom: "1px #8281813b solid" }}

@@ -910,7 +910,7 @@ class userServices extends React.Component {
                             fontWeight: "bold"
                           }}
                         >
-                          {service.label} par {user.firstname}
+                          {service.label} par {serviceUser.user.firstname}
                         </h2>
                       </Grid>
                       <Grid

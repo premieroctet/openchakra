@@ -151,6 +151,30 @@ router.get('/alfredReviewsCurrent', passport.authenticate('jwt', { session: fals
         .catch(err => res.status(404).json(err))
 });
 
+router.get('/profile/customerReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
+    const userId = mongoose.Types.ObjectId(req.params.id);
+    Reviews.find({ alfred: userId, note_client: undefined })
+        .populate('user')
+        .populate('serviceUser')
+        .populate({path: 'serviceUser', populate: { path: 'service' }})
+        .then(review => {
+            res.status(200).json(review);
+        })
+        .catch(err => res.status(404).json(err))
+})
+
+router.get('/profile/alfredReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
+    const userId = mongoose.Types.ObjectId(req.params.id);
+    Reviews.find({ user: userId, note_alfred: undefined })
+        .populate('alfred')
+        .populate('serviceUser')
+        .populate({path: 'serviceUser', populate: { path: 'service' }})
+        .then(review => {
+            res.status(200).json(review);
+        })
+        .catch(err => res.status(404).json(err))
+})
+
 // @Route GET /myAlfred/api/reviews/alfred/:id
 // View the reviews list for one alfred
 router.get('/alfred/:id',(req,res) => {

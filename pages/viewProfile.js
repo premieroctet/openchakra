@@ -46,36 +46,6 @@ const styles = theme => ({
     margin: "0 auto",
     marginTop: -28
   },
-  trait: {
-    width: "87%",
-    marginTop: -18.5,
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
-  trait1: {
-    width: "100%",
-    marginTop: 2,
-    marginLeft: 110,
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait2: {
-    width: "87%",
-    marginTop: -18.5,
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait3: {
-    width: "100%",
-    marginTop: 2,
-    marginLeft: 110,
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
   shopbar: {
     [theme.breakpoints.down("md")]: {
       display: "none"
@@ -180,11 +150,6 @@ const styles = theme => ({
   Rightcontent: {
     marginLeft: "4%",
     marginTop: "15px"
-  },
-  toggle: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
   }
 });
 
@@ -217,7 +182,7 @@ class viewProfile extends React.Component {
         axios
           .get(
             url +
-              "myAlfred/api/reviews/customerReviewsCurrent/" +
+              "myAlfred/api/reviews/profile/customerReviewsCurrent/" +
               this.props.user_id
           )
           .then(res => this.setState({ customerReviews: res.data }));
@@ -225,7 +190,7 @@ class viewProfile extends React.Component {
         axios
           .get(
             url +
-              "myAlfred/api/reviews/alfredReviewsCurrent/" +
+              "myAlfred/api/reviews/profile/alfredReviewsCurrent/" +
               this.props.user_id
           )
           .then(res => this.setState({ alfredReviews: res.data }));
@@ -486,10 +451,10 @@ class viewProfile extends React.Component {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography style={{ fontSize: "1rem" }}>
-                          {user_infos.description.slice(0, 200)}{" "}
+                          {typeof user_infos.description !== 'undefined' ? user_infos.description.slice(0, 200): null}{" "}
                           {depliage ? (
                             <React.Fragment>
-                              {user_infos.description.slice(201)}
+                              {typeof user_infos.description !== 'undefined' ?user_infos.description.slice(201) :null}
                             </React.Fragment>
                           ) : (
                             <React.Fragment>
