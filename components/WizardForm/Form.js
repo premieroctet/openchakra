@@ -153,7 +153,6 @@ class Wizard extends React.Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
-                console.log(res);
                 if (typeof res.data.id_card !== 'undefined') this.setState({ hasId: true });
             })
             .catch(error => {
@@ -1451,17 +1450,8 @@ class Form extends React.Component {
                                                                                                                                       });
                                                                                                                                       form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, event.target.value);
                                                                                                                                   }}
-                                                                                                                                  value={p.billingChoice.map((option, indexc) => {
-                                                                                                                                      if (indexc === 0) {
-                                                                                                                                          if (typeof this.state[`billingChoice${index}${indexf}${indexp}`] === 'undefined' || this.state[`billingChoice${index}${indexf}${indexp}`] === null) {
-                                                                                                                                              this.setState({
-                                                                                                                                                  [`billingChoice${index}${indexf}${indexp}`]: option.label
-                                                                                                                                              });
-                                                                                                                                              form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, option.label);
-                                                                                                                                          }
-                                                                                                                                          return this.state[`billingChoice${index}${indexf}${indexp}`];
-                                                                                                                                      }
-                                                                                                                                  })}
+
+                                                                                                                                  value={ field.value || p.billingChoice[0].label }
                                                                                                                               >
                                                                                                                                   {p.billingChoice.map(option => {
                                                                                                                                       return (
@@ -1937,7 +1927,7 @@ class Form extends React.Component {
                                                                                                             return (
                                                                                                                 <TextField
                                                                                                                     {...field}
-                                                                                                                    value={field.value}
+                                                                                                                    value={field.value || ''}
                                                                                                                     style={{width: '50%', marginRight: '5%'}}
                                                                                                                     className={classes.inputDiplomaCertifResp}
                                                                                                                     label="Année d'obtention"
@@ -2027,7 +2017,7 @@ class Form extends React.Component {
                                                                                                             return (
                                                                                                                 <TextField
                                                                                                                     {...field}
-                                                                                                                    value={field.value}
+                                                                                                                    value={field.value || '' } 
                                                                                                                     style={{width: '50%', marginRight: '5%'}}
                                                                                                                     className={classes.inputDiplomaCertifResp}
                                                                                                                     label="Année d'obtention"
