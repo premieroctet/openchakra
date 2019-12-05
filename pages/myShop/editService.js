@@ -436,7 +436,6 @@ class editService extends React.Component {
     };
 
     handleChecked () {
-        //this.setState({graduated: !this.state.graduated});
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -709,7 +708,7 @@ class editService extends React.Component {
                             </Grid>
 
                         </Grid>
-                    <Grid item sm={12} md={5} style={{paddingLeft:20}}>
+                    <Grid item sm={12} md={5} style={{padding:'2%'}}>
                         <h2 style={{fontWeight: '100'}}>Paramétrez votre service {service.label}</h2>
 
                         <Grid container>
@@ -801,12 +800,12 @@ class editService extends React.Component {
                             </Grid>
                         </Grid>
                         <hr/>
-                        <Grid container>
-                            <Grid item xs={12}>
+                        <Grid>
+                            <Grid xs={12}>
                                 <h2>Option / Supplément</h2>
                             </Grid>
-                            <Grid item xs={9}>
-                                <div>
+                            <Grid xs={9} style={{maxWidth:'inherit'}}>
+                                <div style={{marginBottom: '2%'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Frais de déplacement</Typography>
                                     <Typography style={{marginBottom: '1rem'}}>
                                         Les frais de déplacement s'appliquent pour toutes les prestations réalisées à l'adresse de
@@ -862,7 +861,7 @@ class editService extends React.Component {
                                     </form>
                                 </div>
                                 <hr style={{ margin: '1rem 0' }}/>
-                                <div>
+                                <div style={{marginBottom: '2%'}}>
                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Options</Typography>
                                     <Typography style={{marginBottom: '1rem'}}>
                                         Les options vous permettent de proposer des prestations complémentaires à vos clients. Dans le cadre de prestation de repassage par exemple,
@@ -920,16 +919,16 @@ class editService extends React.Component {
                         </Grid>
                         <hr/>
                         <Grid container>
-                            <Grid item xs={12}>
+                            <Grid xs={12}>
                             <h2>Indiquez ce que vous fournissez</h2>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid xs={12}>
                                 <p>Sélectionnez les produits et le matériel que vous fournissez dans le cadre de vos prestations de service</p>
                             </Grid>
                             {all_equipments.map((e,index)=> {
                                 if(this.state[e.label]){
                                 return(
-                                    <Grid item xs={3}>
+                                    <Grid xs={3} style={{margin:'1%', flexBasis: 'inherit'}}>
                                         <label style={{cursor: 'pointer'}} key={index} onClick={() => {
                                             this.setState({[e.label]: false});
                                             let array = [...this.state.equipments]; // make a separate copy of the array
@@ -940,10 +939,7 @@ class editService extends React.Component {
                                             }
 
                                         }
-
                                         }>
-
-
                                                 <img src={`../../static/equipments/${e.logo.slice(0, -4)}_Selected.svg`} height={80} width={80}
                                                      alt={e.label}/>
                                         </label>
@@ -961,7 +957,7 @@ class editService extends React.Component {
                                     </Grid>)
                             }else {
                                     return (
-                                        <Grid item xs={3}>
+                                        <Grid item xs={3} style={{margin:'1%', flexBasis: 'inherit'}}>
                                             <label style={{cursor: 'pointer'}} key={index} onClick={() => {
                                                 this.setState({[e.label]: true});
                                                 this.setState({
@@ -970,8 +966,6 @@ class editService extends React.Component {
                                             }
 
                                             }>
-
-
                                                 <img src={`../../static/equipments/${e.logo}`} height={80} width={80}
                                                      alt={e.label}/>
                                             </label>
@@ -985,20 +979,17 @@ class editService extends React.Component {
 
                                                     }
                                                 />
-
-
                                         </Grid>
                                     )
                                 }
-
                             })}
                         </Grid>
                         <hr/>
-                        <Grid container>
-                            <Grid item xs={12}>
+                        <Grid style={{marginBottom:'2%'}}>
+                            <Grid xs={12}>
                                 <h2>Définissez votre montant minimum de réservation </h2>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid xs={12}>
                                 <p>
                                     Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service. Si vous indiquez
                                     un montant de 10€, les clients ne pourront pas réserver vos services si la somme des prestations n’atteint
@@ -1140,11 +1131,11 @@ class editService extends React.Component {
 
                                 : null}
 
-                                <Grid container>
+                                <Grid container style={{margin:'1%'}}>
                                     <Grid item xs={12}>
                                         <p>Définissez le périmètre que vous souhaitez couvrir :</p>
                                     </Grid>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={10} style={{marginTop: '2%'}}>
                                         <InputRange
                                             formatLabel={value => `${value}km`}
                                             step={1}
@@ -1158,7 +1149,7 @@ class editService extends React.Component {
                                 </Grid>
                         </Grid>
                         <hr style={{marginTop:40}}/>
-                        <Grid container>
+                        <Grid container style={{marginBottom: '2%'}}>
                             <Grid item xs={12}>
                                 <h2>Indiquez votre délai de prévenance</h2>
                             </Grid>
@@ -1203,7 +1194,7 @@ class editService extends React.Component {
                             </Grid>
                         </Grid>
                         <hr/>
-                        <Grid container>
+                        <Grid container  style={{marginBottom: '2%'}}>
                             <Grid item xs={12}>
                                 <h2>Décrivez brievement votre expertise !</h2>
                             </Grid>
@@ -1230,7 +1221,7 @@ class editService extends React.Component {
                             </Grid>
                         </Grid>
                         <hr/>
-                        <Grid container>
+                        <Grid container  style={{marginBottom: '2%'}}>
                             <Grid item xs={12}>
                                 <h2>Votre expérience, vos certifications & diplômes</h2>
                             </Grid>
@@ -1248,7 +1239,7 @@ class editService extends React.Component {
                             <Grid item xs={8}>
                                 <TextField
                                     select
-                                    style={{width: '100%'}}
+                                    style={{width: '250px'}}
                                     variant="outlined"
                                     onChange={this.onChange}
                                 >
@@ -1328,7 +1319,7 @@ class editService extends React.Component {
                                         </Grid>
                                     </Grid>
                                     <Grid container>
-                                        <Grid item xs={12}>
+                                        <Grid item xs={12} style={{marginTop:'1%', marginBottom:'1%'}}>
                                             <p>
                                                 En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des
                                                 utilisateurs mais il ne sera jamais visible par ses derniers.
@@ -1389,22 +1380,9 @@ class editService extends React.Component {
                                             </label>
                                             <span>{this.state.file_diploma !== null ? this.state.file_diploma.name : null}</span>
                                         </Grid>
-                                        <Grid item xs={6}>
-                                            {extDiploma !== 'pdf' ?
-                                                <img src={`../../${diploma.file}`} alt={'file'} width={'80%'}/>
-                                                :
-                                                <Document
-                                                    file={`../../${this.state.diploma.file}`}
-                                                    onLoadSuccess={this.onDocumentLoadSuccess}
-                                                >
-                                                    <Page pageNumber={this.state.pageNumber} width='250' />
-                                                </Document>
-                                            }
-
-                                        </Grid>
                                     </Grid>
-                                    <Grid container>
-                                        <Grid item xs={12}>
+                                    <Grid>
+                                        <Grid xs={12}>
                                             <p>
                                                 En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des
                                                 utilisateurs mais il ne sera jamais visible par ses derniers.
@@ -1418,7 +1396,6 @@ class editService extends React.Component {
                                     </Grid>
                                 </React.Fragment>
                                 : null}
-
                             <Grid item xs={12}>
                                 <h3 style={{color:'#757575'}}>Certifications</h3>
                             </Grid>
@@ -1488,13 +1465,13 @@ class editService extends React.Component {
                                         </Grid>
                                     </Grid>
                                     <Grid container>
-                                        <Grid item xs={12}>
+                                        <Grid item xs={12} style={{marginTop:'1%', marginBottom:'1%'}}>
                                             <p>
                                                 En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des
                                                 utilisateurs mais elle ne sera jamais visible par ces derniers.
                                             </p>
                                         </Grid>
-                                        <Grid item xs={3}>
+                                        <Grid item xs={3} style={{maxWidth: 'inherit', flexBasis:'inherit'}}>
                                             <Button className={classes.validerWeb} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
                                             <Button className={classes.validerMobile} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
 
@@ -1549,19 +1526,6 @@ class editService extends React.Component {
                                             </label>
                                             <span>{this.state.file_certification !== null ? this.state.file_certification.name : null}</span>
                                         </Grid>
-                                        <Grid item xs={6}>
-                                            {extCertification !== 'pdf' ?
-                                                <img src={`../../${certification.file}`} alt={'file'} width={'80%'}/>
-                                                :
-                                                <Document
-                                                    file={`../../${this.state.certification.file}`}
-                                                    onLoadSuccess={this.onDocumentLoadSuccess}
-                                                >
-                                                    <Page pageNumber={this.state.pageNumber} width='250' />
-                                                </Document>
-                                            }
-
-                                        </Grid>
                                     </Grid>
                                     <Grid container>
                                         <Grid item xs={12}>
@@ -1570,7 +1534,7 @@ class editService extends React.Component {
                                                 utilisateurs mais elle ne sera jamais visible par ces derniers.
                                             </p>
                                         </Grid>
-                                        <Grid item xs={3}>
+                                        <Grid item xs={3} style={{maxWidth: 'inherit', width: 'inherit'}}>
                                             <Button className={classes.validerWeb} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider cette certification</Button>
                                             <Button className={classes.validerMobile} onClick={()=>this.editCertification()} color={"primary"} variant={"contained"} style={{color:"white"}}>Valider</Button>
 
