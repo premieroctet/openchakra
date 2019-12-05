@@ -93,9 +93,9 @@ const styles = theme => ({
 
 
     tabmobile:{
-        visibility:'hidden',
+        display:'none',
         [theme.breakpoints.down('sm')]: {
-            visibility:'visible',
+            display:'inherit',
             fontSize:'10px',
             fontWeight:'300',
             marginTop:'-100px',
