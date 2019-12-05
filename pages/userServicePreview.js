@@ -627,75 +627,106 @@ class userServices extends React.Component {
         console.log(dateIsBetween);
 
         if (dateIsBetween) {
-          axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-            "token"
-          );
-          axios
-            .post(url + "myAlfred/api/chatRooms/addAndConnect", {
-              emitter: this.state.user._id,
-              recipient: this.state.serviceUser.user._id
-            })
-            .then(res => {
-              let reference;
-  
-              let name = this.state.user.name;
-              let firstLetterNameUser = name.charAt(0).toUpperCase();
-              let firstname = this.state.user.firstname;
-              let firstLetterFirstnameUser = firstname.charAt(0).toUpperCase();
-  
-              let nameAlfred = this.state.serviceUser.user.name;
-              let firstLetterNameAlfred = nameAlfred.charAt(0).toUpperCase();
-              let firstnameAlfred = this.state.serviceUser.user.firstname;
-              let firstLetterFirstnameAlfred = firstnameAlfred
-                .charAt(0)
-                .toUpperCase();
-  
-              const letter =
-                firstLetterNameUser +
-                firstLetterFirstnameUser +
-                firstLetterNameAlfred +
-                firstLetterFirstnameAlfred;
-              const day = new Date().getDate();
-              const month = new Date().getMonth();
-              const year = new Date().getFullYear();
-  
-              reference = letter + "_" + day + month + year;
-  
-              let bookingObj = {
-                reference: reference,
-                service: this.state.service.label,
-                address: this.state.serviceUser.service_address,
-                equipments: this.state.serviceUser.equipments,
-                amount: this.state.grandTotal,
-                date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
-                time_prestation: moment(this.state.hour).format("HH:mm"),
-                alfred: this.state.serviceUser.user._id,
-                user: this.state.user._id,
-                prestations: this.state.selectedPrestations,
-                chatroom: res.data._id,
-                fees: this.state.fees,
-                status: "Demande d'infos",
-                serviceUserId: this.state.serviceUser._id
-              };
-  
-              if (this.state.selectedOption !== null) {
-                bookingObj.option = this.state.selectedOption;
+
+          let delayIsOk = false;
+          
+          const dateNow = moment().format('YYYY-MM-DDTHH:mm');
+          let splitDelay = this.state.serviceUser.deadline_before_booking.split(' ');
+
+          switch(splitDelay[1]) {
+            case 'heures' :
+              if (moment(moment(dateTime).subtract(parseInt(splitDelay[0]), 'hours')).isAfter(dateNow)) {
+                delayIsOk = true
               }
-  
-              axios
-                .post(url + "myAlfred/api/booking/add", bookingObj)
-                .then(res => {
-                  axios.put(url + 'myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: res.data._id })
-                    .then(() => {
-                      Router.push({
-                        pathname: "/reservations/detailsReservation",
-                        query: { id: res.data._id }
-                      });
-                    })
-                })
-                .catch(err => console.log(err));
-            })
-            .catch(err => console.log(err));
+              break;
+            case 'jours' :
+              if (moment(moment(dateTime).subtract(parseInt(splitDelay[0]), 'days')).isAfter(dateNow)) {
+                delayIsOk = true
+              }
+              break;
+            case 'semaines' :
+              if (moment(moment(dateTime).subtract(parseInt(splitDelay[0]), 'weeks')).isAfter(dateNow)) {
+                delayIsOk = true
+              }
+              break;
+            default : 
+              delayIsOk = false
+              break;
+          }
+
+          if (delayIsOk) {
+            axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+              "token"
+            );
+            axios
+              .post(url + "myAlfred/api/chatRooms/addAndConnect", {
+                emitter: this.state.user._id,
+                recipient: this.state.serviceUser.user._id
+              })
+              .then(res => {
+                let reference;
+    
+                let name = this.state.user.name;
+                let firstLetterNameUser = name.charAt(0).toUpperCase();
+                let firstname = this.state.user.firstname;
+                let firstLetterFirstnameUser = firstname.charAt(0).toUpperCase();
+    
+                let nameAlfred = this.state.serviceUser.user.name;
+                let firstLetterNameAlfred = nameAlfred.charAt(0).toUpperCase();
+                let firstnameAlfred = this.state.serviceUser.user.firstname;
+                let firstLetterFirstnameAlfred = firstnameAlfred
+                  .charAt(0)
+                  .toUpperCase();
+    
+                const letter =
+                  firstLetterNameUser +
+                  firstLetterFirstnameUser +
+                  firstLetterNameAlfred +
+                  firstLetterFirstnameAlfred;
+                const day = new Date().getDate();
+                const month = new Date().getMonth();
+                const year = new Date().getFullYear();
+    
+                reference = letter + "_" + day + month + year;
+    
+                let bookingObj = {
+                  reference: reference,
+                  service: this.state.service.label,
+                  address: this.state.serviceUser.service_address,
+                  equipments: this.state.serviceUser.equipments,
+                  amount: this.state.grandTotal,
+                  date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
+                  time_prestation: moment(this.state.hour).format("HH:mm"),
+                  alfred: this.state.serviceUser.user._id,
+                  user: this.state.user._id,
+                  prestations: this.state.selectedPrestations,
+                  chatroom: res.data._id,
+                  fees: this.state.fees,
+                  status: "Demande d'infos",
+                  serviceUserId: this.state.serviceUser._id
+                };
+    
+                if (this.state.selectedOption !== null) {
+                  bookingObj.option = this.state.selectedOption;
+                }
+    
+                axios
+                  .post(url + "myAlfred/api/booking/add", bookingObj)
+                  .then(res => {
+                    axios.put(url + 'myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: res.data._id })
+                      .then(() => {
+                        Router.push({
+                          pathname: "/reservations/detailsReservation",
+                          query: { id: res.data._id }
+                        });
+                      })
+                  })
+                  .catch(err => console.log(err));
+              })
+              .catch(err => console.log(err));
+          } else {
+            toast.error(<div>Délai de prévenance non respecté</div>)
+          }
         } else {
           toast.error(<div>L'horaire choisi ne correspond aux disponibilités de l'Alfred</div>)
         }
