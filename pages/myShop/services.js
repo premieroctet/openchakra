@@ -535,7 +535,7 @@ class services extends React.Component {
                             <Grid className={classes.tabscontainer}>
                                 {tabs ?
                                     <Grid style={{width:'90%', display:'flex', flexDirection:'column', padding:'2%'}}>
-                                        <Grid xs={12} >
+                                        <Grid item xs={12} >
                                             <h2 style={{fontWeight: '100'}}>Comment les utilisateurs peuvent réserver ? </h2>
                                         </Grid>
                                         <Grid>
