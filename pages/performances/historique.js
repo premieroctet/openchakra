@@ -255,8 +255,8 @@ class Historique extends React.Component {
                             </Grid>
                         </Grid>
 
-                        <Grid item xs={9} style={{paddingLeft: 20, borderLeft: '#9f919178 solid 1px', marginBottom: '20px'}}>
-                            <Grid container className={classes.tabweb}>
+                        <Grid item xs={9} style={{paddingLeft: 20, borderLeft: '#9f919178 solid 1px', marginBottom: '20px',minHeight:530}}>
+                            <Grid container className={classes.tabweb} style={{paddingRight:30}}>
                                 <Grid item xs={6} style={{textAlign:"center"}}>
                                     <div>
                                         <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}>Versements effectués</h2>
