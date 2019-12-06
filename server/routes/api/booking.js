@@ -240,7 +240,7 @@ router.get('/last/:id',(req,res) => {
 });
 
 // GET /myAlfred/api/booking/getPaid
-// Get all booking paid for a user
+// Get all booking paid for an alfred
 // @access private
 router.get('/getPaid',passport.authenticate('jwt',{session:false}),(req,res)=> {
     Booking.find({alfred: req.user.id, paid:true})
@@ -252,11 +252,35 @@ router.get('/getPaid',passport.authenticate('jwt',{session:false}),(req,res)=> {
 });
 
 // GET /myAlfred/api/booking/getPaidSoon
-// Get all booking paid soon for a user
+// Get all booking paid soon for an alfred
 // @access private
 router.get('/getPaidSoon',passport.authenticate('jwt',{session:false}),(req,res)=> {
     Booking.find({alfred: req.user.id, paid:false, status: 'Confirmée'})
         .populate('user')
+        .then(booking => {
+            res.json(booking)
+        })
+        .catch(err => console.log(err))
+});
+
+// GET /myAlfred/api/booking/account/paid
+// Get all booking paid  for a user
+// @access private
+router.get('/account/paid',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    Booking.find({user: req.user.id, paid:true})
+        .populate('alfred')
+        .then(booking => {
+            res.json(booking)
+        })
+        .catch(err => console.log(err))
+});
+
+// GET /myAlfred/api/booking/account/paidSoon
+// Get all booking paid soon for a user
+// @access private
+router.get('/account/paidSoon',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    Booking.find({user: req.user.id, paid:false,status: 'Confirmée'})
+        .populate('alfred')
         .then(booking => {
             res.json(booking)
         })

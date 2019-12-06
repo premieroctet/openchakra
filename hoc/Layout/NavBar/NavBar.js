@@ -359,7 +359,7 @@ class NavBar extends Component {
           <Typography>
             <Link href={'/reservations/allReservations'}>
               <a className={classes.navbarLinkMobile}>
-                Mes Réservations
+                Mes réservations
               </a>
             </Link>
           </Typography>
@@ -452,7 +452,7 @@ class NavBar extends Component {
               <Typography className={classes.navbarItem}>
                 <Link href={'/reservations/allReservations'}>
                   <a className={classes.navbarLink}>
-                    Mes Réservations
+                    Mes réservations
                   </a>
                 </Link>
               </Typography>

@@ -141,6 +141,8 @@ class transactions extends React.Component {
         this.state = {
             user: {},
             tabs: false,
+            paid: [],
+            paidSoon: []
 
         }
 
@@ -163,6 +165,18 @@ class transactions extends React.Component {
                     }
                 }
             );
+
+        axios.get(url+'myAlfred/api/booking/account/paid')
+            .then(res => {
+                this.setState({paid: res.data})
+            })
+            .catch(err => console.log(err));
+
+        axios.get(url+'myAlfred/api/booking/account/paidSoon')
+            .then(res => {
+                this.setState({paidSoon: res.data})
+            })
+            .catch(err => console.log(err))
     }
     handleClicktabs2 =() => {
         this.setState({ tabs: true });
@@ -178,7 +192,9 @@ class transactions extends React.Component {
     render() {
         const {classes} = this.props;
         const {user} = this.state;
-        const {tabs} = this.state;  
+        const {tabs} = this.state;
+        const {paid} = this.state;
+        const {paidSoon} = this.state;
 
         return (
             <Fragment>
@@ -192,7 +208,7 @@ class transactions extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/notifications'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Notifications
                                             </a>
@@ -202,28 +218,28 @@ class transactions extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/notifications'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} width={27} style={{marginRight: 4}}/>
-                                            <a s style={{fontSize: '1.1rem'}}>
+                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem'}}>
                                                
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10}}className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Mode de paiement
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10}}className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} width={27} style={{marginleft: 4}}/>
+                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                                
                                             </a>
@@ -234,7 +250,7 @@ class transactions extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Préférence de versement
                                             </a>
@@ -244,7 +260,7 @@ class transactions extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             </a>
                                         </div>
@@ -253,8 +269,8 @@ class transactions extends React.Component {
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/transactions'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/ascendant-bars-graphic-2.svg'} alt={'ascendant-bars'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/ascendant-bars-graphic-2.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Historique des transactions
                                             </a>
@@ -264,8 +280,8 @@ class transactions extends React.Component {
 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/transactions'}>
-                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/ascendant-bars-graphic-2.svg'} alt={'ascendant-bars'} width={27} style={{marginRight: 4}}/>
+                                        <div style={{padding:'30px', lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/ascendant-bars-graphic-2.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                                 
                                             </a>
@@ -276,7 +292,7 @@ class transactions extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Sécurité
                                             </a>
@@ -286,7 +302,7 @@ class transactions extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/security'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             
                                             </a>
@@ -294,31 +310,10 @@ class transactions extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Applications connectées
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                               
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Paramètres
                                             </a>
@@ -328,41 +323,19 @@ class transactions extends React.Component {
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
                                             
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-
-                               {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/sponsors'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Parrainage
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/sponsors'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/trophy.svg'} alt={'trophy'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                            
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-
                             </Grid>
                         </Grid>
 
 
-                        <Grid item xs={9} style={{paddingLeft: 20, borderLeft: '#9f919178 solid 1px', marginBottom: '20px'}}>
-                            <Grid container className={classes.tabweb}>
+                        <Grid item xs={9} style={{paddingLeft: 20, borderLeft: '#9f919178 solid 1px', marginBottom: '20px',minHeight:530}}>
+                            <Grid container className={classes.tabweb} style={{paddingRight:20}}>
                                 <Grid item xs={12}>
                                     <h1 style={{color: 'dimgray',fontWeight: '100'}}>Historique des transactions</h1>
                                 </Grid>
@@ -430,40 +403,37 @@ class transactions extends React.Component {
                             <Grid container style={{marginBottom:20, marginTop: '50px'}}>
                                 {tabs ? 
                                 <React.Fragment>
-                                    
+
+                                        <Grid className={classes.historesp} container>
+                                            {paidSoon.map((e,index) => (
+                                                <Grid key={index} container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
+                                                    <Grid item xs={8}>
+                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.end_date}</Typography>
+                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.alfred.firstname} - {e.date_prestation} - {e.service}</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={4}>
+                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount}€</Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            ))}
+
+                                        </Grid>
                                 </React.Fragment>
                                 :
                                 <React.Fragment>
                                     <Grid className={classes.historesp} container>
-                                        <Grid container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
-                                            <Grid item xs={8}>
-                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Date du versement</Typography>
-                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Prénom - Dates de prestation - Service</Typography>
-                                            </Grid> 
-                                            <Grid item xs={4}>
-                                                <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>XXX€</Typography>
+                                        {paid.map((e,index) => (
+                                            <Grid key={index} container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
+                                                <Grid item xs={8}>
+                                                    <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{moment(e.date_payment).format('DD/MM/YYYY')}</Typography>
+                                                    <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.alfred.firstname} - {e.date_prestation} - {e.service}</Typography>
+                                                </Grid>
+                                                <Grid item xs={4}>
+                                                    <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount}€</Typography>
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
+                                        ))}
 
-                                        <Grid container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
-                                            <Grid item xs={8}>
-                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Date du versement</Typography>
-                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Prénom - Dates de prestation - Service</Typography>
-                                            </Grid> 
-                                            <Grid item xs={4}>
-                                                <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>XXX€</Typography>
-                                            </Grid>
-                                        </Grid>
-
-                                        <Grid container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
-                                            <Grid item xs={8}>
-                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Date du versement</Typography>
-                                                <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Prénom - Dates de prestation - Service</Typography>
-                                            </Grid> 
-                                            <Grid item xs={4}>
-                                                <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>XXX€</Typography>
-                                            </Grid>
-                                        </Grid>
                                     </Grid>
                                 </React.Fragment>
                                 }
