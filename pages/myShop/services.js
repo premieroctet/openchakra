@@ -94,6 +94,7 @@ const styles = theme => ({
         top:'114px',
         fontSize:15,
         backgroundColor:'white',
+        zIndex:'1',
         [theme.breakpoints.down('sm')]: {
             visibility:'hidden'
         }
