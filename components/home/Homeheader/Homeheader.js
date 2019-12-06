@@ -291,13 +291,13 @@ class Homeheader extends React.Component {
               <Grid item xs={12} style={{width: '100%',}}>
 
                 <Grid container alignItems="center">
-                  <Grid item className={classes.pickerhomelocation}>
+                  <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '100', marginBottom: '15px',}}>
                     <Select
                         value={this.state.service}
                         onChange={this.handleChangeService}
                         options={options}
                         styles={{
-                          menu: provided => ({ ...provided, zIndex: 9999 })
+                          menu: provided => ({ ...provided, zIndex: 9999,color: '#505050' }),
                         }}
                         isSearchable
                         isClearable
@@ -311,10 +311,10 @@ class Homeheader extends React.Component {
 
 
                   <Grid container alignItems="center">
-                    <Grid item className={classes.pickerhomelocation}>
+                    <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '100', color: '#505050'}}>
                       <AlgoliaPlaces
                           placeholder='Dans quelle ville ?'
-
+                          style={{color: '#505050'}}
                           options={{
                             appId: 'plKATRG826CP',
                             apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
