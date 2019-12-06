@@ -190,6 +190,8 @@ class searchNotLogin extends React.Component {
 
     }
 
+    
+
     async searchWithWord(){
         if(this.state.searchCity.length === 0 || !this.state.searchCity.trim()){
                 await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
@@ -838,11 +840,57 @@ class searchNotLogin extends React.Component {
         }
     }
 
+    /*fadeInStatut() {
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '1';}, 175);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.87';}, 150);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.75';}, 125);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.63';}, 100);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.5';}, 75);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.38';}, 50);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.25';}, 25);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.12';}, 0);
+    }
+
+    fadeOutStatut() {
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '1';}, 0);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.87';}, 25);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.75';}, 50);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.63';}, 75);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.5';}, 100);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.38';}, 125);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.25';}, 150);
+        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.12';}, 175);
+    }
+
+    fadeInDate() {
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '1';},175);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.87';}, 150);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.75';},125);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.63';}, 100);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.5';}, 75);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.38';}, 50);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.25';}, 25);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.12';}, 0);
+    }
+
+    fadeOutDate() {
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '1';}, 0);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.87';}, 25);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.75';}, 50);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.63';}, 75);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.5';}, 100);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.38';}, 125);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.25';}, 150);
+        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.12';}, 175);
+    }*/
+
     yes(){
         if(this.state.clickedstatut == true)
         {
+            {/*this.fadeOutStatut();*/}
             this.setState({clickedstatut: false});
         } else {
+            {/*this.fadeInStatut();*/}
             this.setState({clickedstatut: true});
         }
     }
@@ -850,8 +898,10 @@ class searchNotLogin extends React.Component {
     yes2(){
         if(this.state.clickeddate == true)
         {
+            {/*this.fadeOutDate();*/}
             this.setState({clickeddate: false});
         } else {
+            {/*this.fadeInDate();*/}
             this.setState({clickeddate: true});
         }
     }
@@ -965,7 +1015,7 @@ class searchNotLogin extends React.Component {
                             <Grid container  style={{height: '10px'}}>
                             {this.state.clickedstatut ?<Grid item xs={1} sm={2} md={7}></Grid>:<Grid style={{margin: 10}} item xs={6} sm={6} md={9}></Grid>}
                                 {this.state.clickedstatut ?
-                                <Grid item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1}}>
+                                <Grid id="status" item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1}}>
                                     <Grid container>
                                         <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
                                             {this.state.checkedParticulier ? <Grid item xs={3}></Grid> :
@@ -1012,7 +1062,7 @@ class searchNotLogin extends React.Component {
                                 : null}
                                 {this.state.clickeddate ?
                                 <Fragment>
-                                    <Grid item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
+                                    <Grid id="thedate" item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
                                         <Grid container>
                                             <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
                                                 <DateRangePicker

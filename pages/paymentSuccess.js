@@ -11,6 +11,7 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import {toast} from 'react-toastify';
 
 
+
 const { config } = require('../config/config');
 const url = config.apiUrl;
 
@@ -52,6 +53,7 @@ class paymentSuccess extends React.Component {
                 toast.error('Une erreur est survenue lors du paiement')
             })
 
+
     }
 
 
@@ -67,7 +69,7 @@ class paymentSuccess extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 
-                        <Grid container>
+                        <Grid container style={{minHeight: '530px'}}>
                             <h2>Paiement réussi</h2>
 
                         </Grid>

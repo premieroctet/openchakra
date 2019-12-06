@@ -51,7 +51,7 @@ class paymentDirectSuccess extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 
-                        <Grid container>
+                        <Grid container style={{minHeight: '530px'}}>
                             <h2>Paiement réussi</h2>
 
                         </Grid>

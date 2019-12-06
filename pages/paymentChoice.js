@@ -165,7 +165,7 @@ class paymentChoice extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 
-                        <Grid item xs={12} style={{paddingLeft: 55}}>
+                        <Grid item xs={12} style={{paddingLeft: 55,minHeight: '510px'}}>
                             <Grid container>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Choix du mode de paiement</h1>
                             </Grid>
