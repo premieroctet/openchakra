@@ -27,23 +27,10 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import LocalSeeIcon from '@material-ui/icons/LocalSee';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 
-
-
-
 moment.locale('fr');
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
-const FilledButton = styled.div`
-    display: inline-block;
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    background-color: #2FBCD3;
-    margin-right: 5px;
-    margin-top: 3px;
-    margin-left: 3px;
-`;
 
 const styles = theme => ({
     bigContainer: {
