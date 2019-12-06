@@ -989,20 +989,20 @@ class searchNotLogin extends React.Component {
                                 <Grid container>
                                     {this.state.clickedstatut ?
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Statut</Typography>
                                         </Grid> 
                                     : 
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Statut</Typography>
                                         </Grid> 
                                     }
                                     {this.state.clickeddate ?
                                         <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem', lineHeight: '1.9'}}>Quelle(s) date(s) ?</Typography>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     :
                                         <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem', lineHeight: '1.9'}}>Quelle(s) date(s) ?</Typography>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     }
                                 </Grid>
@@ -1101,9 +1101,9 @@ class searchNotLogin extends React.Component {
                         {click ?
                             <>
                                 <Grid container>
-                                    <h3 style={{marginLeft: '15px'}}>Que recherchez-vous aujourd'hui ?</h3>
+                                    <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous aujourd'hui ?</h3>
                                 </Grid>
-                                <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root'}}>
+                                <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
                                     {categories.map((e,index) => (
                                         <Grid key={index} item xs={3} style={{display: 'inline-block', width: '350px'}}>
                                             <Card style={{width: '85%', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
@@ -1127,7 +1127,7 @@ class searchNotLogin extends React.Component {
                                 </Grid>
 
                                 <Grid container>
-                                    <h3 style={{marginLeft: '15px'}}>Nos meilleurs Alfred ...</h3>
+                                    <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
 
 
                                     {categories.map(e => (
@@ -1329,9 +1329,11 @@ class searchNotLogin extends React.Component {
 
                         {this.state.click2 ?
                             <>
-                            <Grid container>
+                            {this.state.research.length === 0 || !this.state.research.trim() ?
+                            null
+                            :<Grid container>
                                 <Typography style={{fontSize: '1.1rem', color: '#A3A3A3', marginLeft: '15px',}}>Résultat pour la recherche : <i style={{fontWeight: 'bold'}}>{this.state.research}</i></Typography>
-                            </Grid>
+                            </Grid>}
 
                                 {this.state.categoryFinal.map((e, index) => (
                                         <Grid key={index} container>

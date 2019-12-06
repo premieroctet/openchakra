@@ -294,11 +294,11 @@ class reviews extends React.Component {
                         </Grid>
 
 
-                        <Grid item xs={9} style={{paddingLeft: 55}}>
+                        <Grid item xs={9} style={{paddingLeft: 55, minHeight: '530px'}}>
                             <Grid container>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Commentaires</h1>
                             </Grid>
-                            <Grid container className={classes.tabweb}>
+                            <Grid container className={classes.tabweb} style={{paddingRight: '30px'}}>
                                 <Grid item xs={6} style={{textAlign:"center"}}>
                                     <div>
                                         <h2 onClick={()=>this.handleClicktabs()} style={{fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}>Commentaires de mes Alfred</h2>
