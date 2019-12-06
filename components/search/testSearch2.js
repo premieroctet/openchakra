@@ -129,6 +129,7 @@ class testSearch2 extends React.Component {
                     }
                 }
             );
+        setTimeout(()=>this.search(),1000)
     }
 
     onChange = e => {

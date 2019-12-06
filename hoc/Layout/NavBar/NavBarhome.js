@@ -354,7 +354,7 @@ class NavBar extends Component {
         <Typography>
           <Link href={'/search'}>
             <a className={classes.navbarLinkMobile}>
-              <img src={'../../static/search-solid.svg'} style={{height: '10px', margintop: '5px'}} alt="search"/>
+              <img src={'../../static/search-solid1.svg'} style={{height: '15px', margintop: '5px'}} alt="search"/>
             </a>
           </Link>
         </Typography>
@@ -447,7 +447,7 @@ class NavBar extends Component {
             <Typography className={classes.navbarItem}>
                 <Link href={'/search'}>
                   <a className={classes.navbarLink}>
-                    <img src={'../../static/search-solid.svg'} style={{height: '10px', margintop: '5px'}} alt="search"/>
+                    <img src={'../../static/search-solid1.svg'} style={{height: '15px', margintop: '5px'}} alt="search"/>
                   </a>
                 </Link>
               </Typography>
