@@ -381,7 +381,7 @@ class editProfile extends React.Component {
 
 
 
-                        <Grid item xs={9} style={{paddingLeft: 20}}>
+                        <Grid item xs={9} style={{paddingLeft: 20,}}>
                             <h1 style={{color: 'dimgray',fontWeight: '100'}}>Modifier le profil</h1>
                             <form>
 

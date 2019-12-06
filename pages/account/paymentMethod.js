@@ -300,7 +300,7 @@ class paymentMethod extends React.Component {
                         </Grid>
 
 
-                        <Grid item xs={9} style={{paddingLeft: 55}}>
+                        <Grid item xs={9} style={{paddingLeft: 55, minHeight: '530px'}}>
                             <Grid container>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Mode de paiement</h1>
                             </Grid>

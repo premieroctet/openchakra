@@ -247,7 +247,7 @@ class parameters extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                {/*<Grid item style={{marginTop: 10}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
                                     <Link href={'/account/paymentMethod'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -266,7 +266,7 @@ class parameters extends React.Component {
                                             </a>
                                         </div>
                                     </Link>
-                                </Grid>*/}
+                                </Grid>
                                 
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
