@@ -313,9 +313,9 @@ function getAccount(id){
 
 }
 
-new CronJob('0 0 6 * * *', function() {
+/*new CronJob('0 0 6 * * *', function() {
     const date = moment().format('DD-MM-YYYY');
-    Booking.find({status: 'Confirmée'})
+    Booking.find({status: 'Confirmée',paid:false})
         .populate('user')
         .populate('alfred')
         .then(booking => {
@@ -329,7 +329,7 @@ new CronJob('0 0 6 * * *', function() {
                 const isoDate = moment(newDate).format('DD-MM-YYYY');
                 if(moment(date).isSame(isoDate)){
                    b.status = 'Terminée';
-                   b.save().then().catch();
+                   //b.save().then().catch();
                    const amount = b.amount;
                    const id_mangopay_user = b.user.id_mangopay;
                    const id_mangopay_alfred = b.alfred.id_mangopay;
@@ -372,7 +372,10 @@ new CronJob('0 0 6 * * *', function() {
                                                     BankWireRef: "My Alfred"
 
                                                 })
-                                                    .then()
+                                                    .then(()=> {
+                                                        b.paid = true;
+                                                        b.save().then().catch();
+                                                    })
                                         }
 
                                         )
@@ -402,7 +405,7 @@ new CronJob('0 0 5 * * *', function() {
             })
         })
 
-}, null, true, 'Europe/Paris');
+}, null, true, 'Europe/Paris');*/
 
 
 // pattern reference
