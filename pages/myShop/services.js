@@ -25,6 +25,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import LocalSeeIcon from '@material-ui/icons/LocalSee';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
+
 
 
 
@@ -54,11 +56,6 @@ const styles = theme => ({
             width:'100%!important',
             marginTop:'-79px',
         }},
-    containerheader2:{
-        [theme.breakpoints.down('sm')]: {
-            width:'100%!important',
-            marginTop:'-59px',
-        }},
     bottombar:{
         visibility:'hidden',
         [theme.breakpoints.down('sm')]: {
@@ -74,27 +71,34 @@ const styles = theme => ({
             visibility:'hidden',
         }},
     containermain:{
-        paddingLeft:'5%',
+        width:'100%',
+        display: 'flex',
+        zIndex:'-1',
+        height:'100%',
         [theme.breakpoints.down('sm')]: {
             padding:'2%',
             paddingLeft:'2%'
         }},
-    tabscontainer:{width:'60%',
+    tabscontainer:{
+        width:'50%',
+        display:'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
         [theme.breakpoints.down('sm')]: {
-            width:'100%',}},
-
+            width:'100%',
+        }
+        },
     tabweb:{
         visibility:'visible',
         width:'100%',
         position:'sticky',
-        top:'115px',
+        top:'114px',
         fontSize:15,
         backgroundColor:'white',
-        zIndex:'20',
         [theme.breakpoints.down('sm')]: {
-            visibility:'hidden'}},
-
-
+            visibility:'hidden'
+        }
+        },
     tabmobile:{
         display:'none',
         [theme.breakpoints.down('sm')]: {
@@ -102,33 +106,32 @@ const styles = theme => ({
             fontSize:'10px',
             fontWeight:'300',
             marginTop:'-100px',
-            height:60,
             backgroundColor:'white',
             position:'sticky',
             top:55,
-            zIndex:20}},
+            zIndex:20
+        }
+        },
 
     bgimage: {
-        display:'block',
-        width:'37%',
+        width:'100%',
         backgroundColor:'transparent',
-        backgroundImage: "url('../../static/servicesbg.png')",
         backgroundSize:'contain',
         backgroundRepeat:'no-repeat',
-        height:'68%',
-        top:'71%',
-        zIndex: -20,
-        right:0,
-        position:'absolute',
+        height:'100%',
         [theme.breakpoints.down('sm')]: {
             display:'none'
-        }},
-
+        }
+        },
     addweb:{
         marginTop: '2%',
+        display:'flex',
+        flexDirection: 'row-reverse',
+        marginRight: '20%',
         [theme.breakpoints.down('sm')]: {
-            display:'none'}},
-
+            marginRight: 0,
+        }
+        },
     mobile:{
         [theme.breakpoints.up('md')]: {
             display: 'none'
@@ -139,25 +142,13 @@ const styles = theme => ({
             display: 'none'
         }
     },
-    addmobile:{display:'none',
-        [theme.breakpoints.down('sm')]: {
-            display:'block',
-            cursor:'pointer',
-            marginBottom: 45,
-            backgroundColor: 'transparent',
-            width:'15%',
-            padding:'2%',
-            justifyContent:"center",
-            borderRadius:'100%',
-            bottom:'4%',
-            right:'20px',
-            position:'fixed',
-            zIndex:'99999'}},
-
     marginbot: {
-        marginBottom: '3.5%',
-    },
+        marginBottom: '1%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center'
 
+},
     hiddenone: {
         [theme.breakpoints.down('sm')]: {
             display: 'none!important',
@@ -178,7 +169,6 @@ const styles = theme => ({
     },
     trait1:{
         width: '100%',
-
         height: 4,
         backgroundColor: 'lightgray',
         borderColor: 'transparent'
@@ -187,8 +177,7 @@ const styles = theme => ({
         width: '100%',
         height: 4,
         backgroundColor: 'lightgray',
-        borderColor: 'transparent',  [theme.breakpoints.down('sm')]: {
-        },
+        borderColor: 'transparent',
     },
     trait3:{
         width: '100%',
@@ -218,14 +207,32 @@ const styles = theme => ({
         color: 'white'
     },
     responsiveCard: {
+        display:'flex',
+        alignItems:'center',
         border: '1px solid lightgray',
         padding: '15px 15px 15px 15px',
         width:'80%',
         [theme.breakpoints.down('sm')]: {
             width:'100%',
         }
+    },
+    buttonSave: {
+        display:'flex',
+        justifyContent:'flex-end',
+        width:'100%',
+        bottom:0,
+        alignItems:"center",
+        height:60
+    },
+    responsiveBg:{
+        width:'50%',
+        position: 'sticky',
+        top: '224px',
+        height: '50%',
+        [theme.breakpoints.down('sm')]: {
+            display:'none',
+        }
     }
-
 });
 
 class services extends React.Component {
@@ -254,7 +261,6 @@ class services extends React.Component {
     }
 
     componentDidMount() {
-        document.body.style.overflow = 'auto';
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
@@ -458,8 +464,6 @@ class services extends React.Component {
                         <Grid container className={classes.containerheader} style={{backgroundImage: `url('../../${this.state.shop.picture}')`,backgroundPosition: "center", height:'42vh',
                             backgroundSize:"cover", backgroundRepeat:"no-repeat",justifyContent:"center",alignItems:"center"}}>
                         </Grid>
-                        <Grid className={classes.containerheader2} item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
-                        </Grid>
                         <Grid item>
                             <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto', minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',zIndex:501, objectFit: 'cover'}}  alt={'picture'}/>
                         </Grid>
@@ -527,13 +531,15 @@ class services extends React.Component {
                                     </React.Fragment>}
                             </Grid>
                         </Grid>
-                        <Grid container className={classes.containermain}>
-                            <Grid item   className={classes.tabscontainer}>
+                        <Grid className={classes.containermain}>
+                            <Grid className={classes.tabscontainer}>
                                 {tabs ?
-                                    <Grid container style={{}}>
-                                        <Grid item xs={12}><h2 style={{fontWeight: '100'}}>Comment les utilisateurs peuvent réserver ? </h2></Grid>
-                                        <Grid container>
-                                            <Grid container className={classes.marginbot}>
+                                    <Grid style={{width:'90%', display:'flex', flexDirection:'column', padding:'2%'}}>
+                                        <Grid xs={12} >
+                                            <h2 style={{fontWeight: '100'}}>Comment les utilisateurs peuvent réserver ? </h2>
+                                        </Grid>
+                                        <Grid>
+                                            <Grid className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
                                                         checked={this.state.booking_request}
@@ -543,8 +549,8 @@ class services extends React.Component {
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
                                                         }}
-                                                        icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                        checkedIcon={<FilledButton />}
+                                                        icon={<CircleUnchecked />}
+                                                        checkedIcon={<RadioButtonCheckedIcon/>}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
@@ -561,8 +567,8 @@ class services extends React.Component {
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
                                                         }}
-                                                        icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                        checkedIcon={<FilledButton />}
+                                                        icon={<CircleUnchecked/>}
+                                                        checkedIcon={<RadioButtonCheckedIcon />}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
@@ -573,9 +579,11 @@ class services extends React.Component {
                                         <Grid item xs={12}>
                                             <hr style={{backgroundColor: 'darkgray'}}/>
                                         </Grid>
-                                        <Grid item xs={12}><h2 style={{fontWeight: '100'}}>Vos conditions de réservation </h2></Grid>
+                                        <Grid item xs={12}>
+                                            <h2 style={{fontWeight: '100'}}>Vos conditions de réservation </h2>
+                                        </Grid>
                                         <p style={{fontWeight: '100'}}>Il se peut que vous ayez moins de réservation si vous ajoutez des conditions. Les personnes qui ne répondent pas à vos critères peuvent quand même vous envoyer une demande. </p>
-                                        <Grid container style={{marginTop: '2%'}}>
+                                        <Grid container>
                                             <Grid container className={classes.marginbot}>
                                                 <Grid item xs={3} sm={2} md={1}>
                                                     <Checkbox
@@ -586,8 +594,8 @@ class services extends React.Component {
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
                                                         }}
-                                                        icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                        checkedIcon={<FilledButton />}
+                                                        icon={<CircleUnchecked/>}
+                                                        checkedIcon={<RadioButtonCheckedIcon/>}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
@@ -605,8 +613,8 @@ class services extends React.Component {
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
                                                         }}
-                                                        icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                        checkedIcon={<FilledButton />}
+                                                        icon={<CircleUnchecked/>}
+                                                        checkedIcon={<RadioButtonCheckedIcon />}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
@@ -624,8 +632,8 @@ class services extends React.Component {
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
                                                         }}
-                                                        icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                        checkedIcon={<FilledButton />}
+                                                        icon={<CircleUnchecked/>}
+                                                        checkedIcon={<RadioButtonCheckedIcon />}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
@@ -643,8 +651,8 @@ class services extends React.Component {
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
                                                         }}
-                                                        icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                        checkedIcon={<FilledButton />}
+                                                        icon={<CircleUnchecked/>}
+                                                        checkedIcon={<RadioButtonCheckedIcon/>}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
@@ -656,7 +664,9 @@ class services extends React.Component {
                                         <Grid item xs={12}>
                                             <hr style={{backgroundColor: 'darkgray'}}/>
                                         </Grid>
-                                        <Grid item xs={12}><h2 style={{fontWeight: '100'}}>Votre message de bienvenue validant votre réservation </h2></Grid>
+                                        <Grid item xs={12}>
+                                            <h2 style={{fontWeight: '100'}}>Votre message de bienvenue validant votre réservation </h2>
+                                        </Grid>
                                         <p style={{fontWeight: '100'}}>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation. </p>
                                         <Grid item xs={12}>
                                             <TextField
@@ -674,7 +684,9 @@ class services extends React.Component {
                                         <Grid item xs={12}>
                                             <hr style={{backgroundColor: 'darkgray'}}/>
                                         </Grid>
-                                        <Grid item xs={12}><h3 style={{fontWeight: '100'}}>Vos conditions d’annulation </h3></Grid>
+                                        <Grid item xs={12}>
+                                            <h2 style={{fontWeight: '100'}}>Vos conditions d’annulation </h2>
+                                        </Grid>
                                         <p style={{fontWeight: '100'}}>Choisissez vos conditions en cas d'annulation de la part des utilisateurs.</p>
                                         <Grid container style={{marginTop: '2%'}}>
                                             <Grid container className={classes.marginbot}>
@@ -687,8 +699,8 @@ class services extends React.Component {
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
                                                         }}
-                                                        icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                        checkedIcon={<FilledButton />}
+                                                        icon={<CircleUnchecked/>}
+                                                        checkedIcon={<RadioButtonCheckedIcon />}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
@@ -706,8 +718,8 @@ class services extends React.Component {
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
                                                         }}
-                                                        icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                        checkedIcon={<FilledButton />}
+                                                        icon={<CircleUnchecked/>}
+                                                        checkedIcon={<RadioButtonCheckedIcon />}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
@@ -725,95 +737,99 @@ class services extends React.Component {
                                                         inputProps={{
                                                             'aria-label': 'secondary checkbox',
                                                         }}
-                                                        icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                                        checkedIcon={<FilledButton />}
+                                                        icon={<CircleUnchecked/>}
+                                                        checkedIcon={<RadioButtonCheckedIcon />}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
-                                                    <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Strictes </h4>
+                                                    <h4 style={{
+                                                        fontWeight: '100',
+                                                        lineHeight: '0!important'
+                                                    }}>
+                                                        Strictes
+                                                    </h4>
                                                     <p>
                                                         Remboursement intégral jusqu'à 10 jours avant la prestation.
                                                     </p>
                                                 </Grid>
                                             </Grid>
-                                            <Grid item xs={2} style={{zIndex: 999}}>
+                                            <Grid item lg={12}>
                                                 {tabs ?
-                                                    <div style={{display:'flex',justifyContent:'flex-start',width:'100%',bottom:0,
-                                                        alignItems:"center",height:60}}>
-                                                        <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                                                style={{color: 'white',maxHeight:40, zIndex: '999'}}>
+                                                    <div className={classes.buttonSave}>
+                                                        <Button size={'medium'}
+                                                                type={'button'}
+                                                                onClick={this.onSubmit}
+                                                                variant="contained"
+                                                                color="secondary"
+                                                                style={{
+                                                                    color: 'white',
+                                                                    maxHeight:40
+                                                                }}>
                                                             Enregistrer
                                                         </Button>
                                                     </div>: null}
                                             </Grid>
                                         </Grid>
-
                                     </Grid>:
-                                    <React.Fragment>
-                                        {serviceUser.map((e,index)=> (
-                                            <React.Fragment key={index}>
-                                                <Grid className={classes.mobile} style={{padding: '8px'}}>
+                                  <React.Fragment>
+                                    {serviceUser.map((e,index)=> (
+                                        <React.Fragment key={index}>
+                                            <Grid className={classes.mobile}>
+                                                <h3 style={{color: '#505050'}}>{e.service.category.label}</h3>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid className={classes.notmobile} style={{marginLeft: 90, backgroundColor: 'white'}}>
                                                     <h3 style={{color: '#505050'}}>{e.service.category.label}</h3>
                                                 </Grid>
-                                                <Grid container>
-                                                    <Grid className={classes.notmobile} style={{marginLeft: 10, backgroundColor: 'white',padding: '8px',}}>
-                                                        <h3 style={{color: '#505050'}}>{e.service.category.label}</h3>
-                                                    </Grid>
+                                            </Grid>
+                                            <Grid container className={classes.responsiveCard}>
+                                                <Grid item md={3} xs={12} style={{ borderBottom : '150px', borderLeft : '150px', cursor: 'pointer'}}>
+                                                    <Link href={'/myShop/previewService?id='+e._id}>
+                                                        <img className={classes.respimg} src={'../../'+e.service.picture} alt={'picture'} width={'85%'}/>
+                                                    </Link>
                                                 </Grid>
-                                                <Grid container className={classes.responsiveCard}>
-                                                    <Grid item md={3} xs={12} style={{ borderBottom : '150px', borderLeft : '150px', cursor: 'pointer'}}>
-                                                        <Link href={'/myShop/previewService?id='+e._id}><img className={classes.respimg} src={'../../'+e.service.picture} alt={'picture'} width={'85%'}/></Link>
-                                                    </Grid>
-                                                    <Grid item md={6} xs={9}>
-                                                        <h4 style={{fontWeight: 'bolder',fontSize: 18,color: '#737373'}}>{e.service.label}</h4>
-                                                        <p style={{fontSize: 14}}>{e.prestations.length} Prestation(s) proposée(s)</p>
-                                                        <p style={{fontSize: 14}}>{e.number_of_views} Vue(s) du service</p>
-                                                    </Grid>
-                                                    <Grid item xs={3} style={{display:"flex", justifyContent:"flex-end"}}>
-                                                        <Link href={'/myShop/editService?id='+e._id}>
-                                                            <a style={{cursor: 'pointer',textDecoration:'none',height:'fit-content'}}>
-                                                                <h4 style={{paddingRight: 7,fontWeight: 'bolder',fontSize: 16,color:'#3CBED4',marginTop:0,cursor:"pointer"}}><EditIcon  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
-                                                            </a>
-                                                        </Link>
+                                                <Grid item md={6} xs={9}>
+                                                    <h4 style={{fontWeight: 'bolder',fontSize: 18,color: '#737373'}}>{e.service.label}</h4>
+                                                    <p style={{fontSize: 14}}>{e.prestations.length} Prestation(s) proposée(s)</p>
+                                                    <p style={{fontSize: 14}}>{e.number_of_views} Vue(s) du service</p>
+                                                </Grid>
+                                                <Grid item xs={3} style={{display:"flex", justifyContent:"flex-end"}}>
+                                                    <Link href={'/myShop/editService?id='+e._id}>
                                                         <a style={{cursor: 'pointer',textDecoration:'none',height:'fit-content'}}>
-                                                            <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}><DeleteIcon onClick={()=>this.handleClickOpen(e._id)}  style={{cursor: 'pointer',width:22, height:22 }}/></h4>
+                                                            <h4 style={{paddingRight: 7,fontWeight: 'bolder',fontSize: 16,color:'#3CBED4',marginTop:0,cursor:"pointer"}}>
+                                                                <EditIcon  style={{cursor: 'pointer',width:22, height:22 }}/>
+                                                            </h4>
                                                         </a>
-                                                    </Grid>
-                                                </Grid>
-                                            </React.Fragment>))}
-                                        <Grid container className={classes.addweb}>
-                                            <Grid>
-                                                <Link href={'/myShop/addService'}>
-                                                    <Button
-                                                      variant="contained"
-                                                      className={classes.buttonAddService}
-                                                      color="primary"
-                                                      startIcon={<AddCircleOutlineIcon />}
-                                                    >
-                                                        Ajouter un nouveau service
-                                                    </Button>
-                                                </Link>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid container className={classes.addmobile} style={{}}>
-                                            <Grid  item xs={5} style={{display:"flex",justifyContent:"center"}}>
-                                                <Grid container>
-                                                    <Grid item xs={10}>
-                                                        <Link href={'/myShop/addService'}><a style={{textDecoration:'none', padding:'2%'}}>
-                                                            <img src={'../../static/plus-5.svg'} style={{marginTop: '0%', padding:'10px', borderRadius:'50px', backgroundColor:'rgba(47, 188, 211, 1)'}} width={'50px'} alt={'plus'}/>
-                                                        </a>
-                                                        </Link>
-                                                    </Grid>
-
+                                                    </Link>
+                                                    <a style={{cursor: 'pointer',textDecoration:'none',height:'fit-content'}}>
+                                                        <h4 style={{fontWeight: 'bolder',fontSize: 16,color:'#F8727F',marginTop:0,cursor:"pointer"}}>
+                                                            <DeleteIcon onClick={()=>this.handleClickOpen(e._id)}  style={{cursor: 'pointer',width:22, height:22 }}/>
+                                                        </h4>
+                                                    </a>
                                                 </Grid>
                                             </Grid>
-                                        </Grid>
-                                    </React.Fragment>
+                                        </React.Fragment>))}
+                                            <Grid container className={classes.addweb}>
+                                                <Grid>
+                                                    <Link href={'/myShop/addService'}>
+                                                        <Button
+                                                          variant="contained"
+                                                          className={classes.buttonAddService}
+                                                          color="primary"
+                                                          startIcon={<AddCircleOutlineIcon />}
+                                                        >
+                                                            Ajouter un nouveau service
+                                                        </Button>
+                                                    </Link>
+                                                </Grid>
+                                            </Grid>
+                                  </React.Fragment>
                                 }
                             </Grid>
-                        </Grid>
-                        <Grid item xs={7}>
-                            <Grid className={classes.bgimage}>
+                            <Grid className={classes.responsiveBg}>
+                                <div>
+                                    <img className={classes.bgimage} alt="background" src={'../../static/servicesbg.png'}/>
+                                </div>
                             </Grid>
                         </Grid>
                     </Grid>

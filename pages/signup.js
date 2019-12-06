@@ -133,7 +133,6 @@ class signup extends React.Component {
       }
 
       componentDidMount() {
-        document.body.style.overflow = 'auto';
         const token = localStorage.getItem('token');
         if(token !== null) {
           toast.warn('Vous êtes déjà inscrit');

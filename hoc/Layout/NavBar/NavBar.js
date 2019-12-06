@@ -18,7 +18,6 @@ import Router from "next/router";
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
-
 const jwt = require('jsonwebtoken');
 
 const styles = theme => ({
@@ -27,16 +26,6 @@ const styles = theme => ({
   },
   grow: {
     flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
   },
   search: {
     position: 'relative',
@@ -376,15 +365,12 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  color="inherit" position="fixed">
+        <AppBar color="inherit" position="fixed" style={{boxShadow: 'inherit'}}>
           <Toolbar>
             <Link href={'/'}>
               <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
             </Link>
             <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                {/*<SearchIcon />*/}
-              </div>
               <InputBase
                 placeholder="Search…"
                 classes={{
@@ -426,7 +412,9 @@ class NavBar extends Component {
                   </a>
                 </Link>
               </Typography>
-              {test ? null : <React.Fragment><Link href={'/login'}>
+              {test ? null :
+                <React.Fragment>
+                  <Link href={'/login'}>
                     <Button variant="outlined" color={'primary'} style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
                       Connexion
                     </Button>
@@ -441,17 +429,29 @@ class NavBar extends Component {
                 </Button>
                 </Link>
                 </React.Fragment>}
-                {test ?<React.Fragment>
-
-
-                  {picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>}
-
+                {test ?
+                  <React.Fragment>
+                  {picture ?
+                    <React.Fragment>
+                      <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
+                        <Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} />
+                      </IconButton>
+                    </React.Fragment>
+                    :
+                    <React.Fragment>
+                      <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
+                        <Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} />
+                      </IconButton>
+                    </React.Fragment>}
                 </React.Fragment> : null  }
             </div>
             <div className={classes.sectionMobile}>
-
-                {test ? mobileavatar : <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}><MoreIcon className={classes.bigIcon} /></IconButton></React.Fragment>}
-
+                {test ? mobileavatar :
+                  <React.Fragment>
+                    <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}>
+                      <MoreIcon className={classes.bigIcon} />
+                    </IconButton>
+                  </React.Fragment>}
             </div>
           </Toolbar>
         </AppBar>
