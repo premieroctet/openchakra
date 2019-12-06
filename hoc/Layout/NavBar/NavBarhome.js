@@ -350,6 +350,25 @@ class NavBar extends Component {
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
+      <MenuItem onClick={this.handleMobileMenuOpen}>
+        <Typography>
+          <Link href={'/search'}>
+            <a className={classes.navbarLinkMobile}>
+              <img src={'../../static/search-solid.svg'} style={{height: '10px', margintop: '5px'}} alt="search"/>
+            </a>
+          </Link>
+        </Typography>
+      </MenuItem>
+      {test ? 
+      <MenuItem onClick={this.handleMobileMenuOpen}>
+        <Typography>
+          <Link href={'/reservations/allReservations'}>
+            <a className={classes.navbarLinkMobile}>
+              Mes Réservations
+            </a>
+          </Link>
+        </Typography>
+      </MenuItem>: null}
         { alfred ? maboutique :
         becomealfred
         }
@@ -425,6 +444,22 @@ class NavBar extends Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
+            <Typography className={classes.navbarItem}>
+                <Link href={'/search'}>
+                  <a className={classes.navbarLink}>
+                    <img src={'../../static/search-solid.svg'} style={{height: '10px', margintop: '5px'}} alt="search"/>
+                  </a>
+                </Link>
+              </Typography>
+              {test? 
+              <Typography className={classes.navbarItem}>
+                <Link href={'/reservations/allReservations'}>
+                  <a className={classes.navbarLink}>
+                    Mes Réservations
+                  </a>
+                </Link>
+              </Typography>
+              :null}
               {alfred ? 
               <Typography className={classes.navbarItem}>
                 <Link href={'/myShop/services'}>
