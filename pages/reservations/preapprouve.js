@@ -114,7 +114,8 @@ class Preapprouve extends React.Component {
       booking_id: null,
       bookingObj: null,
       date: Date.now(),
-      hour: Date.now()
+      hour: Date.now(),
+      end: null
     };
   }
 
@@ -123,6 +124,7 @@ class Preapprouve extends React.Component {
   }
 
   componentDidMount() {
+
     const booking_id = this.props.booking_id;
     this.setState({booking_id: booking_id});
 
@@ -130,6 +132,14 @@ class Preapprouve extends React.Component {
     axios.get(url + 'myAlfred/api/booking/' + booking_id)
         .then(res => {
           this.setState({ bookingObj: res.data })
+
+          const date_prestation = this.state.bookingObj.date_prestation.split('/');
+          const day = date_prestation[0];
+          const month = date_prestation[1];
+          const year = date_prestation[2];
+          const end = moment(year+'-'+month+'-'+day+'T00:00:00.000Z');
+
+          this.setState({end: end._i, date: new Date(end._i)})
         })
   }
 
@@ -381,14 +391,16 @@ class Preapprouve extends React.Component {
                           <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
                             <p>Heure de début:</p> <p>{bookingObj.date_prestation} - {bookingObj.time_prestation}</p>
                           </Grid>
-                          <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
+                          {typeof this.state.end === null ? null :
+                            <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
                             <p>Heure de fin:</p> <DatePicker
-                                            selected={this.state.date}
+                                            selected={new Date(this.state.end)}
                                             onChange={(date)=>this.setState({date:date})}
                                             customInput={<Input2 />}
                                             locale='fr'
                                             showMonthDropdown
                                             dateFormat="dd/MM/yyyy"
+                                            minDate={new Date(this.state.end)}
                                         /> - <DatePicker
                                         selected={this.state.hour}
                                         onChange={(date)=>this.setState({hour:date})}
@@ -399,8 +411,11 @@ class Preapprouve extends React.Component {
                                         timeCaption="Heure"
                                         dateFormat="HH:mm"
                                         locale='fr'
+                                        minDate={new Date()}
                                     />
                           </Grid>
+                          }
+                  
                         </Grid>
                       </Grid>
                     </Grid>

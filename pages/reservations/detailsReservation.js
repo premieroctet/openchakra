@@ -565,9 +565,9 @@ class DetailsReservation extends React.Component {
                         <Typography
                           style={{ marginTop: "-3%", fontSize: "1.7rem" }}
                         >
-                          {bookingObj === null ? null : is_user ? (
-                            <span>{`${bookingObj.alfred.firstname} ${bookingObj.alfred.name}`}</span>
-                          ) : null}
+                          {bookingObj === null || currentUser === null ? null : currentUser._id === bookingObj.alfred._id ? (
+                            <span>{`${bookingObj.user.firstname} ${bookingObj.user.name}`}</span>
+                          ) : <span>{`${bookingObj.alfred.firstname} ${bookingObj.alfred.name}`}</span> }
                         </Typography>
                         <Typography
                           style={{ marginTop: "2%", fontSize: "0.8rem" }}

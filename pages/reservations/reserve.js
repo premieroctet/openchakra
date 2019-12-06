@@ -196,7 +196,7 @@ class Reserve extends React.Component {
                           fontWeight: "100"
                         }}
                       >
-                        Confirmer la réservation de {`${bookingObj.alfred.firstname} ${bookingObj.alfred.name}`}{" "}
+                        Détails de votre réservation{" "}
                       </h2>
                       <hr
                         style={{
@@ -363,9 +363,12 @@ class Reserve extends React.Component {
                           >
                             <img src="../../static/mapmarker.svg" width={"35%"} />
                           </Grid>
-                          <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
+                          <Grid item xs={5} style={{ width: "50%", display: 'inline-block' }}>
                             <p>Heure de début:</p> <p>{bookingObj.date_prestation} - {bookingObj.time_prestation}</p>
                           </Grid>
+                          {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ? <Grid item xs={4} style={{ width: "50%", display: 'inline-block' }}>
+                            <p>Heure de fin:</p> <p>{bookingObj.end_date} - {bookingObj.end_time}</p>
+                          </Grid> : null}
                         </Grid>
                       </Grid>
                     </Grid>
