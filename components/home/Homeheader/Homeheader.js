@@ -253,13 +253,14 @@ class Homeheader extends React.Component {
     const serviceLabel = this.state.service.label;
     const city = this.state.place;
     const date = moment(this.state.date).format('DD/MM/YYYY');
-    const dateISO = this.state.date;
+    const dateISO = moment(this.state.date).format();
     const day = moment(this.state.date).format('dddd');
     const hour = moment(this.state.hour).format('HH:mm');
     Router.push({
       pathname: '/searchHome',
       query: { service: service,serviceLabel:serviceLabel,city:city,date:date,dateISO:dateISO,day:day,hour:hour }
     })
+    //console.log();
 
   }
 

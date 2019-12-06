@@ -21,13 +21,14 @@ import StarRatings from 'react-star-ratings';
 
 
 import moment from "moment";
+import Tooltip from "@material-ui/core/Tooltip";
 
 
 const _ = require('lodash');
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
-moment.locale('fr');
+//moment.locale('fr');
 const styles = theme => ({
     bigContainer: {
         marginTop: 80
@@ -319,9 +320,8 @@ class searchHome extends React.Component {
                             </Grid>
 
 
-                                            {serviceUser.map((a => {
-if (a.service.category === e._id) {
-    return (
+                                            {serviceUser.map(a => (
+
         <Grid item xs={6} sm={3} md={3}>
             <Card className={classes.card}>
                         <CardMedia
@@ -343,7 +343,7 @@ if (a.service.category === e._id) {
                         <CardContent style={{height: 'auto'}}>
                             <Grid container>
                                 <Grid item xs={7}>
-                                    <Typography style={{fontSize: '0.9rem', color: '#A3A3A3'}}>{e.label}</Typography>
+                                    <Typography style={{fontSize: '0.9rem', color: '#A3A3A3'}}>{a.service.category.label}</Typography>
                                     <Typography style={{fontSize: '1rem'}}>
                                         {a.service.label} par {a.user.firstname}  <img src="../static/checkboxes/roundBlue2Checked.png" style={{width: '13px', height: '13px'}}/>
                                     </Typography>
@@ -360,7 +360,7 @@ if (a.service.category === e._id) {
                                 </Grid>
                                 <Grid item xs={5}>
                                     <Typography style={{marginBottom: '-20px',marginLeft: '10px', fontSize: '0.8rem'}}>à partir de {a.minimum_basket}€</Typography>
-                                    <Link href={"/userServicePreview?id="+ a.service._id}>
+                                    <Link href={"/userServicePreview?id="+ a._id}>
                                         <Button alt={a.service._id} variant="contained" color="primary"
                                                 style={{width: '80%', color: 'white', margin: '20px auto auto'}}>
                                             Réserver
@@ -489,13 +489,9 @@ if (a.service.category === e._id) {
                         </CardContent>
                 </Card>
         </Grid>
-    )
-} else {
-    return null
+    ))
 }
-})
 
-                                            )}
                                 </Grid>
                     </Grid>
                 </Layout>
