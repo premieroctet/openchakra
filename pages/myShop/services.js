@@ -73,7 +73,6 @@ const styles = theme => ({
     containermain:{
         width:'100%',
         display: 'flex',
-        zIndex:'-1',
         height:'100%',
         [theme.breakpoints.down('sm')]: {
             padding:'2%',
@@ -229,6 +228,7 @@ const styles = theme => ({
         position: 'sticky',
         top: '224px',
         height: '50%',
+        zIndex: '-1',
         [theme.breakpoints.down('sm')]: {
             display:'none',
         }
