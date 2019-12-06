@@ -9,7 +9,6 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
-import styled from 'styled-components';
 import { TextField } from '@material-ui/core';
 import Footer2 from '../../hoc/Layout/Footer/Footer2';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';

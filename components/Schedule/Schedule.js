@@ -118,7 +118,7 @@ L10n.load({
       "end": "Fin",
       "onDay": "Jour",
       "days": "Jour(s)",
-      "weeks": "Week(s)",
+      "weeks": "Semaine(s)",
       "months": "Month(s)",
       "years": "Year(s)",
       "every": "every",
@@ -188,7 +188,7 @@ class Schedule extends React.Component{
                 id='RecurrenceEditor'
                 style={{ width: '100%' }}
                 firstDayOfWeek={1}
-                frequencies={['none', 'daily', 'weekly']}
+                frequencies={['none','weekly']}
               />
             </div>
           </div>
