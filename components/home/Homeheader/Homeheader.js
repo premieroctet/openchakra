@@ -291,7 +291,7 @@ class Homeheader extends React.Component {
               <Grid item xs={12} style={{width: '100%',}}>
 
                 <Grid container alignItems="center">
-                  <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '100', marginBottom: '15px',}}>
+                  <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', marginBottom: '15px',color: '#505050'}}>
                     <Select
                         value={this.state.service}
                         onChange={this.handleChangeService}
@@ -311,7 +311,7 @@ class Homeheader extends React.Component {
 
 
                   <Grid container alignItems="center">
-                    <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '100', color: '#505050'}}>
+                    <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', color: '#505050'}}>
                       <AlgoliaPlaces
                           placeholder='Dans quelle ville ?'
                           style={{color: '#505050'}}
