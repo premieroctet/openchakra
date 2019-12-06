@@ -134,6 +134,8 @@ class Historique extends React.Component {
         super(props);
         this.state = {
             tabs: false,
+            bookingsPaid: [],
+            bookingsPaidSoon: []
         }
     }
 
@@ -141,6 +143,20 @@ class Historique extends React.Component {
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
+        axios.get(url+'myAlfred/api/booking/getPaid')
+            .then(res => {
+                let bookingsPaid = res.data;
+                this.setState({bookingsPaid: bookingsPaid})
+            })
+            .catch(err => console.log(err));
+
+        axios.get(url+'myAlfred/api/booking/getPaidSoon')
+            .then(res => {
+                let bookingsPaidSoon = res.data;
+                this.setState({bookingsPaidSoon: bookingsPaidSoon})
+            })
+            .catch(err => console.log(err))
 
     }
 
@@ -156,6 +172,8 @@ class Historique extends React.Component {
     render() {
         const {classes} = this.props;
         const {tabs} = this.state;
+        const {bookingsPaid} = this.state;
+        const {bookingsPaidSoon} = this.state;
 
 
         return (
@@ -323,40 +341,36 @@ class Historique extends React.Component {
                             <Grid container style={{marginBottom:20, marginTop: '50px'}}>
                                 {tabs ?
                                     <React.Fragment>
+                                        <Grid className={classes.historesp} container>
+                                            {bookingsPaidSoon.map((e,index) => (
+                                                <Grid key={index} container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
+                                                    <Grid item xs={8}>
+                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.end_date}</Typography>
+                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.user.firstname} - {e.date_prestation} - {e.service}</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={4}>
+                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount-(e.fees*2)}€</Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            ))}
 
+                                        </Grid>
                                     </React.Fragment>
                                     :
                                     <React.Fragment>
                                         <Grid className={classes.historesp} container>
-                                            <Grid container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
-                                                <Grid item xs={8}>
-                                                    <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Date du versement</Typography>
-                                                    <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Prénom - Dates de prestation - Service</Typography>
+                                            {bookingsPaid.map((e,index) => (
+                                                <Grid key={index} container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
+                                                    <Grid item xs={8}>
+                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{moment(e.date_payment).format('DD/MM/YYYY')}</Typography>
+                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.user.firstname} - {e.date_prestation} - {e.service}</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={4}>
+                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount-(e.fees*2)}€</Typography>
+                                                    </Grid>
                                                 </Grid>
-                                                <Grid item xs={4}>
-                                                    <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>XXX€</Typography>
-                                                </Grid>
-                                            </Grid>
+                                            ))}
 
-                                            <Grid container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
-                                                <Grid item xs={8}>
-                                                    <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Date du versement</Typography>
-                                                    <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Prénom - Dates de prestation - Service</Typography>
-                                                </Grid>
-                                                <Grid item xs={4}>
-                                                    <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>XXX€</Typography>
-                                                </Grid>
-                                            </Grid>
-
-                                            <Grid container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
-                                                <Grid item xs={8}>
-                                                    <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Date du versement</Typography>
-                                                    <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Prénom - Dates de prestation - Service</Typography>
-                                                </Grid>
-                                                <Grid item xs={4}>
-                                                    <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>XXX€</Typography>
-                                                </Grid>
-                                            </Grid>
                                         </Grid>
                                     </React.Fragment>
                                 }

@@ -239,6 +239,30 @@ router.get('/last/:id',(req,res) => {
 
 });
 
+// GET /myAlfred/api/booking/getPaid
+// Get all booking paid for a user
+// @access private
+router.get('/getPaid',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    Booking.find({alfred: req.user.id, paid:true})
+        .populate('user')
+        .then(booking => {
+            res.json(booking)
+        })
+        .catch(err => console.log(err))
+});
+
+// GET /myAlfred/api/booking/getPaidSoon
+// Get all booking paid soon for a user
+// @access private
+router.get('/getPaidSoon',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    Booking.find({alfred: req.user.id, paid:false, status: 'Confirmée'})
+        .populate('user')
+        .then(booking => {
+            res.json(booking)
+        })
+        .catch(err => console.log(err))
+});
+
 // @Route GET /myAlfred/booking/:id
 // View one booking
 // @Access private
@@ -374,6 +398,7 @@ function getAccount(id){
                                                 })
                                                     .then(()=> {
                                                         b.paid = true;
+                                                        b.date_payment = moment()
                                                         b.save().then().catch();
                                                     })
                                         }

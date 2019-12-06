@@ -92,6 +92,9 @@ const BookingSchema = new Schema({
     paid: {
         type: Boolean,
         default: false
+    },
+    date_payment: {
+        type: Date
     }
 
 
