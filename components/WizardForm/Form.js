@@ -318,7 +318,7 @@ class Wizard extends React.Component {
                 if (e.option !== null) {
                     option = {label: e.option.label, price: e.option.price, unity: e.option.unity.value, type: e.option.type.value};
                 }
-                const experienceYears = e.experienceYears.value;
+                const experienceYears = typeof e.experienceYears.value !== 'undefined' && typeof e.experienceYears.value !== null && typeof e.experienceYears.value !== '' ? e.experienceYears.value : '0';
                 const city = e.city.value;
                 const address = e.address.value;
                 const zip_code = e.postal_code.value;
