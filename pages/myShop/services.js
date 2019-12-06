@@ -24,6 +24,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import LocalSeeIcon from '@material-ui/icons/LocalSee';
+
+
 
 moment.locale('fr');
 
@@ -461,7 +464,7 @@ class services extends React.Component {
                             <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto', minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',zIndex:501, objectFit: 'cover'}}  alt={'picture'}/>
                         </Grid>
                         <Grid item style={{position:"absolute",left:'3%',top:'20%',zIndex:502}}>
-                            <EditIcon onClick={()=>this.handleOpen()} style={{cursor:'pointer',color:"white",width:40}}/>
+                            <LocalSeeIcon onClick={()=>this.handleOpen()} style={{cursor:'pointer',color:"white",width:40}}/>
                         </Grid>
                         <Grid item style={{position:"absolute",right:'3%',top:'20%',zIndex:502}}>
                             <Link href={'/myShop/shopPreview?id_alfred=' + this.state.user._id}><a style={{textDecoration: 'none',color: 'white',cursor:'pointer',fontWeight: '600',fontSize: '1.15rem'}}><VisibilityIcon><p>Aperçu</p></VisibilityIcon></a></Link>
