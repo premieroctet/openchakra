@@ -184,6 +184,7 @@ class Wizard extends React.Component {
         const isLastPage = page === React.Children.count(children) - 1;
         if (isLastPage) {
             values.submission.forEach(e => {
+                console.log("Submission:"+JSON.stringify(e))
                 let arrayPrestations = [];
                 let arrayEquipments = [];
                 const service = e.serviceId;
@@ -263,6 +264,10 @@ class Wizard extends React.Component {
                 formData.append('active',active.toString());
                 formData.append('price',price.toString());
                 formData.append('description',description);
+				// SAU
+                formData.append('home',e.location.client);
+                formData.append('alfred',e.location.alfred);
+                formData.append('visio',e.location.visio);
 
                 axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
                 axios.post(url+'myAlfred/api/serviceUser/add',formData)
@@ -285,8 +290,10 @@ class Wizard extends React.Component {
                             const creation_date = values.createShop.creationDate;
                             const naf_ape = values.createShop.nafape;
                             const siret = values.createShop.siret;
+							//SAU
                             const option_presta_user = values.createShop.option_presta_user;
                             const option_presta_home = values.createShop.option_presta_home;
+                            const option_presta_visio = values.createShop.option_presta_visio;
 
 
                             axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
@@ -302,7 +309,7 @@ class Wizard extends React.Component {
 
                                     axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
                                     , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
-                                    self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService,option_presta_user,option_presta_home})
+                                    self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService,option_presta_user,option_presta_home,option_presta_visio})
                                         .then(result => {
 
                                             const formDataIdProfile = new FormData();
@@ -838,6 +845,7 @@ class Form extends React.Component {
             checkedC: false,
             option_presta_user: true,
             option_presta_home: true,
+            option_presta_visio: true,
 
 
         };
@@ -1007,7 +1015,8 @@ class Form extends React.Component {
                             isEngaged: false,
                             isCertified: false,
                             option_presta_home: true,
-                            option_presta_user: true
+                            option_presta_user: true,
+                            option_presta_visio: true
                         },
                         alfredUpdate: {
                             phone: null,
@@ -1259,6 +1268,7 @@ class Form extends React.Component {
                                                                   .then(res => {
                                                                         let servCompObj = {
                                                                               CategoryLabel : res.data.category.label,
+                                                                              location: res.data.location,
                                                                               serviceId: res.data._id,
                                                                               serviceLabel: res.data.label,
                                                                               descService: '',
@@ -1482,6 +1492,7 @@ class Form extends React.Component {
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Où acceptez-vous de réaliser vos prestations ?</Typography>
                                                                             <Grid item>
                                                                               <Field render={({form}) => {
+                                                                                if (s.location.client===false) { form.setFieldValue('createShop.option_presta_user', false); return "" } else
                                                                                 return(
                                                                                   <FormControlLabel
                                                                                     control={
@@ -1509,6 +1520,7 @@ class Form extends React.Component {
                                                                             </Grid>
                                                                             <Grid item>
                                                                               <Field render={({form}) => {
+                                                                                if (s.location.alfred===false) { form.setFieldValue('createShop.option_presta_home', false); return "" } else
                                                                                 return(
                                                                               <FormControlLabel
                                                                                 control={
@@ -1534,6 +1546,35 @@ class Form extends React.Component {
                                                                               }
                                                                               />
                                                                             </Grid>
+                                                                            <Grid item>
+                                                                              <Field render={({form}) => { 
+                                                                                if (s.location.visio===false) { form.setFieldValue('createShop.option_presta_visio', false); return "" } else
+                                                                                return(
+                                                                              <FormControlLabel
+                                                                                control={
+                                                                                    <Checkbox
+                                                                                      color="primary"
+                                                                                      icon={<CircleUnchecked/>}
+                                                                                      checkedIcon={<RadioButtonCheckedIcon />}
+                                                                                      checked={form.values.createShop.option_presta_visio}
+                                                                                      value={form.values.createShop.option_presta_visio}
+                                                                                      name={"option_presta_visio"}
+                                                                                      onChange={() => { 
+                                                                                        form.values.createShop.option_presta_visio = !form.values.createShop.option_presta_visio;
+                                                                                        form.setFieldValue('createShop.option_presta_visio', form.values.createShop.option_presta_visio);
+                                                                                      }}   
+                                                                                    />   
+                                                                                }    
+                                                                                label={<React.Fragment>
+                                                                                    <p style={{fontFamily: 'Helvetica'}}>En visioconférence</p>
+                                                                                </React.Fragment>}
+                                                                              />   
+                                                                                )    
+                                                                              }    
+                                                                              }    
+                                                                              />   
+                                                                            </Grid>
+
                                                                         </div>
                                                                         <hr style={{ margin: '1rem 0' }}/>
                                                                         <div>

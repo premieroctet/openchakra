@@ -28,6 +28,12 @@ const ServiceSchema = new Schema({
     },
     majoration: {
         type: String
+    },
+
+    location: {
+      home   : Boolean,
+      alfred : Boolean,
+      visio  : Boolean,
     }
 });
 

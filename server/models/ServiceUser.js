@@ -107,6 +107,12 @@ const ServiceUserSchema = new Schema({
         type: Number,
         default : 0
     },
+   location: {
+      home   : Boolean,
+      alfred : Boolean,
+      visio  : Boolean,
+    }
+
 });
 
 module.exports = ServiceUser = mongoose.model('serviceUser',ServiceUserSchema);
