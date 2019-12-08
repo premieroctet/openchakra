@@ -264,7 +264,7 @@ class Wizard extends React.Component {
                 formData.append('active',active.toString());
                 formData.append('price',price.toString());
                 formData.append('description',description);
-				// SAU
+
                 formData.append('home',e.location.client);
                 formData.append('alfred',e.location.alfred);
                 formData.append('visio',e.location.visio);
@@ -290,7 +290,7 @@ class Wizard extends React.Component {
                             const creation_date = values.createShop.creationDate;
                             const naf_ape = values.createShop.nafape;
                             const siret = values.createShop.siret;
-							//SAU
+
                             const option_presta_user = values.createShop.option_presta_user;
                             const option_presta_home = values.createShop.option_presta_home;
                             const option_presta_visio = values.createShop.option_presta_visio;
@@ -551,6 +551,7 @@ class Wizard extends React.Component {
                                                                     const div = document.getElementById('bigDiv');
                                                                     div.scrollTop = 0;
                                                                 } else {
+                                                                    console.log("Whole form:"+JSON.stringify(form))
                                                                     toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
                                                                         if (typeof service === 'undefined') {
                                                                             return null
@@ -1455,9 +1456,7 @@ class Form extends React.Component {
                                                                                                                                   disabled={!p.checked}
                                                                                                                                   margin="none"
                                                                                                                                   onChange={event => {
-                                                                                                                                      this.setState({
-                                                                                                                                          [`billingChoice${index}${indexf}${indexp}`]: event.target.value
-                                                                                                                                      });
+                                                                                                                                      this.setState({ [`billingChoice${index}${indexf}${indexp}`]: event.target.value });
                                                                                                                                       form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, event.target.value);
                                                                                                                                   }}
 
