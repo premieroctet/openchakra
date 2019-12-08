@@ -90,10 +90,6 @@ class login extends React.Component {
     };
   }
 
-  componentDidMount() {
-    document.body.style.overflow = 'auto';
-  }
-
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };

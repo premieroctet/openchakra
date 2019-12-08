@@ -25,11 +25,9 @@ import Select from 'react-select';
 import MaterialSelect from '@material-ui/core/Select';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import AddressFinder from '../../components/WizardForm/AddressFinder';
-import { FormControl} from '@material-ui/core';
 import { toast } from "react-toastify";
 import Loader from 'react-loader-spinner';
 import Clear from '@material-ui/icons/Clear';
-import Input from '@material-ui/core/Input';
 import Link from 'next/link';
 import styled from 'styled-components';
 import MultipleSelect from '../../components/WizardForm/MultipleSelect';
@@ -56,7 +54,9 @@ const styles = theme => ({
           display: 'none!important',
       }
    },
-   bottombar:{visibility:'hidden', [theme.breakpoints.down('sm')]: {
+   bottombar:{
+    visibility:'hidden',
+     [theme.breakpoints.down('sm')]: {
        visibility:'visible',
        boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
    }},
@@ -1959,6 +1959,38 @@ class addService extends React.Component {
                     </Wizard.Page>
                   </Wizard>
                 </div>
+              </Grid>
+              <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
+
+                <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
+                  <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                    <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                  </Link>
+                </Grid>
+                <Grid item xs={2} style={{textAlign:"center"}}>
+                  <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                    <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                  </a></Link>
+                </Grid>
+
+                <Grid item xs={2} style={{textAlign:"center"}}>
+                  <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                    <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                  </a></Link>
+                </Grid>
+
+                <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                  <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                    <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                  </a></Link>
+                </Grid>
+
+                <Grid item xs={2} style={{textAlign:"center"}}>
+                  <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                    <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                  </a></Link>
+                </Grid>
+
               </Grid>
             <Footer/>
           </Layout>
