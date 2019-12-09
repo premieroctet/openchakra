@@ -221,9 +221,11 @@ class Homeheader extends React.Component {
       service: '',
       place: '',
       date: Date.now(),
-      hour: Date.now(),
+      dateSelected: '',
+      hour: '',
+      hourSelected: '',
     };
-    this.handleChangeService=this.handleChangeService.bind(this);
+
   }
 
   componentDidMount() {
@@ -243,24 +245,33 @@ class Homeheader extends React.Component {
     this.setState({place: suggestion.name});
   };
 
-  handleChangeService = service => {
-    this.setState({ service });
-
-  };
-
   search() {
-    const service = this.state.service.value;
-    const serviceLabel = this.state.service.label;
+    let date;
+    let dateISO;
+    let day;
+    let hour;
+    const service = this.state.service;
     const city = this.state.place;
-    const date = moment(this.state.date).format('DD/MM/YYYY');
-    const dateISO = moment(this.state.date).format();
-    const day = moment(this.state.date).format('dddd');
-    const hour = moment(this.state.hour).format('HH:mm');
+    if(this.state.dateSelected !== ''){
+       date = moment(this.state.dateSelected).format('DD/MM/YYYY');
+      dateISO = moment(this.state.dateSelected).format();
+      day = moment(this.state.dateSelected).format('dddd');
+    } else {
+      date = '';
+      dateISO = '';
+      day = '';
+    }
+     if(this.state.hourSelected !== ''){
+       hour = moment(this.state.hourSelected).format('HH:mm');
+     } else {
+       hour = '';
+     }
+
     Router.push({
       pathname: '/searchHome',
-      query: { service: service,serviceLabel:serviceLabel,city:city,date:date,dateISO:dateISO,day:day,hour:hour }
+      query: { service: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour }
     })
-    //console.log();
+
 
   }
 
@@ -292,19 +303,14 @@ class Homeheader extends React.Component {
 
                 <Grid container alignItems="center">
                   <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', marginBottom: '15px',color: '#505050'}}>
-                    <Select
+                    <TextField
+                        id="outlined-basic"
+                        label="Service"
+                        variant="outlined"
+                        placeholder={'Coiffure, Plomberie...'}
                         value={this.state.service}
-                        onChange={this.handleChangeService}
-                        options={options}
-                        styles={{
-                          menu: provided => ({ ...provided, zIndex: 9999,color: '#505050' }),
-                        }}
-                        isSearchable
-                        isClearable
-                        closeMenuOnSelect={true}
-                        placeholder={'Quel service ?'}
-                        noOptionsMessage={()=>'Aucun service'}
-
+                        onChange={this.onChange}
+                        name={'service'}
                     />
                   </Grid>
                 </Grid>
@@ -342,12 +348,14 @@ class Homeheader extends React.Component {
                       </Grid>
                       <Grid item xs={10}>
                     <DatePicker
-                        selected={this.state.date}
-                        onChange={(date)=>this.setState({date:date})}
-                        customInput={<Input2 />}
+                        selected={this.state.dateSelected}
+                        onChange={(date)=>this.setState({dateSelected:date})}
+                        /*customInput={<Input2 />}*/
                         locale='fr'
                         showMonthDropdown
                         dateFormat="dd/MM/yyyy"
+                        placeholderText={moment(this.state.date).format('DD/MM/YYYY')}
+                        minDate={new Date()}
 
 
 
@@ -363,15 +371,15 @@ class Homeheader extends React.Component {
                       </Grid>
                       <Grid item xs={10}>
                         <DatePicker
-                            selected={this.state.hour}
-                            onChange={(date)=>this.setState({hour:date})}
-                            customInput={<Input2 />}
+                            selected={this.state.hourSelected}
+                            onChange={(date)=>this.setState({hourSelected:date})}
                             showTimeSelect
                             showTimeSelectOnly
-                            timeIntervals={15}
+                            timeIntervals={30}
                             timeCaption="Heure"
                             dateFormat="HH:mm"
                             locale='fr'
+                            placeholderText={'09:00'}
 
 
 

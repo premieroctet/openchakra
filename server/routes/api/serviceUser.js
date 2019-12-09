@@ -360,6 +360,30 @@ router.get('/all',(req,res)=> {
         .catch(err => res.status(404).json({ service: 'No service found' }));
 });
 
+// @Route GET /myAlfred/api/serviceUser/all/category/:category
+// View all service user per category
+// @Access private
+router.get('/all/category/:category',(req,res)=> {
+    let allServices = [];
+    ServiceUser.find()
+        .populate('user')
+        .populate('service')
+        .then(service => {
+            if(typeof service !== 'undefined' && service.length > 0){
+                service.forEach(e => {
+                    if (e.service.category == req.params.category) {
+                        allServices.push(e)
+                    }
+                });
+            } else {
+                return res.status(400).json({msg: 'No service found'});
+            }
+            res.json(allServices);
+
+        })
+        .catch(err => res.status(404).json({ service: 'No service found' }));
+});
+
 // @Route GET /myAlfred/api/serviceUser/category/:id
 // Count number of service per category
 router.get('/category/:id',(req,res)=> {

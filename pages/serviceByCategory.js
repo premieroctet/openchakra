@@ -37,9 +37,9 @@ const styles = theme => ({
         margin: 20,
     },
     media: {
-      height: "250px!important",
-      position: 'relative',
-      objectFit: 'cover',
+        height: "250px!important",
+        position: 'relative',
+        objectFit: 'cover',
     },
     respfilter:{
         [theme.breakpoints.down('sm')]: {
@@ -65,7 +65,7 @@ const styles = theme => ({
     }
 });
 
-class searchHome extends React.Component {
+class serviceByCategory extends React.Component {
 
     constructor(props) {
         super(props);
@@ -77,7 +77,6 @@ class searchHome extends React.Component {
             copyService: [],
             copyFilterPro: [],
             copyFilterParticulier: [],
-            uniqCategory: '',
             uniqShop: [],
             idAlfred: [],
             checkedB: false,
@@ -86,86 +85,18 @@ class searchHome extends React.Component {
         }
     }
 
-    static getInitialProps ({ query: { service, city, date, dateISO, day, hour } }) {
-        return { service: service, city:city, date:date, dateISO: dateISO,day:day, hour:hour }
+    static getInitialProps ({ query: { category } }) {
+        return { category: category }
 
     }
 
     componentDidMount() {
-        const service = this.props.service;
-        const city = this.props.city;
-        const date = this.props.date;
-        const dateISO = this.props.dateISO;
-        const day = this.props.day;
-        const hour = this.props.hour;
+        const category = this.props.category;
 
-        if(service === '' && city === '' && date === '' && dateISO === '' && day === '' && hour === '') {
-            axios.get(url+'myAlfred/api/serviceUser/all')
-                .then(res => {
-                    const sorted = _.orderBy(res.data,['level','number_of_views','graduated','is_certified','user.creation_date'],
-                        ['desc','desc','desc','desc','desc']);
-                    this.setState({serviceUser: sorted})
-                });
-            setTimeout(() =>
-                axios.get(url+'myAlfred/api/category/all/sort')
-                    .then(response => {
-                        this.setState({allCategories : response.data, showCategories : true})
-                        response.data.forEach(e => {
-                            //this.setState({[e.label+'Array']:[]});
-                            this.setState({[e.label]:0});
-                            this.state.serviceUser.forEach(a => {
-                                //let array = this.state[e.label+'Array'];
-                                if(a.service.category === e._id){
-                                    this.setState(prevState => {
-                                        return {[e.label]: prevState[e.label] + 1}
-                                    })
-                                    //array.push(a);
-                                    //this.setState({[e.label+'Array']:array})
-                                }
-                            })
-
-
-                        })
-                    }),200
-
-            )
-
-
-        }
-
-        const obj = {
-      service:service, city:city, date:date, day:day,hour:hour, dateISO:dateISO
-    };
-    axios.post(url+'myAlfred/api/serviceUser/home/search',obj)
-        .then(res => {
-            let serviceUser = res.data;
-          this.setState({serviceUser: serviceUser, copyService:serviceUser});
-          serviceUser.forEach(s => {
-              this.setState({uniqCategory: s.service.category.label})
-          })
-        })
-        .catch(err => console.log(err))
-    }
-
-    search(){
-        const service_id = this.props.service_id;
-        const service_label = this.props.service_label;
-        const city = this.props.city;
-        const date = this.props.date;
-        const dateISO = this.props.dateISO;
-        const day = this.props.day;
-        const hour = this.props.hour;
-
-        const obj = {
-            service:service_id, city:city, date:date, day:day,hour:hour,serviceLabel:service_label, dateISO:dateISO
-        };
-        axios.post(url+'myAlfred/api/serviceUser/home/search',obj)
+        axios.get(url+'myAlfred/api/serviceUser/all/category/'+category)
             .then(res => {
                 let serviceUser = res.data;
                 this.setState({serviceUser: serviceUser, copyService:serviceUser});
-                serviceUser.forEach(s => {
-                    this.setState({uniqCategory: s.service.category.label})
-                })
             })
             .catch(err => console.log(err))
     }
@@ -187,97 +118,97 @@ class searchHome extends React.Component {
         const arrayShop = [];
         this.setState({idAlfred:[]});
         const serviceUser = this.state.serviceUser;
-            serviceUser.forEach(s => {
-                axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
-                    .then( res => {
-                        let shop = res.data;
-                        const index = arrayShop.findIndex(i=>i._id == shop._id);
-                        if(index === -1){
-                            arrayShop.push(shop);
+        serviceUser.forEach(s => {
+            axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
+                .then( res => {
+                    let shop = res.data;
+                    const index = arrayShop.findIndex(i=>i._id == shop._id);
+                    if(index === -1){
+                        arrayShop.push(shop);
 
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            });
-            await this.setState({uniqShop: arrayShop});
-            if(this.state.checkedB){
-                this.setState({idAlfred:[]});
-                setTimeout(()=>{
-
-                    const arrayService = this.state.serviceUser;
-                    const arrayIndex = [];
-                    this.state.uniqShop.forEach(u => {
-                        if(u.is_particular){
-                            this.state.idAlfred.push(u.alfred._id)
-                        }
-                    });
-                    this.state.serviceUser.forEach((f,index) => {
-                        this.state.idAlfred.forEach(i => {
-                            if(f.user._id === i){
-                                arrayIndex.push(index);
-                            }
-                        })
-                    });
-                    for (let t = arrayIndex.length -1; t >= 0; t--){
-                        arrayService.splice(arrayIndex[t],1);
                     }
-                    this.setState({serviceUser:arrayService,copyFilterPro:arrayService});
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        });
+        await this.setState({uniqShop: arrayShop});
+        if(this.state.checkedB){
+            this.setState({idAlfred:[]});
+            setTimeout(()=>{
 
-                    },2000)
-            } else {
-                this.search();
-            }
+                const arrayService = this.state.serviceUser;
+                const arrayIndex = [];
+                this.state.uniqShop.forEach(u => {
+                    if(u.is_particular){
+                        this.state.idAlfred.push(u.alfred._id)
+                    }
+                });
+                this.state.serviceUser.forEach((f,index) => {
+                    this.state.idAlfred.forEach(i => {
+                        if(f.user._id === i){
+                            arrayIndex.push(index);
+                        }
+                    })
+                });
+                for (let t = arrayIndex.length -1; t >= 0; t--){
+                    arrayService.splice(arrayIndex[t],1);
+                }
+                this.setState({serviceUser:arrayService,copyFilterPro:arrayService});
+
+            },2000)
+        } else {
+            this.search();
+        }
     }
 
     async filterParticulier(){
-            const arrayShop = [];
-            const serviceUser = this.state.serviceUser;
-            serviceUser.forEach(s => {
-                axios.get(url + 'myAlfred/api/shop/alfred/' + s.user._id)
-                    .then(res => {
-                        let shop = res.data;
-                        const index = arrayShop.findIndex(i => i._id == shop._id);
-                        if (index === -1) {
-                            arrayShop.push(shop);
+        const arrayShop = [];
+        const serviceUser = this.state.serviceUser;
+        serviceUser.forEach(s => {
+            axios.get(url + 'myAlfred/api/shop/alfred/' + s.user._id)
+                .then(res => {
+                    let shop = res.data;
+                    const index = arrayShop.findIndex(i => i._id == shop._id);
+                    if (index === -1) {
+                        arrayShop.push(shop);
 
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        });
+        await this.setState({uniqShop: arrayShop});
+
+        if(this.state.checkedParticulier){
+            this.setState({idAlfred:[]});
+            setTimeout(() => {
+
+                const arrayService = this.state.serviceUser;
+                const arrayIndex = [];
+                this.state.uniqShop.forEach(u => {
+                    if (u.is_professional) {
+                        this.state.idAlfred.push(u.alfred._id)
+                    }
+                });
+                this.state.serviceUser.forEach((f, index) => {
+                    this.state.idAlfred.forEach(i => {
+                        if (f.user._id === i) {
+                            arrayIndex.push(index);
                         }
                     })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            });
-            await this.setState({uniqShop: arrayShop});
+                });
+                for (let t = arrayIndex.length - 1; t >= 0; t--)
+                    arrayService.splice(arrayIndex[t], 1);
 
-            if(this.state.checkedParticulier){
-                this.setState({idAlfred:[]});
-                setTimeout(() => {
+                this.setState({serviceUser: arrayService,copyFilterParticulier:arrayService});
 
-                    const arrayService = this.state.serviceUser;
-                    const arrayIndex = [];
-                    this.state.uniqShop.forEach(u => {
-                        if (u.is_professional) {
-                            this.state.idAlfred.push(u.alfred._id)
-                        }
-                    });
-                    this.state.serviceUser.forEach((f, index) => {
-                        this.state.idAlfred.forEach(i => {
-                            if (f.user._id === i) {
-                                arrayIndex.push(index);
-                            }
-                        })
-                    });
-                    for (let t = arrayIndex.length - 1; t >= 0; t--)
-                        arrayService.splice(arrayIndex[t], 1);
+            }, 2000)
+        } else {
+            this.search();
 
-                    this.setState({serviceUser: arrayService,copyFilterParticulier:arrayService});
-
-                }, 2000)
-            } else {
-                this.search();
-
-            }
+        }
     }
 
     render() {
@@ -287,23 +218,23 @@ class searchHome extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                    <Grid container style={{boxShadow: 'rgba(51, 51, 51, 0.31) 0px 5px 7px -5px', paddingBottom: '10px', paddingTop: '10px', position: 'sticky', top: '50px', backgroundColor: 'white', zIndex: 11}}>
-                    <Grid item xs={4}>
+                        <Grid container style={{boxShadow: 'rgba(51, 51, 51, 0.31) 0px 5px 7px -5px', paddingBottom: '10px', paddingTop: '10px', position: 'sticky', top: '50px', backgroundColor: 'white', zIndex: 11}}>
+                            <Grid item xs={4}>
                                 <Grid container>
                                     {this.state.clickedstatut ?
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
                                             <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
                                         </Grid>
-                                    :
+                                        :
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
                                             <Typography style={{textAlign: 'center', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
                                         </Grid>
                                     }
                                 </Grid>
                             </Grid>
-                    </Grid>
+                        </Grid>
                         <Grid container>
-                                {this.state.clickedstatut ?
+                            {this.state.clickedstatut ?
                                 <Grid item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10, zIndex: 1}}>
                                     <Grid container>
                                         <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
@@ -329,7 +260,7 @@ class searchHome extends React.Component {
                                         <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
                                             {this.state.checkedB ? null :
 
-                                            <Grid item xs={6} sm={4} md={3} style={{textAlign:'center', margin: 'auto'}}>
+                                                <Grid item xs={6} sm={4} md={3} style={{textAlign:'center', margin: 'auto'}}>
                                                     <FormControlLabel
                                                         control={
                                                             <Switch
@@ -350,55 +281,13 @@ class searchHome extends React.Component {
                                 : null}
                         </Grid>
                         <Grid container>
-                            {this.state.showCategories ?
-                                <>
-                                <Grid container>
-                                    <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous aujourd'hui ?</h3>
-                                </Grid>
-                                <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
-                                    {this.state.allCategories.map((e,index) => (
-                                        <Grid key={index} item xs={3} style={{display: 'inline-block', width: '350px'}}>
-                                            <Link href={'/serviceByCategory?category='+e._id}>
-                                            <Card style={{width: '85%', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
-                                                <CardActionArea>
-                                                    <CardMedia
-                                                        style={{height:200}}
-                                                        image={e.picture}
-                                                        title={e.label}
-                                                    />
-                                                    <CardContent style={{padding: '5px'}}>
-                                                        <Typography gutterBottom style={{fontSize: '1.1rem', textAlign: 'center'}}>
-                                                            {e.label}
-                                                        </Typography>
-
-                                                    </CardContent>
-                                                </CardActionArea>
-
-                                            </Card>
-                                            </Link>
-
-                                        </Grid>
-                                    ))}
-                                </Grid>
-                                </>
-                                : null}
-
-                            {this.state.showCategories ?
-
-                                <Grid container>
-                                    <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
-
-
-                                    {this.state.allCategories.map((e,index) => (
+                            <Grid container>
                                         <Grid container>
-                                            {this.state[e.label] !== 0 ?<Grid item xs={12}>
-                                                <h3 style={{marginLeft: '15px'}}>{e.label}</h3>
-                                            </Grid> : null}
+
 
                                             <Grid container>
-                                                {serviceUser.map(a => {
-                                                    if (a.service.category === e._id) {
-                                                        return (
+                                                {serviceUser.map(a => (
+
 
                                                             <Grid item md={3} sm={6} xs={12}>
                                                                 <Card className={classes.card}>
@@ -421,7 +310,7 @@ class searchHome extends React.Component {
                                                                     <CardContent style={{height: 'auto'}}>
                                                                         <Grid container>
                                                                             <Grid item xs={7}>
-                                                                                <Typography style={{fontSize: '0.9rem', color: '#A3A3A3'}}>{e.label}</Typography>
+
                                                                                 <Typography style={{fontSize: '1rem'}}>
                                                                                     {a.service.label} par {a.user.firstname}  <img src="../static/checkboxes/roundBlue2Checked.png" style={{width: '13px', height: '13px'}}/>
                                                                                 </Typography>
@@ -568,21 +457,12 @@ class searchHome extends React.Component {
                                                                 </Card>
                                                             </Grid>
 
-                                                        )
-                                                    } else {
-                                                        return null
-                                                    }
-                                                })}
+                                                        ))}
                                             </Grid>
-                                            {this.state[e.label] !== 0 ?
-                                                <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '80px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
-                                                : null}
+
 
                                         </Grid>
-                                    ))}
                                 </Grid>
-
-                                : null}
                         </Grid>
                     </Grid>
                 </Layout>
@@ -593,4 +473,4 @@ class searchHome extends React.Component {
 }
 
 
-export default withStyles(styles)(searchHome);
+export default withStyles(styles)(serviceByCategory);
