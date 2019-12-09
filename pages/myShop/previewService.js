@@ -461,9 +461,17 @@ class services extends React.Component {
                                         <Grid item xs={5}></Grid>
                                     </Grid>
                                     <Grid container>
-                                        {equipments.map((e,index)=>(<React.Fragment key={index}>
-                                            <Grid item xs={1} style={{ marginLeft: '1.5%'}}><img src={`../../static/equipments/${e.logo.slice(0, -4)}_Selected.svg`} alt={e.label}/></Grid>
-                                        </React.Fragment>))}
+                                    {equipments.length ? (
+                                        equipments.map((e, index) => (
+                                            <React.Fragment key={index}>
+                                                <Grid item xs={1} style={{ marginLeft: "1.5%" }}>
+                                                    <img src={"../" + e.logo2} />
+                                                </Grid>
+                                            </React.Fragment>
+                                        ))
+                                    ) : (
+                                        <p>Aucun équipement fournis</p>
+                                    )}
                                         <Grid item xs={1}></Grid>
                                     </Grid>
                                 </div>
