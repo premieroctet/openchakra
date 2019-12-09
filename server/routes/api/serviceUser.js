@@ -94,6 +94,11 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
             fields.service_address.gps.lng = req.body.lng;
 
             fields.majoration.price = parseInt(req.body.price);
+            console.log("Home:"+JSON.stringify(req.body.home))
+            fields.location= {}
+            fields.location.home = req.body.home === 'true'
+            fields.location.alfred = req.body.alfred === 'true'
+            fields.location.visio = req.body.visio === 'true'
             const newService = new ServiceUser(fields);
             console.log(newService);
             newService.save().then(service => res.json(service)).catch(err => console.log(err));
