@@ -2506,7 +2506,7 @@ class DetailsReservation extends React.Component {
                                         textAlign: "center"
                                       }}
                                     >
-                                      {prestation.value} x
+                                      {prestation.value}
                                     </Typography>
                                   );
                                 })}
@@ -2522,7 +2522,7 @@ class DetailsReservation extends React.Component {
                                         textAlign: "center"
                                       }}
                                     >
-                                      {prestation.price} x
+                                      {prestation.price}€
                                     </Typography>
                                   );
                                 })}

@@ -78,6 +78,19 @@ class addPicture extends React.Component {
                 URL.createObjectURL(event.target.files[0])    })
     }
 
+    handleLater(e) {
+        e.preventDefault();
+
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
+        axios.put(url+"myAlfred/api/users/profile/pictureLater", { picture: 'static/basicavatar.png' })
+            .then((response) => {
+                Router.push({pathname: '/addPhone'})
+            }).catch((error) => {
+                console.log(error)
+        });
+    }
+
     onSubmit = e => {
         e.preventDefault();
 
@@ -143,7 +156,7 @@ class addPicture extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
-                                    <Link href={'/addPhone'}><a style={{textDecoration: 'none', color: 'black'}}>Je le ferai plus tard</a></Link>
+                                    <a onClick={(e) => this.handleLater(e)} style={{textDecoration: 'none', color: 'black', cursor: 'pointer'}}>Je le ferai plus tard</a>
                                 </Grid>
                             </form>
                             </div>

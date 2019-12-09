@@ -1080,7 +1080,7 @@ class userServices extends React.Component {
                     }}
                   >
                     par {serviceUser.user.firstname} ({serviceUser.perimeter}{" "}
-                    kms)
+                    km)
                   </p>
                 </Grid>
 

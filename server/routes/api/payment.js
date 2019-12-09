@@ -321,6 +321,35 @@ router.put('/cards',passport.authenticate('jwt',{session:false}),(req,res)=> {
     api.Cards.update({Id:id_card,Active:false}).then().catch()
 });
 
+// POST / myAlfred/api/payment/createKyc
+// Create a KYC document
+// @access private
+router.post('/createKyc', passport.authenticate('jwt', { session: false }), ( req, res ) => {
+    User.findById(req.user.id)
+        .then(user => {
+            const id = user.id_mangopay;
+            const id_recto = user.id_card.recto;
+            let id_verso = null;
+            if (typeof user.id_card.verso !== 'undefined') id_verso = user.id_card.verso;
+
+            api.Users.createKycDocument(id, id_recto)
+                .then(docRecto => {
+                    if (id_verso !== null) {
+                        api.Users.createKycDocument(id, id_verso)
+                            .then(docVerso => {
+                                console.log(docRecto, docVerso);
+                            })
+                            .catch(errV => {
+                                res.json(errV)
+                            })
+                    }
+                })
+                .catch(errR => {
+                    res.json(errR);
+                })
+        })
+});
+
 
 
 
