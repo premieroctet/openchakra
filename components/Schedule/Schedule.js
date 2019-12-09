@@ -9,6 +9,30 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 const propTypes = {};
 const localizer = momentLocalizer(moment);
 
+let formats = {
+  timeGutterFormat : 'HH:mm', // Axe Y horaires week/day
+  eventTimeRangeFormat: ({
+    start,
+    end
+  }, culture, local) =>
+    local.format(start, 'HH:mm', culture) + ' - ' + // Affichage de l'event dans le calendrier h début (week/day)
+    local.format(end, 'HH:mm', culture), // Affichage de l'event dans le calendrier h fin (week/day)
+  dayFormat: 'dddd' + ' ' + 'DD/MM', // header de weekly (lun. dd/mm) (week)
+  agendaTimeRangeFormat: ({
+    start,
+    end
+  }, culture, local) =>
+    local.format(start, 'HH:mm', culture) + ' - ' + // Affichage de l'event dans Agenda - Horaires h début (agenda)
+    local.format(end, 'HH:mm', culture), // Affichage de l'event dans Agenda - Horaires h fin (agenda)
+  agendaDateFormat: 'ddd' + ' ' + 'DD/MM', // Affichage de l'event dans agenda - Date format (ddd. DD/MM) (agenda)
+  dayRangeHeaderFormat: ({
+    start,
+    end
+  }, culture, local) =>
+    local.format(start,  'dddd' + ' ' + 'DD/MM/YYYY', culture) + ' au ' + // Title de week - date début (week)
+    local.format(end,  'dddd' + ' ' + 'DD/MM/YYYY', culture),// Title de week - date fin (week)
+  dayHeaderFormat: 'dddd DD MMMM'
+};
 
 class Schedule extends React.Component {
   constructor(...args) {
@@ -46,17 +70,34 @@ class Schedule extends React.Component {
             The events are being arranged by `no-overlap` algorithm.
           </strong>
         </ExampleControlSlot.Entry>
-        <Calendar
-          selectable
-          localizer={localizer}
-          events={this.state.events}
-          defaultView={Views.WEEK}
-          scrollToTime={new Date(1970, 1, 1, 6)}
-          defaultDate={new Date(2015, 3, 12)}
-          onSelectEvent={event => alert(event.title)}
-          onSelectSlot={this.handleSelect}
-          dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
-        />
+        <div style={{height:700}}>
+          <Calendar
+            selectable
+            culture='fr-FR'
+            localizer={localizer}
+            events={this.state.events}
+            defaultView={Views.WEEK}
+            defaultDate={new Date()}
+            onSelectEvent={event => alert(event.title)}
+            onSelectSlot={this.handleSelect}
+            dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
+            messages={{
+              'today': "Aujourd'hui",
+              "previous":'précédente',
+              "next":"suivante",
+              "month": "Mois",
+              "week": "Semaine",
+              "day": "Aujourd'hui",
+              "agenda": "Agenda",
+              "event" :"Evénement",
+              "date" : "Date",
+              "time" : "Horaires"
+            }}
+            formats={formats}
+            startAccessor="start"
+            endAccessor="end"
+          />
+        </div>
       </>
     )
   }
