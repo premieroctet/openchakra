@@ -1,15 +1,23 @@
 import React from 'react'
-import { Calendar, Views } from 'react-big-calendar'
+import { Calendar, Views, momentLocalizer   } from 'react-big-calendar';
 import events from '../events'
 import ExampleControlSlot from '../ExampleControlSlot'
+import _ from 'lodash'
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+
 const propTypes = {};
+const localizer = momentLocalizer(moment);
 
 
-class Schedule extends React.Component{
-  constructor(props){
-    super(props);
+class Schedule extends React.Component {
+  constructor(...args) {
+    super(...args);
 
-    this.state = { events }
+    this.state = {
+      events: _.cloneDeep(events),
+      dayLayoutAlgorithm: 'no-overlap',
+    }
   }
 
   handleSelect = ({ start, end }) => {
@@ -28,13 +36,14 @@ class Schedule extends React.Component{
   };
 
   render() {
-    const { localizer } = this.props;
-    return(
+    return (
       <>
         <ExampleControlSlot.Entry waitForOutlet>
           <strong>
             Click an event to see more info, or drag the mouse over the calendar
             to select a date/time range.
+            <br />
+            The events are being arranged by `no-overlap` algorithm.
           </strong>
         </ExampleControlSlot.Entry>
         <Calendar
@@ -46,6 +55,7 @@ class Schedule extends React.Component{
           defaultDate={new Date(2015, 3, 12)}
           onSelectEvent={event => alert(event.title)}
           onSelectSlot={this.handleSelect}
+          dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
         />
       </>
     )
@@ -54,4 +64,4 @@ class Schedule extends React.Component{
 
 Schedule.propTypes = propTypes;
 
-export default Schedule;
+export default Schedule

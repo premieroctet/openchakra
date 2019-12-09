@@ -173,9 +173,6 @@ class myAvailabilities extends React.Component {
 
         return (
           <Fragment>
-              <head>
-                  <link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet" type="text/css"/>
-              </head>
               <Layout>
                   <Grid container className={classes.bigContainer}>
                       <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
