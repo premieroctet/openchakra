@@ -446,7 +446,11 @@ class services extends React.Component {
                                         <Grid item xs={5}></Grid>
                                     </Grid>
                                     <Typography style={{fontSize: '1rem' }}>
-                                       {serviceUser.description}
+                                        {typeof serviceUser.description === 'undefined' || serviceUser.description === "" ?
+                                            <p>Aucune description disponible</p>
+                                        :
+                                            serviceUser.description
+                                        }
                                     </Typography>
                                 {/*Mes équipements*/}
                                 <div style={{marginTop: '8%'}}>
