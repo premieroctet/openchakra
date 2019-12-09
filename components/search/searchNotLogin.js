@@ -1177,7 +1177,7 @@ class searchNotLogin extends React.Component {
                                                                                     </Grid>
                                                                                     <Grid item xs={5}>
                                                                                         <Typography style={{marginBottom: '-20px',marginLeft: '10px', fontSize: '0.8rem'}}>à partir de {a.minimum_basket}€</Typography>
-                                                                                        <Link href={"/userServicePreview?id="+ a.service._id}>
+                                                                                        <Link href={"/userServicePreview?id="+ a._id}>
                                                                                             <Button alt={a.service._id} variant="contained" color="primary"
                                                                                                     style={{width: '80%', color: 'white', margin: '20px auto auto'}}>
                                                                                                 Réserver
@@ -1383,7 +1383,7 @@ class searchNotLogin extends React.Component {
                                                                                     </Grid>
                                                                                     <Grid item xs={5}>
                                                                                         <Typography style={{marginBottom: '-20px',marginLeft: '10px', fontSize: '0.8rem'}}>à partir de {s.minimum_basket}€</Typography>
-                                                                                        <Link href={"/userServicePreview?id="+ s.service._id}>
+                                                                                        <Link href={"/userServicePreview?id="+ s._id}>
                                                                                             <Button alt={s.service._id} variant="contained" color="primary"
                                                                                                     style={{width: '80%', color: 'white', margin: '20px auto auto'}}>
                                                                                                 Réserver

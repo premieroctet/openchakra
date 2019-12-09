@@ -178,7 +178,7 @@ router.get('/profile/alfredReviewsCurrent/:id', passport.authenticate('jwt', { s
 // @Route GET /myAlfred/api/reviews/alfred/:id
 // View the reviews list for one alfred
 router.get('/alfred/:id',(req,res) => {
-    Reviews.find({alfred: req.params.id})
+    Reviews.find({alfred: req.params.id,note_client:undefined})
         .populate('alfred')
         .populate('user')
         .then(reviews => {

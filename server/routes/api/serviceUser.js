@@ -114,7 +114,6 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
 
                     fields.majoration.price = parseInt(req.body.price);
                     const newService = new ServiceUser(fields);
-                    console.log(newService);
                     newService.save().then(service => res.json(service)).catch(err => console.log(err));
 
                 })

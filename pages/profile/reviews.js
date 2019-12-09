@@ -355,14 +355,14 @@ class reviews extends React.Component {
                                                 </Grid>
                                                 <Grid item md={10} xs={6}>
                                                     <StarRatings
-                                                        rating={e.note_alfred.prestation_quality}
-                                                        starRatedColor={"#2FBCD3"}
-                                                        numberOfStars={5}
-                                                        name='rating'
-                                                        starDimension={'20px'}
-                                                        starHoverColor={'#2FBCD3'}
-                                                        starSpacing={'3px'}
-                                                    />
+                                                    rating={e.note_alfred.prestation_quality}
+                                                    starRatedColor={"#2FBCD3"}
+                                                    numberOfStars={5}
+                                                    name='rating'
+                                                    starDimension={'20px'}
+                                                    starHoverColor={'#2FBCD3'}
+                                                    starSpacing={'3px'}
+                                                />
                                                 </Grid>
 
                                                 <Grid item md={2} xs={6}>

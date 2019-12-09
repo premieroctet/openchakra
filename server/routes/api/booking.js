@@ -224,7 +224,7 @@ router.get('/last/:id',(req,res) => {
         .populate('alfred')
         .populate('user')
         .populate('prestation')
-        .populate({path:'prestation',populate:{path: 'service',select:'label'}})
+        .populate({path:'prestation',populate:{path: 'service'}})
         .then(booking => {
             if(booking){
                 res.json(booking);

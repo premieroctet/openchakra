@@ -12,6 +12,10 @@ import Fab from "@material-ui/core/Fab";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import moment from 'moment';
+import Link from 'next/link';
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 moment.locale('fr');
 const { config } = require('../../../config/config');
@@ -173,7 +177,7 @@ class myBestSellers extends React.Component{
     const {booking} = this.state;
     const card =booking.map(e =>(<Grid item xs={12} sm={6} md={4}> <Card className={classes.card} key={e._id}>
       <CardActionArea>
-        <CardMedia className={classes.media} image={e.prestation.service.picture} title="Coiffure">
+        {/*<CardMedia className={classes.media} image={'../../'+e.prestation.service.picture} title="Coiffure">
           <div className={classes.darkOverlay}>
             <Grid container className={classes.avatarContainer}>
               <Grid container className={classes.gridContainer}>
@@ -182,29 +186,37 @@ class myBestSellers extends React.Component{
               </Grid>
             </Grid>
           </div>
-        </CardMedia>
+        </CardMedia>*/}
         <CardContent>
           <Typography variant="h6" component="h2">
-            {e.prestation.service.label}
+            {e.service}
           </Typography>
           <Grid container>
-            <Typography variant="body2" component="p">
-              Par {e.alfred.firstname}
-            </Typography>
             <div>
-              {moment(e.date_prestation.end).format('L')}
+              {e.end_date}
             </div>
           </Grid>
-          <Typography component="p" className={classes.text}>
-            {e.prestation.label}
-          </Typography>
+          <List>
+            {e.prestations.map(p =>(
+                <ListItem>
+                  <ListItemText
+                      primary={_.capitalize(p.name)}
+
+                  />
+                </ListItem>
+            ))}
+
+
+          </List>
         </CardContent>
       </CardActionArea>
       <CardActions>
         <Grid container className={classes.gridButton}>
-          <Fab variant="extended" size="medium" color="primary" className={classes.bookButton}>
-            Réservez
-          </Fab>
+          <Link href={'/userServicePreview?id='+e.serviceUserId}>
+            <Fab variant="extended" size="medium" style={{color:'white'}} color="primary" className={classes.bookButton}>
+             Réservez
+            </Fab>
+          </Link>
         </Grid>
       </CardActions>
     </Card></Grid>));
