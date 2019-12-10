@@ -1,5 +1,4 @@
 import React from 'react'
-import 'date-fns';
 import { Calendar, Views, momentLocalizer   } from 'react-big-calendar';
 import events from '../events'
 import _ from 'lodash'
@@ -18,9 +17,14 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DateFnsUtils from '@date-io/date-fns';
-
+import Checkbox from '@material-ui/core/Checkbox';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Typography from '@material-ui/core/Typography';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 const propTypes = {};
 const localizer = momentLocalizer(moment);
@@ -50,6 +54,16 @@ const formats = {
   dayHeaderFormat: 'dddd DD MMMM'
 };
 
+const styles = theme => ({
+  modalContainer:{
+    position: 'absolute',
+    width: 600,
+    backgroundColor: 'white',
+    border: '2px solid #000',
+    padding: '2%',
+  }
+});
+
 class Schedule extends React.Component {
   constructor(props) {
     super(props);
@@ -63,7 +77,8 @@ class Schedule extends React.Component {
       selectedDateStart: new Date(),
       timePickerStart: new Date(),
       selectedDateEnd: new Date(),
-      timePickerEnd: new Date()
+      timePickerEnd: new Date(),
+      isCheckedRecurence: false,
     };
   }
 
@@ -89,7 +104,7 @@ class Schedule extends React.Component {
             end,
           },
         ],
-        
+
         isAddModalOpen: !this.state.isAddModalOpen,
       });
     }
@@ -104,8 +119,9 @@ class Schedule extends React.Component {
   };
 
   render() {
+    const { classes } = this.props;
+
     return (
-      <>
         <div style={{height:700}}>
           <Calendar
             selectable
@@ -143,19 +159,13 @@ class Schedule extends React.Component {
             onClose={this.toggleAddModal}
           >
             <Fade in={this.state.isAddModalOpen}>
-              <div  style={{
-                position: 'absolute',
-                width: 600,
-                backgroundColor: 'white',
-                border: '2px solid #000',
-                padding: '2%',}}
-              >
-                <div id={'title'}>
-                    <div>
+              <Grid className={classes.modalContainer}>
+                <Grid id={'title'}>
+                    <Grid>
                       <h2>Nouvel Event</h2>
-                    </div>
-                </div>
-                <div id={'content'}>
+                    </Grid>
+                </Grid>
+                <Grid id={'content'}>
                   <FormControl style={{width:"100%"}}>
                     <InputLabel id="demo-simple-select-label">Service(s)</InputLabel>
                     <Select
@@ -178,7 +188,9 @@ class Schedule extends React.Component {
                           id="date-picker-inline"
                           label="Date de début"
                           value={this.state.selectedDateStart}
-                          onChange={this.onChange}
+                          onChange={() => {
+                            this.setState({ selectedDateStart: this.state.selectedDateStart });
+                          }}
                           KeyboardButtonProps={{
                             'aria-label': 'change date',
                           }}
@@ -187,8 +199,11 @@ class Schedule extends React.Component {
                           margin="normal"
                           id="time-picker"
                           label="Heures début"
+                          ampm={false}
                           value={this.state.timePickerStart}
-                          onChange={this.onChange}
+                          onChange={() => {
+                            this.setState({ timePickerStart: this.state.timePickerStart });
+                          }}
                           KeyboardButtonProps={{
                             'aria-label': 'change time',
                           }}
@@ -201,24 +216,50 @@ class Schedule extends React.Component {
                           id="date-picker-inline"
                           label="Date de fin"
                           value={this.state.selectedDateEnd}
-                          onChange={this.onChange}
+                          onChange={() => {
+                            this.setState({ selectedDateEnd: this.state.selectedDateEnd });
+                          }}
                           KeyboardButtonProps={{
                             'aria-label': 'change date',
                           }}
                         />
                         <KeyboardTimePicker
+                          ampm={false}
                           margin="normal"
                           id="time-picker"
                           label="Heure fin"
                           value={this.state.timePickerEnd}
-                          onChange={this.onChange}
+                          onChange={() => {
+                            this.setState({ timePickerEnd: this.state.timePickerEnd });
+                          }}
                           KeyboardButtonProps={{
                             'aria-label': 'change time',
                           }}
                         />
                       </Grid>
                     </MuiPickersUtilsProvider>
+                    <Grid>
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary>
+                          <FormControlLabel
+                            aria-label="Acknowledge"
+                            onClick={event => event.stopPropagation()}
+                            onFocus={event => event.stopPropagation()}
+                            control={<Checkbox />}
+                            label="Récurence"
+                          />
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <Typography color="textSecondary">
+                            If you forget to put an aria-label on the nested action, the label of the action will
+                            also be included in the label of the parent button that controls the panel expansion.
+                          </Typography>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </Grid>
+                    <Grid>
                     <TextField
+                      style={{width:'100%'}}
                       id="outlined-multiline-static"
                       label="Description"
                       multiline
@@ -227,23 +268,23 @@ class Schedule extends React.Component {
                       margin="normal"
                       variant="outlined"
                     />
+                    </Grid>
+                    <Grid>
+                      <button type="button">Save
+                      </button>
+                      <button type="button">Cancel
+                      </button>
+                    </Grid>
                   </FormControl>
-                </div>
-                <div>
-                  <button type="button">Save
-                  </button>
-                  <button type="button">Cancel
-                  </button>
-                </div>
-              </div>
+                </Grid>
+              </Grid>
           </Fade>
         </Modal>
         </div>
-      </>
     )
   }
 }
 
 Schedule.propTypes = propTypes;
 
-export default Schedule
+export default withStyles(styles)(Schedule)
