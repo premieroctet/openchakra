@@ -642,6 +642,7 @@ class MessagesDetails extends React.Component {
                 <input
                   size={4}
                   style={{
+                    fontSize: "18px",
                     width: "90%",
                     border: "none",
                     boxShadow: "0px 0px 6px rgba(128, 128, 128, 0.29)",
