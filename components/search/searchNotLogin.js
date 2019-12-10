@@ -106,7 +106,7 @@ class searchNotLogin extends React.Component {
     }
 
     componentDidMount() {
-        //this.searchWithWord();
+        this.search();
     }
     
 
@@ -840,50 +840,6 @@ class searchNotLogin extends React.Component {
         }
     }
 
-    /*fadeInStatut() {
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '1';}, 175);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.87';}, 150);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.75';}, 125);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.63';}, 100);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.5';}, 75);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.38';}, 50);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.25';}, 25);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.12';}, 0);
-    }
-
-    fadeOutStatut() {
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '1';}, 0);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.87';}, 25);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.75';}, 50);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.63';}, 75);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.5';}, 100);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.38';}, 125);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.25';}, 150);
-        setTimeout(()=>{ document.getElementById('status').style.opacity = '0.12';}, 175);
-    }
-
-    fadeInDate() {
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '1';},175);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.87';}, 150);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.75';},125);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.63';}, 100);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.5';}, 75);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.38';}, 50);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.25';}, 25);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.12';}, 0);
-    }
-
-    fadeOutDate() {
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '1';}, 0);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.87';}, 25);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.75';}, 50);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.63';}, 75);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.5';}, 100);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.38';}, 125);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.25';}, 150);
-        setTimeout(()=>{ document.getElementById('thedate').style.opacity = '0.12';}, 175);
-    }*/
-
     yes(){
         if(this.state.clickedstatut == true)
         {
@@ -1106,6 +1062,7 @@ class searchNotLogin extends React.Component {
                                 <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
                                     {categories.map((e,index) => (
                                         <Grid key={index} item xs={3} style={{display: 'inline-block', width: '350px'}}>
+                                            <Link href={'/serviceByCategory?category='+e._id}>
                                             <Card style={{width: '85%', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                                                 <CardActionArea>
                                                     <CardMedia
@@ -1122,6 +1079,7 @@ class searchNotLogin extends React.Component {
                                                 </CardActionArea>
 
                                             </Card>
+                                            </Link>
                                         </Grid>
                                     ))}
                                 </Grid>
@@ -1132,9 +1090,12 @@ class searchNotLogin extends React.Component {
 
                                     {categories.map(e => (
                                             <Grid container>
-                                                <Grid item xs={12}>
-                                                    <h3 style={{marginLeft: '15px'}}>{e.label}</h3>
-                                                </Grid>
+                                                {this.state[e.label] !== 0 ?
+                                                    <Grid item xs={12}>
+                                                        <h3 style={{marginLeft: '15px'}}>{e.label}</h3>
+                                                    </Grid>
+                                                    :null}
+
                                                 <Grid container>
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
@@ -1149,9 +1110,9 @@ class searchNotLogin extends React.Component {
                                                                             >
                                                                                 <img style={{position: 'absolute', width: '130px', height: '130px', borderRadius: '50%', objectFit: 'cover', top: '60px', left: 0, right: 0, margin: 'auto'}} src={"../"+a.user.picture}/>
                                                                                 {a.service_address.city != undefined ? 
-                                                                                <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'rgb(228, 226, 226)', bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
+                                                                                <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'white',textShadow:'0px 0px 3px black',fontWeight:600, bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16.057" height="20.521" viewBox="0 0 16.057 20.521">
-                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="rgb(228, 226, 226)" fill-rule="evenodd"/>
+                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="white" fill-rule="evenodd"/>
                                                                                     </svg> 
                                                                                      {' ' + a.service_address.city}
                                                                                 </Typography>: null}
@@ -1312,8 +1273,10 @@ class searchNotLogin extends React.Component {
                                                     }
                                                 })}
                                                 </Grid>
-                                                {this.state[e.label] !== 0 ? <p style={{marginLeft: '15px'}}>Voir les {this.state[e.label]} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
-                                                <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '80px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
+                                                {this.state[e.label] !== 0 ?
+                                                    <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '80px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
+                                                    :null}
+
                                             </Grid>
                                         ))}
 
@@ -1338,7 +1301,10 @@ class searchNotLogin extends React.Component {
                                 {this.state.categoryFinal.map((e, index) => (
                                         <Grid key={index} container>
                                             <Grid item xs={12}>
-                                                <h3 style={{marginLeft: '15px'}}>{e.label}</h3>
+                                                {this.state[e.label] !== 0 || this.state[e.label+'Final'] !== 0 ?
+                                                    <h3 style={{marginLeft: '15px'}}>{e.label}</h3>
+                                                    : null}
+
 
                                                 <Grid container>
                                                     {this.state.finalServiceUser.map(s => {
@@ -1355,9 +1321,9 @@ class searchNotLogin extends React.Component {
                                                                             >
                                                                                 <img style={{position: 'absolute', width: '130px', height: '130px', borderRadius: '50%', objectFit: 'cover', top: '60px', left: 0, right: 0, margin: 'auto'}} src={"../"+s.user.picture}/>
                                                                                 {s.service_address.city != undefined ? 
-                                                                                <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'rgb(228, 226, 226)', bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
+                                                                                <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'white',textShadow:'0px 0px 3px black',fontWeight:600, bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16.057" height="20.521" viewBox="0 0 16.057 20.521">
-                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="rgb(228, 226, 226)" fill-rule="evenodd"/>
+                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="white" fill-rule="evenodd"/>
                                                                                     </svg> 
                                                                                      {' ' + s.service_address.city}
                                                                                 </Typography>: null}
@@ -1517,8 +1483,9 @@ class searchNotLogin extends React.Component {
 
                                                     })}
                                                 </Grid>
-                                                {this.state[e.label+'Final'] !== 0 ? <p style={{marginLeft: '15px'}}>Voir les {this.state[e.label+'Final']} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
+                                                {this.state[e.label] !== 0 || this.state[e.label+'Final'] !== 0 ?
                                                 <hr style={{width: '10%', margin: 'auto', border:'none', backgroundColor: '#2FBCD3', height: '10px', marginBottom: '80px', marginTop: '55px'}} />
+                                                : null}
                                             </Grid>
                                         </Grid>
                                     ))}
