@@ -1,15 +1,18 @@
 import React from 'react'
 import { Calendar, Views, momentLocalizer   } from 'react-big-calendar';
 import events from '../events'
-import ExampleControlSlot from '../ExampleControlSlot'
 import _ from 'lodash'
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import Modal from '@material-ui/core/Modal';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
 
 const propTypes = {};
 const localizer = momentLocalizer(moment);
 
-let formats = {
+const formats = {
   timeGutterFormat : 'HH:mm', // Axe Y horaires week/day
   eventTimeRangeFormat: ({
     start,
@@ -35,52 +38,61 @@ let formats = {
 };
 
 class Schedule extends React.Component {
-  constructor(...args) {
-    super(...args);
+  constructor(props) {
+    super(props);
 
     this.state = {
       events: _.cloneDeep(events),
-      dayLayoutAlgorithm: 'no-overlap',
-    }
+      title: '',
+      sAddModalOpen: false,
+      isEditModalOpen: false,
+    };
   }
 
-  handleSelect = ({ start, end }) => {
-    const title = window.prompt('New Event name');
-    if (title)
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  onSubmit = e => {
+    e.preventDefault();
+
+    const event = {
+      title: this.state.title,
+    };
+    console.log(event,'ici')
+  };
+
+  toggleAddModal = event => {
+    if (!this.state.isEditModalOpen) {
       this.setState({
-        events: [
-          ...this.state.events,
-          {
-            start,
-            end,
-            title,
-          },
-        ],
-      })
+        currentEvent: event,
+        isAddModalOpen: !this.state.isAddModalOpen,
+      });
+    }
+  };
+  toggleEditModal = event => {
+    if (!this.state.isAddModalOpen) {
+      this.setState({
+        currentEvent: event,
+        isEditModalOpen: !this.state.isEditModalOpen,
+      });
+    }
   };
 
   render() {
     return (
       <>
-        <ExampleControlSlot.Entry waitForOutlet>
-          <strong>
-            Click an event to see more info, or drag the mouse over the calendar
-            to select a date/time range.
-            <br />
-            The events are being arranged by `no-overlap` algorithm.
-          </strong>
-        </ExampleControlSlot.Entry>
         <div style={{height:700}}>
           <Calendar
             selectable
+            popup={false}
             culture='fr-FR'
             localizer={localizer}
             events={this.state.events}
             defaultView={Views.WEEK}
             defaultDate={new Date()}
-            onSelectEvent={event => alert(event.title)}
-            onSelectSlot={this.handleSelect}
-            dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
+            onSelectSlot={this.toggleAddModal}
+            onSelectEvent={this.toggleEditModal}
             messages={{
               'today': "Aujourd'hui",
               "previous":'précédente',
@@ -91,12 +103,49 @@ class Schedule extends React.Component {
               "agenda": "Agenda",
               "event" :"Evénement",
               "date" : "Date",
-              "time" : "Horaires"
+              "time" : "Horaires",
+
             }}
             formats={formats}
             startAccessor="start"
             endAccessor="end"
           />
+          <Modal
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={this.state.isAddModalOpen}
+            onClose={this.toggleAddModal}
+          >
+            <div  style={{
+              position: 'absolute',
+              top: 500,
+              left: 500,
+              width: 400,
+              backgroundColor: 'white',
+              border: '2px solid #000',
+              padding: '2%',}}>
+              <h2 id="simple-modal-title">Ajouter un Evenement</h2>
+              <p id="simple-modal-description">
+                Titre de l'événement
+              </p>
+              <form noValidate autoComplete="off" onSubmit={this.onSubmit}>
+                <TextField
+                  id="standard-basic"
+                  label="Titre"
+                  placeholder="Titre"
+                  margin="normal"
+                  style={{ width: '100%' }}
+                  type="text"
+                  name="title"
+                  value={this.state.title}
+                  onChange={this.onChange}
+                />
+                <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                  Envoyer
+                </Button>
+              </form>
+            </div>
+          </Modal>
         </div>
       </>
     )
