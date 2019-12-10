@@ -1,4 +1,5 @@
 import React from 'react'
+import 'date-fns';
 import { Calendar, Views, momentLocalizer   } from 'react-big-calendar';
 import events from '../events'
 import _ from 'lodash'
@@ -6,7 +7,19 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import Modal from '@material-ui/core/Modal';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Fade from '@material-ui/core/Fade';
+import Grid from '@material-ui/core/Grid';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+
+import DateFnsUtils from '@date-io/date-fns';
 
 
 const propTypes = {};
@@ -46,6 +59,11 @@ class Schedule extends React.Component {
       title: '',
       sAddModalOpen: false,
       isEditModalOpen: false,
+      service:'',
+      selectedDateStart: new Date(),
+      timePickerStart: new Date(),
+      selectedDateEnd: new Date(),
+      timePickerEnd: new Date()
     };
   }
 
@@ -59,13 +77,19 @@ class Schedule extends React.Component {
     const event = {
       title: this.state.title,
     };
-    console.log(event,'ici')
   };
 
-  toggleAddModal = event => {
+  toggleAddModal = ({start, end}) => {
     if (!this.state.isEditModalOpen) {
       this.setState({
-        currentEvent: event,
+        events: [
+          ...this.state.events,
+          {
+            start,
+            end,
+          },
+        ],
+        
         isAddModalOpen: !this.state.isAddModalOpen,
       });
     }
@@ -111,41 +135,109 @@ class Schedule extends React.Component {
             endAccessor="end"
           />
           <Modal
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
+            closeAfterTransition
+            BackdropProps={{
+              timeout: 500,
+            }}
             open={this.state.isAddModalOpen}
             onClose={this.toggleAddModal}
           >
-            <div  style={{
-              position: 'absolute',
-              top: 500,
-              left: 500,
-              width: 400,
-              backgroundColor: 'white',
-              border: '2px solid #000',
-              padding: '2%',}}>
-              <h2 id="simple-modal-title">Ajouter un Evenement</h2>
-              <p id="simple-modal-description">
-                Titre de l'événement
-              </p>
-              <form noValidate autoComplete="off" onSubmit={this.onSubmit}>
-                <TextField
-                  id="standard-basic"
-                  label="Titre"
-                  placeholder="Titre"
-                  margin="normal"
-                  style={{ width: '100%' }}
-                  type="text"
-                  name="title"
-                  value={this.state.title}
-                  onChange={this.onChange}
-                />
-                <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                  Envoyer
-                </Button>
-              </form>
-            </div>
-          </Modal>
+            <Fade in={this.state.isAddModalOpen}>
+              <div  style={{
+                position: 'absolute',
+                width: 600,
+                backgroundColor: 'white',
+                border: '2px solid #000',
+                padding: '2%',}}
+              >
+                <div id={'title'}>
+                    <div>
+                      <h2>Nouvel Event</h2>
+                    </div>
+                </div>
+                <div id={'content'}>
+                  <FormControl style={{width:"100%"}}>
+                    <InputLabel id="demo-simple-select-label">Service(s)</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={this.state.service}
+                      onChange={this.onChange}
+                    >
+                      <MenuItem value={10}>Service A</MenuItem>
+                      <MenuItem value={20}>Service B</MenuItem>
+                      <MenuItem value={30}>Service C</MenuItem>
+                    </Select>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <Grid container justify="space-around">
+                        <KeyboardDatePicker
+                          disableToolbar
+                          variant="inline"
+                          format="dd/MM/yyyy"
+                          margin="normal"
+                          id="date-picker-inline"
+                          label="Date de début"
+                          value={this.state.selectedDateStart}
+                          onChange={this.onChange}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                          }}
+                        />
+                        <KeyboardTimePicker
+                          margin="normal"
+                          id="time-picker"
+                          label="Heures début"
+                          value={this.state.timePickerStart}
+                          onChange={this.onChange}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change time',
+                          }}
+                        />
+                        <KeyboardDatePicker
+                          disableToolbar
+                          variant="inline"
+                          format="dd/MM/yyyy"
+                          margin="normal"
+                          id="date-picker-inline"
+                          label="Date de fin"
+                          value={this.state.selectedDateEnd}
+                          onChange={this.onChange}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                          }}
+                        />
+                        <KeyboardTimePicker
+                          margin="normal"
+                          id="time-picker"
+                          label="Heure fin"
+                          value={this.state.timePickerEnd}
+                          onChange={this.onChange}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change time',
+                          }}
+                        />
+                      </Grid>
+                    </MuiPickersUtilsProvider>
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="Description"
+                      multiline
+                      rows="4"
+                      defaultValue="Ajouter une description"
+                      margin="normal"
+                      variant="outlined"
+                    />
+                  </FormControl>
+                </div>
+                <div>
+                  <button type="button">Save
+                  </button>
+                  <button type="button">Cancel
+                  </button>
+                </div>
+              </div>
+          </Fade>
+        </Modal>
         </div>
       </>
     )
