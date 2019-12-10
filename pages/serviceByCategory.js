@@ -22,13 +22,17 @@ import StarRatings from 'react-star-ratings';
 
 import moment from "moment";
 import Tooltip from "@material-ui/core/Tooltip";
+import 'react-dates/initialize';
+import {DateRangePicker} from "react-dates";
+import 'react-dates/lib/css/_datepicker.css';
+import '../static/overridedate.css';
 
 
 const _ = require('lodash');
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
-//moment.locale('fr');
+moment.locale('fr');
 const styles = theme => ({
     bigContainer: {
         marginTop: 80
@@ -82,6 +86,9 @@ class serviceByCategory extends React.Component {
             checkedB: false,
             checkedParticulier: false,
             clickedstatut:false,
+            clickeddate: false,
+            startDate: null,
+            endDate: null,
         }
     }
 
@@ -96,7 +103,21 @@ class serviceByCategory extends React.Component {
         axios.get(url+'myAlfred/api/serviceUser/all/category/'+category)
             .then(res => {
                 let serviceUser = res.data;
-                this.setState({serviceUser: serviceUser, copyService:serviceUser});
+                const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                    ['desc','desc','desc','desc','desc']);
+                this.setState({serviceUser: sorted});
+            })
+            .catch(err => console.log(err))
+    }
+
+    search() {
+        const category = this.props.category;
+        axios.get(url+'myAlfred/api/serviceUser/all/category/'+category)
+            .then(res => {
+                let serviceUser = res.data;
+                const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                    ['desc','desc','desc','desc','desc']);
+                this.setState({serviceUser: sorted});
             })
             .catch(err => console.log(err))
     }
@@ -110,104 +131,124 @@ class serviceByCategory extends React.Component {
         }
     }
 
+    yes2(){
+        if(this.state.clickeddate == true)
+        {
+            {/*this.fadeOutDate();*/}
+            this.setState({clickeddate: false});
+        } else {
+            {/*this.fadeInDate();*/}
+            this.setState({clickeddate: true});
+        }
+    }
+
     handleChange = event => {
         this.setState({[event.target.name]: event.target.checked} );
     };
 
     async filter(){
-        const arrayShop = [];
-        this.setState({idAlfred:[]});
-        const serviceUser = this.state.serviceUser;
-        serviceUser.forEach(s => {
-            axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
-                .then( res => {
-                    let shop = res.data;
-                    const index = arrayShop.findIndex(i=>i._id == shop._id);
-                    if(index === -1){
-                        arrayShop.push(shop);
-
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        });
-        await this.setState({uniqShop: arrayShop});
-        if(this.state.checkedB){
-            this.setState({idAlfred:[]});
-            setTimeout(()=>{
-
-                const arrayService = this.state.serviceUser;
-                const arrayIndex = [];
-                this.state.uniqShop.forEach(u => {
-                    if(u.is_particular){
-                        this.state.idAlfred.push(u.alfred._id)
+        const serviceUser = await this.state.serviceUser;
+        if( this.state.checkedB){
+            setTimeout(() => {
+                const serviceFilter = [];
+                serviceUser.forEach(s => {
+                    if(s.status === 'Pro'){
+                        serviceFilter.push(s)
                     }
                 });
-                this.state.serviceUser.forEach((f,index) => {
-                    this.state.idAlfred.forEach(i => {
-                        if(f.user._id === i){
-                            arrayIndex.push(index);
-                        }
-                    })
-                });
-                for (let t = arrayIndex.length -1; t >= 0; t--){
-                    arrayService.splice(arrayIndex[t],1);
-                }
-                this.setState({serviceUser:arrayService,copyFilterPro:arrayService});
-
+                const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                    ['desc','desc','desc','desc','desc']);
+                this.setState({serviceUser: sorted, copyFilterPro: sorted});
             },2000)
         } else {
-            this.search();
+            setTimeout(() => {
+                this.search();
+            },2000)
         }
     }
 
     async filterParticulier(){
-        const arrayShop = [];
-        const serviceUser = this.state.serviceUser;
-        serviceUser.forEach(s => {
-            axios.get(url + 'myAlfred/api/shop/alfred/' + s.user._id)
-                .then(res => {
-                    let shop = res.data;
-                    const index = arrayShop.findIndex(i => i._id == shop._id);
-                    if (index === -1) {
-                        arrayShop.push(shop);
-
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        });
-        await this.setState({uniqShop: arrayShop});
-
-        if(this.state.checkedParticulier){
-            this.setState({idAlfred:[]});
+        const serviceUser = await this.state.serviceUser;
+        if( this.state.checkedParticulier){
             setTimeout(() => {
-
-                const arrayService = this.state.serviceUser;
-                const arrayIndex = [];
-                this.state.uniqShop.forEach(u => {
-                    if (u.is_professional) {
-                        this.state.idAlfred.push(u.alfred._id)
+                const serviceFilter = [];
+                serviceUser.forEach(s => {
+                    if(s.status === 'Particulier'){
+                        serviceFilter.push(s)
                     }
                 });
-                this.state.serviceUser.forEach((f, index) => {
-                    this.state.idAlfred.forEach(i => {
-                        if (f.user._id === i) {
-                            arrayIndex.push(index);
+                const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                    ['desc','desc','desc','desc','desc']);
+                this.setState({serviceUser: sorted, copyFilterParticulier: sorted});
+                this.state.allCategories.forEach(e => {
+                    this.setState({[e.label]:0});
+                    this.state.serviceUser.forEach(a => {
+                        if(a.service.category === e._id){
+                            this.setState(prevState => {
+                                return {[e.label]: prevState[e.label] + 1}
+                            })
+
                         }
                     })
-                });
-                for (let t = arrayIndex.length - 1; t >= 0; t--)
-                    arrayService.splice(arrayIndex[t], 1);
-
-                this.setState({serviceUser: arrayService,copyFilterParticulier:arrayService});
-
-            }, 2000)
+                })
+            },2000)
         } else {
-            this.search();
+            setTimeout(() => {
 
+                    this.search()
+            },2000)
+        }
+    }
+
+    async filterDate(){
+
+        const serviceUser = this.state.serviceUser;
+        const begin = this.state.startDate;
+        const end = this.state.endDate;
+        const beginDay =  moment(begin).format('dddd');
+        const endDay =  moment(end).format('dddd');
+        const obj = {begin,end,beginDay,endDay};
+
+        axios.post(url+'myAlfred/api/availability/filterDate',obj)
+            .then(response => {
+                let availability = response.data;
+                const idAlfred = [];
+                const services = [];
+                availability.forEach(a => {
+                    idAlfred.push(a.user);
+                });
+                serviceUser.forEach(w => {
+
+                    const index = idAlfred.findIndex(i => i == w.user._id);
+                    if(index !== -1){
+                        services.push(w);
+                    }
+                });
+                this.setState({serviceUser:services,filterDate:true});
+                this.state.allCategories.forEach(e => {
+                    this.setState({[e.label]:0});
+                    this.state.serviceUser.forEach(a => {
+                        if(a.service.category === e._id){
+                            this.setState(prevState => {
+                                return {[e.label]: prevState[e.label] + 1}
+                            })
+                        }
+                    })
+                })
+            })
+            .catch(err => console.log(err));
+    }
+
+    cancelDateFilter(){
+        this.setState({startDate:null,endDate:null,filterDate:false});
+        if(this.state.checkedB){
+            this.setState({serviceUser:this.state.copyFilterPro});
+
+        } else if(this.state.checkedParticulier){
+            this.setState({serviceUser:this.state.copyFilterParticulier});
+        } else {
+
+                this.search()
         }
     }
 
@@ -228,6 +269,15 @@ class serviceByCategory extends React.Component {
                                         :
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
                                             <Typography style={{textAlign: 'center', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
+                                        </Grid>
+                                    }
+                                    {this.state.clickeddate ?
+                                        <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
+                                        </Grid>
+                                        :
+                                        <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     }
                                 </Grid>
@@ -279,8 +329,43 @@ class serviceByCategory extends React.Component {
                                     </Grid>
                                 </Grid>
                                 : null}
+                            {this.state.clickeddate ?
+                                <Fragment>
+                                    <Grid id="thedate" item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
+                                        <Grid container>
+                                            <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                                <DateRangePicker
+                                                    style={{width: '50px'}}
+                                                    startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+                                                    startDatePlaceholderText={'Début'}
+                                                    endDatePlaceholderText={'Fin'}
+                                                    startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                                                    endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+                                                    endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                                                    onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
+                                                    focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                                                    onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+                                                    minimumNights={0}
+                                                />
+                                            </Grid>
+
+                                            <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                                <Grid container>
+                                                    <Grid item xs={6}>
+                                                        <Button style={{fontSize: '0.8rem',}} onClick={()=>this.cancelDateFilter()}>Annuler</Button>
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <Button style={{fontSize: '0.8rem',}} onClick={()=>this.filterDate()}>Valider</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+
+                                </Fragment>
+                                : null}
                         </Grid>
-                        <Grid container>
+                        <Grid container style={{paddingLeft:25}}>
                             <Grid container>
                                         <Grid container>
 
