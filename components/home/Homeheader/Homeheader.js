@@ -349,13 +349,20 @@ class Homeheader extends React.Component {
                       <Grid item xs={10}>
                     <DatePicker
                         selected={this.state.dateSelected}
-                        onChange={(date)=>this.setState({dateSelected:date})}
+                        onChange={(date)=>{
+                          this.setState({dateSelected:date});
+                          if(date===null){
+                            this.setState({dateSelected:''})
+                          }}
+
+                        }
                         /*customInput={<Input2 />}*/
                         locale='fr'
                         showMonthDropdown
                         dateFormat="dd/MM/yyyy"
                         placeholderText={moment(this.state.date).format('DD/MM/YYYY')}
                         minDate={new Date()}
+
 
 
 
@@ -372,7 +379,12 @@ class Homeheader extends React.Component {
                       <Grid item xs={10}>
                         <DatePicker
                             selected={this.state.hourSelected}
-                            onChange={(date)=>this.setState({hourSelected:date})}
+                            onChange={(date)=>{
+                                this.setState({hourSelected:date});
+                                if(date===null){
+                                  this.setState({hourSelected:''})
+                                }}
+                            }
                             showTimeSelect
                             showTimeSelectOnly
                             timeIntervals={30}
@@ -389,7 +401,7 @@ class Homeheader extends React.Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Button onClick={()=>this.search()}  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
+                <Button disabled={(this.state.service ==='' && this.state.place ==='' && this.state.dateSelected !== '') || (this.state.service ==='' && this.state.place ==='' && this.state.hourSelected !== '') } onClick={()=>this.search()}  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
                   Rechercher
                 </Button>
 

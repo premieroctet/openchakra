@@ -124,6 +124,41 @@ router.post('/filterDate',(req,res)=>{
        .catch(err => console.log(err));
 });
 
+// @Route POST /myAlfred/api/availability/home/date
+// Return availability for a date
+router.post('/home/date',(req,res)=>{
+    const allAvailability = [];
+    const dateBegin = req.body.begin;
+    const beginDay = req.body.beginDay;
+    let newBeginDay;
+    switch (beginDay) {
+        case 'lundi': newBeginDay = beginDay.replace(beginDay,'monday');break;
+        case 'mardi': newBeginDay = beginDay.replace(beginDay,'tuesday');break;
+        case 'mercredi': newBeginDay = beginDay.replace(beginDay,'wednesday');break;
+        case 'jeudi': newBeginDay = beginDay.replace(beginDay,'thursday');break;
+        case 'vendredi': newBeginDay = beginDay.replace(beginDay,'friday');break;
+        case 'samedi': newBeginDay = beginDay.replace(beginDay,'saturday');break;
+        case 'dimanche': newBeginDay = beginDay.replace(beginDay,'sunday');break;
+    }
+    Availability.find()
+        .then(availability => {
+            availability.forEach(e => {
+                if(!e.period.active && e[newBeginDay].event.length ){
+                    allAvailability.push(e)
+                } else {
+                    let begin = e.period.month_begin;
+                    let end = e.period.month_end;
+                    const betweenBegin = moment(dateBegin).isBetween(begin,end);
+                    if(betweenBegin  && e[newBeginDay].event.length){
+                        allAvailability.push(e);
+                    }
+                }
+            });
+            res.json(allAvailability)
+        })
+        .catch(err => console.log(err));
+});
+
 // @Route GET /myAlfred/api/availability/:id
 // Get one availability
 router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {

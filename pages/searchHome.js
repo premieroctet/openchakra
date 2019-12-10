@@ -22,13 +22,17 @@ import StarRatings from 'react-star-ratings';
 
 import moment from "moment";
 import Tooltip from "@material-ui/core/Tooltip";
+import 'react-dates/initialize';
+import {DateRangePicker} from "react-dates";
+import 'react-dates/lib/css/_datepicker.css';
+import '../static/overridedate.css';
 
 
 const _ = require('lodash');
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
-//moment.locale('fr');
+moment.locale('fr');
 const styles = theme => ({
     bigContainer: {
         marginTop: 80
@@ -85,6 +89,9 @@ class searchHome extends React.Component {
             checkedB: false,
             checkedParticulier: false,
             clickedstatut:false,
+            clickeddate: false,
+            startDate: null,
+            endDate: null,
         }
     }
 
@@ -125,8 +132,33 @@ class searchHome extends React.Component {
                         })
                     }),200
             )
-        } else if(service !== '' && city === '' && date === '' && dateISO === '' && day === '' && hour === '') {
+        } else if(service !== '' && city === '' && date === '' && dateISO === '' && day === '') {
             this.searchWithWord();
+        } else if(service === '' && city !== '' && date === '' && dateISO === '' && day === '') {
+            this.searchWithCity();
+        } else if(service !== '' && city !== '' && date === '' && dateISO === '' && day === ''){
+            this.searchWithWordAndCity();
+        } else if(service !== '' && city === '' && date !== '' && dateISO !== '' && day !== ''){
+            this.setState({startDate: moment(dateISO),endDate:moment(dateISO),clickeddate:true});
+            this.searchWithWord();
+            setTimeout(()=> {
+                this.filterDate()
+
+            },1000)
+        } else if(service === '' && city !== '' && date !== '' && dateISO !== '' && day !== '') {
+            this.setState({startDate: moment(dateISO),endDate:moment(dateISO),clickeddate:true});
+            this.searchWithCity();
+            setTimeout(()=> {
+                this.filterDate()
+
+            },1000)
+        } else if(service !== '' && city !== '' && date !== '' && dateISO !== '' && day !== '') {
+            this.setState({startDate: moment(dateISO),endDate:moment(dateISO),clickeddate:true});
+            this.searchWithWordAndCity();
+            setTimeout(()=> {
+                this.filterDate()
+
+            },1000)
         }
     }
 
@@ -263,6 +295,170 @@ class searchHome extends React.Component {
         }
     }
 
+    async searchWithWordAndCity() {
+        const obj = {label:this.props.service.trim()};
+        await axios.post(url+'myAlfred/api/prestation/all/search',obj)
+            .then(res => {
+
+                let prestations = res.data;
+                this.setState({prestations:prestations});
+                const arrayCategory = [];
+                const arrayService = [];
+                prestations.forEach(e => {
+                    arrayCategory.push(e.category);
+                    arrayService.push(e.service);
+                });
+                const uniqCategory = _.uniqBy(arrayCategory,'label');
+                const uniqService = _.uniqBy(arrayService,'label');
+                this.setState({uniqCategory:uniqCategory,uniqService:uniqService});
+                this.setState({prestationOk: true});
+
+            })
+            .catch(err => {
+                console.log(err)
+            });
+
+        await axios.post(url+'myAlfred/api/service/all/search',obj)
+            .then(res => {
+                let services = res.data;
+                this.setState({services: services});
+                const arrayCategory = [];
+
+                services.forEach(e => {
+                    arrayCategory.push(e.category);
+                });
+                const uniqCategory = _.uniqBy(arrayCategory,'label');
+                this.setState({uniqCategoryService:uniqCategory});
+                this.setState({serviceOk: true});
+            })
+            .catch(err => {
+                console.log(err);
+            });
+
+        if(this.state.serviceOk || this.state.prestationOk){
+            const uniqCategoryPrestation = this.state.uniqCategory;
+            const uniqCategoryService = this.state.uniqCategoryService;
+
+            const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService);
+            const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
+            this.setState({allCategories: uniqCategoryFinal});
+            const obj = {city:this.props.city};
+            axios.post(url+'myAlfred/api/serviceUser/nearCity',obj)
+                .then(result => {
+                    const finalServiceUser = [];
+                    const serviceUser = result.data;
+                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
+
+                    this.setState({serviceUser:sorted});
+                    this.state.serviceUser.forEach((s,index) => {
+                        if(this.state.prestations.length){
+                            this.state.prestations.forEach(p => {
+                                const index1 = s.prestations.findIndex(i => i.prestation == p._id);
+
+                                if(index1 !== -1){
+                                    finalServiceUser.push(sorted[index])
+
+                                } else {
+                                    this.state.services.forEach(r => {
+                                        if(s.service._id == r._id){
+                                            finalServiceUser.push(sorted[index])
+                                        }
+                                    })
+                                }
+
+                            })
+                        } else {
+                            this.state.services.forEach(r => {
+                                if(s.service._id == r._id){
+                                    finalServiceUser.push(sorted[index])
+                                }
+                            })
+                        }
+
+                    });
+                    this.setState({serviceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
+                    this.state.allCategories.forEach(e => {
+                        this.setState({[e.label]:0});
+                        this.state.serviceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label]: prevState[e.label] + 1}
+                                })
+                            }
+                        })
+                    })
+
+                })
+                .catch(err => console.log(err));
+
+        }
+        if(!this.state.prestations.length && !this.state.services.length) {
+            axios.post(url + 'myAlfred/api/category/all/search', obj)
+                .then(responseCategory => {
+                    let category = responseCategory.data;
+                    const arrayCategory = [];
+
+                    category.forEach(e => {
+                        arrayCategory.push(e);
+                    });
+                    const uniqCategory = _.uniqBy(arrayCategory, 'label');
+                    this.setState({allCategories: uniqCategory});
+
+                    const obj = {city: this.props.city};
+                    axios.post(url + 'myAlfred/api/serviceUser/nearCity', obj)
+                        .then(res => {
+                            let serviceUser = res.data;
+                            const sorted = _.orderBy(serviceUser, ['level', 'number_of_views', 'graduated', 'is_certified', 'user.creation_date'],
+                                ['desc', 'desc', 'desc', 'desc', 'desc']);
+                            this.setState({serviceUser: sorted, finalServiceUserCopy: sorted});
+                            this.state.allCategories.forEach(e => {
+                                this.setState({[e.label]:0});
+                                this.state.serviceUser.forEach(a => {
+                                    if(a.service.category === e._id){
+                                        this.setState(prevState => {
+                                            return {[e.label]: prevState[e.label] + 1}
+                                        })
+                                    }
+                                })
+                            })
+
+                        })
+                        .catch(err => console.log(err));
+                })
+        }
+    }
+
+    searchWithCity() {
+        const city = this.props.city;
+        const obj = {city:city};
+        axios.post(url+'myAlfred/api/serviceUser/nearCity',obj)
+            .then(res => {
+                let serviceUser = res.data;
+                const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                    ['desc','desc','desc','desc','desc']);
+                this.setState({serviceUser:sorted,serviceUserCopy: sorted});
+
+                axios.get(url+'myAlfred/api/category/all/sort')
+                    .then(res => {
+                        let categories = res.data;
+                        this.setState({allCategories:categories});
+                        categories.forEach(e => {
+                            this.setState({[e.label]:0});
+                            this.state.serviceUser.forEach(a => {
+                                if(a.service.category === e._id){
+                                    this.setState(prevState => {
+                                        return {[e.label]: prevState[e.label] + 1}
+                                    })
+                                }
+                            })
+                        })
+                    })
+
+            })
+            .catch(err => console.log(err));
+    }
+
     search(){
         const service = this.props.service;
         const city = this.props.city;
@@ -323,6 +519,17 @@ class searchHome extends React.Component {
         }
     }
 
+    yes2(){
+        if(this.state.clickeddate == true)
+        {
+            {/*this.fadeOutDate();*/}
+            this.setState({clickeddate: false});
+        } else {
+            {/*this.fadeInDate();*/}
+            this.setState({clickeddate: true});
+        }
+    }
+
     handleChange = event => {
         this.setState({[event.target.name]: event.target.checked} );
     };
@@ -339,7 +546,7 @@ class searchHome extends React.Component {
                 });
                 const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
                     ['desc','desc','desc','desc','desc']);
-                this.setState({serviceUser: sorted});
+                this.setState({serviceUser: sorted, copyFilterPro: sorted});
                 this.state.allCategories.forEach(e => {
                     this.setState({[e.label]:0});
                     this.state.serviceUser.forEach(a => {
@@ -354,7 +561,16 @@ class searchHome extends React.Component {
             },2000)
         } else {
             setTimeout(() => {
-                this.search()
+                if(this.props.city !== '' && this.props.service === ''){
+                    this.searchWithCity()
+                } else if(this.props.service !== '' && this.props.city === ''){
+                    this.searchWithWord();
+                } else if(this.props.service !== '' && this.props.city !== ''){
+                    this.searchWithWordAndCity()
+                } else {
+                    this.search()
+
+                }
             },2000)
         }
     }
@@ -371,7 +587,7 @@ class searchHome extends React.Component {
                 });
                 const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
                     ['desc','desc','desc','desc','desc']);
-                this.setState({serviceUser: sorted});
+                this.setState({serviceUser: sorted, copyFilterParticulier: sorted});
                 this.state.allCategories.forEach(e => {
                     this.setState({[e.label]:0});
                     this.state.serviceUser.forEach(a => {
@@ -386,8 +602,78 @@ class searchHome extends React.Component {
             },2000)
         } else {
             setTimeout(() => {
-                this.search()
+                if(this.props.city !== '' && this.props.service === ''){
+                    this.searchWithCity()
+                } else if(this.props.service !== '' && this.props.city === ''){
+                    this.searchWithWord();
+                } else if(this.props.service !== '' && this.props.city !== ''){
+                    this.searchWithWordAndCity()
+                } else {
+                    this.search()
+
+                }
             },2000)
+        }
+    }
+
+    async filterDate(){
+
+            const serviceUser = this.state.serviceUser;
+            const begin = this.state.startDate;
+            const end = this.state.endDate;
+            const beginDay =  moment(begin).format('dddd');
+            const endDay =  moment(end).format('dddd');
+            const obj = {begin,end,beginDay,endDay};
+
+            axios.post(url+'myAlfred/api/availability/filterDate',obj)
+                .then(response => {
+                    let availability = response.data;
+                    const idAlfred = [];
+                    const services = [];
+                    availability.forEach(a => {
+                        idAlfred.push(a.user);
+                    });
+                    serviceUser.forEach(w => {
+
+                        const index = idAlfred.findIndex(i => i == w.user._id);
+                        if(index !== -1){
+                            services.push(w);
+                        }
+                    });
+                    this.setState({serviceUser:services,filterDate:true});
+                    this.state.allCategories.forEach(e => {
+                        this.setState({[e.label]:0});
+                        this.state.serviceUser.forEach(a => {
+                            if(a.service.category === e._id){
+                                this.setState(prevState => {
+                                    return {[e.label]: prevState[e.label] + 1}
+                                })
+                            }
+                        })
+                    })
+                })
+                .catch(err => console.log(err));
+    }
+
+    cancelDateFilter(){
+        this.setState({startDate:null,endDate:null,filterDate:false});
+        if(this.state.checkedB){
+            this.setState({serviceUser:this.state.copyFilterPro});
+
+        } else if(this.state.checkedParticulier){
+            this.setState({serviceUser:this.state.copyFilterParticulier});
+        } else {
+            if(this.props.city !== '' && this.props.service === ''){
+                this.searchWithCity()
+            } else if(this.props.service !== '' && this.props.city === ''){
+                this.searchWithWord();
+            } else if(this.props.service !== '' && this.props.city !== ''){
+                this.searchWithWordAndCity()
+            } else {
+                this.search()
+
+            }
+
         }
     }
 
@@ -408,6 +694,15 @@ class searchHome extends React.Component {
                                     :
                                         <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
                                             <Typography style={{textAlign: 'center', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
+                                        </Grid>
+                                    }
+                                    {this.state.clickeddate ?
+                                        <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
+                                        </Grid>
+                                        :
+                                        <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     }
                                 </Grid>
@@ -458,6 +753,41 @@ class searchHome extends React.Component {
                                         </Grid>
                                     </Grid>
                                 </Grid>
+                                : null}
+                            {this.state.clickeddate ?
+                                <Fragment>
+                                    <Grid id="thedate" item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
+                                        <Grid container>
+                                            <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                                <DateRangePicker
+                                                    style={{width: '50px'}}
+                                                    startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+                                                    startDatePlaceholderText={'Début'}
+                                                    endDatePlaceholderText={'Fin'}
+                                                    startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                                                    endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+                                                    endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                                                    onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
+                                                    focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                                                    onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+                                                    minimumNights={0}
+                                                />
+                                            </Grid>
+
+                                            <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                                <Grid container>
+                                                    <Grid item xs={6}>
+                                                        <Button style={{fontSize: '0.8rem',}} onClick={()=>this.cancelDateFilter()}>Annuler</Button>
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <Button style={{fontSize: '0.8rem',}} onClick={()=>this.filterDate()}>Valider</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+
+                                </Fragment>
                                 : null}
                         </Grid>
                         <Grid container>
