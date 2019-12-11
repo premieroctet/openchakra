@@ -75,9 +75,9 @@ const styles = theme => ({
     backgroundColor: 'whitesmoke',
     marginLeft: '5%',
     borderRadius: '10px',
-    boxShadow: '6px 6px 5px -6px black',
+    boxShadow: '0px 0px 3px #4c4a4a9e',
     padding:'2%',
-    minHeight:'520px',
+    minHeight:'450px',
     bottom:50, 
     marginTop:-10,
 
@@ -166,7 +166,7 @@ const styles = theme => ({
     color: '#505050!important',
     textAlign: 'left',
     width:'100%',
-    fontSize: '28px!important',
+    fontSize: '1.3rem!important',
     fontFamily: 'Helvetica',
     letterSpacing: '-1px',
     lineHeight: '39px!important',
@@ -221,9 +221,11 @@ class Homeheader extends React.Component {
       service: '',
       place: '',
       date: Date.now(),
-      hour: Date.now(),
+      dateSelected: '',
+      hour: '',
+      hourSelected: '',
     };
-    this.handleChangeService=this.handleChangeService.bind(this);
+
   }
 
   componentDidMount() {
@@ -243,24 +245,33 @@ class Homeheader extends React.Component {
     this.setState({place: suggestion.name});
   };
 
-  handleChangeService = service => {
-    this.setState({ service });
-
-  };
-
   search() {
-    const service = this.state.service.value;
-    const serviceLabel = this.state.service.label;
+    let date;
+    let dateISO;
+    let day;
+    let hour;
+    const service = this.state.service;
     const city = this.state.place;
-    const date = moment(this.state.date).format('DD/MM/YYYY');
-    const dateISO = moment(this.state.date).format();
-    const day = moment(this.state.date).format('dddd');
-    const hour = moment(this.state.hour).format('HH:mm');
+    if(this.state.dateSelected !== ''){
+       date = moment(this.state.dateSelected).format('DD/MM/YYYY');
+      dateISO = moment(this.state.dateSelected).format();
+      day = moment(this.state.dateSelected).format('dddd');
+    } else {
+      date = '';
+      dateISO = '';
+      day = '';
+    }
+     if(this.state.hourSelected !== ''){
+       hour = moment(this.state.hourSelected).format('HH:mm');
+     } else {
+       hour = '';
+     }
+
     Router.push({
       pathname: '/searchHome',
-      query: { service: service,serviceLabel:serviceLabel,city:city,date:date,dateISO:dateISO,day:day,hour:hour }
+      query: { service: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour }
     })
-    //console.log();
+
 
   }
 
@@ -291,20 +302,16 @@ class Homeheader extends React.Component {
               <Grid item xs={12} style={{width: '100%',}}>
 
                 <Grid container alignItems="center">
-                  <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', marginBottom: '15px',color: '#505050'}}>
-                    <Select
+                  <Grid item className={classes.pickerhomelocation} style={{ textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', marginBottom: '15px',color: '#505050'}}>
+                    <TextField
+                        id="outlined-basic"
+                        label="Service"
+                        variant="outlined"
+                        placeholder={'Coiffure, Plomberie...'}
                         value={this.state.service}
-                        onChange={this.handleChangeService}
-                        options={options}
-                        styles={{
-                          menu: provided => ({ ...provided, zIndex: 9999,color: '#505050' }),
-                        }}
-                        isSearchable
-                        isClearable
-                        closeMenuOnSelect={true}
-                        placeholder={'Quel service ?'}
-                        noOptionsMessage={()=>'Aucun service'}
-
+                        onChange={this.onChange}
+                        name={'service'}
+                        style={{width: '100%', backgroundColor: 'white'}}
                     />
                   </Grid>
                 </Grid>
@@ -313,8 +320,9 @@ class Homeheader extends React.Component {
                   <Grid container alignItems="center">
                     <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', color: '#505050'}}>
                       <AlgoliaPlaces
+                          customInput={<TextField variant={"outlined"}/>}
                           placeholder='Dans quelle ville ?'
-                          style={{color: '#505050'}}
+                          style={{color: '#505050', height: '55px'}}
                           options={{
                             appId: 'plKATRG826CP',
                             apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -322,11 +330,7 @@ class Homeheader extends React.Component {
                             countries: ['fr'],
                             type: 'city',
                             useDeviceLocation: 'true'
-
-
                           }}
-
-
                           onChange={(suggestion) =>this.onChangeCity(suggestion)}
                           onClear={()=>this.setState({place:''})}
                       />
@@ -335,19 +339,27 @@ class Homeheader extends React.Component {
 
 
                 <Grid container style={{marginTop:20}}>
-                  <Grid item xs={6}>
+                  <Grid item xs={5}>
                     <Grid container style={{alignItems:"center"}}>
-                      <Grid item xs={2}>
-                    <p style={{color:"gray"}}>Le</p>
-                      </Grid>
-                      <Grid item xs={10}>
+                      <Grid item xs={12}>
                     <DatePicker
-                        selected={this.state.date}
-                        onChange={(date)=>this.setState({date:date})}
-                        customInput={<Input2 />}
+                        style={{fontWeight: 100}}
+                        customInput={<TextField label="quel jour ?" style={{backgroundColor: 'white',fontWeight: 100}} variant={"outlined"}/>}
+                        selected={this.state.dateSelected}
+                        onChange={(date)=>{
+                          this.setState({dateSelected:date});
+                          if(date===null){
+                            this.setState({dateSelected:''})
+                          }}
+
+                        }
+                        /*customInput={<Input2 />}*/
                         locale='fr'
                         showMonthDropdown
                         dateFormat="dd/MM/yyyy"
+                        placeholderText={moment(this.state.date).format('DD/MM/YYYY')}
+                        minDate={new Date()}
+
 
 
 
@@ -356,22 +368,30 @@ class Homeheader extends React.Component {
                     </Grid>
                   </Grid>
 
-                  <Grid item xs={6} >
+                  <Grid item xs={2}>
+                    <p style={{color:"gray",fontWeight: 100}}>À</p>
+                  </Grid>
+
+                  <Grid item xs={5} >
                     <Grid container style={{alignItems:"center"}}>
-                      <Grid item xs={2}>
-                        <p style={{color:"gray"}}>À</p>
-                      </Grid>
-                      <Grid item xs={10}>
+                      <Grid item xs={12}>
                         <DatePicker
-                            selected={this.state.hour}
-                            onChange={(date)=>this.setState({hour:date})}
-                            customInput={<Input2 />}
+                            style={{fontWeight: 100}}
+                            customInput={<TextField label="quelle heure ?" style={{backgroundColor: 'white',fontWeight: 100}} variant={"outlined"}/>}
+                            selected={this.state.hourSelected}
+                            onChange={(date)=>{
+                                this.setState({hourSelected:date});
+                                if(date===null){
+                                  this.setState({hourSelected:''})
+                                }}
+                            }
                             showTimeSelect
                             showTimeSelectOnly
-                            timeIntervals={15}
+                            timeIntervals={30}
                             timeCaption="Heure"
                             dateFormat="HH:mm"
                             locale='fr'
+                            placeholderText={'09:00'}
 
 
 
@@ -381,7 +401,7 @@ class Homeheader extends React.Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Button onClick={()=>this.search()}  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
+                <Button disabled={(this.state.service ==='' && this.state.place ==='' && this.state.dateSelected !== '') || (this.state.service ==='' && this.state.place ==='' && this.state.hourSelected !== '') } onClick={()=>this.search()}  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
                   Rechercher
                 </Button>
 

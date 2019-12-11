@@ -16,6 +16,7 @@ import ExpandMoreIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import DatePicker, { registerLocale } from "react-datepicker";
 import fr from "date-fns/locale/fr";
+import '../static/style2.css'
 import Tooltip from "@material-ui/core/Tooltip";
 import { toast, ToastContainer } from "react-toastify";
 registerLocale("fr", fr);
@@ -2474,17 +2475,20 @@ class userServices extends React.Component {
                     item
                     xs={12}
                     md={5}
-                    style={{ marginTop: "2%", marginBottom: "5%" }}
+                    style={{ marginTop: "2%", marginBottom: "5%"}}
                   >
                     <Grid
                       container
+                      className="contentsticky"
                       style={{
                         border: "thin solid #dedede",
                         maxWidth: "80%",
                         marginLeft: "14%",
                         padding: "2%",
                         position: "sticky",
-                        top: 100
+                        top: 100, 
+                        overflowY: "auto",
+                        height: '85vh'
                       }}
                     >
                       <Grid item xs={12}>
@@ -2927,26 +2931,32 @@ class userServices extends React.Component {
                           );
                         }
                       })}
-                      <p>
-                        Options :{" "}
-                        {this.state.optionPrice === null
-                          ? 0
-                          : this.state.optionPrice}
-                        €
-                      </p>
-                      <p>
-                        Frais de service :{" "}
-                        {this.state.fees === null ? 0 : this.state.fees}€
-                      </p>
-
-                      <p>
-                        TOTAL :{" "}
-                        {this.state.grandTotal === null
-                          ? 0
-                          : this.state.grandTotal}
-                        €
-                      </p>
-
+                      <Grid container>
+                        <Grid item xs={12}>
+                          <p>
+                            Options :{" "}
+                            {this.state.optionPrice === null
+                              ? 0
+                              : this.state.optionPrice}
+                            €
+                          </p>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <p>
+                            Frais de service :{" "}
+                            {this.state.fees === null ? 0 : this.state.fees}€
+                          </p>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <p>
+                            TOTAL :{" "}
+                            {this.state.grandTotal === null
+                              ? 0
+                              : this.state.grandTotal}
+                            €
+                          </p>
+                        </Grid>
+                      </Grid>
                       <hr style={{ width: "100%", margin: "1rem 0" }} />
                       <Grid item xs={12} style={{ marginBottom: "2%" }}>
                         <Typography
@@ -2993,16 +3003,21 @@ class userServices extends React.Component {
                             </Typography>
                           </Grid>
                         </Grid>
-                        <Grid>
-                          <button
+                        <Grid container style={{textAlign: 'center', marginTop: '20px'}}>
+                          <Grid item xs={6}>
+                          <p
                             //disabled={}
+                            style={{color:'#2FBCD3', cursor: 'pointer'}}
                             onClick={() => this.moreInfos()}
                           >
                             Demande d'infos
-                          </button>
-                            <button onClick={() => this.reservationPage()}>
+                          </p>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <p style={{color:'#2FBCD3', cursor: 'pointer'}} onClick={() => this.reservationPage()}>
                               Réserver
-                            </button>
+                            </p>
+                          </Grid>
                           {this.state.errorsPresta !== null ? (
                             <p style={{ color: "red" }}>
                               {this.state.errorsPresta}

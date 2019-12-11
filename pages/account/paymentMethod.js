@@ -12,7 +12,22 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
-
+import NumberFormat from 'react-number-format';
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
+import Cards from 'react-credit-cards';
+import {
+    formatCreditCardNumber,
+    formatCVC,
+    formatExpirationDate,
+    formatFormData,
+  } from '../../components/utils';
+import '../../static/creditcards.css';
+import SupportedCards from '../../components/Cards';
+import 'react-credit-cards/es/styles-compiled.css';
 
 
 
@@ -27,6 +42,21 @@ const styles = theme => ({
      bigContainer: {
         marginTop: 70,
         flexGrow: 1,
+    },
+    buttondelt:{
+        color: 'white', 
+        position : 'absolute', 
+        borderRadius: '50%', 
+        height: '20px', 
+        width: '20px', 
+        border: 'none',
+        backgroundColor: '#F8727F' ,
+        '&:hover':{
+            backgroundColor: 'rgb(173, 79, 88)'
+        }, 
+        top: '-5px', 
+        right: '-5px', 
+        cursor: 'pointer'
     },
     hidesm: {
         minWidth: '271px',
@@ -84,7 +114,14 @@ class paymentMethod extends React.Component {
             cards: [],
             card_number: '',
             expiration_date: '',
+            issuer: '',
+            focused: '',
+            formData: null,
+            name: '',
             csv: '',
+            goodside: false,
+            deletedial: false,
+            Idtempo: ''
         }
 
     }
@@ -97,6 +134,8 @@ class paymentMethod extends React.Component {
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 this.setState({user: res.data});
+                this.setState({userName:  this.state.user.name + ' ' + this.state.user.firstname });
+                this.setState({name: this.state.userName});
             })
             .catch(err => {
                     console.log(err);
@@ -114,18 +153,76 @@ class paymentMethod extends React.Component {
             })
     }
 
+    refreshCards = () =>{
+        axios.get(url+'myAlfred/api/payment/cards')
+            .then(response => {
+                let cards = response.data;
+                this.setState({cards:cards});
+            })
+    }
+
+    handleCloseDial = () => {
+        this.setState({deletedial:false});
+    }
+
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     };
 
+    handleCallback = ({ issuer }, isValid) => {
+        if (isValid) {
+          this.setState({ issuer });
+        }
+      };
+    
+      handleInputFocus = ({ target }) => {
+        this.setState({
+          focused: target.name,
+          goodside: true,
+        });
+        setTimeout(()=>{
+            if (this.state.goodside === true){
+                document.querySelector('.rccs__card').classList.add('rccs__card--flipped');
+            } else {
+                document.querySelector('.rccs__card').classList.remove('rccs__card--flipped');
+            }
+          }, 400)
+      };
+
+      handleBadSide = () =>{
+        this.setState({
+            goodside: false,
+          });
+          setTimeout(()=>{
+            if (this.state.goodside === true){
+                document.querySelector('.rccs__card').classList.add('rccs__card--flipped');
+            } else {
+                document.querySelector('.rccs__card').classList.remove('rccs__card--flipped');
+            }
+          }, 400)
+      }
+    
+      handleInputChange = ({ target }) => {
+        if (target.name === 'card_number') {
+          target.value = formatCreditCardNumber(target.value);
+        } else if (target.name === 'expiration_date') {
+          target.value = formatExpirationDate(target.value);
+        } else if (target.name === 'csv') {
+          target.value = formatCVC(target.value);
+        }
+    
+        this.setState({ [target.name]: target.value });
+      };
+
     addCard() {
-        const card_number = this.state.card_number;
-        const expiration_date = this.state.expiration_date;
+        const card_number = this.state.card_number.replace(/\s/g,'');
+        const expiration_date = this.state.expiration_date.split("/");
+        const finaldate = expiration_date[0]+expiration_date[1];
         const csv = this.state.csv;
 
         const obj = {
             card_number: card_number,
-            expiration_date: expiration_date,
+            expiration_date: finaldate,
             csv: csv
         };
 
@@ -157,6 +254,7 @@ class paymentMethod extends React.Component {
         const {classes} = this.props;
         const {user} = this.state;
         const {cards} = this.state;
+        const {deletedial} = this.state;
 
 
         return (
@@ -308,44 +406,95 @@ class paymentMethod extends React.Component {
                                 {cards.length ?
 
                                     cards.map((e,index) => (
-                                        <Grid container key={index}>
-                                            <p>{e.Alias}</p>
-                                            <p>{e.Active.toString()}</p>
-                                            <Button onClick={()=>this.deleteCard(e.Id)} type="submit" variant="contained" style={{color: 'white'}} color="secondary">
-                                                Supprimer
-                                            </Button>
-                                        </Grid>
+                                        <React.Fragment>
+                                            {e.Active.toString() == "true" ? 
+                                            <Grid item key={index} style={{position: 'relative', margin: '20px'}}>
+                                                <Cards
+                                                    expiry={e.ExpirationDate}
+                                                    focused={this.state.focus}
+                                                    name={this.state.name}
+                                                    number={e.Alias}
+                                                    callback={this.handleCallback}
+                                                    />
+                                                <button className={classes.buttondelt} onClick={()=>this.setState({deletedial: true, Idtempo: e.Id})} type="submit" variant="contained" style={{}} color="secondary">
+                                                    x
+                                                </button>
+                                            </Grid>: null}
+                                        </React.Fragment>
                                     )) :
 
                                     <p>Aucun mode de paiement enregistré</p>
 
                                 }
                             </Grid>
-                            <Grid container>
-                                <TextField label="Numéro carte de crédit"
-                                           variant="outlined"
-                                           value={this.state.card_number}
-                                           onChange={this.onChange}
-                                           name={'card_number'}
-                                />
-                                <TextField label="Date d'expiration"
-                                           variant="outlined"
-                                           value={this.state.expiration_date}
-                                           onChange={this.onChange}
-                                           name={'expiration_date'}
-                                />
-                                <TextField label="Cryptogramme visuel"
-                                           variant="outlined"
-                                           value={this.state.csv}
-                                           onChange={this.onChange}
-                                           name={'csv'}
-                                />
-                                <Button onClick={()=>this.addCard()} type="submit" variant="contained" style={{color: 'white'}} color="primary">
-                                    Ajouter
-                                </Button>
+
+                            <Grid container style={{position: 'relative', margin: '70px 0px', maxWidth: '100%' , width: '400px', boxShadow: '0px 0px 6px lightgray', borderRadius: '10px', }}>
+
+                                <Grid item style={{margin:'auto', marginTop: '-25px'}}>
+                                    <div style={{margin: 'auto',}} id="PaymentForm">
+                                        <Cards
+                                        style={{}}
+                                        cvc={this.state.csv}
+                                        expiry={this.state.expiration_date}
+                                        focused={this.state.focus}
+                                        name={this.state.name}
+                                        number={this.state.card_number}
+                                        callback={this.handleCallback}
+                                        />
+                                    </div>
+                                </Grid>
+                                <Grid item xs={12} style={{textAlign: 'center', margin: '15px'}}>
+                                    <NumberFormat onClick={this.handleBadSide} customInput={TextField} variant={"outlined"} label="Numéro de carte" name={'card_number'} onChange={this.onChange} value={this.state.card_number}  style={{margin: 'auto', width:'90%'}} format="#### #### #### ####" placeholder="Votre carte de crédit"/>
+                                </Grid>
+                                <Grid item xs={7} style={{textAlign: 'center', margin: '15px'}}>
+                                    <NumberFormat onClick={this.handleBadSide} customInput={TextField} variant={"outlined"} label="Date d'expiration" name={'expiration_date'} onChange={this.onChange} value={this.state.expiration_date}  style={{margin: 'auto', width:'90%'}} format="##/##" placeholder="MM/YY" />
+                                </Grid>
+                                <Grid item xs={3} style={{textAlign: 'center', margin: '15px'}}>
+                                    <TextField 
+                                            label="CVV"
+                                            style={{margin: 'auto', width:'85%'}}
+                                            variant="outlined"
+                                            value={this.state.csv}
+                                            onChange={this.onChange}
+                                            name={'csv'}
+                                            onClick={this.handleInputFocus}
+                                            type="number"
+                                            pattern="\d{3,4}"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} style={{textAlign: 'center', margin: '15px'}}>
+                                    <Button onClick={(e)=>{this.addCard(e); this.refreshCards(e)}} type="submit" variant="contained" style={{color: 'white',margin: 'auto', width:'40%'}} color="primary">
+                                        Ajouter
+                                    </Button>
+                                </Grid>
+
+
                             </Grid>
                         </Grid>
                     </Grid>
+                    {deletedial ?
+                        <Dialog
+                            open={this.state.deletedial}
+                            onClose={()=>this.handleCloseDial()}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">{"Voulez-vous vraiment supprimer votre carte bancaire ?"}</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    Si vous supprimez votre carte bancaire vous ne pourrez plus l'utiliser par la suite sur ce site.
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={()=>this.handleCloseDial()} color="primary">
+                                    Annuler
+                                </Button>
+                                <Button onClick={(e)=>{this.deleteCard(this.state.Idtempo); this.refreshCards(e); this.handleCloseDial(e)}} color="secondary" autoFocus>
+                                    Supprimer
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    : null}
                 </Layout>
                 <Footer/>
 

@@ -9811,6 +9811,13 @@ pause@0.0.1:
   resolved "https://registry.yarnpkg.com/pause/-/pause-0.0.1.tgz#1d408b3fdb76923b9543d96fb4c9dfd535d9cb5d"
   integrity sha1-HUCLP9t2kjuVQ9lvtMnf1TXZy10=
 
+payment@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/payment/-/payment-2.3.0.tgz#b2a95e9c3052459647da3926b8b66c553d93098f"
+  integrity sha1-sqlenDBSRZZH2jkmuLZsVT2TCY8=
+  dependencies:
+    qj "~2.0.0"
+
 pbkdf2@^3.0.3:
   version "3.0.17"
   resolved "https://registry.yarnpkg.com/pbkdf2/-/pbkdf2-3.0.17.tgz#976c206530617b14ebb32114239f7b09336e93a6"
@@ -10307,6 +10314,11 @@ q@^1.1.2:
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
 
+qj@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/qj/-/qj-2.0.0.tgz#054dd3b75ce018728d23a0605f030dfda0bd158a"
+  integrity sha1-BU3Tt1zgGHKNI6BgXwMN/aC9FYo=
+
 qs@6.5.2, qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
@@ -10440,6 +10452,13 @@ react-context-toolbox@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/react-context-toolbox/-/react-context-toolbox-2.0.2.tgz#35637287cb23f801e6ed802c2bb7a97e1f04e3fb"
   integrity sha512-tY4j0imkYC3n5ZlYSgFkaw7fmlCp3IoQQ6DxpqeNHzcD0hf+6V+/HeJxviLUZ1Rv1Yn3N3xyO2EhkkZwHn0m1A==
+
+react-credit-cards@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/react-credit-cards/-/react-credit-cards-0.8.0.tgz#5a568d01cb440275adf2d4cda29c0fb1bf97248a"
+  integrity sha512-OTI08Dz1qEefxHOKJQSUa5nn8awuN5rAE8lRz2XS3BG3SIa5vmaAJLAhdmikc75qEoIkrYST79Z8oGUPVkBNsA==
+  dependencies:
+    payment "^2.3.0"
 
 react-css-modules@^4.7.7:
   version "4.7.11"
