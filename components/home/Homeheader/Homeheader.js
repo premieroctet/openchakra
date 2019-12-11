@@ -75,9 +75,9 @@ const styles = theme => ({
     backgroundColor: 'whitesmoke',
     marginLeft: '5%',
     borderRadius: '10px',
-    boxShadow: '6px 6px 5px -6px black',
+    boxShadow: '0px 0px 3px #4c4a4a9e',
     padding:'2%',
-    minHeight:'520px',
+    minHeight:'470px',
     bottom:50, 
     marginTop:-10,
 
@@ -166,7 +166,7 @@ const styles = theme => ({
     color: '#505050!important',
     textAlign: 'left',
     width:'100%',
-    fontSize: '28px!important',
+    fontSize: '1.3rem!important',
     fontFamily: 'Helvetica',
     letterSpacing: '-1px',
     lineHeight: '39px!important',
@@ -311,6 +311,7 @@ class Homeheader extends React.Component {
                         value={this.state.service}
                         onChange={this.onChange}
                         name={'service'}
+                        style={{width: '100%', backgroundColor: 'white'}}
                     />
                   </Grid>
                 </Grid>
@@ -320,7 +321,7 @@ class Homeheader extends React.Component {
                     <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', color: '#505050'}}>
                       <AlgoliaPlaces
                           placeholder='Dans quelle ville ?'
-                          style={{color: '#505050'}}
+                          style={{color: '#505050', height: '55px'}}
                           options={{
                             appId: 'plKATRG826CP',
                             apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -341,12 +342,9 @@ class Homeheader extends React.Component {
 
 
                 <Grid container style={{marginTop:20}}>
-                  <Grid item xs={6}>
+                  <Grid item xs={5}>
                     <Grid container style={{alignItems:"center"}}>
-                      <Grid item xs={2}>
-                    <p style={{color:"gray"}}>Le</p>
-                      </Grid>
-                      <Grid item xs={10}>
+                      <Grid item xs={12}>
                     <DatePicker
                         selected={this.state.dateSelected}
                         onChange={(date)=>{
@@ -356,6 +354,9 @@ class Homeheader extends React.Component {
                           }}
 
                         }
+                        style={{fontWeight: 100}}
+                        customInput={<TextField label="Quel jour ?" style={{backgroundColor: 'white',fontWeight: 100}} variant={"outlined"}/>}
+
                         /*customInput={<Input2 />}*/
                         locale='fr'
                         showMonthDropdown
@@ -371,12 +372,12 @@ class Homeheader extends React.Component {
                     </Grid>
                   </Grid>
 
-                  <Grid item xs={6} >
+                  <Grid item xs={2}>
+                    <p style={{color:"gray",fontWeight: 100}}>À</p>
+                  </Grid>
+                  <Grid item xs={5} >
                     <Grid container style={{alignItems:"center"}}>
-                      <Grid item xs={2}>
-                        <p style={{color:"gray"}}>À</p>
-                      </Grid>
-                      <Grid item xs={10}>
+                      <Grid item xs={12}>
                         <DatePicker
                             selected={this.state.hourSelected}
                             onChange={(date)=>{
@@ -392,6 +393,9 @@ class Homeheader extends React.Component {
                             dateFormat="HH:mm"
                             locale='fr'
                             placeholderText={'09:00'}
+                            style={{fontWeight: 100}}
+                            customInput={<TextField label="Quelle heure ?" style={{backgroundColor: 'white',fontWeight: 100}} variant={"outlined"}/>}
+
 
 
 
