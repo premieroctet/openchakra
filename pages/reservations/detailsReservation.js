@@ -13,6 +13,7 @@ import axios from "axios";
 import moment from "moment";
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
+import io from "socket.io-client";
 
 moment.locale("fr");
 
@@ -249,6 +250,15 @@ class DetailsReservation extends React.Component {
     axios.get(url + "myAlfred/api/booking/" + booking_id).then(res => {
       this.setState({ bookingObj: res.data });
       this.setState({ splitAddress: this.state.bookingObj.address.address.split(' ')})
+
+      this.socket = io("http://localhost:3000");
+      this.socket.on("connect", socket => {
+        this.socket.emit("booking", this.state.bookingObj._id)
+      })
+      this.socket.on("displayStatus", data => {
+        console.log(data);
+        this.setState({bookingObj: data})
+      })
     });
   }
 
@@ -258,7 +268,11 @@ class DetailsReservation extends React.Component {
         url + "myAlfred/api/booking/modifyBooking/" + this.state.booking_id,
         { status: status }
       )
-      .then(res => this.setState({ bookingObj: res.data }))
+      .then(res => {
+        this.setState({ bookingObj: res.data })
+
+        this.socket.emit("changeStatus", this.state.bookingObj);
+      })
       .catch(err => console.log(err));
   }
 
