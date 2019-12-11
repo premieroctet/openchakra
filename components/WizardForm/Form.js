@@ -1460,7 +1460,7 @@ class Form extends React.Component {
                                                                                                                                       form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`, event.target.value);
                                                                                                                                   }}
 
-                                                                                                                                  value={ field.value || p.billingChoice[0].label }
+                                                                                                                                  value={field.value}
                                                                                                                               >
                                                                                                                                   {p.billingChoice.map(option => {
                                                                                                                                       return (
