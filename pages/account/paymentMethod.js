@@ -26,8 +26,8 @@ import {
     formatFormData,
   } from '../../components/utils';
 import '../../static/creditcards.css';
-import SupportedCards from '../../components/Cards';
-import 'react-credit-cards/es/styles-compiled.css';
+
+
 
 
 
@@ -413,8 +413,10 @@ class paymentMethod extends React.Component {
                                                     expiry={e.ExpirationDate}
                                                     focused={this.state.focus}
                                                     name={this.state.name}
-                                                    number={e.Alias}
+                                                    number={e.Alias.replace(/X/g,'*')}
                                                     callback={this.handleCallback}
+                                                    preview
+                                                    cvc={'XXX'}
                                                     />
                                                 <button className={classes.buttondelt} onClick={()=>this.setState({deletedial: true, Idtempo: e.Id})} type="submit" variant="contained" style={{}} color="secondary">
                                                     x
@@ -440,6 +442,7 @@ class paymentMethod extends React.Component {
                                         name={this.state.name}
                                         number={this.state.card_number}
                                         callback={this.handleCallback}
+
                                         />
                                     </div>
                                 </Grid>
