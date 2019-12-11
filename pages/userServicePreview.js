@@ -18,6 +18,8 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import fr from "date-fns/locale/fr";
 import Tooltip from "@material-ui/core/Tooltip";
 import { toast, ToastContainer } from "react-toastify";
+import getDistance from "geolib/es/getDistance";
+import convertDistance from "geolib/es/convertDistance";
 registerLocale("fr", fr);
 
 moment.locale("fr");
@@ -508,7 +510,6 @@ class userServices extends React.Component {
         let dateIsBetween = false;
         const dayNumber = moment(this.state.date).day();
 
-        console.log(dayNumber);
         const formatedDate = moment(this.state.date).format('YYYY-MM-DD');
         const formatedHour = moment(this.state.hour).format('HH:mm');
 
@@ -999,7 +1000,7 @@ class userServices extends React.Component {
 
     return (
       <Fragment>
-        {serviceUser === null ? null : (
+        {serviceUser === null || user === null ? null : (
           <>
             <Layout>
               <Grid container className={classes.bigContainer}>
@@ -1079,7 +1080,13 @@ class userServices extends React.Component {
                       fontSize: "1.1rem"
                     }}
                   >
-                    par {serviceUser.user.firstname} ({serviceUser.perimeter}{" "}
+                    par {serviceUser.user.firstname} ({convertDistance(
+                      getDistance(
+                        user.billing_address.gps,
+                        serviceUser.service_address.gps
+                      ),
+                      'km'
+                    ).toFixed(2)}{" "}
                     km)
                   </p>
                 </Grid>
