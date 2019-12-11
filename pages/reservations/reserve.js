@@ -376,7 +376,7 @@ class Reserve extends React.Component {
 
                   <Grid style={{ float: "right" }} item xs={12}>
                     {" "}
-                    <Link href={{pathname: '/reservations/detailsReservation', query: { id: this.state.booking_id }}}>
+                    <Link href={{pathname: '/paymentChoice', query: { total: bookingObj.amount,fees: bookingObj.fees }}}>
                       <Button
                         color={"secondary"}
                         variant={"contained"}

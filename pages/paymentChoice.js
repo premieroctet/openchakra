@@ -89,6 +89,11 @@ class paymentChoice extends React.Component {
 
     }
 
+    static getInitialProps ({ query: { total, fees } }) {
+        return { total: total, fees:fees }
+
+    }
+
     componentDidMount() {
 
         localStorage.setItem('path',Router.pathname);
@@ -115,10 +120,12 @@ class paymentChoice extends React.Component {
     }
 
     payDirect() {
+        const total = parseFloat(this.props.total);
+        const fees = parseFloat(this.props.fees)*2;
         const data = {
             id_card: this.state.id_card,
-            amount: 20,
-            fees: 0
+            amount: total,
+            fees: fees
         };
         axios.post(url+'myAlfred/api/payment/payInDirect',data)
             .then(() => {
@@ -129,9 +136,11 @@ class paymentChoice extends React.Component {
     }
 
     pay(){
+        const total = parseFloat(this.props.total);
+        const fees = parseFloat(this.props.fees)*2;
         const data = {
-            amount: 20,
-            fees: 0
+            amount: total,
+            fees: fees
         };
         axios.post(url+'myAlfred/api/payment/payIn',data)
             .then(res => {

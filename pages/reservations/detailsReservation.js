@@ -52,36 +52,6 @@ const styles = theme => ({
     margin: "0 auto",
     marginTop: -28
   },
-  trait: {
-    width: "87%",
-    marginTop: -18.5,
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
-  trait1: {
-    width: "100%",
-    marginTop: 2,
-    marginLeft: 110,
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait2: {
-    width: "87%",
-    marginTop: -18.5,
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait3: {
-    width: "100%",
-    marginTop: 2,
-    marginLeft: 110,
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
   shopbar: {
     [theme.breakpoints.down("md")]: {
       display: "none"
@@ -120,18 +90,6 @@ const styles = theme => ({
     }
   },
 
-  toggle: {
-    [theme.breakpoints.down("sm")]: {
-      marginLeft: "-75px",
-      transition: "margin-left 0.7s",
-
-      "&:hover": {
-        marginLeft: "0px",
-        transition: "margin-left 0.7s",
-        boxShadow: "11px 6px 23px -24px rgba(0,0,0,0.75)"
-      }
-    }
-  },
   trait: {
     width: "100%",
     height: 4,
@@ -1967,28 +1925,7 @@ class DetailsReservation extends React.Component {
                             </>
                           ) : bookingObj.status === "Demande d'infos" &&
                             currentUser._id === bookingObj.user._id ? (
-                            <div
-                              style={{
-                                textAlign: "center",
-                                height: "40px",
-                                minWidth: "250px",
-                                backgroundColor: "#F8727F",
-                                lineHeight: 2.5,
-                                borderRadius: "50px",
-                                marginTop: "20%"
-                              }}
-                            >
-                              <Link href={`reserve?id=${bookingObj._id}`}>
-                                <a
-                                  style={{
-                                    textDecoration: "none",
-                                    color: "white"
-                                  }}
-                                >
-                                  Réserver
-                                </a>
-                              </Link>
-                            </div>
+                            null
                           ) : bookingObj.status === "Invitation à réserver" ? (
                             <div
                               style={{
@@ -2151,7 +2088,7 @@ class DetailsReservation extends React.Component {
                                 </Grid>
                               </>
                             ) : (
-                              <div
+                                <div
                                 style={{
                                   textAlign: "center",
                                   height: "40px",

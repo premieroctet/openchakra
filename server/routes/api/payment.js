@@ -105,8 +105,8 @@ router.post('/createCard',passport.authenticate('jwt',{session:false}),(req,res)
 // POST /myAlfred/api/payment/payIn
 // @access private
 router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
-    const amount = parseInt(req.body.amount)*100;
-    const fees = parseInt(req.body.fees)*100;
+    const amount = req.body.amount*100;
+    const fees = req.body.fees*100;
     User.findById(req.user.id)
         .then(user => {
             const id_mangopay = user.id_mangopay;
@@ -140,8 +140,8 @@ router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
 // POST /myAlfred/api/payment/payInDirect
 // @access private
 router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res)=> {
-    const amount = parseInt(req.body.amount)*100;
-    const fees = parseInt(req.body.fees)*100;
+    const amount = req.body.amount*100;
+    const fees = req.body.fees*100;
     const id_card = req.body.id_card;
     User.findById(req.user.id)
         .then(user => {
@@ -178,8 +178,8 @@ router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res
 // POST /myAlfred/api/payment/transfer
 // @access private
 router.post('/transfer',passport.authenticate('jwt',{session:false}),(req,res)=> {
-    const amount = parseInt(req.body.amount)*100;
-    const fees = parseInt(req.body.fees)*100;
+    const amount = parseFloat(req.body.amount)*100;
+    const fees = parseFloat(req.body.fees)*100;
     const wallet_credited = 72050324;
     User.findById(req.user.id)
         .then(user => {
