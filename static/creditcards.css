@@ -29,6 +29,10 @@ a {
   .form-actions {
     margin-top: 15px;
   }
+
+  .rccs__expiry__valid {
+    display: none;
+  }
   
   .App-cards {
     margin: 0 auto;

@@ -406,7 +406,7 @@ class paymentPreference extends React.Component {
                                             <DialogTitle id="alert-dialog-title">{"Voulez-vous vraiment supprimer votre RIB ?"}</DialogTitle>
                                             <DialogContent>
                                                 <DialogContentText id="alert-dialog-description">
-                                                    Si vous supprimez votre RIB vous ne pourrez plus l'utiliser par la suite sur ce site.
+                                                    Si vous supprimez votre RIB vous ne pourrez plus l'utiliser par la suite avec ce compte.
                                                 </DialogContentText>
                                             </DialogContent>
                                             <DialogActions>
