@@ -436,6 +436,30 @@ function getAccount(id){
             })
         })
 
+}, null, true, 'Europe/Paris');*/
+
+new CronJob('0 0 6 * * *', function() {
+    const date = moment().format('DD-MM-YYYY');
+    Booking.find({status: 'Confirmée',paid:false})
+        .populate('user')
+        .populate('alfred')
+        .then(booking => {
+            booking.forEach(b => {
+                const end_date = b.end_date.split('/');
+                const day = end_date[0];
+                const month = end_date[1];
+                const year = end_date[2];
+                const end = moment(year + '-' + month + '-' + day + 'T00:00:00.000Z');
+                const newDate = moment(end).add(1, 'days');
+                const isoDate = moment(newDate).format('DD-MM-YYYY');
+                if (moment(date).isSame(isoDate)) {
+                    b.status = 'Terminée';
+                    b.save().then().catch();
+                }
+            })
+        })
+
+
 }, null, true, 'Europe/Paris');
 
 new CronJob('0 0 5 * * *', function() {
@@ -454,7 +478,7 @@ new CronJob('0 0 5 * * *', function() {
             })
         })
 
-}, null, true, 'Europe/Paris');*/
+}, null, true, 'Europe/Paris');
 
 
 // pattern reference

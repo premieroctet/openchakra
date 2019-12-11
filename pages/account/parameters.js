@@ -149,7 +149,8 @@ class parameters extends React.Component {
                                     .then(() => {
                                         this.setState({open:false});
                                         toast.error('Boutique supprimée');
-                                        this.componentDidMount();
+                                        localStorage.removeItem('token');
+                                        Router.push('/login');
 
                                     })
                                     .catch(error => console.log(error));
@@ -330,27 +331,6 @@ class parameters extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Applications connectées
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                               
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -371,27 +351,6 @@ class parameters extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
-                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/sponsors'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/trophy.svg'} alt={'trophy'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Parrainage
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/sponsors'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/trophy.svg'} alt={'trophy'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
 
                             </Grid>
                         </Grid>
