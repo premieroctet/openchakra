@@ -329,11 +329,7 @@ class Homeheader extends React.Component {
                             countries: ['fr'],
                             type: 'city',
                             useDeviceLocation: 'true'
-
-
                           }}
-
-
                           onChange={(suggestion) =>this.onChangeCity(suggestion)}
                           onClear={()=>this.setState({place:''})}
                       />

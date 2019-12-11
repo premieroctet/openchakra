@@ -155,7 +155,6 @@ const styles = theme => ({
   },
   trait3: {
     width: "100%",
-
     height: 4,
     backgroundColor: "rgb(47, 188, 211)",
     borderColor: "transparent"
@@ -594,7 +593,6 @@ class DetailsReservation extends React.Component {
                           €
                         </Typography>
                       </Grid>
-                      <Grid item xs={1} style={{}}></Grid>
                       <Grid item xs={2} style={{ textAlign: "center" }}>
                         <div style={{ marginTop: "5%" }}>
                           <svg
@@ -638,9 +636,9 @@ class DetailsReservation extends React.Component {
                         paddingBottom: "7%"
                       }}
                     >
-                      <Grid item xs={5} md={7}>
+                      <Grid item xs={12} md={7}>
                         <Typography
-                          style={{ marginTop: "-3%", fontSize: "1.7rem" }}
+                          style={{ marginTop: "-3%", fontSize: "1.7rem", marginBottom: '15px'}}
                         >
                           A propos de{" "}
                           {bookingObj === null ||
@@ -651,7 +649,7 @@ class DetailsReservation extends React.Component {
                             <span>{`${bookingObj.alfred.firstname} ${bookingObj.alfred.name}`}</span>
                           )}
                         </Typography>
-                        <div style={{ marginLeft: "3%" }}>
+                        <div style={{ marginLeft: "3%", marginBottom: '15px' }}>
                           {bookingObj === null ||
                           currentUser === null ? null : currentUser._id ===
                             bookingObj.alfred._id ? (
@@ -1184,13 +1182,13 @@ class DetailsReservation extends React.Component {
                           )}
 
                           <Grid style={{ marginLeft: "4%" }} container>
-                            <Grid item xs={1}>
+                            <Grid item xs={2} md={1}>
                               <img
                                 style={{ width: "15px" }}
                                 src="../../static/stars/star-solid.png"
                               ></img>
                             </Grid>
-                            <Grid item xs={11}>
+                            <Grid item xs={10} md={11}>
                               <Typography
                                 style={{
                                   color: "rgb(47, 188, 211)",
@@ -1213,13 +1211,13 @@ class DetailsReservation extends React.Component {
                               bookingObj.alfred._id ? (
                               bookingObj.user.id_confirmed === true ? (
                                 <>
-                                  <Grid item xs={1}>
+                                  <Grid item xs={2} md={1}>
                                     <img
                                       style={{ width: "15px" }}
                                       src="../../static/statut/oui.png"
                                     ></img>
                                   </Grid>
-                                  <Grid item xs={11}>
+                                  <Grid item xs={10} md={11}>
                                     <Typography
                                       style={{
                                         fontSize: "0.8rem",
@@ -1233,13 +1231,13 @@ class DetailsReservation extends React.Component {
                               ) : null
                             ) : bookingObj.alfred.id_confirmed === true ? (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2} md={1}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/oui.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10} md={11}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -1256,13 +1254,13 @@ class DetailsReservation extends React.Component {
                             currentUser === null ? null : currentUser._id ===
                               bookingObj.alfred._id ? (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2} md={1}>
                                   <img
-                                    style={{ width: "15px" }}
+                                    style={{ width: "15px", margin: 'auto'}}
                                     src="../../static/statut/calendar.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10} md={11}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -1278,13 +1276,13 @@ class DetailsReservation extends React.Component {
                               </>
                             ) : (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2} md={1}>
                                   <img
-                                    style={{ width: "15px" }}
+                                    style={{ width: "15px", margin: 'auto' }}
                                     src="../../static/statut/calendar.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10} md={11}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -1304,13 +1302,13 @@ class DetailsReservation extends React.Component {
                                 .is_alfred === true &&
                               bookingObj.user.is_alfred === true ? (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2} md={1}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/beaver.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10} md={11}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -1327,13 +1325,13 @@ class DetailsReservation extends React.Component {
                             currentUser === null ? null : currentUser._id ===
                               bookingObj.alfred._id ? (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2} md={1}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/chat.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10} md={11}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -1353,13 +1351,13 @@ class DetailsReservation extends React.Component {
                               </>
                             ) : (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2} md={1}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/chat.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10} md={11}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -1523,33 +1521,42 @@ class DetailsReservation extends React.Component {
                             Commentaires
                           </Typography>
                           <div style={{ display: "flex", flexFlow: "row" }}>
-                            <Typography>
-                              Vous avez 15 jours pour évaluer votre Alfred. Une
-                              fois que votre Alfred aura rédigé son commentaire,
-                              il pourra consulter votre évaluation et vous
-                              pourrez consulter la sienne !
-                            </Typography>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                width: "400px",
-                                height: "40px",
-                                backgroundColor: "#F8727F",
-                                lineHeight: 2.5,
-                                borderRadius: "50px"
-                              }}
-                            >
-                              <Link href={`/evaluateClient?id=${bookingObj.serviceUserId}&client=${bookingObj.user._id}`}>
-                                <a
+                            <Grid container>
+                              <Grid item md={6} xs={12}>
+                                <Typography>
+                                  Vous avez 15 jours pour évaluer votre Alfred. Une
+                                  fois que votre Alfred aura rédigé son commentaire,
+                                  il pourra consulter votre évaluation et vous
+                                  pourrez consulter la sienne !
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={2}></Grid>
+                              <Grid item md={4} xs={12}>
+                                <div
                                   style={{
-                                    textDecoration: "none",
-                                    color: "white"
+                                    textAlign: "center",
+                                    width: "200px",
+                                    height: "40px",
+                                    backgroundColor: "#F8727F",
+                                    lineHeight: 2.5,
+                                    borderRadius: "50px",
                                   }}
                                 >
-                                  Evaluer mon client
-                                </a>
-                              </Link>
-                            </div>
+                                  <Link href={`/evaluateClient?id=${bookingObj.serviceUserId}&client=${bookingObj.user._id}`}>
+                                    <a
+                                      style={{
+                                        textDecoration: "none",
+                                        color: "white"
+                                      }}
+                                    >
+                                      Evaluer mon client
+                                    </a>
+                                  </Link>
+                                </div>
+                              </Grid>
+                            </Grid>
+                            
+                            
                           </div>
                         </Grid>
                       ) : (
@@ -1571,59 +1578,64 @@ class DetailsReservation extends React.Component {
                             Commentaires
                           </Typography>
                           <div style={{ display: "flex", flexFlow: "row" }}>
-                            <Typography>
-                              Vous avez 15 jours pour évaluer votre Alfred. Une
-                              fois que votre Alfred aura rédigé son commentaire,
-                              il pourra consulter votre évaluation et vous
-                              pourrez consulter la sienne !
-                            </Typography>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                width: "400px",
-                                height: "40px",
-                                backgroundColor: "#F8727F",
-                                lineHeight: 2.5,
-                                borderRadius: "50px"
-                              }}
-                            >
-                              <Link
-                                href={`/evaluate?id=${bookingObj.serviceUserId}`}
-                              >
-                                <a
+                            <Grid container>
+                              <Grid item md={6} xs={12} style={{marginBottom: '35px'}}>
+                                <Typography>  
+                                  Vous avez 15 jours pour évaluer votre Alfred. Une
+                                  fois que votre Alfred aura rédigé son commentaire,
+                                  il pourra consulter votre évaluation et vous
+                                  pourrez consulter la sienne !
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={2}></Grid>
+                              <Grid item md={4} xs={12}>
+                                <div
                                   style={{
-                                    textDecoration: "none",
-                                    color: "white"
+                                    textAlign: 'center',
+                                    width: "200px",
+                                    height: "40px",
+                                    backgroundColor: "#F8727F",
+                                    lineHeight: 2.5,
+                                    borderRadius: "50px",
                                   }}
                                 >
-                                  Evaluer mon Alfred
-                                </a>
-                              </Link>
-                            </div>
+                                  <Link
+                                    href={`/evaluate?id=${bookingObj.serviceUserId}`}
+                                  >
+                                    <a
+                                      style={{
+                                        textDecoration: "none",
+                                        color: "white"
+                                      }}
+                                    >
+                                      Evaluer mon Alfred
+                                    </a>
+                                  </Link>
+                                </div>
+                              </Grid>
+                            </Grid>
+                            
+                            
                           </div>
                         </Grid>
                       )
                     ) : null}
-                    <Grid
-                      container
-                      style={{
-                        borderBottom: "1.5px #8281813b solid",
-                        marginTop: "5%",
-                        paddingBottom: "7%"
-                      }}
-                    >
-                      <Grid item xs={5} md={9}>
-                        <Typography
-                          style={{
-                            marginTop: "-3%",
-                            fontSize: "1.7rem",
-                            marginBottom: "5%"
-                          }}
-                        >
-                          A propos de votre réservation
-                        </Typography>
+                    <Grid container style={{ borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%" }}a>
+                      <Grid item xs={12} md={9}>
                         <Grid container>
-                          <Grid item xs={1} style={{ textAlign: "center" }}>
+                          <Grid xs={12}>
+                            <Typography
+                              style={{
+                                marginTop: "-3%",
+                                fontSize: "1.7rem",
+                                marginBottom: "5%"
+                              }}
+                            >
+                              A propos de votre réservation
+                            </Typography>
+                          </Grid>
+                        
+                          <Grid item xs={2} style={{ textAlign: "center" }}>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="33.759"
@@ -1798,7 +1810,7 @@ class DetailsReservation extends React.Component {
                               </g>
                             </svg>
                           </Grid>
-                          <Grid item xs={11} style={{ paddingLeft: "3%" }}>
+                          <Grid item xs={10} style={{ paddingLeft: "3%" }}>
                             <Typography>
                               {bookingObj === null
                                 ? null
@@ -1806,11 +1818,7 @@ class DetailsReservation extends React.Component {
                             </Typography>
                           </Grid>
 
-                          <Grid
-                            item
-                            xs={1}
-                            style={{ textAlign: "center", marginTop: "3%" }}
-                          >
+                          <Grid item xs={2} style={{ textAlign: "center", marginTop: "3%" }}>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="25.432"
@@ -1827,11 +1835,7 @@ class DetailsReservation extends React.Component {
                               />
                             </svg>
                           </Grid>
-                          <Grid
-                            item
-                            xs={11}
-                            style={{ paddingLeft: "3%", marginTop: "3%" }}
-                          >
+                          <Grid item xs={10} style={{ paddingLeft: "3%", marginTop: "3%" }}>
                             <Typography>
                               {bookingObj === null
                                 ? null
@@ -2063,7 +2067,7 @@ class DetailsReservation extends React.Component {
                             </>
                           ) : bookingObj.status === "Terminée" ? (
                             <>
-                              <Grid item xs={4}>
+                              <Grid item xs={6} md={4}>
                                 <div
                                   style={{
                                     width: "30px",
@@ -2076,7 +2080,7 @@ class DetailsReservation extends React.Component {
                                   }}
                                 ></div>
                               </Grid>
-                              <Grid item xs={8}>
+                              <Grid item xs={6}md={8}>
                                 <Typography style={{ color: "#C4C4C4" }}>
                                   Réservation terminée
                                 </Typography>
