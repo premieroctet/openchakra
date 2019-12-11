@@ -15,7 +15,7 @@ class Schedule extends React.Component {
     super(...args);
 
     this.state = {
-      events: _.cloneDeep(events),
+      events: _.cloneDeep(this.props.events),
       dayLayoutAlgorithm: 'no-overlap',
     }
   }
@@ -49,10 +49,11 @@ class Schedule extends React.Component {
         <Calendar
           selectable
           localizer={localizer}
-          events={this.state.events}
+          // TODO: fix to use state instead of props
+          events={this.props.events}
           defaultView={Views.WEEK}
-          scrollToTime={new Date(1970, 1, 1, 6)}
-          defaultDate={new Date(2015, 3, 12)}
+          scrollToTime={new Date(2019, 11, 11)}
+          defaultDate={new Date(2019, 11, 11)}
           onSelectEvent={event => alert(event.title)}
           onSelectSlot={this.handleSelect}
           dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}

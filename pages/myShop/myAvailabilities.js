@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Schedule from '../../components/Schedule/Schedule';
-
+import availabilities2events from '../../utils/converters';
 
 moment.locale('fr');
 
@@ -108,7 +108,7 @@ class myAvailabilities extends React.Component {
         this.state = {
             user: {},
             shop: {},
-            all_availabilities: [],
+            events: [],
         };
     }
 
@@ -142,7 +142,8 @@ class myAvailabilities extends React.Component {
                   axios.get(url+'myAlfred/api/availability/currentAlfred')
                     .then(res => {
                         let availability = res.data;
-                        this.setState({all_availabilities: availability});
+                        let events = availabilities2events(availability);
+                        this.setState({events: events});
 
                     })
                     .catch(err => console.log(err));
@@ -169,7 +170,7 @@ class myAvailabilities extends React.Component {
     render() {
         const {classes} = this.props;
         const {user} = this.state;
-        const {all_availabilities} = this.state;
+        const {events} = this.state;
 
         return (
           <Fragment>
@@ -224,7 +225,7 @@ class myAvailabilities extends React.Component {
                   </Grid>
                   <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
                       <Grid item xs={12} md={7}>
-                          <Schedule/>
+                          <Schedule events={this.state.events}/>
                       </Grid>
                       <Grid className={classes.hidenimg} item md={2} style={{backgroundImage:'url(../../static/background/disponibilité.svg)', backgroundPosition:'center',backgroundSize:'contain', backgroundRepeat: 'no-repeat', }}>
                       </Grid>
