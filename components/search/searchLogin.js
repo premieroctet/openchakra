@@ -33,7 +33,8 @@ const url = config.apiUrl;
 moment.locale('fr');
 const styles = theme => ({
     bigContainer: {
-        marginTop: 80
+        marginTop: 80,
+        minHeight: 530
     },
     card: {
         margin: 20,
@@ -1116,11 +1117,11 @@ class searchLogin extends React.Component {
                                 <Grid container>
                                     <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous {user.firstname} ?</h3>
                                 </Grid>
-                                <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
+                                <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
                                     {categories.map((e,index) => (
-                                        <Grid key={index} item xs={3} style={{display: 'inline-block', width: '350px'}}>
+                                        <Grid key={index} style={{display: 'inline-block', width: '350px', margin: 'auto 20px'}}>
                                             <Link href={'/serviceByCategory?category='+e._id}>
-                                            <Card  style={{width: '85%', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
+                                            <Card  style={{width: '350px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                                                 <CardActionArea>
                                                     <CardMedia
                                                         style={{height:200}}
@@ -1146,7 +1147,7 @@ class searchLogin extends React.Component {
                                     {this.state.addressSelected === 'all' ?
 
                                         categories.map(e => (
-                                            <Grid container>
+                                            <Grid container style={{padding: '25px'}}>
                                                 {this.state[e.label] !==0 ?
                                                     <Grid item xs={12}>
                                                         <h4 style={{marginLeft: '15px'}}>{e.label}</h4>
@@ -1156,8 +1157,8 @@ class searchLogin extends React.Component {
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
-                                                            <Grid item xs={6} sm={3} md={3}>
-                                                                <Card className={classes.card}>
+                                                            <Grid item xs={12} sm={6} md={4}>
+                                                                <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia
                                                                                 className={classes.media}
                                                                                 style={{height:150}}
@@ -1345,12 +1346,12 @@ class searchLogin extends React.Component {
                                                     </Grid>
                                                     : null}
 
-                                                <Grid container>
+                                                <Grid container style={{padding: '25px'}}>
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
-                                                            <Grid item xs={3}>
-                                                                <Card className={classes.card}>
+                                                            <Grid item xs={12} sm={6} md={4}>
+                                                                <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia
                                                                                 className={classes.media}
                                                                                 style={{height:150}}
@@ -1564,13 +1565,13 @@ class searchLogin extends React.Component {
                                                     <h4 style={{marginLeft: '15px'}}>{e.label}</h4>
                                                     : null}
 
-                                                <Grid container>
+                                                <Grid container style={{padding: '25px'}}>
                                                 {this.state.finalServiceUser.map(s => {
 
                                                     if (s.service.category === e._id) {
                                                         return (
-                                                            <Grid item md={3} sm={6} xs={12}>
-                                                                    <Card className={classes.card}>
+                                                            <Grid item md={4} sm={6} xs={12}>
+                                                                    <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia
                                                                                 className={classes.media}
                                                                                 style={{height:150}}
@@ -1758,13 +1759,13 @@ class searchLogin extends React.Component {
                                                     <h4>{e.label}</h4>
                                                     : null}
 
-                                                <Grid container>
+                                                <Grid container style={{padding: '25px'}}>
                                                 {this.state.finalServiceUser.map(s => {
 
                                                     if (s.service.category === e._id) {
                                                         return (
-                                                            <Grid item md={3} sm={6} xs={12}>
-                                                            <Card className={classes.card}>
+                                                            <Grid item md={4} sm={6} xs={12}>
+                                                            <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia
                                                                                 className={classes.media}
                                                                                 style={{height:150}}
