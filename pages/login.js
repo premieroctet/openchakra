@@ -90,7 +90,11 @@ class login extends React.Component {
           axios.put(url+'myAlfred/api/users/account/lastLogin')
               .then(data => {
                 let path = localStorage.getItem('path');
-                Router.push({pathname:path});
+                if(path === '/'){
+                  Router.push('/search')
+                } else {
+                  Router.push({pathname:path});
+                }
               })
               .catch(err=> console.log(err));
 

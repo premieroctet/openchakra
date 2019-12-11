@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import Layout from '../../hoc/Layout/Layout';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
@@ -1493,6 +1494,7 @@ class searchNotLogin extends React.Component {
 
                             : null}
                     </Grid>
+                    <Footer/>
                 </Layout>
             </Fragment>
 

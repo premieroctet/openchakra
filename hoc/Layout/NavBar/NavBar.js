@@ -424,9 +424,16 @@ class NavBar extends Component {
       <div className={classes.root}>
         <AppBar  color="inherit" position="fixed">
           <Toolbar>
-            <Link href={'/'}>
-              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
-            </Link>
+            {test ?
+                <Link href={'/search'}>
+                  <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
+                </Link>
+                :
+                <Link href={'/'}>
+                  <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
+                </Link>
+            }
+
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 {/*<SearchIcon />*/}

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import Layout from '../../hoc/Layout/Layout';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
@@ -66,7 +67,7 @@ const styles = theme => ({
     }
 });
 
-class testSearch2 extends React.Component {
+class searchLogin extends React.Component {
 
     constructor(props) {
         super(props);
@@ -1118,6 +1119,7 @@ class testSearch2 extends React.Component {
                                 <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
                                     {categories.map((e,index) => (
                                         <Grid key={index} item xs={3} style={{display: 'inline-block', width: '350px'}}>
+                                            <Link href={'/serviceByCategory?category='+e._id}>
                                             <Card  style={{width: '85%', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                                                 <CardActionArea>
                                                     <CardMedia
@@ -1134,6 +1136,7 @@ class testSearch2 extends React.Component {
                                                 </CardActionArea>
 
                                             </Card>
+                                            </Link>
                                         </Grid>
                                     ))}
                                 </Grid>
@@ -1144,9 +1147,12 @@ class testSearch2 extends React.Component {
 
                                         categories.map(e => (
                                             <Grid container>
-                                                <Grid item xs={12}>
-                                                    <h4 style={{marginLeft: '15px'}}>{e.label}</h4>
-                                                </Grid>
+                                                {this.state[e.label] !==0 ?
+                                                    <Grid item xs={12}>
+                                                        <h4 style={{marginLeft: '15px'}}>{e.label}</h4>
+                                                    </Grid>
+                                                    : null}
+
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
@@ -1322,8 +1328,10 @@ class testSearch2 extends React.Component {
                                                         return null
                                                     }
                                                 })}
-                                                {this.state[e.label] !== 0 ? <p style={{marginLeft: '15px'}}>Voir les {this.state[e.label]} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
-                                                <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '80px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
+                                                {this.state[e.label] !== 0 ?
+                                                    <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '80px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
+                                                    : null}
+
                                             </Grid>
                                         ))
 
@@ -1331,13 +1339,15 @@ class testSearch2 extends React.Component {
 
                                         categories.map(e => (
                                             <Grid container>
-                                                <Grid item xs={12}>
-                                                    <h4 style={{marginLeft: '15px'}}>{e.label}</h4>
-                                                </Grid>
+                                                {this.state[e.label] !== 0 ?
+                                                    <Grid item xs={12}>
+                                                        <h4 style={{marginLeft: '15px'}}>{e.label}</h4>
+                                                    </Grid>
+                                                    : null}
+
                                                 <Grid container>
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
-                                                        //this.setState({[e.label]:this.state[e.label]+1});
                                                         return (
                                                             <Grid item xs={3}>
                                                                 <Card className={classes.card}>
@@ -1522,8 +1532,10 @@ class testSearch2 extends React.Component {
                                                     }
                                                 })}
                                                 </Grid>
-                                                {this.state[e.label] !== 0 ? <p style={{marginLeft: '15px'}}>Voir les {this.state[e.label]} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
-                                                <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '80px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
+                                                {this.state[e.label] !== 0 ?
+                                                    <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '80px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
+                                                    : null}
+
                                             </Grid>
                                         ))
 
@@ -1548,7 +1560,10 @@ class testSearch2 extends React.Component {
                                     this.state.categoryFinal.map((e, index) => (
                                         <Grid key={index} container>
                                             <Grid item xs={12}>
-                                                <h4 style={{marginLeft: '15px'}}>{e.label}</h4>
+                                                {this.state[e.label+'Final'] !== 0 ?
+                                                    <h4 style={{marginLeft: '15px'}}>{e.label}</h4>
+                                                    : null}
+
                                                 <Grid container>
                                                 {this.state.finalServiceUser.map(s => {
 
@@ -1726,8 +1741,10 @@ class testSearch2 extends React.Component {
 
                                                 })}
                                                 </Grid>
-                                                {this.state[e.label+'Final'] !== 0 ? <p style={{marginLeft: '15px'}}>Voir les {this.state[e.label+'Final']} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
-                                                <hr style={{width: '10%', margin: 'auto', border:'none', backgroundColor: '#2FBCD3', height: '10px', marginBottom: '80px', marginTop: '55px'}} />
+                                                {this.state[e.label+'Final'] !== 0 ?
+                                                    <hr style={{width: '10%', margin: 'auto', border:'none', backgroundColor: '#2FBCD3', height: '10px', marginBottom: '80px', marginTop: '55px'}} />
+                                                    : null}
+
                                             </Grid>
                                         </Grid>
                                     ))
@@ -1737,7 +1754,10 @@ class testSearch2 extends React.Component {
                                     this.state.categoryFinal.map((e, index) => (
                                         <Grid key={index} container>
                                             <Grid item xs={12}>
-                                                <h4>{e.label}</h4>
+                                                {this.state[e.label+'Final'] !== 0 ?
+                                                    <h4>{e.label}</h4>
+                                                    : null}
+
                                                 <Grid container>
                                                 {this.state.finalServiceUser.map(s => {
 
@@ -1925,8 +1945,10 @@ class testSearch2 extends React.Component {
 
                                                 })}
                                                 </Grid>
-                                                {this.state[e.label+'Final'] !== 0 ? <p style={{marginLeft: '15px'}}>Voir les {this.state[e.label+'Final']} Alfred</p> : <p>Aucun Alfred pour cette catégorie pour le moment</p>}
-                                                <hr style={{width: '10%', margin: 'auto', border:'none', backgroundColor: '#2FBCD3', height: '10px', marginBottom: '80px', marginTop: '55px'}} />
+                                                {this.state[e.label+'Final'] !== 0 ?
+                                                    <hr style={{width: '10%', margin: 'auto', border:'none', backgroundColor: '#2FBCD3', height: '10px', marginBottom: '80px', marginTop: '55px'}} />
+                                                    : null}
+
                                             </Grid>
                                         </Grid>
                                     ))
@@ -1935,13 +1957,8 @@ class testSearch2 extends React.Component {
 
 
                             </>
-
-
-
-
-
-
                     </Grid>
+                    <Footer/>
                 </Layout>
             </Fragment>
 
@@ -1950,4 +1967,4 @@ class testSearch2 extends React.Component {
 }
 
 
-export default withStyles(styles)(testSearch2);
+export default withStyles(styles)(searchLogin);

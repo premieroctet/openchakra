@@ -4,7 +4,7 @@ import SubBar from '../components/search/SubBar/SubBar';
 import BodySearch from '../components/search/BodySearch/BodySearch';
 import Footer from '../hoc/Layout/Footer/Footer';
 import SearchNotLogin from '../components/search/searchNotLogin';
-import TestSearch2 from '../components/search/testSearch2';
+import TestSearch2 from '../components/search/searchLogin';
 import setAuthToken from "../utils/setAuthToken";
 
 const jwt = require('jsonwebtoken');
