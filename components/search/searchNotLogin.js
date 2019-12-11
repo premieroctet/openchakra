@@ -35,7 +35,8 @@ const url = config.apiUrl;
 moment.locale('fr');
 const styles = theme => ({
     bigContainer: {
-        marginTop: 80
+        marginTop: 80,
+        minHeight: 530
     },
     card: {
         margin: 20,
@@ -1062,9 +1063,9 @@ class searchNotLogin extends React.Component {
                                 </Grid>
                                 <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
                                     {categories.map((e,index) => (
-                                        <Grid key={index} item xs={3} style={{display: 'inline-block', width: '350px'}}>
+                                        <Grid key={index} style={{display: 'inline-block', width: '350px', margin: 'auto 20px'}}>
                                             <Link href={'/serviceByCategory?category='+e._id}>
-                                            <Card style={{width: '85%', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
+                                            <Card style={{width: '350px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                                                 <CardActionArea>
                                                     <CardMedia
                                                         style={{height:200}}
@@ -1097,12 +1098,12 @@ class searchNotLogin extends React.Component {
                                                     </Grid>
                                                     :null}
 
-                                                <Grid container>
+                                                <Grid container style={{paddingLeft: "25px"}}>
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
-                                                            <Grid item md={3} sm={6} xs={12}>
-                                                                    <Card className={classes.card}>
+                                                            <Grid item md={4} sm={6} xs={12}>
+                                                                    <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia
                                                                                 className={classes.media}
                                                                                 style={{height:150}}
@@ -1307,13 +1308,13 @@ class searchNotLogin extends React.Component {
                                                     : null}
 
 
-                                                <Grid container>
+                                                <Grid container style={{padding: '25px'}}>
                                                     {this.state.finalServiceUser.map(s => {
 
                                                         if (s.service.category === e._id) {
                                                             return (
-                                                                <Grid item md={3} sm={6} xs={12}>
-                                                                    <Card className={classes.card}>
+                                                                <Grid item md={4} sm={6} xs={12}>
+                                                                    <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia
                                                                                 className={classes.media}
                                                                                 style={{height:150}}

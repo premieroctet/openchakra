@@ -35,7 +35,8 @@ const url = config.apiUrl;
 moment.locale('fr');
 const styles = theme => ({
     bigContainer: {
-        marginTop: 80
+        marginTop: 80, 
+        minHeight: 530
     },
     card: {
         margin: 20,
@@ -370,12 +371,12 @@ class serviceByCategory extends React.Component {
                                         <Grid container>
 
 
-                                            <Grid container>
+                                            <Grid container style={{padding: '25px'}}>
                                                 {serviceUser.map(a => (
 
 
-                                                            <Grid item md={3} sm={6} xs={12}>
-                                                                <Card className={classes.card}>
+                                                            <Grid item md={4} sm={6} xs={12}>
+                                                                <Card className={classes.card} style={{height: '420px'}}>
                                                                     <CardMedia
                                                                         className={classes.media}
                                                                         style={{height:150}}
