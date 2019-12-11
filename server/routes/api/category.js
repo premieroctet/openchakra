@@ -70,6 +70,7 @@ router.get('/random/home',(req,res)=> {
 router.get('/all/tags/:tags',(req,res)=> {
 
     Category.find({tags: req.params.tags})
+	.sort({'label':1})
         .populate('tags')
         .then(category => {
             if(typeof category !== 'undefined' && category.length > 0){
