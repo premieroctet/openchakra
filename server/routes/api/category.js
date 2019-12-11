@@ -10,7 +10,8 @@ router.get('/test',(req, res) => res.json({msg: 'Category Works!'}) );
 // View all categories
 router.get('/all', (req,res)=> {
 
-    Category.find().sort({'label': 1})
+    Category.find()
+        .sort({'label': 1})
         .populate('tags')
         .then(category => {
             if(typeof category !== 'undefined' && category.length > 0){
