@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import Footer from "../../hoc/Layout/Footer/Footer";
 import dynamic from "next/dynamic";
+import io from "socket.io-client";
 
 moment.locale("fr");
 const _ = require("lodash");
@@ -127,11 +128,18 @@ class Cancel extends React.Component {
   componentDidMount() {
     const booking_id = this.props.booking_id;
     this.setState({booking_id: booking_id});
+    
+    this.socket = io("http://localhost:3000");
+    this.socket.on("connect", socket => {
+      this.socket.emit("booking", booking_id)
+    })
   }
 
   changeStatus(status) {
     axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: status})
-            .then(res => this.setState({ bookingObj: res.data }))
+            .then(res => {this.setState({ 
+              bookingObj: res.data 
+            }), this.socket.emit("changeStatus", res.data)})
             .catch(err => console.log(err))
   }
 
