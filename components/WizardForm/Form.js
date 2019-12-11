@@ -2115,7 +2115,7 @@ class Form extends React.Component {
                             </Grid>
                   </Wizard.Page>
                   <Wizard.Page>
-                    <Schedule/>
+                    <Schedule events={[]}/>
                   </Wizard.Page>
                   <Wizard.Page>
                     <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>

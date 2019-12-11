@@ -53,7 +53,7 @@ class Schedule extends React.Component {
           events={this.props.events}
           defaultView={Views.WEEK}
           scrollToTime={new Date(2019, 11, 11)}
-          defaultDate={new Date(2019, 11, 11)}
+          defaultDate={new Date()}
           onSelectEvent={event => alert(event.title)}
           onSelectSlot={this.handleSelect}
           dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
