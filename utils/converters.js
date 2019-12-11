@@ -40,9 +40,10 @@ const avail2event = availab => {
     let evts = availab[day]['event'];
     console.log("evts:"+JSON.stringify(evts));
     evts.forEach(e => {
+      let title = e.all_services ? "Tous services" : e.services.map( s => s.label).join('\n');
       let res= {
         id: e._id,
-        title: 'Tous services',
+        title: title,
         start: new Date(e.begin),
         end: new Date(e.end),
       }
