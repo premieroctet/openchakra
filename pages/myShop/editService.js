@@ -792,7 +792,7 @@ class editService extends React.Component {
                                                                             style={{width: '100px', fontSize: '0.8rem'}}
                                                                             margin="none"
                                                                             helperText={`Méthode de facturation`}
-                                                                            value={this.state[z.label+'billing']}
+                                                                            value={this.state[z.label+'billing'] || ''}
                                                                             name={z.label+'billing'}
                                                                             onChange={(event)=>{this.onChange2(event);
                                                                             this.onChangeBilling(z.label,event,z._id)}}
