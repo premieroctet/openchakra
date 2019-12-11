@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import Layout from '../hoc/Layout/Layout';
+import Footer from '../hoc/Layout/Footer/Footer';
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
@@ -551,6 +552,7 @@ class serviceByCategory extends React.Component {
                                 </Grid>
                         </Grid>
                     </Grid>
+                    <Footer/>
                 </Layout>
             </Fragment>
 

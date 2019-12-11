@@ -161,7 +161,7 @@ class Reserve extends React.Component {
               this.setState(
                 { 
                   bookingObj: res.data 
-                }, this.socket.emit("changeStatus", res.data));
+                }, ()=>this.socket.emit("changeStatus", res.data));
             })
             .catch(err => console.log(err))
   }
