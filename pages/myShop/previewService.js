@@ -446,7 +446,11 @@ class services extends React.Component {
                                         <Grid item xs={5}></Grid>
                                     </Grid>
                                     <Typography style={{fontSize: '1rem' }}>
-                                       {serviceUser.description}
+                                        {typeof serviceUser.description === 'undefined' || serviceUser.description === "" ?
+                                            <p>Aucune description disponible</p>
+                                        :
+                                            serviceUser.description
+                                        }
                                     </Typography>
                                 {/*Mes équipements*/}
                                 <div style={{marginTop: '8%'}}>
@@ -461,9 +465,17 @@ class services extends React.Component {
                                         <Grid item xs={5}></Grid>
                                     </Grid>
                                     <Grid container>
-                                        {equipments.map((e,index)=>(<React.Fragment key={index}>
-                                            <Grid item xs={1} style={{ marginLeft: '1.5%'}}><img src={`../../static/equipments/${e.logo.slice(0, -4)}_Selected.svg`} alt={e.label}/></Grid>
-                                        </React.Fragment>))}
+                                    {equipments.length ? (
+                                        equipments.map((e, index) => (
+                                            <React.Fragment key={index}>
+                                                <Grid item xs={1} style={{ marginLeft: "1.5%" }}>
+                                                    <img src={"../" + e.logo2} />
+                                                </Grid>
+                                            </React.Fragment>
+                                        ))
+                                    ) : (
+                                        <p>Aucun équipement fournis</p>
+                                    )}
                                         <Grid item xs={1}></Grid>
                                     </Grid>
                                 </div>
@@ -481,97 +493,6 @@ class services extends React.Component {
                                         <Grid item xs={5}></Grid>
                                     </Grid>
                                     <Grid container>
-                                        {/*<Grid item xs={1} style={{}}></Grid>*/}
-                                        {/*<Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
-                                         <Typography>
-                                             Lundi :  <br/>
-                                        {monday_event.map((e,index)=>(
-                                            <React.Fragment key={index}>
-                                                
-                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
-                                            </React.Fragment>
-                                        ))}
-                                        </Typography>
-                                        </Grid>
-
-                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
-                                         <Typography>
-                                             Mardi :  <br/>
-                                        {tuesday_event.map((e,index)=>(
-                                            <React.Fragment key={index}>
-
-                                                {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
-                                            </React.Fragment>
-                                        ))}
-                                        </Typography>
-                                        </Grid>
-                                        
-                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
-                                         <Typography>
-                                             Mercredi :  <br/>
-                                        {wednesday_event.map((e,index)=>(
-                                            <React.Fragment key={index}>
-
-                                                {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
-                                            </React.Fragment>
-                                        ))}
-                                        </Typography>
-                                        </Grid>
-
-                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
-                                         <Typography>
-                                             Jeudi :  <br/>
-                                        {thursday_event.map((e,index)=>(
-                                            <React.Fragment key={index}>
-
-                                                {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
-                                            </React.Fragment>
-                                        ))}
-                                        </Typography>
-                                        </Grid>
-
-                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
-                                         <Typography>
-                                             Vendredi :  <br/>
-                                        {friday_event.map((e,index)=>(
-                                            <React.Fragment key={index}>
-
-                                                {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
-                                            </React.Fragment>
-                                        ))}
-                                        </Typography>
-                                        </Grid>
-
-                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
-                                         <Typography>
-                                             Samedi :  <br/>
-                                        {saturday_event.map((e,index)=>(
-                                            <React.Fragment key={index}>
-
-                                                {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
-                                            </React.Fragment>
-                                        ))}
-                                        </Typography>
-                                        </Grid>
-
-                                        <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}}>
-                                         <Typography>
-                                             Dimanche :  <br/>
-                                        {sunday_event.map((e,index)=>(
-                                            <React.Fragment key={index}>
-
-                                                {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
-                                            </React.Fragment>
-                                        ))}
-                                        </Typography>
-                                        </Grid>*/}
                                         {availability.map((e,index)=> {
                                             if(e.period.active){
                                                 return (

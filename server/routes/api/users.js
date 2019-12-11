@@ -348,6 +348,17 @@ router.post('/profile/picture',upload.single('myImage'),passport.authenticate('j
         })
 });
 
+// @Route PUT /myAlfred/api/users/profile/pictureLater
+// Add a picture profile
+// @Access private
+router.put('/profile/pictureLater', passport.authenticate('jwt', { session: false }), ( req, res) => {
+    User.findByIdAndUpdate(req.user.id, { picture: req.body.picture }, {new: true})
+        .then(user => {
+            res.json(user)
+        })
+        .catch(err => console.log(err));
+})
+
 // @Route PUT /myAlfred/api/users/profile/idCard
 // Add an identity card
 // @Access private

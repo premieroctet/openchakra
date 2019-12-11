@@ -48,6 +48,7 @@ const io = require('socket.io')(server);
 server.listen(3000);
 
 let roomName = '';
+let bookingName = '';
 
 io.on('connection', socket => {
     /*socket.on('chat message', msg => {
@@ -55,10 +56,18 @@ io.on('connection', socket => {
     })*/
     socket.on('room', room => {
         socket.join(room);
-        roomName = room
+        roomName = room;
     });
+    socket.on('booking', booking => {
+        socket.join(booking);
+        bookingName = booking;
+    })
     socket.on('message', msg => {
         io.to(roomName).emit('displayMessage', msg);
+    })
+    socket.on('changeStatus', booking => {
+        console.log('works');
+        io.to(bookingName).emit('displayStatus', booking);
     })
 });
 

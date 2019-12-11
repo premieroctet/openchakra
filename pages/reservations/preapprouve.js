@@ -10,6 +10,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Footer from "../../hoc/Layout/Footer/Footer";
 import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
+import io from "socket.io-client";
 
 registerLocale('fr', fr);
 
@@ -140,6 +141,11 @@ class Preapprouve extends React.Component {
           const end = moment(year+'-'+month+'-'+day+'T00:00:00.000Z');
 
           this.setState({end: end._i, date: new Date(end._i)})
+
+          this.socket = io("http://localhost:3000");
+          this.socket.on("connect", socket => {
+            this.socket.emit("booking", this.state.bookingObj._id)
+          })
         })
   }
 
@@ -151,7 +157,11 @@ class Preapprouve extends React.Component {
     console.log(endDate, endHour)
 
     axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
-            .then(res => this.setState({ bookingObj: res.data }))
+            .then(res => {
+              this.setState({ 
+                bookingObj: res.data 
+              }, this.socket.emit("changeStatus", res.data))
+            })
             .catch(err => console.log(err))
   }
 

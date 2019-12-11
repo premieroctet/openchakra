@@ -459,8 +459,12 @@ class Wizard extends React.Component {
                                                 })
                                             axios.put(url+'myAlfred/api/users/users/becomeAlfred')
                                                 .then(res => {
-                                                    toast.info('Boutique créée avec succès');
-                                                    Router.push('/myShop/services');
+                                                    axios.post(url + 'myAlfred/api/payment/createKycDocument')
+                                                        .then(() => {
+                                                            toast.info('Boutique créée avec succès');
+                                                            Router.push('/myShop/services');
+                                                        })
+                                                        .catch(err => console.log(err))
                                                     
                                                 })
                                                 .catch(err => {

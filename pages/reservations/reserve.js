@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import Link from "next/link";
 import Layout from "../../hoc/Layout/Layout";
+import Typography from '@material-ui/core/Typography';
 import axios from "axios";
 import moment from "moment";
 import Button from "@material-ui/core/Button";
@@ -10,6 +11,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Footer from "../../hoc/Layout/Footer/Footer";
 import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
+import io from "socket.io-client";
 
 registerLocale('fr', fr);
 
@@ -134,6 +136,11 @@ class Reserve extends React.Component {
     axios.get(url + 'myAlfred/api/booking/' + booking_id)
         .then(res => {
           this.setState({ bookingObj: res.data })
+
+          this.socket = io("http://localhost:3000");
+          this.socket.on("connect", socket => {
+            this.socket.emit("booking", this.state.bookingObj._id)
+          })
         })
   }
 
@@ -150,17 +157,22 @@ class Reserve extends React.Component {
     console.log(endDate, endHour)
 
     axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
-            .then(res => this.setState({ bookingObj: res.data }))
+            .then(res => {
+              this.setState(
+                { 
+                  bookingObj: res.data 
+                }, this.socket.emit("changeStatus", res.data));
+            })
             .catch(err => console.log(err))
   }
 
   render() {
     const { classes } = this.props;
-    const { bookingObj } = this.state;
+    const { bookingObj, currentUser } = this.state;
 
     return (
       <Fragment>
-        {this.state.bookingObj === null ?
+        {this.state.bookingObj === null || this.state.currentUser === null ?
           null
           :
           <>
@@ -239,6 +251,772 @@ class Reserve extends React.Component {
                       >
                         A propos de {`${bookingObj.alfred.firstname} ${bookingObj.alfred.name}`}
                       </h3>
+                      <div style={{ marginLeft: "3%" }}>
+                          {bookingObj === null ||
+                          currentUser === null ? null : currentUser._id ===
+                            bookingObj.alfred._id ? (
+                            Math.round(bookingObj.user.score_client) === 0 ? (
+                              <>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                              </>
+                            ) : Math.round(bookingObj.user.score_client) ===
+                              1 ? (
+                              <>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                              </>
+                            ) : Math.round(bookingObj.user.score_client) ===
+                              2 ? (
+                              <>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                              </>
+                            ) : Math.round(bookingObj.user.score_client) ===
+                              3 ? (
+                              <>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                              </>
+                            ) : Math.round(bookingObj.user.score_client) ===
+                              4 ? (
+                              <>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-regular.png"
+                                ></img>
+                              </>
+                            ) : Math.round(bookingObj.user.score_client) ===
+                              5 ? (
+                              <>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                                <img
+                                  style={{
+                                    width: "20px",
+                                    marginRight: "3px",
+                                    marginBottom: "5px"
+                                  }}
+                                  src="../../static/stars/star-solid.png"
+                                ></img>
+                              </>
+                            ) : (
+                              <p>Erreur lors du chargement du score</p>
+                            )
+                          ) : Math.round(bookingObj.alfred.score) === 0 ? (
+                            <>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                            </>
+                          ) : Math.round(bookingObj.alfred.score) === 1 ? (
+                            <>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                            </>
+                          ) : Math.round(bookingObj.alfred.score) === 2 ? (
+                            <>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                            </>
+                          ) : Math.round(bookingObj.alfred.score) === 3 ? (
+                            <>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                            </>
+                          ) : Math.round(bookingObj.alfred.score) === 4 ? (
+                            <>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-regular.png"
+                              ></img>
+                            </>
+                          ) : Math.round(bookingObj.alfred.score) === 5 ? (
+                            <>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                              <img
+                                style={{
+                                  width: "20px",
+                                  marginRight: "3px",
+                                  marginBottom: "5px"
+                                }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                            </>
+                          ) : (
+                            <p>Erreur lors du chargement du score</p>
+                          )}
+
+                          <Grid style={{ marginLeft: "4%" }} container>
+                            <Grid item xs={1}>
+                              <img
+                                style={{ width: "15px" }}
+                                src="../../static/stars/star-solid.png"
+                              ></img>
+                            </Grid>
+                            <Grid item xs={11}>
+                              <Typography
+                                style={{
+                                  color: "rgb(47, 188, 211)",
+                                  fontSize: "0.8rem",
+                                  marginLeft: "-5%",
+                                  cursor: "pointer"
+                                }}
+                              >
+                                {bookingObj === null || currentUser === null
+                                  ? null
+                                  : currentUser._id === bookingObj.alfred._id
+                                  ? bookingObj.user.number_of_reviews
+                                  : bookingObj.alfred.number_of_reviews}{" "}
+                                Commentaires
+                              </Typography>
+                            </Grid>
+
+                            {bookingObj === null ||
+                            currentUser === null ? null : currentUser._id ===
+                              bookingObj.alfred._id ? (
+                              bookingObj.user.id_confirmed === true ? (
+                                <>
+                                  <Grid item xs={1}>
+                                    <img
+                                      style={{ width: "15px" }}
+                                      src="../../static/statut/oui.png"
+                                    ></img>
+                                  </Grid>
+                                  <Grid item xs={11}>
+                                    <Typography
+                                      style={{
+                                        fontSize: "0.8rem",
+                                        marginLeft: "-5%"
+                                      }}
+                                    >
+                                      Pièce d’identité vérifiée
+                                    </Typography>
+                                  </Grid>
+                                </>
+                              ) : null
+                            ) : bookingObj.alfred.id_confirmed === true ? (
+                              <>
+                                <Grid item xs={1}>
+                                  <img
+                                    style={{ width: "15px" }}
+                                    src="../../static/statut/oui.png"
+                                  ></img>
+                                </Grid>
+                                <Grid item xs={11}>
+                                  <Typography
+                                    style={{
+                                      fontSize: "0.8rem",
+                                      marginLeft: "-5%"
+                                    }}
+                                  >
+                                    Pièce d’identité vérifiée
+                                  </Typography>
+                                </Grid>
+                              </>
+                            ) : null}
+
+                            {bookingObj === null ||
+                            currentUser === null ? null : currentUser._id ===
+                              bookingObj.alfred._id ? (
+                              <>
+                                <Grid item xs={1}>
+                                  <img
+                                    style={{ width: "15px" }}
+                                    src="../../static/statut/calendar.png"
+                                  ></img>
+                                </Grid>
+                                <Grid item xs={11}>
+                                  <Typography
+                                    style={{
+                                      fontSize: "0.8rem",
+                                      marginLeft: "-5%"
+                                    }}
+                                  >
+                                    Membre depuis le{" "}
+                                    {moment(
+                                      bookingObj.user.creation_date
+                                    ).format("DD/MM/YYYY")}
+                                  </Typography>
+                                </Grid>
+                              </>
+                            ) : (
+                              <>
+                                <Grid item xs={1}>
+                                  <img
+                                    style={{ width: "15px" }}
+                                    src="../../static/statut/calendar.png"
+                                  ></img>
+                                </Grid>
+                                <Grid item xs={11}>
+                                  <Typography
+                                    style={{
+                                      fontSize: "0.8rem",
+                                      marginLeft: "-5%"
+                                    }}
+                                  >
+                                    Membre depuis le{" "}
+                                    {moment(
+                                      bookingObj.alfred.creation_date
+                                    ).format("DD/MM/YYYY")}
+                                  </Typography>
+                                </Grid>
+                              </>
+                            )}
+
+                            {bookingObj === null ? null : bookingObj.alfred
+                                .is_alfred === true &&
+                              bookingObj.user.is_alfred === true ? (
+                              <>
+                                <Grid item xs={1}>
+                                  <img
+                                    style={{ width: "15px" }}
+                                    src="../../static/statut/beaver.png"
+                                  ></img>
+                                </Grid>
+                                <Grid item xs={11}>
+                                  <Typography
+                                    style={{
+                                      fontSize: "0.8rem",
+                                      marginLeft: "-5%"
+                                    }}
+                                  >
+                                    Il est également Alfred{" "}
+                                  </Typography>
+                                </Grid>
+                              </>
+                            ) : null}
+
+                            {bookingObj === null ||
+                            currentUser === null ? null : currentUser._id ===
+                              bookingObj.alfred._id ? (
+                              <>
+                                <Grid item xs={1}>
+                                  <img
+                                    style={{ width: "15px" }}
+                                    src="../../static/statut/chat.png"
+                                  ></img>
+                                </Grid>
+                                <Grid item xs={11}>
+                                  <Typography
+                                    style={{
+                                      fontSize: "0.8rem",
+                                      marginLeft: "-5%"
+                                    }}
+                                  >
+                                    Langue:{" "}
+                                    {bookingObj.user.languages.length ? (
+                                      bookingObj.user.languages.map(
+                                        language => language + ", "
+                                      )
+                                    ) : (
+                                      <span>Français</span>
+                                    )}{" "}
+                                  </Typography>
+                                </Grid>
+                              </>
+                            ) : (
+                              <>
+                                <Grid item xs={1}>
+                                  <img
+                                    style={{ width: "15px" }}
+                                    src="../../static/statut/chat.png"
+                                  ></img>
+                                </Grid>
+                                <Grid item xs={11}>
+                                  <Typography
+                                    style={{
+                                      fontSize: "0.8rem",
+                                      marginLeft: "-5%"
+                                    }}
+                                  >
+                                    Langue:{" "}
+                                    {bookingObj.alfred.languages.length ? (
+                                      bookingObj.alfred.languages.map(
+                                        language => language + ", "
+                                      )
+                                    ) : (
+                                      <span>Français</span>
+                                    )}{" "}
+                                  </Typography>
+                                </Grid>
+                              </>
+                            )}
+                            {bookingObj === null ||
+                            currentUser == null ? null : currentUser._id ===
+                              bookingObj.alfred._id ? (
+                              <Link
+                                href={{
+                                  pathname: "../viewProfile",
+                                  query: { id: bookingObj.user._id }
+                                }}
+                              >
+                                <Typography
+                                  style={{
+                                    color: "rgb(47, 188, 211)",
+                                    fontSize: "0.8rem",
+                                    cursor: "pointer"
+                                  }}
+                                >
+                                  Voir le profil
+                                </Typography>
+                              </Link>
+                            ) : (
+                              <Link
+                                href={{
+                                  pathname: "../viewProfile",
+                                  query: { id: bookingObj.alfred._id }
+                                }}
+                              >
+                                <Typography
+                                  style={{
+                                    color: "rgb(47, 188, 211)",
+                                    fontSize: "0.8rem",
+                                    cursor: "pointer"
+                                  }}
+                                >
+                                  Voir le profil
+                                </Typography>
+                              </Link>
+                            )}
+                          </Grid>
+                        </div>
                       <Grid item xs={2} style={{}}></Grid>
                       <Grid item xs={10} style={{}}></Grid>
                     </Grid>

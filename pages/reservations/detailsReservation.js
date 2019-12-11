@@ -13,6 +13,7 @@ import axios from "axios";
 import moment from "moment";
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
+import io from "socket.io-client";
 
 moment.locale("fr");
 
@@ -178,7 +179,8 @@ class DetailsReservation extends React.Component {
 
       booking_id: null,
       bookingObj: null,
-      currentUser: null
+      currentUser: null,
+      splitAddress: null
     };
   }
 
@@ -204,6 +206,16 @@ class DetailsReservation extends React.Component {
 
     axios.get(url + "myAlfred/api/booking/" + booking_id).then(res => {
       this.setState({ bookingObj: res.data });
+      this.setState({ splitAddress: this.state.bookingObj.address.address.split(' ')})
+
+      this.socket = io("http://localhost:3000");
+      this.socket.on("connect", socket => {
+        this.socket.emit("booking", this.state.bookingObj._id)
+      })
+      this.socket.on("displayStatus", data => {
+        console.log(data);
+        this.setState({bookingObj: data})
+      })
     });
   }
 
@@ -213,7 +225,11 @@ class DetailsReservation extends React.Component {
         url + "myAlfred/api/booking/modifyBooking/" + this.state.booking_id,
         { status: status }
       )
-      .then(res => this.setState({ bookingObj: res.data }))
+      .then(res => {
+        this.setState({ bookingObj: res.data })
+
+        this.socket.emit("changeStatus", this.state.bookingObj);
+      })
       .catch(err => console.log(err));
   }
 
@@ -252,11 +268,12 @@ class DetailsReservation extends React.Component {
     const { bookingObj } = this.state;
     const { currentUser } = this.state;
     const { is_user } = this.props;
+    const {splitAddress} = this.state;
 
     return (
       <Fragment>
         {bookingObj === null ||
-        currentUser === null ? null : currentUser._id !==
+        currentUser === null || splitAddress === null ? null : currentUser._id !==
             bookingObj.alfred._id && currentUser._id !== bookingObj.user._id ? (
           <p>Vous n'avez pas l'autorisation d'accéder à cette page</p>
         ) : (
@@ -1812,7 +1829,9 @@ class DetailsReservation extends React.Component {
                                 cursor: "pointer"
                               }}
                             >
-                              Voir sur la map
+                              <a style={{ color: "rgb(47, 188, 211)", fontSize: "0.8rem" }} href={`https://www.google.fr/maps/place/${splitAddress.join('+')},+${bookingObj.address.zip_code}+${bookingObj.address.city}/@${bookingObj.address.gps.lat},${bookingObj.address.gps.lng}`} target='_blank'>
+                                Voir sur la map
+                              </a>
                             </Typography>
                           </Grid>
                         </Grid>
@@ -2447,7 +2466,7 @@ class DetailsReservation extends React.Component {
                                         textAlign: "center"
                                       }}
                                     >
-                                      {prestation.value} x
+                                      {prestation.value}
                                     </Typography>
                                   );
                                 })}
@@ -2463,7 +2482,7 @@ class DetailsReservation extends React.Component {
                                         textAlign: "center"
                                       }}
                                     >
-                                      {prestation.price} x
+                                      {prestation.price}€
                                     </Typography>
                                   );
                                 })}
