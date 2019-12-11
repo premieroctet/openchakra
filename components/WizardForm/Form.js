@@ -1491,7 +1491,7 @@ class Form extends React.Component {
                                                                             <Typography variant="h6" style={{marginBottom: '.5rem'}}>Où acceptez-vous de réaliser vos prestations ?</Typography>
                                                                             <Grid item>
                                                                               <Field render={({form}) => {
-                                                                                if (s.location.client===false) { form.setFieldValue('createShop.option_presta_user', false); return "" } else
+                                                                                if (s.location.client===false) { if (form.values.createShop.option_presta_user!==false) {form.setFieldValue('createShop.option_presta_user', false)}; return "" } else
                                                                                 return(
                                                                                   <FormControlLabel
                                                                                     control={
@@ -1519,7 +1519,7 @@ class Form extends React.Component {
                                                                             </Grid>
                                                                             <Grid item>
                                                                               <Field render={({form}) => {
-                                                                                if (s.location.alfred===false) { form.setFieldValue('createShop.option_presta_home', false); return "" } else
+                                                                                if (s.location.alfred===false) { if (form.values.createShop.option_presta_home!=false) {form.setFieldValue('createShop.option_presta_home', false)}; return "" } else
                                                                                 return(
                                                                               <FormControlLabel
                                                                                 control={
@@ -1547,7 +1547,7 @@ class Form extends React.Component {
                                                                             </Grid>
                                                                             <Grid item>
                                                                               <Field render={({form}) => { 
-                                                                                if (s.location.visio===false) { form.setFieldValue('createShop.option_presta_visio', false); return "" } else
+                                                                                if (s.location.visio===false) { if (form.values.createShop.option_presta_visio!==false) {form.setFieldValue('createShop.option_presta_visio', false)}; return "" } else
                                                                                 return(
                                                                               <FormControlLabel
                                                                                 control={

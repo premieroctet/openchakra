@@ -1317,7 +1317,7 @@ class editService extends React.Component {
                                                         margin="normal"
                                                         variant="outlined"
                                                         select
-                                                        value={this.state.year_newDiploma}
+                                                        value={this.state.year_newDiploma || ''}
                                                         name={'year_newDiploma'}
                                                         onChange={this.onChange2}
                                                     >
@@ -1466,7 +1466,7 @@ class editService extends React.Component {
                                                         margin="normal"
                                                         variant="outlined"
                                                         select
-                                                        value={this.state.year_newCertification}
+                                                        value={this.state.year_newCertification || ''}
                                                         name={'year_newCertification'}
                                                         onChange={this.onChange2}
                                                     >
