@@ -12,7 +12,6 @@ import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -25,6 +24,11 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Chip from '@material-ui/core/Chip';
 import frLocale from "date-fns/locale/fr";
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Input from '@material-ui/core/Input';
+import ListItemText from '@material-ui/core/ListItemText';
+
+
 
 const propTypes = {};
 const localizer = momentLocalizer(moment);
@@ -54,13 +58,42 @@ const formats = {
   dayHeaderFormat: 'dddd DD MMMM'
 };
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+
+const names = [
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder',
+];
+
+
 const styles = theme => ({
   modalContainer:{
     position: 'absolute',
     width: 600,
     backgroundColor: 'white',
-    border: '2px solid #000',
+    border: '2px solid #4fbdd7',
     padding: '2%',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -69,7 +102,19 @@ const styles = theme => ({
   },
   contentTimeSlot:{
     justifyContent: 'space-around',
-    alignItems: 'baseline'
+    alignItems: 'baseline',
+    marginTop: 20,
+    marginBottom: 20
+  },
+  textFieldButton: {
+    color : 'white',
+    margin: theme.spacing(1),
+  },
+  textFieldChips: {
+    color: 'white'
+  },
+  textFieldDefaultChips: {
+    color : 'black'
   }
 });
 
@@ -82,81 +127,32 @@ class Schedule extends React.Component {
       title: '',
       sAddModalOpen: false,
       isEditModalOpen: false,
-      service:'',
-      selectedDateStart: new Date(),
-      timePickerStart: new Date(),
-      selectedDateEnd: new Date(),
-      timePickerEnd: new Date(),
+      servicesSelected:[],
       isCheckedRecurence: false,
       dayLayoutAlgorithm: 'no-overlap',
-      isDateActiveLu:'',
-      isDateActiveMa:'',
-      isDateActiveMe:'',
-      isDateActiveJe:'',
-      isDateActiveVe:'',
-      isDateActiveSa:'',
-      isDateActiveDi:'',
-      isActivateDate:{
-        endDateRecurrency: new Date(),
-        lundi:{
-          label: "Lu",
-          isActivate: false
-        },
-        mardi:{
-          label: "Ma",
-          isActivate: false
-        },
-        mercredi:{
-          label: "Me",
-          isActivate: false
-        },
-        jeudi:{
-          label: "Je",
-          isActivate: false
-        },
-        vendredi:{
-          label: "Ve",
-          isActivate: false
-        },
-        samedi:{
-          label: "Sa",
-          isActivate: false
-        },
-        dimanche:{
-          label: "Di",
-          isActivate: false
-        },
-      }
+      selectedDateEndRecu:'',
+      isDateActiveLu:'default',
+      isDateActiveMa:'default',
+      isDateActiveMe:'default',
+      isDateActiveJe:'default',
+      isDateActiveVe:'default',
+      isDateActiveSa:'default',
+      isDateActiveDi:'default',
     };
   }
 
   onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({service: e.target.value });
   };
 
-  onSubmit = e => {
-    e.preventDefault();
-
-    const event = {
-      title: this.state.title,
-    };
-  };
-
-  toggleAddModal = ({start, end}) => {
-    if (!this.state.isEditModalOpen) {
+  toggleAddModal =  ({ start, end })  => {
       this.setState({
-        events: [
-          ...this.state.events,
-          {
-            start,
-            end,
-          },
-        ],
-
+          selectedDateStart: start,
+          selectedDateEnd: end,
         isAddModalOpen: !this.state.isAddModalOpen,
       });
-    }
   };
+
   toggleEditModal = event => {
     if (!this.state.isAddModalOpen) {
       this.setState({
@@ -165,6 +161,23 @@ class Schedule extends React.Component {
       });
     }
   };
+
+   handleChange = panel => (event, isExpanded) => {
+     this.setState({isExpanded: isExpanded ? panel : false});
+   };
+
+   handleDateStartChange = date => {
+    this.setState({selectedDateStart: date});
+  };
+
+  handleDateEndChange = date => {
+    this.setState({selectedDateEnd: date});
+  };
+
+  onSubmit = e => {
+    e.preventDefault();
+  };
+
 
   render() {
     const { classes } = this.props;
@@ -196,8 +209,6 @@ class Schedule extends React.Component {
 
           }}
           formats={formats}
-          startAccessor="start"
-          endAccessor="end"
         />
         <Modal
           closeAfterTransition
@@ -208,25 +219,34 @@ class Schedule extends React.Component {
           onClose={this.toggleAddModal}
         >
           <Fade in={this.state.isAddModalOpen}>
-            <Grid className={classes.modalContainer}>
-              <Grid id={'title'}>
+            <Grid container className={classes.modalContainer}>
+              <Grid container>
                   <Grid>
                     <h2>Nouvel Event</h2>
                   </Grid>
               </Grid>
-              <Grid id={'content'}>
-                <FormControl style={{width:"100%"}}>
-                  <InputLabel id="demo-simple-select-label">Service(s)</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={this.state.service}
-                    onChange={this.onChange}
-                  >
-                    <MenuItem value={10}>Service A</MenuItem>
-                    <MenuItem value={20}>Service B</MenuItem>
-                    <MenuItem value={30}>Service C</MenuItem>
-                  </Select>
+              <Grid container>
+                <form onSubmit={this.onSubmit}>
+                  <FormControl style={{width:"100%"}}>
+                    <InputLabel id="demo-simple-select-label">Service(s)</InputLabel>
+                    <Select
+                      labelId="demo-mutiple-checkbox-label"
+                      id="demo-mutiple-checkbox"
+                      multiple
+                      input={<Input />}
+                      renderValue={selected => selected.join(', ')}
+                      value={this.state.servicesSelected}
+                      onChange={this.onChange}
+                      MenuProps={MenuProps}
+                    >
+                      {names.map(name => (
+                        <MenuItem key={name} value={name}>
+                          <Checkbox checked={this.state.servicesSelected.indexOf(name) > -1} />
+                          <ListItemText primary={name} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                     <Grid container className={classes.contentTimeSlot}>
                       <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
                         <KeyboardDatePicker
@@ -237,9 +257,7 @@ class Schedule extends React.Component {
                           id="date-picker-inline"
                           label="Date de début"
                           value={this.state.selectedDateStart}
-                          onChange={() => {
-                            this.setState({ selectedDateStart: this.state.selectedDateStart });
-                          }}
+                          onChange={this.handleDateStartChange}
                           KeyboardButtonProps={{
                             'aria-label': 'change date',
                           }}
@@ -264,9 +282,7 @@ class Schedule extends React.Component {
                           id="date-picker-inline"
                           label="Date de fin"
                           value={this.state.selectedDateEnd}
-                          onChange={() => {
-                            this.setState({ selectedDateEnd: this.state.selectedDateEnd });
-                          }}
+                          onChange={this.handleDateEndChange}
                           KeyboardButtonProps={{
                             'aria-label': 'change date',
                           }}
@@ -285,8 +301,8 @@ class Schedule extends React.Component {
                         />
                       </MuiPickersUtilsProvider>
                     </Grid>
-                  <Grid>
-                    <ExpansionPanel>
+                  <Grid container>
+                    <ExpansionPanel expanded={this.state.isExpanded === 'panel1'}>
                       <ExpansionPanelSummary>
                         <FormControlLabel
                           aria-label="Acknowledge"
@@ -294,14 +310,16 @@ class Schedule extends React.Component {
                           onFocus={event => event.stopPropagation()}
                           control={<Checkbox />}
                           label="Récurence"
+                          onChange={this.handleChange('panel1')}
                         />
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails style={{alignItems: 'end'}}>
-                        <Grid style={{width : '50%'}}>
+                        <Grid container style={{width : '50%'}}>
                           <Chip
                             clickable
                             label="Lu"
                             color={this.state.isDateActiveLu}
+                            className={this.state.isDateActiveLu === "secondary" ? classes.textFieldChips : classes.test}
                             onClick={() => {
                               if(this.state.isDateActiveLu === "secondary"){
                                 this.setState({isDateActiveLu: ""});
@@ -350,7 +368,11 @@ class Schedule extends React.Component {
                             }
                           }
                           } />
-                          <Chip clickable label="Di" color={this.state.isDateActiveDi} onClick={() => {
+                          <Chip
+                            clickable
+                            label="Di"
+                            color={this.state.isDateActiveDi}
+                            onClick={() => {
                             if(this.state.isDateActiveDi === "secondary"){
                               this.setState({isDateActiveDi: ""});
                             }else{
@@ -359,7 +381,7 @@ class Schedule extends React.Component {
                           }
                           } />
                         </Grid>
-                        <Grid style={{width : '50%'}}>
+                        <Grid container style={{width : '50%'}}>
                           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
                             <KeyboardDatePicker
                                 disableToolbar
@@ -368,9 +390,9 @@ class Schedule extends React.Component {
                                 margin="normal"
                                 id="date-picker-inline"
                                 label="Date de fin"
-                                value={this.state.selectedDateEnd}
+                                value={this.state.selectedDateEndRecu}
                                 onChange={() => {
-                                  this.setState({ selectedDateEnd: this.state.selectedDateEnd });
+                                  this.setState({ selectedDateEndRecu: this.state.selectedDateEndRecu });
                                 }}
                                 KeyboardButtonProps={{
                                   'aria-label': 'change date',
@@ -393,13 +415,13 @@ class Schedule extends React.Component {
                     variant="outlined"
                   />
                   </Grid>*/}
-                  <Grid>
-                    <button type="button">Envoyer
-                    </button>
-                    <button type="button">Annuler
-                    </button>
+                  <Grid container justify="flex-end" style={{marginTop: 20}}>
+                    <Button type="submit" variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer
+                    </Button>
+                    <Button variant="contained" className={classes.textFieldButton} color={'secondary'}>Annuler
+                    </Button>
                   </Grid>
-                </FormControl>
+                </form>
               </Grid>
             </Grid>
         </Fade>
