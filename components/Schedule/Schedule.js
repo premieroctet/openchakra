@@ -49,7 +49,7 @@ class Schedule extends React.Component {
         <Calendar
           selectable
           localizer={localizer}
-          // TODO: fix to use state instead of props
+          // FIX: use state instead of props
           events={this.props.events}
           defaultView={Views.WEEK}
           scrollToTime={new Date(2019, 11, 11)}
