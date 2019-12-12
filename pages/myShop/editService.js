@@ -792,7 +792,7 @@ class editService extends React.Component {
                                                                             style={{width: '100px', fontSize: '0.8rem'}}
                                                                             margin="none"
                                                                             helperText={`Méthode de facturation`}
-                                                                            value={this.state[z.label+'billing']}
+                                                                            value={this.state[z.label+'billing'] || ''}
                                                                             name={z.label+'billing'}
                                                                             onChange={(event)=>{this.onChange2(event);
                                                                             this.onChangeBilling(z.label,event,z._id)}}
@@ -1317,7 +1317,7 @@ class editService extends React.Component {
                                                         margin="normal"
                                                         variant="outlined"
                                                         select
-                                                        value={this.state.year_newDiploma}
+                                                        value={this.state.year_newDiploma || ''}
                                                         name={'year_newDiploma'}
                                                         onChange={this.onChange2}
                                                     >
@@ -1466,7 +1466,7 @@ class editService extends React.Component {
                                                         margin="normal"
                                                         variant="outlined"
                                                         select
-                                                        value={this.state.year_newCertification}
+                                                        value={this.state.year_newCertification || ''}
                                                         name={'year_newCertification'}
                                                         onChange={this.onChange2}
                                                     >

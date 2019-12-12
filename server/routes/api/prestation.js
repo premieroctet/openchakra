@@ -9,7 +9,7 @@ router.get('/test',(req, res) => res.json({msg: 'Prestation Works!'}) );
 // @Route GET /myAlfred/api/prestation/all
 // Get all prestations
 router.get('/all',(req,res) => {
-    Prestation.find()
+    Prestation.find().sort({'label': 1})
         .populate('category')
         .populate('job')
         .populate('service')
@@ -32,7 +32,7 @@ router.get('/all',(req,res) => {
 // @Route GET /myAlfred/api/prestation/home
 // Get all prestations
 router.get('/home',(req,res) => {
-    Prestation.find()
+    Prestation.find().sort({'label': 1})
         .populate('category')
         .populate('job')
         .populate('service')
@@ -57,7 +57,7 @@ router.get('/home',(req,res) => {
 // View all prestations per service
 router.get('/:service',(req,res)=> {
 
-    Prestation.find({service: req.params.service})
+    Prestation.find({service: req.params.service}).sort({'label': 1})
         .populate('category')
         .populate('service')
         .populate('filter_presentation')
@@ -80,6 +80,7 @@ router.get('/:service/:filter', (req, res) => {
     service: req.params.service,
     filter_presentation: req.params.filter,
   })
+  .sort({'label':1})
   .populate('billing')
   .then(prestation => {
     if (typeof prestation !== 'undefined' && prestation.length > 0) {
@@ -96,6 +97,7 @@ router.get('/:service/:filter', (req, res) => {
 router.get('/all/tags/:tags',(req,res)=> {
 
     Prestation.find({tags: req.params.tags})
+        .sort({'label':1})
         .populate('tags')
         .then(prestations => {
             if(typeof prestations !== 'undefined' && prestations.length > 0){
