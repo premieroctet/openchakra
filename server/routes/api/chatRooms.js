@@ -3,6 +3,8 @@ const router = express.Router();
 const uuidv4 = require('uuid/v4');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const CronJob = require('cron').CronJob;
+const nodemailer = require("nodemailer");
 
 const ChatRooms = require('../../models/ChatRooms');
 
@@ -168,5 +170,48 @@ router.put('/addBookingId/:id', ( req, res ) => {
     })
     .catch(err => console.log(err))
 })
+
+new CronJob('0 */30 * * * *', function() {
+  console.log('You will see this message 30 minutes');
+  ChatRooms.find()
+    .populate('emitter')
+    .populate('recipient')
+    .then(chatrooms => {
+      chatrooms.forEach(chatroom => {
+        for (let i = 0; i < chatroom.messages.length; i++) {
+          if (i + 1 === chatroom.messages.length) {
+            if (chatroom.messages[i].viewed === false) {
+              let toEmail;
+              let fromUser;
+              if (chatroom.messages[i].idsender === chatroom.emitter) {
+                toEmail = chatroom.recipient.email;
+                fromUser = chatroom.recipient.firstname
+              } else {
+                toEmail = chatroom.emitter.email;
+                fromUser = chatroom.emitter.firstname
+              }
+              let transporter = nodemailer.createTransport({
+                host: 'smtp.ethereal.email',
+                port: 587,
+                auth: {
+                  user: 'kirstin85@ethereal.email',
+                  pass: '1D7q6PCENKSX5cj622'
+                }
+              })
+  
+              let info = transporter.sendMail({
+                from: 'kirstin85@ethereal.email', // sender address
+                to: `${toEmail}`, // list of receivers
+                subject: "Message non lu", // Subject line
+                text: `Vous avez un message non lu de la part de ${fromUser}`, // plain text body
+                html: '<p>Vous avez un message non lu de la part de ' + fromUser + '</p>' // html body
+              });
+            }
+          }
+        }
+      })
+    })
+    .catch(err => console.log(err))
+}, null, true, 'Europe/Paris');
 
 module.exports = router;

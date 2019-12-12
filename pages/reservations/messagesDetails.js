@@ -220,11 +220,6 @@ class MessagesDetails extends React.Component {
       return;
     }
 
-    if (Notification.permission === 'granted') {
-      new Notification('You are already subscribed to message notifications');
-      return;
-    }
-
     if (
       Notification.permission !== 'denied' ||
       Notification.permission === 'default'
