@@ -469,7 +469,10 @@ class services extends React.Component {
                                         equipments.map((e, index) => (
                                             <React.Fragment key={index}>
                                                 <Grid item xs={1} style={{ marginLeft: "1.5%" }}>
-                                                    <img src={"../" + e.logo2} />
+                                                    <img src={`../../static/equipments/${e.logo.slice(
+                                                        0,
+                                                        -4
+                                                    )}_Selected.svg`} />
                                                 </Grid>
                                             </React.Fragment>
                                         ))
@@ -1380,7 +1383,7 @@ class services extends React.Component {
                                         <Typography style={{marginLeft: '4%' , marginBottom: '2%', fontSize:'1.2rem', fontWeight: '5e00'}}>Conditions de réservation</Typography>
                                         <Grid container>
                                         <Grid item xs={1}>
-                                            <img src="../../static/iconspreview/cart.PNG" alt={'cart'} style={{marginLeft: '20%'}} width={30}/>
+                                            <img src="../../static/iconspreview/cart.png" alt={'cart'} style={{marginLeft: '20%'}} width={30}/>
                                         </Grid>
                                         <Grid item xs={1} style={{maxWidth: '30px'}}></Grid>
                                         <Grid item xs={10}><Typography style={{ marginBottom: '2%', fontSize:'1.1rem'}}>Panier minimum : {serviceUser.minimum_basket}€</Typography></Grid>
@@ -1388,7 +1391,7 @@ class services extends React.Component {
 
 
                                         <Grid item xs={1}>
-                                            <img src="../../static/iconspreview/calendar.PNG" alt={'calendar'} style={{marginLeft: '22%'}} width={30}/>
+                                            <img src="../../static/iconspreview/calendar.png" alt={'calendar'} style={{marginLeft: '22%'}} width={30}/>
                                         </Grid>
                                         <Grid item xs={1} style={{maxWidth: '30px'}}></Grid>
                                         <Grid item xs={8}><Typography style={{ marginBottom: '2%', fontSize:'1.1rem'}}>{serviceUser.deadline_before_booking} de délai de prévenance</Typography></Grid>

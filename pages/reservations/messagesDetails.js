@@ -121,7 +121,7 @@ class MessagesDetails extends React.Component {
     );
     axios.put(url + 'myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
       .then()
-    axios.get("http://localhost:3122/myAlfred/api/users/current").then(res => {
+    axios.get(url+"myAlfred/api/users/current").then(res => {
       this.setState({ userData: res.data });
       this.setState({ emitter: res.data._id });
       this.setState({ recipientpic: res.data.picture });
@@ -131,7 +131,7 @@ class MessagesDetails extends React.Component {
       .then(res => this.setState({ bookingObj: res.data }))
       .catch(err => console.log(err));
     axios
-      .get(`http://localhost:3122/myAlfred/api/chatRooms/userChatRoom/${id}`)
+      .get(url+`myAlfred/api/chatRooms/userChatRoom/${id}`)
       .then(res => {
         this.setState({
           roomData: res.data,
@@ -149,10 +149,10 @@ class MessagesDetails extends React.Component {
           messages.push(data);
           axios
             .put(
-              `http://localhost:3122/myAlfred/api/chatRooms/saveMessages/${id}`,
+              url+`myAlfred/api/chatRooms/saveMessages/${id}`,
               { messages: oldMessages }
             )
-            .then(res => console.log(res));
+            .then();
           this.setState({
             messages,
             oldMessages
@@ -199,12 +199,10 @@ class MessagesDetails extends React.Component {
   }
 
   showNotification = message => {
-    console.log('works notif');
-    console.log(message);
+
     const { userData } = this.state;
-    console.log(userData);
+
     if (message.idsender !== userData._id) {
-      console.log('works notif into condition');
       const title = message.user;
       const body = message.content;
 

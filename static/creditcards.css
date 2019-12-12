@@ -1,31 +1,8 @@
-a {
-    color: #666;
-  }
-  
-  h1 {
-    font-weight: bold;
-    margin: 0 0 10px;
-  }
-  
-  h4 {
-    margin-bottom: 30px;
-  }
-  
-  h1,
-  h2,
-  h4 {
-    text-align: center;
-  }
-  
+
   .App-payment {
     padding: 30px;
   }
-  
-  form {
-    margin: 30px auto 0;
-    max-width: 400px;
-  }
-  
+
   .form-actions {
     margin-top: 15px;
   }
