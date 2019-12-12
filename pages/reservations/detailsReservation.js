@@ -357,10 +357,10 @@ class DetailsReservation extends React.Component {
                     className={classes.shopbar}
                     style={{ textAlign: "center" }}
                   >
-                    <Link href={"/myShop/performances"}>
+                    <Link href={"/performances/revenus"}>
                       <a style={{ textDecoration: "none" }}>
                         <p style={{ color: "white", cursor: "pointer" }}>
-                          Performance
+                          Performances
                         </p>
                       </a>
                     </Link>
@@ -1392,6 +1392,21 @@ class DetailsReservation extends React.Component {
                         </div>
                       </Grid>
                       <Grid item xs={2} style={{ textAlign: "center" }}>
+                        <Link
+                            href={{
+                              pathname: "/reservations/messagesDetails",
+                              query: {
+                                id:
+                                    bookingObj === null
+                                        ? null
+                                        : bookingObj.chatroom,
+                                booking:
+                                    bookingObj === null
+                                        ? null
+                                        : bookingObj._id
+                              }
+                            }}
+                        >
                         <div
                           style={{
                             textAlign: "center",
@@ -1403,28 +1418,12 @@ class DetailsReservation extends React.Component {
                             marginTop: "20%"
                           }}
                         >
-                          <Link
-                            href={{
-                              pathname: "/reservations/messagesDetails",
-                              query: {
-                                id:
-                                  bookingObj === null
-                                    ? null
-                                    : bookingObj.chatroom,
-                                booking:
-                                  bookingObj === null
-                                    ? null
-                                    : bookingObj._id
-                              }
-                            }}
-                          >
-                            <a
-                              style={{ textDecoration: "none", color: "white" }}
-                            >
+
+                            <a style={{ textDecoration: "none", color: "white" }}>
                               Envoyer un message
                             </a>
-                          </Link>
                         </div>
+                          </Link>
 
                         {bookingObj === null ? null : bookingObj.status ===
                           "Confirmée" ? (
@@ -1507,6 +1506,8 @@ class DetailsReservation extends React.Component {
                               </Grid>
                               <Grid item xs={2}></Grid>
                               <Grid item md={4} xs={12}>
+                                <Link href={`/evaluateClient?id=${bookingObj.serviceUserId}&client=${bookingObj.user._id}`}>
+
                                 <div
                                   style={{
                                     textAlign: "center",
@@ -1517,17 +1518,15 @@ class DetailsReservation extends React.Component {
                                     borderRadius: "50px",
                                   }}
                                 >
-                                  <Link href={`/evaluateClient?id=${bookingObj.serviceUserId}&client=${bookingObj.user._id}`}>
-                                    <a
-                                      style={{
+                                  <a style={{
                                         textDecoration: "none",
                                         color: "white"
-                                      }}
-                                    >
+                                      }}>
+
                                       Evaluer mon client
                                     </a>
-                                  </Link>
                                 </div>
+                                  </Link>
                               </Grid>
                             </Grid>
                             
@@ -1564,6 +1563,7 @@ class DetailsReservation extends React.Component {
                               </Grid>
                               <Grid item xs={2}></Grid>
                               <Grid item md={4} xs={12}>
+                                <Link href={`/evaluate?id=${bookingObj.serviceUserId}`}>
                                 <div
                                   style={{
                                     textAlign: 'center',
@@ -1574,9 +1574,7 @@ class DetailsReservation extends React.Component {
                                     borderRadius: "50px",
                                   }}
                                 >
-                                  <Link
-                                    href={`/evaluate?id=${bookingObj.serviceUserId}`}
-                                  >
+
                                     <a
                                       style={{
                                         textDecoration: "none",
@@ -1585,8 +1583,8 @@ class DetailsReservation extends React.Component {
                                     >
                                       Evaluer mon Alfred
                                     </a>
-                                  </Link>
                                 </div>
+                                  </Link>
                               </Grid>
                             </Grid>
                             
@@ -1850,6 +1848,12 @@ class DetailsReservation extends React.Component {
                                     .format("DD/MM/YYYY")}{" "}
                                   à {moment(bookingObj.date).format("HH:mm")}
                                 </Typography>
+                                <Link
+                                    href={{
+                                      pathname: "/reservations/confirm",
+                                      query: { id: this.state.booking_id }
+                                    }}
+                                >
                                 <div
                                   style={{
                                     textAlign: "center",
@@ -1861,12 +1865,7 @@ class DetailsReservation extends React.Component {
                                     marginTop: "20%"
                                   }}
                                 >
-                                  <Link
-                                    href={{
-                                      pathname: "/reservations/confirm",
-                                      query: { id: this.state.booking_id }
-                                    }}
-                                  >
+
                                     <a
                                       style={{
                                         textDecoration: "none",
@@ -1875,8 +1874,8 @@ class DetailsReservation extends React.Component {
                                     >
                                       Confirmer la réservation
                                     </a>
-                                  </Link>
                                 </div>
+                                  </Link>
                                 <div
                                   style={{
                                     textAlign: "center",
@@ -1899,6 +1898,12 @@ class DetailsReservation extends React.Component {
                           ) : bookingObj.status === "Demande d'infos" &&
                             currentUser._id === bookingObj.alfred._id ? (
                             <>
+                            <Link
+                                href={{
+                                  pathname: "/reservations/preapprouve",
+                                  query: { id: this.state.booking_id }
+                                }}
+                            >
                               <div
                                 style={{
                                   textAlign: "center",
@@ -1910,12 +1915,7 @@ class DetailsReservation extends React.Component {
                                   marginTop: "20%"
                                 }}
                               >
-                                <Link
-                                  href={{
-                                    pathname: "/reservations/preapprouve",
-                                    query: { id: this.state.booking_id }
-                                  }}
-                                >
+
                                   <a
                                     style={{
                                       textDecoration: "none",
@@ -1924,8 +1924,8 @@ class DetailsReservation extends React.Component {
                                   >
                                     Pré-approuver
                                   </a>
-                                </Link>
                               </div>
+                                </Link>
                               <div
                                 style={{
                                   textAlign: "center",
@@ -1946,6 +1946,21 @@ class DetailsReservation extends React.Component {
                             currentUser._id === bookingObj.user._id ? (
                             null
                           ) : bookingObj.status === "Invitation à réserver" ? (
+                              <Link
+                                  href={{
+                                    pathname: "/reservations/messagesDetails",
+                                    query: {
+                                      id:
+                                          bookingObj === null
+                                              ? null
+                                              : bookingObj.chatroom,
+                                      booking:
+                                          bookingObj === null
+                                              ? null
+                                              : bookingObj._id
+                                    }
+                                  }}
+                              >
                             <div
                               style={{
                                 textAlign: "center",
@@ -1957,28 +1972,12 @@ class DetailsReservation extends React.Component {
                                 marginTop: "20%"
                               }}
                             >
-                                <Link
-                                    href={{
-                                    pathname: "/reservations/messagesDetails",
-                                    query: {
-                                        id:
-                                        bookingObj === null
-                                            ? null
-                                            : bookingObj.chatroom,
-                                        booking:
-                                        bookingObj === null
-                                            ? null
-                                            : bookingObj._id
-                                    }
-                                    }}
-                                >
-                                    <a
-                                    style={{ textDecoration: "none", color: "white" }}
-                                    >
+
+                                    <a style={{ textDecoration: "none", color: "white" }}>
                                         Envoyer un message
                                     </a>
-                                </Link>
                             </div>
+                                </Link>
                           ) : bookingObj.status === "Confirmée" ? (
                             <>
                               <Grid item xs={4}>
@@ -2107,6 +2106,7 @@ class DetailsReservation extends React.Component {
                                 </Grid>
                               </>
                             ) : (
+                                <Link href={`reserve?id=${bookingObj._id}`}>
                                 <div
                                 style={{
                                   textAlign: "center",
@@ -2118,17 +2118,16 @@ class DetailsReservation extends React.Component {
                                   marginTop: "20%"
                                 }}
                               >
-                                <Link href={`reserve?id=${bookingObj._id}`}>
-                                  <a
-                                    style={{
+
+                                  <a style={{
                                       textDecoration: "none",
                                       color: "white"
                                     }}
                                   >
                                     Réserver
                                   </a>
-                                </Link>
                               </div>
+                                </Link>
                             )
                           ) : null}
                         </Grid>
@@ -2747,9 +2746,6 @@ class DetailsReservation extends React.Component {
                         </Typography>
                       ) : null}
                     </Grid>
-                    {/*<Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}}>
-                                    <Link href="#"><a style={{textDecoration: 'none', fontSize: '1.1rem', color: 'rgb(47, 188, 211)'}}>Modifier la reservation</a></Link>
-                                </Grid>*/}
                     {bookingObj === null ||
                     currentUser === null ? null : (bookingObj.status ===
                         "En attente de confirmation" &&
@@ -2879,7 +2875,7 @@ class DetailsReservation extends React.Component {
               </Grid>
 
               <Grid item xs={2} style={{ textAlign: "center" }}>
-                <Link href={"/myShop/messages"}>
+                <Link href={"/reservations/messages"}>
                   <a style={{ textDecoration: "none" }}>
                     <p style={{ color: "white", cursor: "pointer" }}>
                       <img
@@ -2901,7 +2897,7 @@ class DetailsReservation extends React.Component {
                   borderBottom: "3px solid #4fbdd7"
                 }}
               >
-                <Link href={"/myShop/mesreservations"}>
+                <Link href={"/reservations/allReservations"}>
                   <a style={{ textDecoration: "none" }}>
                     <p style={{ color: "white", cursor: "pointer" }}>
                       <img
@@ -2931,7 +2927,7 @@ class DetailsReservation extends React.Component {
               </Grid>
 
               <Grid item xs={2} style={{ textAlign: "center" }}>
-                <Link href={"/myShop/performances"}>
+                <Link href={"/performances/revenus"}>
                   <a style={{ textDecoration: "none" }}>
                     <p style={{ color: "white", cursor: "pointer" }}>
                       <img

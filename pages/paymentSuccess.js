@@ -36,10 +36,19 @@ class paymentSuccess extends React.Component {
     componentDidMount() {
 
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-
-
-
+        axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+        axios
+            .get(url + "myAlfred/api/users/current")
+            .then(res => {
+                let user = res.data;
+                this.setState({ user: user });
+            })
+            .catch(err => {
+                if (err.response.status === 401 || err.response.status === 403) {
+                    localStorage.removeItem("token");
+                    Router.push({ pathname: "/login" });
+                }
+            });
     }
 
 
@@ -55,14 +64,64 @@ class paymentSuccess extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 
-                        <Grid container style={{minHeight: '530px'}}>
-                            <h2>Paiement réussi</h2>
+                        {/*Le Header */}
 
-                        </Grid>
+                        {/*Le Contenu */}
+                        <Grid container>
+                            <br></br>
+                            {/*Contenu à Gauche*/}
+
+                            {/*Petite Description*/}
+                            <Grid item md={5} xs={12} style={{textAlign: 'left',margin: '0 auto', float:'right', paddingLeft:'3%'}}>
+                                <div style={{margin: '20px 11%', marginTop: '5%',width: '90%'}}></div>
+                                <Grid container>
+
+                                    <Grid item xs={12} style={{marginTop:50, marginBottom:30}}>
+                                        <h2 style={{fontSize: '2.5rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: '100', textAlign:'center'}}>Résevation enregistrée !</h2>
+
+                                    </Grid>
+                                </Grid>
+                                <br></br>
 
 
 
-                    </Grid>
+                                <div>
+
+                                    <Grid container>
+
+                                        <Grid item xs={12} style={{textAlign:'center'}}>
+                                            <p style={{fontSize:'30px'}}>Toute l’équipe de My-Alfred vous remercie pour votre réservation. </p>
+
+                                            <Link href={'/reservations/allReservations'}>
+                                                <Button variant={"contained"} color={"primary"} style={{color:'white'}}>Mes réservations</Button>
+                                            </Link>
+
+
+                                            <br></br>
+
+                                        </Grid>
+
+                                    </Grid>
+
+                                </div>
+
+
+
+                                {/*cadre avec couleur et checkbox*/}
+
+
+
+
+
+
+                            </Grid>
+
+                            {/*Contenu à droite*/}
+                            <Grid item xs={12} md={7} style={{marginTop: '2%', marginBottom: '5%'}}>
+                                <Grid container style={{ backgroundImage: `url('../../static/resa.svg')`,backgroundPosition: "cover", backgroundRepeat:'no-repeat', border: 'thin solid transparent',maxWidth: '100%', height:'90vh', padding:'2%', position: 'sticky', top: 100,}}>
+
+                                </Grid> </Grid>
+                        </Grid>    </Grid>
                 </Layout>
                 <Footer/>
 

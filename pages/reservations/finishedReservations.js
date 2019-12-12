@@ -37,36 +37,6 @@ const styles = theme => ({
         margin: '0 auto',
         marginTop:-28
     },
-    trait:{
-        width: '87%',
-        marginTop: -18.5,
-        height: 4,
-        backgroundColor: 'rgb(47, 188, 211)',
-        borderColor: 'transparent'
-    },
-    trait1:{
-        width: '100%',
-        marginTop: 2,
-        marginLeft: 110,
-        height: 4,
-        backgroundColor: 'lightgray',
-        borderColor: 'transparent'
-    },
-    trait2:{
-        width: '87%',
-        marginTop: -18.5,
-        height: 4,
-        backgroundColor: 'lightgray',
-        borderColor: 'transparent'
-    },
-    trait3:{
-        width: '100%',
-        marginTop: 2,
-        marginLeft: 110,
-        height: 4,
-        backgroundColor: 'rgb(47, 188, 211)',
-        borderColor: 'transparent'
-    },
     shopbar:{
         [theme.breakpoints.down('md')]: {
             display: 'none',
@@ -94,20 +64,6 @@ const styles = theme => ({
                 display:'none',
             }
             
-        },
-    
-    
-        toggle: {
-            [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-            transition: 'margin-left 0.7s',
-           
-            '&:hover': {
-                marginLeft:'0px',
-                transition: 'margin-left 0.7s',
-                boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-    
-                 }
-          }  
         },
         trait:{
             width: '100%',
@@ -160,9 +116,37 @@ const styles = theme => ({
             marginLeft: '4%'
     },
     toggle: {
-        [theme.breakpoints.down('sm')]: {
-            display: 'none'
+        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
+            transition: 'margin-left 0.7s',
+
+            '&:hover': {
+                marginLeft:'0px',
+                transition: 'margin-left 0.7s',
+                boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
+
+            }
         }
+    },
+    trigger:{
+        [theme.breakpoints.down('sm')]: {
+            marginTop: -10,
+            width: '100%',
+            marginLeft:'0px',
+            height:'30px',
+            backgroundColor:'#2FBCD3',
+
+            display:'block',
+            transition: 'display 0.7s',
+            borderRadius:'5px',
+            '&:focus': {
+                display:'none',
+                transition: 'display 0.7s',
+
+            }
+        },
+
+
+
     },
 });
 
@@ -174,7 +158,8 @@ class FinishedReservations extends React.Component {
             user: null,
             alfredReservations: [],
             userReservations: [],
-            finishedReservations: 0
+            finishedReservations: 0,
+            isAlfred: true,
         }
 
     }
@@ -183,8 +168,11 @@ class FinishedReservations extends React.Component {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.get(url + 'myAlfred/api/users/current')
         .then(res => {
-          console.log(res.data);
-          this.setState({ user: res.data })
+
+          this.setState({ user: res.data });
+            if(res.data.is_alfred === true){
+                this.setState({isAlfred: true})
+            }
 
           axios.get(url + 'myAlfred/api/booking/alfredBooking')
             .then(res => {
@@ -226,58 +214,71 @@ class FinishedReservations extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
-                            <Grid item xs={1} className={classes.shopbar}></Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/services'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/reservations/messages'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
-                                <Link href={'/reservations/allReservations'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/myAvailabilities'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/performances'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
-                                    </a>
-                                </Link>
-                            </Grid>
+                        {this.state.isAlfred ?
+                            <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
+                                <Grid item xs={1} className={classes.shopbar}></Grid>
+                                <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                    <Link href={'/myShop/services'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
+                                        </a>
+                                    </Link>
+                                </Grid>
+                                <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                    <Link href={'/reservations/messages'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                                        </a>
+                                    </Link>
+                                </Grid>
+                                <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
+                                    <Link href={'/reservations/allReservations'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                                        </a>
+                                    </Link>
+                                </Grid>
+                                <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                    <Link href={'/myShop/myAvailabilities'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
+                                        </a>
+                                    </Link>
+                                </Grid>
+                                <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                                    <Link href={'/performances/revenus'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <p style={{color: "white",cursor: 'pointer'}}>Performances</p>
+                                        </a>
+                                    </Link>
+                                </Grid>
 
-                        </Grid>
+                            </Grid>
+                            : null}
+
 
                         {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
 
                         <Grid container style={{marginBottom: '10%'}}>
                             <Grid className={classes.toggle}  item xs={3} style={{ height: '100vh', borderRight: '1px #8281813b solid',}}>
-                            
+                                <div className={classes.trigger}></div>
                                 <Grid container style={{justifyContent: 'center', position: 'sticky', top: 100,}}>
                                     <Grid item style={{marginTop: 30,width: 281, height: 70}} className={classes.hidesm}>
                                         <Link href={'allReservations'}>
                                             <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', height: 70}}>
                                                 <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                     Toutes mes réservations
+                                                </a>
+                                            </div>
+                                        </Link>
+                                    </Grid>
+                                    <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
+                                        <Link href={'allReservations'}>
+                                            <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                                <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                    <img src={'../static/calendar-3.svg'} alt={'user'} width={27} height={70} style={{marginRight: 4}}/>
+
                                                 </a>
                                             </div>
                                         </Link>
@@ -292,12 +293,32 @@ class FinishedReservations extends React.Component {
                                             </div>
                                         </Link>
                                     </Grid>
+                                    <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
+                                        <Link href={'comingReservations'}>
+                                            <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                                <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                    <img src={'../static/calendar-5.svg'} alt={'user'} width={27} height={70} style={{marginRight: 4}}/>
+
+                                                </a>
+                                            </div>
+                                        </Link>
+                                    </Grid>
 
                                     <Grid item style={{marginTop: 10,width: 281, height: 70}} className={classes.hidesm}>
                                         <Link href={'finishedReservations'}>
                                             <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', height: 70}}>
                                                 <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                     Mes réservations terminées
+                                                </a>
+                                            </div>
+                                        </Link>
+                                    </Grid>
+                                    <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
+                                        <Link href={'finishedReservations'}>
+                                            <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                                <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                    <img src={'../static/calendar-2.svg'} alt={'user'} width={27} height={70} style={{marginRight: 4}}/>
+
                                                 </a>
                                             </div>
                                         </Link>
@@ -438,39 +459,42 @@ class FinishedReservations extends React.Component {
                         {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
                     </Grid>
                 </Layout>
-                <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
+                {this.state.isAlfred ?
+                    <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
 
-                    <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
-                        </Link>
+                        <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                            </Link>
+                        </Grid>
+
+                        <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                        </Grid>
+
+                        <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
+                            <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                        </Grid>
+
+                        <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                        </Grid>
+
+                        <Grid item xs={2} style={{textAlign:"center"}}>
+                            <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
+                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            </a></Link>
+                        </Grid>
+
                     </Grid>
+                    : null}
 
-                    <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                    <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
-                        <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                    <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
-                        <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                    <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                </Grid>
                 <Footer/>
 
 

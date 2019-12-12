@@ -41,36 +41,6 @@ const styles = theme => ({
     margin: "0 auto",
     marginTop: -28
   },
-  trait: {
-    width: "87%",
-    marginTop: -18.5,
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
-  trait1: {
-    width: "100%",
-    marginTop: 2,
-    marginLeft: 110,
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait2: {
-    width: "87%",
-    marginTop: -18.5,
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait3: {
-    width: "100%",
-    marginTop: 2,
-    marginLeft: 110,
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
   shopbar: {
     [theme.breakpoints.down("md")]: {
       display: "none"
@@ -190,11 +160,27 @@ const styles = theme => ({
   Rightcontent: {
     marginLeft: "4%"
   },
-  toggle: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  }
+  trigger:{
+    [theme.breakpoints.down('sm')]: {
+      marginTop: -10,
+      width: '100%',
+      marginLeft:'0px',
+      height:'30px',
+      backgroundColor:'#2FBCD3',
+
+      display:'block',
+      transition: 'display 0.7s',
+      borderRadius:'5px',
+      '&:focus': {
+        display:'none',
+        transition: 'display 0.7s',
+
+      }
+    },
+
+
+
+  },
 });
 
 class NewMessages extends React.Component {
@@ -207,7 +193,8 @@ class NewMessages extends React.Component {
       chatrooms: [],
       tabs: false,
       alfredReservations: [],
-      userReservations: []
+      userReservations: [],
+      isAlfred: false,
     };
   }
 
@@ -216,8 +203,10 @@ class NewMessages extends React.Component {
       "token"
     );
     axios.get("http://localhost:3122/myAlfred/api/users/current").then(res => {
-      console.log(res.data);
       this.setState({ idEmitter: res.data._id });
+      if(res.data.is_alfred === true){
+        this.setState({isAlfred: true})
+      }
     });
     axios.get(url + 'myAlfred/api/chatRooms/nonViewedMessages')
       .then(res => {
@@ -274,92 +263,95 @@ class NewMessages extends React.Component {
       <Fragment>
         <Layout>
           <Grid container className={classes.bigContainer}>
-            <Grid
-              container
-              className={classes.topbar}
-              justify="center"
-              style={{
-                backgroundColor: "#4fbdd7",
-                marginTop: -3,
-                height: "52px"
-              }}
-            >
-              <Grid item xs={1} className={classes.shopbar}></Grid>
-              <Grid
-                item
-                xs={2}
-                className={classes.shopbar}
-                style={{ textAlign: "center" }}
-              >
-                <Link href={"/myShop/services"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      Ma boutique
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                className={classes.shopbar}
-                style={{
-                  textAlign: "center",
-                  borderBottom: "2px solid white",
-                  zIndex: 999
-                }}
-              >
-                <Link href={"/reservations/messages"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      Messages
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                className={classes.shopbar}
-                style={{ textAlign: "center" }}
-              >
-                <Link href={"/reservations/allReservations"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      Mes réservations
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                className={classes.shopbar}
-                style={{ textAlign: "center" }}
-              >
-                <Link href={"/myShop/myAvailabilities"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      Mon calendrier
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                className={classes.shopbar}
-                style={{ textAlign: "center" }}
-              >
-                <Link href={"/myShop/performances"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      Performance
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-            </Grid>
+            {this.state.isAlfred ?
+                <Grid
+                    container
+                    className={classes.topbar}
+                    justify="center"
+                    style={{
+                      backgroundColor: "#4fbdd7",
+                      marginTop: -3,
+                      height: "52px"
+                    }}
+                >
+                  <Grid item xs={1} className={classes.shopbar}></Grid>
+                  <Grid
+                      item
+                      xs={2}
+                      className={classes.shopbar}
+                      style={{ textAlign: "center" }}
+                  >
+                    <Link href={"/myShop/services"}>
+                      <a style={{ textDecoration: "none" }}>
+                        <p style={{ color: "white", cursor: "pointer" }}>
+                          Ma boutique
+                        </p>
+                      </a>
+                    </Link>
+                  </Grid>
+                  <Grid
+                      item
+                      xs={2}
+                      className={classes.shopbar}
+                      style={{
+                        textAlign: "center",
+                        borderBottom: "2px solid white",
+                        zIndex: 999
+                      }}
+                  >
+                    <Link href={"/reservations/messages"}>
+                      <a style={{ textDecoration: "none" }}>
+                        <p style={{ color: "white", cursor: "pointer" }}>
+                          Messages
+                        </p>
+                      </a>
+                    </Link>
+                  </Grid>
+                  <Grid
+                      item
+                      xs={2}
+                      className={classes.shopbar}
+                      style={{ textAlign: "center" }}
+                  >
+                    <Link href={"/reservations/allReservations"}>
+                      <a style={{ textDecoration: "none" }}>
+                        <p style={{ color: "white", cursor: "pointer" }}>
+                          Mes réservations
+                        </p>
+                      </a>
+                    </Link>
+                  </Grid>
+                  <Grid
+                      item
+                      xs={2}
+                      className={classes.shopbar}
+                      style={{ textAlign: "center" }}
+                  >
+                    <Link href={"/myShop/myAvailabilities"}>
+                      <a style={{ textDecoration: "none" }}>
+                        <p style={{ color: "white", cursor: "pointer" }}>
+                          Mon calendrier
+                        </p>
+                      </a>
+                    </Link>
+                  </Grid>
+                  <Grid
+                      item
+                      xs={2}
+                      className={classes.shopbar}
+                      style={{ textAlign: "center" }}
+                  >
+                    <Link href={"/performances/revenus"}>
+                      <a style={{ textDecoration: "none" }}>
+                        <p style={{ color: "white", cursor: "pointer" }}>
+                          Performances
+                        </p>
+                      </a>
+                    </Link>
+                  </Grid>
+                </Grid>
+                : null}
+
 
             {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
@@ -370,6 +362,7 @@ class NewMessages extends React.Component {
                 xs={3}
                 style={{ height: "100vh", borderRight: "1px #8281813b solid" }}
               >
+                <div className={classes.trigger}></div>
                 <Grid
                   container
                   style={{
@@ -400,6 +393,16 @@ class NewMessages extends React.Component {
                       </div>
                     </Link>
                   </Grid>
+                  <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
+                    <Link href={'/reservations/messages'}>
+                      <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                        <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                          <img src={'../static/speech-bubble.svg'} alt={'user'} width={27} height={70} style={{marginRight: 4}}/>
+
+                        </a>
+                      </div>
+                    </Link>
+                  </Grid>
 
                   <Grid
                     item
@@ -419,6 +422,16 @@ class NewMessages extends React.Component {
                       >
                         <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
                           Messages non lus
+                        </a>
+                      </div>
+                    </Link>
+                  </Grid>
+                  <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
+                    <Link href={'/reservations/newMessages'}>
+                      <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                        <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                          <img src={'../static/unread-email-2.svg'} alt={'user'} width={27} height={70} style={{marginRight: 4}}/>
+
                         </a>
                       </div>
                     </Link>
@@ -729,96 +742,99 @@ class NewMessages extends React.Component {
             {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
           </Grid>
         </Layout>
-        <Grid
-          container
-          className={classes.bottombar}
-          justify="center"
-          style={{
-            backgroundColor: "white",
-            bottom: 0,
-            position: "fixed",
-            zIndex: "999"
-          }}
-        >
-          <Grid item xs={2} style={{ textAlign: "center" }}>
-            <Link href={"/myShop/services"}>
-              <a style={{ textDecoration: "none" }}>
-                <p style={{ color: "white", cursor: "pointer" }}>
-                  <img
-                    src={"../static/shopping-bag.png"}
-                    alt={"sign"}
-                    width={25}
-                    style={{ opacity: "0.5" }}
-                  ></img>
-                </p>
-              </a>
-            </Link>
-          </Grid>
+        {this.state.isAlfred ?
+            <Grid
+                container
+                className={classes.bottombar}
+                justify="center"
+                style={{
+                  backgroundColor: "white",
+                  bottom: 0,
+                  position: "fixed",
+                  zIndex: "999"
+                }}
+            >
+              <Grid item xs={2} style={{ textAlign: "center" }}>
+                <Link href={"/myShop/services"}>
+                  <a style={{ textDecoration: "none" }}>
+                    <p style={{ color: "white", cursor: "pointer" }}>
+                      <img
+                          src={"../static/shopping-bag.png"}
+                          alt={"sign"}
+                          width={25}
+                          style={{ opacity: "0.5" }}
+                      ></img>
+                    </p>
+                  </a>
+                </Link>
+              </Grid>
 
-          <Grid item xs={2} style={{ textAlign: "center" }}>
-            <Link href={"/myShop/messages"}>
-              <a style={{ textDecoration: "none" }}>
-                <p style={{ color: "white", cursor: "pointer" }}>
-                  <img
-                    src={"../static/speech-bubble.png"}
-                    alt={"sign"}
-                    width={25}
-                    style={{ opacity: "0.7" }}
-                  ></img>
-                </p>
-              </a>
-            </Link>
-          </Grid>
+              <Grid item xs={2} style={{ textAlign: "center",borderBottom: "3px solid #4fbdd7" }}>
+                <Link href={"/reservations/messages"}>
+                  <a style={{ textDecoration: "none" }}>
+                    <p style={{ color: "white", cursor: "pointer" }}>
+                      <img
+                          src={"../static/speech-bubble.png"}
+                          alt={"sign"}
+                          width={25}
+                          style={{ opacity: "0.7" }}
+                      ></img>
+                    </p>
+                  </a>
+                </Link>
+              </Grid>
 
-          <Grid
-            item
-            xs={2}
-            style={{ textAlign: "center", borderBottom: "3px solid #4fbdd7" }}
-          >
-            <Link href={"/myShop/mesreservations"}>
-              <a style={{ textDecoration: "none" }}>
-                <p style={{ color: "white", cursor: "pointer" }}>
-                  <img
-                    src={"../static/event.png"}
-                    alt={"sign"}
-                    width={25}
-                    style={{ opacity: "0.7" }}
-                  ></img>
-                </p>
-              </a>
-            </Link>
-          </Grid>
+              <Grid
+                  item
+                  xs={2}
+                  style={{ textAlign: "center" }}
+              >
+                <Link href={"/reservations/allReservations"}>
+                  <a style={{ textDecoration: "none" }}>
+                    <p style={{ color: "white", cursor: "pointer" }}>
+                      <img
+                          src={"../static/event.png"}
+                          alt={"sign"}
+                          width={25}
+                          style={{ opacity: "0.7" }}
+                      ></img>
+                    </p>
+                  </a>
+                </Link>
+              </Grid>
 
-          <Grid item xs={2} style={{ textAlign: "center", zIndex: 999 }}>
-            <Link href={"/myShop/myAvailabilities"}>
-              <a style={{ textDecoration: "none" }}>
-                <p style={{ color: "white", cursor: "pointer" }}>
-                  <img
-                    src={"../static/calendar.png"}
-                    alt={"sign"}
-                    width={25}
-                    style={{ opacity: "0.7" }}
-                  ></img>
-                </p>
-              </a>
-            </Link>
-          </Grid>
+              <Grid item xs={2} style={{ textAlign: "center", zIndex: 999 }}>
+                <Link href={"/myShop/myAvailabilities"}>
+                  <a style={{ textDecoration: "none" }}>
+                    <p style={{ color: "white", cursor: "pointer" }}>
+                      <img
+                          src={"../static/calendar.png"}
+                          alt={"sign"}
+                          width={25}
+                          style={{ opacity: "0.7" }}
+                      ></img>
+                    </p>
+                  </a>
+                </Link>
+              </Grid>
 
-          <Grid item xs={2} style={{ textAlign: "center" }}>
-            <Link href={"/myShop/performances"}>
-              <a style={{ textDecoration: "none" }}>
-                <p style={{ color: "white", cursor: "pointer" }}>
-                  <img
-                    src={"../static/speedometer.png"}
-                    alt={"sign"}
-                    width={25}
-                    style={{ opacity: "0.7" }}
-                  ></img>
-                </p>
-              </a>
-            </Link>
-          </Grid>
-        </Grid>
+              <Grid item xs={2} style={{ textAlign: "center" }}>
+                <Link href={"/performances/revenus"}>
+                  <a style={{ textDecoration: "none" }}>
+                    <p style={{ color: "white", cursor: "pointer" }}>
+                      <img
+                          src={"../static/speedometer.png"}
+                          alt={"sign"}
+                          width={25}
+                          style={{ opacity: "0.7" }}
+                      ></img>
+                    </p>
+                  </a>
+                </Link>
+              </Grid>
+            </Grid>
+            : null}
+
         <Footer />
       </Fragment>
     );

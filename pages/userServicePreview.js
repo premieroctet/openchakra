@@ -3025,9 +3025,9 @@ class userServices extends React.Component {
                           </p>
                           </Grid>
                           <Grid item xs={6}>
-                            <p style={{color:'#2FBCD3', cursor: 'pointer'}} onClick={() => this.reservationPage()}>
+                            <Button variant={"contained"} color={"secondary"} style={{color:'white', cursor: 'pointer'}} onClick={() => this.reservationPage()}>
                               Réserver
-                            </p>
+                            </Button>
                           </Grid>
                           {this.state.errorsPresta !== null ? (
                             <p style={{ color: "red" }}>

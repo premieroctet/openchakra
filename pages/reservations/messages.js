@@ -160,6 +160,27 @@ const styles = theme => ({
   Rightcontent: {
     marginLeft: "4%"
   },
+  trigger:{
+    [theme.breakpoints.down('sm')]: {
+      marginTop: -10,
+      width: '100%',
+      marginLeft:'0px',
+      height:'30px',
+      backgroundColor:'#2FBCD3',
+
+      display:'block',
+      transition: 'display 0.7s',
+      borderRadius:'5px',
+      '&:focus': {
+        display:'none',
+        transition: 'display 0.7s',
+
+      }
+    },
+
+
+
+  },
 });
 
 class Messages extends React.Component {
@@ -173,7 +194,8 @@ class Messages extends React.Component {
       chatrooms: [],
       tabs: false,
       alfredReservations: [],
-      userReservations: []
+      userReservations: [],
+      isAlfred: false,
     };
   }
 
@@ -183,6 +205,9 @@ class Messages extends React.Component {
     );
     axios.get("http://localhost:3122/myAlfred/api/users/current").then(res => {
       this.setState({ idEmitter: res.data._id,currentUser: res.data });
+      if(res.data.is_alfred === true){
+        this.setState({isAlfred: true})
+      }
     });
     axios
       .get(url + "myAlfred/api/booking/alfredBooking")
@@ -315,10 +340,10 @@ class Messages extends React.Component {
                       className={classes.shopbar}
                       style={{ textAlign: "center" }}
                   >
-                    <Link href={"/myShop/performances"}>
+                    <Link href={"/performances/revenus"}>
                       <a style={{ textDecoration: "none" }}>
                         <p style={{ color: "white", cursor: "pointer" }}>
-                          Performance
+                          Performances
                         </p>
                       </a>
                     </Link>
@@ -337,6 +362,7 @@ class Messages extends React.Component {
                 xs={3}
                 style={{ height: "100vh", borderRight: "1px #8281813b solid" }}
               >
+                <div className={classes.trigger}></div>
                 <Grid
                   container
                   style={{
@@ -367,6 +393,16 @@ class Messages extends React.Component {
                       </div>
                     </Link>
                   </Grid>
+                  <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
+                    <Link href={'/reservations/messages'}>
+                      <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                        <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                          <img src={'../static/speech-bubble-2.svg'} alt={'user'} width={27} height={70} style={{marginRight: 4}}/>
+
+                        </a>
+                      </div>
+                    </Link>
+                  </Grid>
 
                   <Grid
                     item
@@ -386,6 +422,16 @@ class Messages extends React.Component {
                       >
                         <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
                           Messages non lus
+                        </a>
+                      </div>
+                    </Link>
+                  </Grid>
+                  <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
+                    <Link href={'/reservations/newMessages'}>
+                      <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                        <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                          <img src={'../static/email.svg'} alt={'user'} width={27} height={70} style={{marginRight: 4}}/>
+
                         </a>
                       </div>
                     </Link>
@@ -730,8 +776,8 @@ class Messages extends React.Component {
             </Link>
           </Grid>
 
-          <Grid item xs={2} style={{ textAlign: "center" }}>
-            <Link href={"/myShop/messages"}>
+          <Grid item xs={2} style={{ textAlign: "center",borderBottom: "3px solid #4fbdd7" }}>
+            <Link href={"/reservations/messages"}>
               <a style={{ textDecoration: "none" }}>
                 <p style={{ color: "white", cursor: "pointer" }}>
                   <img
@@ -748,9 +794,9 @@ class Messages extends React.Component {
           <Grid
             item
             xs={2}
-            style={{ textAlign: "center", borderBottom: "3px solid #4fbdd7" }}
+            style={{ textAlign: "center" }}
           >
-            <Link href={"/myShop/mesreservations"}>
+            <Link href={"/reservations/allReservations"}>
               <a style={{ textDecoration: "none" }}>
                 <p style={{ color: "white", cursor: "pointer" }}>
                   <img
@@ -780,7 +826,7 @@ class Messages extends React.Component {
           </Grid>
 
           <Grid item xs={2} style={{ textAlign: "center" }}>
-            <Link href={"/myShop/performances"}>
+            <Link href={"/performances/revenus"}>
               <a style={{ textDecoration: "none" }}>
                 <p style={{ color: "white", cursor: "pointer" }}>
                   <img
