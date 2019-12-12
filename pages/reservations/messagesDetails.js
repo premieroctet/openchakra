@@ -139,7 +139,7 @@ class MessagesDetails extends React.Component {
           roomData: res.data,
           oldMessagesDisplay: res.data.messages,
           oldMessages: res.data.messages
-        });
+        }, () => this.grantNotificationPermission());
         this.socket = io("http://localhost:3000");
         this.socket.on("connect", socket => {
           this.socket.emit("room", this.state.roomData.name);
@@ -158,7 +158,7 @@ class MessagesDetails extends React.Component {
           this.setState({
             messages,
             oldMessages
-          });
+          }, () => this.showNotification(data));
         });
       })
       .catch(err => console.log(err));
@@ -199,6 +199,45 @@ class MessagesDetails extends React.Component {
       bookingId: booking
     };
   }
+
+  showNotification = message => {
+    console.log('works notif');
+    console.log(message);
+    const { userData } = this.state;
+    console.log(userData);
+    if (message.idsender !== userData._id) {
+      console.log('works notif into condition');
+      const title = message.user;
+      const body = message.content;
+
+      new Notification(title, { body });
+    }
+  };
+
+  grantNotificationPermission = () => {
+    if (!('Notification' in window)) {
+      alert('Votre navigateur ne supporte pas les notifications');
+      return;
+    }
+
+    if (Notification.permission === 'granted') {
+      new Notification('You are already subscribed to message notifications');
+      return;
+    }
+
+    if (
+      Notification.permission !== 'denied' ||
+      Notification.permission === 'default'
+    ) {
+      Notification.requestPermission().then(result => {
+        if (result === 'granted') {
+          new Notification(
+            'Vous recevrez des notifications pour cette conversation'
+          );
+        }
+      });
+    }
+  };
 
   render() {
     const { classes } = this.props;
