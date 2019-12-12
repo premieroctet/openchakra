@@ -12,7 +12,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Footer from '../hoc/Layout/Footer/Footer';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from "@material-ui/core/Radio";
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 
@@ -60,6 +62,11 @@ const styles = theme => ({
             }
         }
 
+    },
+    respright:{
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        }
     }
 
     ,toggle: {
@@ -170,38 +177,58 @@ class paymentChoice extends React.Component {
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Choix du mode de paiement</h1>
                             </Grid>
                             <Grid container>
-                                {cards.length ?
+                                <Grid item xs={12} md={6}>
+                                        {cards.length ?
 
-                                    cards.map((e,index) => (
-                                        <Grid container key={index}>
-                                            <p>{e.Alias}</p>
-                                            <Radio
-                                                checked={this.state.id_card === e.Id}
-                                                onChange={()=> this.setState({id_card:e.Id,cardSelected: !this.state.cardSelected})}
-                                                value={e.Id}
-                                                color={'primary'}
-                                                name="radio-button-demo"
-                                                inputProps={{ 'aria-label': 'A' }}
-                                            />
-                                        </Grid>
-                                    )) :
+                                                    <Grid container>
+                                                        <Grid item md={4} sm={4} xs={8}>
+                                                    {cards.map((e,index) => (<Tooltip title={e.Alias} placement="right"><Grid container style={{width: '30%'}}><Grid item xs={3}><img style={{width: '17px', height: '17px', marginTop: '17px'}} src="../static/creditcard.svg" alt="creditcard"/></Grid><Grid item xs={9}><p key={index}> carte {index + 1}</p></Grid></Grid></Tooltip>))}
+                                                            <p>Autre</p>
+                                                        </Grid>
+                                                        <Grid item md={2} sm={2} xs={4}>
+                                                            <RadioGroup>
+                                                                {cards.map((e,index) => (<Radio
+                                                                    key={index}
+                                                                    checked={this.state.id_card === e.Id}
+                                                                    onChange={()=> this.setState({id_card:e.Id,cardSelected: !this.state.cardSelected})}
+                                                                    value={e.Id}
+                                                                    color={'primary'}
+                                                                    name="radio-button-demo"
+                                                                    inputProps={{'aria-label': 'A'}}
+                                                                    label="yes"
+                                                                />))}
+                                                                <Radio
+                                                                    onChange={()=> this.setState({cardSelected: false})}
+                                                                    color={'primary'}
+                                                                    value={"other"}
+                                                                    name="radio-button-demo1"
+                                                                    inputProps={{'aria-label': 'B'}}
+                                                                />
+                                                            </RadioGroup>
+                                                        </Grid>
+                                                    </Grid>
+                                             :
 
-                                    <p>Aucun mode de paiement enregistré</p>
+                                            <p>Aucun mode de paiement enregistré</p>
 
-                                }
+                                        }
+                                        {this.state.cardSelected ?
+                                            <Button onClick={()=>this.payDirect()} type="submit" variant="contained" style={{color: 'white', marginBottom: '30px'}} color="primary">
+                                                Payer en 1 clic
+                                            </Button>
+                                            :
+                                            <Button onClick={()=>this.pay()} type="submit" variant="contained" style={{color: 'white', marginBottom: '30px'}} color="primary">
+                                                Payer
+                                            </Button>
+                                        }
+                                </Grid>
+                                <Grid item xs={6} className={classes.respright}>
+                                    <img style={{position: 'sticky', top: 5}} src="../static/resa.svg" alt="beaver"/>
+                                </Grid>
+                                
                             </Grid>
-                            <Grid container>
-                                {this.state.cardSelected ?
-                                    <Button onClick={()=>this.payDirect()} type="submit" variant="contained" style={{color: 'white'}} color="primary">
-                                        Payer en 1 clic
-                                    </Button>
-                                    :
-                                    <Button onClick={()=>this.pay()} type="submit" variant="contained" style={{color: 'white'}} color="primary">
-                                        Payer
-                                    </Button>
-                                }
+                                
 
-                            </Grid>
                         </Grid>
                     </Grid>
                 </Layout>
