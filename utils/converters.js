@@ -81,3 +81,5 @@ const events2availabilities= event => {
   console.log("Computing returning availabilities "+JSON.stringify(AVAIL));
   return [AVAIL];
 };
+
+export {availabilities2events, events2availabilities};
