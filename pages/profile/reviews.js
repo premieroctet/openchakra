@@ -186,7 +186,7 @@ class reviews extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                                             <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
                                                 Modifier le profil
                                             </a>
@@ -197,7 +197,7 @@ class reviews extends React.Component {
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} width={27} style={{marginRight: 4}}/>
+                                            <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
 
                                             </a>
