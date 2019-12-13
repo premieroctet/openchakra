@@ -126,7 +126,7 @@ class Evaluations extends React.Component {
         return (
             <Fragment>
                 <Layout>
-                    <Grid container className={classes.bigContainer}>
+                    <Grid container className={classes.bigContainer} >
                         <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
                             <Grid item xs={1} className={classes.shopbar}></Grid>
                             <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
@@ -259,10 +259,10 @@ class Evaluations extends React.Component {
                             </Grid>
                         </Grid>
 
-                        <Grid item xs={9} style={{paddingLeft: 20, borderLeft: '#9f919178 solid 1px', marginBottom: '20px'}}>
+                        <Grid item xs={9} style={{paddingLeft: 20, borderLeft: '#9f919178 solid 1px', marginBottom: '20px',minHeight:530}}>
                             <Grid container style={{marginBottom:20}}>
                                 <Grid item xs={12}>
-                                    <h1 style={{color: '#7E7E7E',fontWeight: '100'}}>Mes Notations</h1>
+                                    <h1 style={{color: '#7E7E7E',fontWeight: '100'}}>Mes évaluations</h1>
                                 </Grid>
                             </Grid>
 

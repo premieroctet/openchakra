@@ -209,26 +209,6 @@ class Cancel extends React.Component {
                   <div>
                     <Grid container>
                       <Grid item xs={12} style={{}}>
-                        <p style={{ fontSize: "20px" }}>
-                          Si vous annulez cette réservation, vous ferez l’objet de
-                          pénalités : 
-                          <br></br>
-                          - Le retrait du statut de super Alfred
-                          pendant 1 an 
-                          <br></br>
-                          - Un commentaire public montrant que vous
-                          avez annulé 
-                          <br></br>
-                          - Le paiement des frais d’annulation ou le
-                          blocage des périodes de la prestation sur votre
-                          calendrier.
-                        </p>
-                        <p style={{ fontSize: "20px" }}>
-                          Si vous avez accepté la réservation instantanée, vous
-                          n’aurez pas ces pénalités si vous avez annulé moins de 3
-                          prestations dans l’année.
-                        </p>
-
                         <br></br>
                       </Grid>
                     </Grid>
@@ -252,7 +232,7 @@ class Cancel extends React.Component {
                           textTransform: "capitalize"
                         }}
                       >
-                        Maintenir ma réservation
+                        Maintenir
                       </Button>
                     </Link>
                   </Grid>
@@ -275,7 +255,7 @@ class Cancel extends React.Component {
                         }}
                         onClick={() => this.changeStatus('Annulée')}
                       >
-                        Annuler ma réservation
+                        Annuler
                       </Button>
                     </Link>
                   </Grid>

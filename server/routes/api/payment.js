@@ -18,6 +18,9 @@ const api = new mangopay({
 
 });
 
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
+
 
 router.get('/test',(req, res) => res.json({msg: 'Payment Works!'}) );
 
@@ -125,7 +128,7 @@ router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
                             Currency: "EUR",
                             Amount: fees
                         },
-                        ReturnURL: 'http://localhost:3122/paymentSuccess',
+                        ReturnURL: url+'paymentSuccess',
                         CardType: "CB_VISA_MASTERCARD",
                         PaymentType: "CARD",
                         ExecutionType: "WEB",
@@ -161,13 +164,13 @@ router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res
                             Currency: "EUR",
                             Amount: fees
                         },
-                        ReturnURL: 'http://localhost:3122/paymentSuccess',
+                        ReturnURL: url+'paymentDirectSuccess',
                         CardType: "CB_VISA_MASTERCARD",
                         PaymentType: "CARD",
                         ExecutionType: "DIRECT",
                         CreditedWalletId: wallet_id,
                         CardId: id_card,
-                        SecureModeReturnURL: 'http://localhost:3122/paymentSuccess'
+                        SecureModeReturnURL: url+'paymentDirectSuccess'
                     })
                         .then(data => {
                             res.json(data)

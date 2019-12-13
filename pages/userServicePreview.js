@@ -227,7 +227,6 @@ class userServices extends React.Component {
       .get(url + `myAlfred/api/serviceUser/${id}`)
       .then(res => {
         let serviceUser = res.data;
-        console.log(serviceUser);
         this.setState({ serviceUser: serviceUser });
         let prestations = serviceUser.prestations;
         let arrayFilter = [];
@@ -248,7 +247,7 @@ class userServices extends React.Component {
         const lat = serviceUser.service_address.gps.lat;
         const lng = serviceUser.service_address.gps.lng;
         this.setState({ position: [lat, lng] });
-        console.log(this.state.serviceUser);
+
 
         axios
           .get(
@@ -256,7 +255,6 @@ class userServices extends React.Component {
               `myAlfred/api/availability/userAvailabilities/${this.state.serviceUser.user._id}`
           )
           .then(res => {
-            console.log(this.state.serviceUser.user._id);
             let availability = res.data;
             this.setState({ availability: availability });
 
@@ -1279,7 +1277,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -1354,7 +1352,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -1429,7 +1427,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -1504,7 +1502,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -1579,7 +1577,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -1654,7 +1652,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -1729,7 +1727,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -1837,7 +1835,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -1912,7 +1910,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -1987,7 +1985,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -2062,7 +2060,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -2137,7 +2135,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -2212,7 +2210,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
@@ -2287,7 +2285,7 @@ class userServices extends React.Component {
                                               f.services.map(g => {
                                                 if (
                                                   g.value ===
-                                                  this.props.service_id
+                                                  this.props.service_id || g.value === service._id
                                                 ) {
                                                   return (
                                                     <React.Fragment>
