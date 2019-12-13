@@ -312,7 +312,7 @@ class MessagesDetails extends React.Component {
                 <Grid item xs={3} md={1} style={{ marginRight: "5%" }}>
                   <Typography
                     style={{
-                      fontSize: "1.3rem",
+                      fontSize: "1.1rem",
                       marginBottom: "15px",
                       color: bookingObj === null ? null : bookingObj.status === 'Confirmée' ? "#419F41" : bookingObj.status === 'En attente de confirmation' || bookingObj.status === "Demande d'infos" ? "#F87280" : bookingObj.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"
                     }}
@@ -678,7 +678,8 @@ class MessagesDetails extends React.Component {
                     boxShadow: "0px 0px 6px rgba(128, 128, 128, 0.29)",
                     height: "60px",
                     alignSelf: "center",
-                    margin: "10px 5%"
+                    margin: "10px 5%",
+                    padding: "20px"
                   }}
                   type="text"
                   value={this.state.message}
