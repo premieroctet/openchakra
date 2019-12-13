@@ -69,21 +69,6 @@ const MenuProps = {
   },
 };
 
-
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
-
 const styles = theme => ({
   modalContainer:{
     position: 'absolute',
@@ -130,7 +115,7 @@ class Schedule extends React.Component {
       servicesSelected:[],
       isCheckedRecurence: false,
       dayLayoutAlgorithm: 'no-overlap',
-      selectedDateEndRecu:'',
+      selectedDateEndRecu: null,
       isDateActiveLu:'default',
       isDateActiveMa:'default',
       isDateActiveMe:'default',
@@ -138,16 +123,21 @@ class Schedule extends React.Component {
       isDateActiveVe:'default',
       isDateActiveSa:'default',
       isDateActiveDi:'default',
-      buttonSendState: true
+      buttonSendState: true,
+      services: [
+        'Service A',
+        'Service B',
+        'Service C',
+      ]
     };
   }
 
   onChange = e => {
     this.setState({servicesSelected: e.target.value });
-    if(this.state.servicesSelected > 1){
-      this.setState({buttonSendState: false})
+    if(e.target.value.length === 0){
+      this.setState({buttonSendState: true});
     }else{
-      this.setState({buttonSendState: true})
+      this.setState({buttonSendState: false});
     }
   };
 
@@ -155,11 +145,10 @@ class Schedule extends React.Component {
       this.setState({
           selectedDateStart: start,
           selectedDateEnd: end,
-          selectedTimeStart: start.toISOString().slice(11, 16),
-          selectedTimeEnd: end.toISOString().slice(11, 16),
+          selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
+          selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
         isAddModalOpen: !this.state.isAddModalOpen,
       });
-      console.log(this.state.selectedTimeStart)
   };
 
   toggleEditModal = event => {
@@ -173,6 +162,13 @@ class Schedule extends React.Component {
 
    handleChange = panel => (event, isExpanded) => {
      this.setState({isExpanded: isExpanded ? panel : false});
+     if(isExpanded && this.state.selectedDateEndRecu === null){
+       this.setState({buttonSendState: true})
+     }else if (!isExpanded  && this.state.selectedDateEndRecu !== null){
+       this.setState({selectedDateEndRecu: null})
+     }else if (!isExpanded  && this.state.selectedDateEndRecu === null){
+       this.setState({buttonSendState: false})
+     }
    };
 
    handleDateStartChange = date => {
@@ -184,13 +180,19 @@ class Schedule extends React.Component {
   };
 
   handleDateEndChangeRecu = date => {
-    this.setState({ selectedDateEndRecu: date })
+    this.setState({ selectedDateEndRecu: date });
+    if(this.state.isExpanded === "panel1" && this.state.selectedDateEndRecu !== null ) {
+    this.setState({ buttonSendState: false })
+   }
   };
 
   onSubmit = e => {
     e.preventDefault();
   };
 
+  closeModal = () =>{
+    this.setState({isAddModalOpen: false})
+  };
 
   render() {
     const { classes } = this.props;
@@ -229,7 +231,7 @@ class Schedule extends React.Component {
             timeout: 500,
           }}
           open={this.state.isAddModalOpen}
-          onClose={this.toggleAddModal}
+          onClose={this.closeModal}
         >
           <Fade in={this.state.isAddModalOpen}>
             <Grid container className={classes.modalContainer}>
@@ -241,7 +243,7 @@ class Schedule extends React.Component {
               <Grid container>
                 <form onSubmit={this.onSubmit}>
                   <FormControl style={{width:"100%"}}>
-                    <InputLabel id="demo-simple-select-label">Service(s)</InputLabel>
+                    <InputLabel id="demo-simple-select-label">Sélectionnez au moins un service</InputLabel>
                     <Select
                       labelId="demo-mutiple-checkbox-label"
                       id="demo-mutiple-checkbox"
@@ -252,7 +254,7 @@ class Schedule extends React.Component {
                       onChange={this.onChange}
                       MenuProps={MenuProps}
                     >
-                      {names.map(name => (
+                      {this.state.services.map(name => (
                         <MenuItem key={name} value={name}>
                           <Checkbox checked={this.state.servicesSelected.indexOf(name) > -1} />
                           <ListItemText primary={name} />
@@ -445,20 +447,8 @@ class Schedule extends React.Component {
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
                   </Grid>
-                  {/*<Grid> // TODO pour plus tard
-                  <TextField
-                    style={{width:'100%'}}
-                    id="outlined-multiline-static"
-                    label="Description"
-                    multiline
-                    rows="4"
-                    defaultValue="Ajouter une description"
-                    margin="normal"
-                    variant="outlined"
-                  />
-                  </Grid>*/}
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
-                    <Button type="submit" disabled={this.state.servicesSelected} variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer
+                    <Button type="submit" disabled={this.state.buttonSendState} variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer
                     </Button>
                     <Button variant="contained" className={classes.textFieldButton} color={'secondary'}>Annuler
                     </Button>
