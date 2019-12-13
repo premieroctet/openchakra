@@ -3026,7 +3026,7 @@ class userServices extends React.Component {
                           </p>
                           </Grid>
                           <Grid item xs={6}>
-                            <Button variant={"contained"} color={"secondary"} style={{color:'white', cursor: 'pointer'}} onClick={() => this.reservationPage()}>
+                            <Button disabled={this.state.user._id === serviceUser.user._id} variant={"contained"} color={"secondary"} style={{color:'white', cursor: 'pointer'}} onClick={() => this.reservationPage()}>
                               Réserver
                             </Button>
                           </Grid>
