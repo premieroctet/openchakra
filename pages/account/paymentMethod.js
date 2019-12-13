@@ -418,7 +418,7 @@ class paymentMethod extends React.Component {
                                                     preview
                                                     cvc={'XXX'}
                                                     />
-                                                <button className={classes.buttondelt} onClick={()=>this.setState({deletedial: true, Idtempo: e.Id})} type="submit" variant="contained" style={{}} color="secondary">
+                                                <button className={classes.buttondelt} onClick={()=>this.setState({deletedial: true, Idtempo: e.Id})} type="submit" variant="contained" style={{lineHeight: 1}} color="secondary">
                                                     x
                                                 </button>
                                             </Grid>: null}
