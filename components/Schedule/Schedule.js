@@ -138,19 +138,28 @@ class Schedule extends React.Component {
       isDateActiveVe:'default',
       isDateActiveSa:'default',
       isDateActiveDi:'default',
+      buttonSendState: true
     };
   }
 
   onChange = e => {
-    this.setState({service: e.target.value });
+    this.setState({servicesSelected: e.target.value });
+    if(this.state.servicesSelected > 1){
+      this.setState({buttonSendState: false})
+    }else{
+      this.setState({buttonSendState: true})
+    }
   };
 
   toggleAddModal =  ({ start, end })  => {
       this.setState({
           selectedDateStart: start,
           selectedDateEnd: end,
+          selectedTimeStart: start.toISOString().slice(11, 16),
+          selectedTimeEnd: end.toISOString().slice(11, 16),
         isAddModalOpen: !this.state.isAddModalOpen,
       });
+      console.log(this.state.selectedTimeStart)
   };
 
   toggleEditModal = event => {
@@ -172,6 +181,10 @@ class Schedule extends React.Component {
 
   handleDateEndChange = date => {
     this.setState({selectedDateEnd: date});
+  };
+
+  handleDateEndChangeRecu = date => {
+    this.setState({ selectedDateEndRecu: date })
   };
 
   onSubmit = e => {
@@ -266,6 +279,7 @@ class Schedule extends React.Component {
                           id="time"
                           label="Heure de début"
                           type="time"
+                          defaultValue={this.state.selectedTimeStart}
                           className={classes.textField}
                           InputLabelProps={{
                             shrink: true,
@@ -292,6 +306,7 @@ class Schedule extends React.Component {
                           label="Heure de fin"
                           type="time"
                           className={classes.textField}
+                          defaultValue={this.state.selectedTimeEnd}
                           InputLabelProps={{
                             shrink: true,
                           }}
@@ -328,7 +343,12 @@ class Schedule extends React.Component {
                               }
                             }
                           } />
-                          <Chip clickable label="Ma" color={this.state.isDateActiveMa} onClick={() => {
+                          <Chip
+                            clickable
+                            label="Ma"
+                            className={this.state.isDateActiveMa === "secondary" ? classes.textFieldChips : classes.test}
+                            color={this.state.isDateActiveMa}
+                            onClick={() => {
                             if(this.state.isDateActiveMa === "secondary"){
                               this.setState({isDateActiveMa: ""});
                             }else{
@@ -336,7 +356,12 @@ class Schedule extends React.Component {
                             }
                           }
                           } />
-                          <Chip clickable label="Me" color={this.state.isDateActiveMe} onClick={() => {
+                          <Chip
+                            clickable
+                            label="Me"
+                            className={this.state.isDateActiveMe === "secondary" ? classes.textFieldChips : classes.test}
+                            color={this.state.isDateActiveMe}
+                            onClick={() => {
                             if(this.state.isDateActiveMe === "secondary"){
                               this.setState({isDateActiveMe: ""});
                             }else{
@@ -344,7 +369,12 @@ class Schedule extends React.Component {
                             }
                           }
                           } />
-                          <Chip clickable label="Je" color={this.state.isDateActiveJe} onClick={() => {
+                          <Chip
+                            clickable
+                            label="Je"
+                            className={this.state.isDateActiveJe === "secondary" ? classes.textFieldChips : classes.test}
+                            color={this.state.isDateActiveJe}
+                            onClick={() => {
                             if(this.state.isDateActiveJe === "secondary"){
                               this.setState({isDateActiveJe: ""});
                             }else{
@@ -352,7 +382,12 @@ class Schedule extends React.Component {
                             }
                           }
                           } />
-                          <Chip clickable label="Ve" color={this.state.isDateActiveVe} onClick={() => {
+                          <Chip
+                            clickable
+                            label="Ve"
+                            className={this.state.isDateActiveVe === "secondary" ? classes.textFieldChips : classes.test}
+                            color={this.state.isDateActiveVe}
+                            onClick={() => {
                             if(this.state.isDateActiveVe === "secondary"){
                               this.setState({isDateActiveVe: ""});
                             }else{
@@ -360,7 +395,12 @@ class Schedule extends React.Component {
                             }
                           }
                           } />
-                          <Chip clickable label="Sa" color={this.state.isDateActiveSa} onClick={() => {
+                          <Chip
+                            clickable
+                            label="Sa"
+                            className={this.state.isDateActiveSa === "secondary" ? classes.textFieldChips : classes.test}
+                            color={this.state.isDateActiveSa}
+                            onClick={() => {
                             if(this.state.isDateActiveSa === "secondary"){
                               this.setState({isDateActiveSa: ""});
                             }else{
@@ -372,6 +412,7 @@ class Schedule extends React.Component {
                             clickable
                             label="Di"
                             color={this.state.isDateActiveDi}
+                            className={this.state.isDateActiveDi === "secondary" ? classes.textFieldChips : classes.test}
                             onClick={() => {
                             if(this.state.isDateActiveDi === "secondary"){
                               this.setState({isDateActiveDi: ""});
@@ -391,11 +432,12 @@ class Schedule extends React.Component {
                                 id="date-picker-inline"
                                 label="Date de fin"
                                 value={this.state.selectedDateEndRecu}
-                                onChange={() => {
-                                  this.setState({ selectedDateEndRecu: this.state.selectedDateEndRecu });
-                                }}
+                                onChange={this.handleDateEndChangeRecu}
                                 KeyboardButtonProps={{
                                   'aria-label': 'change date',
+                                }}
+                                InputLabelProps={{
+                                  shrink: true,
                                 }}
                               />
                          </MuiPickersUtilsProvider>
@@ -416,7 +458,7 @@ class Schedule extends React.Component {
                   />
                   </Grid>*/}
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
-                    <Button type="submit" variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer
+                    <Button type="submit" disabled={this.state.servicesSelected} variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer
                     </Button>
                     <Button variant="contained" className={classes.textFieldButton} color={'secondary'}>Annuler
                     </Button>
