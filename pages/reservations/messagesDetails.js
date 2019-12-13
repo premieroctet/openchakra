@@ -5,6 +5,7 @@ import axios from "axios";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Layout from "../../hoc/Layout/Layout";
+import Footer from '../../hoc/Layout/Footer/Footer';
 import moment from "moment";
 import { withStyles } from "@material-ui/core/styles";
 import getDistance from "geolib/es/getDistance";
@@ -702,6 +703,7 @@ class MessagesDetails extends React.Component {
             </Grid>
           </Grid>
         </Layout>
+        <Footer/>
       </Fragment>
     );
   }
