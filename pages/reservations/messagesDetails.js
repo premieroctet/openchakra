@@ -394,7 +394,7 @@ class MessagesDetails extends React.Component {
                 id="chat"
                 className={classes.scrollbar}
                 style={{
-                  height: "58vh",
+                  height: "57vh",
                   overflow: "auto",
                   overflowX: "hidden"
                 }}
