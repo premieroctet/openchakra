@@ -60,11 +60,20 @@ class addPhone extends React.Component {
         super(props);
         this.state = {
             phone: '',
+            phoneOk: false,
         };
     }
 
-    onChange = e => {
+    async onChange(e) {
+
         this.setState({ [e.target.name]: e.target.value });
+        if( await this.state.phone.length > 8){
+            this.setState({phoneOk:true})
+        } else {
+            this.setState({phoneOk:false})
+        }
+
+
     };
 
     onSubmit = e => {
@@ -119,11 +128,11 @@ class addPhone extends React.Component {
                                                 name="phone"
                                                 variant="outlined"
                                                 value={this.state.address}
-                                                onChange={this.onChange}
+                                                onChange={(e)=>this.onChange(e)}
                                             />
                                         </Grid>
                                         <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                            <Button type="submit" variant="contained" color="primary" style={{ width: '100%', color: 'white' }}>
+                                            <Button disabled={!this.state.phoneOk} type="submit" variant="contained" color="primary" style={{ width: '100%', color: 'white' }}>
                                                 Je confirme mon numéro
                                             </Button>
                                         </Grid>
