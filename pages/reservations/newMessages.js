@@ -202,7 +202,7 @@ class NewMessages extends React.Component {
     axios.defaults.headers.common["Authorization"] = localStorage.getItem(
       "token"
     );
-    axios.get("http://localhost:3122/myAlfred/api/users/current").then(res => {
+    axios.get(url+"myAlfred/api/users/current").then(res => {
       this.setState({ idEmitter: res.data._id });
       if(res.data.is_alfred === true){
         this.setState({isAlfred: true})
@@ -218,7 +218,7 @@ class NewMessages extends React.Component {
       })
     axios
       .get(
-        "http://localhost:3122/myAlfred/api/users/users/5d384b49d06f1a2b5c1addd4"
+        url+"myAlfred/api/users/users/5d384b49d06f1a2b5c1addd4"
       )
       .then(res => {
         console.log(res.data);
@@ -226,7 +226,7 @@ class NewMessages extends React.Component {
       });
 
     axios
-      .get("http://localhost:3122/myAlfred/api/chatRooms/userChatRooms")
+      .get(url+"myAlfred/api/chatRooms/userChatRooms")
       .then(res => {
         this.setState({ chatrooms: res.data });
         console.log(res.data);
@@ -360,7 +360,7 @@ class NewMessages extends React.Component {
                 className={classes.toggle}
                 item
                 xs={3}
-                style={{ height: "100vh", borderRight: "1px #8281813b solid" }}
+                style={{ height: "100vh" }}
               >
                 <div className={classes.trigger}></div>
                 <Grid

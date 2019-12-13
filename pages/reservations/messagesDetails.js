@@ -301,24 +301,27 @@ class MessagesDetails extends React.Component {
               </Grid>
             </Grid>
             <Grid item className={classes.Rightcontent} xs={12} sm={12} md={7}>
-              <Grid
-                container
-                className={classes.mobilerow}
-                style={{
-                  marginTop: "80px",
-                  boxShadow: "0 5px 5px -5px rgba(51, 51, 51, 0.29)"
-                }}
-              >
-                <Grid item xs={3} md={1} style={{ marginRight: "5%" }}>
-                  <Typography
+              <Grid container style={{marginTop: "80px",}}>
+                <Typography
                     style={{
                       fontSize: "1.1rem",
                       marginBottom: "15px",
                       color: bookingObj === null ? null : bookingObj.status === 'Confirmée' ? "#419F41" : bookingObj.status === 'En attente de confirmation' || bookingObj.status === "Demande d'infos" ? "#F87280" : bookingObj.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"
                     }}
-                  >
-                    {bookingObj === null ? null : bookingObj.status}
-                  </Typography>
+                >
+                  {bookingObj === null ? null : bookingObj.status}
+                </Typography>
+              </Grid>
+              <Grid
+                container
+                className={classes.mobilerow}
+                style={{
+                  boxShadow: "0 5px 5px -5px rgba(51, 51, 51, 0.29)"
+                }}
+              >
+                <Grid item xs={3} md={1} style={{ marginRight: "5%" }}>
+
+
                   <img
                     src={`../../${
                       bookingObj === null
@@ -337,7 +340,7 @@ class MessagesDetails extends React.Component {
                   ></img>
                 </Grid>
                 <Grid item xs={5} md={7}>
-                  <Typography style={{ marginTop: "60px", fontSize: "1.3rem" }}>
+                  <Typography style={{ marginTop: "25px", fontSize: "1.3rem" }}>
                     {bookingObj === null
                         ? null
                         : this.state.userData._id === bookingObj.alfred._id
@@ -354,13 +357,11 @@ class MessagesDetails extends React.Component {
                   </Typography>
                 </Grid>
                 <Grid item xs={1} style={{}}>
-                  <Typography
-                    style={{ fontWeight: "600", paddingTop: "45%" }}
-                  ></Typography>
+
                 </Grid>
                 <Grid item xs={2} style={{}}>
                   <svg
-                    style={{ marginTop: "60px" }}
+                    style={{ marginTop: "25px" }}
                     xmlns="http://www.w3.org/2000/svg"
                     width="25.432"
                     height="36.478"

@@ -338,7 +338,7 @@ class ComingReservations extends React.Component {
                 className={classes.toggle}
                 item
                 xs={3}
-                style={{ height: "100vh", borderRight: "1px #8281813b solid" }}
+                style={{ height: "100vh" }}
               >
                 <div className={classes.trigger}></div>
                 <Grid

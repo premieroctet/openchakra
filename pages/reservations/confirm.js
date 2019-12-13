@@ -789,13 +789,13 @@ class Confirm extends React.Component {
                           )}
 
                           <Grid style={{ marginLeft: "4%" }} container>
-                            <Grid item xs={1}>
+                            <Grid item xs={2}>
                               <img
                                 style={{ width: "15px" }}
                                 src="../../static/stars/star-solid.png"
                               ></img>
                             </Grid>
-                            <Grid item xs={11}>
+                            <Grid item xs={10}>
                               <Typography
                                 style={{
                                   color: "rgb(47, 188, 211)",
@@ -818,13 +818,13 @@ class Confirm extends React.Component {
                               bookingObj.alfred._id ? (
                               bookingObj.user.id_confirmed === true ? (
                                 <>
-                                  <Grid item xs={1}>
+                                  <Grid item xs={2}>
                                     <img
                                       style={{ width: "15px" }}
                                       src="../../static/statut/oui.png"
                                     ></img>
                                   </Grid>
-                                  <Grid item xs={11}>
+                                  <Grid item xs={10}>
                                     <Typography
                                       style={{
                                         fontSize: "0.8rem",
@@ -838,13 +838,13 @@ class Confirm extends React.Component {
                               ) : null
                             ) : bookingObj.alfred.id_confirmed === true ? (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/oui.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -861,13 +861,13 @@ class Confirm extends React.Component {
                             currentUser === null ? null : currentUser._id ===
                               bookingObj.alfred._id ? (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/calendar.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -883,13 +883,13 @@ class Confirm extends React.Component {
                               </>
                             ) : (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/calendar.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -909,13 +909,13 @@ class Confirm extends React.Component {
                                 .is_alfred === true &&
                               bookingObj.user.is_alfred === true ? (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/beaver.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -932,13 +932,13 @@ class Confirm extends React.Component {
                             currentUser === null ? null : currentUser._id ===
                               bookingObj.alfred._id ? (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/chat.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -958,13 +958,13 @@ class Confirm extends React.Component {
                               </>
                             ) : (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/chat.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
