@@ -1147,10 +1147,10 @@ class searchLogin extends React.Component {
                                     {this.state.addressSelected === 'all' ?
 
                                         categories.map(e => (
-                                            <Grid container style={{padding: '25px'}}>
+                                            <Grid container style={{paddingLeft: '25px'}}>
                                                 {this.state[e.label] !==0 ?
                                                     <Grid item xs={12}>
-                                                        <h4 style={{marginLeft: '15px'}}>{e.label}</h4>
+                                                        <h4 style={{marginLeft:15}}>{e.label}</h4>
                                                     </Grid>
                                                     : null}
 
@@ -1342,11 +1342,11 @@ class searchLogin extends React.Component {
                                             <Grid container>
                                                 {this.state[e.label] !== 0 ?
                                                     <Grid item xs={12}>
-                                                        <h4 style={{marginLeft: '15px'}}>{e.label}</h4>
+                                                        <h4 style={{marginLeft:15}}>{e.label}</h4>
                                                     </Grid>
                                                     : null}
 
-                                                <Grid container style={{padding: '25px'}}>
+                                                <Grid container style={{paddingLeft: '25px'}}>
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
@@ -1560,12 +1560,13 @@ class searchLogin extends React.Component {
 
                                     this.state.categoryFinal.map((e, index) => (
                                         <Grid key={index} container>
-                                            <Grid item xs={12}>
                                                 {this.state[e.label+'Final'] !== 0 ?
-                                                    <h4 style={{marginLeft: '15px'}}>{e.label}</h4>
+                                            <Grid item xs={12}>
+                                                    <h4 style={{marginLeft:15}}>{e.label}</h4>
+                                            </Grid>
                                                     : null}
 
-                                                <Grid container style={{padding: '25px'}}>
+                                                <Grid container style={{paddingLeft: '25px'}}>
                                                 {this.state.finalServiceUser.map(s => {
 
                                                     if (s.service.category === e._id) {
@@ -1747,19 +1748,20 @@ class searchLogin extends React.Component {
                                                     : null}
 
                                             </Grid>
-                                        </Grid>
+
                                     ))
 
                                     :
 
                                     this.state.categoryFinal.map((e, index) => (
                                         <Grid key={index} container>
-                                            <Grid item xs={12}>
                                                 {this.state[e.label+'Final'] !== 0 ?
-                                                    <h4>{e.label}</h4>
+                                            <Grid item xs={12}>
+                                                    <h4 style={{marginLeft:15}}>{e.label}</h4>
+                                            </Grid>
                                                     : null}
 
-                                                <Grid container style={{padding: '25px'}}>
+                                                <Grid container style={{paddingLeft: '25px'}}>
                                                 {this.state.finalServiceUser.map(s => {
 
                                                     if (s.service.category === e._id) {
@@ -1950,7 +1952,7 @@ class searchLogin extends React.Component {
                                                     <hr style={{width: '10%', margin: 'auto', border:'none', backgroundColor: '#2FBCD3', height: '10px', marginBottom: '80px', marginTop: '55px'}} />
                                                     : null}
 
-                                            </Grid>
+
                                         </Grid>
                                     ))
 
