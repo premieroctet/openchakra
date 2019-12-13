@@ -1,5 +1,17 @@
 import { RRule, RRuleSet, rrulestr } from 'rrule'
 
+const AVAIL={
+	"period" : { "active" : false, "month_begin" : null, "month_end" : null },
+	"monday" : {
+		"event" : [ { "all_services" : true, "begin" : "2019-11-27T09:00:00.257Z", "end" : "2019-11-27T11:00:00.257Z", "services" : [ ] } ] },
+	"tuesday" : { "event" : [ { "all_services" : true, "begin" : "2019-10-30T07:00:00.257Z", "end" : "2019-10-30T10:00:00.257Z", "services" : [ ] } ] },
+	"wednesday" : { "event" : [ ] },
+	"thursday" : { "event" : [ ] },
+	"friday" : { "event" : [ ] },
+	"saturday" : { "event" : [ ] },
+	"sunday" : { "event" : [ ] },
+}
+
 const DAY_MAPPING={
         'monday': RRule.MO,
         'tuesday': RRule.TU,
@@ -63,4 +75,11 @@ const availabilities2events= avails => {
   return totalresult;
 };
 
-export default availabilities2events;
+
+const events2availabilities= event => {
+  console.log("Event:"+JSON.stringify(event));
+  console.log("Computing returning availabilities "+JSON.stringify(AVAIL));
+  return [AVAIL];
+};
+
+export {availabilities2events, events2availabilities};

@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Schedule from '../../components/Schedule/Schedule';
-import availabilities2events from '../../utils/converters';
+import {availabilities2events, events2availabilities} from '../../utils/converters';
 
 moment.locale('fr');
 
