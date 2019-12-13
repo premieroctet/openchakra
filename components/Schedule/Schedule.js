@@ -116,6 +116,7 @@ class Schedule extends React.Component {
       isCheckedRecurence: false,
       dayLayoutAlgorithm: 'no-overlap',
       selectedDateEndRecu: null,
+      isDayActive: new Set([1,2,3,4,5,6,7]),
       isDateActiveLu:'default',
       isDateActiveMa:'default',
       isDateActiveMe:'default',
