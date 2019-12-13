@@ -625,13 +625,13 @@ class ConfirmPayement extends React.Component {
                           )}
 
                           <Grid style={{ marginLeft: "4%" }} container>
-                            <Grid item xs={1}>
+                            <Grid item xs={2}>
                               <img
                                 style={{ width: "15px" }}
                                 src="../../static/stars/star-solid.png"
                               ></img>
                             </Grid>
-                            <Grid item xs={11}>
+                            <Grid item xs={10}>
                               <Typography
                                 style={{
                                   color: "rgb(47, 188, 211)",
@@ -646,13 +646,13 @@ class ConfirmPayement extends React.Component {
 
                             {user.id_confirmed === true ? (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/oui.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -665,13 +665,13 @@ class ConfirmPayement extends React.Component {
                               </>
                             ) : null}
 
-                            <Grid item xs={1}>
+                            <Grid item xs={2}>
                               <img
                                 style={{ width: "15px" }}
                                 src="../../static/statut/calendar.png"
                               ></img>
                             </Grid>
-                            <Grid item xs={11}>
+                            <Grid item xs={10}>
                               <Typography
                                 style={{
                                   fontSize: "0.8rem",
@@ -688,13 +688,13 @@ class ConfirmPayement extends React.Component {
                             {user.is_alfred === true &&
                             currentUser.is_alfred === true ? (
                               <>
-                                <Grid item xs={1}>
+                                <Grid item xs={2}>
                                   <img
                                     style={{ width: "15px" }}
                                     src="../../static/statut/beaver.png"
                                   ></img>
                                 </Grid>
-                                <Grid item xs={11}>
+                                <Grid item xs={10}>
                                   <Typography
                                     style={{
                                       fontSize: "0.8rem",
@@ -707,13 +707,13 @@ class ConfirmPayement extends React.Component {
                               </>
                             ) : null}
 
-                            <Grid item xs={1}>
+                            <Grid item xs={2}>
                               <img
                                 style={{ width: "15px" }}
                                 src="../../static/statut/chat.png"
                               ></img>
                             </Grid>
-                            <Grid item xs={11}>
+                            <Grid item xs={10}>
                               <Typography
                                 style={{
                                   fontSize: "0.8rem",
