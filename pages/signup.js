@@ -147,7 +147,7 @@ class signup extends React.Component {
 
   onChangePassword = e => {
     this.setState({ [e.target.name]: e.target.value });
-    if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")){
+    if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})")){
       this.setState({password: e.target.value});
       this.setState({check2: true});
 
@@ -249,7 +249,7 @@ class signup extends React.Component {
                               onChange={this.onChange}
                               error={errors.email}
                           />
-                          <em>{errors.email}</em>
+                          <em style={{color:'red'}}>{errors.email}</em>
                         </Grid>
                         <Grid item style={{width: '48%', marginRight: 20}}>
                           <TextField
@@ -265,7 +265,7 @@ class signup extends React.Component {
                               onChange={this.onChange}
                               error={errors.firstname}
                           />
-                          <em>{errors.firstname}</em>
+                          <em style={{color:'red'}}>{errors.firstname}</em>
                         </Grid>
                         <Grid item style={{width: '48%'}}>
                           <TextField
@@ -280,7 +280,7 @@ class signup extends React.Component {
                               onChange={this.onChange}
                               error={errors.name}
                           />
-                          <em>{errors.name}</em>
+                          <em style={{color:'red'}}>{errors.name}</em>
                         </Grid>
                       </Grid>
                       <Grid container style={{marginTop: 15}}>
@@ -317,7 +317,7 @@ class signup extends React.Component {
                               onChange={this.onChange}
                               error={errors.address}
                           />
-                          <em>{errors.address}</em>
+                          <em style={{color:'red'}}>{errors.address}</em>
                         </Grid>
                         <Grid item style={{width: '30%', marginRight: 20}}>
                           <TextField
@@ -332,7 +332,7 @@ class signup extends React.Component {
                               onChange={this.onChange}
                               error={errors.zip_code}
                           />
-                          <em>{errors.zip_code}</em>
+                          <em style={{color:'red'}}>{errors.zip_code}</em>
                         </Grid>
                         <Grid item style={{width: '66%'}}>
                           <TextField
@@ -347,7 +347,7 @@ class signup extends React.Component {
                               onChange={this.onChange}
                               error={errors.city}
                           />
-                          <em>{errors.city}</em>
+                          <em style={{color:'red'}}>{errors.city}</em>
                         </Grid>
                         <Grid item className={classes.country}>
                           <TextField
@@ -361,7 +361,7 @@ class signup extends React.Component {
                               variant="outlined"
                               error={errors.country}
                           />
-                          <em>{errors.country}</em>
+                          <em style={{color:'red'}}>{errors.country}</em>
                         </Grid>
                         <Grid item style={{width: '100%'}}>
                           <TextField
@@ -376,7 +376,7 @@ class signup extends React.Component {
                               onChange={this.onChangePassword}
                               error={errors.password}
                               helperText="8 caractères minimum dont
-                                    une majuscule, une minuscule, un chiffre et un caractère spécial (@,&,$,*,#,%,!)"
+                                    une majuscule, une minuscule et un chiffre"
                           />
                         </Grid>
                         {!this.state.check2 ? <em style={{color:'red'}}>Mot de passe invalide</em> : null}
@@ -415,7 +415,7 @@ class signup extends React.Component {
                         />
 
                       </Grid>
-                          {this.state.errors.birthday != null ? <em>{this.state.errors.birthday}</em> : null}
+                          <em style={{color:'red'}}>{this.state.errors.birthday}</em>
 
 
 

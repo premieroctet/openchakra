@@ -177,7 +177,7 @@ class myAvailabilities extends React.Component {
               <Layout>
                   <Grid container className={classes.bigContainer}>
                       <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
-                          <Grid item xs={1} className={classes.shopbar}></Grid>
+                          <Grid item xs={1} className={classes.shopbar}/>
                           <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
                               <Link href={'/myShop/services'}>
                                   <a style={{textDecoration:'none'}}>
@@ -224,11 +224,11 @@ class myAvailabilities extends React.Component {
                       </Grid>
                   </Grid>
                   <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
-                      <Grid item xs={12} md={7}>
+                      <Grid style={{width:'100%'}}>
                           <Schedule events={this.state.events}/>
                       </Grid>
-                      <Grid className={classes.hidenimg} item md={2} style={{backgroundImage:'url(../../static/background/disponibilité.svg)', backgroundPosition:'center',backgroundSize:'contain', backgroundRepeat: 'no-repeat', }}>
-                      </Grid>
+                      {/*<Grid className={classes.hidenimg} item md={2} style={{backgroundImage:'url(../../static/background/disponibilité.svg)', backgroundPosition:'center',backgroundSize:'contain', backgroundRepeat: 'no-repeat', }}>
+                      </Grid>*/}
                   </Grid>
               </Layout>
               <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
