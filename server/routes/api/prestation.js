@@ -9,7 +9,9 @@ router.get('/test',(req, res) => res.json({msg: 'Prestation Works!'}) );
 // @Route GET /myAlfred/api/prestation/all
 // Get all prestations
 router.get('/all',(req,res) => {
-    Prestation.find().sort({'label': 1})
+    Prestation.find()
+        .collation({ locale: "fr" })
+        .sort({'label': 1})
         .populate('category')
         .populate('job')
         .populate('service')
