@@ -124,14 +124,14 @@ class security extends React.Component {
 
     onChangeNewPassword = e => {
         this.setState({ [e.target.name]: e.target.value });
-        if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")){
+        if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})")){
             this.setState({newPassword: e.target.value});
         }
     };
 
    onChangeNewPassword2 = e => {
         this.setState({ [e.target.name]: e.target.value });
-        if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})") && this.state.newPassword === this.state.newPassword2){
+        if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})") && this.state.newPassword === this.state.newPassword2){
             this.setState({newPassword2: e.target.value});
             this.setState({check: false});
             this.setState({checkbuttonvalidate : true});
@@ -265,7 +265,7 @@ class security extends React.Component {
                                 </Grid>
                                 <Grid item xs={7}>
                                 <p>
-                                Pour la sécurité de votre compte, votre mot de passe doit contenir 8 caractères minimum dont une majuscule, une minuscule, un chiffre et un caractère spécial suivant :@,&,$,*,#,%,!
+                                Pour la sécurité de votre compte, votre mot de passe doit contenir 8 caractères minimum dont une majuscule, une minuscule et un chiffre
                                 </p>
                                 </Grid>
                                 <Grid style={{display:"flex"}}>
