@@ -1986,7 +1986,7 @@ class addService extends React.Component {
                       </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
-                      <Schedule/>
+                      <Schedule events={[]}/>
                     </Wizard.Page>
                   </Wizard>
                 </div>
