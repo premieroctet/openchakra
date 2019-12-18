@@ -27,6 +27,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
+import {events2availabilities} from '../../utils/converters';
 
 
 
@@ -113,7 +114,6 @@ class Schedule extends React.Component {
       sAddModalOpen: false,
       isEditModalOpen: false,
       servicesSelected:[],
-      isCheckedRecurence: false,
       dayLayoutAlgorithm: 'no-overlap',
       selectedDateEndRecu: null,
       isDayActive: new Set([1,2,3,4,5,6,7]),
@@ -125,11 +125,7 @@ class Schedule extends React.Component {
       isDateActiveSa:'default',
       isDateActiveDi:'default',
       buttonSendState: true,
-      services: [
-        'Service A',
-        'Service B',
-        'Service C',
-      ]
+      services: this.props.services || [],
     };
   }
 
@@ -189,6 +185,8 @@ class Schedule extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
+    console.log("State:"+JSON.stringify(this.state));
+    events2availabilities(this.state);
   };
 
   closeModal = () =>{
@@ -256,7 +254,7 @@ class Schedule extends React.Component {
                       onChange={this.onChange}
                       MenuProps={MenuProps}
                     >
-                      {this.state.services.map(name => (
+                      {this.props.services.map(name => (
                         <MenuItem key={name} value={name}>
                           <Checkbox checked={this.state.servicesSelected.indexOf(name) > -1} />
                           <ListItemText primary={name} />
@@ -452,7 +450,7 @@ class Schedule extends React.Component {
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
                     <Button type="submit" disabled={this.state.buttonSendState} variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer
                     </Button>
-                    <Button variant="contained" className={classes.textFieldButton} color={'secondary'}>Annuler
+                    <Button type="cancel" variant="contained" className={classes.textFieldButton} color={'secondary'}>Annuler
                     </Button>
                   </Grid>
                 </form>

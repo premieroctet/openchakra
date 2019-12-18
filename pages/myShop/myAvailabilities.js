@@ -109,6 +109,7 @@ class myAvailabilities extends React.Component {
             user: {},
             shop: {},
             events: [],
+            services: [],
         };
     }
 
@@ -147,6 +148,19 @@ class myAvailabilities extends React.Component {
 
                     })
                     .catch(err => console.log(err));
+
+                   axios
+                        .get(url+'myAlfred/api/serviceUser/currentAlfred')
+                        .then(res => {
+                            let services = res.data.map(d => d['service']['label']);   
+                            this.setState({services:services});
+                            //this.setState({serviceUser: serviceUser});
+                        })
+                        .catch(err =>
+                            console.log(err)
+                        );
+
+
               }
           })
           .catch(err => {
@@ -225,7 +239,7 @@ class myAvailabilities extends React.Component {
                   </Grid>
                   <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
                       <Grid style={{width:'100%'}}>
-                          <Schedule events={this.state.events}/>
+                          <Schedule events={this.state.events} services={this.state.services}/>
                       </Grid>
                       {/*<Grid className={classes.hidenimg} item md={2} style={{backgroundImage:'url(../../static/background/disponibilité.svg)', backgroundPosition:'center',backgroundSize:'contain', backgroundRepeat: 'no-repeat', }}>
                       </Grid>*/}
