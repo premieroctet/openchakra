@@ -73,7 +73,7 @@ const MenuProps = {
 const styles = theme => ({
   modalContainer:{
     position: 'absolute',
-    width: 600,
+    width: 700,
     backgroundColor: 'white',
     border: '2px solid #4fbdd7',
     padding: '2%',
@@ -104,6 +104,8 @@ const styles = theme => ({
   }
 });
 
+const DAYS='Lu Ma Me Je Ve Sa Di'.split(' ');
+
 class Schedule extends React.Component {
   constructor(props) {
     super(props);
@@ -116,17 +118,34 @@ class Schedule extends React.Component {
       servicesSelected:[],
       dayLayoutAlgorithm: 'no-overlap',
       selectedDateEndRecu: null,
-      isDateActiveLu:'default',
-      isDateActiveMa:'default',
-      isDateActiveMe:'default',
-      isDateActiveJe:'default',
-      isDateActiveVe:'default',
-      isDateActiveSa:'default',
-      isDateActiveDi:'default',
+      // Days (1=>7)
+      recurrDays: new Set(),
       buttonSendState: true,
       services: this.props.services || [],
     };
   }
+
+  toggleRecurrDay(item) {
+    this.state.recurrDays.has(item) ? this.removeRecurrDay(item) : this.addRecurrDay(item);
+  }
+
+  addRecurrDay(item) {
+    this.setState(({ recurrDays }) => ({
+      recurrDays: new Set(recurrDays).add(item)
+    }));
+  }
+
+  removeRecurrDay(item) {
+    this.setState(({ recurrDays }) => {
+      const newChecked = new Set(recurrDays);
+      newChecked.delete(item);
+
+      return {
+       recurrDays: newChecked
+      };
+    });
+  }
+
 
   onChange = e => {
     this.setState({servicesSelected: e.target.value });
@@ -144,9 +163,9 @@ class Schedule extends React.Component {
           selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
           selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
           isExpanded: false,
-        isAddModalOpen: !this.state.isAddModalOpen,
+          isAddModalOpen: !this.state.isAddModalOpen,
+          recurrDays: new Set(),
       });
-      'Lu Ma Me Je Ve Sa Di'.split(' ').forEach( d => this.setState({['isDateActive'+d]: 'default'}));
   };
 
   toggleEditModal = event => {
@@ -240,7 +259,7 @@ class Schedule extends React.Component {
             <Grid container className={classes.modalContainer}>
               <Grid container>
                   <Grid>
-                    <h2>Nouvel Event</h2>
+                    <h2>Nouvelle disponibilité</h2>
                   </Grid>
               </Grid>
               <Grid container>
@@ -292,6 +311,7 @@ class Schedule extends React.Component {
                           inputProps={{
                             step: 300, // 5 min
                           }}
+                          onChange={e => this.setState({selectedTimeStart: e.target.value})}
                         />
                         <KeyboardDatePicker
                           disableToolbar
@@ -318,6 +338,7 @@ class Schedule extends React.Component {
                           inputProps={{
                             step: 300, // 5 min
                           }}
+                          onChange={e => this.setState({selectedTimeEnd: e.target.value})}
                         />
                       </MuiPickersUtilsProvider>
                     </Grid>
@@ -334,20 +355,15 @@ class Schedule extends React.Component {
                         />
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails style={{alignItems: 'end'}}>
-                        <Grid container style={{width : '50%'}}>
-                          {'Lu Ma Me Je Ve Sa Di'.split(' ').map( d => {
-                            let stateName='isDateActive'+d;
+                        <Grid container style={{width : '60%'}}>
+                          {[0,1,2,3,4,5,6].map( d => {
                             return (<Chip
                               clickable
-                              label={d}
-                              color={this.state[stateName]}
-                              className={this.state[stateName]=== "secondary" ? classes.textFieldChips : classes.test}
+                              label={DAYS[d]}
+                              color={this.state.recurrDays.has(d) ? 'secondary' :  ''}
+                              className={this.state.recurrDays.has(d) ? classes.textFieldChips : classes.test}
                               onClick={() => {
-                                if(this.state[stateName] === "secondary"){
-                                  this.setState({[stateName]: ""});
-                                }else{
-                                  this.setState({[stateName]: "secondary"});
-                                }
+                                  this.toggleRecurrDay(d);
                               }
                             } />)
                           })}

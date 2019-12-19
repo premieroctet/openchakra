@@ -12,15 +12,7 @@ const AVAIL={
 	"sunday" : { "event" : [ ] },
 }
 
-const EV_AVAIL_DAY_MAPPING={
-  'isDateActiveLu': 'monday',
-  'isDateActiveMa': 'tuesday',
-  'isDateActiveMe': 'wednesday',
-  'isDateActiveJe': 'thursday',
-  'isDateActiveVe': 'friday',
-  'isDateActiveSa': 'saturday',
-  'isDateActiveDi': 'sunday',
-}
+const EV_AVAIL_DAY_MAPPING='monday tuesday wednesday thursday friday saturday sunday'.split(' ');
 
 const DAY_MAPPING={
         'monday': RRule.MO,
@@ -81,20 +73,20 @@ const availabilities2events= avails => {
 
 
 const events2availabilities= event => {
-  console.log("Received event:"+JSON.stringify(event, null, 2));
+  console.log("Event:"+JSON.stringify(event, null, 2));
   let avail = {}
+
   let startDate=new Date(event.selectedDateStart);
   let endDate=new Date(event.selectedDateEnd);
-  let recurrent = event.isExpanded!==false;
+  startDate.setHours(...event.selectedTimeStart.split(':').map(v=>parseInt(v)));
+  endDate.setHours(...event.selectedTimeEnd.split(':').map(v=>parseInt(v)));
+
+  let recurrent = event.recurrDays.size > 0;
   const inner_event = { 'begin': startDate, 'end': endDate, all_services : true }
-  Object.entries(EV_AVAIL_DAY_MAPPING).forEach( item => {
-    console.log(item);
-    console.log(event[item[0]]);
-    if (event[item[0]]=='secondary') {
-      avail[item[1]]={'event':[inner_event]};
-    }
+  EV_AVAIL_DAY_MAPPING.forEach( (item, index) => {
+    avail[item] = event.recurrDays.has(index)? {'event':[inner_event]} : {};
   })  
-  console.log("Generated availability:"+JSON.stringify(avail)); 
+  console.log("Generated availability:"+JSON.stringify(avail, null, 2));
 };
 
 export {availabilities2events, events2availabilities};
