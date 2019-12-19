@@ -85,13 +85,16 @@ const events2availabilities= event => {
   let avail = {}
   let startDate=new Date(event.selectedDateStart);
   let endDate=new Date(event.selectedDateEnd);
+  let recurrent = event.isExpanded!==false;
   const inner_event = { 'begin': startDate, 'end': endDate, all_services : true }
-  EV_AVAIL_DAY_MAPPING.forEach( (ed, avday) => {
-    if (event[ed]=='secondary') {
-      avail[avday].event=[inner_event];
+  Object.entries(EV_AVAIL_DAY_MAPPING).forEach( item => {
+    console.log(item);
+    console.log(event[item[0]]);
+    if (event[item[0]]=='secondary') {
+      avail[item[1]]={'event':[inner_event]};
     }
   })  
-  console.log("Event:"+JSON.stringify(avail));
+  console.log("Generated availability:"+JSON.stringify(avail)); 
 };
 
 export {availabilities2events, events2availabilities};

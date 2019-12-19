@@ -152,7 +152,7 @@ class myAvailabilities extends React.Component {
                    axios
                         .get(url+'myAlfred/api/serviceUser/currentAlfred')
                         .then(res => {
-                            let services = res.data.map(d => d['service']['label']);   
+                            let services = ['Tous les services', ...new Set(res.data.map(d => d['service']['label']))];
                             this.setState({services:services});
                             //this.setState({serviceUser: serviceUser});
                         })
