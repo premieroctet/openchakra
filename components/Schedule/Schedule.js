@@ -129,7 +129,9 @@ class Schedule extends React.Component {
         'Service A',
         'Service B',
         'Service C',
-      ]
+      ],
+      selectedDateStart: null,
+      selectedDateEnd: null
     };
   }
 
@@ -173,11 +175,14 @@ class Schedule extends React.Component {
    };
 
    handleDateStartChange = date => {
-    this.setState({selectedDateStart: date});
-  };
+     this.setState({selectedDateStart: date});
+    this.setState(this.selectedDateStart = date);
+
+   };
 
   handleDateEndChange = date => {
     this.setState({selectedDateEnd: date});
+    this.setState(this.selectedDateEnd = date);
   };
 
   handleDateEndChangeRecu = date => {
