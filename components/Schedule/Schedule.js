@@ -198,11 +198,19 @@ class Schedule extends React.Component {
   };
 
   handleTimeStartChange = time =>{
+    let hours = time.target.value.substring(0,2);
+    let minutes = time.target.value.substring(3,5);
     this.setState({selectedTimeStart: time.target.value});
+    this.state.selectedDateStart.setHours(hours);
+    this.state.selectedDateStart.setMinutes(minutes);
   };
 
   handleTimeEndChange = time =>{
+    let hours = time.target.value.substring(0,2);
+    let minutes = time.target.value.substring(3,5);
     this.setState({selectedTimeEnd: time.target.value});
+    this.state.selectedDateEnd.setHours(hours);
+    this.state.selectedDateEnd.setMinutes(minutes);
   };
 
   handleDateEndChangeRecu = date => {
