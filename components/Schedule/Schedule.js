@@ -120,9 +120,21 @@ class Schedule extends React.Component {
       selectedDateEndRecu: null,
       // Days (1=>7)
       recurrDays: new Set(),
-      buttonSendState: true,
       services: this.props.services || [],
     };
+  }
+
+  /**
+    On peut envoyer si service(s) sélectionné(s), date/heure début et fin saisis
+    et, si récurrence, au moins un jour sélectionné
+  */
+  isButtonSendEnabled() {
+    let enabled=this.state.servicesSelected.length > 0;
+    enabled = enabled && this.state.selectedDateStart && this.state.selectedTimeStart && this.state.selectedDateEnd && this.state.selectedTimeEnd;
+    enabled = enabled && (!this.state.isExpanded || this.state.recurrDays.size>0);
+    console.log("Services selected:"+JSON.stringify(this.state.servicesSelected));
+    console.log("Send enabled:"+enabled);
+    return enabled;
   }
 
   toggleRecurrDay(item) {
@@ -149,11 +161,6 @@ class Schedule extends React.Component {
 
   onChange = e => {
     this.setState({servicesSelected: e.target.value });
-    if(e.target.value.length === 0){
-      this.setState({buttonSendState: true});
-    }else{
-      this.setState({buttonSendState: false});
-    }
   };
 
   toggleAddModal =  ({ start, end })  => {
@@ -179,13 +186,6 @@ class Schedule extends React.Component {
 
    handleChange = panel => (event, isExpanded) => {
      this.setState({isExpanded: isExpanded ? panel : false});
-     if(isExpanded && this.state.selectedDateEndRecu === null){
-       this.setState({buttonSendState: true})
-     }else if (!isExpanded  && this.state.selectedDateEndRecu !== null){
-       this.setState({selectedDateEndRecu: null})
-     }else if (!isExpanded  && this.state.selectedDateEndRecu === null){
-       this.setState({buttonSendState: false})
-     }
    };
 
    handleDateStartChange = date => {
@@ -208,7 +208,6 @@ class Schedule extends React.Component {
   handleDateEndChangeRecu = date => {
     this.setState({ selectedDateEndRecu: date });
     if(this.state.isExpanded === "panel1" && this.state.selectedDateEndRecu !== null ) {
-    this.setState({ buttonSendState: false })
    }
   };
 
@@ -398,7 +397,7 @@ class Schedule extends React.Component {
                     </ExpansionPanel>
                   </Grid>
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
-                    <Button type="submit" disabled={this.state.buttonSendState} variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer
+                    <Button type="submit" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer
                     </Button>
                     <Button type="cancel" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler
                     </Button>
