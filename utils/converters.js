@@ -12,6 +12,8 @@ const AVAIL={
 	"sunday" : { "event" : [ ] },
 }
 
+const EV_AVAIL_DAY_MAPPING='monday tuesday wednesday thursday friday saturday sunday'.split(' ');
+
 const DAY_MAPPING={
         'monday': RRule.MO,
         'tuesday': RRule.TU,
@@ -23,7 +25,6 @@ const DAY_MAPPING={
 }
 
 const computeRecurrency = (period, event, dayOfWeek) => {
-  console.log("ComputeRecurrency:"+JSON.stringify([period, event, dayOfWeek]));
   if (period.active===false) {
     return [event];
   }
@@ -41,7 +42,6 @@ const computeRecurrency = (period, event, dayOfWeek) => {
     end.setHours(event.end.getHours(), event.end.getMinutes(),0);
     let cp = {...event, start:start, end:end}
     all_events.push(cp)
-    console.log('Added event:'+JSON.stringify(cp));
   })
   return all_events;
 }
@@ -50,7 +50,6 @@ const avail2event = availab => {
   let result=[];
   "monday tuesday wednesday thursday friday saturday sunday".split(' ').forEach(day => {
     let evts = availab[day]['event'];
-    console.log("evts:"+JSON.stringify(evts));
     evts.forEach(e => {
       let title = e.all_services ? "Tous services" : e.services.map( s => s.label).join('\n');
       let res= {
@@ -63,23 +62,31 @@ const avail2event = availab => {
       result=result.concat(re);
     })
   })
-  console.log("Returning "+JSON.stringify(result));
   return result;
 }
 
 const availabilities2events= avails => {
   let totalresult = []
-  console.log("Availabilities:"+JSON.stringify(avails));
   avails.forEach( avail => totalresult=totalresult.concat(avail2event(avail)));
-  console.log("Computing returning events "+JSON.stringify(totalresult));
   return totalresult;
 };
 
 
 const events2availabilities= event => {
-  console.log("Event:"+JSON.stringify(event));
-  console.log("Computing returning availabilities "+JSON.stringify(AVAIL));
-  return [AVAIL];
+  console.log("Event:"+JSON.stringify(event, null, 2));
+  let avail = {}
+
+  let startDate=new Date(event.selectedDateStart);
+  let endDate=new Date(event.selectedDateEnd);
+  startDate.setHours(...event.selectedTimeStart.split(':').map(v=>parseInt(v)));
+  endDate.setHours(...event.selectedTimeEnd.split(':').map(v=>parseInt(v)));
+
+  let recurrent = event.recurrDays.size > 0;
+  const inner_event = { 'begin': startDate, 'end': endDate, all_services : true }
+  EV_AVAIL_DAY_MAPPING.forEach( (item, index) => {
+    avail[item] = event.recurrDays.has(index)? {'event':[inner_event]} : {};
+  })  
+  console.log("Generated availability:"+JSON.stringify(avail, null, 2));
 };
 
 export {availabilities2events, events2availabilities};
