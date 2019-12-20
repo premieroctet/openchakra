@@ -130,8 +130,6 @@ class Schedule extends React.Component {
         'Service B',
         'Service C',
       ],
-      selectedDateStart: null,
-      selectedDateEnd: null
     };
   }
 
@@ -176,13 +174,19 @@ class Schedule extends React.Component {
 
    handleDateStartChange = date => {
      this.setState({selectedDateStart: date});
-    this.setState(this.selectedDateStart = date);
 
    };
 
   handleDateEndChange = date => {
     this.setState({selectedDateEnd: date});
-    this.setState(this.selectedDateEnd = date);
+  };
+
+  handleTimeStartChange = time =>{
+    this.setState({selectedTimeStart: time.target.value});
+  };
+
+  handleTimeEndChange = time =>{
+    this.setState({selectedTimeEnd: time.target.value});
   };
 
   handleDateEndChangeRecu = date => {
@@ -289,6 +293,7 @@ class Schedule extends React.Component {
                           label="Heure de début"
                           type="time"
                           defaultValue={this.state.selectedTimeStart}
+                          onChange={this.handleTimeStartChange}
                           className={classes.textField}
                           InputLabelProps={{
                             shrink: true,
@@ -316,6 +321,7 @@ class Schedule extends React.Component {
                           type="time"
                           className={classes.textField}
                           defaultValue={this.state.selectedTimeEnd}
+                          onChange={this.handleTimeEndChange}
                           InputLabelProps={{
                             shrink: true,
                           }}
