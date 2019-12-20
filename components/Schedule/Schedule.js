@@ -318,7 +318,6 @@ class Schedule extends React.Component {
                           inputProps={{
                             step: 300, // 5 min
                           }}
-                          onChange={e => this.setState({selectedTimeStart: e.target.value})}
                         />
                         <KeyboardDatePicker
                           disableToolbar
@@ -346,7 +345,6 @@ class Schedule extends React.Component {
                           inputProps={{
                             step: 300, // 5 min
                           }}
-                          onChange={e => this.setState({selectedTimeEnd: e.target.value})}
                         />
                       </MuiPickersUtilsProvider>
                     </Grid>
