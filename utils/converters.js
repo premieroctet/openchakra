@@ -1,16 +1,5 @@
 import { RRule, RRuleSet, rrulestr } from 'rrule'
-
-const AVAIL={
-	"period" : { "active" : false, "month_begin" : null, "month_end" : null },
-	"monday" : {
-		"event" : [ { "all_services" : true, "begin" : "2019-11-27T09:00:00.257Z", "end" : "2019-11-27T11:00:00.257Z", "services" : [ ] } ] },
-	"tuesday" : { "event" : [ { "all_services" : true, "begin" : "2019-10-30T07:00:00.257Z", "end" : "2019-10-30T10:00:00.257Z", "services" : [ ] } ] },
-	"wednesday" : { "event" : [ ] },
-	"thursday" : { "event" : [ ] },
-	"friday" : { "event" : [ ] },
-	"saturday" : { "event" : [ ] },
-	"sunday" : { "event" : [ ] },
-}
+import {ALL_SERVICES} from './consts.js';
 
 const EV_AVAIL_DAY_MAPPING='monday tuesday wednesday thursday friday saturday sunday'.split(' ');
 
@@ -62,6 +51,7 @@ const avail2event = availab => {
       result=result.concat(re);
     })
   })
+  console.log("Converted avail "+JSON.stringify(availab)+" to events "+JSON.stringify(result));
   return result;
 }
 
@@ -73,20 +63,27 @@ const availabilities2events= avails => {
 
 
 const events2availabilities= event => {
-  console.log("Event:"+JSON.stringify(event, null, 2));
+ // console.log("Event:"+JSON.stringify(event, null, 2));
   let avail = {}
 
   let startDate=new Date(event.selectedDateStart);
   let endDate=new Date(event.selectedDateEnd);
-  startDate.setHours(...event.selectedTimeStart.split(':').map(v=>parseInt(v)));
-  endDate.setHours(...event.selectedTimeEnd.split(':').map(v=>parseInt(v)));
 
   let recurrent = event.recurrDays.size > 0;
-  const inner_event = { 'begin': startDate, 'end': endDate, all_services : true }
+  let selDay=(startDate.getDay()+6)%7;
+  let all_services = event.servicesSelected.indexOf(ALL_SERVICES)>-1;
+  let services=[]
+  if (!all_services) {
+    services=event.servicesSelected.map(s => ({ label:s[0], value:s[1]}));
+  } 
+  
+  const inner_event = { 'begin': startDate, 'end': endDate, services:services, all_services : all_services }
   EV_AVAIL_DAY_MAPPING.forEach( (item, index) => {
-    avail[item] = event.recurrDays.has(index)? {'event':[inner_event]} : {};
+    let include = recurrent ? event.recurrDays.has(index) : index==selDay;
+    avail[item] = include ? {'event':[inner_event]} : {};
   })  
   console.log("Generated availability:"+JSON.stringify(avail, null, 2));
+  return avail;
 };
 
 export {availabilities2events, events2availabilities};

@@ -457,6 +457,8 @@ class Wizard extends React.Component {
             return pc.serviceLabel
         });
 
+        console.log("Services:"+JSON.stringify(this.state.values, null, 2));
+
         return (
             <Formik
                 initialValues={values}
@@ -2115,7 +2117,7 @@ class Form extends React.Component {
                             </Grid>
                   </Wizard.Page>
                   <Wizard.Page>
-                    <Schedule events={[]}/>
+                    <Schedule events={[]} services={[]} />
                   </Wizard.Page>
                   <Wizard.Page>
                     <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>

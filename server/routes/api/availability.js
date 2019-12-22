@@ -12,28 +12,9 @@ router.get('/test',(req, res) => res.json({msg: 'Availability Works!'}) );
 // access private
 router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
 
-    const fields = {};
-    fields.user = req.user.id;
-    fields.monday = {};
-    fields.tuesday = {};
-    fields.wednesday = {};
-    fields.thursday = {};
-    fields.friday = {};
-    fields.saturday = {};
-    fields.sunday = {};
-    fields.monday.event = req.body.monday_event;
-    fields.tuesday.event = req.body.tuesday_event;
-    fields.wednesday.event = req.body.wednesday_event;
-    fields.thursday.event = req.body.thursday_event;
-    fields.friday.event = req.body.friday_event;
-    fields.saturday.event = req.body.saturday_event;
-    fields.sunday.event = req.body.sunday_event;
-    fields.period = {};
-    fields.period.active = req.body.active;
-    fields.period.month_begin = req.body.month_begin;
-    fields.period.month_end = req.body.month_end;
+    console.log("Adding availability:"+JSON.stringify(req.body));
 
-    const newAvailability = new Availability(fields);
+    const newAvailability = new Availability({user:req.user.id, ...req.body});
     newAvailability.save().then(availability => res.json(availability)).catch(err => console.log(err));
 
 

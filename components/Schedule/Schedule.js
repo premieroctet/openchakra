@@ -28,6 +28,7 @@ import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
 import {events2availabilities} from '../../utils/converters';
+import {ALL_SERVICES} from '../../utils/consts.js';
 
 
 
@@ -120,8 +121,9 @@ class Schedule extends React.Component {
       selectedDateEndRecu: null,
       // Days (1=>7)
       recurrDays: new Set(),
-      services: this.props.services || [],
+      services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
     };
+    this.closeModal = this.closeModal.bind(this);
   }
 
   /**
@@ -132,8 +134,6 @@ class Schedule extends React.Component {
     let enabled=this.state.servicesSelected.length > 0;
     enabled = enabled && this.state.selectedDateStart && this.state.selectedTimeStart && this.state.selectedDateEnd && this.state.selectedTimeEnd;
     enabled = enabled && (!this.state.isExpanded || this.state.recurrDays.size>0);
-    console.log("Services selected:"+JSON.stringify(this.state.servicesSelected));
-    console.log("Send enabled:"+enabled);
     return enabled;
   }
 
@@ -159,8 +159,15 @@ class Schedule extends React.Component {
   }
 
 
-  onChange = e => {
-    this.setState({servicesSelected: e.target.value });
+  onChangeServices = e => {
+    let all_serv = e.target.value.filter(serv => serv[0]==ALL_SERVICES[0]);
+    let contains = all_serv.length>0;
+    if (contains) {
+      this.setState({servicesSelected: [ALL_SERVICES]});
+    }
+    else {
+      this.setState({servicesSelected: e.target.value });
+    } 
   };
 
   toggleAddModal =  ({ start, end })  => {
@@ -221,7 +228,11 @@ class Schedule extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
-    events2availabilities(this.state);
+    let avail=events2availabilities(this.state);
+    console.log("Sending availability:"+JSON.stringify(avail));
+    let res = this.props.cbAvailCreation(avail);
+    console.log("Envoi avail:"+res);
+    this.closeModal();
   };
 
   closeModal = () =>{
@@ -284,15 +295,15 @@ class Schedule extends React.Component {
                       id="demo-mutiple-checkbox"
                       multiple
                       input={<Input />}
-                      renderValue={selected => selected.join(', ')}
+                      renderValue={selected => selected.map(s=>s[0]).join(',')}
                       value={this.state.servicesSelected}
-                      onChange={this.onChange}
+                      onChange={this.onChangeServices}
                       MenuProps={MenuProps}
                     >
-                      {this.props.services.map(name => (
+                      {[ALL_SERVICES, ...this.props.services].map(name => (
                         <MenuItem key={name} value={name}>
                           <Checkbox checked={this.state.servicesSelected.indexOf(name) > -1} />
-                          <ListItemText primary={name} />
+                          <ListItemText primary={name[0]} />
                         </MenuItem>
                       ))}
                     </Select>
@@ -405,10 +416,8 @@ class Schedule extends React.Component {
                     </ExpansionPanel>
                   </Grid>
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
-                    <Button type="submit" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer
-                    </Button>
-                    <Button type="cancel" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler
-                    </Button>
+                    <Button type="submit" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer </Button>
+                    <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler </Button>
                   </Grid>
                 </form>
               </Grid>
