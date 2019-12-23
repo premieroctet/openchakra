@@ -44,7 +44,7 @@ const avail2event = availab => {
     evts.forEach(e => {
       let title = e.all_services ? "Tous services" : e.services.map( s => s.label).join('\n');
       let res= {
-        id: e._id+new Date().getTime(),
+        id: e._id+"-"+new Date().getTime(),
         title: title,
         start: new Date(e.begin),
         end: new Date(e.end),
