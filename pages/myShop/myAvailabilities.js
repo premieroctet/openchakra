@@ -174,7 +174,6 @@ class myAvailabilities extends React.Component {
                             //let services = [...new Set(res.data.map(d => [d['service']['label'],d['service'][_id']]))];
                             let mapServices = new Map();
                             res.data.forEach( d => mapServices.set(d['service']['label'], d['service']['_id']));
-                            console.log("Mapped services:"+JSON.stringify(mapServices));
                             let services = [...mapServices.entries()];
                             this.setState({services:services});
                             //this.setState({serviceUser: serviceUser});

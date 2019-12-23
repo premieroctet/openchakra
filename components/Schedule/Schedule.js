@@ -272,9 +272,7 @@ class Schedule extends React.Component {
 
   onSubmit = e => {
     let avail=events2availabilities(this.state);
-    console.log("Sending availability:"+JSON.stringify(avail));
     let res = this.props.cbAvailCreation(avail);
-    console.log("Envoi avail:"+res);
     this.closeModal();
   };
 
@@ -285,6 +283,7 @@ class Schedule extends React.Component {
   render() {
     const { classes } = this.props;
 
+    console.log("Scheduler.events:"+JSON.stringify(this.props.events));
     return (
       <div style={{height:700}}>
         <Calendar
