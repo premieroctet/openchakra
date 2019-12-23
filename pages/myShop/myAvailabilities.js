@@ -8,7 +8,6 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Schedule from '../../components/Schedule/Schedule';
-import {availabilities2events, events2availabilities} from '../../utils/converters';
 import { toast } from 'react-toastify';
 
 moment.locale('fr');
@@ -109,7 +108,7 @@ class myAvailabilities extends React.Component {
         this.state = {
             user: {},
             shop: {},
-            events: [],
+            availabilities: [],
             services: [],
         };
         this.availabilityCreated = this.availabilityCreated.bind(this);
@@ -120,11 +119,11 @@ class myAvailabilities extends React.Component {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
       axios.post(url+'myAlfred/api/availability/add',avail)
-          .then(() => {
+          .then(res => {
+              console.log("Added:"+JSON.stringify(res.data));
               toast.info('Disponibilité ajoutée avec succès !');
-              let event=availabilities2events([avail])[0];
-              let new_events = [event, ...this.state.events];
-              this.setState({events: new_events});
+              let new_availabilities = [res.data, ...this.state.availabilities];
+              this.setState({availabilities: new_availabilities});
           })
           .catch(err => {
             console.log(err);
@@ -161,9 +160,8 @@ class myAvailabilities extends React.Component {
 
                   axios.get(url+'myAlfred/api/availability/currentAlfred')
                     .then(res => {
-                        let availability = res.data;
-                        let events = availabilities2events(availability);
-                        this.setState({events: events});
+                        let availabilities = res.data;
+                        this.setState({availabilities: availabilities});
 
                     })
                     .catch(err => console.log(err));
@@ -261,7 +259,7 @@ class myAvailabilities extends React.Component {
                   </Grid>
                   <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
                       <Grid style={{width:'100%'}}>
-                          <Schedule events={this.state.events} services={this.state.services} cbAvailabilityCreated={this.availabilityCreated} />
+                          <Schedule availabilities={this.state.availabilities} services={this.state.services} cbAvailabilityCreated={this.availabilityCreated} />
                       </Grid>
                   </Grid>
               </Layout>

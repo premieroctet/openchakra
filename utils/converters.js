@@ -37,7 +37,6 @@ const computeRecurrency = (period, event, dayOfWeek) => {
 }
 
 const avail2event = availab => {
-  console.log("Converting avail to event:"+JSON.stringify(availab));
   let result=[];
   "monday tuesday wednesday thursday friday saturday sunday".split(' ').forEach(day => {
     let evts = availab[day]['event'];
@@ -53,7 +52,6 @@ const avail2event = availab => {
       result=result.concat(re);
     })
   })
-  console.log("Converted avail "+JSON.stringify(availab)+" to events "+JSON.stringify(result));
   return result;
 }
 

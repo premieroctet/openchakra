@@ -27,7 +27,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
-import {events2availabilities} from '../../utils/converters';
+import {availabilities2events, events2availabilities} from '../../utils/converters';
 import {ALL_SERVICES} from '../../utils/consts.js';
 
 
@@ -223,6 +223,7 @@ class Schedule extends React.Component {
           selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
           selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
           isExpanded: false,
+          servicesSelected: [],
           isAddModalOpen: !this.state.isAddModalOpen,
           recurrDays: new Set(),
       });
@@ -287,7 +288,8 @@ class Schedule extends React.Component {
   render() {
     const { classes } = this.props;
 
-    console.log("Scheduler.events:"+JSON.stringify(this.props.events));
+    let events = availabilities2events(this.props.availabilities);
+    console.log("Scheduler.events:"+JSON.stringify(events));
     return (
       <div style={{height:700}}>
         <Calendar
@@ -296,7 +298,7 @@ class Schedule extends React.Component {
           culture='fr-FR'
           localizer={localizer}
           // FIX: use state instead of props
-          events={this.props.events}
+          events={events}
           defaultView={Views.WEEK}
           defaultDate={new Date()}
           onSelectSlot={this.toggleAddModal}

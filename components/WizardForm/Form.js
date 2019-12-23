@@ -993,7 +993,6 @@ class Form extends React.Component {
             for (let i = 1950; i <= actualDate; i++) {
                 dates.push(i);
             }
-        let events=availabilities2events(this.state.availabilities);
 
         return (
             <div className="App" style={{marginTop: 64}}>
@@ -2129,7 +2128,7 @@ class Form extends React.Component {
                   </Wizard.Page>
                   <Wizard.Page>
                     <Field render={(arrayHelpers) => (
-                    <Schedule events={events} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailabilityCreated={this.availabilityCreated} />
+                    <Schedule availabilities={this.state.availabilities} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailabilityCreated={this.availabilityCreated} />
 )} />
                   </Wizard.Page>
                   <Wizard.Page>
