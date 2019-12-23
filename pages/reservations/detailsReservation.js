@@ -2525,7 +2525,7 @@ class DetailsReservation extends React.Component {
                         >
                           <Grid item xs={12}>
                             <Typography style={{ fontSize: "1.4rem" }}>
-                              Matériels Fournis
+                              Matériels fournis
                             </Typography>
                           </Grid>
                           {bookingObj === null ? null : bookingObj.equipments

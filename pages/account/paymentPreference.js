@@ -150,7 +150,7 @@ class paymentPreference extends React.Component {
       axios.post(url+'myAlfred/api/payment/bankAccount',data)
           .then(res => {
               toast.info('RIB ajouté');
-              this.setState({haveAccount: true});
+              //this.setState({haveAccount: true});
 
               this.setState({clickAdd: false});
               axios.get(url+'myAlfred/api/payment/activeAccount')
@@ -173,8 +173,8 @@ class paymentPreference extends React.Component {
         };
         axios.put(url+'myAlfred/api/payment/account',data)
             .then(() => {
-                this.handleClose();
-                this.setState({haveAccount: false})
+                //this.handleClose();
+                this.setState({haveAccount: false,clickDelete: !this.state.clickDelete})
             })
             .catch(() => {
                 toast.error('Un erreur est survenue')
@@ -350,7 +350,7 @@ class paymentPreference extends React.Component {
                                     <Grid item xs={3}>
                                         {haveAccount ?
                                             <h2 style={{color: '#2FBCD3', fontWeight: '100', cursor: 'pointer'}}
-                                                onClick={this.handleClick2}>Supprimer le RIB</h2>
+                                                onClick={()=>this.handleClick2()}>Supprimer le RIB</h2>
                                             :
                                         <h2 style={{color: '#2FBCD3', fontWeight: '100', cursor: 'pointer'}}
                                             onClick={this.handleClick}>Ajouter un RIB</h2>}

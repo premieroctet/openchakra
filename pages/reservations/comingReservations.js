@@ -452,10 +452,10 @@ class ComingReservations extends React.Component {
 
               <Grid className={classes.Rightcontent} item xs={9} sm={9} md={7}>
                 <Typography style={{ fontSize: "2rem", marginTop: "4%" }}>
-                  Mes reservations à venir
+                  Mes réservations à venir
                 </Typography>
                 <Typography style={{ fontSize: "0.8rem", marginBottom: "4%" }}>
-                  vous avez {this.state.comingReservations} réservations à venir
+                  Vous avez {this.state.comingReservations} réservations à venir
                 </Typography>
                 <Grid container className={classes.tabweb}>
                   <Grid item xs={6} style={{ textAlign: "center" }}>

@@ -1040,10 +1040,9 @@ class userServices extends React.Component {
                       marginLeft: "auto",
                       marginRight: "auto",
                       zIndex: 501,
-                      minWidth: "137px",
-                      maxWidth: "137px",
-                      maxHeight: "137px",
-                      minHeight: "137px"
+                      width: "137px",
+                      height: "137px",
+
                     }}
                     alt={"picture"}
                   />

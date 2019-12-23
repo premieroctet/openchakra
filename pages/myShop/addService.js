@@ -579,7 +579,7 @@ class addService extends React.Component {
                                                                         onChange={(event)=>{this.onChange2(event);
                                                                             this.onChangeBilling(z.label,event,z._id)}}
                                                                     >
-                                                                        <MenuItem value="">...</MenuItem>
+
                                                                         {z.billing.map(y => (
                                                                             <MenuItem key={y.value} value={y.label}>{y.label}</MenuItem>
                                                                         ))}
@@ -617,6 +617,7 @@ class addService extends React.Component {
                                         options={
                                             array_option
                                         }
+                                        noOptionsMessage={()=>'Pas d\'options'}
                                         onChange={ opt => {
                                             if(opt != null) {
 

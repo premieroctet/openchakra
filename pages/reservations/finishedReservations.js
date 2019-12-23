@@ -327,8 +327,8 @@ class FinishedReservations extends React.Component {
                             </Grid> 
 
                             <Grid className={classes.Rightcontent} item xs={9} sm={9} md={7}>
-                                <Typography style={{fontSize: '2rem',marginTop: '4%'}}>Mes reservations terminées</Typography>
-                                <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}}>vous avez {this.state.finishedReservations} réservations terminées</Typography>
+                                <Typography style={{fontSize: '2rem',marginTop: '4%'}}>Mes réservations terminées</Typography>
+                                <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}}>Vous avez {this.state.finishedReservations} réservations terminées</Typography>
                                 <Grid container className={classes.tabweb}>
                                     <Grid item xs={6} style={{textAlign:"center"}}>
                                         <div>
