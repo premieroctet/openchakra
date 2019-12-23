@@ -46,10 +46,10 @@ class Footer2 extends Component {
                             <ExpansionPanelDetails>
                                 <Grid container>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
-                                        <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Devenir Alfred</Typography></a></Link>
+                                        <Link href="/becomeAlfredForm"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Devenir Alfred</Typography></a></Link>
                                     </Grid>    
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
-                                        <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Comment ça marche ?</Typography></a></Link>
+                                        <Link href="/faq"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Comment ça marche ?</Typography></a></Link>
                                     </Grid>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>    
                                     <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Nous contacter</Typography></a></Link>
@@ -62,10 +62,10 @@ class Footer2 extends Component {
                         <Typography className={classes.normal} style={{fontSize: '1rem', color: 'white', fontWeight: 'bold'}}>My-Alfred</Typography>
                                 <Grid container className={classes.normal} style={{marginTop: '4%'}}>
                                     <Grid item xs={12}>
-                                        <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Devenir Alfred</Typography></a></Link>
+                                        <Link href="/becomeAlfredForm"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Devenir Alfred</Typography></a></Link>
                                     </Grid>    
                                     <Grid item xs={12}>
-                                        <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Comment ça marche ?</Typography></a></Link>
+                                        <Link href="/faq"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Comment ça marche ?</Typography></a></Link>
                                     </Grid>
                                     <Grid item xs={12}>    
                                     <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Nous contacter</Typography></a></Link>
