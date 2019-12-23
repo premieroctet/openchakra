@@ -252,7 +252,6 @@ class AllReservations extends React.Component {
                             </Grid>
                             :null}
 
-
                         {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
 
@@ -375,7 +374,7 @@ class AllReservations extends React.Component {
                                                 <hr className={classes.trait3}/>
                                             </React.Fragment>}
                                     </Grid>
-                                    <Grid item xs={6} >
+                                    <Grid item xs={6}>
                                         {tabs ?
                                             <React.Fragment>
                                                 <hr className={classes.trait}/>

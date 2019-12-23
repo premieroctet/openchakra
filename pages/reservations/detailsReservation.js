@@ -2580,299 +2580,319 @@ class DetailsReservation extends React.Component {
                                         <Typography style={{fontSize: '1rem', marginTop: '20px'}}>Partagez avec votre Alfred des vidéos et photos de la prestation à réaliser afin qu’il puisse organiser son intervention de la meilleure façon ! </Typography>
                                     </Grid>
                                 </Grid>*/}
-                        <Grid
-                            container
-                            style={{
-                              borderBottom: "1.5px #8281813b solid",
-                              marginTop: "5%",
-                              paddingBottom: "7%"
-                            }}
+                    <Grid
+                      container
+                      style={{
+                        borderBottom: "1.5px #8281813b solid",
+                        marginTop: "5%",
+                        paddingBottom: "7%"
+                      }}
+                    >
+                      <Grid item xs={12}>
+                        <Typography style={{ fontSize: "1.4rem" }}>
+                          Paiement si acceptation
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography style={{ fontSize: "1.4rem" }}>
+                          Total (EUR)
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography style={{ fontSize: "1.4rem" }}>
+                          {bookingObj === null || currentUser === null
+                            ? null
+                            : currentUser._id === bookingObj.alfred._id
+                            ? (bookingObj.amount - bookingObj.fees * 2).toFixed(
+                                2
+                              )
+                            : bookingObj.amount}
+                          €
+                        </Typography>
+                      </Grid>
+                      <ExpansionPanel
+                        defaultExpanded
+                        className={classes.exp1}
+                        style={{
+                          border: "none",
+                          boxShadow: "none",
+                          width: "60%"
+                        }}
+                      >
+                        <ExpansionPanelSummary
+                          expandIcon={
+                            <ExpandMoreIcon style={{ fontSize: 25 }} />
+                          }
                         >
-                          <Grid item xs={12}>
-                            <Typography style={{ fontSize: "1.4rem" }}>
-                              Paiement si acceptation
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Typography style={{ fontSize: "1.4rem" }}>
-                              Total (EUR)
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Typography style={{ fontSize: "1.4rem" }}>
-                              {bookingObj === null || currentUser === null
+                          <Typography
+                            style={{
+                              fontSize: "0.8rem",
+                              color: "rgb(47, 188, 211)"
+                            }}
+                          >
+                            voir détail
+                          </Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <Grid container>
+                            <Grid item xs={4}>
+                              {bookingObj === null
+                                ? null
+                                : bookingObj.prestations.map(prestation => {
+                                    return (
+                                      <Typography
+                                        style={{ fontSize: "1.1rem" }}
+                                      >
+                                        {prestation.name}
+                                      </Typography>
+                                    );
+                                  })}
+                              </Grid>
+                              <Grid item xs={6}>
+                              <Grid
+                                style={{
+                                  height: "25px",
+                                  borderBottom: "1.5px #8281813b solid",
+                                  width: "100%",
+                                  marginTop: "10px"
+                                }}
+                              ></Grid>
+                            </Grid>
+                            <Grid item xs={2}>
+                              {bookingObj === null
+                                ? null
+                                : bookingObj.prestations.map(prestation => {
+                                    return (
+                                      <Typography
+                                        style={{
+                                          fontSize: "1.1rem",
+                                          textAlign: "center"
+                                        }}
+                                      >
+                                        {prestation.value}x{prestation.price}€
+                                      </Typography>
+                                    );
+                                  })}
+                              </Grid>
+
+
+                              <Grid item xs={4}>
+                              <Typography
+                                style={{
+                                  fontSize: "1.1rem",
+                                  marginTop: "10px"
+                                }}
+                              >
+                                Frais du service
+                              </Typography>
+                              </Grid>
+                              <Grid item xs={6}>
+                              <Grid
+                                style={{
+                                  height: "25px",
+                                  borderBottom: "1.5px #8281813b solid",
+                                  width: "100%",
+                                  marginTop: "10px"
+                                }}
+                              ></Grid>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <Typography
+                                style={{
+                                  fontSize: "1.1rem",
+                                  textAlign: "center",
+                                  marginTop: "10px"
+                                }}
+                              >
+                                {bookingObj === null ||
+                                currentUser ===
+                                  null ? null : currentUser._id ===
+                                  bookingObj.alfred._id ? (
+                                  <span>- {bookingObj.fees}</span>
+                                ) : (
+                                  <span>+ {bookingObj.fees}</span>
+                                )}
+                                €
+                              </Typography>
+                              </Grid>
+
+
+                            <Grid item xs={4}>
+                              <Typography
+                                style={{
+                                  fontSize: "1.5rem",
+                                  fontWeight: "bold",
+                                  color: "rgb(47, 188, 211)",
+                                  marginTop: "10px"
+                                }}
+                              >
+                                Revenu total
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Grid
+                                style={{
+                                  height: "25px",
+                                  borderBottom: "1.5px #8281813b solid",
+                                  width: "100%",
+                                  marginTop: "10px"
+                                }}
+                              ></Grid>
+                            </Grid>
+                              <Grid item xs={2}>
+                              <Typography
+                                style={{
+                                  fontSize: "1.5rem",
+                                  fontWeight: "bold",
+                                  color: "rgb(47, 188, 211)",
+                                  textAlign: "center",
+                                  marginTop: "10px"
+                                }}
+                              >
+                                {bookingObj === null || currentUser === null
                                   ? null
                                   : currentUser._id === bookingObj.alfred._id
-                                      ? (bookingObj.amount - bookingObj.fees * 2).toFixed(
-                                          2
-                                      )
-                                      : bookingObj.amount}
-                              €
-                            </Typography>
+                                  ? (
+                                      bookingObj.amount -
+                                      bookingObj.fees * 2
+                                    ).toFixed(2)
+                                  : bookingObj.amount}
+                                €
+                              </Typography>
+                            </Grid>
                           </Grid>
-                          <ExpansionPanel
-                              defaultExpanded
-                              className={classes.exp1}
-                              style={{
-                                border: "none",
-                                boxShadow: "none",
-                                width: "60%"
-                              }}
-                          >
-                            <ExpansionPanelSummary
-                                expandIcon={
-                                  <ExpandMoreIcon style={{ fontSize: 25 }} />
-                                }
-                            >
-                              <Typography
-                                  style={{
-                                    fontSize: "0.8rem",
-                                    color: "rgb(47, 188, 211)"
-                                  }}
-                              >
-                                voir détail
-                              </Typography>
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails>
-                              <Grid container>
-                                <Grid item xs={4}>
-                                  {bookingObj === null
-                                      ? null
-                                      : bookingObj.prestations.map(prestation => {
-                                        return (
-                                            <Typography
-                                                style={{ fontSize: "1.1rem" }}
-                                            >
-                                              {prestation.name}
-                                            </Typography>
-                                        );
-                                      })}
-                                  <Typography
-                                      style={{
-                                        fontSize: "1.1rem",
-                                        marginTop: "10px"
-                                      }}
-                                  >
-                                    Frais du service
-                                  </Typography>
-                                  <Typography
-                                      style={{
-                                        fontSize: "1.5rem",
-                                        fontWeight: "bold",
-                                        color: "rgb(47, 188, 211)",
-                                        marginTop: "10px"
-                                      }}
-                                  >
-                                    Revenu total
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={6}>
-                                  {bookingObj === null
-                                      ? null
-                                      : bookingObj.prestations.map(prestation => {
-                                        return (
-                                            <Grid
-                                                style={{
-                                                  height: "25px",
-                                                  borderBottom: "1.5px #8281813b solid",
-                                                  width: "100%"
-                                                }}
-                                            ></Grid>
-                                        );
-                                      })}
-                                  <Grid
-                                      style={{
-                                        height: "25px",
-                                        borderBottom: "1.5px #8281813b solid",
-                                        width: "100%",
-                                        marginTop: "10px"
-                                      }}
-                                  ></Grid>
-                                </Grid>
-                                <Grid item xs={2}>
-                                  {bookingObj === null
-                                      ? null
-                                      : bookingObj.prestations.map(prestation => {
-                                        return (
-                                            <Typography
-                                                style={{
-                                                  fontSize: "1.1rem",
-                                                  textAlign: "center"
-                                                }}
-                                            >
-                                              {prestation.value}x{prestation.price}€
-                                            </Typography>
-                                        );
-                                      })}
-                                  <Typography
-                                      style={{
-                                        fontSize: "1.1rem",
-                                        textAlign: "center",
-                                        marginTop: "10px"
-                                      }}
-                                  >
-                                    {bookingObj === null ||
-                                    currentUser ===
-                                    null ? null : currentUser._id ===
-                                    bookingObj.alfred._id ? (
-                                        <span>- {bookingObj.fees}</span>
-                                    ) : (
-                                        <span>+ {bookingObj.fees}</span>
-                                    )}
-                                    €
-                                  </Typography>
-                                  <Typography
-                                      style={{
-                                        fontSize: "1.5rem",
-                                        fontWeight: "bold",
-                                        color: "rgb(47, 188, 211)",
-                                        textAlign: "center",
-                                        marginTop: "10px"
-                                      }}
-                                  >
-                                    {bookingObj === null || currentUser === null
-                                        ? null
-                                        : currentUser._id === bookingObj.alfred._id
-                                            ? (
-                                                bookingObj.amount -
-                                                bookingObj.fees * 2
-                                            ).toFixed(2)
-                                            : bookingObj.amount}
-                                    €
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </ExpansionPanelDetails>
-                          </ExpansionPanel>
-                        </Grid>
-                        <Grid
-                            container
-                            style={{
-                              borderBottom: "1.5px #8281813b solid",
-                              marginTop: "2%",
-                              paddingBottom: "3%"
-                            }}
-                        >
-                          <Typography style={{ fontSize: "1rem" }}>
-                            Début le{" "}
-                            {bookingObj === null
-                                ? null
-                                : bookingObj.date_prestation}{" "}
-                            à{" "}
-                            {bookingObj === null
-                                ? null
-                                : bookingObj.time_prestation}
-                          </Typography>
-                          {bookingObj === null ? null : bookingObj.status ===
-                          "Confirmée" ? (
-                              <Typography style={{ fontSize: "1rem" }}>
-                                Fin le{" "}
-                                {bookingObj === null ? null : bookingObj.end_date} à{" "}
-                                {bookingObj === null ? null : bookingObj.end_time}
-                              </Typography>
-                          ) : null}
-                        </Grid>
-                        {/*<Grid container style={{borderBottom: '1.5px #8281813b solid', marginTop:'2%', paddingBottom: '3%'}}>
-                                    <Link href="#"><a style={{textDecoration: 'none', fontSize: '1.1rem', color: 'rgb(47, 188, 211)'}}>Modifier la reservation</a></Link>
-                                </Grid>*/}
-                        {bookingObj === null ||
-                        currentUser === null ? null : (bookingObj.status ===
-                            "En attente de confirmation" &&
-                            currentUser._id !== bookingObj.alfred._id) ||
-                        bookingObj.status === "Confirmée" ||
-                        (bookingObj.status === "Demande d'infos" &&
-                            currentUser._id !== bookingObj.alfred._id) ||
-                        bookingObj.status === "Pré-approuvée" ? (
-                            <Grid
-                                container
-                                style={{
-                                  borderBottom: "1.5px #8281813b solid",
-                                  marginTop: "2%",
-                                  paddingBottom: "3%"
-                                }}
-                            >
-                              <Link
-                                  href={{
-                                    pathname: "cancel",
-                                    query: { id: this.state.booking_id }
-                                  }}
-                              >
-                                <a
-                                    style={{
-                                      textDecoration: "none",
-                                      fontSize: "1.1rem",
-                                      color: "rgb(47, 188, 211)"
-                                    }}
-                                >
-                                  Annuler la réservation
-                                </a>
-                              </Link>
-                            </Grid>
-                        ) : null}
-                        <Grid
-                            container
-                            style={{
-                              borderBottom: "1.5px #8281813b solid",
-                              marginTop: "2%",
-                              paddingBottom: "3%"
-                            }}
-                        >
-                          <a
-                              href="mailto:contact@myalfred.io"
-                              style={{
-                                textDecoration: "none",
-                                fontSize: "1.1rem",
-                                color: "rgb(47, 188, 211)"
-                              }}
-                          >
-                            Signaler l’utilisateur
-                          </a>
-                        </Grid>
-                        {bookingObj === null ||
-                        currentUser === null ? null : bookingObj.status ===
-                        "Terminée" ? (
-                            <Grid
-                                container
-                                style={{
-                                  borderBottom: "1.5px #8281813b solid",
-                                  marginTop: "2%",
-                                  paddingBottom: "3%"
-                                }}
-                            >
-                              <a
-                                  href="mailto:contact@myalfred.io"
-                                  style={{
-                                    textDecoration: "none",
-                                    fontSize: "1.1rem",
-                                    color: "rgb(47, 188, 211)"
-                                  }}
-                              >
-                                Réclamation
-                              </a>
-                            </Grid>
-                        ) : null}
-                        <Grid
-                            container
-                            style={{
-                              borderBottom: "1.5px #8281813b solid",
-                              marginTop: "2%",
-                              paddingBottom: "3%"
-                            }}
-                        >
-                          <Link href="/faq">
-                            <a
-                                style={{
-                                  textDecoration: "none",
-                                  fontSize: "1.1rem",
-                                  color: "rgb(47, 188, 211)"
-                                }}
-                            >
-                              Aide
-                            </a>
-                          </Link>
-                        </Grid>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </Grid>
+                    <Grid
+                      container
+                      style={{
+                        borderBottom: "1.5px #8281813b solid",
+                        marginTop: "2%",
+                        paddingBottom: "3%"
+                      }}
+                    >
+                      <Grid item xs={12}>
+                        <Typography style={{ fontSize: "1rem" }}>
+                          Début le{" "}
+                          {bookingObj === null
+                            ? null
+                            : bookingObj.date_prestation}{" "}
+                          à{" "}
+                          {bookingObj === null
+                            ? null
+                            : bookingObj.time_prestation}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                      {bookingObj === null ? null : bookingObj.status ===
+                        "Confirmée" ? (
+                        <Typography style={{ fontSize: "1rem" }}>
+                          Fin le{" "}
+                          {bookingObj === null ? null : bookingObj.end_date} à{" "}
+                          {bookingObj === null ? null : bookingObj.end_time}
+                        </Typography>
+                      ) : null}
                       </Grid>
                     </Grid>
+                    {bookingObj === null ||
+                    currentUser === null ? null : (bookingObj.status ===
+                        "En attente de confirmation" &&
+                        currentUser._id !== bookingObj.alfred._id) ||
+                      bookingObj.status === "Confirmée" ||
+                      (bookingObj.status === "Demande d'infos" &&
+                        currentUser._id !== bookingObj.alfred._id) ||
+                      bookingObj.status === "Pré-approuvée" ? (
+                      <Grid
+                        container
+                        style={{
+                          borderBottom: "1.5px #8281813b solid",
+                          marginTop: "2%",
+                          paddingBottom: "3%"
+                        }}
+                      >
+                        <Link
+                          href={{
+                            pathname: "cancel",
+                            query: { id: this.state.booking_id }
+                          }}
+                        >
+                          <a
+                            style={{
+                              textDecoration: "none",
+                              fontSize: "1.1rem",
+                              color: "rgb(47, 188, 211)"
+                            }}
+                          >
+                            Annuler la réservation
+                          </a>
+                        </Link>
+                      </Grid>
+                    ) : null}
+                    <Grid
+                      container
+                      style={{
+                        borderBottom: "1.5px #8281813b solid",
+                        marginTop: "2%",
+                        paddingBottom: "3%"
+                      }}
+                    >
+                      <a
+                        href="mailto:contact@myalfred.io"
+                        style={{
+                          textDecoration: "none",
+                          fontSize: "1.1rem",
+                          color: "rgb(47, 188, 211)"
+                        }}
+                      >
+                        Signaler l’utilisateur
+                      </a>
+                    </Grid>
+                    {bookingObj === null ||
+                    currentUser === null ? null : bookingObj.status ===
+                      "Terminée" ? (
+                      <Grid
+                        container
+                        style={{
+                          borderBottom: "1.5px #8281813b solid",
+                          marginTop: "2%",
+                          paddingBottom: "3%"
+                        }}
+                      >
+                        <a
+                          href="mailto:contact@myalfred.io"
+                          style={{
+                            textDecoration: "none",
+                            fontSize: "1.1rem",
+                            color: "rgb(47, 188, 211)"
+                          }}
+                        >
+                          Réclamation
+                        </a>
+                      </Grid>
+                    ) : null}
+                    <Grid
+                      container
+                      style={{
+                        borderBottom: "1.5px #8281813b solid",
+                        marginTop: "2%",
+                        paddingBottom: "3%"
+                      }}
+                    >
+                      <Link href="/faq">
+                        <a
+                          style={{
+                            textDecoration: "none",
+                            fontSize: "1.1rem",
+                            color: "rgb(47, 188, 211)"
+                          }}
+                        >
+                          Aide
+                        </a>
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </Grid>
 
                     {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
                   </Grid>
@@ -2904,7 +2924,7 @@ class DetailsReservation extends React.Component {
                   </Grid>
 
                   <Grid item xs={2} style={{ textAlign: "center" }}>
-                    <Link href={"/myShop/messages"}>
+                    <Link href={"/reservations/messages"}>
                       <a style={{ textDecoration: "none" }}>
                         <p style={{ color: "white", cursor: "pointer" }}>
                           <img
@@ -2918,215 +2938,212 @@ class DetailsReservation extends React.Component {
                     </Link>
                   </Grid>
 
-                  <Grid
-                      item
-                      xs={2}
-                      style={{
-                        textAlign: "center",
-                        borderBottom: "3px solid #4fbdd7"
-                      }}
-                  >
-                    <Link href={"/myShop/mesreservations"}>
-                      <a style={{ textDecoration: "none" }}>
-                        <p style={{ color: "white", cursor: "pointer" }}>
-                          <img
-                              src={"../static/event.png"}
-                              alt={"sign"}
-                              width={25}
-                              style={{ opacity: "0.7" }}
-                          ></img>
-                        </p>
-                      </a>
-                    </Link>
-                  </Grid>
+              <Grid
+                item
+                xs={2}
+                style={{
+                  textAlign: "center",
+                  borderBottom: "3px solid #4fbdd7"
+                }}
+              >
+                <Link href={"/reservations/allReservations"}>
+                  <a style={{ textDecoration: "none" }}>
+                    <p style={{ color: "white", cursor: "pointer" }}>
+                      <img
+                        src={"../static/event.png"}
+                        alt={"sign"}
+                        width={25}
+                        style={{ opacity: "0.7" }}
+                      ></img>
+                    </p>
+                  </a>
+                </Link>
+              </Grid>
 
-                  <Grid item xs={2} style={{ textAlign: "center", zIndex: 999 }}>
-                    <Link href={"/myShop/myAvailabilities"}>
-                      <a style={{ textDecoration: "none" }}>
-                        <p style={{ color: "white", cursor: "pointer" }}>
-                          <img
-                              src={"../static/calendar.png"}
-                              alt={"sign"}
-                              width={25}
-                              style={{ opacity: "0.7" }}
-                          ></img>
-                        </p>
-                      </a>
-                    </Link>
-                  </Grid>
+              <Grid item xs={2} style={{ textAlign: "center", zIndex: 999 }}>
+                <Link href={"/myShop/myAvailabilities"}>
+                  <a style={{ textDecoration: "none" }}>
+                    <p style={{ color: "white", cursor: "pointer" }}>
+                      <img
+                        src={"../static/calendar.png"}
+                        alt={"sign"}
+                        width={25}
+                        style={{ opacity: "0.7" }}
+                      ></img>
+                    </p>
+                  </a>
+                </Link>
+              </Grid>
 
-                  <Grid item xs={2} style={{ textAlign: "center" }}>
-                    <Link href={"/myShop/performances"}>
-                      <a style={{ textDecoration: "none" }}>
-                        <p style={{ color: "white", cursor: "pointer" }}>
-                          <img
-                              src={"../static/speedometer.png"}
-                              alt={"sign"}
-                              width={25}
-                              style={{ opacity: "0.7" }}
-                          ></img>
-                        </p>
-                      </a>
-                    </Link>
-                  </Grid>
+              <Grid item xs={2} style={{ textAlign: "center" }}>
+                <Link href={"/performances/revenus"}>
+                  <a style={{ textDecoration: "none" }}>
+                    <p style={{ color: "white", cursor: "pointer" }}>
+                      <img
+                        src={"../static/speedometer.png"}
+                        alt={"sign"}
+                        width={25}
+                        style={{ opacity: "0.7" }}
+                      ></img>
+                    </p>
+                  </a>
+                </Link>
+              </Grid>
+            </Grid>
+
+            {modal1 ? (
+              <React.Fragment>
+                <Grid
+                  onClick={() => this.handleClose()}
+                  style={{
+                    height: "100%",
+                    width: "250vh",
+                    position: "fixed",
+                    background: "#82818191",
+                    zIndex: "9999",
+                    top: 0
+                  }}
+                ></Grid>
+                <Grid
+                  style={{
+                    height: "400px",
+                    width: "700px",
+                    position: "fixed",
+                    background: "#f1f1f1",
+                    zIndex: "99999",
+                    top: "25%",
+                    left: 0,
+                    right: 0,
+                    margin: "auto"
+                  }}
+                >
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/RK1K2bCg4J8"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  ></iframe>
                 </Grid>
+              </React.Fragment>
+            ) : null}
 
-                {modal1 ? (
-                    <React.Fragment>
-                      <Grid
-                          onClick={() => this.handleClose()}
-                          style={{
-                            height: "100%",
-                            width: "250vh",
-                            position: "fixed",
-                            background: "#82818191",
-                            zIndex: "9999",
-                            top: 0
-                          }}
-                      ></Grid>
-                      <Grid
-                          style={{
-                            height: "400px",
-                            width: "700px",
-                            position: "fixed",
-                            background: "#f1f1f1",
-                            zIndex: "99999",
-                            top: "25%",
-                            left: 0,
-                            right: 0,
-                            margin: "auto"
-                          }}
-                      >
-                        <iframe
-                            width="100%"
-                            height="100%"
-                            src="https://www.youtube.com/embed/RK1K2bCg4J8"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                        ></iframe>
-                      </Grid>
-                    </React.Fragment>
-                ) : null}
+            {modal2 ? (
+              <React.Fragment>
+                <Grid
+                  onClick={() => this.handleClose()}
+                  style={{
+                    height: "100%",
+                    width: "250vh",
+                    position: "fixed",
+                    background: "#82818191",
+                    zIndex: "9999",
+                    top: 0
+                  }}
+                ></Grid>
+                <Grid
+                  style={{
+                    height: "400px",
+                    width: "700px",
+                    position: "fixed",
+                    background: "#f1f1f1",
+                    zIndex: "99999",
+                    top: "25%",
+                    left: 0,
+                    right: 0,
+                    margin: "auto"
+                  }}
+                >
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/RK1K2bCg4J8"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  ></iframe>
+                </Grid>
+              </React.Fragment>
+            ) : null}
 
-                {modal2 ? (
-                    <React.Fragment>
-                      <Grid
-                          onClick={() => this.handleClose()}
-                          style={{
-                            height: "100%",
-                            width: "250vh",
-                            position: "fixed",
-                            background: "#82818191",
-                            zIndex: "9999",
-                            top: 0
-                          }}
-                      ></Grid>
-                      <Grid
-                          style={{
-                            height: "400px",
-                            width: "700px",
-                            position: "fixed",
-                            background: "#f1f1f1",
-                            zIndex: "99999",
-                            top: "25%",
-                            left: 0,
-                            right: 0,
-                            margin: "auto"
-                          }}
-                      >
-                        <iframe
-                            width="100%"
-                            height="100%"
-                            src="https://www.youtube.com/embed/RK1K2bCg4J8"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                        ></iframe>
-                      </Grid>
-                    </React.Fragment>
-                ) : null}
+            {modal3 ? (
+              <React.Fragment>
+                <Grid
+                  onClick={() => this.handleClose()}
+                  style={{
+                    height: "100%",
+                    width: "250vh",
+                    position: "fixed",
+                    background: "#82818191",
+                    zIndex: "9999",
+                    top: 0
+                  }}
+                ></Grid>
+                <Grid
+                  style={{
+                    height: "400px",
+                    width: "700px",
+                    position: "fixed",
+                    background: "#f1f1f1",
+                    zIndex: "99999",
+                    top: "25%",
+                    left: 0,
+                    right: 0,
+                    margin: "auto"
+                  }}
+                >
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/RK1K2bCg4J8"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  ></iframe>
+                </Grid>
+              </React.Fragment>
+            ) : null}
 
-                {modal3 ? (
-                    <React.Fragment>
-                      <Grid
-                          onClick={() => this.handleClose()}
-                          style={{
-                            height: "100%",
-                            width: "250vh",
-                            position: "fixed",
-                            background: "#82818191",
-                            zIndex: "9999",
-                            top: 0
-                          }}
-                      ></Grid>
-                      <Grid
-                          style={{
-                            height: "400px",
-                            width: "700px",
-                            position: "fixed",
-                            background: "#f1f1f1",
-                            zIndex: "99999",
-                            top: "25%",
-                            left: 0,
-                            right: 0,
-                            margin: "auto"
-                          }}
-                      >
-                        <iframe
-                            width="100%"
-                            height="100%"
-                            src="https://www.youtube.com/embed/RK1K2bCg4J8"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                        ></iframe>
-                      </Grid>
-                    </React.Fragment>
-                ) : null}
+            {modal4 ? (
+              <React.Fragment>
+                <Grid
+                  onClick={() => this.handleClose()}
+                  style={{
+                    height: "100%",
+                    width: "250vh",
+                    position: "fixed",
+                    background: "#82818191",
+                    zIndex: "9999",
+                    top: 0
+                  }}
+                ></Grid>
+                <Grid
+                  style={{
+                    height: "400px",
+                    width: "700px",
+                    position: "fixed",
+                    background: "#f1f1f1",
+                    zIndex: "99999",
+                    top: "25%",
+                    left: 0,
+                    right: 0,
+                    margin: "auto"
+                  }}
+                >
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/RK1K2bCg4J8"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  ></iframe>
+                </Grid>
+              </React.Fragment>
+            ) : null}
 
-                {modal4 ? (
-                    <React.Fragment>
-                      <Grid
-                          onClick={() => this.handleClose()}
-                          style={{
-                            height: "100%",
-                            width: "250vh",
-                            position: "fixed",
-                            background: "#82818191",
-                            zIndex: "9999",
-                            top: 0
-                          }}
-                      ></Grid>
-                      <Grid
-                          style={{
-                            height: "400px",
-                            width: "700px",
-                            position: "fixed",
-                            background: "#f1f1f1",
-                            zIndex: "99999",
-                            top: "25%",
-                            left: 0,
-                            right: 0,
-                            margin: "auto"
-                          }}
-                      >
-                        <iframe
-                            width="100%"
-                            height="100%"
-                            src="https://www.youtube.com/embed/RK1K2bCg4J8"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                        ></iframe>
-                      </Grid>
-                    </React.Fragment>
-                ) : null}
-
-                <Footer />
-              </>
-          )}
-        </Fragment>
+            <Footer />
+          </>
+        )}
+      </Fragment>
     );
-
-
-
   }
 }
 
