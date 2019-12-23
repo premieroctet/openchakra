@@ -541,7 +541,7 @@ class services extends React.Component {
                                                                                 {e.monday.event.map(f=> (
 
                                                                                         f.services.map(g => {
-                                                                                            if (g.value === this.props.service_id) {
+                                                                                            if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                                 return (
                                                                                                     <React.Fragment>
 
@@ -585,7 +585,7 @@ class services extends React.Component {
                                                                                 {e.tuesday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -629,7 +629,7 @@ class services extends React.Component {
                                                                                 {e.wednesday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -673,7 +673,7 @@ class services extends React.Component {
                                                                                 {e.thursday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -717,7 +717,7 @@ class services extends React.Component {
                                                                                 {e.friday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -761,7 +761,7 @@ class services extends React.Component {
                                                                                 {e.saturday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -805,7 +805,7 @@ class services extends React.Component {
                                                                                 {e.sunday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -877,7 +877,7 @@ class services extends React.Component {
                                                                                 {e.monday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -921,7 +921,7 @@ class services extends React.Component {
                                                                                 {e.tuesday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -965,7 +965,7 @@ class services extends React.Component {
                                                                                 {e.wednesday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -1009,7 +1009,7 @@ class services extends React.Component {
                                                                                 {e.thursday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -1053,7 +1053,7 @@ class services extends React.Component {
                                                                                 {e.friday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -1097,7 +1097,7 @@ class services extends React.Component {
                                                                                 {e.saturday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 
@@ -1141,7 +1141,7 @@ class services extends React.Component {
                                                                                 {e.sunday.event.map(f=> (
 
                                                                                     f.services.map(g => {
-                                                                                        if (g.value === this.props.service_id) {
+                                                                                        if (g.value === this.props.service_id || g.value === this.state.service._id) {
                                                                                             return (
                                                                                                 <React.Fragment>
 

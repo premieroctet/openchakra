@@ -613,7 +613,7 @@ class detailsAvailability extends React.Component {
 
         const optionsService = all_service.map(service => ({
             label: service.service.label,
-            value: service._id
+            value: service.service._id
         }));
 
 
