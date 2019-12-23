@@ -81,11 +81,21 @@ const styles = theme => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: 200,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      marginLeft:0,
+      marginRight: 0,
+      marginBottom: '5%',
+      marginTop:'5%'
+    },
   },
   contentTimeSlot:{
     justifyContent: 'space-around',
@@ -99,9 +109,43 @@ const styles = theme => ({
   },
   textFieldChips: {
     color: 'white'
+
   },
   textFieldDefaultChips: {
     color : 'black'
+  },
+  formSchedule:{
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      marginBottom: '5%'
+    },
+  },
+  panelForm:{
+    alignItems: 'end',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column'
+    },
+},
+  panelFormDays:{
+    width : '250px',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
+    },
+  },
+  panelFormRecu:{
+    width : '250px',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      marginTop: '10%'
+
+    },
+  },
+  containerRecurrence:{
+    width:'100%',
+    [theme.breakpoints.down('xs')]: {
+      display:'inherit',
+    },
   }
 });
 
@@ -316,6 +360,7 @@ class Schedule extends React.Component {
                           margin="normal"
                           id="date-picker-inline"
                           label="Date de début"
+                          className={classes.formSchedule}
                           value={this.state.selectedDateStart}
                           onChange={this.handleDateStartChange}
                           KeyboardButtonProps={{
@@ -343,6 +388,7 @@ class Schedule extends React.Component {
                           margin="normal"
                           id="date-picker-inline"
                           label="Date de fin"
+                          className={classes.formSchedule}
                           value={this.state.selectedDateEnd}
                           onChange={this.handleDateEndChange}
                           KeyboardButtonProps={{
@@ -365,8 +411,8 @@ class Schedule extends React.Component {
                         />
                       </MuiPickersUtilsProvider>
                     </Grid>
-                  <Grid container>
-                    <ExpansionPanel expanded={this.state.isExpanded === 'panel1'}>
+                  <Grid container className={classes.containerRecurrence}>
+                    <ExpansionPanel expanded={this.state.isExpanded === 'panel1'} style={{width:'100%'}}>
                       <ExpansionPanelSummary>
                         <FormControlLabel
                           aria-label="Acknowledge"
@@ -377,8 +423,8 @@ class Schedule extends React.Component {
                           onChange={this.handleChange('panel1')}
                         />
                       </ExpansionPanelSummary>
-                      <ExpansionPanelDetails style={{alignItems: 'end'}}>
-                        <Grid container style={{width : '60%'}}>
+                      <ExpansionPanelDetails className={classes.panelForm}>
+                        <Grid container className={classes.panelFormDays}>
                           {[0,1,2,3,4,5,6].map( d => {
                             return (<Chip
                               clickable
@@ -391,7 +437,7 @@ class Schedule extends React.Component {
                             } />)
                           })}
                         </Grid>
-                        <Grid container style={{width : '50%'}}>
+                        <Grid container className={classes.panelFormRecu}>
                           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
                             <KeyboardDatePicker
                                 disableToolbar
@@ -400,6 +446,7 @@ class Schedule extends React.Component {
                                 margin="normal"
                                 id="date-picker-inline"
                                 label="Date de fin"
+                                className={classes.textField}
                                 value={this.state.selectedDateEndRecu}
                                 onChange={this.handleDateEndChangeRecu}
                                 KeyboardButtonProps={{
