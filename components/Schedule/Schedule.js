@@ -262,7 +262,14 @@ class Schedule extends React.Component {
   };
 
    handleChange = panel => (event, isExpanded) => {
+     console.log("recurrDays:"+JSON.stringify(this.state.recurrDays));
      this.setState({isExpanded: isExpanded ? panel : false});
+     if (isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
+       let dayOfWeek = new Date(this.state.selectedDateStart).getDay();
+       dayOfWeek = (dayOfWeek+6)%7
+       console.log("Faut remplir avec "+dayOfWeek);
+       this.setState({recurrDays: new Set([dayOfWeek])});
+     }
    };
 
    handleDateStartChange = date => {
@@ -292,8 +299,6 @@ class Schedule extends React.Component {
 
   handleDateEndChangeRecu = date => {
     this.setState({ selectedDateEndRecu: date });
-    if(this.state.isExpanded === "panel1" && this.state.selectedDateEndRecu !== null ) {
-   }
   };
 
   onSubmit = e => {
