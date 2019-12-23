@@ -21,6 +21,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { toast, ToastContainer } from "react-toastify";
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
+import NumberFormat from "react-number-format";
 registerLocale("fr", fr);
 
 moment.locale("fr");
@@ -1070,23 +1071,26 @@ class userServices extends React.Component {
                   >
                     {service.label}
                   </p>
-                  <p
-                    style={{
-                      color: "white",
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      fontSize: "1.1rem"
-                    }}
-                  >
-                    par {serviceUser.user.firstname} ({convertDistance(
-                      getDistance(
-                        user.billing_address.gps,
-                        serviceUser.service_address.gps
-                      ),
-                      'km'
-                    ).toFixed(2)}{" "}
-                    km)
-                  </p>
+                  {typeof user.billing_address.gps !== "undefined" && typeof serviceUser.service_address.gps !== "undefined" ?
+                      <p
+                          style={{
+                            color: "white",
+                            cursor: "pointer",
+                            fontWeight: "600",
+                            fontSize: "1.1rem"
+                          }}
+                      >
+                        par {serviceUser.user.firstname} ({convertDistance(
+                          getDistance(
+                              {latitude:user.billing_address.gps.lat,longitude:user.billing_address.gps.lng},
+                              {latitude:serviceUser.service_address.gps.lat, longitude: serviceUser.service_address.gps.lng}
+                          ),
+                          'km'
+                      ).toFixed(2)}{" "}
+                        km)
+                      </p>
+                      : null}
+
                 </Grid>
 
                 {/*Le Contenu */}
@@ -2675,8 +2679,8 @@ class userServices extends React.Component {
                                                       classes.prestationside
                                                     }
                                                   >
-                                                    <input
-                                                      type="number"
+                                                    <NumberFormat
+                                                      allowNegative={false}
                                                       name={d.prestation.label}
                                                       style={{ width: "100%" }}
                                                       onChange={() =>
