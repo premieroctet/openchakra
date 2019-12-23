@@ -122,11 +122,13 @@ class myAvailabilities extends React.Component {
       axios.post(url+'myAlfred/api/availability/add',avail)
           .then(() => {
               toast.info('Disponibilité ajoutée avec succès !');
-              window.location.reload();
+              let event=availabilities2events([avail])[0];
+              let new_events = [event, ...this.state.events];
+              this.setState({events: new_events});
           })
           .catch(err => {
             console.log(err);
-            toaster.error(err);
+            toast.error(err);
 		  })
     }
 
@@ -169,7 +171,11 @@ class myAvailabilities extends React.Component {
                    axios
                         .get(url+'myAlfred/api/serviceUser/currentAlfred')
                         .then(res => {
-                            let services = [...new Set(res.data.map(d => [d['service']['label'],d['_id']]))];
+                            //let services = [...new Set(res.data.map(d => [d['service']['label'],d['service'][_id']]))];
+                            let mapServices = new Map();
+                            res.data.forEach( d => mapServices.set(d['service']['label'], d['service']['_id']));
+                            console.log("Mapped services:"+JSON.stringify(mapServices));
+                            let services = [...mapServices.entries()];
                             this.setState({services:services});
                             //this.setState({serviceUser: serviceUser});
                         })

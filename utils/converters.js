@@ -36,6 +36,7 @@ const computeRecurrency = (period, event, dayOfWeek) => {
 }
 
 const avail2event = availab => {
+  console.log("Converting avail to event:"+JSON.stringify(availab));
   let result=[];
   "monday tuesday wednesday thursday friday saturday sunday".split(' ').forEach(day => {
     let evts = availab[day]['event'];
@@ -57,6 +58,7 @@ const avail2event = availab => {
 
 const availabilities2events= avails => {
   let totalresult = []
+  console.log("Converting avails 2 events:"+JSON.stringify(avails));
   avails.forEach( avail => totalresult=totalresult.concat(avail2event(avail)));
   return totalresult;
 };
@@ -82,6 +84,7 @@ const events2availabilities= event => {
     let include = recurrent ? event.recurrDays.has(index) : index==selDay;
     avail[item] = include ? {'event':[inner_event]} : {'event': []};
   })  
+  avail['period']={active:false, month_begin: null, month_end: null};
   console.log("Generated availability:"+JSON.stringify(avail, null, 2));
   return avail;
 };
