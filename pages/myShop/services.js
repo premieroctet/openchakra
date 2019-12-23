@@ -771,7 +771,7 @@ class services extends React.Component {
                                             </Grid>
                                             <Grid container className={classes.responsiveCard}>
                                                 <Grid item md={3} xs={12} style={{ borderBottom : '150px', borderLeft : '150px', cursor: 'pointer'}}>
-                                                    <Link href={'/myShop/previewService?id='+e._id}>
+                                                    <Link /*href={'/myShop/previewService?id='+e._id}*/>
                                                         <img className={classes.respimg} src={'../../'+e.service.picture} alt={'picture'} width={'85%'}/>
                                                     </Link>
                                                 </Grid>
