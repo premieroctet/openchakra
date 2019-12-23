@@ -158,7 +158,7 @@ class Schedule extends React.Component {
     this.state = {
       events: _.cloneDeep(this.props.events),
       title: '',
-      sAddModalOpen: false,
+      isAddModalOpen: false,
       isEditModalOpen: false,
       servicesSelected:[],
       dayLayoutAlgorithm: 'no-overlap',
@@ -168,6 +168,8 @@ class Schedule extends React.Component {
       services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
     };
     this.closeModal = this.closeModal.bind(this);
+    this.toggleEditModal = this.toggleEditModal.bind(this);
+
   }
 
   /**
@@ -227,7 +229,9 @@ class Schedule extends React.Component {
   };
 
   toggleEditModal = event => {
+    console.log("isAddModalOpen"+this.state.isAddModalOpen);
     if (!this.state.isAddModalOpen) {
+      console.log("Updating");
       this.setState({
         currentEvent: event,
         isEditModalOpen: !this.state.isEditModalOpen,
@@ -272,7 +276,7 @@ class Schedule extends React.Component {
 
   onSubmit = e => {
     let avail=events2availabilities(this.state);
-    let res = this.props.cbAvailCreation(avail);
+    let res = this.props.cbAvailabilityCreated(avail);
     this.closeModal();
   };
 

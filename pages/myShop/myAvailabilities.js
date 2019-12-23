@@ -112,10 +112,10 @@ class myAvailabilities extends React.Component {
             events: [],
             services: [],
         };
-        this.availability_created = this.availability_created.bind(this);
+        this.availabilityCreated = this.availabilityCreated.bind(this);
     }
 
-    availability_created(avail) {
+    availabilityCreated(avail) {
       console.log("CB created availability:"+JSON.stringify(avail));
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
@@ -261,7 +261,7 @@ class myAvailabilities extends React.Component {
                   </Grid>
                   <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
                       <Grid style={{width:'100%'}}>
-                          <Schedule events={this.state.events} services={this.state.services} cbAvailCreation={this.availability_created} />
+                          <Schedule events={this.state.events} services={this.state.services} cbAvailabilityCreated={this.availabilityCreated} />
                       </Grid>
                   </Grid>
               </Layout>

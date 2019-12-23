@@ -16,9 +16,27 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
 
     const newAvailability = new Availability({user:req.user.id, ...req.body});
     newAvailability.save().then(availability => res.json(availability)).catch(err => console.log(err));
-
-
 });
+
+// @Route POST /myAlfred/api/availability/update
+// update an availability for one user
+// access private
+router.post('/update',passport.authenticate('jwt',{session: false}),(req,res)=> {
+    
+    console.log("Updating availability:"+JSON.stringify(req.body));
+    
+    const newAvailability = new Availability({user:req.user.id, ...req.body});
+    newAvailability.delete()
+        .then(availability => {
+          availability.save()
+            .then (availability => {
+              res.json(availability)
+            })
+            .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+});
+
 
 // @Route GET /myAlfred/api/availability/all
 // Get all availability

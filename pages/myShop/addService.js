@@ -784,11 +784,11 @@ class addService extends React.Component {
       this.toggleCheckbox = this.toggleCheckbox.bind(this);
       this.handleChecked = this.handleChecked.bind(this);
       this.handleInputChange = this.handleInputChange.bind(this);
-      this.availability_created = this.availability_created.bind(this);
+      this.availabilityCreated = this.availabilityCreated.bind(this);
 
     }
 
-    availability_created(avail) {
+    availabilityCreated(avail) {
       console.log("CB created availability:"+JSON.stringify(avail));
       this.setState({availabilities: [avail, ...this.state.availabilities]});
     }
@@ -1996,7 +1996,7 @@ class addService extends React.Component {
                     </Wizard.Page>
                     <Wizard.Page>
                       <Field render={(arrayHelpers) => (
-                        <Schedule events={events} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailCreation={this.availability_created} />
+                        <Schedule events={events} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailabilityCreated={this.availabilityCreated} />
                       )} />
                     </Wizard.Page>
                   </Wizard>
