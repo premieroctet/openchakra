@@ -32,6 +32,7 @@ import Loader from 'react-loader-spinner';
 import Clear from '@material-ui/icons/Clear';
 import Input from '@material-ui/core/Input';
 import Schedule from '../Schedule/Schedule';
+import {availabilities2events} from '../../utils/converters';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -992,6 +993,7 @@ class Form extends React.Component {
             for (let i = 1950; i <= actualDate; i++) {
                 dates.push(i);
             }
+        let events=availabilities2events(this.state.availabilities);
 
         return (
             <div className="App" style={{marginTop: 64}}>
@@ -2127,7 +2129,7 @@ class Form extends React.Component {
                   </Wizard.Page>
                   <Wizard.Page>
                     <Field render={(arrayHelpers) => (
-                    <Schedule events={[]} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailCreation={this.availability_created} />
+                    <Schedule events={events} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailCreation={this.availability_created} />
 )} />
                   </Wizard.Page>
                   <Wizard.Page>

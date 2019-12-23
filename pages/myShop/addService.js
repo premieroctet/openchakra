@@ -32,6 +32,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import MultipleSelect from '../../components/WizardForm/MultipleSelect';
 import Schedule from '../../components/Schedule/Schedule';
+import {availabilities2events} from '../../utils/converters';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -776,13 +777,20 @@ class addService extends React.Component {
         checkedC: false,
         option_presta_user: true,
         option_presta_home: true,
-            option_presta_visio: true,
-
+        option_presta_visio: true,
+        availabilities: [],
 
         };
       this.toggleCheckbox = this.toggleCheckbox.bind(this);
       this.handleChecked = this.handleChecked.bind(this);
       this.handleInputChange = this.handleInputChange.bind(this);
+      this.availability_created = this.availability_created.bind(this);
+
+    }
+
+    availability_created(avail) {
+      console.log("CB created availability:"+JSON.stringify(avail));
+      this.setState({availabilities: [avail, ...this.state.availabilities]});
     }
 
   componentDidMount() {
@@ -911,7 +919,8 @@ class addService extends React.Component {
         dates.push(i);
       }
 
-        return (
+    let events=availabilities2events(this.state.availabilities);
+    return (
           <Layout>
               <Grid container className={classes.bigContainer}>
                 <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
@@ -1986,7 +1995,9 @@ class addService extends React.Component {
                       </Grid>
                     </Wizard.Page>
                     <Wizard.Page>
-                      <Schedule events={[]} services={[]}/>
+                      <Field render={(arrayHelpers) => (
+                        <Schedule events={events} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailCreation={this.availability_created} />
+                      )} />
                     </Wizard.Page>
                   </Wizard>
                 </div>
