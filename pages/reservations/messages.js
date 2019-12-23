@@ -444,7 +444,7 @@ class Messages extends React.Component {
                   Mes messages
                 </Typography>
                 <Typography style={{ fontSize: "0.8rem", marginBottom: "4%" }}>
-                  Vous avez {this.state.chatrooms.length} conversations
+                  vous avez {this.state.chatrooms.length} conversations
                 </Typography>
                 <Grid container className={classes.tabweb}>
                   <Grid item xs={6} style={{ textAlign: "center" }}>
@@ -651,7 +651,7 @@ class Messages extends React.Component {
                         </Grid>
                       );
                     })
-                  ) : <p>Vous n'avez aucune réservation en tant qu'utilisateur</p> 
+                  ) : <p>vous n'avez aucune réservation en tant qu'utilisateur</p> 
                 ) : (
                   <React.Fragment>
                     {this.state.alfredReservations.length
@@ -741,7 +741,7 @@ class Messages extends React.Component {
                             </Grid>
                           );
                         })
-                      : <p>Vous n'avez aucune réservation en tant qu'Alfred</p>}
+                      : <p>vous n'avez aucune réservation en tant qu'Alfred</p>}
                   </React.Fragment>
                 )}
               </Grid>

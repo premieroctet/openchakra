@@ -252,12 +252,11 @@ class AllReservations extends React.Component {
                             </Grid>
                             :null}
 
-
                         {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
 
                         <Grid container style={{marginBottom: '10%'}}>
-                            <Grid className={classes.toggle}  item xs={3} style={{ height: '100vh', borderRight: '1px #8281813b solid',}}>
+                            <Grid className={classes.toggle}  item xs={3} style={{ height: '100vh'}}>
                                 <div className={classes.trigger}></div>
                                 <Grid container style={{justifyContent: 'center', position: 'sticky', top: 100,}}>
                                     <Grid item style={{marginTop: 30,width: 281, height: 70}} className={classes.hidesm}>
@@ -375,7 +374,7 @@ class AllReservations extends React.Component {
                                                 <hr className={classes.trait3}/>
                                             </React.Fragment>}
                                     </Grid>
-                                    <Grid item xs={6} >
+                                    <Grid item xs={6}>
                                         {tabs ?
                                             <React.Fragment>
                                                 <hr className={classes.trait}/>

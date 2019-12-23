@@ -2621,39 +2621,8 @@ class DetailsReservation extends React.Component {
                                       </Typography>
                                     );
                                   })}
-                              <Typography
-                                style={{
-                                  fontSize: "1.1rem",
-                                  marginTop: "10px"
-                                }}
-                              >
-                                Frais du service
-                              </Typography>
-                              <Typography
-                                style={{
-                                  fontSize: "1.5rem",
-                                  fontWeight: "bold",
-                                  color: "rgb(47, 188, 211)",
-                                  marginTop: "10px"
-                                }}
-                              >
-                                Revenu total
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                              {bookingObj === null
-                                ? null
-                                : bookingObj.prestations.map(prestation => {
-                                    return (
-                                      <Grid
-                                        style={{
-                                          height: "25px",
-                                          borderBottom: "1.5px #8281813b solid",
-                                          width: "100%"
-                                        }}
-                                      ></Grid>
-                                    );
-                                  })}
+                              </Grid>
+                              <Grid item xs={6}>
                               <Grid
                                 style={{
                                   height: "25px",
@@ -2678,6 +2647,30 @@ class DetailsReservation extends React.Component {
                                       </Typography>
                                     );
                                   })}
+                              </Grid>
+
+
+                              <Grid item xs={4}>
+                              <Typography
+                                style={{
+                                  fontSize: "1.1rem",
+                                  marginTop: "10px"
+                                }}
+                              >
+                                Frais du service
+                              </Typography>
+                              </Grid>
+                              <Grid item xs={6}>
+                              <Grid
+                                style={{
+                                  height: "25px",
+                                  borderBottom: "1.5px #8281813b solid",
+                                  width: "100%",
+                                  marginTop: "10px"
+                                }}
+                              ></Grid>
+                            </Grid>
+                            <Grid item xs={2}>
                               <Typography
                                 style={{
                                   fontSize: "1.1rem",
@@ -2695,6 +2688,32 @@ class DetailsReservation extends React.Component {
                                 )}
                                 €
                               </Typography>
+                              </Grid>
+
+
+                            <Grid item xs={4}>
+                              <Typography
+                                style={{
+                                  fontSize: "1.5rem",
+                                  fontWeight: "bold",
+                                  color: "rgb(47, 188, 211)",
+                                  marginTop: "10px"
+                                }}
+                              >
+                                Revenu total
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Grid
+                                style={{
+                                  height: "25px",
+                                  borderBottom: "1.5px #8281813b solid",
+                                  width: "100%",
+                                  marginTop: "10px"
+                                }}
+                              ></Grid>
+                            </Grid>
+                              <Grid item xs={2}>
                               <Typography
                                 style={{
                                   fontSize: "1.5rem",
@@ -2727,16 +2746,19 @@ class DetailsReservation extends React.Component {
                         paddingBottom: "3%"
                       }}
                     >
-                      <Typography style={{ fontSize: "1rem" }}>
-                        Début le{" "}
-                        {bookingObj === null
-                          ? null
-                          : bookingObj.date_prestation}{" "}
-                        à{" "}
-                        {bookingObj === null
-                          ? null
-                          : bookingObj.time_prestation}
-                      </Typography>
+                      <Grid item xs={12}>
+                        <Typography style={{ fontSize: "1rem" }}>
+                          Début le{" "}
+                          {bookingObj === null
+                            ? null
+                            : bookingObj.date_prestation}{" "}
+                          à{" "}
+                          {bookingObj === null
+                            ? null
+                            : bookingObj.time_prestation}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
                       {bookingObj === null ? null : bookingObj.status ===
                         "Confirmée" ? (
                         <Typography style={{ fontSize: "1rem" }}>
@@ -2745,6 +2767,7 @@ class DetailsReservation extends React.Component {
                           {bookingObj === null ? null : bookingObj.end_time}
                         </Typography>
                       ) : null}
+                      </Grid>
                     </Grid>
                     {bookingObj === null ||
                     currentUser === null ? null : (bookingObj.status ===
