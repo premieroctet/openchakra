@@ -236,7 +236,7 @@ class Schedule extends React.Component {
     if (this.props.cbAvailabilityDelete) {
      confirmAlert({
       title: 'Suppression',
-      message: 'Supprimer cette disponibilité pour '+event.title+"?",
+      message: 'Supprimer cette disponibilité et toutes ses occurrences pour '+event.title+"?",
       buttons: [
         {
           label: 'Oui',
