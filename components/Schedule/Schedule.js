@@ -28,6 +28,7 @@ import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
 import {events2availabilities} from '../../utils/converters';
+import {ALL_SERVICES} from '../../utils/consts.js';
 
 
 
@@ -164,9 +165,20 @@ class Schedule extends React.Component {
       selectedDateEndRecu: null,
       // Days (1=>7)
       recurrDays: new Set(),
-      buttonSendState: true,
-      services: this.props.services || [],
+      services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
     };
+    this.closeModal = this.closeModal.bind(this);
+  }
+
+  /**
+    On peut envoyer si service(s) sélectionné(s), date/heure début et fin saisis
+    et, si récurrence, au moins un jour sélectionné
+  */
+  isButtonSendEnabled() {
+    let enabled=this.state.servicesSelected.length > 0;
+    enabled = enabled && this.state.selectedDateStart && this.state.selectedTimeStart && this.state.selectedDateEnd && this.state.selectedTimeEnd;
+    enabled = enabled && (!this.state.isExpanded || this.state.recurrDays.size>0);
+    return enabled;
   }
 
   toggleRecurrDay(item) {
@@ -191,13 +203,15 @@ class Schedule extends React.Component {
   }
 
 
-  onChange = e => {
-    this.setState({servicesSelected: e.target.value });
-    if(e.target.value.length === 0){
-      this.setState({buttonSendState: true});
-    }else{
-      this.setState({buttonSendState: false});
+  onChangeServices = e => {
+    let all_serv = e.target.value.filter(serv => serv[0]==ALL_SERVICES[0]);
+    let contains = all_serv.length>0;
+    if (contains) {
+      this.setState({servicesSelected: [ALL_SERVICES]});
     }
+    else {
+      this.setState({servicesSelected: e.target.value });
+    } 
   };
 
   toggleAddModal =  ({ start, end })  => {
@@ -223,13 +237,6 @@ class Schedule extends React.Component {
 
    handleChange = panel => (event, isExpanded) => {
      this.setState({isExpanded: isExpanded ? panel : false});
-     if(isExpanded && this.state.selectedDateEndRecu === null){
-       this.setState({buttonSendState: true})
-     }else if (!isExpanded  && this.state.selectedDateEndRecu !== null){
-       this.setState({selectedDateEndRecu: null})
-     }else if (!isExpanded  && this.state.selectedDateEndRecu === null){
-       this.setState({buttonSendState: false})
-     }
    };
 
    handleDateStartChange = date => {
@@ -260,13 +267,15 @@ class Schedule extends React.Component {
   handleDateEndChangeRecu = date => {
     this.setState({ selectedDateEndRecu: date });
     if(this.state.isExpanded === "panel1" && this.state.selectedDateEndRecu !== null ) {
-    this.setState({ buttonSendState: false })
    }
   };
 
   onSubmit = e => {
-    e.preventDefault();
-    events2availabilities(this.state);
+    let avail=events2availabilities(this.state);
+    console.log("Sending availability:"+JSON.stringify(avail));
+    let res = this.props.cbAvailCreation(avail);
+    console.log("Envoi avail:"+res);
+    this.closeModal();
   };
 
   closeModal = () =>{
@@ -321,7 +330,7 @@ class Schedule extends React.Component {
                   </Grid>
               </Grid>
               <Grid container>
-                <form onSubmit={this.onSubmit}>
+                <form >
                   <FormControl style={{width:"100%"}}>
                     <InputLabel id="demo-simple-select-label">Sélectionnez au moins un service</InputLabel>
                     <Select
@@ -329,15 +338,15 @@ class Schedule extends React.Component {
                       id="demo-mutiple-checkbox"
                       multiple
                       input={<Input />}
-                      renderValue={selected => selected.join(', ')}
+                      renderValue={selected => selected.map(s=>s[0]).join(',')}
                       value={this.state.servicesSelected}
-                      onChange={this.onChange}
+                      onChange={this.onChangeServices}
                       MenuProps={MenuProps}
                     >
-                      {this.props.services.map(name => (
+                      {[ALL_SERVICES, ...this.props.services].map(name => (
                         <MenuItem key={name} value={name}>
                           <Checkbox checked={this.state.servicesSelected.indexOf(name) > -1} />
-                          <ListItemText primary={name} />
+                          <ListItemText primary={name[0]} />
                         </MenuItem>
                       ))}
                     </Select>
@@ -453,10 +462,8 @@ class Schedule extends React.Component {
                     </ExpansionPanel>
                   </Grid>
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
-                    <Button type="submit" disabled={this.state.buttonSendState} variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer
-                    </Button>
-                    <Button type="cancel" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler
-                    </Button>
+                    <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>Envoyer </Button>
+                    <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler </Button>
                   </Grid>
                 </form>
               </Grid>
