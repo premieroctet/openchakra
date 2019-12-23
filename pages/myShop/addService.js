@@ -619,7 +619,7 @@ class Wizard extends React.Component {
                                 }
                               }}
                             >
-                              Envoyer
+                              Suivant
                             </Button>
                           </React.Fragment>
                         )
@@ -1996,7 +1996,7 @@ class addService extends React.Component {
                     </Wizard.Page>
                     <Wizard.Page>
                       <Field render={(arrayHelpers) => (
-                        <Schedule events={events} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailabilityCreated={this.availabilityCreated} />
+                        <Schedule availabilities={this.state.availabilities} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailabilityCreated={this.availabilityCreated} />
                       )} />
                     </Wizard.Page>
                   </Wizard>

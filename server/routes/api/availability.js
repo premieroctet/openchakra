@@ -131,6 +131,7 @@ router.delete('/currentAlfred',passport.authenticate('jwt',{session:false}),(req
 // Delete one availability
 router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
+    console.log("Deleting availability:"+req.params.id);
     Availability.findById(req.params.id)
         .then(availability => {
             availability.remove().then(() => res.json({msg: 'Ok'})).catch(error => console.log(error))

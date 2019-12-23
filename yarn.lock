@@ -10891,6 +10891,11 @@ react-clientside-effect@^1.2.0:
   dependencies:
     "@babel/runtime" "^7.0.0"
 
+react-confirm-alert@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/react-confirm-alert/-/react-confirm-alert-2.4.1.tgz#cc0837edd80271ea1c5e93840537399e99b07ff3"
+  integrity sha512-Sc2N1paCTCS5HWEAhik2IQa9/vwSQLAoCT5uccjPH/VyTaBAkRPZPx9sUqFTy3q5VnnGwCPsoz7fnw54x79d/w==
+
 react-css-modules@^4.7.7:
   version "4.7.11"
   resolved "https://registry.yarnpkg.com/react-css-modules/-/react-css-modules-4.7.11.tgz#e9bc7ac6e3dd7e71c8e46e9d22c1d0abb2110682"

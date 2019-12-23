@@ -29,7 +29,8 @@ import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
 import {availabilities2events, eventUI2availabilities} from '../../utils/converters';
 import {ALL_SERVICES} from '../../utils/consts.js';
-
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 
 const propTypes = {};
@@ -231,6 +232,26 @@ class Schedule extends React.Component {
 
   toggleEditModal = event => {
     console.log("isAddModalOpen"+this.state.isAddModalOpen);
+
+    if (this.props.cbAvailabilityDelete) {
+     confirmAlert({
+      title: 'Suppression',
+      message: 'Supprimer cette disponibilité pour '+event.title+"?",
+      buttons: [
+        {
+          label: 'Oui',
+          onClick: () => this.props.cbAvailabilityDelete(event.id.split('-')[0])
+        },
+        {
+          label: 'Non',
+        },
+        {
+          label: 'Annuler',
+        }
+      ]
+    });
+    }
+
     if (!this.state.isAddModalOpen) {
       console.log("Updating");
       this.setState({
@@ -467,7 +488,7 @@ class Schedule extends React.Component {
                     </ExpansionPanel>
                   </Grid>
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
-                    <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>Envoyer </Button>
+                    <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>Ajouter </Button>
                     <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler </Button>
                   </Grid>
                 </form>

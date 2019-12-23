@@ -112,6 +112,7 @@ class myAvailabilities extends React.Component {
             services: [],
         };
         this.availabilityCreated = this.availabilityCreated.bind(this);
+        this.availabilityDelete = this.availabilityDelete.bind(this);
     }
 
     availabilityCreated(avail) {
@@ -130,6 +131,29 @@ class myAvailabilities extends React.Component {
             toast.error(err);
 		  })
     }
+
+    availabilityDelete(avail) {
+      console.log("CB delete availability:"+JSON.stringify(avail));
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
+      axios.delete(url+'myAlfred/api/availability/'+avail)
+          .then(res => {
+              console.log("Deleting:"+JSON.stringify(res.data));
+              toast.info('Disponibilité supprimée avec succès !');
+              let new_availabilities=[];
+              this.state.availabilities.forEach( a => {
+                if (a._id!==avail) {
+                  new_availabilities.push(a);
+                }
+              })
+              this.setState({availabilities: new_availabilities});
+          })
+          .catch(err => {
+            console.log(err);
+            toast.error(err);
+          })
+    }
+
 
     componentDidMount() {
 
@@ -259,7 +283,7 @@ class myAvailabilities extends React.Component {
                   </Grid>
                   <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
                       <Grid style={{width:'100%'}}>
-                          <Schedule availabilities={this.state.availabilities} services={this.state.services} cbAvailabilityCreated={this.availabilityCreated} />
+                          <Schedule availabilities={this.state.availabilities} services={this.state.services} cbAvailabilityCreated={this.availabilityCreated} cbAvailabilityDelete={this.availabilityDelete} />
                       </Grid>
                   </Grid>
               </Layout>
