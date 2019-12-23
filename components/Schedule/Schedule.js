@@ -227,7 +227,6 @@ class Schedule extends React.Component {
   };
 
   onSubmit = e => {
-    e.preventDefault();
     let avail=events2availabilities(this.state);
     console.log("Sending availability:"+JSON.stringify(avail));
     let res = this.props.cbAvailCreation(avail);
@@ -287,7 +286,7 @@ class Schedule extends React.Component {
                   </Grid>
               </Grid>
               <Grid container>
-                <form onSubmit={this.onSubmit}>
+                <form >
                   <FormControl style={{width:"100%"}}>
                     <InputLabel id="demo-simple-select-label">Sélectionnez au moins un service</InputLabel>
                     <Select
@@ -416,7 +415,7 @@ class Schedule extends React.Component {
                     </ExpansionPanel>
                   </Grid>
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
-                    <Button type="submit" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}>Envoyer </Button>
+                    <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>Envoyer </Button>
                     <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler </Button>
                   </Grid>
                 </form>

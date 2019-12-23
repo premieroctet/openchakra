@@ -80,7 +80,7 @@ const events2availabilities= event => {
   const inner_event = { 'begin': startDate, 'end': endDate, services:services, all_services : all_services }
   EV_AVAIL_DAY_MAPPING.forEach( (item, index) => {
     let include = recurrent ? event.recurrDays.has(index) : index==selDay;
-    avail[item] = include ? {'event':[inner_event]} : {};
+    avail[item] = include ? {'event':[inner_event]} : {'event': []};
   })  
   console.log("Generated availability:"+JSON.stringify(avail, null, 2));
   return avail;
