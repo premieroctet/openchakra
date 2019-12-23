@@ -161,7 +161,7 @@ class Schedule extends React.Component {
       title: '',
       isAddModalOpen: false,
       isEditModalOpen: false,
-      servicesSelected:[],
+      servicesSelected:[ALL_SERVICES],
       dayLayoutAlgorithm: 'no-overlap',
       selectedDateEndRecu: null,
       // Days (1=>7)
@@ -224,7 +224,7 @@ class Schedule extends React.Component {
           selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
           selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
           isExpanded: false,
-          servicesSelected: [],
+          servicesSelected: [ALL_SERVICES],
           isAddModalOpen: !this.state.isAddModalOpen,
           recurrDays: new Set(),
       });

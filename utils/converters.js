@@ -13,15 +13,23 @@ const DAY_MAPPING={
         'sunday': RRule.SU,
 }
 
+const addOneYear = dt => {
+  let result=new Date(dt.setFullYear(dt.getFullYear()+1));
+  return result;
+}
+
 const computeRecurrency = (period, event, dayOfWeek) => {
   if (period.active===false) {
     return [event];
   }
+
+  let rec_end = period.month_end ? new Date(period.month_end): addOneYear(new Date(period.month_begin));
+
   const rule = new RRule({
     freq: RRule.WEEKLY,
     byweekday: [DAY_MAPPING[dayOfWeek]],
     dtstart: new Date(period.month_begin),
-    until: new Date(period.month_end),
+    until: rec_end,
   })
   let all_events=[]
   console.log("Recurrence rules:"+JSON.stringify(rule));
@@ -83,7 +91,7 @@ const eventUI2availabilities= event => {
     avail[item] = include ? {'event':[inner_event]} : {'event': []};
   })  
   if (event.isExpanded==='panel1') {
-    avail['period']={active:true, month_begin: new Date(event.selectedDateStart), month_end:new Date(event.selectedDateEndRecu) };
+    avail['period']={active:true, month_begin: new Date(event.selectedDateStart), month_end: event.selectedDateEndRecu ? new Date(event.selectedDateEndRecu):null };
   }
   else {
     avail['period']={active:false, month_begin: null, month_end: null};
