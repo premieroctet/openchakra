@@ -294,6 +294,7 @@ class DetailsReservation extends React.Component {
               <>
                 <Layout>
                   <Grid container className={classes.bigContainer}>
+                    {currentUser.is_alfred === true ?
                     <Grid
                         container
                         className={classes.topbar}
@@ -371,7 +372,7 @@ class DetailsReservation extends React.Component {
                           className={classes.shopbar}
                           style={{ textAlign: "center" }}
                       >
-                        <Link href={"/myShop/performances"}>
+                        <Link href={"/performances/revenus"}>
                           <a style={{ textDecoration: "none" }}>
                             <p style={{ color: "white", cursor: "pointer" }}>
                               Performance
@@ -379,7 +380,7 @@ class DetailsReservation extends React.Component {
                           </a>
                         </Link>
                       </Grid>
-                    </Grid>
+                    </Grid> : null}
 
                     {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
@@ -2897,6 +2898,7 @@ class DetailsReservation extends React.Component {
                     {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
                   </Grid>
                 </Layout>
+                {currentUser.is_alfred === true ?
                 <Grid
                     container
                     className={classes.bottombar}
@@ -2989,7 +2991,7 @@ class DetailsReservation extends React.Component {
                   </a>
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> : null}
 
             {modal1 ? (
               <React.Fragment>

@@ -250,35 +250,12 @@ class ConfirmPayement extends React.Component {
   }
 
   handlePay() {
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-      "token"
-    );
-    axios
-      .post(url + "myAlfred/api/chatRooms/addAndConnect", {
-        emitter: this.state.emitter,
-        recipient: this.state.recipient
-      })
-      .then(res => {
-        let booking = this.state.bookingObj;
-        booking.chatroom = res.data._id;
-
-        axios
-          .post(url + "myAlfred/api/booking/add", booking)
-          .then(result => {
-            axios
-              .put(
-                url + "myAlfred/api/chatRooms/addBookingId/" + booking.chatroom,
-                { booking: result.data._id }
-              )
-              .then(() => {
-                Router.push({
-                  pathname: "/paymentChoice",
-                  query: { total: this.state.grandTotal, fees: this.state.fees }
-                });
-              });
-          })
-          .catch(err => console.log(err));
-      });
+    localStorage.setItem("emitter", this.state.emitter);
+    localStorage.setItem("recipient", this.state.recipient);
+    Router.push({
+      pathname: "/paymentChoiceCreate",
+      query: { total: this.state.grandTotal, fees: this.state.fees }
+    })
   }
 
   render() {

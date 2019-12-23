@@ -142,6 +142,41 @@ router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
         });
 });
 
+// POST /myAlfred/api/payment/payInCreate
+// @access private
+router.post('/payInCreate',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const amount = parseInt(req.body.amount)*100;
+    const fees = parseInt(req.body.fees)*100;
+    User.findById(req.user.id)
+        .then(user => {
+            const id_mangopay = user.id_mangopay;
+            api.Users.getWallets(id_mangopay)
+                .then(wallets => {
+                    const wallet_id = wallets[0].Id;
+                    api.PayIns.create({
+                        AuthorId: id_mangopay,
+                        DebitedFunds: {
+                            Currency: 'EUR',
+                            Amount: amount
+                        },
+                        Fees: {
+                            Currency: "EUR",
+                            Amount: fees
+                        },
+                        ReturnURL: url+'paymentSuccessCreate',
+                        CardType: "CB_VISA_MASTERCARD",
+                        PaymentType: "CARD",
+                        ExecutionType: "WEB",
+                        Culture: "FR",
+                        CreditedWalletId: wallet_id
+                    })
+                        .then(data => {
+                            res.json(data)
+                        })
+                })
+        });
+});
+
 // POST /myAlfred/api/payment/payInDirect
 // @access private
 router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res)=> {
@@ -171,6 +206,44 @@ router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res
                         CreditedWalletId: wallet_id,
                         CardId: id_card,
                         SecureModeReturnURL: url+'paymentDirectSuccess'
+                    })
+                        .then(data => {
+                            res.json(data)
+                        })
+                })
+        })
+
+});
+
+// POST /myAlfred/api/payment/payInDirectCreate
+// @access private
+router.post('/payInDirectCreate',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const amount = parseInt(req.body.amount)*100;
+    const fees = parseInt(req.body.fees)*100;
+    const id_card = req.body.id_card;
+    User.findById(req.user.id)
+        .then(user => {
+            const id_mangopay = user.id_mangopay;
+            api.Users.getWallets(id_mangopay)
+                .then(wallets => {
+                    const wallet_id = wallets[0].Id;
+                    api.PayIns.create({
+                        AuthorId: id_mangopay,
+                        DebitedFunds: {
+                            Currency: 'EUR',
+                            Amount: amount
+                        },
+                        Fees: {
+                            Currency: "EUR",
+                            Amount: fees
+                        },
+                        ReturnURL: url+'paymentSuccessCreate',
+                        CardType: "CB_VISA_MASTERCARD",
+                        PaymentType: "CARD",
+                        ExecutionType: "DIRECT",
+                        CreditedWalletId: wallet_id,
+                        CardId: id_card,
+                        SecureModeReturnURL: url+'paymentSuccessCreate'
                     })
                         .then(data => {
                             res.json(data)
