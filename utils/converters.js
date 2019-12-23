@@ -24,6 +24,7 @@ const computeRecurrency = (period, event, dayOfWeek) => {
     until: new Date(period.month_end),
   })
   let all_events=[]
+  console.log("Recurrence rules:"+JSON.stringify(rule));
   rule.all().forEach( dt => {
     let start = new Date(dt)
     start.setHours(event.start.getHours(), event.start.getMinutes(),0);
@@ -43,7 +44,7 @@ const avail2event = availab => {
     evts.forEach(e => {
       let title = e.all_services ? "Tous services" : e.services.map( s => s.label).join('\n');
       let res= {
-        id: e._id,
+        id: e._id+new Date().getTime(),
         title: title,
         start: new Date(e.begin),
         end: new Date(e.end),
@@ -58,14 +59,13 @@ const avail2event = availab => {
 
 const availabilities2events= avails => {
   let totalresult = []
-  console.log("Converting avails 2 events:"+JSON.stringify(avails));
   avails.forEach( avail => totalresult=totalresult.concat(avail2event(avail)));
   return totalresult;
 };
 
 
 const events2availabilities= event => {
- // console.log("Event:"+JSON.stringify(event, null, 2));
+  console.log("Event 2 availability:"+JSON.stringify(event, null, 2));
   let avail = {}
 
   let startDate=new Date(event.selectedDateStart);
@@ -84,8 +84,12 @@ const events2availabilities= event => {
     let include = recurrent ? event.recurrDays.has(index) : index==selDay;
     avail[item] = include ? {'event':[inner_event]} : {'event': []};
   })  
-  avail['period']={active:false, month_begin: null, month_end: null};
-  console.log("Generated availability:"+JSON.stringify(avail, null, 2));
+  if (event.isExpanded==='panel1') {
+    avail['period']={active:true, month_begin: new Date(event.selectedDateStart), month_end:new Date(event.selectedDateEndRecu) };
+  }
+  else {
+    avail['period']={active:false, month_begin: null, month_end: null};
+  }
   return avail;
 };
 
