@@ -145,7 +145,7 @@ class Wizard extends React.Component {
         this.state = {
             page: 0,
             values: props.initialValues,
-            hasId: false
+            hasId: false,
         };
     }
 
@@ -450,12 +450,14 @@ class Wizard extends React.Component {
 
     render() {
         const { schemaArray } = this;
-        const { children } = this.props;
+        const { children, availabilities } = this.props;
         const { page, values } = this.state;
         const activePage = React.Children.toArray(children)[page];
         const textLabel = values.submission.map(pc => {
             return pc.serviceLabel
         });
+
+console.log("Render, availabilities:"+JSON.stringify(availabilities));
 
         return (
             <Formik
@@ -577,7 +579,7 @@ class Wizard extends React.Component {
                                                     color="secondary"
                                                     style={{ color: 'white'}}
                                                     onClick={() => {
-                                                        if (form.values.servicesAvailability.monday_event.length > 0 || form.values.servicesAvailability.tuesday_event.length > 0 || form.values.servicesAvailability.wednesday_event.length > 0 || form.values.servicesAvailability.thursday_event.length > 0 || form.values.servicesAvailability.friday_event.length > 0 || form.values.servicesAvailability.saturday_event.length > 0 || form.values.servicesAvailability.sunday_event.length > 0) {
+                                                        if (true) {
                                                             const data = {
                                                                 active: form.values.servicesAvailability.active,
                                                                 month_begin: form.values.servicesAvailability.month_begin,
@@ -602,8 +604,9 @@ class Wizard extends React.Component {
                                                                 "token"
                                                             );
 
+                                                            availabilities.forEach( avail => {
                                                             axios
-                                                                .post(url + "myAlfred/api/availability/add", data)
+                                                                .post(url + "myAlfred/api/availability/add", avail)
                                                                 .then(() => {
                                                                 toast.info("Disponibilité(s) ajoutée(s) avec succès");
                                                                 form.setFieldValue(`servicesAvailability.monday_event`, []);
@@ -615,6 +618,7 @@ class Wizard extends React.Component {
                                                                 form.setFieldValue(`servicesAvailability.sunday_event`, []);
                                                             })
                                                                 .catch(err => console.log(err));
+                                                            })
 
                                                             const div = document.getElementById('bigDiv');
                                                             div.scrollTop = 0;
@@ -847,14 +851,19 @@ class Form extends React.Component {
             option_presta_user: true,
             option_presta_home: true,
             option_presta_visio: true,
-
-
+            availabilities: [],
         };
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
 
         this.handleChecked = this.handleChecked.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.availability_created = this.availability_created.bind(this);
+    }
+
+    availability_created(avail) {
+      console.log("CB created availability:"+JSON.stringify(avail));
+      this.setState({availabilities: [avail, ...this.state.availabilities]});
     }
 
     componentDidMount() {
@@ -987,7 +996,7 @@ class Form extends React.Component {
         return (
             <div className="App" style={{marginTop: 64}}>
 
-                <Wizard
+                <Wizard availabilities={this.state.availabilities}
                     initialValues={{
                         categories: [],
                         services: [],
@@ -2054,6 +2063,8 @@ class Form extends React.Component {
                                                                                                 <Field
                                                                                                         name={`submission.${index}.certification.year`}
                                                                                                         render={({field}) => {
+                                                                                                            console.log("Fields");
+
                                                                                                             return (
                                                                                                                 <TextField
                                                                                                                     {...field}
@@ -2115,7 +2126,9 @@ class Form extends React.Component {
                             </Grid>
                   </Wizard.Page>
                   <Wizard.Page>
-                    <Schedule events={[]}/>
+                    <Field render={(arrayHelpers) => (
+                    <Schedule events={[]} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailCreation={this.availability_created} />
+)} />
                   </Wizard.Page>
                   <Wizard.Page>
                     <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>

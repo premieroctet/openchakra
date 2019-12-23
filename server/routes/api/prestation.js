@@ -1,3 +1,4 @@
+const passport = require('passport');
 const express = require('express');
 const router = express.Router();
 
@@ -77,7 +78,13 @@ router.get('/:service',(req,res)=> {
 
 // @Route GET /myAlfred/api/prestation/:service/:filter
 // View all prestations per service and filter
-router.get('/:service/:filter', (req, res) => {
+router.get('/:service/:filter',passport.authenticate('jwt',{session:false}), (req, res) => {
+
+  console.log("Before getting user:"+req.user.id);
+  let result = User.findById(req.user.id);
+  
+  console.log("After getting user:"+Object.keys(result.mongooseCollection));
+
   Prestation.find({
     service: req.params.service,
     filter_presentation: req.params.filter,
@@ -98,6 +105,8 @@ router.get('/:service/:filter', (req, res) => {
 // View all prestations per tags
 router.get('/all/tags/:tags',(req,res)=> {
 
+    console.log("Getting prestation/all/tags/:tag");
+
     Prestation.find({tags: req.params.tags})
         .sort({'label':1})
         .populate('tags')
@@ -116,6 +125,8 @@ router.get('/all/tags/:tags',(req,res)=> {
 // @Route GET /myAlfred/api/prestation/:id
 // View one prestation
 router.get('/:id',(req,res)=> {
+
+    console.log("Getting api/prestation/:id");
 
     Prestation.findById(req.params.id)
         .populate('category')

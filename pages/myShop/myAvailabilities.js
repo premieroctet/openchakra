@@ -9,6 +9,7 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Schedule from '../../components/Schedule/Schedule';
 import {availabilities2events, events2availabilities} from '../../utils/converters';
+import { toast } from 'react-toastify';
 
 moment.locale('fr');
 
@@ -109,7 +110,24 @@ class myAvailabilities extends React.Component {
             user: {},
             shop: {},
             events: [],
+            services: [],
         };
+        this.availability_created = this.availability_created.bind(this);
+    }
+
+    availability_created(avail) {
+      console.log("CB created availability:"+JSON.stringify(avail));
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
+      axios.post(url+'myAlfred/api/availability/add',avail)
+          .then(() => {
+              toast.info('Disponibilité ajoutée avec succès !');
+              window.location.reload();
+          })
+          .catch(err => {
+            console.log(err);
+            toaster.error(err);
+		  })
     }
 
     componentDidMount() {
@@ -147,6 +165,19 @@ class myAvailabilities extends React.Component {
 
                     })
                     .catch(err => console.log(err));
+
+                   axios
+                        .get(url+'myAlfred/api/serviceUser/currentAlfred')
+                        .then(res => {
+                            let services = [...new Set(res.data.map(d => [d['service']['label'],d['_id']]))];
+                            this.setState({services:services});
+                            //this.setState({serviceUser: serviceUser});
+                        })
+                        .catch(err =>
+                            console.log(err)
+                        );
+
+
               }
           })
           .catch(err => {
@@ -225,10 +256,8 @@ class myAvailabilities extends React.Component {
                   </Grid>
                   <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
                       <Grid style={{width:'100%'}}>
-                          <Schedule events={this.state.events}/>
+                          <Schedule events={this.state.events} services={this.state.services} cbAvailCreation={this.availability_created} />
                       </Grid>
-                      {/*<Grid className={classes.hidenimg} item md={2} style={{backgroundImage:'url(../../static/background/disponibilité.svg)', backgroundPosition:'center',backgroundSize:'contain', backgroundRepeat: 'no-repeat', }}>
-                      </Grid>*/}
                   </Grid>
               </Layout>
               <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
