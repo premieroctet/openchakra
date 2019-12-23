@@ -238,11 +238,9 @@ class myAvailabilities extends React.Component {
                       </Grid>
                   </Grid>
                   <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
-                      <Grid style={{width:'100%'}}>
+                      <Grid style={{width:'90%', marginLeft: 'auto', marginRight:'auto'}}>
                           <Schedule events={this.state.events} services={this.state.services}/>
                       </Grid>
-                      {/*<Grid className={classes.hidenimg} item md={2} style={{backgroundImage:'url(../../static/background/disponibilité.svg)', backgroundPosition:'center',backgroundSize:'contain', backgroundRepeat: 'no-repeat', }}>
-                      </Grid>*/}
                   </Grid>
               </Layout>
               <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
