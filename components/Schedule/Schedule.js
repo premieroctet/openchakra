@@ -27,7 +27,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
-import {availabilities2events, events2availabilities} from '../../utils/converters';
+import {availabilities2events, eventUI2availabilities} from '../../utils/converters';
 import {ALL_SERVICES} from '../../utils/consts.js';
 
 
@@ -276,7 +276,7 @@ class Schedule extends React.Component {
   };
 
   onSubmit = e => {
-    let avail=events2availabilities(this.state);
+    let avail=eventUI2availabilities(this.state);
     let res = this.props.cbAvailabilityCreated(avail);
     this.closeModal();
   };

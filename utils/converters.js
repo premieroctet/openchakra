@@ -62,7 +62,7 @@ const availabilities2events= avails => {
 };
 
 
-const events2availabilities= event => {
+const eventUI2availabilities= event => {
   console.log("Event 2 availability:"+JSON.stringify(event, null, 2));
   let avail = {}
 
@@ -91,4 +91,4 @@ const events2availabilities= event => {
   return avail;
 };
 
-export {availabilities2events, events2availabilities};
+export {availabilities2events, eventUI2availabilities};
