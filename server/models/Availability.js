@@ -20,7 +20,7 @@ const AvailabilitySchema = new Schema({
                   },
                   value: {
                     type: Schema.Types.ObjectId,
-                    ref: 'serviceUser',
+                    ref: 'service',
                   },
               }],
               all_services: {
@@ -43,7 +43,7 @@ const AvailabilitySchema = new Schema({
                     },
                     value: {
                         type: Schema.Types.ObjectId,
-                        ref: 'serviceUser'
+                        ref: 'service'
                     }
 
                 }],
@@ -67,7 +67,7 @@ const AvailabilitySchema = new Schema({
                     },
                     value: {
                         type: Schema.Types.ObjectId,
-                        ref: 'serviceUser'
+                        ref: 'service'
                     }
 
                 }],
@@ -91,7 +91,7 @@ const AvailabilitySchema = new Schema({
                     },
                     value: {
                         type: Schema.Types.ObjectId,
-                        ref: 'serviceUser'
+                        ref: 'service'
                     }
 
                 }],
@@ -115,7 +115,7 @@ const AvailabilitySchema = new Schema({
                     },
                     value: {
                         type: Schema.Types.ObjectId,
-                        ref: 'serviceUser'
+                        ref: 'service'
                     }
 
                 }],
@@ -139,7 +139,7 @@ const AvailabilitySchema = new Schema({
                     },
                     value: {
                         type: Schema.Types.ObjectId,
-                        ref: 'serviceUser'
+                        ref: 'service'
                     }
 
                 }],
@@ -163,7 +163,7 @@ const AvailabilitySchema = new Schema({
                     },
                     value: {
                         type: Schema.Types.ObjectId,
-                        ref: 'serviceUser'
+                        ref: 'service'
                     }
 
                 }],
