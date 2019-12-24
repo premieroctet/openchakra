@@ -111,7 +111,6 @@ class searchLogin extends React.Component {
     }
 
     componentDidMount() {
-        setTimeout(() => {this.searchWithWord(); this.setState({click2:false})}, 1000);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
             .get(url+'myAlfred/api/users/current')
@@ -525,52 +524,23 @@ class searchLogin extends React.Component {
     }
 
       async filter(){
-
         if((this.state.serviceUser.length && this.state.finalServiceUser.length) || this.state.finalServiceUserCopy.length){
-            const arrayShop = [];
-            const serviceUser = this.state.finalServiceUser;
-            serviceUser.forEach(s => {
-                axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
-                    .then( res => {
-                        let shop = res.data;
-                        const index = arrayShop.findIndex(i=>i._id == shop._id);
-                        if(index === -1){
-                            arrayShop.push(shop);
-
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            });
-            await this.setState({uniqShop: arrayShop});
-
+          const serviceUser = await this.state.finalServiceUser;
 
             if(this.state.checkedB){
-                this.setState({idAlfred:[]});
                 setTimeout(()=>{
-
-                    const arrayService = this.state.finalServiceUser;
-                    const arrayIndex = [];
-                    this.state.uniqShop.forEach(u => {
-                        if(u.is_particular){
-                            this.state.idAlfred.push(u.alfred._id)
+                    const serviceFilter = [];
+                    serviceUser.forEach(s => {
+                        if(s.status === 'Pro'){
+                            serviceFilter.push(s)
                         }
                     });
-                    this.state.finalServiceUser.forEach((f,index) => {
-                        this.state.idAlfred.forEach(i => {
-                            if(f.user._id === i){
-                                arrayIndex.push(index);
-                            }
-                        })
-                    });
-                    for (let t = arrayIndex.length -1; t >= 0; t--)
-                        arrayService.splice(arrayIndex[t],1);
-
-                    this.setState({finalServiceUser:arrayService,copyFilterPro:arrayService});
+                    const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
+                    this.setState({finalServiceUser: sorted, copyFilterPro: sorted});
                     this.state.categoryFinal.forEach(e => {
                         this.setState({[e.label+'Final']:0});
-                        this.state.finalServiceUser.forEach(a => {
+                        this.state.serviceUser.forEach(a => {
                             if(a.service.category === e._id){
                                 this.setState(prevState => {
                                     return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
@@ -587,47 +557,20 @@ class searchLogin extends React.Component {
                 }},2000)
             }
         } else {
-            const arrayShop = [];
-            const serviceUser = this.state.serviceUser;
-            serviceUser.forEach(s => {
-                axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
-                    .then( res => {
-                        let shop = res.data;
-                        const index = arrayShop.findIndex(i=>i._id == shop._id);
-                        if(index === -1){
-                            arrayShop.push(shop);
-
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            });
-            await this.setState({uniqShop: arrayShop});
-
-
+            const serviceUser =  await this.state.serviceUser;
             if(this.state.checkedB){
-                this.setState({idAlfred:[]});
                 setTimeout(()=>{
 
-                    const arrayService = this.state.serviceUser;
-                    const arrayIndex = [];
-                    this.state.uniqShop.forEach(u => {
-                        if(u.is_particular){
-                            this.state.idAlfred.push(u.alfred._id)
+                    const serviceFilter = [];
+                    serviceUser.forEach(s => {
+                        if(s.status === 'Pro'){
+                            serviceFilter.push(s)
                         }
                     });
-                    this.state.serviceUser.forEach((f,index) => {
-                        this.state.idAlfred.forEach(i => {
-                            if(f.user._id === i){
-                                arrayIndex.push(index);
-                            }
-                        })
-                    });
-                    for (let t = arrayIndex.length -1; t >= 0; t--)
-                        arrayService.splice(arrayIndex[t],1);
+                    const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
 
-                    this.setState({serviceUser:arrayService,copyFilterPro:arrayService});
+                    this.setState({serviceUser:sorted,copyFilterPro:sorted});
                     this.state.categories.forEach(e => {
                         this.setState({[e.label]:0});
                         this.state.serviceUser.forEach(a => {
@@ -638,10 +581,6 @@ class searchLogin extends React.Component {
                             }
                         })
                     })
-
-
-
-
                 },2000)
             } else {
                 setTimeout(() => {
@@ -654,62 +593,24 @@ class searchLogin extends React.Component {
                     2000);
             }
         }
-
-
-
-
-
-
-
-
-    }
+     }
 
     async filterParticulier(){
         if(this.state.serviceUser.length && this.state.finalServiceUser.length){
-            const arrayShop = [];
-            const serviceUser = this.state.finalServiceUser;
-            serviceUser.forEach(s => {
-                axios.get(url + 'myAlfred/api/shop/alfred/' + s.user._id)
-                    .then(res => {
-                        let shop = res.data;
-                        const index = arrayShop.findIndex(i => i._id == shop._id);
-                        if (index === -1) {
-                            arrayShop.push(shop);
-
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            });
-            await this.setState({uniqShop: arrayShop});
-
+            const serviceUser =  await this.state.finalServiceUser;
             if(this.state.checkedParticulier){
                 this.setState({idAlfred:[]});
                 setTimeout(() => {
-
-                    const arrayService = this.state.finalServiceUser;
-                    const arrayIndex = [];
-                    this.state.uniqShop.forEach(u => {
-                        if (u.is_professional) {
-                            this.state.idAlfred.push(u.alfred._id)
+                    const serviceFilter = [];
+                    serviceUser.forEach(s => {
+                        if(s.status === 'Particulier'){
+                            serviceFilter.push(s)
                         }
                     });
-                    this.state.finalServiceUser.forEach((f, index) => {
-                        this.state.idAlfred.forEach(i => {
-                            if (f.user._id === i) {
-                                arrayIndex.push(index);
+                    const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
 
-
-                            }
-
-
-                        })
-                    });
-                    for (let t = arrayIndex.length - 1; t >= 0; t--)
-                        arrayService.splice(arrayIndex[t], 1);
-
-                    this.setState({finalServiceUser: arrayService,copyFilterParticulier:arrayService});
+                    this.setState({finalServiceUser: sorted,copyFilterParticulier:sorted});
                     this.state.categoryFinal.forEach(e => {
                         this.setState({[e.label+'Final']:0});
                         this.state.finalServiceUser.forEach(a => {
@@ -720,8 +621,6 @@ class searchLogin extends React.Component {
                             }
                         })
                     })
-
-
                 }, 2000)
             } else {
                 setTimeout(() => {if(this.state.filterDate){
@@ -732,50 +631,19 @@ class searchLogin extends React.Component {
 
             }
         } else {
-            const arrayShop = [];
-            const serviceUser = this.state.serviceUser;
-            serviceUser.forEach(s => {
-                axios.get(url + 'myAlfred/api/shop/alfred/' + s.user._id)
-                    .then(res => {
-                        let shop = res.data;
-                        const index = arrayShop.findIndex(i => i._id == shop._id);
-                        if (index === -1) {
-                            arrayShop.push(shop);
-
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            });
-            await this.setState({uniqShop: arrayShop});
-
+            const serviceUser =  await this.state.serviceUser;
             if(this.state.checkedParticulier){
-                this.setState({idAlfred:[]});
                 setTimeout(() => {
-
-                    const arrayService = this.state.serviceUser;
-                    const arrayIndex = [];
-                    this.state.uniqShop.forEach(u => {
-                        if (u.is_professional) {
-                            this.state.idAlfred.push(u.alfred._id)
+                    const serviceFilter = [];
+                    serviceUser.forEach(s => {
+                        if(s.status === 'Particulier'){
+                            serviceFilter.push(s)
                         }
                     });
-                    this.state.serviceUser.forEach((f, index) => {
-                        this.state.idAlfred.forEach(i => {
-                            if (f.user._id === i) {
-                                arrayIndex.push(index);
+                    const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
 
-
-                            }
-
-
-                        })
-                    });
-                    for (let t = arrayIndex.length - 1; t >= 0; t--)
-                        arrayService.splice(arrayIndex[t], 1);
-
-                    this.setState({serviceUser: arrayService,copyFilterParticulier:arrayService});
+                    this.setState({serviceUser: sorted,copyFilterParticulier:sorted});
                     this.state.categories.forEach(e => {
                         this.setState({[e.label]:0});
                         this.state.serviceUser.forEach(a => {
@@ -786,8 +654,6 @@ class searchLogin extends React.Component {
                             }
                         })
                     })
-
-
                 }, 2000)
             } else {
                 setTimeout(() => {
@@ -934,6 +800,16 @@ class searchLogin extends React.Component {
          }
      }
 
+     keyPress(e) {
+         if(e.keyCode === 13){
+             if(this.state.research.length === 0 || !this.state.research.trim()){
+                 this.search()
+             } else {
+                 this.searchWithWord()
+             }
+         }
+     }
+
 
 
     render() {
@@ -964,7 +840,8 @@ class searchLogin extends React.Component {
                                     variant={"outlined"}
                                     value={this.state.research}
                                     style={{width: '100%', margin: 'auto'}}
-                                    onChange={(event)=>{this.setState({research: event.target.value,click2:false}); this.searchWithWord()}}
+                                    onChange={(event)=>{this.setState({research: event.target.value,click2:false});}}
+                                    onKeyDown={(e)=>this.keyPress(e)}
                                 />
                             </Grid>
                             <Grid item xs={3} style={{fontFamily: 'Helvetica Neue, Helvetica,sans-serif',width: '100%', margin: 'auto'}}>
@@ -977,7 +854,7 @@ class searchLogin extends React.Component {
                                     style={{width:'100%', marginTop: '6px'}}
                                     value={this.state.addressSelected}
                                     name={'addressSelected'}
-                                    onChange={(e) => {this.onChange(e); this.search()}}
+                                    onChange={(e) => {this.onChange(e);}}
                                     margin="normal"
                                     variant="outlined"
                                 >
@@ -1025,6 +902,14 @@ class searchLogin extends React.Component {
                                     }
                                 </Grid>
                             </Grid>
+                            <Grid item xs={5} style={{marginLeft:50}}>
+                                {this.state.research.length === 0 || !this.state.research.trim() ?
+                                    <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white'}}>Rechercher</Button>
+                                    :
+                                    <Button variant={"contained"}  onClick={()=>this.searchWithWord()} color={"primary"} style={{color:'white'}}>Rechercher</Button>
+                                }
+                                    </Grid>
+
                         </Grid>
                         <Grid container className={classes.respfilter} style={{position: 'sticky', top: '145px', zIndex: 10}}>
                             <Grid container  style={{height: '10px'}}>
@@ -1169,7 +1054,7 @@ class searchLogin extends React.Component {
                                                                                 {a.service_address.city != undefined ? 
                                                                                 <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'white', textShadow:'0px 0px 3px black',fontWeight:600,bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16.057" height="20.521" viewBox="0 0 16.057 20.521">
-                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="white" fill-rule="evenodd"/>
+                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="white" fillRule="evenodd"/>
                                                                                     </svg> 
                                                                                      {' ' + a.service_address.city}
                                                                                 </Typography>: null}
@@ -1362,7 +1247,7 @@ class searchLogin extends React.Component {
                                                                                 {a.service_address.city != undefined ? 
                                                                                 <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'white',textShadow:'0px 0px 3px black',fontWeight:600, bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16.057" height="20.521" viewBox="0 0 16.057 20.521">
-                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="white" fill-rule="evenodd"/>
+                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="white" fillRule="evenodd"/>
                                                                                     </svg> 
                                                                                      {' ' + a.service_address.city}
                                                                                      ({Math.round((geolib.convertDistance(
@@ -1583,7 +1468,7 @@ class searchLogin extends React.Component {
                                                                                 {s.service_address.city != undefined ? 
                                                                                 <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'white', textShadow:'0px 0px 3px black',fontWeight:600,bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16.057" height="20.521" viewBox="0 0 16.057 20.521">
-                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="white" fill-rule="evenodd"/>
+                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="white" fillRule="evenodd"/>
                                                                                     </svg> 
                                                                                      {' ' + s.service_address.city}
                                                                                 </Typography>: null}
@@ -1778,7 +1663,7 @@ class searchLogin extends React.Component {
                                                                                 {s.service_address.city != undefined ? 
                                                                                 <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'white', textShadow:'0px 0px 3px black',fontWeight:600,bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16.057" height="20.521" viewBox="0 0 16.057 20.521">
-                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="white" fill-rule="evenodd"/>
+                                                                                        <path id="Tracé_13306" data-name="Tracé 13306" d="M274.542,14959.223l-.392.033-.391.063-.425.061-.36.1-.391.092-.752.252-.684.348-.687.377-.587.441-.587.5-.522.566-.457.566-.391.66-.359.66-.26.725-.1.377-.1.348-.065.41-.066.377-.031.379v.406l.031.568.066.566.1.6.164.566.163.566.228.566.229.566.26.566.294.535.326.568.685,1.035.718,1.008.752.945.75.881.718.789.686.723.62.6.88.818.36.314.36-.314.88-.818.62-.6.685-.723.718-.789.752-.881.752-.945.718-1.008.685-1.035.326-.568.294-.535.26-.566.229-.566.228-.566.163-.566.164-.566.1-.6.065-.566.033-.568v-.406l-.033-.379-.065-.377-.065-.41-.1-.348-.1-.377-.26-.725-.36-.66-.392-.66-.456-.566-.522-.566-.587-.5-.587-.441-.686-.377-.684-.348-.752-.252-.391-.092-.36-.1-.425-.061-.391-.062-.394-.033Zm.784,4.439.326.064.327.061.326.125.294.127.293.188.262.189.228.221.228.221.2.25.2.285.132.283.13.314.065.313.065.318v.689l-.065.316-.065.313-.13.318-.132.281-.2.283-.2.252-.228.221-.228.221-.262.189-.293.188-.294.125-.326.127-.327.064-.326.063h-.719l-.326-.062-.327-.064-.326-.127-.294-.125-.293-.187-.262-.189-.228-.221-.228-.221-.2-.252-.2-.283-.132-.281-.13-.318-.065-.312-.065-.316v-.689l.065-.318.065-.312.13-.314.132-.283.2-.285.2-.25.228-.221.228-.221.262-.189.293-.187.294-.127.326-.125.327-.061.326-.064Z" transform="translate(-266.938 -14959.223)" fill="white" fillRule="evenodd"/>
                                                                                     </svg> 
                                                                                      {' ' + s.service_address.city}
                                                                                      ({Math.round((geolib.convertDistance(
