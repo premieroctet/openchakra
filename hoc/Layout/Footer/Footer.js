@@ -88,10 +88,10 @@ class Footer extends Component {
                             <ExpansionPanelDetails>
                                 <Grid container style={{marginTop: '4%'}}>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
-                                        <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Utilisateurs</Typography></a></Link>
+                                        <Link href="/faq"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Utilisateurs</Typography></a></Link>
                                     </Grid>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
-                                        <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Alfred</Typography></a></Link>
+                                        <Link href="/faq"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Alfred</Typography></a></Link>
                                     </Grid>
                                 </Grid>
                             </ExpansionPanelDetails>
@@ -101,10 +101,10 @@ class Footer extends Component {
                         <Typography className={classes.normal} style={{fontSize: '1rem', color: 'white', fontWeight: 'bold'}}>Aide</Typography>
                             <Grid container className={classes.normal} style={{marginTop: '4%'}}>
                                 <Grid item xs={12}>
-                                    <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Utilisateurs</Typography></a></Link>
+                                    <Link href="/faq"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Utilisateurs</Typography></a></Link>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Alfred</Typography></a></Link>
+                                    <Link href="/faq"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ Alfred</Typography></a></Link>
                                 </Grid>
                             </Grid>
                     </Grid>
