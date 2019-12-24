@@ -134,8 +134,12 @@ const styles = theme => ({
       marginRight: theme.spacing(1),
       width: '70px',
     },
+  App:{
+    [theme.breakpoints.down('xs')]: {
+      marginTop:'10%',
+    }
+  }
 });
-
 
 class Wizard extends React.Component {
     static Page = ({ children }) => children;
@@ -449,7 +453,8 @@ class Wizard extends React.Component {
     schemaArray =[this.Step0Schema, this.Step1Schema, this.Step2Schema, this.Step3Schema, this.Step4Schema, this.Step5Schema];
 
     render() {
-        const { schemaArray } = this;
+
+      const { schemaArray } = this;
         const { children, availabilities } = this.props;
         const { page, values } = this.state;
         const activePage = React.Children.toArray(children)[page];
@@ -485,7 +490,7 @@ console.log("Render, availabilities:"+JSON.stringify(availabilities));
                             </div>
                         </div>}
                         <form onSubmit={handleSubmit} style={{display: 'flex'}}>
-                            <div style={{width:'50%', marginTop:150}}>
+                            <div style={{marginTop:'150px',  width: 900}}>
                                 <div id="bigDiv">
                                     {activePage}
                                 </div>
@@ -867,7 +872,6 @@ class Form extends React.Component {
     }
 
     componentDidMount() {
-        document.body.style.overflow = 'hidden';
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
@@ -994,7 +998,7 @@ class Form extends React.Component {
             }
 
         return (
-            <div className="App" style={{marginTop: '1%'}}>
+            <div className="App" style={{marginTop: 25}}>
 
                 <Wizard availabilities={this.state.availabilities}
                     initialValues={{
@@ -2965,5 +2969,5 @@ const Fill = styled.div`
   width: ${props => props.width};
 `;
 
-export default withStyles(styles)(Form);
+export default withStyles(styles)(Form,Wizard);
 
