@@ -77,9 +77,6 @@ const styles = theme => ({
     },
     formClasse:{
         width:'100%',
-          [theme.breakpoints.down('lg')]: {
-            width:'50%'
-         }
     }
 });
 
