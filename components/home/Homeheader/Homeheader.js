@@ -62,7 +62,7 @@ const styles = theme => ({
     left: '0%',
     zIndex: '2',
     width: '100%',
-    minHeight: '90vh',
+    minHeight: '122vh',
     backgroundImage: 'linear-gradient(to top, rgba(0,0,0,.5), rgba(0,0,0,.4), rgba(0,0,0,.3), rgba(0,0,0,.2), rgba(255,255,255,0))',
   },
   headerhome: {

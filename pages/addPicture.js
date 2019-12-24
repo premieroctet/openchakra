@@ -20,12 +20,11 @@ const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        justifyContent: 'top',
         flexDirection: 'column',
 
     },
     card: {
-        width: 800,
+        maxWidth: 800,
         marginTop: '100px',
     },
     cardContant: {
@@ -41,6 +40,9 @@ const styles = theme => ({
         marginBottom: 25,
         backgroundColor: '#2FBCD3',
         height: 80,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
 
     },
     newContainer: {
@@ -49,10 +51,6 @@ const styles = theme => ({
     title: {
         fontFamily: 'helveticaNeue',
         color: 'white',
-        display: 'flex',
-        justifyContent: 'center',
-        marginTop: 0,
-        paddingTop: 22,
         letterSpacing: 1,
     },
 });
@@ -123,6 +121,7 @@ class addPicture extends React.Component {
         return (
             <Layout>
                 <Grid container className={classes.signupContainer}>
+                    <Grid item xs={10}>
                     <Card className={classes.card}>
                         <div className={classes.banner}>
                             <h2 className={classes.title}>Ajouter votre photo de profil</h2>
@@ -162,6 +161,7 @@ class addPicture extends React.Component {
                             </div>
 
                     </Card>
+                    </Grid>
                 </Grid>
             </Layout>
         );
