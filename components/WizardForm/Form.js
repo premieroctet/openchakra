@@ -47,7 +47,6 @@ const styles = theme => ({
             padding: '0'
         },
         fontFamily: 'helvetica',
-        overflow: 'scroll',
         height: 'auto',
     },
     chip: {
@@ -469,7 +468,7 @@ console.log("Render, availabilities:"+JSON.stringify(availabilities));
                 onSubmit={this.handleSubmit}
                 render={({ values, handleSubmit }) => (
                     <React.Fragment>
-                        {page !== 0 && <div style={{backgroundColor: 'white'}}>
+                        {page !== 0 && <div style={{backgroundColor: 'white', position:'fixed', width:'100%'}}>
                             {page === 1 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez votre catégorie puis votre service </h3> : null}
                             {page === 2 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de votre service - {textLabel}</h3> : null}
                             {page === 3 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
@@ -485,12 +484,12 @@ console.log("Render, availabilities:"+JSON.stringify(availabilities));
                                 </Bar>
                             </div>
                         </div>}
-                        <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh', padding:'1%'}}>
-                            <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%'}}>
-                                <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '90%' : '81%', overflowY: page === 2 ? 'scroll' : 'none', position: 'relative' }}>
+                        <form onSubmit={handleSubmit} style={{display: 'flex'}}>
+                            <div style={{width:'50%', marginTop:150}}>
+                                <div id="bigDiv">
                                     {activePage}
                                 </div>
-                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent'}}>
+                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
                                         {page !== 0 && <React.Fragment><Button
                                             color="primary"
@@ -693,7 +692,7 @@ console.log("Render, availabilities:"+JSON.stringify(availabilities));
                                     </div>
                                 </div>
                             </div>
-                            <div className="imgDiv" style={{width:'100%', overflow: 'hidden', backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : page === 3 ? 'url("../../static/illutration boutique - Etape du calendrier.png")' : page === 4 || page === 5 ? 'url("../../static/Creation_shop_step3.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: page !== 3 ? 'center' : null}}>
+                            <div className="imgDiv" style={{width:'50%', marginTop:150, backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : page === 3 ? 'url("../../static/illutration boutique - Etape du calendrier.png")' : page === 4 || page === 5 ? 'url("../../static/Creation_shop_step3.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: page !== 3 ? 'center' : null}}>
                             </div>
                         </form>
                     </React.Fragment>
@@ -995,7 +994,7 @@ class Form extends React.Component {
             }
 
         return (
-            <div className="App" style={{marginTop: 64}}>
+            <div className="App" style={{marginTop: '1%'}}>
 
                 <Wizard availabilities={this.state.availabilities}
                     initialValues={{
@@ -1096,7 +1095,7 @@ class Form extends React.Component {
                     }}
                 >
                   <Wizard.Page>
-                      <Grid container className={classes.cardContainer} style={{justifyContent: 'start', overflow: 'hidden'}}>
+                      <Grid container className={classes.cardContainer} style={{justifyContent: 'start'}}>
 
                           <div style={{padding: '0rem 2rem 1rem 2rem', width: '100%'}}>
                               <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem', fontSize: 35}}>Devenez Alfred</Typography>
