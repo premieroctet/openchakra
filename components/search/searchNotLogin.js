@@ -477,47 +477,20 @@ class searchNotLogin extends React.Component {
     async filter(){
 
         if((this.state.serviceUser.length && this.state.finalServiceUser.length) || this.state.finalServiceUserCopy.length){
-            const arrayShop = [];
-            const serviceUser = this.state.finalServiceUser;
-            serviceUser.forEach(s => {
-                axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
-                    .then( res => {
-                        let shop = res.data;
-                        const index = arrayShop.findIndex(i=>i._id == shop._id);
-                        if(index === -1){
-                            arrayShop.push(shop);
-
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            });
-            await this.setState({uniqShop: arrayShop});
-
+            const serviceUser = await this.state.finalServiceUser;
 
             if(this.state.checkedB){
-                this.setState({idAlfred:[]});
                 setTimeout(()=>{
-
-                    const arrayService = this.state.finalServiceUser;
-                    const arrayIndex = [];
-                    this.state.uniqShop.forEach(u => {
-                        if(u.is_particular){
-                            this.state.idAlfred.push(u.alfred._id)
+                    const serviceFilter = [];
+                    serviceUser.forEach(s => {
+                        if(s.status === 'Pro'){
+                            serviceFilter.push(s)
                         }
                     });
-                    this.state.finalServiceUser.forEach((f,index) => {
-                        this.state.idAlfred.forEach(i => {
-                            if(f.user._id === i){
-                                arrayIndex.push(index);
-                            }
-                        })
-                    });
-                    for (let t = arrayIndex.length -1; t >= 0; t--)
-                        arrayService.splice(arrayIndex[t],1);
+                    const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
 
-                    this.setState({finalServiceUser:arrayService,copyFilterPro:arrayService});
+                    this.setState({finalServiceUser:sorted,copyFilterPro:sorted});
                     this.state.categoryFinal.forEach(e => {
                         this.setState({[e.label+'Final']:0});
                         this.state.finalServiceUser.forEach(a => {
@@ -538,47 +511,21 @@ class searchNotLogin extends React.Component {
                 }},2000)
             }
         } else {
-            const arrayShop = [];
-            const serviceUser = this.state.serviceUser;
-            serviceUser.forEach(s => {
-                axios.get(url+'myAlfred/api/shop/alfred/'+s.user._id)
-                    .then( res => {
-                        let shop = res.data;
-                        const index = arrayShop.findIndex(i=>i._id == shop._id);
-                        if(index === -1){
-                            arrayShop.push(shop);
-
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            });
-            await this.setState({uniqShop: arrayShop});
-
+            const serviceUser =  await this.state.serviceUser;
 
             if(this.state.checkedB){
-                this.setState({idAlfred:[]});
-                setTimeout(()=>{
 
-                    const arrayService = this.state.serviceUser;
-                    const arrayIndex = [];
-                    this.state.uniqShop.forEach(u => {
-                        if(u.is_particular){
-                            this.state.idAlfred.push(u.alfred._id)
+                setTimeout(()=>{
+                    const serviceFilter = [];
+                    serviceUser.forEach(s => {
+                        if(s.status === 'Pro'){
+                            serviceFilter.push(s)
                         }
                     });
-                    this.state.serviceUser.forEach((f,index) => {
-                        this.state.idAlfred.forEach(i => {
-                            if(f.user._id === i){
-                                arrayIndex.push(index);
-                            }
-                        })
-                    });
-                    for (let t = arrayIndex.length -1; t >= 0; t--)
-                        arrayService.splice(arrayIndex[t],1);
+                    const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
 
-                    this.setState({serviceUser:arrayService,copyFilterPro:arrayService});
+                    this.setState({serviceUser:sorted,copyFilterPro:sorted});
                     this.state.categories.forEach(e => {
                         this.setState({[e.label]:0});
                         this.state.serviceUser.forEach(a => {
@@ -589,10 +536,6 @@ class searchNotLogin extends React.Component {
                             }
                         })
                     })
-
-
-
-
                 },2000)
             } else {
                 setTimeout(() => {
@@ -605,62 +548,22 @@ class searchNotLogin extends React.Component {
                     2000);
             }
         }
-
-
-
-
-
-
-
-
     }
 
     async filterParticulier(){
         if(this.state.serviceUser.length && this.state.finalServiceUser.length){
-            const arrayShop = [];
-            const serviceUser = this.state.finalServiceUser;
-            serviceUser.forEach(s => {
-                axios.get(url + 'myAlfred/api/shop/alfred/' + s.user._id)
-                    .then(res => {
-                        let shop = res.data;
-                        const index = arrayShop.findIndex(i => i._id == shop._id);
-                        if (index === -1) {
-                            arrayShop.push(shop);
-
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            });
-            await this.setState({uniqShop: arrayShop});
-
+            const serviceUser =  await this.state.finalServiceUser;
             if(this.state.checkedParticulier){
-                this.setState({idAlfred:[]});
                 setTimeout(() => {
-
-                    const arrayService = this.state.finalServiceUser;
-                    const arrayIndex = [];
-                    this.state.uniqShop.forEach(u => {
-                        if (u.is_professional) {
-                            this.state.idAlfred.push(u.alfred._id)
+                    const serviceFilter = [];
+                    serviceUser.forEach(s => {
+                        if(s.status === 'Particulier'){
+                            serviceFilter.push(s)
                         }
                     });
-                    this.state.finalServiceUser.forEach((f, index) => {
-                        this.state.idAlfred.forEach(i => {
-                            if (f.user._id === i) {
-                                arrayIndex.push(index);
-
-
-                            }
-
-
-                        })
-                    });
-                    for (let t = arrayIndex.length - 1; t >= 0; t--)
-                        arrayService.splice(arrayIndex[t], 1);
-
-                    this.setState({finalServiceUser: arrayService,copyFilterParticulier:arrayService});
+                    const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
+                    this.setState({finalServiceUser: sorted,copyFilterParticulier:sorted});
                     this.state.categoryFinal.forEach(e => {
                         this.setState({[e.label+'Final']:0});
                         this.state.finalServiceUser.forEach(a => {
@@ -671,8 +574,6 @@ class searchNotLogin extends React.Component {
                             }
                         })
                     })
-
-
                 }, 2000)
             } else {
                 setTimeout(() => {if(this.state.filterDate){
@@ -683,50 +584,18 @@ class searchNotLogin extends React.Component {
 
             }
         } else {
-            const arrayShop = [];
-            const serviceUser = this.state.serviceUser;
-            serviceUser.forEach(s => {
-                axios.get(url + 'myAlfred/api/shop/alfred/' + s.user._id)
-                    .then(res => {
-                        let shop = res.data;
-                        const index = arrayShop.findIndex(i => i._id == shop._id);
-                        if (index === -1) {
-                            arrayShop.push(shop);
-
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            });
-            await this.setState({uniqShop: arrayShop});
-
+            const serviceUser = await this.state.serviceUser;
             if(this.state.checkedParticulier){
-                this.setState({idAlfred:[]});
                 setTimeout(() => {
-
-                    const arrayService = this.state.serviceUser;
-                    const arrayIndex = [];
-                    this.state.uniqShop.forEach(u => {
-                        if (u.is_professional) {
-                            this.state.idAlfred.push(u.alfred._id)
+                    const serviceFilter = [];
+                    serviceUser.forEach(s => {
+                        if(s.status === 'Particulier'){
+                            serviceFilter.push(s)
                         }
                     });
-                    this.state.serviceUser.forEach((f, index) => {
-                        this.state.idAlfred.forEach(i => {
-                            if (f.user._id === i) {
-                                arrayIndex.push(index);
-
-
-                            }
-
-
-                        })
-                    });
-                    for (let t = arrayIndex.length - 1; t >= 0; t--)
-                        arrayService.splice(arrayIndex[t], 1);
-
-                    this.setState({serviceUser: arrayService,copyFilterParticulier:arrayService});
+                    const sorted = _.orderBy(serviceFilter,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                        ['desc','desc','desc','desc','desc']);
+                    this.setState({serviceUser: sorted,copyFilterParticulier:sorted});
                     this.state.categories.forEach(e => {
                         this.setState({[e.label]:0});
                         this.state.serviceUser.forEach(a => {
@@ -737,8 +606,6 @@ class searchNotLogin extends React.Component {
                             }
                         })
                     })
-
-
                 }, 2000)
             } else {
                 setTimeout(() => {
@@ -749,10 +616,8 @@ class searchNotLogin extends React.Component {
                         }
                     },
                     2000);
-
             }
         }
-
     }
 
 
@@ -893,6 +758,16 @@ class searchNotLogin extends React.Component {
 
     }
 
+    keyPress(e) {
+        if(e.keyCode === 13){
+            if(this.state.research.length === 0 || !this.state.research.trim()){
+                this.search()
+            } else {
+                this.searchWithWord()
+            }
+        }
+    }
+
 
 
     render() {
@@ -920,7 +795,8 @@ class searchNotLogin extends React.Component {
                                     variant={"outlined"}
                                     value={this.state.research}
                                     style={{width: '100%', margin: 'auto'}}
-                                    onChange={(event)=>{this.setState({research: event.target.value,click2:false});  this.searchWithWord()}}
+                                    onChange={(event)=>{this.setState({research: event.target.value});}}
+                                    onKeyDown={(e)=>this.keyPress(e)}
                                 />
                             </Grid>
                             <Grid item xs={3} style={{fontFamily: 'Helvetica Neue, Helvetica,sans-serif',width: '100%', margin: 'auto'}}>
@@ -938,7 +814,7 @@ class searchNotLogin extends React.Component {
                                     }}
 
 
-                                    onChange={(suggestion) =>{this.onChangeAddress(suggestion); this.search()}}
+                                    onChange={(suggestion) =>{this.onChangeAddress(suggestion);}}
                                     onClear={()=>this.setState({searchCity:''})}
                                 />
 
@@ -964,6 +840,13 @@ class searchNotLogin extends React.Component {
                                         </Grid>
                                     }
                                 </Grid>
+                            </Grid>
+                            <Grid item xs={5} style={{marginLeft:50}}>
+                                {this.state.research.length === 0 || !this.state.research.trim() ?
+                                    <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white'}}>Rechercher</Button>
+                                    :
+                                    <Button variant={"contained"}  onClick={()=>this.searchWithWord()} color={"primary"} style={{color:'white'}}>Rechercher</Button>
+                                }
                             </Grid>
                         
 
