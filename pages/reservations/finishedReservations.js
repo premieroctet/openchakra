@@ -104,7 +104,7 @@ const styles = theme => ({
             display: 'none'
         },
         [theme.breakpoints.down('sm')]: {
-            visibility: 'visible',fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:90, backgroundColor:'white', position:'sticky', top:55, zIndex:20}},
+            visibility: 'visible',fontSize:'10px', fontWeight:'300', height:90, backgroundColor:'white', position:'sticky', top:55, zIndex:20}},
 
     mobilerow: {
         marginTop: '1%',

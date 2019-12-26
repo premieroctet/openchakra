@@ -126,7 +126,6 @@ const styles = theme => ({
       visibility: "visible",
       fontSize: "10px",
       fontWeight: "300",
-      marginTop: "-100px",
       height: 90,
       backgroundColor: "white",
       position: "sticky",

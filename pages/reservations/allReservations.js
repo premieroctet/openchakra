@@ -114,7 +114,7 @@ const styles = theme => ({
             display: 'none'
         },
         [theme.breakpoints.down('sm')]: {
-            visibility: 'visible',fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:90, backgroundColor:'white', position:'sticky', top:55, zIndex:20}},
+            visibility: 'visible',fontSize:'10px', fontWeight:'300', height:90, backgroundColor:'white', position:'sticky', top:55, zIndex:20}},
 
     mobilerow: {
         marginTop: '1%',
@@ -322,8 +322,12 @@ class AllReservations extends React.Component {
                             </Grid> 
 
                             <Grid className={classes.Rightcontent} item xs={9} sm={9} md={7}>
+                                <Grid container>
+                                    <Grid item xs={12}>
                                 <Typography style={{fontSize: '2rem',marginTop: '4%'}}>Toutes mes réservations</Typography>
+                                    </Grid>
                                 <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}}>Vous avez {this.state.userReservations.length + this.state.alfredReservations.length} réservations</Typography>
+                                </Grid>
                                 <Grid container className={classes.tabweb}>
                                     <Grid item xs={6} style={{textAlign:"center"}}>
                                         <div>

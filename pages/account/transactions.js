@@ -334,7 +334,7 @@ class transactions extends React.Component {
                         </Grid>
 
 
-                        <Grid item xs={9} style={{paddingLeft: 20, borderLeft: '#9f919178 solid 1px', marginBottom: '20px',minHeight:530}}>
+                        <Grid item xs={9} style={{paddingLeft: 20, marginBottom: '20px',minHeight:530}}>
                             <Grid container className={classes.tabweb} style={{paddingRight:20}}>
                                 <Grid item xs={12}>
                                     <h1 style={{color: 'dimgray',fontWeight: '100'}}>Historique des transactions</h1>
