@@ -174,12 +174,24 @@ class paymentPreference extends React.Component {
         axios.put(url+'myAlfred/api/payment/account',data)
             .then(() => {
                 //this.handleClose();
-                this.setState({haveAccount: false,clickDelete: !this.state.clickDelete})
+                toast.error('Compte bancaire supprimé');
+                this.refresh();
             })
             .catch(() => {
                 toast.error('Un erreur est survenue')
             })
 
+    }
+
+    refresh() {
+        this.setState({clickDelete: false,haveAccount: false});
+        axios.get(url+'myAlfred/api/payment/activeAccount')
+            .then(response => {
+                let accounts = response.data;
+                if(accounts.length){
+                    this.setState({haveAccount: true, accounts: accounts})
+                }
+            })
     }
 
 

@@ -386,7 +386,11 @@ router.put('/account',passport.authenticate('jwt',{session:false}),(req,res)=> {
     User.findById(req.user.id)
         .then(user => {
             const id_mangopay = user.id_mangopay;
-            api.Users.deactivateBankAccount(id_mangopay,id_account).then().catch();
+            api.Users.deactivateBankAccount(id_mangopay,id_account).then(
+                account=> {
+                    res.status(200).json(account)
+                }
+            ).catch(err => console.log(err));
         })
 
 });
