@@ -45,7 +45,9 @@ const storage2 = multer.diskStorage({
     filename: function (req, file, cb) {
         let datetimestamp = Date.now();
         let key = crypto.randomBytes(5).toString('hex');
-        cb(null, datetimestamp+'_'+key+ '_'+file.originalname )
+        let key2 = crypto.randomBytes(10).toString('hex');
+        cb(null, datetimestamp+'_'+key+ '_'+key2+path.extname(file.originalname) )
+
     }
 });
 const upload2 = multer({ storage: storage2,fileFilter: function (req, file, callback) {

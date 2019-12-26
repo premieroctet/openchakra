@@ -170,7 +170,8 @@ class userServices extends React.Component {
       date: Date.now(),
       hour: Date.now(),
       selectedOption: null,
-      errorsPresta: null
+      errorsPresta: null,
+      isToday: false
     };
 
     this.handleclick1 = this.handleclick1.bind(this);
@@ -189,6 +190,13 @@ class userServices extends React.Component {
     localStorage.removeItem("bookingObj");
     localStorage.removeItem("emitter");
     localStorage.removeItem("recipient");
+
+    let isToday = moment(this.state.date).isSame(moment(new Date()), 'day');
+    console.log(isToday);
+    this.setState({
+      isToday: isToday
+    });
+
 
     const id = this.props.service_id;
     localStorage.setItem("path", Router.pathname);
@@ -2591,9 +2599,17 @@ class userServices extends React.Component {
                                 <Grid item xs={10}>
                                   <DatePicker
                                       selected={this.state.date}
-                                      onChange={date => this.setState({ date: date })}
+                                      onChange={date => {
+                                        let isToday = moment(date).isSame(moment(new Date()), 'day');
+                                        this.setState({
+                                          date: date,
+                                          isToday: isToday
+                                        })
+                                      }}
+
                                       customInput={<Input2 />}
                                       locale="fr"
+                                      minDate={Date.now()}
                                       showMonthDropdown
                                       dateFormat="dd/MM/yyyy"
                                   />
@@ -2613,6 +2629,9 @@ class userServices extends React.Component {
                                       customInput={<Input2 />}
                                       showTimeSelect
                                       showTimeSelectOnly
+                                      excludeOutOfBoundsTimes
+                                      minTime={this.state.isToday ? new Date() : null}
+                                      maxTime={this.state.isToday ? moment().endOf('day').toDate() : null}
                                       timeIntervals={15}
                                       timeCaption="Heure"
                                       dateFormat="HH:mm"
