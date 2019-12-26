@@ -416,7 +416,7 @@ class searchNotLogin extends React.Component {
                                     }
 
                                 });
-                                this.setState({finalServiceUser:finalServiceUser,finalServiceUserCopy:finalServiceUser});
+                                this.setState({finalServiceUser:_.uniqBy(finalServiceUser,'_id'),finalServiceUserCopy:_.uniqBy(finalServiceUser,'_id')});
                                 this.state.categoryFinal.forEach(e => {
                                     this.setState({[e.label+'Final']:0});
                                     this.state.finalServiceUser.forEach(a => {
