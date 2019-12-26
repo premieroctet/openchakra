@@ -638,7 +638,7 @@ class services extends React.Component {
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
-                                                    <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Pièce d'identité<span className={classes.hiddenone}> officielle</span></h4><h4 style={{fontWeight: '100', lineHeight: '0.5!important'}} className={classes.revealedone}>officielle</h4>
+                                                    <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Pièce d'identité officielle</h4>
                                                     <p>Ces utilisateurs ont vérifié leur identité.</p>
                                                 </Grid>
                                             </Grid>
@@ -658,7 +658,7 @@ class services extends React.Component {
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
-                                                    <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Recommandations<span className={classes.hiddenone}> d'autres Alfred</span></h4><h4 style={{fontWeight: '100', lineHeight: '0.5!important'}} className={classes.revealedone}>d'autres Alfred</h4>
+                                                    <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Recommandations d'autres Alfred</h4>
                                                     <p>Ces utilisateurs ont déjà utilisés des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commentaires négatifs.</p>
                                                 </Grid>
                                             </Grid>
@@ -760,7 +760,7 @@ class services extends React.Component {
                                             </Grid>
                                             <Grid item xs={1} style={{zIndex: 999}}></Grid>
 
-                                            <Grid item xs={2} style={{zIndex: 999}}>
+                                            <Grid item xs={3} style={{zIndex: 999}}>
                                                 {tabs ?
                                                     <div style={{display:'flex',justifyContent:'flex-start',width:'100%',bottom:0,
                                                         alignItems:"center",height:60}}>

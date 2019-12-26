@@ -1203,7 +1203,7 @@ class editService extends React.Component {
 
                                 </p>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={12} md={4}>
                                 <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center",
                                     lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }}
                                 onClick={()=> this.setState({deadline_before_booking_number: this.state.deadline_before_booking_number -1})}>

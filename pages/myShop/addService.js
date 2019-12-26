@@ -876,7 +876,7 @@ class addService extends React.Component {
 
                                 </p>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={5} md={4}>
                                 <TextField
                                     id="standard-name"
                                     label="Panier minimum"
@@ -1057,7 +1057,7 @@ class addService extends React.Component {
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <TextField className={classes.field1}
-                                    style={{width:'53%'}}
+                                    style={{width:'61%'}}
                                     select
                                     margin="dense"
                                     variant="outlined"
