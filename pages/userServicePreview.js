@@ -213,16 +213,6 @@ class userServices extends React.Component {
           }
         });
 
-    axios
-        .get(url + "myAlfred/api/shop/currentAlfred")
-        .then(res => {
-          let shop = res.data;
-          this.setState({ shop: shop });
-          this.setState({ flexible2: shop.flexible_cancel });
-          this.setState({ moderate2: shop.moderate_cancel });
-          this.setState({ strict2: shop.strict_cancel });
-        })
-        .catch(err => console.log(err));
 
     axios
         .get(url + `myAlfred/api/serviceUser/${id}`)
@@ -248,6 +238,17 @@ class userServices extends React.Component {
           const lat = serviceUser.service_address.gps.lat;
           const lng = serviceUser.service_address.gps.lng;
           this.setState({ position: [lat, lng] });
+          axios
+              .get(url + "myAlfred/api/shop/alfred/" + this.state.serviceUser.user._id)
+              .then(res => {
+                let shop = res.data;
+                this.setState({ shop: shop });
+                this.setState({ flexible2: shop.flexible_cancel });
+                this.setState({ moderate2: shop.moderate_cancel });
+                this.setState({ strict2: shop.strict_cancel });
+              })
+              .catch(err => console.log(err));
+
 
 
           axios
