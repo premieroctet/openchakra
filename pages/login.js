@@ -93,7 +93,7 @@ class login extends React.Component {
                 if(path === '/'){
                   Router.push('/search')
                 } else {
-                  Router.push({pathname:path});
+                  Router.back();
                 }
               })
               .catch(err=> console.log(err));
