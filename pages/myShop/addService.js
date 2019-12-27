@@ -69,7 +69,6 @@ const styles = theme => ({
       padding: '0'
     },
     fontFamily: 'helvetica',
-    overflow: 'scroll',
     height: 'auto',
   },
   chip: {
@@ -164,6 +163,12 @@ const styles = theme => ({
     zIndex:999,
     [theme.breakpoints.down('sm')]: {
       visibility:'hidden',
+    }},
+  containercalendar:{
+    width:'100%',
+    [theme.breakpoints.down('sm')]: {
+      width:'100%!important',
+
     }},
 });
 
@@ -507,12 +512,12 @@ class Wizard extends React.Component {
                 </Bar>
               </div>
             </div>}
-            <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh', padding:'1%'}}>
-              <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '81vh'}}>
-                <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '90%' : '81%', overflowY: page === 1 ? 'scroll' : 'none', position: 'relative' }}>
+            <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh'}}>
+              <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%', overflow: 'hidden'}}>
+                <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '100%' : '81%', overflowY: page === 3 ? 'hidden' : 'scroll', position: 'relative'}}>
                   {activePage}
                 </div>
-                <div className={page === 1 ? 'step3buttons' : null} style={{position: 'absolute', width: '100%', padding: page !== 1 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: 'transparent'}}>
+                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '999'}}>
                   <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
                     {page !== 0 && <React.Fragment><Button
                       color="primary"
@@ -628,7 +633,7 @@ class Wizard extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="imgDiv" style={{width:'100%', overflow: 'hidden', backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat'}}>
+              <div className="imgDiv" style={{width: page === 2 ? '0%' : '100%', overflow: 'hidden', backgroundImage: page === 0 || page === 1  ? 'url("../../static/Creation_shop_step1.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: page !== 3 ? 'center' : null}}>
               </div>
             </form>
           </React.Fragment>
@@ -794,7 +799,6 @@ class addService extends React.Component {
     }
 
   componentDidMount() {
-    document.body.style.overflow = 'hidden';
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(url+'myAlfred/api/users/current')
       .then(res => {
@@ -998,7 +1002,7 @@ class addService extends React.Component {
                     }}
                   >
                     <Wizard.Page>
-                      <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', overflowX: 'hidden', height:'100%'}}>
+                      <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start'}}>
                         <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                           <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Votre catégorie de service</Typography>
                           <Typography>
@@ -1996,7 +2000,15 @@ class addService extends React.Component {
                     </Wizard.Page>
                     <Wizard.Page>
                       <Field render={(arrayHelpers) => (
-                        <Schedule availabilities={this.state.availabilities} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailabilityCreated={this.availabilityCreated} />
+                        <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
+                          <Grid style={{width:'100%', backgroundColor:'green'}}>
+                            <Schedule
+                              availabilities={this.state.availabilities}
+                              services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]}
+                              cbAvailabilityCreated={this.availabilityCreated}
+                            />
+                          </Grid>
+                        </Grid>
                       )} />
                     </Wizard.Page>
                   </Wizard>
