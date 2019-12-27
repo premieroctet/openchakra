@@ -129,7 +129,7 @@ class Cancel extends React.Component {
     const booking_id = this.props.booking_id;
     this.setState({booking_id: booking_id});
     
-    this.socket = io("http://localhost:3000");
+    this.socket = io();
     this.socket.on("connect", socket => {
       this.socket.emit("booking", booking_id)
     })

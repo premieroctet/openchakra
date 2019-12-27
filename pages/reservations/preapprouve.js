@@ -142,7 +142,7 @@ class Preapprouve extends React.Component {
 
           this.setState({end: end._i, date: new Date(end._i)})
 
-          this.socket = io("http://localhost:3000");
+          this.socket = io();
           this.socket.on("connect", socket => {
             this.socket.emit("booking", this.state.bookingObj._id)
           })

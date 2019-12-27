@@ -137,7 +137,7 @@ class Reserve extends React.Component {
         .then(res => {
           this.setState({ bookingObj: res.data })
 
-          this.socket = io("http://localhost:3000");
+          this.socket = io();
           this.socket.on("connect", socket => {
             this.socket.emit("booking", this.state.bookingObj._id)
           })
