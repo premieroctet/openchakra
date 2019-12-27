@@ -820,6 +820,9 @@ class services extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
+                    <Grid>
+                        <Footer2 />
+                    </Grid>
                     <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
 
                         <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
@@ -860,16 +863,19 @@ class services extends React.Component {
                         open={this.state.open}
                         onClose={this.handleClose}
                     >
-                        <div style={{top: `50%`,
+                        <div style={{
+                            top: `50%`,
                             left: `50%`,
-                            transform: `translate(-50%, -50%)`,}} className={classes.paper}>
+                            transform: `translate(-50%, -50%)`
+                        }}
+                             className={classes.paper}>
                             <Carousel>
                                 {image}
                             </Carousel>
                         </div>
                     </Modal>
                 </Layout>
-                <Footer2/>
+
                 <Dialog
                     open={this.state.open2}
                     onClose={()=>this.handleClose2()}

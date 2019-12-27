@@ -18,52 +18,47 @@ const { config } = require('../../config/config');
 const url = config.apiUrl;
 
 const styles = theme => ({
-    bigContainer: {
-        marginTop: 70,
-        flexGrow: 1,
-    },
-    hidesm: {
-        minWidth: '271px',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'
-        }
-    }
-
-   ,hidelg: {
+  bigContainer: {
+      marginTop: 70,
+      flexGrow: 1,
+  },
+  hidesm: {
+      minWidth: '271px',
+      [theme.breakpoints.down('sm')]: {
+          display:'none'
+      }
+  },
+  hidelg: {
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-
     },
     trigger:{
-    [theme.breakpoints.down('sm')]: {
-    marginTop: -10,
-    width: '100%',
-    marginLeft:'0px',
-    height:'30px',
-    backgroundColor:'#2FBCD3',
-
-    display:'block',
-    transition: 'display 0.7s',
-    borderRadius:'5px',
-    '&:focus': {
-    display:'none',
-    transition: 'display 0.7s',
-
+      [theme.breakpoints.down('sm')]: {
+        marginTop: -10,
+        width: '100%',
+        marginLeft:'0px',
+        height:'30px',
+        backgroundColor:'#2FBCD3',
+        display:'block',
+        transition: 'display 0.7s',
+        borderRadius:'5px',
+        '&:focus': {
+          display:'none',
+          transition: 'display 0.7s',
        }
      },
 },
   toggle: {
-        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-        transition: 'margin-left 0.7s',
-
-        '&:hover': {
-            marginLeft:'0px',
-            transition: 'margin-left 0.7s',
-            boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
-             }
+    [theme.breakpoints.down('sm')]:{
+      marginLeft:'-75px',
+      transition: 'margin-left 0.7s',
+      '&:hover': {
+          marginLeft:'0px',
+          transition: 'margin-left 0.7s',
+          boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
       }
+    }
     },
   buttonAddAddress: {
       display:'inline-block',
@@ -99,7 +94,6 @@ class paymentPreference extends React.Component {
 
         componentDidMount()
         {
-
             localStorage.setItem('path', Router.pathname);
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
             axios
@@ -122,9 +116,9 @@ class paymentPreference extends React.Component {
                 );
         }
 
-        handleClick = () => {
-            this.setState({clickAdd: !this.state.clickAdd});
-        };
+    handleClick = () => {
+        this.setState({clickAdd: !this.state.clickAdd});
+    };
 
     handleClick2 = () => {
         this.setState({clickEdit: !this.state.clickEdit});
@@ -160,7 +154,6 @@ class paymentPreference extends React.Component {
         render()
         {
             const {classes} = this.props;
-            const {user} = this.state;
             const {account} = this.state;
             const {clickAdd} = this.state;
             const {clickEdit} = this.state;
@@ -172,9 +165,7 @@ class paymentPreference extends React.Component {
                 <Fragment>
                     <Layout>
                         <Grid container className={classes.bigContainer}>
-
-                        <Grid className={classes.toggle}  item xs={3} style={{}}>
-
+                        <Grid className={classes.toggle}  item xs={3}>
                          <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
@@ -427,10 +418,6 @@ class paymentPreference extends React.Component {
                 </Fragment>
             );
         }
-
-
 }
-
-
 
 export default withStyles(styles)(paymentPreference);

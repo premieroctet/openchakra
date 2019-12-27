@@ -5,12 +5,8 @@ import axios from "axios";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
-import Footer from '../../hoc/Layout/Footer/Footer';
 import Footer2 from '../../hoc/Layout/Footer/Footer2';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { toast } from 'react-toastify';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,7 +14,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -39,7 +34,6 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-        
     },
     trigger:{ 
     [theme.breakpoints.down('sm')]: {
@@ -59,23 +53,17 @@ const styles = theme => ({
        }
      }
 
-}
-
-    ,toggle: {
+},
+  toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
         transition: 'margin-left 0.7s',
-       
         '&:hover': {
             marginLeft:'0px',
             transition: 'margin-left 0.7s',
             boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
              }
       }  
     }
-
-
-
 });
 
 class parameters extends React.Component {
@@ -93,7 +81,6 @@ class parameters extends React.Component {
     }
 
     componentDidMount() {
-
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
@@ -139,35 +126,28 @@ class parameters extends React.Component {
     };
 
     deleteShop = () => {
+      axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
+          .then(() => {
+              axios.delete(url+'myAlfred/api/shop/current/delete')
+                  .then(() => {
+                      axios.put(url+'myAlfred/api/users/users/deleteAlfred')
+                          .then(() => {
+                              this.setState({open:false});
+                              toast.error('Boutique supprimée');
+                              this.componentDidMount();
 
+                          })
+                          .catch(error => console.log(error));
 
-                axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
-                    .then(() => {
-                        axios.delete(url+'myAlfred/api/shop/current/delete')
-                            .then(() => {
-                                axios.put(url+'myAlfred/api/users/users/deleteAlfred')
-                                    .then(() => {
-                                        this.setState({open:false});
-                                        toast.error('Boutique supprimée');
-                                        this.componentDidMount();
-
-                                    })
-                                    .catch(error => console.log(error));
-
-                            })
-                            .catch(err => console.log(err));
-
-
-                    })
-                    .catch(err => console.log(err));
-                axios.delete(url+'myAlfred/api/availability/currentAlfred')
-                    .then(() => {
-                        console.log('ok')
-                    })
-                    .catch(error => console.log(error));
-
-
-
+                  })
+                  .catch(err => console.log(err));
+          })
+          .catch(err => console.log(err));
+      axios.delete(url+'myAlfred/api/availability/currentAlfred')
+          .then(() => {
+              console.log('ok')
+          })
+          .catch(error => console.log(error));
     };
 
     deleteAccount = () => {
@@ -205,26 +185,18 @@ class parameters extends React.Component {
                 })
                 .catch(err => console.log(err));
         }
-
-
     };
-
-
 
     render() {
         const {classes} = this.props;
         const {user} = this.state;
 
-
-
         return (
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-
-                    <Grid className={classes.toggle}  item xs={3} style={{}}>
-                         
-                         <div className={classes.trigger}></div>
+                    <Grid className={classes.toggle}  item xs={3}>
+                         <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/notifications'}>
@@ -246,28 +218,6 @@ class parameters extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
-                                {/*<Grid item style={{marginTop: 10}} className={classes.hidesm}>
-                                    <Link href={'/account/paymentMethod'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mode de paiement
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
-                                    <Link href={'/account/paymentMethod'}>
-                                        <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginleft: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                               
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-                                
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -287,28 +237,6 @@ class parameters extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
-                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/transactions'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Historique des transactions
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/transactions'}>
-                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                                
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -329,28 +257,6 @@ class parameters extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
-                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Applications connectées
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                               
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-
                                 <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -371,28 +277,6 @@ class parameters extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
-                                {/*<Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/sponsors'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/trophy.svg'} alt={'trophy'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Parrainage
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/sponsors'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/trophy.svg'} alt={'trophy'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>*/}
-
                             </Grid>
                         </Grid>
 
@@ -466,8 +350,6 @@ class parameters extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer2/>
-
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
@@ -513,7 +395,7 @@ class parameters extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-
+              <Footer2/>
             </Fragment>
 
 

@@ -514,7 +514,7 @@ class Wizard extends React.Component {
             </div>}
             <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh'}}>
               <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%', overflow: 'hidden'}}>
-                <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '100%' : '81%', overflowY: page === 3 ? 'hidden' : 'scroll', position: 'relative'}}>
+                <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '100%' : '81%', overflowY: page === 2 ? 'hidden' : 'scroll', position: 'relative'}}>
                   {activePage}
                 </div>
                 <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '999'}}>
@@ -954,7 +954,7 @@ class addService extends React.Component {
                       </Link>
                   </Grid>
               </Grid>
-                <div className="App">
+                <div className="App" style={{width: '100%'}}>
 
                   <Wizard
                     initialValues={{
@@ -2001,7 +2001,7 @@ class addService extends React.Component {
                     <Wizard.Page>
                       <Field render={(arrayHelpers) => (
                         <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
-                          <Grid style={{width:'100%', backgroundColor:'green'}}>
+                          <Grid style={{width:'100%'}}>
                             <Schedule
                               availabilities={this.state.availabilities}
                               services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]}
