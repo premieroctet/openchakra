@@ -723,6 +723,20 @@ router.get('/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
         .catch(err => res.status(404).json({ service: 'No service found' }));
 });
 
+// @Route GET /myAlfred/api/serviceUser/:id
+// View one serviceUser
+// @Access private
+router.get('/allUserServices/:id', (req, res) => {
+    let userId = mongoose.Types.ObjectId(req.params.id);
+    ServiceUser.find({user: userId})
+        .populate('service')
+        .then(services => {
+            res.json(services);
+        })
+        .catch(err => console.log(err))
+})
+
+
 // @Route PUT /myAlfred/serviceUser/deletePrestation/:id
 // Delete one prestation from the list
 // @Access private

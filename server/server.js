@@ -45,31 +45,7 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
-server.listen(3000);
 
-let roomName = '';
-let bookingName = '';
-
-io.on('connection', socket => {
-    /*socket.on('chat message', msg => {
-        io.emit('chat message', msg);
-    })*/
-    socket.on('room', room => {
-        socket.join(room);
-        roomName = room;
-    });
-    socket.on('booking', booking => {
-        socket.join(booking);
-        bookingName = booking;
-    })
-    socket.on('message', msg => {
-        io.to(roomName).emit('displayMessage', msg);
-    })
-    socket.on('changeStatus', booking => {
-        console.log('works');
-        io.to(bookingName).emit('displayStatus', booking);
-    })
-});
 
 nextApp.prepare().then(() => {
 
@@ -139,6 +115,31 @@ nextApp.prepare().then(() => {
         if (!controllerPath.includes('.test.js')) require(controllerPath)(app)
     })
     app.get('*', routerHandler);
-    app.listen(config.serverPort, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`));
+    app.use(config.serverPort, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`));
+    server.listen(3122);
+
+    let roomName = '';
+    let bookingName = '';
+
+    io.on('connection', socket => {
+        /*socket.on('chat message', msg => {
+            io.emit('chat message', msg);
+        })*/
+        socket.on('room', room => {
+            socket.join(room);
+            roomName = room;
+        });
+        socket.on('booking', booking => {
+            socket.join(booking);
+            bookingName = booking;
+        })
+        socket.on('message', msg => {
+            io.to(roomName).emit('displayMessage', msg);
+        })
+        socket.on('changeStatus', booking => {
+            console.log('works');
+            io.to(bookingName).emit('displayStatus', booking);
+        })
+    });
 });
 

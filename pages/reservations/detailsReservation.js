@@ -222,7 +222,7 @@ class DetailsReservation extends React.Component {
       this.setState({ bookingObj: res.data });
       this.setState({ splitAddress: this.state.bookingObj.address.address.split(' ')})
 
-      this.socket = io("http://localhost:3000");
+      this.socket = io();
       this.socket.on("connect", socket => {
         this.socket.emit("booking", this.state.bookingObj._id)
       })

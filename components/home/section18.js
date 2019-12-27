@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import FeelingoodCard from './feelingood/feelingoodCard/feelingoodCard';
 import axios from 'axios';
+import Link from 'next/link';
 
 
 const { config } = require('../../config/config');
@@ -115,7 +116,9 @@ class section18 extends React.Component{
 
         const cards = resdata.slice(0, 4).map((e,index) => (
             <Grid key={index} item xs={12} sm={6} md={3}>
+                <Link href={'/serviceByService?service='+e._id}>
                 <FeelingoodCard img={e.picture} title={e.label} />
+                </Link>
             </Grid>
         ));
 

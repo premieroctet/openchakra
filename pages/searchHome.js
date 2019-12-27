@@ -84,6 +84,7 @@ class searchHome extends React.Component {
             copyFilterPro: [],
             copyFilterParticulier: [],
             uniqCategory: [],
+            uniqCategoryService: [],
             uniqShop: [],
             idAlfred: [],
             prestations: [],
@@ -135,7 +136,8 @@ class searchHome extends React.Component {
                     }),200
             )
         } else if(service !== '' && city === '' && date === '' && dateISO === '' && day === '') {
-            this.searchWithWord();
+            this.searchWithWord()
+
         } else if(service === '' && city !== '' && date === '' && dateISO === '' && day === '') {
             this.searchWithCity();
         } else if(service !== '' && city !== '' && date === '' && dateISO === '' && day === ''){
@@ -682,6 +684,7 @@ class searchHome extends React.Component {
     render() {
         const {classes} = this.props;
         const serviceUser = this.state.serviceUser;
+        const {allCategories} = this.state;
         return (
             <Fragment>
                 <Layout>
@@ -832,7 +835,7 @@ class searchHome extends React.Component {
                                     <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
 
 
-                                    {this.state.allCategories.map((e,index) => (
+                                    {allCategories.map((e,index) => (
                                         <Grid container>
                                             {this.state[e.label] !== 0 ?<Grid item xs={12}>
                                                 <h3 style={{marginLeft: '15px'}}>{e.label}</h3>

@@ -30,7 +30,7 @@ router.get('/all', (req,res)=> {
 router.post('/all/search', (req,res)=> {
     const dat = req.body.label;
     const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), "[eéèêaàoôuù]");
-    Category.find({$or:[{label:{ $regex : data, $options : 'i' } },{description:{$regex : data, $options : 'i'}}]})
+    Category.find({$text:{$search:dat}})
         .sort({label:1})
         .then(category => {
             if(typeof category !== 'undefined' && category.length > 0){

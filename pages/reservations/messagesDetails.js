@@ -139,7 +139,7 @@ class MessagesDetails extends React.Component {
           oldMessagesDisplay: res.data.messages,
           oldMessages: res.data.messages
         }, () => this.grantNotificationPermission());
-        this.socket = io("http://localhost:3000");
+        this.socket = io();
         this.socket.on("connect", socket => {
           this.socket.emit("room", this.state.roomData.name);
         });

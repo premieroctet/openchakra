@@ -171,6 +171,7 @@ class section19 extends React.Component {
         const resdata = shuffleArray(prestations);
         const services = resdata.slice(0, 12).map(e => (
             <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
+                <Link href={'/serviceByPrestation?prestation='+e._id}>
                 <Card className={classes.card}>
                     <CardActionArea>
 
@@ -193,6 +194,7 @@ class section19 extends React.Component {
 
                     </CardActions>
                 </Card>
+                </Link>
             </Grid>
         ));
 

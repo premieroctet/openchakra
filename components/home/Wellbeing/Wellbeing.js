@@ -145,6 +145,7 @@ class Wellbeing extends React.Component {
     const resdata = shuffleArray(service);
     const services = resdata.slice(0, 6).map(e => (
         <Grid item xs={12} sm={6} md={4} lg={4} key={e._id}>
+          <Link href={'/serviceByService?service='+e._id}>
           <Card className={classes.card}>
             <CardActionArea>
               <CardMedia
@@ -167,6 +168,7 @@ class Wellbeing extends React.Component {
               
             </CardActions>
           </Card>
+          </Link>
         </Grid>
     ));
 

@@ -79,7 +79,7 @@ router.get('/:service',(req,res)=> {
 router.post('/all/search', (req,res)=> {
     const dat = req.body.label;
     const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), "[eéèêaàoôuù]");
-    Prestation.find({$or:[{label:{ $regex : data, $options : 'i' } },{description:{$regex : data, $options : 'i'}}]})
+    Prestation.find({$text:{$search:dat}})
         .populate('service')
         .populate('category')
         .sort({label:1})
