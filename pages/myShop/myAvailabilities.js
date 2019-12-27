@@ -34,7 +34,9 @@ const styles = theme => ({
             display: 'none!important',
         },
     },
-    containercalendar:{width:'100%',   [theme.breakpoints.down('sm')]: {
+    containercalendar:{
+      width:'100%',
+      [theme.breakpoints.down('sm')]: {
             width:'100%!important',
 
         }},

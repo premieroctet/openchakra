@@ -30,9 +30,7 @@ import { FormControl, RadioGroup, Radio } from '@material-ui/core';
 import { toast } from "react-toastify";
 import Loader from 'react-loader-spinner';
 import Clear from '@material-ui/icons/Clear';
-import Input from '@material-ui/core/Input';
 import Schedule from '../Schedule/Schedule';
-import {availabilities2events} from '../../utils/converters';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -138,7 +136,13 @@ const styles = theme => ({
     [theme.breakpoints.down('xs')]: {
       marginTop:'10%',
     }
-  }
+  },
+  containercalendar:{
+    width:'100%',
+    [theme.breakpoints.down('sm')]: {
+      width:'100%!important',
+
+    }},
 });
 
 class Wizard extends React.Component {
@@ -473,7 +477,7 @@ console.log("Render, availabilities:"+JSON.stringify(availabilities));
                 onSubmit={this.handleSubmit}
                 render={({ values, handleSubmit }) => (
                     <React.Fragment>
-                        {page !== 0 && <div style={{backgroundColor: 'white', position:'fixed', width:'100%'}}>
+                        {page !== 0 && <div style={{backgroundColor: 'white'}}>
                             {page === 1 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez votre catégorie puis votre service </h3> : null}
                             {page === 2 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de votre service - {textLabel}</h3> : null}
                             {page === 3 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
@@ -489,215 +493,215 @@ console.log("Render, availabilities:"+JSON.stringify(availabilities));
                                 </Bar>
                             </div>
                         </div>}
-                        <form onSubmit={handleSubmit} style={{display: 'flex'}}>
-                            <div style={{marginTop:'150px',  width: 900}}>
-                                <div id="bigDiv">
-                                    {activePage}
-                                </div>
-                                <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent'}}>
-                                    <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
-                                        {page !== 0 && <React.Fragment><Button
-                                            color="primary"
-                                            type="button"
-                                            onClick={() => {
-                                                const div = document.getElementById('bigDiv');
-                                                div.scrollTop = 0;
-                                                this.previous();
-                                            }}
-                                            disabled={page === 0}
-                                        >
-                                            Retour
-                                        </Button>
-                                        </React.Fragment>}
-                                        {page === 0 && <Button
-                                            type="submit"
-                                            variant="contained"
-                                            color="secondary"
-                                            style={{color: 'white'}}
-                                        >
-                                            Suivant
-                                        </Button>}
-                                        {page === 1 && <Button
-                                            type="submit"
-                                            variant="contained"
-                                            color="secondary"
-                                            style={{color: 'white'}}
-                                            disabled={values.submission.length <= 0}
-                                            onClick={() => {
-                                                const div = document.getElementById('bigDiv');
-                                                div.scrollTop = 0;
-                                            }}
-                                        >
-                                            Suivant
-                                        </Button>}
-                                        {page === 2 &&
-                                            <Field render={({form}) => {
-                                                const checkArr = [];
-                                                form.values.submission.map(pc => {
-                                                    if (pc.prestationsCount > 0) {
-                                                        return checkArr.push(true);
-                                                    } else {
-                                                        return checkArr.push(false);
-                                                    }
-                                                });
+                      <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh'}}>
+                        <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%', overflow: 'hidden'}}>
+                          <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '100%' : '81%', overflowY: page === 3 ? 'hidden' : 'scroll', position: 'relative'}}>
+                            {activePage}
+                          </div>
+                          <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '999'}}>
+                            <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
+                              {page !== 0 && <React.Fragment><Button
+                                  color="primary"
+                                  type="button"
+                                  onClick={() => {
+                                      const div = document.getElementById('bigDiv');
+                                      div.scrollTop = 0;
+                                      this.previous();
+                                  }}
+                                  disabled={page === 0}
+                              >
+                                  Retour
+                              </Button>
+                              </React.Fragment>}
+                              {page === 0 && <Button
+                                  type="submit"
+                                  variant="contained"
+                                  color="secondary"
+                                  style={{color: 'white'}}
+                              >
+                                  Suivant
+                              </Button>}
+                              {page === 1 && <Button
+                                  type="submit"
+                                  variant="contained"
+                                  color="secondary"
+                                  style={{color: 'white'}}
+                                  disabled={values.submission.length <= 0}
+                                  onClick={() => {
+                                      const div = document.getElementById('bigDiv');
+                                      div.scrollTop = 0;
+                                  }}
+                              >
+                                  Suivant
+                              </Button>}
+                              {page === 2 &&
+                                  <Field render={({form}) => {
+                                      const checkArr = [];
+                                      form.values.submission.map(pc => {
+                                          if (pc.prestationsCount > 0) {
+                                              return checkArr.push(true);
+                                          } else {
+                                              return checkArr.push(false);
+                                          }
+                                      });
 
-                                                const check = el => {
-                                                    return el === false;
-                                                };
+                                      const check = el => {
+                                          return el === false;
+                                      };
 
-                                                return (
-                                                    <React.Fragment>
-                                                        <Button
-                                                            type="submit"
-                                                            variant="contained"
-                                                            color="secondary"
-                                                            style={{color: !checkArr.some(check) ? 'white' : null }}
-                                                            disabled={checkArr.some(check)}
-                                                            onClick={() => {
-                                                                if (typeof form.errors.submission === 'undefined') {
-                                                                    const div = document.getElementById('bigDiv');
-                                                                    div.scrollTop = 0;
-                                                                } else {
-                                                                    console.log("Whole form:"+JSON.stringify(form))
-                                                                    toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
-                                                                        if (typeof service === 'undefined') {
-                                                                            return null
-                                                                        } else {
-                                                                            return <p>{form.values.submission[i].serviceLabel}</p>
-                                                                        }
-                                                                    })}</div>)
-                                                                }
-                                                            }}
-                                                        >
-                                                            Suivant
-                                                        </Button>
-                                                    </React.Fragment>
-                                                )
-                                            }}
-                                        />}
-                                        {page === 3 &&
-                                        <Field render={({form}) => {
-                                            return (
-                                                <Button
-                                                    type="submit"
-                                                    variant="contained"
-                                                    color="secondary"
-                                                    style={{ color: 'white'}}
-                                                    onClick={() => {
-                                                        if (true) {
-                                                            const data = {
-                                                                active: form.values.servicesAvailability.active,
-                                                                month_begin: form.values.servicesAvailability.month_begin,
-                                                                month_end: form.values.servicesAvailability.month_end,
-                                                                monday_event: form.values.servicesAvailability
-                                                                .monday_event,
-                                                                tuesday_event: form.values.servicesAvailability
-                                                                .tuesday_event,
-                                                                wednesday_event: form.values.servicesAvailability
-                                                                .wednesday_event,
-                                                                thursday_event: form.values.servicesAvailability
-                                                                .thursday_event,
-                                                                friday_event: form.values.servicesAvailability
-                                                                .friday_event,
-                                                                saturday_event: form.values.servicesAvailability
-                                                                .saturday_event,
-                                                                sunday_event: form.values.servicesAvailability
-                                                                .sunday_event
-                                                            };
+                                      return (
+                                          <React.Fragment>
+                                              <Button
+                                                  type="submit"
+                                                  variant="contained"
+                                                  color="secondary"
+                                                  style={{color: !checkArr.some(check) ? 'white' : null }}
+                                                  disabled={checkArr.some(check)}
+                                                  onClick={() => {
+                                                      if (typeof form.errors.submission === 'undefined') {
+                                                          const div = document.getElementById('bigDiv');
+                                                          div.scrollTop = 0;
+                                                      } else {
+                                                          console.log("Whole form:"+JSON.stringify(form))
+                                                          toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
+                                                              if (typeof service === 'undefined') {
+                                                                  return null
+                                                              } else {
+                                                                  return <p>{form.values.submission[i].serviceLabel}</p>
+                                                              }
+                                                          })}</div>)
+                                                      }
+                                                  }}
+                                              >
+                                                  Suivant
+                                              </Button>
+                                          </React.Fragment>
+                                      )
+                                  }}
+                              />}
+                              {page === 3 &&
+                              <Field render={({form}) => {
+                                  return (
+                                      <Button
+                                          type="submit"
+                                          variant="contained"
+                                          color="secondary"
+                                          style={{ color: 'white'}}
+                                          onClick={() => {
+                                              if (true) {
+                                                  const data = {
+                                                      active: form.values.servicesAvailability.active,
+                                                      month_begin: form.values.servicesAvailability.month_begin,
+                                                      month_end: form.values.servicesAvailability.month_end,
+                                                      monday_event: form.values.servicesAvailability
+                                                      .monday_event,
+                                                      tuesday_event: form.values.servicesAvailability
+                                                      .tuesday_event,
+                                                      wednesday_event: form.values.servicesAvailability
+                                                      .wednesday_event,
+                                                      thursday_event: form.values.servicesAvailability
+                                                      .thursday_event,
+                                                      friday_event: form.values.servicesAvailability
+                                                      .friday_event,
+                                                      saturday_event: form.values.servicesAvailability
+                                                      .saturday_event,
+                                                      sunday_event: form.values.servicesAvailability
+                                                      .sunday_event
+                                                  };
 
-                                                            axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-                                                                "token"
-                                                            );
+                                                  axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+                                                      "token"
+                                                  );
 
-                                                            availabilities.forEach( avail => {
-                                                            axios
-                                                                .post(url + "myAlfred/api/availability/add", avail)
-                                                                .then(() => {
-                                                                toast.info("Disponibilité(s) ajoutée(s) avec succès");
-                                                                form.setFieldValue(`servicesAvailability.monday_event`, []);
-                                                                form.setFieldValue(`servicesAvailability.tuesday_event`, []);
-                                                                form.setFieldValue(`servicesAvailability.wednesday_event`, []);
-                                                                form.setFieldValue(`servicesAvailability.thursday_event`, []);
-                                                                form.setFieldValue(`servicesAvailability.friday_event`, []);
-                                                                form.setFieldValue(`servicesAvailability.saturday_event`, []);
-                                                                form.setFieldValue(`servicesAvailability.sunday_event`, []);
-                                                            })
-                                                                .catch(err => console.log(err));
-                                                            })
+                                                  availabilities.forEach( avail => {
+                                                  axios
+                                                      .post(url + "myAlfred/api/availability/add", avail)
+                                                      .then(() => {
+                                                      toast.info("Disponibilité(s) ajoutée(s) avec succès");
+                                                      form.setFieldValue(`servicesAvailability.monday_event`, []);
+                                                      form.setFieldValue(`servicesAvailability.tuesday_event`, []);
+                                                      form.setFieldValue(`servicesAvailability.wednesday_event`, []);
+                                                      form.setFieldValue(`servicesAvailability.thursday_event`, []);
+                                                      form.setFieldValue(`servicesAvailability.friday_event`, []);
+                                                      form.setFieldValue(`servicesAvailability.saturday_event`, []);
+                                                      form.setFieldValue(`servicesAvailability.sunday_event`, []);
+                                                  })
+                                                      .catch(err => console.log(err));
+                                                  })
 
-                                                            const div = document.getElementById('bigDiv');
-                                                            div.scrollTop = 0;
-                                                        } else {
-                                                            const div = document.getElementById('bigDiv');
-                                                            div.scrollTop = 0;
-                                                        }
+                                                  const div = document.getElementById('bigDiv');
+                                                  div.scrollTop = 0;
+                                              } else {
+                                                  const div = document.getElementById('bigDiv');
+                                                  div.scrollTop = 0;
+                                              }
 
-                                                    }}
-                                                >
-                                                    Suivant
-                                                </Button>
-                                            )
-                                        }}/>
-                                        }
-                                        {page === 4 &&
-                                        <Field render={({form}) => {
-                                            let cancel = true;
+                                          }}
+                                      >
+                                          Suivant
+                                      </Button>
+                                  )
+                              }}/>
+                              }
+                              {page === 4 &&
+                              <Field render={({form}) => {
+                                  let cancel = true;
 
-                                            if (form.values.createShop.flexible_cancel === true || form.values.createShop.moderate_cancel === true || form.values.createShop.strict_cancel === true) {
-                                                cancel = false;
-                                            } else {
-                                                cancel = true;
-                                            }
+                                  if (form.values.createShop.flexible_cancel === true || form.values.createShop.moderate_cancel === true || form.values.createShop.strict_cancel === true) {
+                                      cancel = false;
+                                  } else {
+                                      cancel = true;
+                                  }
 
-                                            return (
-                                                <Button type="submit" variant="contained" color="secondary" style={{color: !cancel ? 'white' : null }} disabled={cancel} onClick={() => {
-                                                    const div = document.getElementById('bigDiv');
-                                                    div.scrollTop = 0;
-                                                }}>
-                                                    Suivant
-                                                </Button>
-                                            )
-                                        }} />}
-                                        {page === 5 &&
-                                            <Field render={({form}) => {
-                                                let check = true;
+                                  return (
+                                      <Button type="submit" variant="contained" color="secondary" style={{color: !cancel ? 'white' : null }} disabled={cancel} onClick={() => {
+                                          const div = document.getElementById('bigDiv');
+                                          div.scrollTop = 0;
+                                      }}>
+                                          Suivant
+                                      </Button>
+                                  )
+                              }} />}
+                              {page === 5 &&
+                                  <Field render={({form}) => {
+                                      let check = true;
 
-                                                if (form.values.createShop.is_particular === true && form.values.createShop.isEngaged === true) {
-                                                    check = false;
-                                                } else if(form.values.createShop.is_professional === true && form.values.createShop.siret === "" && form.values.createShop.denomination === "" || form.values.createShop.isEngaged === false) {
-                                                    check = true;
-                                                }
-                                                else if (form.values.createShop.is_professional === true && form.values.createShop.isCertified === false) {
-                                                    check = true
-                                                } else if(form.values.createShop.is_professional === true && form.values.createShop.siret !== "" && form.values.createShop.denomination !== "" || form.values.createShop.isEngaged === false) {
-                                                    check = false;
-                                                } else {
-                                                    check = true;
-                                                }
+                                      if (form.values.createShop.is_particular === true && form.values.createShop.isEngaged === true) {
+                                          check = false;
+                                      } else if(form.values.createShop.is_professional === true && form.values.createShop.siret === "" && form.values.createShop.denomination === "" || form.values.createShop.isEngaged === false) {
+                                          check = true;
+                                      }
+                                      else if (form.values.createShop.is_professional === true && form.values.createShop.isCertified === false) {
+                                          check = true
+                                      } else if(form.values.createShop.is_professional === true && form.values.createShop.siret !== "" && form.values.createShop.denomination !== "" || form.values.createShop.isEngaged === false) {
+                                          check = false;
+                                      } else {
+                                          check = true;
+                                      }
 
-                                                return (
-                                                    <Button
-                                                        type="submit"
-                                                        variant="contained"
-                                                        style={{color: !check ? 'white' : null }}
-                                                        color="secondary"
-                                                        disabled={check}
-                                                        onClick={() => {
-                                                            if (form.values.createShop.siret !== '' && form.values.createShop.siret.length === 14 || form.values.createShop.is_professional === false) {
-                                                                return null;
-                                                            } else {
-                                                                toast.error(<div>Veuillez renseigner un numéro siret</div>);
-                                                            }
-                                                        }}
-                                                    >
-                                                        Envoyer
-                                                    </Button>
-                                                )
-                                            }} />}
+                                      return (
+                                          <Button
+                                              type="submit"
+                                              variant="contained"
+                                              style={{color: !check ? 'white' : null }}
+                                              color="secondary"
+                                              disabled={check}
+                                              onClick={() => {
+                                                  if (form.values.createShop.siret !== '' && form.values.createShop.siret.length === 14 || form.values.createShop.is_professional === false) {
+                                                      return null;
+                                                  } else {
+                                                      toast.error(<div>Veuillez renseigner un numéro siret</div>);
+                                                  }
+                                              }}
+                                          >
+                                              Envoyer
+                                          </Button>
+                                      )
+                                  }} />}
                                     </div>
                                 </div>
                             </div>
-                            <div className="imgDiv" style={{width:'50%', marginTop:150, backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : page === 3 ? 'url("../../static/illutration boutique - Etape du calendrier.png")' : page === 4 || page === 5 ? 'url("../../static/Creation_shop_step3.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: page !== 3 ? 'center' : null}}>
+                        <div className="imgDiv" style={{width: page === 3 ? '0%' : '100%', overflow: 'hidden', backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : page === 4 || page === 5 ? 'url("../../static/Creation_shop_step3.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: page !== 3 ? 'center' : null}}>
                             </div>
                         </form>
                     </React.Fragment>
@@ -998,7 +1002,7 @@ class Form extends React.Component {
             }
 
         return (
-            <div className="App" style={{marginTop: 25}}>
+            <div className="App" style={{marginTop: 50}}>
 
                 <Wizard availabilities={this.state.availabilities}
                     initialValues={{
@@ -1129,7 +1133,7 @@ class Form extends React.Component {
                       </Grid>
                     </Wizard.Page>
                   <Wizard.Page>
-                   <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start', overflowX: 'hidden', height:'100%'}}>
+                   <Grid container className={classes.cardContainer} style={{display: 'flex', justifyContent: 'start'}}>
                      <div style={{padding: '0rem 2rem 1rem 2rem'}}>
                       <Typography variant="h6" style={{marginBottom: '.5rem', marginTop: '1rem'}}>Votre catégorie de service</Typography>
                       <Typography>
@@ -2131,8 +2135,16 @@ class Form extends React.Component {
                   </Wizard.Page>
                   <Wizard.Page>
                     <Field render={(arrayHelpers) => (
-                    <Schedule availabilities={this.state.availabilities} services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]} cbAvailabilityCreated={this.availabilityCreated} />
-)} />
+                      <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
+                        <Grid style={{width:'100%'}}>
+                          <Schedule
+                            availabilities={this.state.availabilities}
+                            services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]}
+                            cbAvailabilityCreated={this.availabilityCreated}
+                          />
+                        </Grid>
+                      </Grid>
+                    )} />
                   </Wizard.Page>
                   <Wizard.Page>
                     <Grid container className={classes.cardContainer} style={{overflow: 'hidden'}}>
