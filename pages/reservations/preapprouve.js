@@ -102,9 +102,9 @@ const styles = theme => ({
 });
 
 const Input2 = ({value,  onClick }) => (
-  <Button value={value} color={"inherit"} variant={"outlined"} style={{color:"gray"}} className="example-custom-input" onClick={onClick}>
-    {value}
-  </Button>
+    <Button value={value} color={"inherit"} variant={"outlined"} style={{color:"gray"}} className="example-custom-input" onClick={onClick}>
+      {value}
+    </Button>
 
 );
 
@@ -115,8 +115,11 @@ class Preapprouve extends React.Component {
       booking_id: null,
       bookingObj: null,
       date: Date.now(),
+      currDate: Date.now(),
       hour: Date.now(),
-      end: null
+      end: null,
+      minDate: null,
+      isToday: false
     };
   }
 
@@ -142,6 +145,15 @@ class Preapprouve extends React.Component {
 
           this.setState({end: end._i, date: new Date(end._i)})
 
+          let isToday = moment(this.state.currDate).isSame(moment(new Date()), 'day');
+          this.setState({
+            isToday: isToday
+          })
+
+          if (moment(this.state.currDate).isAfter(this.state.end)) {
+            this.setState({end: this.state.currDate})
+          }
+
           this.socket = io();
           this.socket.on("connect", socket => {
             this.socket.emit("booking", this.state.bookingObj._id)
@@ -150,19 +162,19 @@ class Preapprouve extends React.Component {
   }
 
   changeStatus() {
-    const endDate = moment(this.state.date).format('DD/MM/YYYY');
+    const endDate = moment(this.state.end).format('YYYY-MM-DD');
     const endHour = moment(this.state.hour).format('HH:mm');
 
     const dateObj = { end_date: endDate, end_time: endHour, status: 'Pré-approuvée' };
     console.log(endDate, endHour)
 
     axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
-            .then(res => {
-              this.setState({ 
-                bookingObj: res.data 
-              }, this.socket.emit("changeStatus", res.data))
-            })
-            .catch(err => console.log(err))
+        .then(res => {
+          this.setState({
+            bookingObj: res.data
+          }, () => this.socket.emit("changeStatus", res.data))
+        })
+        .catch(err => console.log(err))
   }
 
   render() {
@@ -170,320 +182,328 @@ class Preapprouve extends React.Component {
     const { bookingObj } = this.state;
 
     return (
-      <Fragment>
-        {this.state.bookingObj === null ?
-          null
-          :
-          <>
-            <Layout>
-            <Grid container className={classes.bigContainer}>
-              <Grid container>
-                <br></br>
-                <Grid
-                  item
-                  md={5}
-                  xs={12}
-                  style={{
-                    textAlign: "left",
-                    margin: "0 auto",
-                    float: "right",
-                    paddingLeft: "3%"
-                  }}
-                >
-                  <div
-                    style={{ margin: "20px 11%", marginTop: "5%", width: "90%" }}
-                  ></div>
-                  <Grid container>
-                    <Grid
-                      item
-                      xs={12}
-                      style={{ marginTop: 50, marginBottom: 30 }}
-                    >
-                      <h2
-                        style={{
-                          fontSize: "2rem",
-                          color: "rgba(84,89,95,0.95)",
-                          letterSpacing: -1,
-                          fontWeight: "100"
-                        }}
-                      >
-                        Confirmer la réservation de {`${bookingObj.user.firstname} ${bookingObj.user.name}`}{" "}
-                      </h2>
-                      <hr
-                        style={{
-                          width: "100px",
-                          color: "#F87280",
-                          border: "solid 3px #F87280 ",
-                          float: "left",
-                          marginTop: "-10px"
-                        }}
-                      ></hr>
-                    </Grid>
-                  </Grid>
-                  <br></br>
-                  <Grid container>
-                    <Grid item xs={5} style={{}}>
-                      <img
-                        src={`../../${bookingObj.user.picture}`}
-                        style={{
-                          borderRadius: "50%",
-                          marginLeft: "auto",
-                          marginRight: "auto",
-                          zIndex: 501,
-                          width: "137px",
-                          height: "137px",
-                          objectFit:"cover"
-                        }}
-                        alt={"picture"}
-                      />
-                    </Grid>
-
-                    <Grid item xs={5} style={{}}>
-                      <h3
-                        style={{
-                          fontSize: "1.6rem",
-                          color: "rgba(84,89,95,0.95)",
-                          letterSpacing: -1,
-                          fontWeight: "bold"
-                        }}
-                      >
-                        A propos de {`${bookingObj.user.firstname} ${bookingObj.user.name}`}
-                      </h3>
-                      <Grid item xs={2} style={{}}></Grid>
-                      <Grid item xs={10} style={{}}></Grid>
-                    </Grid>
-                  </Grid>
-
-                  <div style={{ marginTop: "8%" }}>
-                    <hr></hr>
-
+        <Fragment>
+          {this.state.bookingObj === null ?
+              null
+              :
+              <>
+                <Layout>
+                  <Grid container className={classes.bigContainer}>
                     <Grid container>
-                      <Grid item xs={12} style={{}}>
-                        <h3
+                      <br></br>
+                      <Grid
+                          item
+                          md={5}
+                          xs={12}
                           style={{
-                            fontSize: "1.6rem",
-                            color: "rgba(84,89,95,0.95)",
-                            letterSpacing: -1,
-                            fontWeight: "bold"
+                            textAlign: "left",
+                            margin: "0 auto",
+                            float: "right",
+                            paddingLeft: "3%"
                           }}
-                        >
-                          Détail de la réservation
-                        </h3>
-                        <Grid xs={12} style={{}}>
+                      >
+                        <div
+                            style={{ margin: "20px 11%", marginTop: "5%", width: "90%" }}
+                        ></div>
+                        <Grid container>
                           <Grid
-                            item
-                            xs={9}
-                            style={{ width: "90%", float: "left" }}
+                              item
+                              xs={12}
+                              style={{ marginTop: 50, marginBottom: 30 }}
                           >
-                            <h4>{bookingObj.service}</h4>
-                          </Grid>
-                          {bookingObj.prestations.map(prestation => {
-                            return (
-                              <>
-                                <Grid
-                                  item
-                                  xs={9}
-                                  style={{ width: "90%", float: "left" }}
-                                >
-                                  <p>{prestation.value}X {prestation.name}</p>
-                                </Grid>
-                                <Grid
-                                  item
-                                  xs={3}
-                                  style={{ width: "10%", float: "right" }}
-                                >
-                                  <p>{prestation.price}€</p>
-                                </Grid>
-                              </>
-                            )
-                          })}
-                          {typeof bookingObj.option === 'undefined' ?
-                            null
-                            :
-                            <>
-                              <Grid
-                                item
-                                xs={9}
-                                style={{ width: "90%", float: "left" }}
-                              >
-                                <p>{bookingObj.option.label}</p>
-                              </Grid>
-                              <Grid
-                                item
-                                xs={3}
-                                style={{ width: "10%", float: "right" }}
-                              >
-                                {" "}
-                                <p>{bookingObj.option.price}€</p>
-                              </Grid>
-                            </>
-                          }
-
-                          <br></br>
-
-                          <Grid
-                            item
-                            xs={9}
-                            style={{ width: "90%", float: "left" }}
-                          >
-                            <p>Frais de service</p>
-                          </Grid>
-                          <Grid
-                            item
-                            xs={3}
-                            style={{ width: "10%", float: "right" }}
-                          >
-                            {" "}
-                          <p>{bookingObj.fees}€</p>
+                            <h2
+                                style={{
+                                  fontSize: "2rem",
+                                  color: "rgba(84,89,95,0.95)",
+                                  letterSpacing: -1,
+                                  fontWeight: "100"
+                                }}
+                            >
+                              Confirmer la réservation de {`${bookingObj.user.firstname} ${bookingObj.user.name}`}{" "}
+                            </h2>
+                            <hr
+                                style={{
+                                  width: "100px",
+                                  color: "#F87280",
+                                  border: "solid 3px #F87280 ",
+                                  float: "left",
+                                  marginTop: "-10px"
+                                }}
+                            ></hr>
                           </Grid>
                         </Grid>
-                      </Grid>
-                      <Grid container>
-                        <Grid item xs={12} style={{}}>
-                          <hr></hr>
-                          <h3
-                            style={{
-                              fontSize: "1.6rem",
-                              color: "rgba(84,89,95,0.95)",
-                              letterSpacing: -1,
-                              fontWeight: "bold"
-                            }}
-                          >
-                            Planning de la réservation
-                          </h3>
-                          <br></br>
-                          <p>
-                            Afin de mettre à jour votre calendrier et donner de la
-                            visibilité à votre client sur la réalisation de la
-                            prestation, le planning de la réservation doit être
-                            mis à jour. Si votre réservation se réalise sur un
-                            seul créneau, renseignez l’heure de fin. Si votre
-                            prestation se réalise en plusieurs créneaux (peinture,
-                            cours etc.), échangez avec votre client sur un
-                            planning et des créneaux horaires pour cette
-                            prestation. Renseignez les en indiquant l’heure de fin
-                            du premier créneau et en ajoutant les suivants en
-                            cliquant sur « Ajouter un nouveau créneau ».
-                          </p>
-                          <br></br>
-                          <Grid
-                            item
-                            xs={3}
-                            style={{
-                              width: "25%",
-                              float: "left",
-                              paddingTop: 15
-                            }}
-                          >
+                        <br></br>
+                        <Grid container>
+                          <Grid item xs={5} style={{}}>
                             <img
-                              src="../../static/calendarreservation.svg"
-                              width={"35%"}
+                                src={`../../${bookingObj.user.picture}`}
+                                style={{
+                                  borderRadius: "50%",
+                                  marginLeft: "auto",
+                                  marginRight: "auto",
+                                  zIndex: 501,
+                                  width: "137px",
+                                  height: "137px",
+                                  objectFit:"cover"
+                                }}
+                                alt={"picture"}
                             />
                           </Grid>
-                          <Grid item xs={9} style={{ width: "70%" }}>
-                            <p>Adresse de la prestation:</p>{" "}
-                            <p>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</p>
+
+                          <Grid item xs={5} style={{}}>
+                            <h3
+                                style={{
+                                  fontSize: "1.6rem",
+                                  color: "rgba(84,89,95,0.95)",
+                                  letterSpacing: -1,
+                                  fontWeight: "bold"
+                                }}
+                            >
+                              A propos de {`${bookingObj.user.firstname} ${bookingObj.user.name}`}
+                            </h3>
+                            <Grid item xs={2} style={{}}></Grid>
+                            <Grid item xs={10} style={{}}></Grid>
                           </Grid>
                         </Grid>
-                        <Grid item xs={12} style={{}}>
-                          <Grid
-                            item
-                            xs={3}
-                            style={{
-                              width: "25%",
-                              float: "left",
-                              paddingTop: 15
-                            }}
-                          >
-                            <img src="../../static/mapmarker.svg" width={"35%"} />
-                          </Grid>
-                          <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
-                            <p>Heure de début:</p> <p>{bookingObj.date_prestation} - {bookingObj.time_prestation}</p>
-                          </Grid>
-                          {typeof this.state.end === null ? null :
-                            <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
-                            <p>Heure de fin:</p> <DatePicker
-                                            selected={new Date(this.state.end)}
-                                            onChange={(date)=>this.setState({date:date})}
-                                            customInput={<Input2 />}
-                                            locale='fr'
-                                            showMonthDropdown
-                                            dateFormat="dd/MM/yyyy"
-                                            minDate={new Date(this.state.end)}
-                                        /> - <DatePicker
+
+                        <div style={{ marginTop: "8%" }}>
+                          <hr></hr>
+
+                          <Grid container>
+                            <Grid item xs={12} style={{}}>
+                              <h3
+                                  style={{
+                                    fontSize: "1.6rem",
+                                    color: "rgba(84,89,95,0.95)",
+                                    letterSpacing: -1,
+                                    fontWeight: "bold"
+                                  }}
+                              >
+                                Détail de la réservation
+                              </h3>
+                              <Grid xs={12} style={{}}>
+                                <Grid
+                                    item
+                                    xs={9}
+                                    style={{ width: "90%", float: "left" }}
+                                >
+                                  <h4>{bookingObj.service}</h4>
+                                </Grid>
+                                {bookingObj.prestations.map(prestation => {
+                                  return (
+                                      <>
+                                        <Grid
+                                            item
+                                            xs={9}
+                                            style={{ width: "90%", float: "left" }}
+                                        >
+                                          <p>{prestation.value}X {prestation.name}</p>
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            xs={3}
+                                            style={{ width: "10%", float: "right" }}
+                                        >
+                                          <p>{prestation.price}€</p>
+                                        </Grid>
+                                      </>
+                                  )
+                                })}
+                                {typeof bookingObj.option === 'undefined' ?
+                                    null
+                                    :
+                                    <>
+                                      <Grid
+                                          item
+                                          xs={9}
+                                          style={{ width: "90%", float: "left" }}
+                                      >
+                                        <p>{bookingObj.option.label}</p>
+                                      </Grid>
+                                      <Grid
+                                          item
+                                          xs={3}
+                                          style={{ width: "10%", float: "right" }}
+                                      >
+                                        {" "}
+                                        <p>{bookingObj.option.price}€</p>
+                                      </Grid>
+                                    </>
+                                }
+
+                                <br></br>
+
+                                <Grid
+                                    item
+                                    xs={9}
+                                    style={{ width: "90%", float: "left" }}
+                                >
+                                  <p>Frais de service</p>
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={3}
+                                    style={{ width: "10%", float: "right" }}
+                                >
+                                  {" "}
+                                  <p>{bookingObj.fees}€</p>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                            <Grid container>
+                              <Grid item xs={12} style={{}}>
+                                <hr></hr>
+                                <h3
+                                    style={{
+                                      fontSize: "1.6rem",
+                                      color: "rgba(84,89,95,0.95)",
+                                      letterSpacing: -1,
+                                      fontWeight: "bold"
+                                    }}
+                                >
+                                  Planning de la réservation
+                                </h3>
+                                <br></br>
+                                <p>
+                                  Afin de mettre à jour votre calendrier et donner de la
+                                  visibilité à votre client sur la réalisation de la
+                                  prestation, le planning de la réservation doit être
+                                  mis à jour. Si votre réservation se réalise sur un
+                                  seul créneau, renseignez l’heure de fin. Si votre
+                                  prestation se réalise en plusieurs créneaux (peinture,
+                                  cours etc.), échangez avec votre client sur un
+                                  planning et des créneaux horaires pour cette
+                                  prestation. Renseignez les en indiquant l’heure de fin
+                                  du premier créneau et en ajoutant les suivants en
+                                  cliquant sur « Ajouter un nouveau créneau ».
+                                </p>
+                                <br></br>
+                                <Grid
+                                    item
+                                    xs={3}
+                                    style={{
+                                      width: "25%",
+                                      float: "left",
+                                      paddingTop: 15
+                                    }}
+                                >
+                                  <img
+                                      src="../../static/calendarreservation.svg"
+                                      width={"35%"}
+                                  />
+                                </Grid>
+                                <Grid item xs={9} style={{ width: "70%" }}>
+                                  <p>Adresse de la prestation:</p>{" "}
+                                  <p>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</p>
+                                </Grid>
+                              </Grid>
+                              <Grid item xs={12} style={{}}>
+                                <Grid
+                                    item
+                                    xs={3}
+                                    style={{
+                                      width: "25%",
+                                      float: "left",
+                                      paddingTop: 15
+                                    }}
+                                >
+                                  <img src="../../static/mapmarker.svg" width={"35%"} />
+                                </Grid>
+                                <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
+                                  <p>Heure de début:</p> <p>{bookingObj.date_prestation} - {bookingObj.time_prestation}</p>
+                                </Grid>
+                                {typeof this.state.end === null ? null :
+                                    <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
+                                      <p>Heure de fin:</p> <DatePicker
+                                        selected={moment(this.state.end).isAfter(this.state.currDate) ? this.state.end : this.state.currDate}
+                                        onChange={date => {
+                                          let isToday = moment(date).isSame(moment(new Date()), 'day');
+                                          this.setState({
+                                            end:date,
+                                            isToday: isToday
+                                          })
+                                        }}
+                                        customInput={<Input2 />}
+                                        locale='fr'
+                                        showMonthDropdown
+                                        dateFormat="dd/MM/yyyy"
+                                        minDate={this.state.currDate}
+                                    /> - <DatePicker
                                         selected={this.state.hour}
                                         onChange={(date)=>this.setState({hour:date})}
                                         customInput={<Input2 />}
                                         showTimeSelect
                                         showTimeSelectOnly
+                                        minTime={this.state.isToday ? new Date() : null}
+                                        maxTime={this.state.isToday ? moment().endOf('day').toDate() : null}
                                         timeIntervals={15}
                                         timeCaption="Heure"
                                         dateFormat="HH:mm"
                                         locale='fr'
                                         minDate={new Date()}
                                     />
+                                    </Grid>
+                                }
+
+                              </Grid>
+                            </Grid>
                           </Grid>
-                          }
-                  
+                        </div>
+
+                        <Grid style={{ float: "right" }} item xs={12}>
+                          {" "}
+                          <Link href={{pathname: '/reservations/detailsReservation', query: { id: this.state.booking_id }}}>
+                            <Button
+                                color={"secondary"}
+                                variant={"contained"}
+                                onClick={() => this.changeStatus()}
+                                style={{
+                                  color: "white",
+                                  fontSize: "16px",
+                                  width: "100%",
+                                  paddingLeft: "20px",
+                                  paddingRight: "20px",
+                                  marginBottom: 50,
+                                  marginRight: 20
+                                }}
+                            >
+                              Pré-approuver
+                            </Button>
+                          </Link>
                         </Grid>
+
+                        {/*cadre avec couleur et checkbox*/}
                       </Grid>
-                    </Grid>
-                  </div>
 
-                  <Grid style={{ float: "right" }} item xs={12}>
-                    {" "}
-                    <Link href={{pathname: '/reservations/detailsReservation', query: { id: this.state.booking_id }}}>
-                      <Button
-                        color={"secondary"}
-                        variant={"contained"}
-                        onClick={() => this.changeStatus()}
-                        style={{
-                          color: "white",
-                          fontSize: "16px",
-                          width: "100%",
-                          paddingLeft: "20px",
-                          paddingRight: "20px",
-                          marginBottom: 50,
-                          marginRight: 20
-                        }}
+                      {/*Contenu à droite*/}
+                      <Grid
+                          item
+                          xs={12}
+                          md={7}
+                          style={{ marginTop: "2%", marginBottom: "5%" }}
                       >
-                        Pré-approuver
-                      </Button>
-                    </Link>
+                        <Grid
+                            container
+                            style={{
+                              backgroundImage: `url('../../static/resa.svg')`,
+                              backgroundPosition: "cover",
+                              backgroundRepeat: "no-repeat",
+                              border: "thin solid transparent",
+                              maxWidth: "100%",
+                              height: "90vh",
+                              padding: "2%",
+                              position: "sticky",
+                              top: 100
+                            }}
+                        ></Grid>{" "}
+                      </Grid>
+                    </Grid>{" "}
                   </Grid>
-
-                  {/*cadre avec couleur et checkbox*/}
-                </Grid>
-
-                {/*Contenu à droite*/}
-                <Grid
-                  item
-                  xs={12}
-                  md={7}
-                  style={{ marginTop: "2%", marginBottom: "5%" }}
-                >
-                  <Grid
-                    container
-                    style={{
-                      backgroundImage: `url('../../static/resa.svg')`,
-                      backgroundPosition: "cover",
-                      backgroundRepeat: "no-repeat",
-                      border: "thin solid transparent",
-                      maxWidth: "100%",
-                      height: "90vh",
-                      padding: "2%",
-                      position: "sticky",
-                      top: 100
-                    }}
-                  ></Grid>{" "}
-                </Grid>
-              </Grid>{" "}
-            </Grid>
-          </Layout>
-          <Footer />
-        </>
-        }
-      </Fragment>
+                </Layout>
+                <Footer />
+              </>
+          }
+        </Fragment>
     );
   }
 }
