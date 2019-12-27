@@ -2790,7 +2790,7 @@ class DetailsReservation extends React.Component {
                         "Confirmée" ? (
                         <Typography style={{ fontSize: "1rem" }}>
                           Fin le{" "}
-                          {bookingObj === null ? null : bookingObj.end_date} à{" "}
+                          {bookingObj === null ? null : moment(bookingObj.end_date).format('DD/MM/YYYY')} à{" "}
                           {bookingObj === null ? null : bookingObj.end_time}
                         </Typography>
                       ) : null}

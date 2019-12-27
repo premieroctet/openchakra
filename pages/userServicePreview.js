@@ -72,7 +72,9 @@ const styles = theme => ({
 
     boxShadow: "4px 4px 41px -37px rgba(0,0,0,0.0)",
     border: "solid 1px #ccc",
-    borderRadius: "10px"
+    borderBottomRightRadius:"10px",
+    borderBottomLeftRadius: "10px",
+
   },
   dispocardin: {
     padding: "1%",
@@ -108,7 +110,7 @@ const styles = theme => ({
 
     borderRadius: "0px",
     backgroundColor: "#F8727F",
-    marginBottom: "20px"
+    marginBottom: "21px"
   }
 });
 

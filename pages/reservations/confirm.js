@@ -116,8 +116,12 @@ class Confirm extends React.Component {
       booking_id: null,
       bookingObj: null,
       date: Date.now(),
+      currDate: Date.now(),
       hour: Date.now(),
-      end: null
+      end: null,
+      minDate: null,
+      isToday: false
+
     };
   }
 
@@ -145,9 +149,19 @@ class Confirm extends React.Component {
           const year = date_prestation[2];
           const end = moment(year+'-'+month+'-'+day+'T00:00:00.000Z');
 
-          this.setState({end: end._i, date: new Date(end._i)})
+          this.setState({end: end._i, date: new Date(end._i), minDate: new Date(end._i)})
 
-          this.socket = io("http://localhost:3000");
+          let isToday = moment(this.state.currDate).isSame(moment(new Date()), 'day');
+          this.setState({
+            isToday: isToday
+          })
+
+          if (moment(this.state.currDate).isAfter(this.state.end)) {
+            this.setState({end: this.state.currDate})
+          }
+
+
+          this.socket = io();
           this.socket.on("connect", socket => {
             this.socket.emit("booking", this.state.bookingObj._id)
           })
@@ -155,7 +169,7 @@ class Confirm extends React.Component {
   }
 
   changeStatus() {
-    const endDate = moment(this.state.date).format('DD/MM/YYYY');
+    const endDate = moment(this.state.end).format('YYYY-MM-DD');
     const endHour = moment(this.state.hour).format('HH:mm');
 
     const dateObj = { end_date: endDate, end_time: endHour, status: 'Confirmée' };
@@ -165,7 +179,7 @@ class Confirm extends React.Component {
             .then(res => {
               this.setState({ 
                 bookingObj: res.data 
-              }, this.socket.emit("changeStatus", res.data))
+              }, ()=>this.socket.emit("changeStatus", res.data))
             })
             .catch(err => console.log(err))
 
@@ -1174,7 +1188,7 @@ class Confirm extends React.Component {
                           </Grid>
                           {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ? 
                             <Grid item xs={4} style={{ width: "50%", display: 'inline-block' }}>
-                              <p>Heure de fin:</p> <p>{bookingObj.end_date} - {bookingObj.end_time}</p>
+                              <p>Heure de fin:</p> <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
                             </Grid>
                             :
                             null
@@ -1182,13 +1196,20 @@ class Confirm extends React.Component {
                           {typeof this.state.end === null ? null :
                             <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
                             <p>Heure de fin:</p> <DatePicker
-                                            selected={new Date(this.state.end)}
-                                            onChange={(date)=>this.setState({date:date})}
-                                            customInput={<Input2 />}
+                                selected={moment(this.state.end).isAfter(this.state.currDate) ? this.state.end : this.state.currDate}
+                                onChange={date => {
+                                  let isToday = moment(date).isSame(moment(new Date()), 'day');
+                                  this.setState({
+                                    end:date,
+                                    isToday: isToday
+                                  })
+                                }}
+
+                                customInput={<Input2 />}
                                             locale='fr'
                                             showMonthDropdown
                                             dateFormat="dd/MM/yyyy"
-                                            minDate={new Date(this.state.end)}
+                                minDate={this.state.currDate}
                                         /> - <DatePicker
                                         selected={this.state.hour}
                                         onChange={(date)=>this.setState({hour:date})}
@@ -1196,6 +1217,8 @@ class Confirm extends React.Component {
                                         showTimeSelect
                                         showTimeSelectOnly
                                         timeIntervals={15}
+                                        minTime={this.state.isToday ? new Date() : null}
+                                        maxTime={this.state.isToday ? moment().endOf('day').toDate() : null}
                                         timeCaption="Heure"
                                         dateFormat="HH:mm"
                                         locale='fr'

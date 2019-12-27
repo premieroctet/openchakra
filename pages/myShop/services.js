@@ -11,7 +11,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import styled from 'styled-components';
 import { TextField } from '@material-ui/core';
-import Footer2 from '../../hoc/Layout/Footer/Footer2';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/EditOutlined';
 import Modal from '@material-ui/core/Modal';
@@ -84,6 +84,12 @@ const styles = theme => ({
     addweb:{
         [theme.breakpoints.down('sm')]: {
             display:'none'}},
+    respfooterr:{
+        [theme.breakpoints.down('sm')]: {
+            marginBottom: '66px!important'
+        }
+    },
+
 
     mobile:{
         [theme.breakpoints.up('md')]: {
@@ -392,7 +398,7 @@ class services extends React.Component {
 
         return (
             <Fragment>
-                <Layout>
+                <Layout style={{minHeight: '550px'}}>
                     <Grid container className={classes.bigContainer}>
                         <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
 
@@ -871,9 +877,14 @@ class services extends React.Component {
 
                     </Grid>
 
-                    <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
+                </Layout>
+                <Grid className={classes.respfooterr}>
+                    <Footer/>
+                </Grid>
+                <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
 
-                        <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
+
+                <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
                             <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
                             </Link>
@@ -924,8 +935,6 @@ class services extends React.Component {
 
                         </div>
                     </Modal>
-                </Layout>
-                <Footer2/>
 
                 <Dialog
                     open={this.state.open2}
