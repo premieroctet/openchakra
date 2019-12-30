@@ -200,7 +200,7 @@ class all extends React.Component {
                                     </Table>
                                 </div>
                                 <TablePagination
-                                    rowsPerPageOptions={[10, 25]}
+                                    rowsPerPageOptions={[10, 25, 100, 200]}
                                     component="div"
                                     count={prestation.length}
                                     rowsPerPage={this.state.rowsPerPage}

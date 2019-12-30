@@ -1789,7 +1789,6 @@ router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,r
 
     if(admin) {
         Prestation.find()
-            .collation({ locale: "fr" })
             .sort({label:1, category:1})
             .populate('category')
             .populate('job')
