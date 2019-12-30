@@ -18,7 +18,7 @@ const styles = theme => ({
     }
 });
 
-class cgu extends React.Component {
+class cguPage extends React.Component {
     constructor(props) {
         super(props);
 
@@ -318,4 +318,4 @@ class cgu extends React.Component {
 }
 
 
-export default withStyles(styles)(cgu);
+export default withStyles(styles)(cguPage);
