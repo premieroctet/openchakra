@@ -30,8 +30,8 @@ router.get('/all',(req,res)=> {
 // @Route POST /myAlfred/api/service/all/search
 // Search service by label or description
 router.post('/all/search', (req,res)=> {
-    const dat = req.body.label;
-    const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), "[eéèêaàoôuù]");
+    const dat = "\""+req.body.label+"\"";
+    //const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), "[eéèêaàoôuù]");
     Service.find({$text:{$search:dat}})
         .populate('category')
         .sort({label:1})

@@ -98,12 +98,12 @@ const styles = theme => ({
 
 const feelingoodCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { classes, img, desc, title,alfred,avatar,score,shop } = props;
+  const { classes, img, desc, title,alfred,avatar,score,shop,id } = props;
 
   return (
    
     
-
+    <Link href={'serviceByService?service='+id}>
     <Card className={classes.card}>
       <CardActionArea>
       
@@ -132,6 +132,7 @@ const feelingoodCard = (props) => {
       </CardActionArea>
     
     </Card>
+    </Link>
   );
 };
 

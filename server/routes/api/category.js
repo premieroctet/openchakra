@@ -28,9 +28,8 @@ router.get('/all', (req,res)=> {
 // @Route POST /myAlfred/api/category/all/search
 // Search category by label or description
 router.post('/all/search', (req,res)=> {
-    const dat = req.body.label;
-    const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), "[eéèêaàoôuù]");
-    Category.find({$text:{$search:dat}})
+    const dat =  req.body.label;
+    Category.find({$text:{$search:dat,$language:'none'}})
         .sort({label:1})
         .then(category => {
             if(typeof category !== 'undefined' && category.length > 0){

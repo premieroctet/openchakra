@@ -78,6 +78,7 @@ class searchHome extends React.Component {
         this.state = {
             categories: [],
             allCategories: [],
+            categoryFinal:[],
             showCategories: false,
             serviceUser: [],
             copyService: [],
@@ -89,6 +90,7 @@ class searchHome extends React.Component {
             idAlfred: [],
             prestations: [],
             services: [],
+            resultCategory: [],
             checkedB: false,
             checkedParticulier: false,
             clickedstatut:false,
@@ -204,11 +206,29 @@ class searchHome extends React.Component {
                 console.log(err);
             });
 
-        if(this.state.serviceOk || this.state.prestationOk){
+        await axios.post(url + 'myAlfred/api/category/all/search', obj)
+            .then(responseCategory => {
+                let category = responseCategory.data;
+                this.setState({resultCategory:category});
+                const arrayCategory = [];
+
+                category.forEach(e => {
+                    arrayCategory.push(e);
+                });
+                const uniqCategory = _.uniqBy(arrayCategory, 'label');
+                this.setState({categoryFinal: uniqCategory});
+                this.setState({categoryOk: true});
+            })
+            .catch(err => {
+                console.log(err)
+            });
+
+        if(this.state.serviceOk || this.state.prestationOk || this.state.categoryOk){
             const uniqCategoryPrestation = this.state.uniqCategory;
             const uniqCategoryService = this.state.uniqCategoryService;
+            const uniqCategoryCategory = this.state.categoryFinal;
 
-            const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService);
+            const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService).concat(uniqCategoryCategory);
             const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
             this.setState({allCategories: uniqCategoryFinal});
 
@@ -232,14 +252,32 @@ class searchHome extends React.Component {
                                     this.state.services.forEach(r => {
                                         if(s.service._id == r._id){
                                             finalServiceUser.push(sorted[index])
+                                        } else {
+                                            this.state.resultCategory.forEach(z => {
+                                                if(s.service.category == z._id){
+                                                    finalServiceUser.push(sorted[index])
+                                                }
+                                            })
                                         }
                                     })
                                 }
 
                             })
-                        } else {
+                        } else if(this.state.services.length) {
                             this.state.services.forEach(r => {
                                 if(s.service._id == r._id){
+                                    finalServiceUser.push(sorted[index])
+                                } else {
+                                    this.state.resultCategory.forEach(z => {
+                                        if(s.service.category == z._id){
+                                            finalServiceUser.push(sorted[index])
+                                        }
+                                    })
+                                }
+                            })
+                        } else {
+                            this.state.resultCategory.forEach(z => {
+                                if(s.service.category == z._id){
                                     finalServiceUser.push(sorted[index])
                                 }
                             })
@@ -262,41 +300,7 @@ class searchHome extends React.Component {
                 .catch(err => console.log(err));
 
         }
-        if(!this.state.prestations.length && !this.state.services.length) {
-            axios.post(url + 'myAlfred/api/category/all/search', obj)
-                .then(responseCategory => {
-                    let category = responseCategory.data;
-                    const arrayCategory = [];
 
-                    category.forEach(e => {
-                        arrayCategory.push(e);
-                    });
-                    const uniqCategory = _.uniqBy(arrayCategory, 'label');
-                    this.setState({allCategories: uniqCategory});
-
-
-
-                    axios.get(url + 'myAlfred/api/serviceUser/all')
-                        .then(res => {
-                            let serviceUser = res.data;
-                            const sorted = _.orderBy(serviceUser, ['level', 'number_of_views', 'graduated', 'is_certified', 'user.creation_date'],
-                                ['desc', 'desc', 'desc', 'desc', 'desc']);
-                            this.setState({serviceUser: sorted, finalServiceUserCopy: sorted});
-                            this.state.allCategories.forEach(e => {
-                                this.setState({[e.label]:0});
-                                this.state.serviceUser.forEach(a => {
-                                    if(a.service.category === e._id){
-                                        this.setState(prevState => {
-                                            return {[e.label]: prevState[e.label] + 1}
-                                        })
-                                    }
-                                })
-                            })
-
-                        })
-                        .catch(err => console.log(err));
-                })
-        }
     }
 
     async searchWithWordAndCity() {
@@ -339,11 +343,29 @@ class searchHome extends React.Component {
                 console.log(err);
             });
 
-        if(this.state.serviceOk || this.state.prestationOk){
+        await axios.post(url + 'myAlfred/api/category/all/search', obj)
+            .then(responseCategory => {
+                let category = responseCategory.data;
+                this.setState({resultCategory:category});
+                const arrayCategory = [];
+
+                category.forEach(e => {
+                    arrayCategory.push(e);
+                });
+                const uniqCategory = _.uniqBy(arrayCategory, 'label');
+                this.setState({categoryFinal: uniqCategory});
+                this.setState({categoryOk: true});
+            })
+            .catch(err => {
+                console.log(err)
+            });
+
+        if(this.state.serviceOk || this.state.prestationOk || this.state.categoryOk){
             const uniqCategoryPrestation = this.state.uniqCategory;
             const uniqCategoryService = this.state.uniqCategoryService;
+            const uniqCategoryCategory = this.state.categoryFinal;
 
-            const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService);
+            const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService).concat(uniqCategoryCategory);
             const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
             this.setState({allCategories: uniqCategoryFinal});
             const obj = {city:this.props.city};
@@ -367,14 +389,32 @@ class searchHome extends React.Component {
                                     this.state.services.forEach(r => {
                                         if(s.service._id == r._id){
                                             finalServiceUser.push(sorted[index])
+                                        } else {
+                                            this.state.resultCategory.forEach(z => {
+                                                if(s.service.category == z._id){
+                                                    finalServiceUser.push(sorted[index])
+                                                }
+                                            })
                                         }
                                     })
                                 }
 
                             })
-                        } else {
+                        } else if(this.state.services.length) {
                             this.state.services.forEach(r => {
                                 if(s.service._id == r._id){
+                                    finalServiceUser.push(sorted[index])
+                                } else {
+                                    this.state.resultCategory.forEach(z => {
+                                        if(s.service.category == z._id){
+                                            finalServiceUser.push(sorted[index])
+                                        }
+                                    })
+                                }
+                            })
+                        } else {
+                            this.state.resultCategory.forEach(z => {
+                                if(s.service.category == z._id){
                                     finalServiceUser.push(sorted[index])
                                 }
                             })
@@ -397,40 +437,7 @@ class searchHome extends React.Component {
                 .catch(err => console.log(err));
 
         }
-        if(!this.state.prestations.length && !this.state.services.length) {
-            axios.post(url + 'myAlfred/api/category/all/search', obj)
-                .then(responseCategory => {
-                    let category = responseCategory.data;
-                    const arrayCategory = [];
 
-                    category.forEach(e => {
-                        arrayCategory.push(e);
-                    });
-                    const uniqCategory = _.uniqBy(arrayCategory, 'label');
-                    this.setState({allCategories: uniqCategory});
-
-                    const obj = {city: this.props.city};
-                    axios.post(url + 'myAlfred/api/serviceUser/nearCity', obj)
-                        .then(res => {
-                            let serviceUser = res.data;
-                            const sorted = _.orderBy(serviceUser, ['level', 'number_of_views', 'graduated', 'is_certified', 'user.creation_date'],
-                                ['desc', 'desc', 'desc', 'desc', 'desc']);
-                            this.setState({serviceUser: sorted, finalServiceUserCopy: sorted});
-                            this.state.allCategories.forEach(e => {
-                                this.setState({[e.label]:0});
-                                this.state.serviceUser.forEach(a => {
-                                    if(a.service.category === e._id){
-                                        this.setState(prevState => {
-                                            return {[e.label]: prevState[e.label] + 1}
-                                        })
-                                    }
-                                })
-                            })
-
-                        })
-                        .catch(err => console.log(err));
-                })
-        }
     }
 
     searchWithCity() {

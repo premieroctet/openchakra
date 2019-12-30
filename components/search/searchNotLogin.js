@@ -88,6 +88,7 @@ class searchNotLogin extends React.Component {
             searchCity: '',
             prestations: [],
             services: [],
+            resultCategory: [],
             uniqCategory: [],
             uniqCategoryService: [],
             uniqService: [],
@@ -95,6 +96,7 @@ class searchNotLogin extends React.Component {
             categoryFinal: [],
             prestationOk: false,
             serviceOk: false,
+            categoryOk: false,
             idAlfred: [],
             checkedB: false,
             checkedParticulier: false,
@@ -196,8 +198,8 @@ class searchNotLogin extends React.Component {
 
     async searchWithWord(){
         if(this.state.searchCity.length === 0 || !this.state.searchCity.trim()){
-                await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
-                    checkedParticulier:false,idAlfred:[]});
+                await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],resultCategory:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+                    checkedParticulier:false,idAlfred:[],prestationOk:false,serviceOk:false,categoryOk:false});
                 const obj = {label:this.state.research.trim()};
                 await axios.post(url+'myAlfred/api/prestation/all/search',obj)
                     .then(res => {
@@ -235,11 +237,30 @@ class searchNotLogin extends React.Component {
                         console.log(err);
                     });
 
-                if(this.state.serviceOk || this.state.prestationOk){
+
+                await axios.post(url + 'myAlfred/api/category/all/search', obj)
+                    .then(responseCategory => {
+                        let category = responseCategory.data;
+                        this.setState({resultCategory:category});
+                        const arrayCategory = [];
+
+                        category.forEach(e => {
+                            arrayCategory.push(e);
+                        });
+                        const uniqCategory = _.uniqBy(arrayCategory, 'label');
+                        this.setState({categoryFinal: uniqCategory});
+                        this.setState({categoryOk: true});
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    });
+
+                if(this.state.serviceOk || this.state.prestationOk || this.state.categoryOk){
                     const uniqCategoryPrestation = this.state.uniqCategory;
                     const uniqCategoryService = this.state.uniqCategoryService;
+                    const uniqCategoryCategory = this.state.categoryFinal;
 
-                    const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService);
+                    const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService).concat(uniqCategoryCategory);
                     const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
                     this.setState({categoryFinal: uniqCategoryFinal});
 
@@ -263,14 +284,32 @@ class searchNotLogin extends React.Component {
                                             this.state.services.forEach(r => {
                                                 if(s.service._id == r._id){
                                                     finalServiceUser.push(sorted[index])
+                                                } else {
+                                                    this.state.resultCategory.forEach(z => {
+                                                        if(s.service.category == z._id){
+                                                            finalServiceUser.push(sorted[index])
+                                                        }
+                                                    })
                                                 }
                                             })
                                         }
 
                                     })
-                                } else {
+                                } else if(this.state.services.length) {
                                     this.state.services.forEach(r => {
                                         if(s.service._id == r._id){
+                                            finalServiceUser.push(sorted[index])
+                                        } else {
+                                            this.state.resultCategory.forEach(z => {
+                                                if(s.service.category == z._id){
+                                                    finalServiceUser.push(sorted[index])
+                                                }
+                                            })
+                                        }
+                                    })
+                                } else {
+                                    this.state.resultCategory.forEach(z => {
+                                        if(s.service.category == z._id){
                                             finalServiceUser.push(sorted[index])
                                         }
                                     })
@@ -293,7 +332,7 @@ class searchNotLogin extends React.Component {
                         .catch(err => console.log(err));
 
                 }
-                if(!this.state.prestations.length && !this.state.services.length) {
+                /*if(!this.state.prestations.length && !this.state.services.length) {
                     axios.post(url + 'myAlfred/api/category/all/search', obj)
                         .then(responseCategory => {
                             let category = responseCategory.data;
@@ -327,14 +366,14 @@ class searchNotLogin extends React.Component {
                                 })
                                 .catch(err => console.log(err));
                         })
-                }
+                }*/
 
 
                 this.setState({click: false, click2: true});
             } else {
 
-                    await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
-                        checkedParticulier:false,idAlfred:[]});
+                    await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],resultCategory:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+                        checkedParticulier:false,idAlfred:[],prestationOk:false,serviceOk:false,categoryOk:false});
                     const obj = {label:this.state.research.trim()};
                     await axios.post(url+'myAlfred/api/prestation/all/search',obj)
                         .then(res => {
@@ -374,11 +413,29 @@ class searchNotLogin extends React.Component {
                             console.log(err);
                         });
 
-                    if(this.state.serviceOk || this.state.prestationOk){
+                    await axios.post(url + 'myAlfred/api/category/all/search', obj)
+                        .then(responseCategory => {
+                        let category = responseCategory.data;
+                        this.setState({resultCategory:category});
+                        const arrayCategory = [];
+
+                        category.forEach(e => {
+                            arrayCategory.push(e);
+                        });
+                        const uniqCategory = _.uniqBy(arrayCategory, 'label');
+                        this.setState({categoryFinal: uniqCategory});
+                        this.setState({categoryOk: true});
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    });
+
+                    if(this.state.serviceOk || this.state.prestationOk || this.state.categoryOk){
                         const uniqCategoryPrestation = this.state.uniqCategory;
                         const uniqCategoryService = this.state.uniqCategoryService;
+                        const uniqCategoryCategory = this.state.categoryFinal;
 
-                        const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService);
+                        const categoryFinal = uniqCategoryPrestation.concat(uniqCategoryService).concat(uniqCategoryCategory);
                         const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
                         this.setState({categoryFinal: uniqCategoryFinal});
                         const obj = {city:this.state.searchCity};
@@ -402,14 +459,32 @@ class searchNotLogin extends React.Component {
                                                 this.state.services.forEach(r => {
                                                     if(s.service._id == r._id){
                                                         finalServiceUser.push(sorted[index])
+                                                    } else {
+                                                        this.state.resultCategory.forEach(z => {
+                                                            if(s.service.category == z._id){
+                                                                finalServiceUser.push(sorted[index])
+                                                            }
+                                                        })
                                                     }
                                                 })
                                             }
 
                                         })
-                                    } else {
+                                    } else if(this.state.services.length) {
                                         this.state.services.forEach(r => {
                                             if(s.service._id == r._id){
+                                                finalServiceUser.push(sorted[index])
+                                            } else {
+                                                this.state.resultCategory.forEach(z => {
+                                                    if(s.service.category == z._id){
+                                                        finalServiceUser.push(sorted[index])
+                                                    }
+                                                })
+                                            }
+                                        })
+                                    } else {
+                                        this.state.resultCategory.forEach(z => {
+                                            if(s.service.category == z._id){
                                                 finalServiceUser.push(sorted[index])
                                             }
                                         })
@@ -431,41 +506,6 @@ class searchNotLogin extends React.Component {
                             })
                             .catch(err => console.log(err));
 
-                    }
-                    if(!this.state.prestations.length && !this.state.services.length) {
-                        axios.post(url + 'myAlfred/api/category/all/search', obj)
-                            .then(responseCategory => {
-                                let category = responseCategory.data;
-                                const arrayCategory = [];
-
-                                category.forEach(e => {
-                                    arrayCategory.push(e);
-                                });
-                                const uniqCategory = _.uniqBy(arrayCategory, 'label');
-                                this.setState({categoryFinal: uniqCategory});
-                                const address = this.state.addressSelected;
-
-                                const obj = {city: this.state.searchCity};
-                                axios.post(url + 'myAlfred/api/serviceUser/nearCity', obj)
-                                    .then(res => {
-                                        let serviceUser = res.data;
-                                        const sorted = _.orderBy(serviceUser, ['level', 'number_of_views', 'graduated', 'is_certified', 'user.creation_date'],
-                                            ['desc', 'desc', 'desc', 'desc', 'desc']);
-                                        this.setState({finalServiceUser: sorted, finalServiceUserCopy: sorted});
-                                        this.state.categoryFinal.forEach(e => {
-                                            this.setState({[e.label+'Final']:0});
-                                            this.state.finalServiceUser.forEach(a => {
-                                                if(a.service.category === e._id){
-                                                    this.setState(prevState => {
-                                                        return {[e.label+'Final']: prevState[e.label+'Final'] + 1}
-                                                    })
-                                                }
-                                            })
-                                        })
-
-                                    })
-                                    .catch(err => console.log(err));
-                            })
                     }
 
                     this.setState({click: false, click2: true});
@@ -1185,7 +1225,7 @@ class searchNotLogin extends React.Component {
 
                                 {this.state.categoryFinal.map((e, index) => (
                                         <Grid key={index} container>
-                                                {this.state[e.label] !== 0 || this.state[e.label+'Final'] !== 0 ?
+                                                {this.state[e.label] !== 0 && this.state[e.label+'Final'] !== 0 ?
                                             <Grid item xs={12}>
                                                     <h3 style={{marginLeft: '15px'}}>{e.label}</h3>
                                             </Grid>
@@ -1369,7 +1409,7 @@ class searchNotLogin extends React.Component {
 
                                                     })}
                                                 </Grid>
-                                                {this.state[e.label] !== 0 || this.state[e.label+'Final'] !== 0 ?
+                                                {this.state[e.label] !== 0 && this.state[e.label+'Final'] !== 0 ?
                                                 <hr style={{width: '10%', margin: 'auto', border:'none', backgroundColor: '#2FBCD3', height: '10px', marginBottom: '80px', marginTop: '55px'}} />
                                                 : null}
 
