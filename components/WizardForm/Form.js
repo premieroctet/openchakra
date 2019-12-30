@@ -138,7 +138,9 @@ const styles = theme => ({
     }
   },
   containercalendar:{
-    width:'100%',
+    display: 'flex',
+    alignContent: 'center',
+    justifyContent: 'center',
     [theme.breakpoints.down('sm')]: {
       width:'100%!important',
 
@@ -2132,8 +2134,8 @@ class Form extends React.Component {
                   </Wizard.Page>
                   <Wizard.Page>
                     <Field render={(arrayHelpers) => (
-                      <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
-                        <Grid style={{width:'100%'}}>
+                      <Grid container style={{padding:'2%'}} className={classes.containercalendar}>
+                        <Grid style={{width:'90%'}}>
                           <Schedule
                             availabilities={this.state.availabilities}
                             services={[[arrayHelpers.form.values.submission[0].serviceLabel, arrayHelpers.form.values.submission[0].serviceId]]}

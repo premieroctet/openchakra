@@ -35,10 +35,11 @@ const styles = theme => ({
         },
     },
     containercalendar:{
-      width:'100%',
+      display: 'flex',
+      alignContent: 'center',
+      justifyContent: 'center',
       [theme.breakpoints.down('sm')]: {
-            width:'100%!important',
-
+        width:'100%!important',
         }},
     containerheader:{[theme.breakpoints.down('sm')]: {
             width:'100%!important',
@@ -230,7 +231,6 @@ class myAvailabilities extends React.Component {
     render() {
         const {classes} = this.props;
         const {user} = this.state;
-        const {events} = this.state;
 
         return (
           <Fragment>
@@ -283,8 +283,8 @@ class myAvailabilities extends React.Component {
                           <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius:'50%',position:'absolute',top:'27%',left:'0%',right:'0%',margin: 'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}} alt={'picture'}/>
                       </Grid>
                   </Grid>
-                  <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
-                      <Grid style={{width:'100%'}}>
+                  <Grid container style={{padding:'2%'}} className={classes.containercalendar}>
+                      <Grid style={{width:'90%'}}>
                           <Schedule availabilities={this.state.availabilities} services={this.state.services} cbAvailabilityCreated={this.availabilityCreated} cbAvailabilityDelete={this.availabilityDelete} />
                       </Grid>
                   </Grid>
