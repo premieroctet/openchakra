@@ -132,13 +132,19 @@ class bio extends React.Component {
                 <Typography className={classes.text}>{alfred.name} {alfred.firstname}</Typography>
                 <Typography>{address.address}, {address.city} </Typography>
               </Grid>
-              <Grid item xs={12} md={8} className={classes.biographyContainer}>
-                <Card className={classes.biography}>
-                  <Typography>
-                    {alfred.description}
-                  </Typography>
-                </Card>
-              </Grid>
+              {alfred.description !== undefined   ?
+                  alfred.description.length !== 0 || alfred.description.trim() ?
+                  <Grid item xs={12} md={8} className={classes.biographyContainer}>
+                    <Card className={classes.biography}>
+                      <Typography>
+                        {alfred.description}
+                      </Typography>
+                    </Card>
+                  </Grid>
+                      :null
+                  : null}
+
+
             </Grid>
           </Grid>
         </Fragment>

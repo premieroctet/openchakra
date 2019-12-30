@@ -176,7 +176,7 @@ class myBestSellers extends React.Component{
     const {classes} = this.props;
     const {booking} = this.state;
     const card =booking.map(e =>(<Grid item xs={12} sm={6} md={4}> <Card className={classes.card} key={e._id}>
-      <CardActionArea>
+
         {/*<CardMedia className={classes.media} image={'../../'+e.prestation.service.picture} title="Coiffure">
           <div className={classes.darkOverlay}>
             <Grid container className={classes.avatarContainer}>
@@ -209,7 +209,7 @@ class myBestSellers extends React.Component{
 
           </List>
         </CardContent>
-      </CardActionArea>
+
       <CardActions>
         <Grid container className={classes.gridButton}>
           <Link href={'/userServicePreview?id='+e.serviceUserId}>
