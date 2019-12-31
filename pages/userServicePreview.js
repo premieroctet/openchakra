@@ -3048,7 +3048,7 @@ class userServices extends React.Component {
                                 TOTAL :{" "}
                                 {this.state.grandTotal === null
                                     ? 0
-                                    : this.state.grandTotal}
+                                    : this.state.grandTotal.toFixed(2)}
                                 €
                               </p>
                             </Grid>

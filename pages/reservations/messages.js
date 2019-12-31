@@ -59,7 +59,7 @@ const styles = theme => ({
   topbar: {
     visibility: "visible",
     position: "sticky",
-    top: 65,
+    top: 64,
     zIndex: 999,
     [theme.breakpoints.down("sm")]: {
       display: "none",

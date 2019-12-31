@@ -823,17 +823,19 @@ class services extends React.Component {
                                             </Grid>
 
                                             <Grid  item xs={5}>
-                                                <Grid container>
-                                                    <Grid item xs={2}>
-                                                        <Link href={'/myShop/selectCategory'}><a style={{textDecoration:'none'}}>
-                                                            <img src={'../../static/plus-4.svg'} style={{marginTop: '27%'}} width={'42%'} alt={'plus'}/>
-                                                        </a>
+                                                <Grid container style={{height: '100%'}}>
+                                                    <Grid item xs={2} style={{textAlign: 'center', position: 'relative'}}>
+                                                        <Link href={'/myShop/selectCategory'}>
+                                                            <a style={{textDecoration:'none'}}>
+                                                                <img src={'../../static/plus-4.svg'} style={{width: '20px', position: 'absolute', top: 0, bottom: 0, margin: 'auto'}} alt={'plus'}/>
+                                                            </a>
                                                         </Link>
                                                     </Grid>
-                                                    <Grid item xs={10}>
-                                                        <Link href={'/myShop/selectCategory'}><a style={{textDecoration:'none'}}>
-                                                            <h3 style={{color:'white',fontWeight: '100'}}>Ajouter un nouveau service</h3>
-                                                        </a>
+                                                    <Grid item xs={10} style={{textAlign: 'center', position: 'relative'}}>
+                                                        <Link href={'/myShop/selectCategory'}>
+                                                            <a style={{textDecoration:'none'}}>
+                                                                <h3 style={{color:'white',fontWeight: '100', position: 'absolute', top: 0, bottom: 0, margin: 'auto', height: '20px'}}>Ajouter un nouveau service</h3>
+                                                            </a>
                                                         </Link>
                                                     </Grid>
                                                 </Grid>
@@ -884,57 +886,57 @@ class services extends React.Component {
                 <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
 
 
-                <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
-                            <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
-                            </Link>
-                        </Grid>
-
-                        <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                            </a></Link>
-                        </Grid>
-
-                        <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                            </a></Link>
-                        </Grid>
-
-                        <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
-                            <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                            </a></Link>
-                        </Grid>
-
-                        <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                            </a></Link>
-                        </Grid>
-
+                    <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
+                        <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
+                        </Link>
                     </Grid>
 
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
 
-                    <Modal
-                        style={{zIndex: 9999}}
-                        aria-labelledby="simple-modal-title"
-                        aria-describedby="simple-modal-description"
-                        open={this.state.open}
-                        onClose={this.handleClose}
-                    >
-                        <div style={{top: `50%`,
-                            left: `50%`,
-                            transform: `translate(-50%, -50%)`,}} className={classes.paper}>
-                            <Carousel>
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
 
-                                {image}
+                    <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                        <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
 
-                            </Carousel>
+                    <Grid item xs={2} style={{textAlign:"center"}}>
+                        <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                        </a></Link>
+                    </Grid>
 
-                        </div>
-                    </Modal>
+                </Grid>
+
+
+                <Modal
+                    style={{zIndex: 9999}}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                >
+                    <div style={{top: `50%`,
+                        left: `50%`,
+                        transform: `translate(-50%, -50%)`,}} className={classes.paper}>
+                        <Carousel>
+
+                            {image}
+
+                        </Carousel>
+
+                    </div>
+                </Modal>
 
                 <Dialog
                     open={this.state.open2}

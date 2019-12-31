@@ -219,7 +219,7 @@ class Preapprouve extends React.Component {
                                   fontWeight: "100"
                                 }}
                             >
-                              Confirmer la réservation de {`${bookingObj.user.firstname} ${bookingObj.user.name}`}{" "}
+                              Pré-approuver la réservation de {`${bookingObj.user.firstname} ${bookingObj.user.name}`}{" "}
                             </h2>
                             <hr
                                 style={{

@@ -815,8 +815,8 @@ class searchLogin extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid container style={{boxShadow: 'rgba(51, 51, 51, 0.31) 0px 5px 7px -5px', paddingBottom: '10px', paddingTop: '10px', position: 'sticky', top: '50px', backgroundColor: 'white', zIndex: 11}}>
-                            <Grid item xs={3} style={{textAlign: 'center',width: '100%', margin: 'auto', color: '#545659' }}>
+                        <Grid container style={{boxShadow: 'rgba(51, 51, 51, 0.31) 0px 5px 7px -5px', paddingBottom: '10px', paddingTop: '10px', position: 'sticky', top: '55px', backgroundColor: 'white', zIndex: 11}}>
+                            <Grid item xs={4} style={{textAlign: 'center',width: '100%', margin: 'auto', color: '#545659' }}>
                                 <TextField
                                     id="input-with-icon-textfield"
                                     InputProps={{
@@ -835,7 +835,7 @@ class searchLogin extends React.Component {
                                     onKeyDown={(e)=>this.keyPress(e)}
                                 />
                             </Grid>
-                            <Grid item xs={3} style={{fontFamily: 'Helvetica Neue, Helvetica,sans-serif',width: '100%', margin: 'auto'}}>
+                            <Grid item xs={4} style={{fontFamily: 'Helvetica Neue, Helvetica,sans-serif',width: '100%', margin: 'auto'}}>
                             <TextField
                             InputProps={{
                                 style:{height: 40},
@@ -871,42 +871,44 @@ class searchLogin extends React.Component {
                                 </TextField>
 
                             </Grid>
-                            <Grid item xs={4}>
-                                <Grid container>
-                                    {this.state.clickedstatut ?
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Statut</Typography>
-                                        </Grid> 
-                                    : 
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Statut</Typography>
-                                        </Grid> 
-                                    }
-                                    {this.state.clickeddate ?
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
-                                        </Grid>
-                                    :
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
-                                        </Grid>
-                                    }
-                                </Grid>
-                            </Grid>
-                            <Grid item xs={5} style={{marginLeft:50}}>
+                            <Grid item xs={3}>
                                 {this.state.research.length === 0 || !this.state.research.trim() ?
                                     <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white'}}>Rechercher</Button>
                                     :
                                     <Button variant={"contained"}  onClick={()=>this.searchWithWord()} color={"primary"} style={{color:'white'}}>Rechercher</Button>
                                 }
-                                    </Grid>
-
+                            </Grid>
                         </Grid>
-                        <Grid container className={classes.respfilter} style={{position: 'sticky', top: '145px', zIndex: 10}}>
+                        <Grid container className={classes.respfilter} style={{position: 'sticky', top: '120px', zIndex: 10}}>
+                            <Grid item xs={12} style={{height: 50}}>
+                                <Grid container>
+                                    {this.state.clickedstatut ?
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Statut</Typography>
+                                        </Grid> 
+                                    : 
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Statut</Typography>
+                                        </Grid> 
+                                    }
+                                    {this.state.clickeddate ?
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
+                                        </Grid>
+                                    :
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
+                                        </Grid>
+                                    }
+                                </Grid>
+                            </Grid>
+
+
+
+
                             <Grid container  style={{height: '10px'}}>
-                            {this.state.clickedstatut ?<Grid item xs={1} sm={2} md={7}></Grid>:<Grid style={{margin: 10}} item xs={6} sm={6} md={9}></Grid>}
                                 {this.state.clickedstatut ?
-                                <Grid item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10, zIndex: 1}}>
+                                <Grid item xs={10} sm={4} md={3} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10, zIndex: 1}}>
                                     <Grid container>
                                         <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
                                             {this.state.checkedParticulier ? <Grid item xs={3}></Grid> :
@@ -952,7 +954,7 @@ class searchLogin extends React.Component {
                                 : null}
                                 {this.state.clickeddate ?
                                 <Fragment>
-                                    <Grid item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
+                                    <Grid item xs={10} sm={4} md={3} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
                                         <Grid container>
                                             <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
                                                 <DateRangePicker
@@ -1026,14 +1028,14 @@ class searchLogin extends React.Component {
                                             <Grid container style={{paddingLeft: '25px'}}>
                                                 {this.state[e.label] !==0 ?
                                                     <Grid item xs={12}>
-                                                        <h4 style={{marginLeft:15}}>{e.label}</h4>
+                                                        <h3 style={{marginLeft:15}}>{e.label}</h3>
                                                     </Grid>
                                                     : null}
 
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
-                                                            <Grid item xs={12} sm={6} md={4}>
+                                                            <Grid item xs={12} sm={6} md={3}>
                                                                 <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia
                                                                                 className={classes.media}
@@ -1220,7 +1222,7 @@ class searchLogin extends React.Component {
                                             <Grid container>
                                                 {this.state[e.label] !== 0 ?
                                                     <Grid item xs={12}>
-                                                        <h4 style={{marginLeft:15}}>{e.label}</h4>
+                                                        <h3 style={{marginLeft:15}}>{e.label}</h3>
                                                     </Grid>
                                                     : null}
 
@@ -1228,7 +1230,7 @@ class searchLogin extends React.Component {
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
-                                                            <Grid item xs={12} sm={6} md={4}>
+                                                            <Grid item xs={12} sm={6} md={3}>
                                                                 <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia
                                                                                 className={classes.media}
@@ -1440,7 +1442,7 @@ class searchLogin extends React.Component {
                                         <Grid key={index} container>
                                                 {this.state[e.label+'Final'] !== 0 ?
                                             <Grid item xs={12}>
-                                                    <h4 style={{marginLeft:15}}>{e.label}</h4>
+                                                    <h3 style={{marginLeft:15}}>{e.label}</h3>
                                             </Grid>
                                                     : null}
 
@@ -1449,7 +1451,7 @@ class searchLogin extends React.Component {
 
                                                     if (s.service.category === e._id) {
                                                         return (
-                                                            <Grid item md={4} sm={6} xs={12}>
+                                                            <Grid item md={3} sm={6} xs={12}>
                                                                     <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia
                                                                                 className={classes.media}
@@ -1635,7 +1637,7 @@ class searchLogin extends React.Component {
                                         <Grid key={index} container>
                                                 {this.state[e.label+'Final'] !== 0 ?
                                             <Grid item xs={12}>
-                                                    <h4 style={{marginLeft:15}}>{e.label}</h4>
+                                                    <h3 style={{marginLeft:15}}>{e.label}</h3>
                                             </Grid>
                                                     : null}
 
@@ -1644,7 +1646,7 @@ class searchLogin extends React.Component {
 
                                                     if (s.service.category === e._id) {
                                                         return (
-                                                            <Grid item md={4} sm={6} xs={12}>
+                                                            <Grid item md={3} sm={6} xs={12}>
                                                             <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia
                                                                                 className={classes.media}

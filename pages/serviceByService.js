@@ -274,32 +274,32 @@ class serviceByService extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid container style={{boxShadow: 'rgba(51, 51, 51, 0.31) 0px 5px 7px -5px', paddingBottom: '10px', paddingTop: '10px', position: 'sticky', top: '50px', backgroundColor: 'white', zIndex: 11}}>
-                            <Grid item xs={4}>
+
                                 <Grid container>
                                     {this.state.clickedstatut ?
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.9'}}>Statut</Typography>
                                         </Grid>
                                         :
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.9'}}>Statut</Typography>
                                         </Grid>
                                     }
                                     {this.state.clickeddate ?
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
                                             <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                         :
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
                                             <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     }
                                 </Grid>
-                            </Grid>
+
                         </Grid>
                         <Grid container>
                             {this.state.clickedstatut ?
-                                <Grid item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10, zIndex: 1}}>
+                                <Grid item xs={5} sm={4} md={3} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10, zIndex: 1}}>
                                     <Grid container>
                                         <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
                                             {this.state.checkedParticulier ? <Grid item xs={3}></Grid> :
@@ -345,7 +345,7 @@ class serviceByService extends React.Component {
                                 : null}
                             {this.state.clickeddate ?
                                 <Fragment>
-                                    <Grid id="thedate" item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
+                                    <Grid id="thedate" item xs={5} sm={4} md={3} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
                                         <Grid container>
                                             <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
                                                 <DateRangePicker
@@ -388,7 +388,7 @@ class serviceByService extends React.Component {
                                         {serviceUser.map(a => (
 
 
-                                            <Grid item md={4} sm={6} xs={12}>
+                                            <Grid item md={3} sm={6} xs={12}>
                                                 <Card className={classes.card} style={{height: '420px'}}>
                                                     <CardMedia
                                                         className={classes.media}

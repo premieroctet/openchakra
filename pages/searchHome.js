@@ -697,32 +697,32 @@ class searchHome extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                     <Grid container style={{boxShadow: 'rgba(51, 51, 51, 0.31) 0px 5px 7px -5px', paddingBottom: '10px', paddingTop: '10px', position: 'sticky', top: '50px', backgroundColor: 'white', zIndex: 11}}>
-                    <Grid item xs={4}>
+
                                 <Grid container>
                                     {this.state.clickedstatut ?
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.9'}}>Statut</Typography>
                                         </Grid>
                                     :
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.6rem', lineHeight: '1.9'}}>Statut</Typography>
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.9'}}>Statut</Typography>
                                         </Grid>
                                     }
                                     {this.state.clickeddate ?
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
                                             <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                         :
-                                        <Grid item xs={6} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
                                             <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
                                     }
                                 </Grid>
                             </Grid>
-                    </Grid>
+
                         <Grid container>
                                 {this.state.clickedstatut ?
-                                <Grid item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10, zIndex: 1}}>
+                                <Grid item xs={5} sm={4} md={3} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10, zIndex: 1}}>
                                     <Grid container>
                                         <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
                                             {this.state.checkedParticulier ? <Grid item xs={3}></Grid> :
@@ -768,7 +768,7 @@ class searchHome extends React.Component {
                                 : null}
                             {this.state.clickeddate ?
                                 <Fragment>
-                                    <Grid id="thedate" item xs={5} sm={4} md={2} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
+                                    <Grid id="thedate" item xs={5} sm={4} md={3} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
                                         <Grid container>
                                             <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
                                                 <DateRangePicker
@@ -805,34 +805,33 @@ class searchHome extends React.Component {
                         <Grid container>
                             {this.state.showCategories ?
                                 <>
-                                <Grid container>
-                                    <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous aujourd'hui ?</h3>
-                                </Grid>
-                                <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
-                                    {this.state.allCategories.map((e,index) => (
-                                        <Grid key={index} item xs={3} style={{display: 'inline-block', width: '350px', margin: 'auto 20px'}}>
-                                            <Link href={'/serviceByCategory?category='+e._id}>
-                                            <Card style={{width: '350px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
-                                                <CardActionArea>
-                                                    <CardMedia
-                                                        style={{height:200}}
-                                                        image={e.picture}
-                                                        title={e.label}
-                                                    />
-                                                    <CardContent style={{padding: '5px'}}>
-                                                        <Typography gutterBottom style={{fontSize: '1.1rem', textAlign: 'center'}}>
-                                                            {e.label}
-                                                        </Typography>
+                                    <Grid container>
+                                        <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous aujourd'hui ?</h3>
+                                    </Grid>
+                                    <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
+                                        {this.state.allCategories.map((e,index) => (
+                                            <Grid key={index} style={{display: 'inline-block', width: '350px', margin: 'auto 20px'}}>
+                                                <Link href={'/serviceByCategory?category='+e._id}>
+                                                    <Card style={{width: '350px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
+                                                        <CardActionArea>
+                                                            <CardMedia
+                                                                style={{height:200}}
+                                                                image={e.picture}
+                                                                title={e.label}
+                                                            />
+                                                            <CardContent style={{padding: '5px'}}>
+                                                                <Typography gutterBottom style={{fontSize: '1.1rem', textAlign: 'center'}}>
+                                                                    {e.label}
+                                                                </Typography>
 
-                                                    </CardContent>
-                                                </CardActionArea>
+                                                            </CardContent>
+                                                        </CardActionArea>
 
-                                            </Card>
-                                            </Link>
-
-                                        </Grid>
-                                    ))}
-                                </Grid>
+                                                    </Card>
+                                                </Link>
+                                            </Grid>
+                                        ))}
+                                    </Grid>
                                 </>
                                 : null}
 
@@ -853,7 +852,7 @@ class searchHome extends React.Component {
                                                     if (a.service.category === e._id) {
                                                         return (
 
-                                                            <Grid item md={4} sm={6} xs={12}>
+                                                            <Grid item md={3} sm={6} xs={12}>
                                                                 <Card className={classes.card} style={{height: '420px'}}>
                                                                     <CardMedia
                                                                         className={classes.media}
