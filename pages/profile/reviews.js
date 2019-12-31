@@ -73,9 +73,9 @@ const styles = theme => ({
             }
         }
     },
-    tabweb:{visibility:'visible', width:'100%', position:'sticky', top:'115px', fontSize:15, backgroundColor:'white', zIndex:'20',
+    tabweb:{width:'100%', position:'sticky', top:'115px', fontSize:15, backgroundColor:'white', zIndex:'20',
         [theme.breakpoints.down('sm')]: {
-            visibility:'hidden'}},
+            display:'none'}},
     trait:{
         width: '100%',
         height: 4,
@@ -83,6 +83,19 @@ const styles = theme => ({
         borderColor: 'transparent',
         [theme.breakpoints.down('sm')]: {
         },
+    },
+    tabmobile: {
+        fontSize: "10px",
+        fontWeight: "300",
+        height: 90,
+        backgroundColor: "white",
+        position: "sticky",
+        top: 55,
+        zIndex: 20,
+        [theme.breakpoints.up("md")]: {
+            display: "none"
+        },
+
     },
 
     trait1:{
@@ -329,6 +342,60 @@ class reviews extends React.Component {
                                         </React.Fragment>}
                                 </Grid>
 
+                            </Grid>
+                            <Grid container className={classes.tabmobile}>
+                                <Grid item xs={6} style={{ textAlign: "center" }}>
+                                    <h2
+                                        onClick={()=>this.handleClicktabs()}
+                                        style={{
+                                            color: "#828181",
+                                            fontWeight: "100",
+                                            cursor: "pointer",
+                                            marginLeft: "25%",
+                                            fontSize:'0.8rem'
+                                        }}
+                                    >
+                                        Commentaires de mes Alfred
+                                    </h2>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <h2
+                                        onClick={()=>this.handleClicktabs2()}
+                                        style={{
+                                            color: "#828181",
+                                            fontWeight: "100",
+                                            textAlign: "center",
+                                            cursor: "pointer",
+                                            fontSize:'0.8rem'
+                                        }}
+                                    >
+                                        Commentaires de mes clients
+                                    </h2>
+                                    <br />
+                                </Grid>
+
+                                <Grid item xs={6} style={{ textAlign: "center" }}>
+                                    {tabs ? (
+                                        <React.Fragment>
+                                            <hr className={classes.trait1} />
+                                        </React.Fragment>
+                                    ) : (
+                                        <React.Fragment>
+                                            <hr className={classes.trait3} />
+                                        </React.Fragment>
+                                    )}
+                                </Grid>
+                                <Grid item xs={6}>
+                                    {tabs ? (
+                                        <React.Fragment>
+                                            <hr className={classes.trait} />
+                                        </React.Fragment>
+                                    ) : (
+                                        <React.Fragment>
+                                            <hr className={classes.trait2} />
+                                        </React.Fragment>
+                                    )}
+                                </Grid>
                             </Grid>
                             {tabs ?
                                     clientReviews.map(e => (

@@ -1116,7 +1116,8 @@ class userServices extends React.Component {
                           style={{
                             textAlign: "left",
                             margin: "0 auto",
-                            float: "right"
+                            float: "right",
+                            paddingLeft:10
                           }}
                       >
                         <div
