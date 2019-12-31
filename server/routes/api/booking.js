@@ -450,6 +450,7 @@ new CronJob('0 0 5 * * *', function() {
                     console.log('is same or after');
 
                     b.status = 'Terminée';
+                    b.paid = true;
                     b.save().then().catch();
                 }
             })

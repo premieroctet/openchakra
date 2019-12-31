@@ -1806,7 +1806,7 @@ class DetailsReservation extends React.Component {
                                 <Typography>
                                   {bookingObj === null
                                       ? null
-                                      : `${bookingObj.date_prestation} - ${bookingObj.time_prestation}`}
+                                      : `${bookingObj.date_prestation} - ${moment(bookingObj.time_prestation).format('HH:mm')}`}
                                 </Typography>
                               </Grid>
 
@@ -2782,7 +2782,7 @@ class DetailsReservation extends React.Component {
                           à{" "}
                           {bookingObj === null
                             ? null
-                            : bookingObj.time_prestation}
+                              : moment(bookingObj.time_prestation).format('HH:mm')}
                         </Typography>
                       </Grid>
                       <Grid item xs={12}>

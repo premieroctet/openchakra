@@ -557,6 +557,9 @@ class serviceByService extends React.Component {
                                             </Grid>
 
                                         ))}
+                                        {!serviceUser.length ?
+                                            <p>Aucun résultat</p>
+                                            : null}
                                     </Grid>
 
 

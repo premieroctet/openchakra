@@ -107,12 +107,15 @@ class paymentChoice extends React.Component {
 
     }
 
-    static getInitialProps ({ query: { total, fees } }) {
-        return { total: total, fees:fees }
-
+    static getInitialProps ({ query: { id, total, fees } }) {
+        return { id: id, total: total, fees:fees }
     }
 
+
     componentDidMount() {
+        const id = this.props.id;
+        this.setState({booking_id:id})
+
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
@@ -147,7 +150,7 @@ class paymentChoice extends React.Component {
         };
         axios.post(url+'myAlfred/api/payment/payInDirect',data)
             .then(() => {
-                Router.push('/paymentDirectSuccess')
+                Router.push('/paymentDirectSuccess?id=' +  this.state.booking_id)
 
             })
             .catch()
@@ -162,6 +165,7 @@ class paymentChoice extends React.Component {
         };
         axios.post(url+'myAlfred/api/payment/payIn',data)
             .then(res => {
+                axios.put(url +  'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: 'Confirmée'})
                 let payIn = res.data;
                 Router.push(payIn.RedirectURL)
             })

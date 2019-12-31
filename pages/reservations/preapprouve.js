@@ -114,12 +114,14 @@ class Preapprouve extends React.Component {
     this.state = {
       booking_id: null,
       bookingObj: null,
-      date: Date.now(),
       currDate: Date.now(),
       hour: Date.now(),
+      hourToSend: Date.now(),
+      begin: null,
       end: null,
       minDate: null,
-      isToday: false
+      isToday: false,
+      isBookingDay: false
     };
   }
 
@@ -141,20 +143,33 @@ class Preapprouve extends React.Component {
           const day = date_prestation[0];
           const month = date_prestation[1];
           const year = date_prestation[2];
-          const end = moment(year+'-'+month+'-'+day+'T00:00:00.000Z');
+          const end = new Date(moment(year+'-'+month+'-'+day+'T00:00:00.000Z', 'YYYY-MM-DD').startOf('days'));
 
-          this.setState({end: end._i, date: new Date(end._i)})
+          this.setState({
+            time_prestation: this.state.bookingObj.time_prestation,
+            end: end,
+            begin: end
+          })
+
 
           let isToday = moment(this.state.currDate).isSame(moment(new Date()), 'day');
           this.setState({
             isToday: isToday
           })
 
-          if (moment(this.state.currDate).isAfter(this.state.end)) {
-            this.setState({end: this.state.currDate})
+          if (moment(this.state.currDate).isSame(end, 'day')) {
+            this.setState({
+              isBookingDate: true
+            })
           }
 
-          this.socket = io();
+          if (moment(this.state.currDate).isAfter(this.state.end)) {
+            this.setState({end: this.state.currDate})
+
+        }
+
+
+    this.socket = io();
           this.socket.on("connect", socket => {
             this.socket.emit("booking", this.state.bookingObj._id)
           })
@@ -163,7 +178,7 @@ class Preapprouve extends React.Component {
 
   changeStatus() {
     const endDate = moment(this.state.end).format('YYYY-MM-DD');
-    const endHour = moment(this.state.hour).format('HH:mm');
+    const endHour = moment(this.state.hourToSend).format('HH:mm');
 
     const dateObj = { end_date: endDate, end_time: endHour, status: 'Pré-approuvée' };
     console.log(endDate, endHour)
@@ -410,7 +425,7 @@ class Preapprouve extends React.Component {
                                   <img src="../../static/mapmarker.svg" width={"35%"} />
                                 </Grid>
                                 <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
-                                  <p>Heure de début:</p> <p>{bookingObj.date_prestation} - {bookingObj.time_prestation}</p>
+                                  <p>Heure de début:</p> <p>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
                                 </Grid>
                                 {typeof this.state.end === null ? null :
                                     <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
@@ -427,15 +442,30 @@ class Preapprouve extends React.Component {
                                         locale='fr'
                                         showMonthDropdown
                                         dateFormat="dd/MM/yyyy"
-                                        minDate={this.state.currDate}
+                                        minDate={this.state.begin}
                                     /> - <DatePicker
-                                        selected={this.state.hour}
-                                        onChange={(date)=>this.setState({hour:date})}
+                                        selected={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.time_prestation) : this.state.currDate}
+                                        onChange={
+                                          moment(this.state.begin).isSame(this.state.end, 'day') ?
+                                              (date) => this.setState({
+                                                time_prestation:date,
+                                                hour: date,
+                                                hourToSend: date
+                                              })
+                                              :
+                                              (date) => this.setState({
+                                                currDate:date,
+                                                hour: date,
+                                                hourToSend: date
+                                              })
+                                        }
+
                                         customInput={<Input2 />}
                                         showTimeSelect
                                         showTimeSelectOnly
-                                        minTime={this.state.isToday ? new Date() : null}
-                                        maxTime={this.state.isToday ? moment().endOf('day').toDate() : null}
+                                        minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.bookingObj.time_prestation) : this.state.isToday ? this.state.currDate : null}
+                                        maxTime={moment(this.state.begin).isSame(this.state.end, 'day') || this.state.isToday ? moment().endOf('day').toDate() : null}
+
                                         timeIntervals={15}
                                         timeCaption="Heure"
                                         dateFormat="HH:mm"

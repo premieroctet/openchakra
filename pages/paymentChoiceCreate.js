@@ -97,12 +97,16 @@ class PaymentChoiceCreate extends React.Component {
 
     }
 
-    static getInitialProps ({ query: { total, fees } }) {
-        return { total: total, fees:fees }
+    static getInitialProps ({ query: { id, total, fees } }) {
+        return { id: id, total: total, fees:fees }
 
     }
 
+
     componentDidMount() {
+        const id = this.props.id;
+        this.setState({booking_id: id});
+
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
@@ -137,7 +141,7 @@ class PaymentChoiceCreate extends React.Component {
         };
         axios.post(url+'myAlfred/api/payment/payInDirectCreate',data)
             .then(() => {
-                Router.push('/paymentDirectSuccessCreate')
+                Router.push('/paymentDirectSuccessCreate?=' + this.state.booking_id)
 
             })
             .catch()

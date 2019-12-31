@@ -46,7 +46,7 @@ const BookingSchema = new Schema({
         required: true
     },
     time_prestation: {
-        type: String,
+        type: Date,
         required: true
     },
     end_date: {

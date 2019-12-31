@@ -1436,6 +1436,7 @@ class searchLogin extends React.Component {
                             :<Grid container>
                                 <Typography style={{fontSize: '1.1rem', color: '#A3A3A3', marginLeft: '15px',}}>Résultat pour la recherche : <i style={{fontWeight: 'bold'}}>{this.state.research}</i></Typography>
                             </Grid>}
+                                {!this.state.finalServiceUser.length ? <p>Aucun résultat</p> : null}
                                 {this.state.addressSelected === 'all' ?
 
                                     this.state.categoryFinal.map((e, index) => (

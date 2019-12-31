@@ -36,6 +36,7 @@ class paymentSuccess extends React.Component {
     componentDidMount() {
 
         localStorage.setItem('path',Router.pathname);
+        const booking_id = localStorage.getItem('bookingId');
         axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
         axios
             .get(url + "myAlfred/api/users/current")

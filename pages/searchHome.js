@@ -838,7 +838,7 @@ class searchHome extends React.Component {
 
 
                                 <Grid container>
-                                    <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
+                                    {serviceUser.length ?<h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>:null}
 
 
                                     {allCategories.map((e,index) => (
@@ -1032,6 +1032,9 @@ class searchHome extends React.Component {
 
                                         </Grid>
                                     ))}
+                                    {!serviceUser.length ?
+                                        <p>Aucun résultat</p>
+                                        : null}
                                 </Grid>
 
 

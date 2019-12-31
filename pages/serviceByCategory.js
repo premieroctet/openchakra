@@ -78,6 +78,7 @@ class serviceByCategory extends React.Component {
         this.state = {
             categories: [],
             allCategories: [],
+            allCategories2: [],
             showCategories: false,
             serviceUser: [],
             copyService: [],
@@ -102,6 +103,14 @@ class serviceByCategory extends React.Component {
     componentDidMount() {
         const category = this.props.category;
 
+
+        axios.get(url+'myAlfred/api/category/all/sort')
+            .then(res => {
+                let categories = res.data;
+                this.setState({allCategories2:categories});
+            })
+            .catch(err => console.log(err));
+
         axios.get(url+'myAlfred/api/serviceUser/all/category/'+category)
             .then(res => {
                 let serviceUser = res.data;
@@ -115,6 +124,17 @@ class serviceByCategory extends React.Component {
     search() {
         const category = this.props.category;
         axios.get(url+'myAlfred/api/serviceUser/all/category/'+category)
+            .then(res => {
+                let serviceUser = res.data;
+                const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+                    ['desc','desc','desc','desc','desc']);
+                this.setState({serviceUser: sorted});
+            })
+            .catch(err => console.log(err))
+    }
+
+    refresh(id) {
+        axios.get(url+'myAlfred/api/serviceUser/all/category/'+id)
             .then(res => {
                 let serviceUser = res.data;
                 const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
@@ -257,6 +277,7 @@ class serviceByCategory extends React.Component {
     render() {
         const {classes} = this.props;
         const serviceUser = this.state.serviceUser;
+        const {allCategories2} = this.state;
         return (
             <Fragment>
                 <Layout>
@@ -370,6 +391,33 @@ class serviceByCategory extends React.Component {
                         <Grid container style={{paddingLeft:25}}>
                             <Grid container>
                                         <Grid container>
+
+                                                <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
+                                                    {allCategories2.map((e,index) => (
+                                                        <Grid key={index} style={{display: 'inline-block', width: '350px', margin: 'auto 20px'}}>
+                                                            <Link href={'/serviceByCategory?category='+e._id}>
+                                                                <Card onClick={()=>this.refresh(e._id)} style={{width: '350px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
+                                                                    <CardActionArea>
+                                                                        <CardMedia
+                                                                            style={{height:200}}
+                                                                            image={e.picture}
+                                                                            title={e.label}
+                                                                        />
+                                                                        <CardContent style={{padding: '5px'}}>
+                                                                            <Typography gutterBottom style={{fontSize: '1.1rem', textAlign: 'center'}}>
+                                                                                {e.label}
+                                                                            </Typography>
+
+                                                                        </CardContent>
+                                                                    </CardActionArea>
+
+                                                                </Card>
+                                                            </Link>
+                                                        </Grid>
+                                                    ))}
+                                                </Grid>
+
+
 
 
                                             <Grid container style={{padding: '25px'}}>
@@ -545,6 +593,9 @@ class serviceByCategory extends React.Component {
                                                             </Grid>
 
                                                         ))}
+                                                {!serviceUser.length ?
+                                                    <p>Aucun résultat</p>
+                                                    : null}
                                             </Grid>
 
 

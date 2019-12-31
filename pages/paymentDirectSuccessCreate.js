@@ -31,7 +31,16 @@ class PaymentDirectSuccessCreate extends React.Component {
 
     }
 
+    static getInitialProps ({ query: { id } }) {
+        return { id: id }
+
+    }
+
+
     componentDidMount() {
+        const id = this.props.id;
+        this.setState({booking_id: id})
+
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');

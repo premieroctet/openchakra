@@ -1140,10 +1140,10 @@ class Reserve extends React.Component {
                             <img src="../../static/mapmarker.svg" width={"35%"} />
                           </Grid>
                           <Grid item xs={5} style={{ width: "50%", display: 'inline-block' }}>
-                            <p>Heure de début:</p> <p>{bookingObj.date_prestation} - {bookingObj.time_prestation}</p>
+                            <p>Heure de début:</p> <p>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
                           </Grid>
                           {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ? <Grid item xs={4} style={{ width: "50%", display: 'inline-block' }}>
-                            <p>Heure de fin:</p> <p>{bookingObj.end_date} - {bookingObj.end_time}</p>
+                            <p>Heure de fin:</p> <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
                           </Grid> : null}
                         </Grid>
                       </Grid>
@@ -1152,7 +1152,7 @@ class Reserve extends React.Component {
 
                   <Grid style={{ float: "right" }} item xs={12}>
                     {" "}
-                    <Link href={{pathname: '/paymentChoice', query: { total: bookingObj.amount,fees: bookingObj.fees }}}>
+                    <Link href={{pathname: '/paymentChoice', query: { id: bookingObj._id, total: bookingObj.amount,fees: bookingObj.fees }}}>
                       <Button
                         color={"secondary"}
                         variant={"contained"}

@@ -13,8 +13,15 @@ router.get('/test',(req, res) => res.json({msg: 'ChatRooms Works!'}) );
 // Get chatrooms for one user
 router.get('/userChatRooms', passport.authenticate('jwt',{session:false}), (req, res) => {
   const user = mongoose.Types.ObjectId(req.user.id);
-  ChatRooms.find()
-    .populate("emitter")
+  ChatRooms.find({ $or: [
+      {
+        emitter: user
+      },
+      {
+        recipient: user
+      }
+    ] })
+     .populate("emitter")
     .populate("recipient")
     .then(chatrooms => {
       if (!chatrooms) {

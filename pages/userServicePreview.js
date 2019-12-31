@@ -708,7 +708,7 @@ class userServices extends React.Component {
                     equipments: this.state.serviceUser.equipments,
                     amount: this.state.grandTotal,
                     date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
-                    time_prestation: moment(this.state.hour).format("HH:mm"),
+                    time_prestation: moment(this.state.hour),
                     alfred: this.state.serviceUser.user._id,
                     user: this.state.user._id,
                     prestations: this.state.selectedPrestations,
@@ -782,7 +782,7 @@ class userServices extends React.Component {
 
         switch(dayNumber) {
           case 0 :
-            this.state.sunday_event.forEach(event => {
+            this.state.sunday.event.forEach(event => {
               const dateBegin = moment(event.begin).format('HH:mm');
               const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
               const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
@@ -797,7 +797,7 @@ class userServices extends React.Component {
             })
             break;
           case 1 :
-            this.state.monday_event.forEach(event => {
+            this.state.monday.event.forEach(event => {
               const dateBegin = moment(event.begin).format('HH:mm');
               const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
               const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
@@ -812,7 +812,7 @@ class userServices extends React.Component {
             })
             break;
           case 2 :
-            this.state.tuesday_event.forEach(event => {
+            this.state.tuesday.event.forEach(event => {
               const dateBegin = moment(event.begin).format('HH:mm');
               const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
               const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
@@ -827,7 +827,7 @@ class userServices extends React.Component {
             })
             break;
           case 3 :
-            this.state.wednesday_event.forEach(event => {
+            this.state.wednesday.event.forEach(event => {
               const dateBegin = moment(event.begin).format('HH:mm');
               const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
               const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
@@ -842,7 +842,7 @@ class userServices extends React.Component {
             })
             break;
           case 4 :
-            this.state.thursday_event.forEach(event => {
+            this.state.thursday.event.forEach(event => {
               const dateBegin = moment(event.begin).format('HH:mm');
               const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
               const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
@@ -857,7 +857,7 @@ class userServices extends React.Component {
             })
             break;
           case 5 :
-            this.state.friday_event.forEach(event => {
+            this.state.friday.event.forEach(event => {
               const dateBegin = moment(event.begin).format('HH:mm');
               const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
               const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
@@ -872,7 +872,7 @@ class userServices extends React.Component {
             })
             break;
           case 6 :
-            this.state.saturday_event.forEach(event => {
+            this.state.saturday.event.forEach(event => {
               const dateBegin = moment(event.begin).format('HH:mm');
               const momentBegin = moment(formatedDate + dateBegin, 'YYYY-MM-DDLT');
               const dtBegin = moment(momentBegin).format('YYYY-MM-DDTHH:mm');
@@ -951,7 +951,7 @@ class userServices extends React.Component {
               equipments: this.state.serviceUser.equipments,
               amount: this.state.grandTotal,
               date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
-              time_prestation: moment(this.state.hour).format("HH:mm"),
+              time_prestation: moment(this.state.hour),
               alfred: this.state.serviceUser.user._id,
               user: this.state.user._id,
               prestations: this.state.selectedPrestations,
