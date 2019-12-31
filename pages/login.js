@@ -126,62 +126,62 @@ class login extends React.Component {
 
     return (
       <Layout>
-          <Grid className={classes.fullContainer}>
-            <Grid container className={classes.loginContainer}>
-              <Card className={classes.card}>
-                <Grid>
-                  <Grid item style={{textAlign:'center'}}>
-                    <Typography style={{ fontSize: 30 }}>Connexion</Typography>
-                    <img src={'../static/background/connexion.svg'} alt={'bienvenu'} style={{width:100, height:100}}/>
-                  </Grid>
-                  <form onSubmit={this.onSubmit} style={{marginBottom:15}}>
-                    <Grid item>
-                      <TextField
-                          label="Email"
-                          placeholder="Email"
-                          margin="normal"
-                          style={{ width: '100%' }}
-                          type="email"
-                          name="username"
-                          value={this.state.username}
-                          onChange={this.onChange}
-                          error={errors.username}
-                      />
-                      <em>{errors.username}</em>
-                    </Grid>
-                    <Grid item style={{backgroundColor:'borwn'}}>
-                      <TextField
-                          id="standard-with-placeholder"
-                          label="Mot de passe"
-                          placeholder="Mot de passe"
-                          margin="normal"
-                          style={{ width: '100%' }}
-                          type="password"
-                          name="password"
-                          value={this.state.password}
-                          onChange={this.onChange}
-                          error={errors.password}
-                      />
-                      <em>{errors.password}</em>
-                    </Grid>
-                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                      <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
-                        Connexion
-                      </Button>
-                    </Grid>
-                  </form>
-                  <Grid item style={{display:'flex',flexDirection:'column'}}>
-                    <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
-                    <Link href={"/signup"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Pas encore inscrit ? Inscrivez-vous !</a></Link>
-                  </Grid>
+        <Grid className={classes.fullContainer}>
+          <Grid container className={classes.loginContainer}>
+            <Card className={classes.card}>
+              <Grid>
+                <Grid item style={{textAlign:'center'}}>
+                  <Typography style={{ fontSize: 30 }}>Connexion</Typography>
+                  <img src={'../static/background/connexion.svg'} alt={'bienvenu'} style={{width:100, height:100}}/>
                 </Grid>
-              </Card>
-            </Grid>
-            <hr className={classes.hrStyle}/>
-            <Grid className={classes.secondContainer}>
-              <img src={'../static/background/Illustration Inscription-connexion_Plan de travail 1 copie-01.svg'} style={{height:'100vh', width:'90%'}} alt={'test'}/>
-            </Grid>
+                <form onSubmit={this.onSubmit} style={{marginBottom:15}}>
+                  <Grid item>
+                    <TextField
+                        label="Email"
+                        placeholder="Email"
+                        margin="normal"
+                        style={{ width: '100%' }}
+                        type="email"
+                        name="username"
+                        value={this.state.username}
+                        onChange={this.onChange}
+                        error={errors.username}
+                    />
+                    <em>{errors.username}</em>
+                  </Grid>
+                  <Grid item style={{backgroundColor:'borwn'}}>
+                    <TextField
+                        id="standard-with-placeholder"
+                        label="Mot de passe"
+                        placeholder="Mot de passe"
+                        margin="normal"
+                        style={{ width: '100%' }}
+                        type="password"
+                        name="password"
+                        value={this.state.password}
+                        onChange={this.onChange}
+                        error={errors.password}
+                    />
+                    <em>{errors.password}</em>
+                  </Grid>
+                  <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30}}>
+                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
+                      Connexion
+                    </Button>
+                  </Grid>
+                </form>
+                <Grid item style={{display:'flex',flexDirection:'column'}}>
+                  <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
+                  <Link href={"/signup"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Pas encore inscrit ? Inscrivez-vous !</a></Link>
+                </Grid>
+              </Grid>
+            </Card>
           </Grid>
+          <hr className={classes.hrStyle}/>
+          <Grid className={classes.secondContainer}>
+            <img src={'../static/background/Illustration Inscription-connexion_Plan de travail 1 copie-01.svg'} style={{height:'100vh', width:'90%'}} alt={'test'}/>
+          </Grid>
+        </Grid>
         <Footer/>
       </Layout>
     );

@@ -52,7 +52,7 @@ class Footer extends Component {
                                         <Link href="/faq"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Comment ça marche ?</Typography></a></Link>
                                     </Grid>
                                     <Grid item xs={12} style={{textAlign: 'left'}}>
-                                    <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Nous contacter</Typography></a></Link>
+                                    <Link href="/footer/contactPage"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Nous contacter</Typography></a></Link>
                                     </Grid>
                                 </Grid>
                             </ExpansionPanelDetails>
@@ -68,7 +68,7 @@ class Footer extends Component {
                                         <Link href="/faq"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Comment ça marche ?</Typography></a></Link>
                                     </Grid>
                                     <Grid item xs={12}>
-                                    <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Nous contacter</Typography></a></Link>
+                                    <Link href="/footer/contactPage"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Nous contacter</Typography></a></Link>
                                     </Grid>
                                 </Grid>
                     </Grid>
