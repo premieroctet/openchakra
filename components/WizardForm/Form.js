@@ -37,101 +37,101 @@ const url = config.apiUrl;
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const styles = theme => ({
-    cardContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1.5rem 3rem 0 3rem',
-        [theme.breakpoints.down('sm')]: {
-            padding: '0'
-        },
-        fontFamily: 'helvetica',
-        height: 'auto',
+  cardContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '1.5rem 3rem 0 3rem',
+    [theme.breakpoints.down('sm')]: {
+        padding: '0'
     },
-    chip: {
-        marginRight: 5,
-        marginBottom: 5,
-    },
-    checkboxespart: {
-        marginTop: 25,
-    },
-    obligations: {
-        marginTop: 31,
-    },
-    input: {
+    fontFamily: 'helvetica',
+    height: 'auto',
+  },
+  chip: {
+    marginRight: 5,
+    marginBottom: 5,
+  },
+  checkboxespart: {
+    marginTop: 25,
+  },
+  obligations: {
+    marginTop: 31,
+  },
+  input: {
+    display: 'none',
+  },
+  button: {
+    margin: theme.spacing,
+  },
+  newContainer: {
+    padding: 20,
+  },
+  imgDiv: {
+    [theme.breakpoints.down('sm')]: {
         display: 'none',
     },
-    button: {
-        margin: theme.spacing,
+  },
+  delayDivResponsive: {
+    [theme.breakpoints.down('sm')]: {
+        textAlign: 'center',
     },
-    newContainer: {
-        padding: 20,
+  },
+  selectDelayInputRepsonsive: {
+    [theme.breakpoints.down('sm')]: {
+        width: '100%!important',
     },
-    imgDiv: {
-        [theme.breakpoints.down('sm')]: {
-            display: 'none',
-        },
+  },
+  inputDiplomaCertifResp: {
+    [theme.breakpoints.down('sm')]: {
+        width: '100%!important',
     },
-    delayDivResponsive: {
-        [theme.breakpoints.down('sm')]: {
-            textAlign: 'center',
-        },
-    },
-    selectDelayInputRepsonsive: {
-        [theme.breakpoints.down('sm')]: {
-            width: '100%!important',
-        },
-    },
-    inputDiplomaCertifResp: {
-        [theme.breakpoints.down('sm')]: {
-            width: '100%!important',
-        },
-    },
-    prestationsPres: {
-        [theme.breakpoints.down('sm')]: {
-            padding: '0!important',
-        }
-    },
-    contentCheckBox: {
-        display:'flex',
-        alignItems: 'center',
-        fontFamily: 'helvetica',
-    },
-    inputTextField: {
-        color:'white',
-        fontSize: '1em',
-        fontFamily: 'helvetica',
-    },
-    responsiveIOSswitch:{
-      width: '70%',
-        [theme.breakpoints.down('xs')]: {
-          width: '50%',
-        }
-    },
-    responsiveIOSswitchContent:{
-      display:'flex',
-      flexDirection:'row',
-      width:'30%',
-      alignItems: 'flex-end',
-      justifyContent:'end',
-        [theme.breakpoints.down('xs')]: {
-          width:'50%',
-      }
-    },
-    contentFiltre:{
-      width:'100%',
-      display:'flex',
-      alignItems: 'last baseline',
-      height:'50px',
-      marginBottom:'2%',
+  },
+  prestationsPres: {
+    [theme.breakpoints.down('sm')]: {
+        padding: '0!important',
+    }
+  },
+  contentCheckBox: {
+    display:'flex',
+    alignItems: 'center',
+    fontFamily: 'helvetica',
+  },
+  inputTextField: {
+    color:'white',
+    fontSize: '1em',
+    fontFamily: 'helvetica',
+  },
+  responsiveIOSswitch:{
+    width: '70%',
       [theme.breakpoints.down('xs')]: {
-        height:'90px',
+        width: '50%',
       }
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: '70px',
-    },
+  },
+  responsiveIOSswitchContent:{
+    display:'flex',
+    flexDirection:'row',
+    width:'30%',
+    alignItems: 'flex-end',
+    justifyContent:'end',
+      [theme.breakpoints.down('xs')]: {
+        width:'50%',
+    }
+  },
+  contentFiltre:{
+    width:'100%',
+    display:'flex',
+    alignItems: 'last baseline',
+    height:'50px',
+    marginBottom:'2%',
+    [theme.breakpoints.down('xs')]: {
+      height:'90px',
+    }
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: '70px',
+  },
   App:{
     [theme.breakpoints.down('xs')]: {
       marginTop:'10%',
@@ -148,232 +148,232 @@ const styles = theme => ({
 });
 
 class Wizard extends React.Component {
-    static Page = ({ children }) => children;
+  static Page = ({ children }) => children;
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            page: 0,
-            values: props.initialValues,
-            hasId: false,
-        };
-    }
-
-    componentDidMount() {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(url+'myAlfred/api/users/current')
-            .then(res => {
-                if (typeof res.data.id_card !== 'undefined') this.setState({ hasId: true });
-            })
-            .catch(error => {
-                console.log(error);
-            })
-    }
-
-    next = values =>
-        this.setState(state => ({
-            page: Math.min(state.page + 1, this.props.children.length - 1),
-            values,
-        }));
-
-    previous = () =>
-        this.setState(state => ({
-            page: Math.max(state.page - 1, 0),
-        }));
-
-    validate = values => {
-        const activePage = React.Children.toArray(this.props.children)[
-            this.state.page
-            ];
-        return activePage.props.validate ? activePage.props.validate(values) : {};
+  constructor(props) {
+    super(props);
+    this.state = {
+      page: 0,
+      values: props.initialValues,
+      hasId: false,
     };
+  }
 
-    handleSubmit = (values, bag) => {
-        const { children } = this.props;
-        const { page } = this.state;
-        const isLastPage = page === React.Children.count(children) - 1;
-        if (isLastPage) {
-            values.submission.forEach(e => {
-                console.log("Submission:"+JSON.stringify(e))
-                let arrayPrestations = [];
-                let arrayEquipments = [];
-                const service = e.serviceId;
-                e.filters.forEach(a => {
-                    a.prestations.forEach(b => {
+  componentDidMount() {
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.get(url+'myAlfred/api/users/current')
+      .then(res => {
+        if (typeof res.data.id_card !== 'undefined') this.setState({ hasId: true });
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
 
-                        if(b.checked === true) {
-                            const newObj = {prestation: b.id, price: b.price, billing:b.billing};
-                            arrayPrestations.push(newObj);
+  next = values =>
+    this.setState(state => ({
+      page: Math.min(state.page + 1, this.props.children.length - 1),
+      values,
+    }));
 
-                        }
-                    })
-                });
-                e.equipments.forEach(c => {
+  previous = () =>
+    this.setState(state => ({
+      page: Math.max(state.page - 1, 0),
+    }));
 
-                    if(c.checked === true) {
-                        arrayEquipments.push(c.id);
-                    }
-                });
-                let option = null;
-                if (e.option !== null) {
-                    option = {label: e.option.label, price: e.option.price, unity: e.option.unity.value, type: e.option.type.value};
-                }
-                const experienceYears = e.experienceYears.value;
-                const city = e.city.value;
-                const perimeter = e.perimeter;
-                const minimum_basket = e.minimumBasket;
-                const deadline_before_booking = e.delayBeforeShop + ' ' + e.delayBeforeShopDWM;
-                const description = e.descService;
+  validate = values => {
+    const activePage = React.Children.toArray(this.props.children)[
+      this.state.page
+      ];
+    return activePage.props.validate ? activePage.props.validate(values) : {};
+  };
 
-                let graduated = false;
-                let diploma = null;
-                let diplomaLabel = null;
-                let diplomaYear = null;
-                if(e.diploma !== null) {
-                    graduated = true;
-                    diploma = e.diploma.diploma;
-                    diplomaLabel = e.diploma.label;
-                    diplomaYear = e.diploma.year;
+  handleSubmit = (values, bag) => {
+      const { children } = this.props;
+      const { page } = this.state;
+      const isLastPage = page === React.Children.count(children) - 1;
+      if (isLastPage) {
+          values.submission.forEach(e => {
+              console.log("Submission:"+JSON.stringify(e))
+              let arrayPrestations = [];
+              let arrayEquipments = [];
+              const service = e.serviceId;
+              e.filters.forEach(a => {
+                  a.prestations.forEach(b => {
 
-                }
-                let is_certified = false;
-                let certification = null;
-                let certificationYear = null;
-                let certificationLabel = null;
-                if(e.certification !== null) {
-                     is_certified = true;
-                     certification = e.certification.certification;
-                     certificationLabel = e.certification.label;
-                     certificationYear = e.certification.year;
-                }
+                      if(b.checked === true) {
+                          const newObj = {prestation: b.id, price: b.price, billing:b.billing};
+                          arrayPrestations.push(newObj);
 
-                let active = false;
-                let price = 0;
-                if(e.increases.checked === true) {
-                     active = true;
-                     price = e.increases.price;
-                }
-                const formData = new FormData();
-                formData.append('service',service);
-                formData.append('option', JSON.stringify(option));
-                formData.append('experience_years', experienceYears);
-                formData.append('prestations',JSON.stringify(arrayPrestations));
-                formData.append('equipments',JSON.stringify(arrayEquipments));
-                formData.append('city',city);
-                formData.append('perimeter',perimeter);
-                formData.append('minimum_basket',minimum_basket);
-                formData.append('deadline_before_booking',deadline_before_booking);
-                formData.append('graduated',graduated.toString());
-                formData.append('diploma',diploma);
-                formData.append('diplomaLabel', diplomaLabel);
-                formData.append('diplomaYear', diplomaYear);
-                formData.append('is_certified',is_certified.toString());
-                formData.append('certification',certification);
-                formData.append('certificationLabel', certificationLabel);
-                formData.append('certificationYear', certificationYear);
-                formData.append('active',active.toString());
-                formData.append('price',price.toString());
-                formData.append('description',description);
+                      }
+                  })
+              });
+              e.equipments.forEach(c => {
 
-                formData.append('home',e.location.client);
-                formData.append('alfred',e.location.alfred);
-                formData.append('visio',e.location.visio);
+                  if(c.checked === true) {
+                      arrayEquipments.push(c.id);
+                  }
+              });
+              let option = null;
+              if (e.option !== null) {
+                  option = {label: e.option.label, price: e.option.price, unity: e.option.unity.value, type: e.option.type.value};
+              }
+              const experienceYears = e.experienceYears.value;
+              const city = e.city.value;
+              const perimeter = e.perimeter;
+              const minimum_basket = e.minimumBasket;
+              const deadline_before_booking = e.delayBeforeShop + ' ' + e.delayBeforeShopDWM;
+              const description = e.descService;
 
-                axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-                axios.post(url+'myAlfred/api/serviceUser/add',formData)
-                    .then(res => {
-                            const booking_request = values.createShop.booking_request;
-                            const no_booking_request = values.createShop.no_booking_request;
-                            const my_alfred_conditions = values.createShop.my_alfred_conditions;
-                            const profile_picture = values.createShop.profile_picture_user;
-                            const identity_card = values.createShop.identity_card;
-                            const recommandations = values.createShop.recommandations;
-                            const welcome_message = values.createShop.welcome_message;
-                            const flexible_cancel = values.createShop.flexible_cancel;
-                            const moderate_cancel = values.createShop.moderate_cancel;
-                            const strict_cancel = values.createShop.strict_cancel;
-                            const is_particular = values.createShop.is_particular;
-                            const is_professional = values.createShop.is_professional;
-                            const self_employed = values.createShop.is_microCompany;
-                            const individual_company = values.createShop.isIndividualCompany;
-                            const name = values.createShop.denomination;
-                            const creation_date = values.createShop.creationDate;
-                            const naf_ape = values.createShop.nafape;
-                            const siret = values.createShop.siret;
+              let graduated = false;
+              let diploma = null;
+              let diplomaLabel = null;
+              let diplomaYear = null;
+              if(e.diploma !== null) {
+                  graduated = true;
+                  diploma = e.diploma.diploma;
+                  diplomaLabel = e.diploma.label;
+                  diplomaYear = e.diploma.year;
 
-                            const option_presta_user = values.createShop.option_presta_user;
-                            const option_presta_home = values.createShop.option_presta_home;
-                            const option_presta_visio = values.createShop.option_presta_visio;
+              }
+              let is_certified = false;
+              let certification = null;
+              let certificationYear = null;
+              let certificationLabel = null;
+              if(e.certification !== null) {
+                   is_certified = true;
+                   certification = e.certification.certification;
+                   certificationLabel = e.certification.label;
+                   certificationYear = e.certification.year;
+              }
 
+              let active = false;
+              let price = 0;
+              if(e.increases.checked === true) {
+                   active = true;
+                   price = e.increases.price;
+              }
+              const formData = new FormData();
+              formData.append('service',service);
+              formData.append('option', JSON.stringify(option));
+              formData.append('experience_years', experienceYears);
+              formData.append('prestations',JSON.stringify(arrayPrestations));
+              formData.append('equipments',JSON.stringify(arrayEquipments));
+              formData.append('city',city);
+              formData.append('perimeter',perimeter);
+              formData.append('minimum_basket',minimum_basket);
+              formData.append('deadline_before_booking',deadline_before_booking);
+              formData.append('graduated',graduated.toString());
+              formData.append('diploma',diploma);
+              formData.append('diplomaLabel', diplomaLabel);
+              formData.append('diplomaYear', diplomaYear);
+              formData.append('is_certified',is_certified.toString());
+              formData.append('certification',certification);
+              formData.append('certificationLabel', certificationLabel);
+              formData.append('certificationYear', certificationYear);
+              formData.append('active',active.toString());
+              formData.append('price',price.toString());
+              formData.append('description',description);
 
-                            axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
-                                .then(response => {
-                                    let data = response.data;
-                                    let arrayService = [];
+              formData.append('home',e.location.client);
+              formData.append('alfred',e.location.alfred);
+              formData.append('visio',e.location.visio);
 
-                                    data.forEach(q => {
+              axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+              axios.post(url+'myAlfred/api/serviceUser/add',formData)
+                  .then(res => {
+                          const booking_request = values.createShop.booking_request;
+                          const no_booking_request = values.createShop.no_booking_request;
+                          const my_alfred_conditions = values.createShop.my_alfred_conditions;
+                          const profile_picture = values.createShop.profile_picture_user;
+                          const identity_card = values.createShop.identity_card;
+                          const recommandations = values.createShop.recommandations;
+                          const welcome_message = values.createShop.welcome_message;
+                          const flexible_cancel = values.createShop.flexible_cancel;
+                          const moderate_cancel = values.createShop.moderate_cancel;
+                          const strict_cancel = values.createShop.strict_cancel;
+                          const is_particular = values.createShop.is_particular;
+                          const is_professional = values.createShop.is_professional;
+                          const self_employed = values.createShop.is_microCompany;
+                          const individual_company = values.createShop.isIndividualCompany;
+                          const name = values.createShop.denomination;
+                          const creation_date = values.createShop.creationDate;
+                          const naf_ape = values.createShop.nafape;
+                          const siret = values.createShop.siret;
 
-                                        arrayService.push(q._id);
-
-                                    });
-
-                                    axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
-                                    , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
-                                    self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService,option_presta_user,option_presta_home,option_presta_visio})
-                                        .then(result => {
-
-                                            const formDataIdProfile = new FormData();
-                                            formDataIdProfile.append('myCardR',values.createShop.id_recto);
-                                            if (values.createShop.id_verso !== null) {
-                                                formDataIdProfile.append('myCardV',values.createShop.id_verso);
-                                            }
-                                            axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
-                                                .then(res => {
-
-                                                })
-                                                .catch(err => {
-                                                    console.log(err);
-                                                })
-
-                                            const profilePicture = values.alfredUpdate.profile_picture_user;
-                                            const formDataPicture = new FormData();
-                                            formDataPicture.append('myImage',profilePicture);
-                                            axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
-                                                .then(res => {
-
-                                                })
-                                                .catch(err => {
-                                                    console.log(err);
-                                                })
-                                            axios.put(url+'myAlfred/api/users/users/becomeAlfred')
-                                                .then(res => {
-                                                    toast.info('Boutique créée avec succès');
-                                                    Router.push('/myShop/services');
-
-                                                })
-                                                .catch(err => {
-                                                    console.log(err);
-                                                })
-
-                                            return console.log(values);
+                          const option_presta_user = values.createShop.option_presta_user;
+                          const option_presta_home = values.createShop.option_presta_home;
+                          const option_presta_visio = values.createShop.option_presta_visio;
 
 
-                                        })
-                                        .catch(error => {
-                                            console.log(error);
-                                        })
-                                })
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
-            });
-        } else {
-            bag.setTouched({});
-            bag.setSubmitting(false);
-            this.next(values);
-        }
-    };
+                          axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
+                              .then(response => {
+                                  let data = response.data;
+                                  let arrayService = [];
+
+                                  data.forEach(q => {
+
+                                      arrayService.push(q._id);
+
+                                  });
+
+                                  axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
+                                  , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
+                                  self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService,option_presta_user,option_presta_home,option_presta_visio})
+                                      .then(result => {
+
+                                          const formDataIdProfile = new FormData();
+                                          formDataIdProfile.append('myCardR',values.createShop.id_recto);
+                                          if (values.createShop.id_verso !== null) {
+                                              formDataIdProfile.append('myCardV',values.createShop.id_verso);
+                                          }
+                                          axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
+                                              .then(res => {
+
+                                              })
+                                              .catch(err => {
+                                                  console.log(err);
+                                              })
+
+                                          const profilePicture = values.alfredUpdate.profile_picture_user;
+                                          const formDataPicture = new FormData();
+                                          formDataPicture.append('myImage',profilePicture);
+                                          axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
+                                              .then(res => {
+
+                                              })
+                                              .catch(err => {
+                                                  console.log(err);
+                                              })
+                                          axios.put(url+'myAlfred/api/users/users/becomeAlfred')
+                                              .then(res => {
+                                                  toast.info('Boutique créée avec succès');
+                                                  Router.push('/myShop/services');
+
+                                              })
+                                              .catch(err => {
+                                                  console.log(err);
+                                              })
+
+                                          return console.log(values);
+
+
+                                      })
+                                      .catch(error => {
+                                          console.log(error);
+                                      })
+                              })
+                  })
+                  .catch(err => {
+                      console.log(err);
+                  })
+          });
+      } else {
+          bag.setTouched({});
+          bag.setSubmitting(false);
+          this.next(values);
+      }
+  };
 
     phoneRegEx = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
     Step0Schema = null;
@@ -863,6 +863,8 @@ class Form extends React.Component {
             option_presta_home: true,
             option_presta_visio: true,
             availabilities: [],
+            checked_presta: false
+
         };
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -1165,7 +1167,9 @@ class Form extends React.Component {
                                                   arrayHelpers.form.setFieldValue('submission', []);
                                                   arrayHelpers.form.setFieldValue('services', []);
                                                   this.setState({ isDisabledExpansionPanels: true });
-                                              }}
+                                                  this.setState({checked_presta: false});
+
+                                          }}
 
                                            theme={theme => ({
                                                ...theme,
@@ -1193,6 +1197,7 @@ class Form extends React.Component {
                                            onClick={() => {
                                                   if (arrayHelpers.form.values.categories !== '' && arrayHelpers.form.values.categories != null) {
                                                         this.handleCategorieChange(arrayHelpers.form.values.categories, arrayHelpers);
+                                                      this.setState({checked_presta: !this.state.checked_presta});
                                                     }
                                               }}>
                                             Je valide cette catégorie
@@ -1207,7 +1212,7 @@ class Form extends React.Component {
                                            </Typography>
                                       </div>
                                        <div style={{marginTop: '1rem'}}>
-                                            {arrayHelpers.form.values.categories && arrayHelpers.form.values.categories.length > 0 && this.state.loading === false ? (
+                                            {arrayHelpers.form.values.categories && arrayHelpers.form.values.categories.length > 0 && this.state.loading === false && this.state.checked_presta === true ? (
                                                   arrayHelpers.form.values.categories.map((categorie) => {
                                                         return (
                                               <Select
