@@ -154,7 +154,7 @@ class profiteandlearn extends React.Component {
             <Grid item md={6} xs={12} className={classes.textdesc}>
               <Grid container>
                 <Grid item xs={12}>
-                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/1.svg" title="1" alt="1" scale="0" style={{height:"40px", width:"40px",}}/>
+                  <img src='../../../static/one.svg' title="1" alt="1" scale="0" style={{height:"40px", width:"40px",}}/>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography className={classes.textBox2}>
@@ -187,7 +187,7 @@ class profiteandlearn extends React.Component {
             <Grid item md={6} xs={12} className={classes.textdesc}>
               <Grid container>
                 <Grid item xs={12}>
-                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/2.svg" title="2" alt="2" scale="0" style={{height:"40px", width:"40px",}}/>
+                  <img src='../../../static/two.svg' title="2" alt="2" scale="0" style={{height:"40px", width:"40px",}}/>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography className={classes.textBox2}>
@@ -206,7 +206,7 @@ class profiteandlearn extends React.Component {
             <Grid item md={6} xs={12} className={classes.textdesc}>
               <Grid container>
                 <Grid item xs={12}>
-                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/3.svg" title="3" alt="3" scale="0" style={{height:"40px", width:"40px",}}/>
+                  <img src='../../../static/three.svg' title="3" alt="3" scale="0" style={{height:"40px", width:"40px",}}/>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography className={classes.textBox2}>

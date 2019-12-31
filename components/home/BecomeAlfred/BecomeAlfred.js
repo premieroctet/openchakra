@@ -223,9 +223,7 @@ class becomeAlfred extends React.Component{
 
     return (
         <Fragment>
-          <Grid container className={classes.container}>
-          </Grid>
-          <Grid container className={classes.container} spacing={24} wrap="wrap">
+          <Grid container className={classes.container} style={{maxWidth:'100%'}} spacing={24} wrap="wrap">
             <Grid item xs={12}>
               <Card className={classes.card1}>
                 <CardMedia

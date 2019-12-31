@@ -292,9 +292,7 @@ class Assureback extends React.Component{
         <Fragment>
           
           {/*Nous assurons vos arrière*/}
-          <Grid container className={classes.container}>
-          </Grid>
-          <Grid container className={classes.container} style={{marginBottom:20}} spacing={24} wrap="wrap">
+          <Grid container className={classes.container} style={{marginBottom:20,maxWidth:'100%'}} spacing={24} wrap="wrap">
             <Grid item xs={12}>
               <Card  className={classes.card1}>
               <CardMedia
