@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import Link from 'next/link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
@@ -119,7 +120,7 @@ class canDo extends React.Component{
     super(props);
     this.state = {
       id:'',
-      service: []
+      services: []
     }
   }
 
@@ -130,61 +131,52 @@ class canDo extends React.Component{
 
     const id_alfred = self.props.shop;
 
-    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
-        .then(function (response) {
-
-          let shop = response.data;
-          console.log(shop.services);
-
-          self.setState({service: shop.services})
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-
+    axios.get(url + 'myAlfred/api/serviceUser/allUserServices/' + id_alfred)
+        .then(res => this.setState({services: res.data}))
+        .catch(err => console.log(err));
   }
-
 
   render() {
     const {classes} = this.props;
-    const {service} = this.state;
+    const {services} = this.state;
 
-    const services = service.map(e => (
+    const servicesUser = services.map(e => (
         <React.Fragment>
           {/*<Grid className={classes.resphide} item xs={2}></Grid>*/}
           <Grid item xs={12} sm={6} md={4} key={e._id}>
-
             <Card className={classes.card}>
-              <CardActionArea>
-                <CardMedia className={classes.media} image={'../../../'+e.service.picture} title={e.service.label}>
-                  <div className={classes.darkOverlay}>
-                    <Grid container style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: '100%',
-                      justifyContent: 'space-around'
-                    }}>
-                      <Grid item/>
-                      <Grid item style={{alignSelf: 'center'}}>
-                        <Typography style={{color: 'white', fontSize: 25, textAlign: 'center'}}>{e.service.label}</Typography>
-                      </Grid>
-                      <Grid container style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-                        <Grid item style={{paddingLeft: 15}}>
-                          <FavoriteBorderOutlined style={{color: 'white'}}/>
+              <Link href={`/userServicePreview?id=${e._id}`}>
+                <CardActionArea>
+                  <CardMedia className={classes.media} image={'../../../'+e.service.picture} title={e.service.label}>
+                    <div className={classes.darkOverlay}>
+                      <Grid container style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '100%',
+                        justifyContent: 'space-around'
+                      }}>
+                        <Grid item/>
+                        <Grid item style={{alignSelf: 'center'}}>
+                          <Typography style={{color: 'white', fontSize: 25, textAlign: 'center'}}>{e.service.label}</Typography>
                         </Grid>
-                        <Grid item style={{paddingRight: 15}}>
-                          <More style={{color: 'white'}}/>
+                        <Grid container style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                          <Grid item style={{paddingLeft: 15}}>
+                            <FavoriteBorderOutlined style={{color: 'white'}}/>
+                          </Grid>
+                          <Grid item style={{paddingRight: 15}}>
+                            <More style={{color: 'white'}}/>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  </div>
-                </CardMedia>
-                <CardContent>
-                  <Typography component="p">
-                    {e.description}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
+                    </div>
+                  </CardMedia>
+                  <CardContent>
+                    <Typography component="p">
+                      {e.description}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Link>
             </Card>
           </Grid>
         </React.Fragment>
@@ -196,7 +188,7 @@ class canDo extends React.Component{
             <Typography variant="h5" className={classes.title}>Je peux faire...</Typography>
           </Grid>
           <Grid container className={classes.container} spacing={24}>
-            {services}
+            {servicesUser}
           </Grid>
         </Fragment>
     );

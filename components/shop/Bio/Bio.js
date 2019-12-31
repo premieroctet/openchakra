@@ -78,19 +78,17 @@ class bio extends React.Component {
   constructor(props) {
     super(props);
     this.state ={
-      shop: [],
-      alfred: [],
-      currentAddress: '',
-      currentCity: '',
-      currentZip_code: '',
-      currentCountry: '',
-      user: [],
+      shop: {},
+      alfred: {},
+      user: {},
+      address: {},
       description: '',
-      addressCity: {}
     };
   }
 
   componentDidMount() {
+      localStorage.setItem('path',Router.pathname);
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     let self = this;
 
 
@@ -100,53 +98,21 @@ class bio extends React.Component {
 
 
     axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
-        .then( (response) =>  {
+        .then(function (response) {
 
           let shop = response.data;
 
 
-          this.setState({
+          self.setState({
             shop: shop,
             alfred: shop.alfred,
+            address: shop.alfred.billing_address
           })
-
-          this.setState({
-            addressCity : this.state.alfred.billing_address,
-          })
-
-
-
         })
         .catch(function (error) {
           console.log(error);
         });
 
-        localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios
-            .get(url+'myAlfred/api/users/current')
-            .then(res => {
-                let user = res.data;
-                this.setState({user:user});
-
-
-                if(typeof user.billing_address != 'undefined') {
-                    this.setState({address: true, currentAddress: user.billing_address.address,currentCity: user.billing_address.city,
-                        currentZip_code: user.billing_address.zip_code,currentCountry: user.billing_address.country})
-                } else {
-                    this.setState({address:false})
-                }
-                this.setState({service_address: user.service_address});
-
-            })
-            .catch(err => {
-                    console.log(err);
-                    if(err.response.status === 401 || err.response.status === 403) {
-                        localStorage.removeItem('token');
-                        Router.push({pathname: '/login'})
-                    }
-                }
-            );
 
   }
 
@@ -155,8 +121,7 @@ class bio extends React.Component {
 
     const {classes} = this.props;
     const {alfred} = this.state;
-    const {addressCity} = this.state;
-    const {shop} = this.state;
+    const {address} = this.state;
 
     return (
         <Fragment>
@@ -165,15 +130,21 @@ class bio extends React.Component {
               <Grid item xs={12} md={4} className={classes.avatarContainer}>
                 <Avatar alt="John Doe" src={`../../../../${alfred.picture}`} className={classes.avatar} />
                 <Typography className={classes.text}>{alfred.name} {alfred.firstname}</Typography>
-                <Typography> {addressCity.city} </Typography>
+                <Typography>{address.address}, {address.city} </Typography>
               </Grid>
-              <Grid item xs={12} md={8} className={classes.biographyContainer}>
-                <Card className={classes.biography}>
-                  <Typography>
-                    {alfred.description}
-                  </Typography>
-                </Card>
-              </Grid>
+              {alfred.description !== undefined   ?
+                  alfred.description.length !== 0 || alfred.description.trim() ?
+                  <Grid item xs={12} md={8} className={classes.biographyContainer}>
+                    <Card className={classes.biography}>
+                      <Typography>
+                        {alfred.description}
+                      </Typography>
+                    </Card>
+                  </Grid>
+                      :null
+                  : null}
+
+
             </Grid>
           </Grid>
         </Fragment>

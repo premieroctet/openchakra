@@ -8,10 +8,11 @@ import {StarRate} from "@material-ui/icons";
 import Card from "@material-ui/core/Card";
 import axios from "axios";
 import moment from 'moment';
+import StarRatings from 'react-star-ratings';
 moment.locale('fr');
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
-
+const _ = require('lodash');
 const styles = theme => ({
   container: {
     paddingRight: 15,
@@ -108,13 +109,9 @@ class review extends React.Component {
 
 
                 self.setState({
-                  reviews: reviews,
+                  reviews: _.orderBy(reviews,['date'],['desc']),
 
                 })
-
-
-
-
               })
               .catch(function (error) {
                 console.log(error);
@@ -147,16 +144,15 @@ class review extends React.Component {
                   <Grid item>
                     <Grid container className={classes.starAndQuickReviewContainer}>
                       <Grid item className={classes.starContainer}>
-                        <div>
-                          <StarRate fontSize="small" />
-                          <StarRate fontSize="small" />
-                          <StarRate fontSize="small" />
-                          <StarRate fontSize="small" />
-                          <StarRate fontSize="small" />
-                        </div>
-                      </Grid>
-                      <Grid item>
-                        <Typography className={classes.oneWordText}>&quot;{e.title}&quot;</Typography>
+                        <StarRatings
+                            rating={e.note_alfred.global}
+                            starRatedColor={"#2FBCD3"}
+                            numberOfStars={5}
+                            name='rating'
+                            starDimension={'20px'}
+                            starHoverColor={'#2FBCD3'}
+                            starSpacing={'3px'}
+                        />
                       </Grid>
                     </Grid>
                   </Grid>
