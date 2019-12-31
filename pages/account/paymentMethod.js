@@ -446,16 +446,17 @@ class paymentMethod extends React.Component {
                                         />
                                     </div>
                                 </Grid>
-                                <Grid item xs={12} style={{textAlign: 'center', margin: '15px'}}>
-                                    <NumberFormat onClick={this.handleBadSide} customInput={TextField} variant={"outlined"} label="Numéro de carte" name={'card_number'} onChange={this.onChange} value={this.state.card_number}  style={{margin: 'auto', width:'90%'}} format="#### #### #### ####" placeholder="Votre carte de crédit"/>
+                                <Grid item xs={12} style={{ margin: '15px'}}>
+                                    <NumberFormat onClick={this.handleBadSide} customInput={TextField} variant={"outlined"} label="Numéro de carte" name={'card_number'} onChange={this.onChange} value={this.state.card_number}  style={{margin: 'auto', width:'94%'}} format="#### #### #### ####" placeholder="Votre carte de crédit"/>
                                 </Grid>
-                                <Grid item xs={7} style={{textAlign: 'center', margin: '15px'}}>
+                                <Grid container>
+                                <Grid item xs={7} style={{ margin: '15px'}}>
                                     <NumberFormat onClick={this.handleBadSide} customInput={TextField} variant={"outlined"} label="Date d'expiration" name={'expiration_date'} onChange={this.onChange} value={this.state.expiration_date}  style={{margin: 'auto', width:'90%'}} format="##/##" placeholder="MM/YY" />
                                 </Grid>
-                                <Grid item xs={3} style={{textAlign: 'center', margin: '15px'}}>
+                                <Grid item xs={3} style={{ margin: '15px'}}>
                                     <TextField 
                                             label="CVV"
-                                            style={{margin: 'auto', width:'85%'}}
+                                            style={{ width:'85%'}}
                                             variant="outlined"
                                             value={this.state.csv}
                                             onChange={this.onChange}
@@ -464,6 +465,7 @@ class paymentMethod extends React.Component {
                                             type="number"
                                             pattern="\d{3,4}"
                                     />
+                                </Grid>
                                 </Grid>
                                 <Grid item xs={12} style={{textAlign: 'center', margin: '15px'}}>
                                     <Button onClick={(e)=>{this.addCard(e); this.refreshCards(e)}} type="submit" variant="contained" style={{color: 'white',margin: 'auto', width:'40%'}} color="primary">

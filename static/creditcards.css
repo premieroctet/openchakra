@@ -86,6 +86,9 @@
     color: #fff;
     font-weight: bold;
   }
+  .rccs__expiry__valid {
+    display: none;
+  }
   
   @media screen and (min-width: 600px) {
     .App-badges {
