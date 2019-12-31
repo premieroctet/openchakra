@@ -785,6 +785,7 @@ class addService extends React.Component {
         option_presta_home: true,
         option_presta_visio: true,
         availabilities: [],
+        checked_presta: false
 
         };
       this.toggleCheckbox = this.toggleCheckbox.bind(this);
@@ -985,7 +986,7 @@ class addService extends React.Component {
                   isCertified: false,
                   option_presta_home: true,
                   option_presta_user: true,
-                  option_presta_visio: true
+                  option_presta_visio: true,
                 },
                 alfredUpdate: {
                   phone: null,
@@ -1030,6 +1031,7 @@ class addService extends React.Component {
                               arrayHelpers.form.setFieldValue('submission', []);
                               arrayHelpers.form.setFieldValue('services', []);
                               this.setState({ isDisabledExpansionPanels: true });
+                              this.setState({checked_presta: false});
                             }}
 
                             theme={theme => ({
@@ -1058,6 +1060,7 @@ class addService extends React.Component {
                             onClick={() => {
                               if (arrayHelpers.form.values.categories !== '' && arrayHelpers.form.values.categories != null) {
                                 this.handleCategorieChange(arrayHelpers.form.values.categories, arrayHelpers);
+                                this.setState({checked_presta: !this.state.checked_presta});
                               }
                             }}>
                             Je valide cette catégorie
@@ -1072,7 +1075,7 @@ class addService extends React.Component {
                             </Typography>
                           </div>
                           <div style={{marginTop: '1rem'}}>
-                            {arrayHelpers.form.values.categories && arrayHelpers.form.values.categories.length > 0 && this.state.loading === false ? (
+                            {arrayHelpers.form.values.categories && arrayHelpers.form.values.categories.length > 0 && this.state.loading === false && this.state.checked_presta === true  ? (
                               arrayHelpers.form.values.categories.map((categorie) => {
                                 return (
                                   <Select
