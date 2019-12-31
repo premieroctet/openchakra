@@ -114,7 +114,7 @@ const feelingoodCard = (props) => {
 
 
     <Card className={classes.card}>
-      <CardActionArea>
+      <CardActionArea style={{cursor:'default'}}>
 
         <CardMedia className={classes.media} image={img}>
           <div className={classes.lightOverlay}>

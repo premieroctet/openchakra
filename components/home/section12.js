@@ -120,7 +120,7 @@ class section12 extends React.Component {
                     textAlign:'center',
                     margin:10,
                     boxShadow: '1px 3px 1px transparent'}}>
-                    <CardActionArea>
+                    <CardActionArea style={{cursor:'default'}}>
                         <CardMedia
                             className={classes.media2}
                             image={e.picture}

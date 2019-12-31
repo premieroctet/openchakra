@@ -112,7 +112,7 @@ class Wellbeing extends React.Component {
     const services = resdata.slice(0, 6).map(e => (
         <Grid item xs={12} sm={6} md={4} lg={4} key={e._id}>
           <Card className={classes.card}>
-            <CardActionArea>
+            <CardActionArea style={{cursor:'default'}}>
               <CardMedia
                   className={classes.media2}
                   image={e.picture}
@@ -128,7 +128,6 @@ class Wellbeing extends React.Component {
               </CardContent>
             </CardActionArea>
             <CardActions>
-
             </CardActions>
           </Card>
         </Grid>

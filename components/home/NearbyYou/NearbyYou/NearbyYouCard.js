@@ -93,7 +93,7 @@ const styles = theme => ({
 
 const nearbyYouCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { classes, img, desc, title,alfred,avatar,score,shop } = props;
+  const { classes, img, title,alfred,avatar,shop } = props;
 
   return (
 
@@ -101,7 +101,7 @@ const nearbyYouCard = (props) => {
 
     <Card className={classes.card}>
       <Link href={`/shop?id_alfred=${shop}`}>
-      <CardActionArea>
+      <CardActionArea style={{cursor:'default'}}>
 
         <CardMedia className={classes.media} image={img} title={alfred}>
           <div className={classes.darkOverlay}>

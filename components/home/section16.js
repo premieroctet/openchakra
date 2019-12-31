@@ -115,7 +115,7 @@ class section16 extends React.Component {
         const services = resdata.slice(0, 6).map(e => (
             <Grid item xs={12} sm={6} md={4} lg={4} key={e._id}>
                 <Card className={classes.card}>
-                    <CardActionArea>
+                    <CardActionArea style={{cursor:'default'}}>
                         <CardMedia
 
                             className={classes.media2}
@@ -123,7 +123,6 @@ class section16 extends React.Component {
                             title={e.label}
                         />
                         <CardContent>
-
                             <p style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.25rem',}}>
                                 {e.label}
                             </p>
@@ -133,7 +132,6 @@ class section16 extends React.Component {
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-
                     </CardActions>
                 </Card>
             </Grid>

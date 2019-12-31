@@ -145,7 +145,7 @@ class becomeAlfred extends React.Component{
                       répertoriez vos services, indiquez vos disponibilités,
                       vos tarifs et profitez d’un complément de revenu !
                     </Typography>
-                    <Link href={'/becomeAlfredForm'}>
+                    <Link href={'/login'}>
                       <a style={{textDecoration:'none'}}>
                     <Button variant="contained" color={"primary"} className={classes.margin}>
                       Créer ma boutique

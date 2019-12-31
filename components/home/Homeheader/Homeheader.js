@@ -4,11 +4,9 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import MenuItem from "@material-ui/core/MenuItem";
 import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 registerLocale('fr', fr);
-
 
 const styles = theme => ({
   headerimg: {
@@ -165,7 +163,6 @@ const Input2 = ({value,  onClick }) => (
     <Button value={value} color={"inherit"} variant={"outlined"} style={{color:"gray"}} className="example-custom-input" onClick={onClick}>
       {value}
     </Button>
-
 );
 
 class Homeheader extends React.Component {
@@ -187,7 +184,7 @@ class Homeheader extends React.Component {
 
   handleClose =() =>{
     this.setState({ popopen: false });
-  }
+  };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -198,161 +195,145 @@ class Homeheader extends React.Component {
     const {popopen} = this.state;
 
     return (
-        <Fragment>
-          <div className={classes.headerimg}/>
-          <div className={classes.headerhomevid}>
-            <video id="background-video" loop autoPlay muted playsInline style={{width: '100%'}}>
-              <source src="../../../static/newVideoLight.mp4" type="video/mp4"/>
-              <source src="../../../static/newVideoLight.mp4" type="video/ogg"/>
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          <div className={classes.headeroverlay}/>
-          <div className={classes.headerhome} onClick={()=>this.handleClick1()}>
-            <Grid container>
-              <Grid item xs={12}>
-                <h3 className={classes.homeform} style={{marginTop:0}}>Et si vous pouviez réserver n'importe quel service immédiatement ?</h3>
+      <Fragment>
+        <div className={classes.headerimg}/>
+        <div className={classes.headerhomevid}>
+          <video id="background-video" loop autoPlay muted playsInline style={{width: '100%'}}>
+            <source src="../../../static/newVideoLight.mp4" type="video/mp4"/>
+            <source src="../../../static/newVideoLight.mp4" type="video/ogg"/>
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div className={classes.headeroverlay}/>
+        <div className={classes.headerhome} onClick={()=>this.handleClick1()}>
+          <Grid container>
+            <Grid item xs={12}>
+              <h3 className={classes.homeform} style={{marginTop:0}}>Et si vous pouviez réserver n'importe quel service immédiatement ?</h3>
+            </Grid>
+            <Grid item xs={12} style={{width: '100%',}}>
+              <Grid container alignItems="center">
+                <Grid item className={classes.pickerhomelocation}>
+                <TextField
+                    id="outlined-select-currency"
+                    label="Réparation de bijoux"
+                    value={this.state.service}
+                    onChange={this.onChange}
+                    margin="normal"
+                    variant="outlined"
+                    style={{width:'100%'}}
+                    disabled={true}
+                >
+                </TextField>
+                </Grid>
               </Grid>
-              <Grid item xs={12} style={{width: '100%',}}>
-
                 <Grid container alignItems="center">
                   <Grid item className={classes.pickerhomelocation}>
-                  <TextField
-                      id="outlined-select-currency"
-                      label="Réparation de bijoux"
-                      value={this.state.service}
-                      onChange={this.onChange}
-                      margin="normal"
-                      variant="outlined"
-                      style={{width:'100%'}}
-                      disabled={true}
-                  >
-                  </TextField>
+                    <TextField
+                        label="Lieu"
+                        value={this.state.place}
+                        onChange={this.onChange}
+                        margin="normal"
+                        variant="outlined"
+                        style={{width:'100%'}}
+                        disabled={true}
+                    />
                   </Grid>
                 </Grid>
-
-
-                  <Grid container alignItems="center">
-                    <Grid item className={classes.pickerhomelocation}>
-                      <TextField
-                          label="Lieu"
-                          value={this.state.place}
-                          onChange={this.onChange}
-                          margin="normal"
-                          variant="outlined"
-                          style={{width:'100%'}}
-                          disabled={true}
+              <Grid container style={{marginTop:20}}>
+                <Grid item xs={6}>
+                  <Grid container style={{alignItems:"center"}}>
+                    <Grid item xs={2}>
+                  <p style={{color:"gray"}}>Le</p>
+                    </Grid>
+                    <Grid item xs={10}>
+                  <DatePicker
+                      selected={this.state.date}
+                      onChange={(date)=>this.setState({date:date})}
+                      customInput={<Input2 />}
+                      locale='fr'
+                      showMonthDropdown
+                      dateFormat="dd/MM/yyyy"
+                      disabled
+                  />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={6} >
+                  <Grid container style={{alignItems:"center"}}>
+                    <Grid item xs={2}>
+                      <p style={{color:"gray"}}>À</p>
+                    </Grid>
+                    <Grid item xs={10}>
+                      <DatePicker
+                          selected={this.state.hour}
+                          onChange={(date)=>this.setState({hour:date})}
+                          customInput={<Input2 />}
+                          showTimeSelect
+                          showTimeSelectOnly
+                          timeIntervals={15}
+                          timeCaption="Heure"
+                          dateFormat="HH:mm"
+                          locale='fr'
+                          disabled
                       />
                     </Grid>
                   </Grid>
-
-
-                <Grid container style={{marginTop:20}}>
-                  <Grid item xs={6}>
-                    <Grid container style={{alignItems:"center"}}>
-                      <Grid item xs={2}>
-                    <p style={{color:"gray"}}>Le</p>
-                      </Grid>
-                      <Grid item xs={10}>
-                    <DatePicker
-                        selected={this.state.date}
-                        onChange={(date)=>this.setState({date:date})}
-                        customInput={<Input2 />}
-                        locale='fr'
-                        showMonthDropdown
-                        dateFormat="dd/MM/yyyy"
-                        disabled
-
-
-                    />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item xs={6} >
-                    <Grid container style={{alignItems:"center"}}>
-                      <Grid item xs={2}>
-                        <p style={{color:"gray"}}>À</p>
-                      </Grid>
-                      <Grid item xs={10}>
-                        <DatePicker
-                            selected={this.state.hour}
-                            onChange={(date)=>this.setState({hour:date})}
-                            customInput={<Input2 />}
-                            showTimeSelect
-                            showTimeSelectOnly
-                            timeIntervals={15}
-                            timeCaption="Heure"
-                            dateFormat="HH:mm"
-                            locale='fr'
-                            disabled
-
-
-
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
                 </Grid>
-                <Button  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
-                  Rechercher
-                </Button>
-
               </Grid>
+              <Button  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
+                Rechercher
+              </Button>
             </Grid>
-
-          </div>
-
-          <div style={{textAlign: 'left'}} className={classes.headerhome2}>
-            <br/>
-            <h2 style={{
-              fontWeight: 'bold',
-              textAlign: 'left',
-              fontSize: '2rem',
-              textShadow: '0px 0.5px 2px #696969'
-            }}>Vous avez du talent, de l’or entre les mains. Qu’attendez-vous pour le mettre à profit ? </h2>
-            <hr style={{
-              float: 'left',
-              width: '60px',
-              border: 'none',
-              height: '1px',
-              backgroundColor: 'white',
-              boxShadow: '1px 1px 1px #696969'
-            }}/>
-            <br/><br/>
-            <h4 style={{
-              fontWeight: 'bold',
-              textAlign: 'left',
-              fontSize: '1.5rem',
-              textShadow: '0px 0.5px 2px #696969'
-            }}>
-              Particuliers ou indépendants ?  Créez dès aujourd’hui votre boutique, proposez vos services et arrondissez vos fins de mois avec My-Alfred !
-            </h4>
-          </div>
-
-
-          {popopen ? <React.Fragment>
-                <div className={classes.paper}>
-                  <Grid container style={{padding:'5%'}}>
-                    <Grid item xs={4} style={{height: '1px'}}/>
-                    <Grid item xs={4}><img src={'../../../static/popupResa.svg'} style={{width: 110,}} alt={'Logo Bleu'}/></Grid>
-                    <Grid item xs={3} style={{height: '1px'}}/>
-                    <Grid item xs={1} style={{height: '4px', zIndex: '10'}}>
-                      <p onClick={this.handleClose} style={{color: '#F8727F', cursor: 'pointer'}}>x</p>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <h2 style={{textAlign: 'center',color: 'rgba(84,89,95,0.95)',letterSpacing: -2, fontWeight: 'bold',}}>Les réservations ne seront disponibles qu'en Décembre !</h2>
-                    </Grid>
-                    <Grid item xs={5}/>
-                    <Grid item xs={2} style={{marginTop: '-10px'}}><hr className={classes.grosHR}/></Grid>
-                    <Grid item xs={5}/>
-                  </Grid>
-                </div>
-
-                <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '9999px', zIndex: '99998'}}/>
-              </React.Fragment>
-              : null}
-        </Fragment>
+          </Grid>
+        </div>
+        <div style={{textAlign: 'left'}} className={classes.headerhome2}>
+          <br/>
+          <h2 style={{
+            fontWeight: 'bold',
+            textAlign: 'left',
+            fontSize: '2rem',
+            textShadow: '0px 0.5px 2px #696969'
+          }}>Vous avez du talent, de l’or entre les mains. Qu’attendez-vous pour le mettre à profit ? </h2>
+          <hr style={{
+            float: 'left',
+            width: '60px',
+            border: 'none',
+            height: '1px',
+            backgroundColor: 'white',
+            boxShadow: '1px 1px 1px #696969'
+          }}/>
+          <br/><br/>
+          <h4 style={{
+            fontWeight: 'bold',
+            textAlign: 'left',
+            fontSize: '1.5rem',
+            textShadow: '0px 0.5px 2px #696969'
+          }}>
+            Particuliers ou indépendants ?  Créez dès aujourd’hui votre boutique, proposez vos services et arrondissez vos fins de mois avec My-Alfred !
+          </h4>
+        </div>
+        {popopen ?
+          <React.Fragment>
+            <div className={classes.paper}>
+              <Grid container style={{padding:'5%'}}>
+                <Grid item xs={4} style={{height: '1px'}}/>
+                <Grid item xs={4}><img src={'../../../static/popupResa.svg'} style={{width: 110,}} alt={'Logo Bleu'}/></Grid>
+                <Grid item xs={3} style={{height: '1px'}}/>
+                <Grid item xs={1} style={{height: '4px', zIndex: '10'}}>
+                  <p onClick={this.handleClose} style={{color: '#F8727F', cursor: 'pointer'}}>x</p>
+                </Grid>
+                <Grid item xs={12}>
+                  <h2 style={{textAlign: 'center',color: 'rgba(84,89,95,0.95)',letterSpacing: -2, fontWeight: 'bold',}}>Les réservations ne seront disponibles qu'en Février !</h2>
+                </Grid>
+                <Grid item xs={5}/>
+                <Grid item xs={2} style={{marginTop: '-10px'}}><hr className={classes.grosHR}/></Grid>
+                <Grid item xs={5}/>
+              </Grid>
+            </div>
+            <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '9999px', zIndex: '99998'}}/>
+            </React.Fragment>
+            : null}
+      </Fragment>
     );
   };
 }

@@ -128,7 +128,7 @@ class serenityNeed extends React.Component {
     const services = resdata.slice(0, 12).map(e => (
         <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
           <Card className={classes.card}>
-            <CardActionArea>
+            <CardActionArea style={{cursor:'default'}}>
               <CardMedia
                   className={classes.media2}
                   image={e.picture}

@@ -113,105 +113,98 @@ class profiteandlearn extends React.Component {
     const {classes} = this.props;
 
     return (
-        <Fragment>
-          <Grid container className={classes.container}>
-            <Grid item xs={2}/>
-            <Grid item xs={8}>
-              <div>
-                <Typography variant="h4" className={classes.textBox1}>
-                  Proposez vos services, en 3 étapes !
-                </Typography>
-                <Grid container>
-                  <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
-                  <Grid item xs={2} sm={4} md={4}  lg={4} xl={4} style={{margin:'auto'}}>
-                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
-                  </Grid>
-                  <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
-                  <Grid item xs={5}/>
-                </Grid>
-              </div>
-            </Grid>
-            <Grid item xs={2}/>
-
-            {/*Partie 1*/}
-
-            <Grid item md={6} xs={12} className={classes.textdesc}>
+      <Fragment>
+        <Grid container className={classes.container}>
+          <Grid item xs={2}/>
+          <Grid item xs={8}>
+            <div>
+              <Typography variant="h4" className={classes.textBox1}>
+                Proposez vos services, en 3 étapes !
+              </Typography>
               <Grid container>
-                <Grid item xs={12}>
-                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/1.svg" title="1" alt="1" scale="0" style={{height:"40px", width:"40px",}}/>
+                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                <Grid item xs={2} sm={4} md={4}  lg={4} xl={4} style={{margin:'auto'}}>
+                  <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
                 </Grid>
-                <Grid item xs={12}>
-                  <Typography className={classes.textBox2}>
-                    Proposez vos services
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} className={classes.contentTextBox}>
-                  <Typography className={classes.textBox3}>
-                    Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement les prestations que vous souhaitez réaliser en vous appuyant sur une liste de plus de 2000 services
-                     proposées sur My-Alfred. Un service n'apparait pas ? Proposez-le à nos équipes !
-                  </Typography>
-
-                </Grid>
+                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                <Grid item xs={5}/>
               </Grid>
-            </Grid>
-
-            <Grid className={classes.hideSM} item md={6} xs={12}>
-              <video width="75%" height="75%" style={{float: "right"}} autoPlay muted playsInline loop>
-                <source src="../static/assets/img/Phone1.mp4" type="video/mp4"/>
-              </video>
-            </Grid>
-
-            {/*Partie 2*/}
-            <Grid className={classes.hideSM} item md={6} xs={12}>
-              <video width="75%" height="75%" style={{float: "left"}} autoPlay muted playsInline loop>
-                <source src="../static/assets/img/Phone2.mp4" type="video/mp4"/>
-              </video>
-            </Grid>
-
-            <Grid item md={6} xs={12} className={classes.textdesc}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/2.svg" title="2" alt="2" scale="0" style={{height:"40px", width:"40px",}}/>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography className={classes.textBox2}>
-                    Fixez vos conditions
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} className={classes.contentTextBox}>
-                  <Typography className={classes.textBox3}>
-                    Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Et si vous avez besoin d'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences !                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-
-
-            {/*Partie 3*/}
-            <Grid item md={6} xs={12} className={classes.textdesc}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <img src="http://my-alfred.io/wp-content/uploads/2019/03/3.svg" title="3" alt="3" scale="0" style={{height:"40px", width:"40px",}}/>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography className={classes.textBox2}>
-                    Réalisez vos premiers services
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} className={classes.contentTextBox}>
-                  <Typography className={classes.textBox3}>
-                    Une fois votre boutique en ligne, les personnes intéressées par vos prestations pourront réserver en ligne vos services. Si vous avez des questions avant la prestation, vous pourrez les contacter !                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid className={classes.hideSM} item md={6} xs={12}>
-              <video width="75%" height="75%" style={{float: "right"}} autoPlay muted playsInline loop>
-                <source src="../static/assets/img/Phone3.mp4" type="video/mp4"/>
-              </video>
-            </Grid>
-
+            </div>
           </Grid>
-        </Fragment>
+          <Grid item xs={2}/>
+          {/*Partie 1*/}
+          <Grid item md={6} xs={12} className={classes.textdesc}>
+            <Grid container>
+              <Grid item xs={12}>
+                <img src="http://my-alfred.io/wp-content/uploads/2019/03/1.svg" title="1" alt="1" scale="0" style={{height:"40px", width:"40px",}}/>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography className={classes.textBox2}>
+                  Proposez vos services
+                </Typography>
+              </Grid>
+              <Grid item xs={12} className={classes.contentTextBox}>
+                <Typography className={classes.textBox3}>
+                  Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement les prestations que vous souhaitez réaliser en vous appuyant sur une liste de plus de 2000 services
+                   proposées sur My-Alfred. Un service n'apparait pas ? Proposez-le à nos équipes !
+                </Typography>
+
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid className={classes.hideSM} item md={6} xs={12}>
+            <video width="75%" height="75%" style={{float: "right"}} autoPlay muted playsInline loop>
+              <source src="../static/assets/img/Phone1.mp4" type="video/mp4"/>
+            </video>
+          </Grid>
+          {/*Partie 2*/}
+          <Grid className={classes.hideSM} item md={6} xs={12}>
+            <video width="75%" height="75%" style={{float: "left"}} autoPlay muted playsInline loop>
+              <source src="../static/assets/img/Phone2.mp4" type="video/mp4"/>
+            </video>
+          </Grid>
+          <Grid item md={6} xs={12} className={classes.textdesc}>
+            <Grid container>
+              <Grid item xs={12}>
+                <img src="http://my-alfred.io/wp-content/uploads/2019/03/2.svg" title="2" alt="2" scale="0" style={{height:"40px", width:"40px",}}/>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography className={classes.textBox2}>
+                  Fixez vos conditions
+                </Typography>
+              </Grid>
+              <Grid item xs={12} className={classes.contentTextBox}>
+                <Typography className={classes.textBox3}>
+                  Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Et si vous avez besoin d'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences !                  </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/*Partie 3*/}
+          <Grid item md={6} xs={12} className={classes.textdesc}>
+            <Grid container>
+              <Grid item xs={12}>
+                <img src="http://my-alfred.io/wp-content/uploads/2019/03/3.svg" title="3" alt="3" scale="0" style={{height:"40px", width:"40px",}}/>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography className={classes.textBox2}>
+                  Réalisez vos premiers services
+                </Typography>
+              </Grid>
+              <Grid item xs={12} className={classes.contentTextBox}>
+                <Typography className={classes.textBox3}>
+                  Une fois votre boutique en ligne, les personnes intéressées par vos prestations pourront réserver en ligne vos services. Si vous avez des questions avant la prestation, vous pourrez les contacter !                  </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid className={classes.hideSM} item md={6} xs={12}>
+            <video width="75%" height="75%" style={{float: "right"}} autoPlay muted playsInline loop>
+              <source src="../static/assets/img/Phone3.mp4" type="video/mp4"/>
+            </video>
+          </Grid>
+
+        </Grid>
+      </Fragment>
     );
   }
 }
