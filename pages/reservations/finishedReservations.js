@@ -159,7 +159,7 @@ class FinishedReservations extends React.Component {
             alfredReservations: [],
             userReservations: [],
             finishedReservations: 0,
-            isAlfred: true,
+            isAlfred: false,
         }
 
     }

@@ -646,7 +646,7 @@ class NewMessages extends React.Component {
                         </Grid>
                       );
                     })
-                  ) : <p>Vous n'avez aucun message en tant qu'utilisateur</p>
+                  ) : <p>Vous n'avez aucun nouveaux messages en tant qu'utilisateur</p>
                 ) : (
                   <React.Fragment>
                     {this.state.alfredReservations.length
@@ -732,7 +732,7 @@ class NewMessages extends React.Component {
                             </Grid>
                           );
                         })
-                      : <p>Vous n'avez aucune réservation en tant qu'Alfred</p>}
+                      : <p>Vous n'avez aucun nouveaux messages en tant qu'Alfred</p>}
                   </React.Fragment>
                 )}
               </Grid>

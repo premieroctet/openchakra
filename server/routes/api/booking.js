@@ -25,6 +25,7 @@ router.get('/test',(req, res) => res.json({msg: 'Booking Works!'}) );
 router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
     const userId = mongoose.Types.ObjectId(req.user.id);
     Booking.find({ alfred: userId })
+        .sort([["date", -1]])
         .populate('user')
         .populate('chatroom')
         .then(alfred => {
@@ -41,6 +42,7 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
 router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req, res) => {
     const userId = mongoose.Types.ObjectId(req.user.id);
     Booking.find({ user: userId })
+        .sort([["date", -1]])
         .populate('alfred')
         .populate({
             path: 'chatroom',
