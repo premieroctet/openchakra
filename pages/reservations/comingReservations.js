@@ -345,9 +345,7 @@ class ComingReservations extends React.Component {
                 <Grid
                   container
                   style={{
-                    justifyContent: "center",
-                    position: "sticky",
-                    top: 100
+                    justifyContent: "center"
                   }}
                 >
                   <Grid
@@ -451,7 +449,7 @@ class ComingReservations extends React.Component {
                 </Grid>
               </Grid>
 
-              <Grid className={classes.Rightcontent} item xs={9} sm={9} md={7}>
+              <Grid style={{paddingLeft: 55}} item xs={9} sm={9} md={7}>
                 <Typography style={{ fontSize: "2rem", marginTop: "4%" }}>
                   Mes réservations à venir
                 </Typography>
@@ -633,7 +631,7 @@ class ComingReservations extends React.Component {
                                     paddingTop: "45%"
                                   }}
                                 >
-                                  {booking.amount}€
+                                  {booking.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€
                                 </Typography>
                               </Grid>
                               <Grid item xs={2} style={{}}>
@@ -661,7 +659,7 @@ class ComingReservations extends React.Component {
                                         color: "white"
                                       }}
                                     >
-                                      Voir la réservation
+                                      Voir
                                     </a>
                                   </Link>
                                 </Typography>
@@ -734,7 +732,7 @@ class ComingReservations extends React.Component {
                                 paddingTop: "45%"
                               }}
                             >
-                              {booking.amount}€
+                              {booking.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€
                             </Typography>
                           </Grid>
                           <Grid item xs={2} style={{}}>
@@ -761,7 +759,7 @@ class ComingReservations extends React.Component {
                                     color: "white"
                                   }}
                                 >
-                                  Voir la réservation
+                                  Voir
                                 </a>
                               </Link>
                             </Typography>

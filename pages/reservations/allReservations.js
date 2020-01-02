@@ -247,7 +247,7 @@ class AllReservations extends React.Component {
                                 <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
                                     <Link href={'/performances/revenus'}>
                                         <a style={{textDecoration:'none'}}>
-                                            <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                                            <p style={{color: "white",cursor: 'pointer'}}>Performances</p>
                                         </a>
                                     </Link>
                                 </Grid>
@@ -261,7 +261,7 @@ class AllReservations extends React.Component {
                         <Grid container style={{marginBottom: '10%'}}>
                             <Grid className={classes.toggle}  item xs={3} style={{ height: '100vh'}}>
                                 <div className={classes.trigger}></div>
-                                <Grid container style={{justifyContent: 'center', position: 'sticky', top: 100,}}>
+                                <Grid container style={{justifyContent: 'center'}}>
                                     <Grid item style={{marginTop: 30,width: 281, height: 70}} className={classes.hidesm}>
                                         <Link href={'allReservations'}>
                                             <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', height: 70}}>
@@ -324,7 +324,7 @@ class AllReservations extends React.Component {
                                 </Grid>
                             </Grid> 
 
-                            <Grid className={classes.Rightcontent} item xs={9} sm={9} md={7}>
+                            <Grid style={{paddingLeft: 55}} item xs={9} sm={9} md={7}>
                                 <Grid container>
                                     <Grid item xs={12}>
                                 <Typography style={{fontSize: '2rem',marginTop: '4%'}}>Toutes mes réservations</Typography>
@@ -402,13 +402,13 @@ class AllReservations extends React.Component {
                                                 <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
                                                     <img src={`../../${booking.alfred.picture}`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
                                                 </Grid>
-                                                <Grid item xs={5} md={7}>
-                                                    <Typography style={{marginTop: '2%', color: booking.status === 'Confirmée' ? '#419F41' : booking.status === 'Demande d\'infos' || booking.status === "En attente de confirmation" ? '#F87280' : booking.status === 'Pré-approuvée' ? '#F89B72' : '#5D5D5D'}}>{booking.status} - {booking.alfred.firstname}</Typography>
-                                                    <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {moment(booking.time_prestation).format('HH:mm')}</Typography>
-                                                    <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
+                                                <Grid item xs={5} md={7} style={{paddingRight: "5%", paddingLeft: "5%",}}>
+                                                    <Typography style={{marginTop: '2%', fontSize: '0.8rem', color: booking.status === 'Confirmée' ? '#419F41' : booking.status === 'Demande d\'infos' || booking.status === "En attente de confirmation" ? '#F87280' : booking.status === 'Pré-approuvée' ? '#F89B72' : '#5D5D5D'}}>{booking.status} - {booking.alfred.firstname}</Typography>
+                                                    <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
+                                                    <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.service}</Typography>
                                                 </Grid>
                                                 <Grid item xs={1} style={{}}>
-                                                    <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{booking.amount}€</Typography>
+                                                    <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{booking.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€</Typography>
                                                 </Grid>
                                                 <Grid item xs={2} style={{}}>
                                                     <Typography className={classes.webvoir} style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true } }}><a style={{textDecoration: 'none', color: 'white'}}>Voir la réservation</a></Link></Typography>
@@ -427,10 +427,11 @@ class AllReservations extends React.Component {
                                             <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
                                                 <img src={`../../${booking.user.picture}`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
                                             </Grid>
-                                            <Grid item xs={5} md={7}>
-                                                <Typography style={{marginTop: '2%', color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"}}>{booking.status} - {booking.user.firstname}</Typography>
-                                                <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {moment(booking.time_prestation).format('HH:mm')}</Typography>
-                                                <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
+                                            <Grid item xs={5} md={7} style={{paddingRight: "5%", paddingLeft: "5%", fontSize: '0.8rem'}}>
+                                                <Typography style={{marginTop: '2%', fontSize: '0.8rem', color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"}}>{booking.status} - {booking.user.firstname}</Typography>
+                                                <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
+                                                <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.service}</Typography>
+
                                             </Grid>
                                             <Grid item xs={1} style={{}}>
                                                 <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{(booking.amount - (booking.fees * 2)).toFixed(2)}€</Typography>

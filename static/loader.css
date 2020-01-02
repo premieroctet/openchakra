@@ -4,7 +4,7 @@
     justify-content: center;
     min-height: 100vh;
     background-color: #ededed;
-    position: absolute;
+    position: sticky;
     top:0;
     height: 100%;
     width: 100%;

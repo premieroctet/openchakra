@@ -265,7 +265,7 @@ class FinishedReservations extends React.Component {
                         <Grid container style={{marginBottom: '10%'}}>
                             <Grid className={classes.toggle}  item xs={3} style={{ height: '100vh'}}>
                                 <div className={classes.trigger}></div>
-                                <Grid container style={{justifyContent: 'center', position: 'sticky', top: 100,}}>
+                                <Grid container style={{justifyContent: 'center'}}>
                                     <Grid item style={{marginTop: 30,width: 281, height: 70}} className={classes.hidesm}>
                                         <Link href={'allReservations'}>
                                             <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', height: 70}}>
@@ -328,7 +328,7 @@ class FinishedReservations extends React.Component {
                                 </Grid>
                             </Grid> 
 
-                            <Grid className={classes.Rightcontent} item xs={9} sm={9} md={7}>
+                            <Grid style={{paddingLeft: 55}} item xs={9} sm={9} md={7}>
                                 <Typography style={{fontSize: '2rem',marginTop: '4%'}}>Mes réservations terminées</Typography>
                                 <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}}>Vous avez {this.state.finishedReservations} réservations terminées</Typography>
                                 <Grid container className={classes.tabweb}>
@@ -409,7 +409,7 @@ class FinishedReservations extends React.Component {
                                                         <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
                                                     </Grid>
                                                     <Grid item xs={1} style={{}}>
-                                                        <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{booking.amount}€</Typography>
+                                                        <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{booking.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€</Typography>
                                                     </Grid>
                                                     <Grid item xs={2} style={{}}>
                                                         <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true } }}><a style={{textDecoration: 'none', color: 'white'}}>Voir la réservation</a></Link></Typography>
@@ -437,7 +437,7 @@ class FinishedReservations extends React.Component {
                                                     <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
                                                 </Grid>
                                                 <Grid item xs={1} style={{}}>
-                                                    <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{booking.amount}€</Typography>
+                                                    <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{booking.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€</Typography>
                                                 </Grid>
                                                 <Grid item xs={2} style={{}}>
                                                     <Typography style={{height: '45px', backgroundColor: '#BCBCBC', color: 'white', textAlign:'center', cursor: 'pointer', lineHeight: '3',marginTop: '15%'}}><Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true } }}><a style={{textDecoration: 'none', color: 'white'}}>Voir la réservation</a></Link></Typography>

@@ -70,14 +70,14 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             width:'100%',}},
 
-    tabweb:{visibility:'visible', width:'100%', position:'sticky', top:'115px', fontSize:15, backgroundColor:'white', zIndex:'20',
+    tabweb:{visibility:'visible', width:'100%', position:'sticky', top:'115px', fontSize:15, backgroundColor:'white', zIndex:'1000',
         [theme.breakpoints.down('sm')]: {
             visibility:'hidden'}},
 
 
     tabmobile:{visibility:'hidden',
         [theme.breakpoints.down('sm')]: {
-            visibility:'visible', fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:20}},
+            visibility:'visible', fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:1000}},
 
     bgimage: {display:'block', width:'37%', backgroundColor:'transparent',  backgroundImage: "url('../../static/servicesbg.png')", backgroundSize:'contain', backgroundRepeat:'no-repeat', height:'68%',top:'71%',zIndex: -20, right:0, position:'absolute', [theme.breakpoints.down('sm')]: { display:'none'}},
 
@@ -214,14 +214,8 @@ class services extends React.Component {
 
     componentDidMount() {
         document.body.style.overflow = 'auto';
-
-
         localStorage.setItem('path',Router.pathname);
-
-
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-
-
         axios.get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
@@ -236,7 +230,7 @@ class services extends React.Component {
 
                             this.setState({banner: banner})
                         })
-                        .catch(err =>{console.log(err)});
+                        .catch();
 
                     axios
                         .get(url+'myAlfred/api/shop/currentAlfred')
@@ -247,9 +241,7 @@ class services extends React.Component {
                                 flexible_cancel: shop.flexible_cancel, moderate_cancel: shop.moderate_cancel, strict_cancel: shop.strict_cancel,
                                 welcome_message: shop.welcome_message});
                         })
-                        .catch(err =>
-                            console.log(err)
-                        );
+                        .catch();
 
                     axios
                         .get(url+'myAlfred/api/serviceUser/currentAlfred')
@@ -257,14 +249,11 @@ class services extends React.Component {
                             let serviceUser = res.data;
                             this.setState({serviceUser: serviceUser});
                         })
-                        .catch(err =>
-                            console.log(err)
-                        );
+                        .catch();
 
                 }
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
@@ -338,7 +327,9 @@ class services extends React.Component {
             .then(() => {
                 toast.info('Paramètres modifiés')
             })
-            .catch(err => console.log(err))
+            .catch(() => {
+                toast.error('Erreur')
+            })
     };
 
     handleClicktabs2 =() => {
@@ -356,7 +347,9 @@ class services extends React.Component {
                 this.setState({open2:false,id_service:''});
                 this.componentDidMount();
             })
-            .catch(err => console.log(err))
+            .catch(() => {
+                toast.error('Erreur')
+            })
 
     }
 
@@ -370,8 +363,8 @@ class services extends React.Component {
                 this.setState({open:false});
                 this.componentDidMount();
             })
-            .catch(err => {
-                console.log(err)
+            .catch(() => {
+                toast.error('Erreur')
             })
 
     };
@@ -431,14 +424,14 @@ class services extends React.Component {
                         </Grid>
 
                         <Grid container className={classes.containerheader} style={{backgroundImage: `url('../../${this.state.shop.picture}')`,backgroundPosition: "center", height:'42vh',
-                            backgroundSize:"cover", backgroundRepeat:"no-repeat",justifyContent:"center",alignItems:"center"}}>
+                            backgroundSize:"cover", backgroundRepeat:"no-repeat",justifyContent:"center",alignItems:"center", position: 'relative'}}>
+
+
+                        <Grid className={classes.containerheader2} item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh', bottom: 0}}></Grid>
+                    </Grid>
 
 
 
-                        </Grid>
-                        <Grid className={classes.containerheader2} item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
-
-                        </Grid>
                         <Grid item>
 
                             <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius: '50%',position:'absolute',top:'27%',left:'0',right:'0',marginLeft:'auto',marginRight:'auto', minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px',zIndex:501, objectFit: 'cover'}}  alt={'picture'}/>

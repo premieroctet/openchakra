@@ -3,24 +3,16 @@ import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import dynamic from 'next/dynamic';
-import { border } from 'polished';
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpandMoreIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import Card from "@material-ui/core/Card";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import DatePicker from "react-datepicker";
-import FormControl from "@material-ui/core/FormControl";
-import Select2 from "react-select";
 import Tooltip from "@material-ui/core/Tooltip";
 
 
@@ -196,7 +188,6 @@ class services extends React.Component {
                 this.setState({user:user});
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
@@ -213,9 +204,7 @@ class services extends React.Component {
                 this.setState({moderate2:shop.moderate_cancel});
                 this.setState({strict2:shop.strict_cancel});
             })
-            .catch(err =>
-                console.log(err)
-            );
+            .catch();
 
         axios
             .get(url+`myAlfred/api/availability/currentAlfred`)
@@ -332,9 +321,7 @@ class services extends React.Component {
                 })
 
             })
-            .catch(err =>
-                console.log(err)
-            );
+            .catch();
 
         axios
             .get(url+`myAlfred/api/serviceUser/${id}`)
@@ -362,9 +349,7 @@ class services extends React.Component {
                 const lng = serviceUser.service_address.gps.lng;
                 this.setState({position: [lat,lng]})
             })
-            .catch(err =>
-                console.log(err)
-            );
+            .catch();
     }
 
     handleclick1(label) {

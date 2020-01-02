@@ -196,9 +196,7 @@ class addAvailability extends React.Component {
                             let shop = res.data;
                             this.setState({shop:shop});
                         })
-                        .catch(err =>
-                            console.log(err)
-                        );
+                        .catch();
 
 
                     axios.get(url+'myAlfred/api/serviceUser/currentAlfred')
@@ -206,21 +204,17 @@ class addAvailability extends React.Component {
                             let data = res.data;
                             this.setState({all_service: data})
                         })
-                        .catch(err => console.log(err))
+                        .catch()
 
                 }
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
                     }
                 }
             );
-
-
-
     }
 
 
@@ -621,7 +615,9 @@ class addAvailability extends React.Component {
                 toast.info('Disponibilité ajoutée avec succès !');
                 Router.push('/myShop/myAvailabilities');
             })
-            .catch(err => console.log(err))
+            .catch(() => {
+                toast.error('Erreur');
+            })
 
     };
 
