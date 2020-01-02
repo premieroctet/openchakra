@@ -110,8 +110,8 @@ router.post('/filterDate',(req,res)=>{
                if(!e.period.active && (e[newBeginDay].event.length || e[newEndDay].event.length)){
                    allAvailability.push(e)
                } else {
-                   let begin = e.period.month_begin;
-                   let end = e.period.month_end;
+                   let begin = moment(e.period.month_begin).subtract(1,'days');
+                   let end = moment(e.period.month_end).add(1,'days');
                    const betweenBegin = moment(dateBegin).isBetween(begin,end);
                    const betweenEnd = moment(dateEnd).isBetween(begin,end);
                    if(betweenBegin && betweenEnd && (e[newBeginDay].event.length || e[newEndDay].event.length)){
