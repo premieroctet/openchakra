@@ -853,7 +853,9 @@ class addService extends React.Component {
       loading: true
     });
     categorie.map((categorie, catInd) => {
-      axios.get(`${url}myAlfred/api/service/all/${categorie.value}`)
+
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.get(`${url}myAlfred/api/service/currentAlfred/${categorie.value}`)
         .then((response) => {
           const services = response.data;
           if (formikCtx.form.values.categories[catInd][categorie.label.replace(/\s/g, '') + 'Services'].length > 0) {

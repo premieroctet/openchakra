@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 
 const Service = require('../../models/Service');
+const ServiceUser = require('../../models/ServiceUser');
 
 router.get('/test',(req, res) => res.json({msg: 'Service Works!'}) );
 
@@ -74,7 +76,7 @@ router.get('/:id',(req,res)=> {
 
 });
 
-// @Route GET /myAlfred/api/service/:category
+// @Route GET /myAlfred/api/service/all/:category
 // View all service per category
 router.get('/all/:category',(req,res)=> {
 
@@ -92,6 +94,31 @@ router.get('/all/:category',(req,res)=> {
 
         })
         .catch(err => res.status(404).json({ service: 'No service found' }));
+
+});
+
+// @Route GET /myAlfred/api/service/currentAlfred/:category
+// View all service per category filtered by already provided Alfred's services
+router.get('/currentAlfred/:category', passport.authenticate('jwt',{session:false}), async (req,res)=> {
+
+    let serviceUsers = await ServiceUser.find({user:req.user});
+    serviceUsers = serviceUsers.map(s => s.service);
+    console.log("Count:"+JSON.stringify(serviceUsers));
+
+    Service.find({category: req.params.category, _id : { $nin: serviceUsers}})
+        .sort({'label':1})
+        .populate('tags')
+        .populate('equipments')
+        .populate('category')
+        .then(services => {
+            if(typeof services !== 'undefined' && services.length > 0){
+                res.json(services);
+            } else {
+                return res.status(400).json({msg: 'No service found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ service: 'No service found:error' }));
 
 });
 
