@@ -489,8 +489,6 @@ class Wizard extends React.Component {
             return pc.serviceLabel
         });
 
-console.log("Render, availabilities:"+JSON.stringify(availabilities));
-
         return (
             <Formik
                 initialValues={values}
@@ -1312,7 +1310,7 @@ class Form extends React.Component {
                                                                 [`userCityClicked${index}`]: false,
                                                                 [`otherOptionChecked${index}`]: false
                                                             })
-                                                            axios.get(`${url}myAlfred/api/service/${service}`)
+                                                            axios.get(`${url}myAlfred/api/service/${service.value}`)
                                                                 .then(res => {
                                                                     let servCompObj = { 
                                                                         CategoryLabel : res.data.category.label,
