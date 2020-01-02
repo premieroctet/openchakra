@@ -9,6 +9,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Footer from "../../hoc/Layout/Footer/Footer";
 import dynamic from "next/dynamic";
 import io from "socket.io-client";
+import Router from 'next/router';
 
 moment.locale("fr");
 const _ = require("lodash");
@@ -118,6 +119,8 @@ class Cancel extends React.Component {
       user: {},
       shop: {},
       booking_id: null,
+      bookingObj: null,
+      currUser: null
     };
   }
 
@@ -128,7 +131,14 @@ class Cancel extends React.Component {
   componentDidMount() {
     const booking_id = this.props.booking_id;
     this.setState({booking_id: booking_id});
-    
+    axios.get(url + "myAlfred/api/users/current").then(res => {
+      this.setState({ currUser: res.data });
+    });
+
+    axios.get(url + 'myAlfred/api/booking/' + booking_id)
+        .then(res => this.setState({ bookingObj: res.data }))
+        .catch();
+
     this.socket = io();
     this.socket.on("connect", socket => {
       this.socket.emit("booking", booking_id)
@@ -137,20 +147,23 @@ class Cancel extends React.Component {
 
   changeStatus(status) {
     axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: status})
-            .then(res => {this.setState({ 
-              bookingObj: res.data 
-            }), this.socket.emit("changeStatus", res.data)})
-            .catch(err => console.log(err))
+        .then(res => {
+          this.setState({
+
+            bookingObj: res.data
+          }, () => this.socket.emit("changeStatus", res.data))
+        })
+
+        .catch(err => console.log(err))
   }
 
   render() {
     const { classes } = this.props;
-    const { user } = this.state;
-    const { bookingObj } = this.state;
+    const { user, currUser, bookingObj } = this.state;
 
     return (
       <Fragment>
-        {bookingObj === null ?
+        {bookingObj === null || currUser === null ?
           null
           :
           <>
@@ -191,7 +204,7 @@ class Cancel extends React.Component {
                           fontWeight: "100"
                         }}
                       >
-                        Annuler la réservation service pour {user.firstname}{" "}
+                        Annuler la réservation
                       </h2>
                       <hr
                         style={{

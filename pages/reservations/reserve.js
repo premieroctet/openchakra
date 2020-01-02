@@ -149,12 +149,22 @@ class Reserve extends React.Component {
     const endHour = moment(this.state.hour).format('HH:mm');
     let dateObj;
 
-    if (this.state.currentUser._id === this.state.bookingObj.alfred._id) {
-      dateObj = { end_date: endDate, end_time: endHour, status: 'Pré-approuvée' };
+    if (typeof this.state.bookingObj.end_date !== 'undefined' && typeof this.state.bookingObj.end_time) {
+      if (this.state.currentUser._id === this.state.bookingObj.alfred._id) {
+        dateObj = { status: 'Pré-approuvée' };
+      } else {
+        dateObj = { status: 'En attente de confirmation' };
+      }
+
     } else {
-      dateObj = { end_date: endDate, end_time: endHour, status: 'En attente de confirmation' };
+      if (this.state.currentUser._id === this.state.bookingObj.alfred._id) {
+        dateObj = { end_date: endDate, end_time: endHour, status: 'Pré-approuvée' };
+      } else {
+        dateObj = { end_date: endDate, end_time: endHour, status: 'En attente de confirmation' };
+      }
+
     }
-    console.log(endDate, endHour)
+
 
     axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
             .then(res => {
@@ -162,7 +172,7 @@ class Reserve extends React.Component {
                   bookingObj: res.data 
                 }, ()=>this.socket.emit("changeStatus", res.data));
             })
-            .catch(err => console.log(err))
+            .catch()
   }
 
   render() {
@@ -1140,10 +1150,10 @@ class Reserve extends React.Component {
                             <img src="../../static/mapmarker.svg" width={"35%"} />
                           </Grid>
                           <Grid item xs={5} style={{ width: "50%", display: 'inline-block' }}>
-                            <p>Heure de début:</p> <p>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
+                            <p>Date de début:</p> <p>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
                           </Grid>
                           {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ? <Grid item xs={4} style={{ width: "50%", display: 'inline-block' }}>
-                            <p>Heure de fin:</p> <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
+                            <p>Date de fin:</p> <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
                           </Grid> : null}
                         </Grid>
                       </Grid>

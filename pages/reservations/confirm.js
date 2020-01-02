@@ -188,13 +188,26 @@ class Confirm extends React.Component {
     const dateObj = { end_date: endDate, end_time: endHour, status: 'Confirmée' };
 
 
-    axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
-        .then(res => {
+    if (typeof this.state.bookingObj.end_date !== 'undefined' && typeof this.state.bookingObj.end_time !== 'undefined') {
+      axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, { status: 'Confirmée' })
+
+          .then(res => {
           this.setState({
             bookingObj: res.data
           }, () => this.socket.emit("changeStatus", res.data))
         })
         .catch(err => console.log(err))
+      return null;
+    } else {
+      axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
+          .then(res => {
+            this.setState({
+              bookingObj: res.data
+            }, () => this.socket.emit("changeStatus", res.data))
+          })
+          .catch(err => console.log(err))
+    }
+
 
   }
 
@@ -1160,9 +1173,7 @@ class Confirm extends React.Component {
                                   prestation se réalise en plusieurs créneaux (peinture,
                                   cours etc.), échangez avec votre client sur un
                                   planning et des créneaux horaires pour cette
-                                  prestation. Renseignez les en indiquant l’heure de fin
-                                  du premier créneau et en ajoutant les suivants en
-                                  cliquant sur « Ajouter un nouveau créneau ».
+                                  prestation.
                                 </p>
                                 <br></br>
                                 <Grid
@@ -1197,18 +1208,20 @@ class Confirm extends React.Component {
                                   <img src="../../static/mapmarker.svg" width={"35%"} />
                                 </Grid>
                                 <Grid item xs={5} style={{ width: "50%", display: 'inline-block' }}>
-                                  <p>Heure de début:</p> <p>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
+                                  <p>Date de début:</p> <p>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
                                 </Grid>
                                 {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ?
                                     <Grid item xs={4} style={{ width: "50%", display: 'inline-block' }}>
-                                      <p>Heure de fin:</p> <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
+                                      <p>Date de fin:</p> <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
                                     </Grid>
                                     :
                                     null
                                 }
-                                {typeof this.state.end === null ? null :
-                                    <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
-                                      <p>Heure de fin:</p> <DatePicker
+                                {typeof this.state.bookingObj.end_date === 'undefined' && typeof this.state.bookingObj.end_time === 'undefined' ?
+                                    typeof this.state.end === null ? null :
+
+                                        <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
+                                      <p>Date de fin:</p> <DatePicker
                                         selected={moment(this.state.end).isAfter(this.state.currDate) ? this.state.end : this.state.currDate}
                                         onChange={date => {
                                           let isToday = moment(date).isSame(moment(new Date()), 'day');
@@ -1227,18 +1240,20 @@ class Confirm extends React.Component {
                                         onChange={
                                           moment(this.state.begin).isSame(this.state.end, 'day') ?
                                               (date) => this.setState({
-                                                time_prestation:date,
+                                                time_prestation: date,
                                                 hour: date,
                                                 hourToSend: date
                                               })
                                               :
                                               (date) => this.setState({
-                                                currDate:date,
+                                                currDate: date,
                                                 hour: date,
                                                 hourToSend: date
                                               })
+
                                         }
-                                        customInput={<Input2 />}
+
+                                          customInput={<Input2 />}
                                         showTimeSelect
                                         showTimeSelectOnly
                                         timeIntervals={15}
@@ -1250,7 +1265,10 @@ class Confirm extends React.Component {
                                         minDate={new Date()}
                                     />}
                                     </Grid>
-                                }
+
+                                :
+                                null}
+
                               </Grid>
                             </Grid>
                           </Grid>
