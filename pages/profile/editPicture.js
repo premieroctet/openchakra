@@ -31,48 +31,51 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             display:'none'
         }
-    }
-
-   ,hidelg: {
+    },
+   hidelg: {
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-        
     },
-    trigger:{ 
-    [theme.breakpoints.down('sm')]: {
-    marginTop: -10,
-    width: '100%', 
-    marginLeft:'0px',
-    height:'30px', 
-    backgroundColor:'#2FBCD3',
-    
-    display:'block',
-    transition: 'display 0.7s',
-    borderRadius:'5px',
-    '&:focus': {
-    display:'none',
-    transition: 'display 0.7s',
-
-       }
-     }
-
-}
-
-    ,toggle: {
-        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-        transition: 'margin-left 0.7s',
-       
-        '&:hover': {
+    trigger:{
+        [theme.breakpoints.down('sm')]: {
+            marginTop: -10,
+            width: '100%',
             marginLeft:'0px',
+            height:'30px',
+            backgroundColor:'#2FBCD3',
+            display:'block',
+            transition: 'display 0.7s',
+            borderRadius:'5px',
+            '&:focus': {
+            display:'none',
+            transition: 'display 0.7s',
+            }
+        }
+    },
+    toggle: {
+        [theme.breakpoints.down('sm')]: {
+            marginLeft:'-75px',
             transition: 'margin-left 0.7s',
-            boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
+             '&:hover': {
+                 marginLeft:'0px',
+                  transition: 'margin-left 0.7s',
+                 boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
              }
-      }  
+        }
+    },
+    buttonAddaddress: {
+        display: 'inline-block',
+        marginTop: 15,
+        color: '#4fbdd7',
+        borderColor: '#4fbdd7',
+        backgroundColor: 'white',
+        border: '1px solid',
+        '&:hover': {
+            backgroundColor: '#4fbdd7',
+            color:'white'
+        },
     }
-
-
 });
 
 class Thumb extends React.Component {
@@ -123,7 +126,6 @@ class editPicture extends React.Component {
     }
 
     componentDidMount() {
-
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
@@ -159,8 +161,6 @@ class editPicture extends React.Component {
         this.setState({haveapicture:e.target.files[0]});
     };
 
-
-
     onSubmit = e => {
         e.preventDefault();
 
@@ -188,20 +188,15 @@ class editPicture extends React.Component {
           .catch();
     };
 
-
     render() {
         const {classes} = this.props;
         const user = this.state.user;
-        const picture = this.state.picture;
-
         return (
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
-                         
-                         <div className={classes.trigger}></div>
+                         <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
@@ -213,13 +208,11 @@ class editPicture extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                               
                                             </a>
                                         </div>
                                     </Link>
@@ -234,13 +227,11 @@ class editPicture extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/sign.svg'} alt={'sign'} height={70} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                               
                                             </a>
                                         </div>
                                     </Link>
@@ -264,18 +255,15 @@ class editPicture extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/success.svg'} alt={'check'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -292,7 +280,7 @@ class editPicture extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
@@ -322,12 +310,9 @@ class editPicture extends React.Component {
                             <Grid container style={{marginTop: 20}}>
                                 <Grid item>
                                     <DeleteIcon onClick={()=>this.handleClickOpen()} className={classes.deleteicon} style={{marginLeft: '90%',padding: '2%', marginBottom: '-10%', color: '#616060',  cursor: 'pointer' }}/>
-
                                     <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img width={150} height={150} style={{borderRadius: '50%',objectFit:'cover'}} src={`../${user.picture}`} alt={'picture'}/>}
                                 </Grid>
-
                                 <Grid item xs={12} md={6} style={{marginLeft: '5%'}}>
-
                                     <form onSubmit={this.onSubmit}>
                                         <Grid container>
                                         <Grid item xs={12} lg={12}>
@@ -336,33 +321,27 @@ class editPicture extends React.Component {
                                                 Téléchargez une photo de vous claire et lumineuse, de bonne qualité. Pour un rendu optimal,
                                                 la photo doit être cadrée, sans lunette de soleil, en regardant l’objectif,
                                                 avec seulement vous sur la photo. </p><br />
-
-                                            <label style={{display: 'inline-block', marginTop: 15,color:'#2FBCD3'}} className="forminputs">
+                                           <label style={{display: 'inline-block', marginTop: 15,color:'#2FBCD3'}} className="forminputs">
                                                 <p style={{cursor:"pointer",fontSize:'0.8rem'}}>Téléchargez une photo depuis votre ordinateur</p>
                                                 <input id="file" style={{display: 'none'}} name="myImage" type="file"
                                                        onChange={this.onChange}
                                                        className="form-control" accept={'image/*'}
                                                 />
                                             </label>
-
-
                                         </Grid>
                                         </Grid>
                                         <Grid item style={{ display: 'flex', justifyContent: 'left', marginTop: 30 }}>
-                                            <Button type="submit" variant="contained" color="primary" style={{ width: '20%',color: 'white' }}>
-                                                Valider
+                                            <Button type="submit" variant="contained" color="secondary" style={{color: 'white' }}>
+                                                Enregistrer
                                             </Button>
                                         </Grid>
                                     </form>
                                 </Grid>
                             </Grid>
                         </Grid>
-
                     </Grid>
-
                 </Layout>
                 <Footer2/>
-
                 <Dialog
                     open={this.state.open}
                     onClose={()=>this.handleClose()}
@@ -384,12 +363,9 @@ class editPicture extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-
             </Fragment>
         );
     };
 }
-
-
 
 export default withStyles(styles)(editPicture);

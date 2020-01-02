@@ -1264,6 +1264,7 @@ router.get('/category/all', passport.authenticate('jwt',{session: false}),(req,r
     const admin = decode.is_admin;
     if(admin) {
         Category.find()
+	    .sort({'label': 1})
             .populate('tags')
             .then(category => {
                 if(!category){
@@ -1588,6 +1589,7 @@ router.get('/service/all',passport.authenticate('jwt',{session:false}),(req,res)
     if(req.query.category != null) {
         let label = req.query.category;
         Service.find({category: mongoose.Types.ObjectId(label) })
+	    .sort({'label': 1})
             .populate('tags', ['label'])
             .populate('equipments', 'label')
             .populate('category', 'label')
@@ -1603,6 +1605,7 @@ router.get('/service/all',passport.authenticate('jwt',{session:false}),(req,res)
 
         if(admin) {
         Service.find()
+	    .sort({'label': 1})
             .populate('tags', ['label'])
             .populate('equipments', 'label')
             .populate('category', 'label')
@@ -1786,7 +1789,7 @@ router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,r
 
     if(admin) {
         Prestation.find()
-            .sort({category:-1,label:1})
+            .sort({label:1, category:1})
             .populate('category')
             .populate('job')
             .populate('service')

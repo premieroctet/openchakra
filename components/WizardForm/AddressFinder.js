@@ -2,14 +2,6 @@ import React from 'react';
 import AlgoliaPlaces from 'algolia-places-react';
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Button from "@material-ui/core/Button";
-
 
 class AddressFinder extends React.Component {
 
@@ -27,21 +19,16 @@ class AddressFinder extends React.Component {
 
     }
 
-    onChange({query, rawAnswer, suggestion, suggestionIndex}) {
+    onChange({suggestion}) {
         this.setState({city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode,country: suggestion.country,
         lat: suggestion.latlng.lat, lng: suggestion.latlng.lng});
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.city`, this.state.city);
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.address`, this.state.address);
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.country`, this.state.country);
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.postal_code`, this.state.zip_code);
-
-
     }
 
     render() {
-
-        const {lat} = this.state;
-        const {lng} = this.state;
 
         return (
            <React.Fragment>
@@ -59,7 +46,6 @@ class AddressFinder extends React.Component {
 
             onChange={(suggestion) =>this.onChange(suggestion)}
         />
-
                    <Grid item>
                        <TextField
                             inputProps={{
@@ -132,13 +118,6 @@ class AddressFinder extends React.Component {
                            onChange={this.onChange}
                        />
                    </Grid>
-
-
-                   {/*<Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                       <Button type="submit" variant="contained" color="primary" style={{ width: '100%', color: 'white' }}>
-                           Ajouter
-                       </Button>
-        </Grid>*/}
            </React.Fragment>
 
         );

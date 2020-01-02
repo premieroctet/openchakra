@@ -5,7 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import BodySearchCard from './BodySeachCard/BodySearchCard';
 import axios from "axios";
 
-const url = "https://myalfred.hausdivision.com/";
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
   container: {

@@ -28,6 +28,15 @@ const styles = theme => ({
     margin:10,
     boxShadow: '1px 3px 1px transparent',
     height: '90%',
+    [theme.breakpoints.down('xs')]: { // tel
+      maxWidth: '100%',
+    },
+    [theme.breakpoints.down('sm')]: { // medium: 960px or larger
+      maxWidth: '100%',
+    },
+    [theme.breakpoints.down('md')]: { // ipad
+      maxWidth: '100%',
+    },
   },
   gridContainer: {
     display: 'flex',
@@ -69,7 +78,7 @@ const styles = theme => ({
   },
   lightOverlay: {
     height: '100%',
-    backgroundColor: 'rgba(0,0,0,0.2)', 
+    backgroundColor: 'rgba(0,0,0,0.2)',
   },
   locationGrid: {
     display: 'flex',
@@ -105,8 +114,8 @@ const feelingoodCard = (props) => {
     
     <Link href={'serviceByService?service='+id}>
     <Card className={classes.card}>
-      <CardActionArea>
-      
+      <CardActionArea style={{cursor:'default'}}>
+
         <CardMedia className={classes.media} image={img}>
           <div className={classes.lightOverlay}>
             <Grid container className={classes.avatarContainer}>
@@ -120,17 +129,17 @@ const feelingoodCard = (props) => {
           <Typography variant="h6" component="h2" style={{textAlign:'center'}}>
             <center> {title}</center>
           </Typography>
-            
+
           <Grid container>
-           
-           
-            
+
+
+
           </Grid>
-         
+
         </CardContent>
 
       </CardActionArea>
-    
+
     </Card>
     </Link>
   );

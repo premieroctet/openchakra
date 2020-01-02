@@ -1,3 +1,4 @@
+const passport = require('passport');
 const express = require('express');
 const router = express.Router();
 
@@ -11,6 +12,8 @@ router.get('/test',(req, res) => res.json({msg: 'Prestation Works!'}) );
 // Get all prestations
 router.get('/all',(req,res) => {
     Prestation.find()
+        .collation({ locale: "fr" })
+        .sort({'label': 1})
         .populate('category')
         .populate('job')
         .populate('service')
@@ -33,7 +36,7 @@ router.get('/all',(req,res) => {
 // @Route GET /myAlfred/api/prestation/home
 // Get all prestations
 router.get('/home',(req,res) => {
-    Prestation.find()
+    Prestation.find().sort({'label': 1})
         .populate('category')
         .populate('job')
         .populate('service')
@@ -58,7 +61,7 @@ router.get('/home',(req,res) => {
 // View all prestations per service
 router.get('/:service',(req,res)=> {
 
-    Prestation.find({service: req.params.service})
+    Prestation.find({service: req.params.service}).sort({'label': 1})
         .populate('category')
         .populate('service')
         .populate('filter_presentation')
@@ -98,11 +101,18 @@ router.post('/all/search', (req,res)=> {
 
 // @Route GET /myAlfred/api/prestation/:service/:filter
 // View all prestations per service and filter
-router.get('/:service/:filter', (req, res) => {
+router.get('/:service/:filter',passport.authenticate('jwt',{session:false}), (req, res) => {
+
+  console.log("Before getting user:"+req.user.id);
+  let result = User.findById(req.user.id);
+  
+  console.log("After getting user:"+Object.keys(result.mongooseCollection));
+
   Prestation.find({
     service: req.params.service,
     filter_presentation: req.params.filter,
   })
+  .sort({'label':1})
   .populate('billing')
   .then(prestation => {
     if (typeof prestation !== 'undefined' && prestation.length > 0) {
@@ -118,7 +128,10 @@ router.get('/:service/:filter', (req, res) => {
 // View all prestations per tags
 router.get('/all/tags/:tags',(req,res)=> {
 
+    console.log("Getting prestation/all/tags/:tag");
+
     Prestation.find({tags: req.params.tags})
+        .sort({'label':1})
         .populate('tags')
         .then(prestations => {
             if(typeof prestations !== 'undefined' && prestations.length > 0){
@@ -135,6 +148,8 @@ router.get('/all/tags/:tags',(req,res)=> {
 // @Route GET /myAlfred/api/prestation/:id
 // View one prestation
 router.get('/:id',(req,res)=> {
+
+    console.log("Getting api/prestation/:id");
 
     Prestation.findById(req.params.id)
         .populate('category')

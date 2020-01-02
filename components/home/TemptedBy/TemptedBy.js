@@ -10,7 +10,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import {RestaurantMenu} from "@material-ui/icons";
 import Card from "@material-ui/core/Card";
 
-const url = "https://myalfred.hausdivision.com/";
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
@@ -44,7 +45,7 @@ const styles = theme => ({
   textUp: {
     textAlign: 'left',
     paddingTop: '1rem',
-    fontFamily: 'helvetica',
+    fontFamily: 'Helvetica',
     fontWeight: 'bold',
     fontSize: '20px',
     color: 'white',
@@ -55,7 +56,7 @@ const styles = theme => ({
   },
   textDown: {
     textAlign: 'left',
-    fontFamily: 'roboto',
+    fontFamily: 'Helvetica',
     fontSize: '17px',
     color: 'white',
   },

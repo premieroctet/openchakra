@@ -11,6 +11,7 @@ router.get('/test',(req, res) => res.json({msg: 'Service Works!'}) );
 router.get('/all',(req,res)=> {
 
         Service.find()
+            .sort({'label':1})
             .populate('tags')
             .populate('equipments')
             .populate('category')
@@ -100,6 +101,7 @@ router.get('/:id',(req,res)=> {
 router.get('/all/:category',(req,res)=> {
 
     Service.find({category: req.params.category})
+        .sort({'label':1})
         .populate('tags')
         .populate('equipments')
         .populate('category')
@@ -120,6 +122,7 @@ router.get('/all/:category',(req,res)=> {
 router.get('/all/tags/:tags',(req,res)=> {
 
     Service.find({tags: req.params.tags})
+        .sort({'label':1})
         .populate('tags')
         .populate('equipments')
         .populate('category')

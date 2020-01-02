@@ -15,7 +15,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 
@@ -35,7 +34,6 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-        
     },
     trigger:{ 
     [theme.breakpoints.down('sm')]: {
@@ -55,23 +53,17 @@ const styles = theme => ({
        }
      }
 
-}
-
-    ,toggle: {
+},
+  toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
         transition: 'margin-left 0.7s',
-       
         '&:hover': {
             marginLeft:'0px',
             transition: 'margin-left 0.7s',
             boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
              }
       }  
     }
-
-
-
 });
 
 class parameters extends React.Component {
@@ -89,7 +81,6 @@ class parameters extends React.Component {
     }
 
     componentDidMount() {
-
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
@@ -197,26 +188,18 @@ class parameters extends React.Component {
                 })
                 .catch();
         }
-
-
     };
-
-
 
     render() {
         const {classes} = this.props;
         const {user} = this.state;
 
-
-
         return (
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-
-                    <Grid className={classes.toggle}  item xs={3} style={{}}>
-                         
-                         <div className={classes.trigger}></div>
+                    <Grid className={classes.toggle}  item xs={3}>
+                         <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/notifications'}>
@@ -254,7 +237,7 @@ class parameters extends React.Component {
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -295,7 +278,7 @@ class parameters extends React.Component {
                                         <div style={{padding:'30px', lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                                
+
                                             </a>
                                         </div>
                                     </Link>
@@ -416,8 +399,6 @@ class parameters extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer2/>
-
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
@@ -463,7 +444,7 @@ class parameters extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-
+              <Footer2/>
             </Fragment>
 
 

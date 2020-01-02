@@ -23,7 +23,6 @@ const styles = theme => ({
     [theme.breakpoints.up('lg')]: { // medium: 960px or larger
      display: 'none',
     },
-
   /* Center and scale the image nicely */
   backgroundImage: 'url(../../../static/bg.jpg)',
   backgroundPosition: 'center',
@@ -36,21 +35,14 @@ const styles = theme => ({
   minHeight: '122vh',
   },
   headerhomevid: {
-
     [theme.breakpoints.down('md')]: { // medium: 960px or larger
       backgroundAttachment: "fixed",
      display: 'none',
     },
-  /* Full height */
-  height: '100vh!important',
-  width: '100%!important',
-
   /* Center and scale the image nicely */
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
-    
-    
   },
   headeroverlay: {
     [theme.breakpoints.up('lg')]: { // medium: 960px or larger
@@ -80,8 +72,6 @@ const styles = theme => ({
     minHeight:'470px',
     bottom:50, 
     marginTop:-10,
-
-
     [theme.breakpoints.down('xs')]: { // extra-large: 1920px or larger
       width: '88%',
       left: '45%',
@@ -103,7 +93,7 @@ const styles = theme => ({
       left: '20%',
     },
     [theme.breakpoints.up('xl')]: { // extra-large: 1920px or larger
-      width: '28%',
+      width: '31%',
       top: '50%',
       left: '20%',
     },
@@ -144,24 +134,6 @@ const styles = theme => ({
       left: '75%',
     },
   },
-  input: {
-    display: 'none',
-   
-  },
-  locationcity: {
-    color: 'black',
-    width:'100%',
-  },
-  formlabel: {
-    //display: 'inline-block',
-    textAlign: 'center',
-    width:'100%',
-    marginBottom: '-60px',
-    
-  },
-  homepunchline: {
-    color: 'lightgrey!important',
-  },
   homeform: {
     color: '#505050!important',
     textAlign: 'left',
@@ -171,11 +143,6 @@ const styles = theme => ({
     letterSpacing: '-1px',
     lineHeight: '39px!important',
     paddingLeft: '20px',
-  },
-  selecthomecategory:{
-    marginBottom: '-15px',
-    marginTop: '-30px',
-    marginLeft: '-9px',
   },
   pickerhomelocation: {
     width:'100%',
@@ -200,7 +167,6 @@ const styles = theme => ({
     left: '0%',
     right: '0%',
     margin:'auto',
-
   },
 });
 
@@ -208,7 +174,6 @@ const Input2 = ({value,  onClick }) => (
     <Button value={value} color={"inherit"} variant={"outlined"} style={{color:"gray"}} className="example-custom-input" onClick={onClick}>
       {value}
     </Button>
-
 );
 
 class Homeheader extends React.Component {

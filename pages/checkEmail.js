@@ -21,18 +21,12 @@ const styles = theme => ({
 
     },
     card: {
-        fontFamily: 'helveticaNeue',
-        maxWidth: 800,
+        fontFamily: 'Helvetica',
+        width: 600,
         marginTop: '100px',
-    },
-    cardContant: {
-        flexDirection: 'column',
-    },
-    linkText: {
-        textDecoration: 'none',
-        color: 'black',
-        fontSize: 12,
-        lineHeight: 4.15,
+        [theme.breakpoints.down('xs')]:{
+            width:'90%'
+        }
     },
     banner: {
         marginBottom: 25,
@@ -47,22 +41,34 @@ const styles = theme => ({
         padding: 20,
     },
     title: {
-        fontFamily: 'helveticaNeue',
+        fontFamily: 'Helvetica',
         color: 'white',
         letterSpacing: 1,
     },
+    responsiveButton:{
+        display:'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+        [theme.breakpoints.down('xs')]:{
+            flexDirection: 'column',
+            justifyContent: 'center',
+        }
+    },
+    responsiveSecondaryButton:{
+        [theme.breakpoints.down('xs')]:{
+           marginTop: '2%'
+        }
+    }
 });
 
 class checkEmail extends React.Component {
     constructor(props) {
         super(props);
-
     }
-
 
     render() {
         const { classes } = this.props;
-
 
         return (
             <Layout>
@@ -71,27 +77,31 @@ class checkEmail extends React.Component {
                     <Card className={classes.card}>
                         <div className={classes.banner}>
                             <h2 className={classes.title}>Inscription terminée</h2>
-
                         </div>
                         <div className={classes.newContainer}>
                             <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
-                                <img src='../static/success-signup.svg' style={{width: 100}} alt={'success'}/>
+                                <img src='../static/happy_castor.svg' style={{width: 100}} alt={'success'}/>
                             </Grid>
-                            <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
-
+                            <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10, textAlign: 'justify'}}>
+                                <p>Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My Alfred</p>
                             </Grid>
-                            <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
-                                <p>Vous pouvez maintenant proposer ou rechercher vos services sur My Alfred</p>
-                            </Grid>
-                            <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10}}>
-                                <Link href={'/'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <Button variant={"contained"} color={"primary"} style={{color:"white"}}>Commencez à explorer</Button>
-                                    </a>
-                                </Link>
+                            <Grid item className={classes.responsiveButton}>
+                                <Grid item style={{marginRight:'1%' }}>
+                                    <Link href={'/'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <Button variant={"contained"} color={"primary"} style={{color:"white"}}>Commencez à explorer</Button>
+                                        </a>
+                                    </Link>
+                                </Grid>
+                                <Grid item className={classes.responsiveSecondaryButton}>
+                                    <Link href={'/becomeAlfredForm'}>
+                                        <a style={{textDecoration:'none'}}>
+                                            <Button variant={"contained"} color={"secondary"} style={{color:"white"}}>Créer ma boutique</Button>
+                                        </a>
+                                    </Link>
+                                </Grid>
                             </Grid>
                         </div>
-
                     </Card>
                     </Grid>
                 </Grid>

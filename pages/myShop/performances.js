@@ -158,7 +158,7 @@ class Performances extends React.Component {
                                     Cette fonctionnalité sera disponible lors du lancement des réservations sur My-Alfred.
                                 </p>
                                 <p>
-                                    Inscrivez-vous dès aujourd’hui à la session de lancement des réservations ! Toute l’équipe My-Alfred sera mobilisée pour vous présenter l’ensemble des fonctionnalités de My-Alfred et vous annoncer de grandes surpises !
+                                    Inscrivez-vous dès aujourd’hui à la session de lancement des réservations ! Toute l’équipe My-Alfred sera mobilisée pour vous présenter l’ensemble des fonctionnalités de My-Alfred et vous annoncer de grandes surprises !
                                 </p>
                                 <Button color={"primary"} style={{borderRadius:'30px'}} variant={"contained"}><a style={{textDecoration:'none',color:'white'}} href="mailto:hello@my-alfred.io">Je m'inscris !</a></Button>
                             </Grid>

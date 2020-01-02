@@ -49,7 +49,7 @@ const styles = theme => ({
         padding: 20,
     },
     title: {
-        fontFamily: 'helveticaNeue',
+        fontFamily: 'Helvetica',
         color: 'white',
         letterSpacing: 1,
     },
@@ -144,7 +144,7 @@ class addPicture extends React.Component {
                                     </label>
 
                                 </Grid>
-                                
+
                                 <Grid container>
                                     <Grid item xs={4}></Grid>
                                     <Grid item xs={4} style={{justifyContent: 'center', marginTop: 30, justifyItems: 'center' }}>

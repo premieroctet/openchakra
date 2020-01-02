@@ -1,21 +1,13 @@
 import React, {Fragment} from 'react';
-import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
-import axios from "axios";
-import moment from 'moment';
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
 import Footer from '../../hoc/Layout/Footer/Footer';
-import dynamic from 'next/dynamic';
 
 const styles = theme => ({
     bigContainer: {
         flexGrow: 1,
     },
-
 
     trigger1: {
         [theme.breakpoints.down('sm')]: {
@@ -32,7 +24,6 @@ const styles = theme => ({
             
                    }
         }
-
     },
     trigger:{ 
     [theme.breakpoints.down('sm')]: {
@@ -53,9 +44,6 @@ const styles = theme => ({
 
        }
      },
-
-
-
 },
     responsiveContainer: {
         [theme.breakpoints.down('sm')]: {
@@ -70,9 +58,6 @@ const styles = theme => ({
             marginTop: '6%',
         }
     }
-
-
-    
     ,toggle: {
         height: '950px',
         [theme.breakpoints.down('sm')]: {  marginLeft:'-200px',

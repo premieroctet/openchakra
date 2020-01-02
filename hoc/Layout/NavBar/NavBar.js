@@ -5,18 +5,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import axios from "axios";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+import { withStyles} from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
@@ -24,7 +18,6 @@ import Router from "next/router";
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
-
 const jwt = require('jsonwebtoken');
 
 const styles = theme => ({
@@ -34,16 +27,6 @@ const styles = theme => ({
   grow: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-  },
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -51,17 +34,17 @@ const styles = theme => ({
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    marginRight: theme.spacing.unit * 2,
+    marginRight: theme.spacing(2),
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit * 3,
+      marginLeft: theme.spacing(3),
       width: 'auto',
     },
     display: 'none',
   },
   searchIcon: {
-    width: theme.spacing.unit * 9,
+    width: theme.spacing(9),
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
@@ -74,10 +57,10 @@ const styles = theme => ({
     width: '100%',
   },
   inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
+    paddingTop: theme.spacing,
+    paddingRight: theme.spacing,
+    paddingBottom: theme.spacing,
+    paddingLeft: theme.spacing(10),
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
@@ -175,7 +158,6 @@ class NavBar extends Component {
     localStorage.removeItem('path');
     // Remove auth header for future requests
     setAuthToken(false);
-    //document.location.href="https://myalfred.hausdivision.com/";
     Router.push('/');
   };
 
@@ -218,8 +200,6 @@ class NavBar extends Component {
     const picture = this.state.picture;
     const mobileavatar = picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>;
     const alfred = this.state.alfred;
-    const logout = <Button variant="outlined" color='primary' style={{ marginRight: '20px' }}
-                           onClick={()=>this.logout2()}>Déconnexion</Button>;
 
     const logoutMobile = <React.Fragment>
     <MenuItem onClick={this.handleMenuClose}>
@@ -252,13 +232,13 @@ class NavBar extends Component {
     </MenuItem>
   </React.Fragment>;
 
-    const logoutAvatar = 
+    const logoutAvatar =
     [
     <MenuItem key={1} onClick={this.handleMenuClose}>
       <Typography>
         <Link href={'/profile/editProfile'}>
           <a className={classes.navbarLinkMobile}>
-            Profil  
+            Profil
           </a>
         </Link>
       </Typography>
@@ -305,15 +285,6 @@ class NavBar extends Component {
         open={isAvatarMenuOpen}
         onClose={this.handleMenuClose}
       >
-        {/*<MenuItem onClick={this.handleAvatarMenuClose}>
-          <Typography>
-            <Link href='/aide'>
-              <a className={classes.navbarLinkAvatar}>
-                Aide
-              </a>
-            </Link>
-          </Typography>
-        </MenuItem>*/}
         {test ? logoutAvatar : <React.Fragment>
         <MenuItem onClick={this.handleAvatarMenuOpen}>
           <Typography>
@@ -389,15 +360,6 @@ class NavBar extends Component {
                 </Link>
               </Typography>
               </MenuItem>
-        {/*<MenuItem onClick={this.handleMobileMenuClose}>
-          <Typography>
-            <Link href='/aide'>
-              <a className={classes.navbarLinkMobile}>
-                Aide
-              </a>
-            </Link>
-          </Typography>
-        </MenuItem>*/}
         {test ? logoutMobile : <React.Fragment>
         <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
@@ -422,7 +384,7 @@ class NavBar extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar  color="inherit" position="fixed">
+        <AppBar color="inherit" position="fixed" style={{boxShadow: 'inherit'}}>
           <Toolbar>
             {test ?
                 <Link href={'/search'}>
@@ -435,9 +397,6 @@ class NavBar extends Component {
             }
 
             <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                {/*<SearchIcon />*/}
-              </div>
               <InputBase
                 placeholder="Search…"
                 classes={{
@@ -476,7 +435,7 @@ class NavBar extends Component {
               <Typography className={classes.navbarItem}>
                 <Link href={'/becomeAlfredForm'}>
                   <a className={classes.navbarLink}>
-                    Devenir Alfred
+                    Créer ma boutique
                   </a>
                 </Link>
               </Typography>}
@@ -495,7 +454,9 @@ class NavBar extends Component {
                   </a>
                 </Link>
               </Typography>
-              {test ? null : <React.Fragment><Link href={'/login'}>
+              {test ? null :
+                <React.Fragment>
+                  <Link href={'/login'}>
                     <Button variant="outlined" color={'primary'} style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
                       Connexion
                     </Button>
@@ -510,17 +471,29 @@ class NavBar extends Component {
                 </Button>
                 </Link>
                 </React.Fragment>}
-                {test ?<React.Fragment>
-
-                
-                  {picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>}
-                
+                {test ?
+                  <React.Fragment>
+                  {picture ?
+                    <React.Fragment>
+                      <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
+                        <Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} />
+                      </IconButton>
+                    </React.Fragment>
+                    :
+                    <React.Fragment>
+                      <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
+                        <Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} />
+                      </IconButton>
+                    </React.Fragment>}
                 </React.Fragment> : null  }
             </div>
             <div className={classes.sectionMobile}>
-              
-                {test ? mobileavatar : <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}><MoreIcon className={classes.bigIcon} /></IconButton></React.Fragment>}
-              
+                {test ? mobileavatar :
+                  <React.Fragment>
+                    <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}>
+                      <MoreIcon className={classes.bigIcon} />
+                    </IconButton>
+                  </React.Fragment>}
             </div>
           </Toolbar>
         </AppBar>
@@ -531,24 +504,5 @@ class NavBar extends Component {
     );
   }
 }
-
-/*<IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton color="inherit">
-                <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>*/
 
 export default withStyles(styles)(NavBar);

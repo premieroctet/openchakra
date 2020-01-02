@@ -230,7 +230,7 @@ class faq extends React.Component {
                                                 Pour modifier le prix de vos prestations :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez votre Boutique sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes services</strong> </li>
                                                 <li>Cliquez sur <strong>Modifier</strong> dans un service </li>
@@ -270,7 +270,7 @@ class faq extends React.Component {
                                                 Pour modifier les options d'un service :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes services</strong> </li>
                                                 <li>Cliquez sur <strong>Modifier</strong> dans un service </li>
@@ -313,7 +313,7 @@ class faq extends React.Component {
                                                 Pour modifier le matériel fourni dans votre service  :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes services</strong> </li>
                                                 <li>Cliquez sur <strong>Modifier</strong> dans un service </li>
@@ -352,7 +352,7 @@ class faq extends React.Component {
                                                 Pour modifier le montant minimum d'un service  :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes services</strong> </li>
                                                 <li>Cliquez sur <strong>Modifier</strong> dans un service </li>
@@ -381,7 +381,7 @@ class faq extends React.Component {
                                         <Grid container>
                                             <p>
                                                 Votre périmètre d’intervention correspond à la zone dans laquelle vous souhaitez réaliser votre service.
-                                                Par défaut, nous utiliserons la ville de l’adresse renseignée dans votre profil comme base de référence.
+                                                Par défaut, nous utilisons la ville de votre profil comme référence.
                                                 Cette adresse ne vous convient pas ? Vous pouvez changer votre ville de référence à tout moment !
                                                 Le périmètre que vous indiquez va permettre à la plateforme My-Alfred de proposer votre service si le
                                                 périmètre d’intervention correspond à l’adresse du client.  Si le client se trouve à 5km de votre
@@ -396,7 +396,7 @@ class faq extends React.Component {
                                                 Pour modifier le périmètre d'intervention d'un service  :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes services</strong> </li>
                                                 <li>Cliquez sur <strong>Modifier</strong> dans un service </li>
@@ -439,7 +439,7 @@ class faq extends React.Component {
                                                 Pour modifier le délai de prévenance d'un service  :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes services</strong> </li>
                                                 <li>Cliquez sur <strong>Modifier</strong> dans un service </li>
@@ -483,7 +483,7 @@ class faq extends React.Component {
                                                 Pour modifier la description de votre expertise d'un service  :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes services</strong> </li>
                                                 <li>Cliquez sur <strong>Modifier</strong> dans un service </li>
@@ -528,7 +528,7 @@ class faq extends React.Component {
                                                 Pour modifier vos années d’expérience, vos diplômes et certifications d'un service  :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes services</strong> </li>
                                                 <li>Cliquez sur <strong>Modifier</strong> dans un service </li>
@@ -584,7 +584,7 @@ class faq extends React.Component {
                                                 Pour modifier votre calendrier de disponibilités   :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mon calendrier</strong> </li>
                                                 <li>Cliquez sur <strong>Ajouter ou modifier dans la page calendrier</strong> </li>
@@ -628,7 +628,7 @@ class faq extends React.Component {
                                                 Pour modifier la façon dont vos clients peuvent réserver vos services :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes paramètres de réservation</strong> </li>
                                                 <li>Cliquez sur <strong>Modifier</strong>dans un service </li>
@@ -692,7 +692,7 @@ class faq extends React.Component {
                                                 Pour modifier vos conditions de réservation de vos services :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes paramètres de réservation</strong> </li>
                                                 <li>Cliquez sur <strong>Modifier</strong>dans un service </li>
@@ -732,7 +732,7 @@ class faq extends React.Component {
                                                 Pour ajouter ou supprimer votre photo de profil  :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Profil</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Ma photo</strong> </li>
                                                 <li>Cliquez sur <strong>Télécharger une photo depuis votre ordinateur </strong></li>
@@ -785,7 +785,7 @@ class faq extends React.Component {
                                                 Pour modifier vos conditions d’annulation de vos services dans votre boutique :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes paramètres de réservation</strong> </li>
                                                 <li>Sélectionnez le type de condition d’annulation de réservation de vos services puis cliquez sur
@@ -827,7 +827,7 @@ class faq extends React.Component {
                                                 Pour ajouter ou supprimer votre photo de couverture  :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Boutique</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur le crayon pour modifier, en haut à droite de votre photo de couverture </li>
                                                 <li>Sélectionnez votre photo de couverture </li>
@@ -905,7 +905,7 @@ class faq extends React.Component {
                                             Pour insérer une pièce d’identité :
                                         </p>
                                         <br/>
-                                        <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                        <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                             <li>Consultez <strong>votre Profil</strong> sur my-alfred.io </li>
                                             <li>Cliquez sur l’onglet <strong>Confiance & vérification</strong> de votre compte </li>
                                             <li>Sélectionnez le type de pièce Passeport ou Carte nationale d’identité</li>
@@ -938,7 +938,7 @@ class faq extends React.Component {
                                                 Vous pouvez ajouter une des pièces d’identité officielle suivante sur la plateforme My-Alfred :
                                             </p>
                                             <br/>
-                                            <ul style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ul style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Passeport </li>
                                                 <li>Carte Nationale d’Identité </li>
 
@@ -977,7 +977,7 @@ class faq extends React.Component {
                                                 être visibles par les autres utilisateurs de la plateforme My-Alfred :
                                             </p>
                                             <br/>
-                                            <ul style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ul style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>La confirmation que votre pièce d'identité a bien été ajoutée </li>
                                                 <li>Votre photo de profil et le prénom et le nom figurant sur votre profil </li>
 
@@ -1024,7 +1024,7 @@ class faq extends React.Component {
                                                 Pour supprimer la photo de votre pièce d'identité :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Profil</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Confiance & vérification</strong> de votre compte </li>
                                                 <li>Cliquez sur la corbeille à côté de votre pièce d’identité pour la supprimer</li>
@@ -1107,7 +1107,7 @@ class faq extends React.Component {
                                                 Pour ajouter ou supprimer votre IBAN :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Consultez <strong>votre Compte</strong> sur my-alfred.io </li>
                                                 <li>Cliquez sur l’onglet <strong>Mes préférences de versement</strong></li>
                                                 <li>Cliquez sur <strong>Ajouter un RIB</strong></li>
@@ -1144,7 +1144,7 @@ class faq extends React.Component {
                                                 Vous êtes un particulier :
                                             </p>
                                             <br/>
-                                            <ul style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ul style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Votre nom et prénom </li>
                                                 <li>Votre date de naissance </li>
                                                 <li>Votre pays de résidence </li>
@@ -1158,7 +1158,7 @@ class faq extends React.Component {
                                                 Vous êtes un auto-entrepreneur, en complément des éléments ci-dessus, les éléments
                                                 suivants vous sont également demandés :
                                             </p>
-                                            <ul style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ul style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Votre email </li>
                                                 <li>Nom de votre entreprise </li>
 
@@ -1197,7 +1197,7 @@ class faq extends React.Component {
                                                 Pour consulter vos informations de versements :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Je suis Alfred</strong> </li>
                                                 <li>Cliquez sur l’onglet <strong>Performance</strong></li>
                                                 <li>Cliquez sur <strong>revenus</strong></li>
@@ -1240,7 +1240,7 @@ class faq extends React.Component {
                                                 Pour modifier votre réservation :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Je suis Alfred</strong> </li>
                                                 <li>Cliquez sur <strong>Mes réservations</strong></li>
                                                 <li>Parcourez votre fiche réservation et cliquez sur modifier en bas de votre fiche de réservation</li>
@@ -1299,7 +1299,7 @@ class faq extends React.Component {
                                                 Pour annuler votre réservation :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Je suis Alfred</strong> </li>
                                                 <li>Cliquez sur <strong>Mes réservations</strong></li>
                                                 <li>Parcourez votre fiche réservation et cliquez sur modifier en bas de votre fiche de réservation</li>
@@ -1381,7 +1381,7 @@ class faq extends React.Component {
                                                 Pour annuler votre réservation :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Je suis Alfred</strong> </li>
                                                 <li>Cliquez sur <strong>Mes réservations</strong></li>
                                                 <li>Parcourez votre fiche réservation et cliquez sur modifier en bas de votre fiche de réservation</li>
@@ -1546,7 +1546,7 @@ class faq extends React.Component {
                                                 Pour supprimer votre boutique :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong> </li>
                                                 <li>Cliquez sur <strong>Paramètres</strong></li>
                                                 <li>Cliquez sur <strong>Supprimer</strong> dans la rubrique je souhaite supprimer ma boutique de services</li>
@@ -1595,7 +1595,7 @@ class faq extends React.Component {
                                                 Pour supprimer votre compte :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong> </li>
                                                 <li>Cliquez sur <strong>Paramètres</strong></li>
                                                 <li>Cliquez sur <strong>Désactiver</strong> dans la rubrique je souhaite désactiver mon compte</li>
@@ -1647,7 +1647,7 @@ class faq extends React.Component {
                                                 Pour modifier le paramétrage de vos notifications, il vous suffit de :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong> </li>
                                                 <li>Cliquez sur la rubrique <strong>Notifications</strong></li>
                                                 <li>Cliquez sur <strong>Enregistrer</strong></li>
@@ -1687,13 +1687,13 @@ class faq extends React.Component {
                                                 Les différents moyens de paiements de My-Alfred sont les suivants :
                                             </p>
                                             <br/>
-                                            <ul style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ul style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Carte de paiement </li>
                                                 <li>Crédit (remboursement crédité sur votre compte)</li>
                                                 <li>Coupons (programme fidélité, parrainage, code promotionnel etc.)</li>
                                             </ul>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong> </li>
                                                 <li>Cliquez sur la rubrique <strong>Mes moyens de paiement</strong></li>
                                             </ol>
@@ -1728,7 +1728,7 @@ class faq extends React.Component {
                                             Pour ajouter ou modifier votre préférence de versement :
                                         </p>
                                         <br/>
-                                        <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                        <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                             <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong> </li>
                                             <li>Cliquez sur  <strong>Préférences de versement</strong></li>
                                             <li>Cliquez sur  <strong>Ajouter un RIB</strong></li>
@@ -1801,7 +1801,7 @@ class faq extends React.Component {
                                                 Pour changer votre mot de passe :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong> </li>
                                                 <li>Cliquez sur  <strong>Sécurité</strong></li>
                                             </ol>
@@ -1873,7 +1873,7 @@ class faq extends React.Component {
                                                 Pour cela:
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong> </li>
                                                 <li>Cliquez sur  <strong>Applications connectées</strong></li>
                                                 <li>Cliquez sur  <strong>Supprimer</strong> dans l’encart de l’application Gmail</li>
@@ -1883,7 +1883,7 @@ class faq extends React.Component {
 
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong> </li>
                                                 <li>Cliquez sur  <strong>Applications connectées</strong></li>
                                                 <li>Cliquez sur  <strong>Connecter</strong> dans l’encart de l’application Gmail</li>
@@ -1923,7 +1923,7 @@ class faq extends React.Component {
                                                 Pour cela:
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong> </li>
                                                 <li>Cliquez sur  <strong>Applications connectées</strong></li>
                                                 <li>Cliquez sur  <strong>Supprimer</strong> dans l’encart de l’application Facebook</li>
@@ -1933,7 +1933,7 @@ class faq extends React.Component {
 
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong> </li>
                                                 <li>Cliquez sur  <strong>Applications connectées</strong></li>
                                                 <li>Cliquez sur  <strong>Connecter</strong> dans l’encart de l’application Facebook</li>
@@ -1972,7 +1972,7 @@ class faq extends React.Component {
                                                 Pour empêcher l’indexation de votre profil et de votre boutique par les moteurs de recherche :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong> </li>
                                                 <li>Cliquez sur  <strong>Paramètres</strong></li>
                                                 <li>Désactiver la ligne ‘’J'accepte que mon profil et ma boutique soient indexés par les moteurs de recherche”</li>
@@ -2065,7 +2065,7 @@ class faq extends React.Component {
                                                 Pour accéder à votre profil :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon profil</strong> </li>
                                                 <li>Cliquez sur  <strong>Modifier le profil</strong></li>
                                             </ol>
@@ -2093,13 +2093,13 @@ class faq extends React.Component {
                                             <p style={{width:'100%'}}>
                                                 Lorsque vous souhaitez réserver un service, notre plateforme vous propose des Alfred en fonction
                                                 de leur périmètre d’intervention.  Dans ce cadre, nous utiliserons l’adresse de prestation que vous
-                                                aurez indiqué pour la prestation de service commandée.  Vous pouvez à tout moment ajouter ou modifier
+                                                aurez indiquée pour la prestation de service commandée.  Vous pouvez à tout moment ajouter ou modifier
                                                 vos adresses de prestations.
 
 
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon profil</strong> </li>
                                                 <li>Cliquez sur  <strong>Mes adresses de prestations</strong></li>
                                             </ol>
@@ -2209,7 +2209,7 @@ class faq extends React.Component {
                                                 Pour modifier votre adresse email :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon profil</strong> </li>
                                                 <li>Cliquez sur  <strong>Confiance et vérification</strong></li>
                                                 <li>Modifiez votre email</li>
@@ -2219,7 +2219,7 @@ class faq extends React.Component {
                                                 Pour demander une nouvelle vérification de votre adresse email :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon profil</strong> </li>
                                                 <li>Cliquez sur  <strong>Confiance et vérification</strong></li>
                                                 <li>Cliquez sur Envoyer email de vérification</li>
@@ -2260,7 +2260,7 @@ class faq extends React.Component {
                                                 Pour modifier votre téléphone portable :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon profil</strong> </li>
                                                 <li>Cliquez sur  <strong>Confiance et vérification</strong></li>
                                                 <li>Modifiez votre téléphone portable</li>
@@ -2270,7 +2270,7 @@ class faq extends React.Component {
                                                 Pour demander une nouvelle vérification de votre téléphone portable :
                                             </p>
                                             <br/>
-                                            <ol style={{fontFamily:'helveticaNeue',fontSize:'0.9rem'}}>
+                                            <ol style={{fontFamily:'Helvetica',fontSize:'0.9rem'}}>
                                                 <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon profil</strong> </li>
                                                 <li>Cliquez sur  <strong>Confiance et vérification</strong></li>
                                                 <li>Cliquez sur Envoyer SMS de vérification</li>

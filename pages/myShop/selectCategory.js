@@ -17,48 +17,41 @@ const { config } = require('../../config/config');
 const url = config.apiUrl;
 const styles = theme => ({
 
-    bigContainer: {
-        marginTop: 68,
-        flexGrow: 1,
-    },
-    sidebg:{
-display:'block', 
-
-[theme.breakpoints.down('sm')]: {
-    display: 'none!important',
+bigContainer: {
+    marginTop: 68,
+    flexGrow: 1,
 },
- suivant:{
-    [theme.breakpoints.down('sm')]: {
-        right:10
+sidebg: {
+  display:'block',
+  [theme.breakpoints.down('sm')]: {
+      display: 'none!important',
+  },
+   suivant: {
+      [theme.breakpoints.down('sm')]: {
+          right:10
+      },
+   }
+     },
+    maincontainer: {
+      [theme.breakpoints.down('sm')]: {
+          width:'98% !important',
+          margin:'auto',
+      },
     },
-   
-
-
- }
-
-    },
-    maincontainer:{
-      
-        
-        [theme.breakpoints.down('sm')]: {
-            width:'98% !important',
-            margin:'auto',
-        },
-        
-            },
-            bottombar:{visibility:'hidden', [theme.breakpoints.down('sm')]: {
-                visibility:'visible',
-                boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
-            }},
-            topbar:{visibility:'visible', position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
-                visibility:'hidden',
-            }},
-
-
-
+    bottombar: {
+      visibility:'hidden',
+      [theme.breakpoints.down('sm')]: {
+        visibility:'visible',
+        boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
+    }},
+    topbar: {
+      visibility:'visible',
+      position: 'sticky',
+      top: 65,
+      zIndex:999,[theme.breakpoints.down('sm')]: {
+        visibility:'hidden',
+    }},
 });
-
-
 
 class selectCategory extends React.Component {
     constructor(props) {
@@ -188,35 +181,33 @@ class selectCategory extends React.Component {
             <Layout>
 
                 <Grid container className={classes.bigContainer}>
-                <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
-                            
-                            <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white'}}>
-                                <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
-                                <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
-                                <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
-                                    <p style={{color: "white",cursor: 'pointer'}}>Performances</p></a>
-                                </Link>
-                            </Grid>
-
-                        </Grid>
+                  <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
+                      <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white'}}>
+                          <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                          <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
+                          </Link>
+                      </Grid>
+                      <Grid item xs={2} style={{textAlign:"center"}}>
+                          <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                              <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
+                          </Link>
+                      </Grid>
+                      <Grid item xs={2} style={{textAlign:"center"}}>
+                          <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                              <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
+                          </Link>
+                      </Grid>
+                      <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
+                          <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                              <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
+                          </Link>
+                      </Grid>
+                      <Grid item xs={2} style={{textAlign:"center"}}>
+                          <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                              <p style={{color: "white",cursor: 'pointer'}}>Performance</p></a>
+                          </Link>
+                      </Grid>
+                  </Grid>
                     <Grid className={classes.maincontainer} item xs={12} md={7} style={{paddingLeft:20}}>
                         <Grid container>
                             <Grid item xs={12}>
@@ -224,7 +215,7 @@ class selectCategory extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <p>
-                                    Commencez par sélectionner votre catégories de service. Par exemple, si vous souhaitez réaliser un service
+                                    Commencez par sélectionner votre catégories de service. Par exemple, si vous souhaitez proposer un service
                                     de coiffure, sélectionnez la catégorie «Beauté et bien-être».
                                 </p>
                             </Grid>
@@ -261,10 +252,8 @@ class selectCategory extends React.Component {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <p>
-                                            Identifiez maintenant le service que vous souhaitez réaliser dans la catégorie sélectionnée.
-                                            Vous pourrez choisir le type de prestation que vous souhaitez réaliser dans ce service dès la prochaine étape !
-
-
+                                            Sélectionnez maintenant le service que vous souhaitez proposer dans la catégorie sélectionnée.
+                                            Vous pourrez choisir le type de prestation que vous souhaitez proposer dans ce service dès la prochaine étape !
                                         </p>
                                     </Grid>
 
@@ -341,13 +330,13 @@ class selectCategory extends React.Component {
                          </Grid>
 
                          <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
+                            <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
                          </Grid>
 
                          <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
+                            <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
                          </Grid>
@@ -359,7 +348,7 @@ class selectCategory extends React.Component {
                          </Grid>
 
                          <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
+                            <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
                          </Grid>

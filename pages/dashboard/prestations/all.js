@@ -55,7 +55,7 @@ const actionsStyles = theme => ({
     root: {
         flexShrink: 0,
         color: theme.palette.text.secondary,
-        marginLeft: theme.spacing.unit * 2.5
+        marginLeft: theme.spacing(2.5)
     }
 });
 
@@ -200,7 +200,7 @@ class all extends React.Component {
                                     </Table>
                                 </div>
                                 <TablePagination
-                                    rowsPerPageOptions={[10, 25]}
+                                    rowsPerPageOptions={[10, 25, 100, 200]}
                                     component="div"
                                     count={prestation.length}
                                     rowsPerPage={this.state.rowsPerPage}

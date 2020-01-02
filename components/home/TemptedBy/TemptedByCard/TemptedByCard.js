@@ -13,7 +13,7 @@ const styles = theme => ({
     textUp: {
       textAlign: 'left',
       paddingTop: '1rem',
-      fontFamily: 'helvetica',
+      fontFamily: 'Helvetica',
       fontWeight: 'bold',
       fontSize: '20px',
       color: 'white',
@@ -24,7 +24,7 @@ const styles = theme => ({
     },
     textDown: {
       textAlign: 'left',
-      fontFamily: 'roboto',
+      fontFamily: 'Helvetica',
       fontSize: '17px',
       color: 'white',
     },
@@ -43,13 +43,13 @@ const styles = theme => ({
       maxHeight: '300px',
       height: '200px',
       borderRadius: '5px',
-  
+
           // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('xs')]: { // xs: 600px or larger
       maxWidth: 450,
       maxHeight: 300,
     },
-    [theme.breakpoints.up('sm')]: { 
+    [theme.breakpoints.up('sm')]: {
       maxWidth: 400,
       },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
@@ -76,7 +76,7 @@ const styles = theme => ({
   const TemptedByCard = (props) => {
     // eslint-disable-next-line object-curly-newline
     const { img, classes, desc, avatar } = props;
-  
+
     return (
       <Card className={classes.card}>
         <CardActionArea className={classes.cardAction}>
@@ -118,11 +118,11 @@ const styles = theme => ({
       </Card>
     );
   };
-  
+
   TemptedByCard.propTypes = {
     img: PropTypes.string.isRequired,
     classes: PropTypes.objectOf(PropTypes.string).isRequired,
     desc: PropTypes.string.isRequired,
   };
-  
+
   export default withStyles(styles)(TemptedByCard);

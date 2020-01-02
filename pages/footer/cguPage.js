@@ -2,18 +2,9 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Layout from '../../hoc/Layout/Layout';
 import Grid from "@material-ui/core/Grid";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Typography from "@material-ui/core/Typography";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Link from 'next/link';
 import Footer from '../../hoc/Layout/Footer/Footer';
 
-
-
-const { config } = require('../../config/config');
-const url = config.apiUrl;
 const styles = theme => ({
     hideed:{
         padding: '0 300px',
@@ -27,13 +18,11 @@ const styles = theme => ({
     }
 });
 
-class cgu extends React.Component {
+class cguPage extends React.Component {
     constructor(props) {
         super(props);
 
     }
-
-
 
     render() {
         const { classes } = this.props;
@@ -329,4 +318,4 @@ class cgu extends React.Component {
 }
 
 
-export default withStyles(styles)(cgu);
+export default withStyles(styles)(cguPage);

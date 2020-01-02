@@ -15,11 +15,6 @@ import fr from 'date-fns/locale/fr';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
 registerLocale('fr', fr);
-
-
-
-
-
 moment.locale('fr');
 
 const { config } = require('../../config/config');
@@ -43,58 +38,44 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             display:'none'
         }
-    }
-
-   ,hidelg: {
+    },
+   hidelg: {
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-        
     },
-    trigger:{ 
+    trigger:{
     [theme.breakpoints.down('sm')]: {
     marginTop: -10,
-    width: '100%', 
+    width: '100%',
     marginLeft:'0px',
-    height:'30px', 
+    height:'30px',
     backgroundColor:'#2FBCD3',
-    
     display:'block',
     transition: 'display 0.7s',
     borderRadius:'5px',
     '&:focus': {
     display:'none',
     transition: 'display 0.7s',
-
        }
      },
-
-
-
 },
     responsiveContainer: {
         [theme.breakpoints.down('sm')]: {
-            width:'148%!important',
+            width: '148%!important',
         }
-    }
-
-
-    ,toggle: {
+    },
+    toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
         transition: 'margin-left 0.7s',
-       
+
         '&:hover': {
             marginLeft:'0px',
             transition: 'margin-left 0.7s',
             boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
              }
-      }  
+      }
     },
-
-
-
-
 });
 
 const options = [
@@ -124,14 +105,9 @@ class editProfile extends React.Component {
             ipDate: moment().format(momentDateFormat)
         };
         this.handleChangeLanguages = this.handleChangeLanguages.bind(this);
-
-
-
     }
 
     componentDidMount() {
-        document.body.style.overflow = 'auto';
-
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
@@ -144,9 +120,6 @@ class editProfile extends React.Component {
                         label: b,
                         value: b
                     })) });
-
-
-
             })
             .catch(err => {
                     if(err.response.status === 401 || err.response.status === 403) {
@@ -172,17 +145,12 @@ class editProfile extends React.Component {
 
     };
 
-
-
-
     onSubmit = e => {
         e.preventDefault();
         let arrayLanguages = [];
         if(this.state.selectedLanguages != null){
             this.state.selectedLanguages.forEach(w => {
-
                 arrayLanguages.push(w.value);
-
             });
         }
         const languages = arrayLanguages;
@@ -205,15 +173,12 @@ class editProfile extends React.Component {
         const {user} = this.state;
         const {birthday} = this.state;
 
-
         return (
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer} style={{overflowX:"hidden"}}>
-
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
-                         
-                         <div className={classes.trigger}></div>
+                         <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
@@ -225,13 +190,12 @@ class editProfile extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/editProfile'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/user-2.svg'} alt={'user'} width={27} height={70} style={{marginRight: 4}}/>
                                             <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -247,13 +211,12 @@ class editProfile extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10}} className={classes.hidelg}>
                                     <Link href={'/profile/myAddresses'}>
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/sign.svg'} alt={'sign'} height={70} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -277,18 +240,16 @@ class editProfile extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/success.svg'} alt={'check'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                
+
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-
                                 <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/trustAndVerification'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -305,7 +266,7 @@ class editProfile extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
@@ -324,18 +285,13 @@ class editProfile extends React.Component {
                                 </Grid>
                             </Grid>
                         </Grid>
-
-
-
-
-                        <Grid item xs={9} style={{paddingLeft: 20,}}>
-                            <h1 style={{color: 'dimgray',fontWeight: '100'}}>Modifier le profil</h1>
+                        <Grid item xs={9} style={{paddingLeft: 20}}>
+                            <h1 style={{color: 'dimgray',fontWeight: '100'}}>Modifier votre profil</h1>
                             <form>
 
                             <Grid container className={classes.responsiveContainer}>
                                 <Grid container>
                                 <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 20}}>
-
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
@@ -346,14 +302,11 @@ class editProfile extends React.Component {
                                         placeholder={'Prénom'}
                                         variant={"outlined"}
                                         label={'Prénom'}
-
                                     />
-
                                 </Grid>
                                 </Grid>
                                 <Grid container>
                                 <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 20}}>
-
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
@@ -364,15 +317,10 @@ class editProfile extends React.Component {
                                         placeholder={'Nom'}
                                         variant={"outlined"}
                                         label={'Nom'}
-
                                     />
-
                                 </Grid>
                                 </Grid>
-
                                 <Grid item xs={10} lg={6} md={6} sm={6} style={{marginTop: 20}}>
-
-                                    {/*<InputLabel style={{color: 'black'}}>A propos de moi</InputLabel>*/}
                                     <TextField
                                         id="standard-name"
                                         style={{ marginTop: 15,width: '100%'}}
@@ -384,9 +332,7 @@ class editProfile extends React.Component {
                                         margin="normal"
                                         name={'description'}
                                         label={'A propos de moi'}
-
                                     />
-
                                 </Grid>
                             </Grid>
                             <Grid container className={classes.responsiveContainer}>
@@ -395,7 +341,6 @@ class editProfile extends React.Component {
                                 </Grid>
                                 <Grid container style={{marginTop:10}}>
                                 <Grid item lg={2} xs={10} sm={5} md={3} >
-
                                     <TextField
                                         id="standard-name"
                                         style={{width: '100%'}}
@@ -407,9 +352,7 @@ class editProfile extends React.Component {
                                         name={'gender'}
                                         placeholder={'Sexe'}
                                         label={'Sexe'}
-
                                     >
-
                                         <MenuItem  value={'Homme'}>
                                             Homme
                                         </MenuItem>
@@ -417,10 +360,8 @@ class editProfile extends React.Component {
                                             Femme
                                         </MenuItem>
                                     </TextField>
-
                                 </Grid>
-                                    <Grid item xs={1}></Grid>
-
+                                    <Grid item xs={1}/>
                                 <Grid item lg={3} xs={10} sm={6} md={3}  style={{marginTop:15}}>
                                     <DatePicker
                                         selected={Date.parse(birthday)}
@@ -433,7 +374,6 @@ class editProfile extends React.Component {
                                         dateFormat="dd/MM/yyyy"
                                         maxDate={new Date()}
                                     />
-
                                 </Grid>
                                 </Grid>
                                 <Grid container>
@@ -579,7 +519,5 @@ class editProfile extends React.Component {
         );
     };
 }
-
-
 
 export default withStyles(styles)(editProfile);

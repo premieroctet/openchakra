@@ -19,6 +19,9 @@ const crypto = require('crypto');
 const multer = require("multer");
 const nodemailer = require("nodemailer");
 
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'static/profile/')
@@ -119,16 +122,13 @@ router.post('/register',(req,res) =>{
                                     from: 'kirstin85@ethereal.email', // sender address
                                     to: `${user.email}`, // list of receivers
                                     subject: "Valider votre compte", // Subject line
-                                    text: `https://myalfred.hausdivision.com/validateAccount?user=${user._id}`, // plain text body
-                                    html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
+                                    text: `${url}/validateAccount?user=${user._id}`, // plain text body
+                                    html: '<a href='+url+'validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
                                 });
                             })
                             .catch(err => console.log(err));
                     })
                 })
-
-
-
             }
         })
 });
@@ -152,8 +152,8 @@ router.get('/sendMailVerification',passport.authenticate('jwt',{session:false}),
                 from: 'kirstin85@ethereal.email', // sender address
                 to: `${user.email}`, // list of receivers
                 subject: "Valider votre compte", // Subject line
-                text: `https://myalfred.hausdivision.com/validateAccount?user=${user._id}`, // plain text body
-                html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
+                text: `${url}validateAccount?user=${user._id}`, // plain text body
+                html: '<a href='+url+'validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
             });
         })
         .catch(err => {
@@ -653,8 +653,8 @@ router.post('/email/check',(req,res) => {
                 from: 'kirstin85@ethereal.email', // sender address
                 to: `${user.email}`, // list of receivers
                 subject: "Valider votre compte", // Subject line
-                text: `https://myalfred.hausdivision.com/validateAccount?user=${user._id}`, // plain text body
-                html: '<a href='+'https://myalfred.hausdivision.com/validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
+                text: `${url}validateAccount?user=${user._id}`, // plain text body
+                html: '<a href='+url+'validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
             });
         })
         .catch(err => {
@@ -693,7 +693,7 @@ router.post('/forgotPassword',(req,res) => {
                     to: `${user.email}`, // list of receivers
                     subject: "Reset password", // Subject line
                     text: `http://localhost:3000/resetPassword?token=${token}`, // plain text body
-                    html: '<a href='+'https://myalfred.hausdivision.com/resetPassword?token='+token+'>Cliquez içi</a>' // html body
+                    html: '<a href='+url+'resetPassword?token='+token+'>Cliquez içi</a>' // html body
                 });
             }
         })
@@ -913,50 +913,3 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
 
 
 module.exports = router;
-
-/*
-
-router.put('/profile/serviceAddress',passport.authenticate('jwt',{session: false}), (req,res) => {
-
-    User.findById(req.user.id)
-        .then(user => {
-            user.service_address = {};
-            user.service_address.address = req.body.address;
-            user.service_address.zip_code = req.body.zip_code;
-            user.service_address.city = req.body.city;
-
-            if (req.body.country === 'France') {
-                user.service_address.country = 'France';
-            } else {
-                user.service_address.country = 'Maroc';
-            }
-
-            user.service_address.gps = {};
-
-            let address = req.body.address;
-            let city = req.body.city;
-            let zip = req.body.zip_code;
-
-            let newAddress = address.replace(/ /g, '+');
-
-            const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
-
-            axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
-                .then(response => {
-
-                    let result = response.data.features;
-
-                    result.forEach(function (element) {
-                        user.service_address.gps.lat = element.geometry.coordinates[1];
-                        user.service_address.gps.lng = element.geometry.coordinates[0];
-                    });
-
-                    user.save().then(user => res.json(user)).catch(err => console.log(err));
-
-                })
-                .catch(error => {
-                    console.log(error)
-                });
-        })
-});
- */

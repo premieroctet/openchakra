@@ -4,25 +4,21 @@ import Layout from '../../hoc/Layout/Layout';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import axios from "axios";
 import moment from 'moment';
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-
-
-
+import Schedule from '../../components/Schedule/Schedule';
+import { toast } from 'react-toastify';
 
 moment.locale('fr');
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 68,
         flexGrow: 1,
-
     },
 
     marginbot: {
@@ -38,9 +34,12 @@ const styles = theme => ({
             display: 'none!important',
         },
     },
-    containercalendar:{width:'100%',   [theme.breakpoints.down('sm')]: {
-            width:'100%!important',
-
+    containercalendar:{
+      display: 'flex',
+      alignContent: 'center',
+      justifyContent: 'center',
+      [theme.breakpoints.down('sm')]: {
+        width:'100%!important',
         }},
     containerheader:{[theme.breakpoints.down('sm')]: {
             width:'100%!important',
@@ -60,43 +59,29 @@ const styles = theme => ({
     }
     ,
     dispocard:{
-
         minHeight:'100px',
         maxWidth:'250px',
         textAlign:'center',
         backgroundColor:'#f2f2f2',
-
         boxShadow: '4px 4px 41px -37px rgba(0,0,0,0.0)',
         border:'solid 1px #ccc',
         borderRadius:'10px',
         padding:'5%',
-
-
     },
     dispocardin:{
-
         padding:'5%',
         fontSize:'15px',
-
         marginBottom:10,
-
-
     },
 
-
-
     dispoheader:{
-
         height:'10%',
         color:'gray',
         width:'100%',
         backgroundColor:'#f2f2f2',
         transition: 'background-color 0.5s',
-        
-
         fontSize:'15px',
         textAlign:'left',
-
         borderRadius:'0px',
         marginBottom:'5 px',
         '&:hover': {
@@ -104,8 +89,6 @@ const styles = theme => ({
             transition: 'background-color 0.5s',
             color: 'white',
         }
-
-
     },
 
     respbg:{
@@ -118,83 +101,124 @@ const styles = theme => ({
             top: '17%!important',
         }
     },
-
-
-
-
 });
 
+
 class myAvailabilities extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
             user: {},
             shop: {},
-            all_availabilities: [],
-
+            availabilities: [],
+            services: [],
         };
-
-
-
+        this.availabilityCreated = this.availabilityCreated.bind(this);
+        this.availabilityDelete = this.availabilityDelete.bind(this);
     }
+
+    availabilityCreated(avail) {
+      console.log("CB created availability:"+JSON.stringify(avail));
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
+      axios.post(url+'myAlfred/api/availability/add',avail)
+          .then(res => {
+              console.log("Added:"+JSON.stringify(res.data));
+              toast.info('Disponibilité ajoutée avec succès !');
+              let new_availabilities = [res.data, ...this.state.availabilities];
+              this.setState({availabilities: new_availabilities});
+          })
+          .catch(err => {
+            console.log(err);
+            toast.error(err);
+		  })
+    }
+
+    availabilityDelete(avail) {
+      console.log("CB delete availability:"+JSON.stringify(avail));
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
+      axios.delete(url+'myAlfred/api/availability/'+avail)
+          .then(res => {
+              console.log("Deleting:"+JSON.stringify(res.data));
+              toast.info('Disponibilité supprimée avec succès !');
+              let new_availabilities=[];
+              this.state.availabilities.forEach( a => {
+                if (a._id!==avail) {
+                  new_availabilities.push(a);
+                }
+              })
+              this.setState({availabilities: new_availabilities});
+          })
+          .catch(err => {
+            console.log(err);
+            toast.error(err);
+          })
+    }
+
 
     componentDidMount() {
 
-
         localStorage.setItem('path',Router.pathname);
-        //const token = localStorage.getItem('token').split(' ')[1];
-        /*const decode = jwt.decode(token);
-        if (decode.is_alfred === false) {
-            Router.push('/becomeAlfredForm');
-
-        }*/
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-
         axios
-            .get(url+'myAlfred/api/users/current')
-            .then(res => {
-                let user = res.data;
-                if(user.is_alfred === false) {
-                    Router.push('/becomeAlfredForm');
-                } else {
-                    this.setState({user:user});
-                    axios
-                        .get(url+'myAlfred/api/shop/currentAlfred')
+          .get(url+'myAlfred/api/users/current')
+          .then(res => {
+              let user = res.data;
+              if(user.is_alfred === false) {
+                  Router.push('/becomeAlfredForm');
+              } else {
+                  this.setState({user:user});
+                  axios
+                    .get(url+'myAlfred/api/shop/currentAlfred')
+                    .then(res => {
+                        let shop = res.data;
+                        this.setState({shop:shop,booking_request: shop.booking_request, no_booking_request:shop.no_booking_request,my_alfred_conditions: shop.my_alfred_conditions,
+                            profile_picture: shop.profile_picture, identity_card: shop.identity_card, recommandations: shop.recommandations,
+                            flexible_cancel: shop.flexible_cancel, moderate_cancel: shop.moderate_cancel, strict_cancel: shop.strict_cancel,
+                            welcome_message: shop.welcome_message});
+                    })
+                    .catch(err =>
+                      console.log(err)
+                    );
+
+                  axios.get(url+'myAlfred/api/availability/currentAlfred')
+                    .then(res => {
+                        let availabilities = res.data;
+                        this.setState({availabilities: availabilities});
+
+                    })
+                    .catch(err => console.log(err));
+
+                   axios
+                        .get(url+'myAlfred/api/serviceUser/currentAlfred')
                         .then(res => {
-                            let shop = res.data;
-                            this.setState({shop:shop,booking_request: shop.booking_request, no_booking_request:shop.no_booking_request,my_alfred_conditions: shop.my_alfred_conditions,
-                                profile_picture: shop.profile_picture, identity_card: shop.identity_card, recommandations: shop.recommandations,
-                                flexible_cancel: shop.flexible_cancel, moderate_cancel: shop.moderate_cancel, strict_cancel: shop.strict_cancel,
-                                welcome_message: shop.welcome_message});
+                            //let services = [...new Set(res.data.map(d => [d['service']['label'],d['service'][_id']]))];
+                            let mapServices = new Map();
+                            res.data.forEach( d => mapServices.set(d['service']['label'], d['service']['_id']));
+                            let services = [...mapServices.entries()];
+                            this.setState({services:services});
+                            //this.setState({serviceUser: serviceUser});
                         })
                         .catch(err =>
                             console.log(err)
                         );
 
-                    axios.get(url+'myAlfred/api/availability/currentAlfred')
-                        .then(res => {
-                            let availability = res.data;
-                            this.setState({all_availabilities: availability});
 
-                        })
-                        .catch(err => console.log(err));
+              }
+          })
+          .catch(err => {
+                console.log(err);
+                if(err.response.status === 401 || err.response.status === 403) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'})
                 }
-            })
-            .catch(err => {
-                    console.log(err);
-                    if(err.response.status === 401 || err.response.status === 403) {
-                        localStorage.removeItem('token');
-                        Router.push({pathname: '/login'})
-                    }
-                }
-            );
-
-
-
+            }
+          );
     }
-
 
     handleChange = name => event => {
         this.setState({ [name]: event.target.checked });
@@ -204,167 +228,99 @@ class myAvailabilities extends React.Component {
         this.setState({ [e.target.name]: e.target.value });
     };
 
-
-    onSubmit =() => {
-
-    };
-
     render() {
         const {classes} = this.props;
         const {user} = this.state;
-        const {all_availabilities} = this.state;
-
-
-
-
-
 
         return (
-            <Fragment>
-                <Layout>
-                    <Grid container className={classes.bigContainer}>
-                        <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
-                            <Grid item xs={1} className={classes.shopbar}></Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/services'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/reservations/messages'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/reservations/allReservations'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
-                                <Link href={'/myShop/myAvailabilities'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/performances/revenus'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Performances</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-
-                        </Grid>
-                        <Grid className={classes.respbg} container style={{backgroundImage: `url('../../${this.state.shop.picture}')`,backgroundPosition: "center", height:'42vh',
-                            backgroundSize:"cover", backgroundRepeat:"no-repeat",justifyContent:"center",alignItems:"center"}}>
-
-
-
-                        </Grid>
-                        <Grid className={classes.respbg} item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
-
-                        </Grid>
-                        <Grid item>
-
-                            <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius:'50%',position:'absolute',top:'27%',left:'0%',right:'0%',margin: 'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px', objectFit: 'cover'}} alt={'picture'}/>
-                        </Grid>
-                    </Grid>
-
-
-                    <Grid container style={{marginTop: 20, padding:'2%'}} className={classes.containercalendar}>
-                        <Grid item xs={12} md={7}>
-
-                            {all_availabilities.map((e,index) => {
-                                if(e.period.active){
-                                    return (
-                                        <Link className={classes.dispocard} key={index} href={'/myShop/detailsAvailability?id='+e._id}>
-                                            <a className={classes.dispocardin} style={{textDecoration:'none', color:'gray'}}>
-                                                <div style={{boxShadow: '10px 10px 25px -13px rgba(0,0,0,0.05)'}}>
-                                                    <div className={classes.dispoheader}><p style={{ padding: '2%'}}>Disponibilités pour la période:</p></div>
-                                                    <p style={{marginLeft:'20px',padding: '2%'}}>  {moment(e.period.month_begin).format('LL')} / {moment(e.period.month_end).format('LL')}</p>
-                                                </div>
-                                            </a>
-                                        </Link>
-                                    )
-                                } else {
-                                    return (
-                                        <Link className={classes.dispocard} key={index} href={'/myShop/detailsAvailability?id='+e._id}>
-                                            <a className={classes.dispocardin} style={{textDecoration:'none', color:'gray'}}>
-                                                <div style={{boxShadow: '10px 10px 25px -13px rgba(0,0,0,0.05)'}}>
-                                                    <div className={classes.dispoheader}><p style={{ padding: '2%'}}>Disponibilités pour la période:</p></div>
-                                                    <p style={{marginLeft:'20px',padding: '2%'}}>Indéfinies</p>
-                                                </div>
-                                            </a>
-                                        </Link>
-                                    )
-                                }
-                            })}
-
-
-                        </Grid>
-                        <Grid className={classes.hidenimg} item md={5} style={{backgroundImage:'url(../../static/background/disponibilité.svg)', backgroundPosition:'center',backgroundSize:'contain', backgroundRepeat: 'no-repeat', }}>
-
-                        </Grid>
-
-                    </Grid>
-                    <Grid container  style={{ padding:'3%'}}>
-                        <Link href={'/myShop/addAvailability'}>
-                            <a style={{textDecoration:'none'}}><Button color={"primary"} style={{color:"white"}} variant={"contained"}>Ajouter une disponibilité</Button></a>
-                        </Link>
-                    </Grid>
-
-
-
-                </Layout>
-                <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
-
-                    <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
-                        </Link>
-                    </Grid>
-
-                    <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                    <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                    <Grid item xs={2} style={{textAlign:"center",zIndex:999, borderBottom: '3px solid #4fbdd7'}}>
-                        <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                    <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                </Grid>
-                <Footer/>
-
-            </Fragment>
+          <Fragment>
+              <Layout>
+                  <Grid container className={classes.bigContainer}>
+                      <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
+                          <Grid item xs={1} className={classes.shopbar}/>
+                          <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                              <Link href={'/myShop/services'}>
+                                  <a style={{textDecoration:'none'}}>
+                                      <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
+                                  </a>
+                              </Link>
+                          </Grid>
+                          <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                              <Link href={'/myShop/messages'}>
+                                  <a style={{textDecoration:'none'}}>
+                                      <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
+                                  </a>
+                              </Link>
+                          </Grid>
+                          <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                              <Link href={'/myShop/mesreservations'}>
+                                  <a style={{textDecoration:'none'}}>
+                                      <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
+                                  </a>
+                              </Link>
+                          </Grid>
+                          <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
+                              <Link href={'/myShop/myAvailabilities'}>
+                                  <a style={{textDecoration:'none'}}>
+                                      <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
+                                  </a>
+                              </Link>
+                          </Grid>
+                          <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
+                              <Link href={'/myShop/performances'}>
+                                  <a style={{textDecoration:'none'}}>
+                                      <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
+                                  </a>
+                              </Link>
+                          </Grid>
+                      </Grid>
+                      <Grid className={classes.respbg} container style={{backgroundImage: `url('../../${this.state.shop.picture}')`,backgroundPosition: "center", height:'42vh',
+                          backgroundSize:"cover", backgroundRepeat:"no-repeat",justifyContent:"center",alignItems:"center"}}>
+                      </Grid>
+                      <Grid className={classes.respbg} item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
+                      </Grid>
+                      <Grid item>
+                          <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius:'50%',position:'absolute',top:'27%',left:'0%',right:'0%',margin: 'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}} alt={'picture'}/>
+                      </Grid>
+                  </Grid>
+                  <Grid container style={{padding:'2%'}} className={classes.containercalendar}>
+                      <Grid style={{width:'90%'}}>
+                          <Schedule availabilities={this.state.availabilities} services={this.state.services} cbAvailabilityCreated={this.availabilityCreated} cbAvailabilityDelete={this.availabilityDelete} />
+                      </Grid>
+                  </Grid>
+              </Layout>
+              <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
+                  <Grid item xs={2} style={{textAlign:"center"}}>
+                      <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                          <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}/></p></a>
+                      </Link>
+                  </Grid>
+                  <Grid item xs={2} style={{textAlign:"center"}}>
+                      <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                          <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
+                      </a></Link>
+                  </Grid>
+                  <Grid item xs={2} style={{textAlign:"center"}}>
+                      <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                          <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
+                      </a></Link>
+                  </Grid>
+                  <Grid item xs={2} style={{textAlign:"center",zIndex:999, borderBottom: '3px solid #4fbdd7'}}>
+                      <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+                          <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
+                      </a></Link>
+                  </Grid>
+                  <Grid item xs={2} style={{textAlign:"center"}}>
+                      <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                          <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
+                      </a></Link>
+                  </Grid>
+              </Grid>
+              <Footer/>
+          </Fragment>
         );
     };
 }
-
-
-
 export default withStyles(styles)(myAvailabilities);
 
 

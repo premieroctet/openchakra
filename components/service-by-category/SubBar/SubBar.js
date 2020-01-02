@@ -5,7 +5,9 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-const url = "https://myalfred.hausdivision.com/";
+
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
   grow: {

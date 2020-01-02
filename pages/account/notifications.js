@@ -26,48 +26,39 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             display:'none'
         }
-    }
-
-   ,hidelg: {
+    },
+    hidelg: {
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-        
     },
-    trigger:{ 
-    [theme.breakpoints.down('sm')]: {
-    marginTop: -10,
-    width: '100%', 
-    marginLeft:'0px',
-    height:'30px', 
-    backgroundColor:'#2FBCD3',
-    
-    display:'block',
-    transition: 'display 0.7s',
-    borderRadius:'5px',
-    '&:focus': {
-    display:'none',
-    transition: 'display 0.7s',
-
-       }
-     }
-
-}
-
-    ,toggle: {
-        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-        transition: 'margin-left 0.7s',
-       
-        '&:hover': {
-            marginLeft:'0px',
+    trigger: {
+        [theme.breakpoints.down('sm')]: {
+            marginTop: -10,
+            width: '100%',
+            marginLeft: '0px',
+            height: '30px',
+            backgroundColor: '#2FBCD3',
+            display: 'block',
+            transition: 'display 0.7s',
+            borderRadius: '5px',
+            '&:focus': {
+                display: 'none',
+                transition: 'display 0.7s',
+            }
+        }
+    },
+    toggle: {
+        [theme.breakpoints.down('sm')]:{
+            marginLeft:'-75px',
             transition: 'margin-left 0.7s',
-            boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
+            '&:hover': {
+                marginLeft:'0px',
+                transition: 'margin-left 0.7s',
+                boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
              }
-      }  
+        }
     }
-
-
 });
 
 class notifications extends React.Component {
@@ -95,8 +86,6 @@ class notifications extends React.Component {
     }
 
     componentDidMount() {
-        document.body.style.overflow = 'auto';
-
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
@@ -110,22 +99,16 @@ class notifications extends React.Component {
                 this.setState({rappel_email: user.notifications_rappel.email,
                                      rappel_push: user.notifications_rappel.push,
                                      rappel_sms: user.notifications_rappel.sms});
-
                 this.setState({promotions_email: user.notifications_promotions.email,
                     promotions_push: user.notifications_promotions.push,
                     promotions_sms: user.notifications_promotions.sms,
                     promotions_phone: user.notifications_promotions.phone});
-
                 this.setState({community_email: user.notifications_community.email,
                     community_push: user.notifications_community.push,
                     community_sms: user.notifications_community.sms});
-
                 this.setState({assistance_email: user.notifications_assistance.email,
                     assistance_push: user.notifications_assistance.push,
                     assistance_sms: user.notifications_assistance.sms});
-
-
-
             })
             .catch(err => {
                     if(err.response.status === 401 || err.response.status === 403) {
@@ -166,7 +149,6 @@ class notifications extends React.Component {
             .catch();
     };
 
-
     render() {
         const {classes} = this.props;
         const {user} = this.state;
@@ -176,10 +158,8 @@ class notifications extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
-                         
-                         <div className={classes.trigger}></div>
+                         <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/notifications'}>
@@ -217,7 +197,7 @@ class notifications extends React.Component {
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -258,7 +238,7 @@ class notifications extends React.Component {
                                         <div style={{padding:'30px', lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                                
+
                                             </a>
                                         </div>
                                     </Link>
@@ -308,8 +288,6 @@ class notifications extends React.Component {
 
                             </Grid>
                         </Grid>
-
-
                         <Grid item xs={9} style={{paddingLeft: 55}}>
                             <Grid container>
                                 <Grid container>
@@ -371,7 +349,6 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                             </Grid>
-
                             <Grid container>
                                 <Grid item xs={12}>
                                     <h2 style={{fontWeight: '100',marginBotto:0}}>Rappel</h2>
@@ -379,8 +356,6 @@ class notifications extends React.Component {
                                 <Grid item xs={12} md={6}>
                                     <p style={{marginTop:0}}>
                                         Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et d’autres rappels relatifs à vos activités sur My-Alfred.
-
-
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
@@ -440,8 +415,6 @@ class notifications extends React.Component {
                                     <p style={{marginTop:0}}>
                                         Recevez des coupons, des informations promotionnelles, des enquêtes, et des informations de la part de My-Alfred
                                         et de ses partenaires.
-
-
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
@@ -506,7 +479,6 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                             </Grid>
-
                             <Grid container>
                                 <Grid item xs={12}>
                                     <h2 style={{fontWeight: '100',marginBotto:0}}>Politique & communauté </h2>
@@ -514,8 +486,6 @@ class notifications extends React.Component {
                                 <Grid item xs={12} md={6}>
                                     <p style={{marginTop:0}}>
                                         Recevez des nouvelles sur les réglementations liées aux prestations de services
-
-
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
@@ -566,23 +536,18 @@ class notifications extends React.Component {
                                     </Grid>
                                 </Grid>
                             </Grid>
-
                             <Grid container>
                                 <Grid item xs={12}>
                                     <h2 style={{fontWeight: '100',marginBotto:0}}>Assistance du compte </h2>
                                 </Grid>
                                 <Grid item xs={12} md={6}>
                                     <p style={{marginTop:0}}>
-
-                                            Nous devrons peut-être vous envoyer des messages concernant votre compte. Vos réservations de services,
+                                        Nous devrons peut-être vous envoyer des messages concernant votre compte. Vos réservations de services,
                                         des informations légales,
                                         des questions de sécurité et de confidentialité, et pour répondre à vos demandes adressées à notre assistance
                                         utilisateur.
                                         Pour votre sécurité, vous ne pouvez pas désactiver les notifications par email et nous pourrions vous
                                         contacter par téléphone ou d’autres moyens si besoin.
-
-
-
                                     </p>
                                 </Grid>
                                 <Grid container className={classes.item}>
@@ -637,25 +602,33 @@ class notifications extends React.Component {
                     </Grid>
                     <Grid container style={{marginBottom:20}}>
                         <Grid item xs={8}>
-                            <div style={{display:'flex',justifyContent:'flex-end',marginBottom: '-1.95%',width:'100%',bottom:0,
-                            alignItems:"center",height:60}}>
-                                <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained" color="secondary"
-                                style={{color: 'white',maxHeight:40,marginRight:40}}>
+                            <div style={{
+                                display:'flex',
+                                justifyContent:'flex-end',
+                                marginBottom: '-1.95%',
+                                width:'100%',
+                                bottom:0,
+                                alignItems:"center",
+                                height:60
+                            }}>
+                                <Button
+                                  size={'medium'}
+                                  type={'button'}
+                                  onClick={this.onSubmit}
+                                  variant="contained"
+                                  color="secondary"
+                                  style={{color: 'white',maxHeight:40,marginRight:40}}>
                                     Enregistrer
                                 </Button>
                             </div>
                         </Grid>
-                        <Grid item xs={4}></Grid>
+                        <Grid item xs={4}/>
                     </Grid>
-
                 </Layout>
                 <Footer/>
-
             </Fragment>
         );
     };
 }
-
-
 
 export default withStyles(styles)(notifications);

@@ -110,7 +110,13 @@ const ServiceUserSchema = new Schema({
     status: {
         type: String,
         enum: ['Pro','Particulier']
+    },
+   location: {
+      home   : Boolean,
+      alfred : Boolean,
+      visio  : Boolean,
     }
+
 });
 
 module.exports = ServiceUser = mongoose.model('serviceUser',ServiceUserSchema);

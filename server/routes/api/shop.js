@@ -28,10 +28,11 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
     }
     Shop.findOne({alfred: req.user.id})
         .then(shop => {
-
+            /**
             if(shop !== null) {
                 console.log('Existe déjà');
             } else {
+	    */
                 const shopFields = {};
                 shopFields.alfred = req.user.id;
                 shopFields.booking_request = req.body.booking_request;
@@ -69,7 +70,7 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
 
 
 
-            }
+            //}
         })
 });
 
