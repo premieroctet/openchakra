@@ -1316,7 +1316,7 @@ class Form extends React.Component {
                                                                 .then(res => {
                                                                     let servCompObj = { 
                                                                         CategoryLabel : res.data.category.label,
-                                                                        location: res.data.location,
+
                                                                         serviceId: res.data._id, 
                                                                         serviceLabel: res.data.label,
                                                                         descService: '', 
