@@ -3,14 +3,9 @@ import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { Typography } from '@material-ui/core';
 
@@ -158,7 +153,6 @@ class transactions extends React.Component {
                 this.setState({user: res.data});
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
@@ -170,13 +164,13 @@ class transactions extends React.Component {
             .then(res => {
                 this.setState({paid: res.data})
             })
-            .catch(err => console.log(err));
+            .catch();
 
         axios.get(url+'myAlfred/api/booking/account/paidSoon')
             .then(res => {
                 this.setState({paidSoon: res.data})
             })
-            .catch(err => console.log(err))
+            .catch()
     }
     handleClicktabs2 =() => {
         this.setState({ tabs: true });
@@ -412,7 +406,7 @@ class transactions extends React.Component {
                                                         <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.alfred.firstname} - {e.date_prestation} - {e.service}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}>
-                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount}€</Typography>
+                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€</Typography>
                                                     </Grid>
                                                 </Grid>
                                             ))}
@@ -429,7 +423,7 @@ class transactions extends React.Component {
                                                     <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.alfred.firstname} - {e.date_prestation} - {e.service}</Typography>
                                                 </Grid>
                                                 <Grid item xs={4}>
-                                                    <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount}€</Typography>
+                                                    <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€</Typography>
                                                 </Grid>
                                             </Grid>
                                         ))}

@@ -5,12 +5,8 @@ import axios from "axios";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
-import Footer from '../../hoc/Layout/Footer/Footer';
 import Footer2 from '../../hoc/Layout/Footer/Footer2';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { toast } from 'react-toastify';
 import Dialog from '@material-ui/core/Dialog';
@@ -103,7 +99,6 @@ class parameters extends React.Component {
 
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
@@ -135,7 +130,7 @@ class parameters extends React.Component {
             .then(() => {
                 toast.info('Compte mis à jour');
             })
-            .catch(err => console.log(err));
+            .catch();
     };
 
     deleteShop = () => {
@@ -153,19 +148,17 @@ class parameters extends React.Component {
                                         Router.push('/login');
 
                                     })
-                                    .catch(error => console.log(error));
+                                    .catch();
 
                             })
-                            .catch(err => console.log(err));
+                            .catch();
 
 
                     })
-                    .catch(err => console.log(err));
+                    .catch();
                 axios.delete(url+'myAlfred/api/availability/currentAlfred')
-                    .then(() => {
-                        console.log('ok')
-                    })
-                    .catch(error => console.log(error));
+                    .then()
+                    .catch();
 
 
 
@@ -184,18 +177,16 @@ class parameters extends React.Component {
                                     localStorage.removeItem('token');
                                     Router.push('/');
                                 })
-                                .catch(err => console.log(err));
+                                .catch();
                         })
-                        .catch(err => console.log(err));
+                        .catch();
 
 
                 })
-                .catch(err => console.log(err));
+                .catch();
             axios.delete(url+'myAlfred/api/availability/currentAlfred')
-                .then(() => {
-                    console.log('ok')
-                })
-                .catch(error => console.log(error));
+                .then()
+                .catch();
         } else {
             axios.put(url+'myAlfred/api/users/current/delete')
                 .then(() => {
@@ -204,7 +195,7 @@ class parameters extends React.Component {
                     localStorage.removeItem('token');
                     Router.push('/');
                 })
-                .catch(err => console.log(err));
+                .catch();
         }
 
 

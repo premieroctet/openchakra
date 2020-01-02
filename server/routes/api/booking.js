@@ -363,23 +363,17 @@ function getAccount(id){
 
 }
 
-/*new CronJob('0 0 6 * * *', function() {
-    const date = moment().format('DD-MM-YYYY');
+/*new CronJob('0 0 5 * * *', function() {
+    const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
     Booking.find({status: 'Confirmée',paid:false})
         .populate('user')
         .populate('alfred')
         .then(booking => {
             booking.forEach(b => {
-                const end_date = b.end_date.split('/');
-                const day = end_date[0];
-                const month = end_date[1];
-                const year = end_date[2];
-                const end = moment(year+'-'+month+'-'+day+'T00:00:00.000Z');
-                const newDate = moment(end).add(1,'days');
-                const isoDate = moment(newDate).format('DD-MM-YYYY');
-                if(moment(date).isSame(isoDate)){
+                const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
+                if(moment(date).isSameOrAfter(end_date)){
                    b.status = 'Terminée';
-                   //b.save().then().catch();
+                   b.save().then().catch();
                    const amount = b.amount;
                    const id_mangopay_user = b.user.id_mangopay;
                    const id_mangopay_alfred = b.alfred.id_mangopay;
@@ -449,10 +443,10 @@ new CronJob('0 0 5 * * *', function() {
             booking.forEach(b => {
                 const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
                 if (moment(date).isSameOrAfter(end_date)) {
-                    console.log('is same or after');
 
                     b.status = 'Terminée';
                     b.paid = true;
+                    b.date_payment = moment();
                     b.save().then().catch();
                 }
             })

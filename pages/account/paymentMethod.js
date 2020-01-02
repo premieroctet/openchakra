@@ -8,9 +8,6 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import NumberFormat from 'react-number-format';
 import Dialog from "@material-ui/core/Dialog";
@@ -26,12 +23,6 @@ import {
     formatFormData,
   } from '../../components/utils';
 import '../../static/creditcards.css';
-
-
-
-
-
-
 
 moment.locale('fr');
 
@@ -138,7 +129,6 @@ class paymentMethod extends React.Component {
                 this.setState({name: this.state.userName});
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
@@ -406,9 +396,9 @@ class paymentMethod extends React.Component {
                                 {cards.length ?
 
                                     cards.map((e,index) => (
-                                        <React.Fragment>
+                                        <React.Fragment key={index}>
                                             {e.Active.toString() == "true" ? 
-                                            <Grid item key={index} style={{position: 'relative', margin: '20px'}}>
+                                            <Grid item  style={{position: 'relative', margin: '20px'}}>
                                                 <Cards
                                                     expiry={e.ExpirationDate}
                                                     focused={this.state.focus}

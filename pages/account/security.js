@@ -2,7 +2,6 @@ import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
-import Typography from "@material-ui/core/Typography";
 import moment from 'moment';
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -98,9 +97,12 @@ class security extends React.Component {
 
 
             })
-            .catch(err =>
-                console.log(err)
-            );
+            .catch(err => {
+                if(err.response.status === 401 || err.response.status === 403) {
+                    localStorage.removeItem('token');
+                    Router.push({pathname: '/login'});
+                }
+            });
     }
 
     onChange = e => {
@@ -110,7 +112,7 @@ class security extends React.Component {
 
         } else {
             this.setState({testpremier: false})
-        };
+        }
     };
 
     onChangeNewPassword = e => {
@@ -118,7 +120,7 @@ class security extends React.Component {
         if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")){
             this.setState({newPassword: e.target.value});
         }
-    }
+    };
 
    onChangeNewPassword2 = e => {
         this.setState({ [e.target.name]: e.target.value });
@@ -131,7 +133,7 @@ class security extends React.Component {
             this.setState({check: true});
             this.setState({checkbuttonvalidate : false});
         }
-    }
+    };
 
     onClick1 = () => {
         if(this.state.newPassword === this.state.newPassword2){
@@ -141,7 +143,7 @@ class security extends React.Component {
             this.setState({check: true});
             this.setState({checkbuttonvalidate : false});
         }
-    }
+    };
  
 
     onSubmit = e => {
@@ -154,20 +156,8 @@ class security extends React.Component {
                 toast.info('Mot de passe modifié');
                 setTimeout(() => window.location.reload(), 2000);
             })
-            .catch(err =>
-                console.log(err)
-            );
+            .catch();
     };
-
-
-
-
-
-
-
-
-
-
 
     render() {
         const {classes} = this.props;
@@ -341,14 +331,8 @@ class security extends React.Component {
 
                                         />
                                     </Grid>
-
-                                    {/*test pour la validation*/}
-                                    {/*{this.state.testpremier ? <p>c'est remplis </p> : <p>c'est pas remplis</p>}*/}
-
-
                                     <Grid item xs={12} md={4}>
                                         <TextField
-                                            id="standard-with-placeholder"
                                             margin="normal"
                                             style={{width:'100%'}}
                                             label={"Nouveau mot de passe"}
@@ -363,7 +347,6 @@ class security extends React.Component {
 
                                     <Grid item xs={12} md={4}>
                                         <TextField
-                                            id="standard-with-placeholder"
                                             margin="normal"
                                             label={"Répéter le mot de passe"}
                                             placeholder={"Répéter le mot de passe"}

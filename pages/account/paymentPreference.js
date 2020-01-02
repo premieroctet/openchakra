@@ -18,10 +18,6 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 
 
-
-
-
-
 moment.locale('fr');
 
 const { config } = require('../../config/config');
@@ -108,7 +104,6 @@ class paymentPreference extends React.Component {
 
                 })
                 .catch(err => {
-                        console.log(err);
                         if (err.response.status === 401 || err.response.status === 403) {
                             localStorage.removeItem('token');
                             Router.push({pathname: '/login'})
@@ -150,7 +145,6 @@ class paymentPreference extends React.Component {
       axios.post(url+'myAlfred/api/payment/bankAccount',data)
           .then(res => {
               toast.info('RIB ajouté');
-              //this.setState({haveAccount: true});
 
               this.setState({clickAdd: false});
               axios.get(url+'myAlfred/api/payment/activeAccount')
@@ -162,9 +156,7 @@ class paymentPreference extends React.Component {
                   })
 
           })
-          .catch(err => {
-              console.log(err);
-          })
+          .catch()
     };
 
     deleteAccount(id){
@@ -173,7 +165,6 @@ class paymentPreference extends React.Component {
         };
         axios.put(url+'myAlfred/api/payment/account',data)
             .then(() => {
-                //this.handleClose();
                 toast.error('Compte bancaire supprimé');
                 this.refresh();
             })
@@ -386,7 +377,6 @@ class paymentPreference extends React.Component {
                                                 </Grid>
                                                 <Grid item xs={12}>
                                                     <TextField
-                                                        id="outlined-name"
                                                         style={{width: '100%'}}
                                                         value={this.state.bic}
                                                         name={'bic'}
