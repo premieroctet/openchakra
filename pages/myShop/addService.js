@@ -306,6 +306,7 @@ class Wizard extends React.Component {
                 formData.append('visio',e.location.visio);
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        console.log("FormData is:"+JSON.stringify(formData));
         axios.post(url+'myAlfred/api/serviceUser/add',formData)
           .then(res => {
             const booking_request = values.createShop.booking_request;
@@ -853,7 +854,7 @@ class addService extends React.Component {
       loading: true
     });
     categorie.map((categorie, catInd) => {
-      axios.get(`${url}myAlfred/api/service/all/${categorie.value}`)
+      axios.get(`${url}myAlfred/api/service/all/${categorie.value}/currentAlfred`)
         .then((response) => {
           const services = response.data;
           if (formikCtx.form.values.categories[catInd][categorie.label.replace(/\s/g, '') + 'Services'].length > 0) {
