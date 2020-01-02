@@ -177,23 +177,13 @@ class myBestSellers extends React.Component{
     const {booking} = this.state;
     const card =booking.map(e =>(<Grid item xs={12} sm={6} md={4}> <Card className={classes.card} key={e._id}>
 
-        {/*<CardMedia className={classes.media} image={'../../'+e.prestation.service.picture} title="Coiffure">
-          <div className={classes.darkOverlay}>
-            <Grid container className={classes.avatarContainer}>
-              <Grid container className={classes.gridContainer}>
-                <PermContactCalendar className={classes.whiteLogo} />
-                <FavoriteBorderOutlined className={classes.whiteLogo} />
-              </Grid>
-            </Grid>
-          </div>
-        </CardMedia>*/}
         <CardContent>
           <Typography variant="h6" component="h2">
             {e.service}
           </Typography>
           <Grid container>
             <div>
-              {e.end_date}
+              {moment(e.end_date).format('DD/MM/YYYY')}
             </div>
           </Grid>
           <List>

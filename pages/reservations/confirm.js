@@ -186,7 +186,7 @@ class Confirm extends React.Component {
     const endHour = moment(this.state.hourToSend).format('HH:mm');
 
     const dateObj = { end_date: endDate, end_time: endHour, status: 'Confirmée' };
-    console.log(endDate, endHour)
+
 
     axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
         .then(res => {

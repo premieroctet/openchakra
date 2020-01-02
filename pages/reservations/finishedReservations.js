@@ -5,10 +5,12 @@ import Grid from "@material-ui/core/Grid";
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import Footer from '../../hoc/Layout/Footer/Footer';
-import Typography from '@material-ui/core/Typography'
+import Typography from '@material-ui/core/Typography';
+import moment from 'moment';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
+moment.locale('fr');
 
 const styles = theme => ({
     bigContainer: {
@@ -403,7 +405,7 @@ class FinishedReservations extends React.Component {
                                                     </Grid>
                                                     <Grid item xs={5} md={7}>
                                                         <Typography style={{marginTop: '2%', color: '#5D5D5D'}}>{booking.status} - {booking.alfred.firstname}</Typography>
-                                                        <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
+                                                        <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {moment(booking.time_prestation).format('HH:mm')}</Typography>
                                                         <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
                                                     </Grid>
                                                     <Grid item xs={1} style={{}}>
@@ -431,7 +433,7 @@ class FinishedReservations extends React.Component {
                                                 </Grid>
                                                 <Grid item xs={5} md={7}>
                                                     <Typography style={{marginTop: '2%', color: '#5D5D5D'}}>{booking.status} - {booking.user.firstname}</Typography>
-                                                    <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
+                                                    <Typography style={{color: '#9B9B9B'}}>{booking.date_prestation} - {moment(booking.time_prestation).format('HH:mm')}</Typography>
                                                     <Typography style={{color: '#9B9B9B'}}>{booking.service}</Typography>
                                                 </Grid>
                                                 <Grid item xs={1} style={{}}>

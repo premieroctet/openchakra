@@ -561,7 +561,7 @@ class DetailsReservation extends React.Component {
                             <Typography
                                 style={{ marginTop: "2%", fontSize: "0.8rem" }}
                             >
-                              Réservation coiffure le{" "}
+                              Réservation {bookingObj.service} le{" "}
                               {bookingObj === null
                                   ? null
                                   : bookingObj.date_prestation}

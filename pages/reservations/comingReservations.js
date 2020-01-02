@@ -6,9 +6,11 @@ import { withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import Footer from "../../hoc/Layout/Footer/Footer";
 import Typography from "@material-ui/core/Typography";
+import moment from 'moment';
 
 const { config } = require("../../config/config");
 const url = config.apiUrl;
+moment.locale('fr');
 
 const styles = theme => ({
   bigContainer: {
@@ -617,7 +619,7 @@ class ComingReservations extends React.Component {
                                 </Typography>
                                 <Typography style={{ color: "#9B9B9B" }}>
                                   {booking.date_prestation} -{" "}
-                                  {booking.time_prestation}
+                                  {moment(booking.time_prestation).format('HH:mm')}
                                 </Typography>
                                 <Typography style={{ color: "#9B9B9B" }}>
                                   {booking.service}
@@ -718,7 +720,7 @@ class ComingReservations extends React.Component {
                             </Typography>
                             <Typography style={{ color: "#9B9B9B" }}>
                               {booking.date_prestation} -{" "}
-                              {booking.time_prestation}
+                              {moment(booking.time_prestation).format('HH:mm')}
                             </Typography>
                             <Typography style={{ color: "#9B9B9B" }}>
                               {booking.service}
