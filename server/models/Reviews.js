@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const ReviewsSchema = new Schema({
     content: {
         type: String,
-        required: true
     },
     note_alfred: {
         prestation_quality:{

@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import Link from 'next/link';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 import Button from "@material-ui/core/Button";
@@ -153,7 +152,6 @@ class EvaluateClient extends React.Component {
                 this.setState({user:user});
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
@@ -166,7 +164,7 @@ class EvaluateClient extends React.Component {
                 let service = res.data;
                 this.setState({service: service});
             })
-            .catch(err => console.log(err))
+            .catch()
     }
 
     changeRating( newRating, name ) {
@@ -185,6 +183,10 @@ class EvaluateClient extends React.Component {
         this.setState({
             relational: newRating
         });
+    }
+
+    back(){
+        Router.back();
     }
 
     evaluate() {
@@ -347,9 +349,9 @@ class EvaluateClient extends React.Component {
 
                                 <br></br>
 
-                                <Grid style={{float:'left'}} item xs={6}> <Button  color={"white"} variant={"contained"} style={{color:"gray", backgroundColor:'white', fontSize:'16px', width:"100%", paddingLeft:'20px', paddingRight:'20px', marginBottom:50, marginRight:20, borderRadius:'20px', textTransform:'capitalize'}}>Retour</Button>
+                                <Grid style={{float:'left'}} item xs={6}> <Button onClick={()=>this.back()}  color={"white"} variant={"contained"} style={{color:"gray", backgroundColor:'white', fontSize:'16px', width:"100%", paddingLeft:'20px', paddingRight:'20px', marginBottom:50, marginRight:20, borderRadius:'20px', textTransform:'capitalize'}}>Retour</Button>
                                 </Grid>
-                                <Grid style={{float:'right'}} item xs={6}> <Button onClick={()=>this.evaluate()}  color={"primary"} variant={"contained"} style={{color:"white", fontSize:'16px', width:"100%", paddingLeft:'20px', paddingRight:'20px', marginBottom:50, marginRight:20, borderRadius:'20px', textTransform:'capitalize'}}>Terminé</Button>
+                                <Grid style={{float:'right'}} item xs={6}> <Button disabled={this.state.accueil ===0 || this.state.accuracy === 0 || this.state.relational === 0 || !this.state.content.trim()} onClick={()=>this.evaluate()}  color={"primary"} variant={"contained"} style={{color:"white", fontSize:'16px', width:"100%", paddingLeft:'20px', paddingRight:'20px', marginBottom:50, marginRight:20, borderRadius:'20px', textTransform:'capitalize'}}>Terminé</Button>
                                 </Grid>
 
 
