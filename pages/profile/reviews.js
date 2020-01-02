@@ -3,20 +3,12 @@ import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import Typography from "@material-ui/core/Typography";
 import StarRatings from 'react-star-ratings';
-
-
-
-
-
 
 moment.locale('fr');
 
@@ -142,12 +134,8 @@ class reviews extends React.Component {
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
-
-
-
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
@@ -160,14 +148,14 @@ class reviews extends React.Component {
                 let reviews = res.data;
                 this.setState({alfredReviews:reviews})
             })
-            .catch(err => console.log(err));
+            .catch();
 
         axios.get(url+'myAlfred/api/reviews/customerReviewsCurrent')
             .then(res => {
                 let reviews = res.data;
                 this.setState({clientReviews:reviews})
             })
-            .catch(err => console.log(err))
+            .catch()
     }
 
     handleClicktabs2 =() => {

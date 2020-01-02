@@ -8,8 +8,6 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Fab from '@material-ui/core/Fab';
-import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -141,7 +139,6 @@ class editPicture extends React.Component {
                 }
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
@@ -178,9 +175,7 @@ class editPicture extends React.Component {
             .then((response) => {
                 toast.info('Photo modifiée');
                 Router.push({pathname:'/profile/editProfile'})
-            }).catch((error) => {
-            console.log(error)
-        });
+            }).catch();
     };
 
     deletePicture = () => {
@@ -190,7 +185,7 @@ class editPicture extends React.Component {
               this.setState({open:false});
               this.componentDidMount();
           })
-          .catch(err => console.log(err));
+          .catch();
     };
 
 

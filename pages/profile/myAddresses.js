@@ -8,7 +8,6 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import AlgoliaPlaces from 'algolia-places-react';
@@ -103,7 +102,6 @@ class myAddresses extends React.Component {
             new_address: '',
             new_city: '',
             new_zip_code: '',
-            //floor: '',
             note: '',
             phone: '',
             lat: '',
@@ -117,17 +115,11 @@ class myAddresses extends React.Component {
             edit_address: '',
             edit_city: '',
             edit_zip_code: '',
-            //edit_floor: '',
             edit_note: '',
             edit_phone: '',
             edit_lat: '',
             edit_lng: '',
             id_address: '',
-
-
-
-
-
         };
         this.onChangeAlgolia=this.onChangeAlgolia.bind(this);
         this.onChangeAlgolia2=this.onChangeAlgolia2.bind(this);
@@ -156,7 +148,6 @@ class myAddresses extends React.Component {
 
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
@@ -198,7 +189,7 @@ class myAddresses extends React.Component {
               this.setState({address_selected: result,edit_label: result.label,edit_address:result.address,edit_zip_code:result.zip_code,
               edit_city:result.city, edit_note: result.note,edit_phone: result.phone_address,edit_lat: result.lat,edit_lng: result.lng});
           })
-          .catch(err => console.log(err));
+          .catch();
     };
 
     onSubmit = e => {
@@ -215,9 +206,7 @@ class myAddresses extends React.Component {
                 toast.info('Adresse principale modifiée');
                 Router.push({pathname:'/profile/myAddresses'})
             })
-            .catch(err =>
-                console.log(err)
-            );
+            .catch();
     };
 
     onSubmit2 = e => {
@@ -238,7 +227,7 @@ class myAddresses extends React.Component {
                 this.setState({clickAdd: false});
                 this.componentDidMount();
             })
-            .catch(err => console.log(err))
+            .catch()
 
     };
 
@@ -262,25 +251,18 @@ class myAddresses extends React.Component {
               this.componentDidMount();
 
           })
-          .catch(err => console.log(err));
+          .catch();
     };
 
     deleteAddress = (id) => {
-        //if(confirm('Etes vous sûr de vouloir supprimer cette adresse ?')) {
             axios.delete(url+'myAlfred/api/users/profile/address/'+id)
                 .then(() => {
                     toast.error('Adresse supprimée');
                     this.setState({clickEdit: false,open:false,id_address:''});
                     this.componentDidMount();
                 })
-                .catch(err => console.log(err));
-       // }
-
+                .catch();
     };
-
-
-
-
 
 
 

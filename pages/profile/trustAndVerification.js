@@ -243,14 +243,8 @@ class trustAndVerification extends React.Component {
 
                         })
                 }
-
-
-
-
-
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
@@ -327,9 +321,7 @@ class trustAndVerification extends React.Component {
                 this.setState({creation_date: result});
 
             })
-            .catch(err => {
-                console.log(err);
-            })
+            .catch()
 
     }
 
@@ -350,9 +342,7 @@ class trustAndVerification extends React.Component {
                 this.componentDidMount();
 
 
-            }).catch((error) => {
-            console.log(error)
-        });
+            }).catch();
     };
 
     addVerso() {
@@ -367,9 +357,7 @@ class trustAndVerification extends React.Component {
             .then((response) => {
                 toast.info('Carte d\'identité ajoutée');
 
-            }).catch((error) => {
-            console.log(error)
-        });
+            }).catch();
     }
 
     onDocumentLoadSuccess = ({ numPages }) => {
@@ -381,7 +369,7 @@ class trustAndVerification extends React.Component {
             .then(() => {
                 toast.info('Email envoyé');
             })
-            .catch(err => console.log(err));
+            .catch();
     };
 
     sendSms = () => {
@@ -416,9 +404,7 @@ class trustAndVerification extends React.Component {
                     .catch()
 
             })
-            .catch(err =>
-                console.log(err)
-            );
+            .catch();
     }
 
     deleteRecto() {
@@ -429,7 +415,7 @@ class trustAndVerification extends React.Component {
                 setTimeout(() => window.location.reload(), 2000);
 
             })
-            .catch(err => console.log(err));
+            .catch();
 
     }
 
@@ -565,7 +551,7 @@ class trustAndVerification extends React.Component {
 
                         <Grid item xs={9} style={{paddingLeft: 55, }}>
                             <Grid container className={classes.divresp}>
-                                <h1 style={{color: 'dimgray',fontWeight: '100'}}>Confiance & vérification</h1>
+                                <h1 style={{color: 'dimgray',fontWeight: '100'}}>Confiance et vérification</h1>
                             </Grid>
                             <Grid container className={classes.divresp}>
                                 <Grid item xs={12} style={{marginTop: 20}}>
@@ -739,22 +725,6 @@ class trustAndVerification extends React.Component {
                                                     </Grid>
                                             )}
 
-                                        {/*<Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center"}}>
-                                        <label style={{display: 'inline-block',textAlign:"center" }} className="forminputs">
-                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
-                                            <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
-                                                   onChange={this.onChangeVerso}
-                                                   className="form-control" accept=".jpg,.jpeg,.png,.pdf"
-                                            />
-                                        </label>
-
-                                    </Grid>
-                                        <Thumb file={this.state.id_verso} />
-                                        <Grid item xs={6}>
-                                            <Button type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
-                                            Enregistrer
-                                            </Button>
-                                        </Grid>*/}
                                         {this.state.haveCard && this.state.haveCardV ?
                                             <Grid item xs={12}>
 
@@ -849,31 +819,6 @@ class trustAndVerification extends React.Component {
                                     </form>
                                 </Grid>
 
-                                {/*<Grid item xs={6} style={{borderLeft:'0.2px solid lightgrey',height:"max-content",paddingLeft:20}}>
-
-                                    {this.state.haveCard ?
-                                        <div style={{marginTop: 20,width:'80%',display:'flex'}}>
-                                            {ext ==='pdf' ?
-                                                <Document
-                                                file={`../${this.state.card.recto}`}
-                                                onLoadSuccess={this.onDocumentLoadSuccess}
-                                                >
-                                                <Page pageNumber={this.state.pageNumber} width={250} />
-                                                </Document>
-                                                :
-                                                <img src={`../${this.state.card.recto}`} alt={'recto'} width={200}/>
-
-                                            }
-                                            {user.id_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :
-                                                <img src={'../static/success.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
-                                            }
-                                        </div>
-
-                                        : null}
-
-
-
-                                </Grid>*/}
                             </Grid>
                             {alfred ?
                                 <React.Fragment><Grid container>

@@ -8,20 +8,12 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import {FormLabel} from "@material-ui/core";
 import Select2 from 'react-select';
-import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
-import Birthday from '@material-ui/icons/CakeOutlined'
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
-import {number} from "prop-types";
 registerLocale('fr', fr);
 
 
@@ -32,11 +24,6 @@ moment.locale('fr');
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
-
-const ExampleCustomInput = ({ value,onClick}) => (
-    <TextField style={{width:'100%'}} value={value} label={'Date de naissance'} variant={"outlined"} className="example-custom-input" onClick={onClick}/>
-
-);
 
 const styles = theme => ({
     bigContainer: {
@@ -135,12 +122,6 @@ class editProfile extends React.Component {
             birthday: null,
             dpDate: moment().toDate(),
             ipDate: moment().format(momentDateFormat)
-
-
-
-
-
-
         };
         this.handleChangeLanguages = this.handleChangeLanguages.bind(this);
 
@@ -168,7 +149,6 @@ class editProfile extends React.Component {
 
             })
             .catch(err => {
-                    console.log(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
@@ -216,17 +196,8 @@ class editProfile extends React.Component {
                 this.componentDidMount();
 
             })
-            .catch(err => console.log(err))
+            .catch()
     };
-
-
-
-
-
-
-
-
-
 
 
     render() {
