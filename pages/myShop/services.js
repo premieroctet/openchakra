@@ -69,6 +69,7 @@ const styles = theme => ({
         display:'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        marginBottom: '1%',
         [theme.breakpoints.down('sm')]: {
             width:'100%',
         }
