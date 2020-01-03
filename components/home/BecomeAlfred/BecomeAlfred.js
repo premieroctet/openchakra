@@ -10,6 +10,8 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import Link from 'next/link';
+const jwt = require('jsonwebtoken');
+
 const {config} = require('../../../config/config');
 const url = config.apiUrl;
 
@@ -108,17 +110,29 @@ class becomeAlfred extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      alfred: []
+      logged:false,
+      alfred: false,
+
     }
   }
 
   componentDidMount() {
-    axios.get(url+'myAlfred/api/users/home/alfred')
-        .then(response => {
-          let alfred = response.data;
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.setState({logged:true});
+      const token2 = localStorage.getItem('token').split(' ')[1];
+      const decode = jwt.decode(token2);
+      this.setState({alfred: decode.is_alfred});
 
-          this.setState({alfred:alfred})
+      axios.defaults.headers.common['Authorization'] = token;
+      axios
+        .get(url+'myAlfred/api/users/current')
+        .then(res => {
+          let user = res.data;
+          this.setState({user:user, alfred:user.is_alfred});
         })
+        .catch(err => console.log(err))
+    }
   }
 
   render() {
@@ -145,7 +159,7 @@ class becomeAlfred extends React.Component{
                       répertoriez vos services, indiquez vos disponibilités,
                       vos tarifs et profitez d’un complément de revenu !
                     </Typography>
-                    <Link href={'/login'}>
+                    <Link href={this.state.logged && this.state.alfred ?  '/myShop/services'  : this.state.logged && !this.state.alfred ? '/becomeAlfredForm' : '/signup'}>
                       <a style={{textDecoration:'none'}}>
                     <Button variant="contained" color={"primary"} className={classes.margin}>
                       Créer ma boutique

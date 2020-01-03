@@ -31,7 +31,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            'logged':false
+            logged:false
         }
     }
 
@@ -39,7 +39,7 @@ class Home extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const token = localStorage.getItem('token');
         if (token) {
-            this.setState({'logged':true})
+            this.setState({logged:true})
         }
         console.clear();
     }
