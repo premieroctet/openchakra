@@ -306,6 +306,7 @@ class Wizard extends React.Component {
                 formData.append('visio',e.location.visio);
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        console.log("FormData is:"+JSON.stringify(formData));
         axios.post(url+'myAlfred/api/serviceUser/add',formData)
           .then(res => {
             const booking_request = values.createShop.booking_request;
@@ -373,7 +374,7 @@ class Wizard extends React.Component {
                       })
                     axios.put(url+'myAlfred/api/users/users/becomeAlfred')
                       .then(res => {
-                        toast.info('Boutique créée avec succès');
+                        toast.info('Service ajouté avec succès');
                         Router.push('/myShop/services');
 
                       })
@@ -818,7 +819,7 @@ class addService extends React.Component {
       .catch(error => {
         console.log(error);
       });
-    axios.get(url+'myAlfred/api/category/all')
+    axios.get(url+'myAlfred/api/category/currentAlfred')
       .then(response => {
         let categories = response.data;
         if (categories === null) {

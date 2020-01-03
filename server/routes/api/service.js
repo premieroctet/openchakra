@@ -12,6 +12,7 @@ router.get('/test',(req, res) => res.json({msg: 'Service Works!'}) );
 // View all service
 router.get('/all',(req,res)=> {
 
+   console.log("All services");
         Service.find()
             .sort({'label':1})
             .populate('tags')
