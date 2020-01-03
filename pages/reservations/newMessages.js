@@ -2,10 +2,8 @@ import React, { Fragment } from "react";
 import Link from "next/link";
 import Layout from "../../hoc/Layout/Layout";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import Footer from "../../hoc/Layout/Footer/Footer";
-import { toast } from "react-toastify";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import _ from 'lodash';
@@ -209,26 +207,17 @@ class NewMessages extends React.Component {
     });
     axios.get(url + 'myAlfred/api/chatRooms/nonViewedMessages')
       .then(res => {
-        console.log(res.data)
         this.setState({
           alfredReservations: res.data[0],
           userReservations: res.data[1]
         })
       })
-    axios
-      .get(
-        url+"myAlfred/api/users/users/5d384b49d06f1a2b5c1addd4"
-      )
-      .then(res => {
-        console.log(res.data);
-        this.setState({ idRecipient: res.data._id });
-      });
+
 
     axios
       .get(url+"myAlfred/api/chatRooms/userChatRooms")
       .then(res => {
         this.setState({ chatrooms: res.data });
-        console.log(res.data);
       });
   }
   handleClicktabs2 = () => {
@@ -239,20 +228,6 @@ class NewMessages extends React.Component {
     this.setState({ tabs: false });
   };
 
-  createChat() {
-    axios
-      .post("http://localhost:3122/myAlfred/api/chatRooms/addAndConnect", {
-        emitter: this.state.idEmitter,
-        recipient: this.state.idRecipient
-      })
-      .then(res => {
-        console.log(res);
-        this.componentDidMount();
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
 
   render() {
     const { classes } = this.props;

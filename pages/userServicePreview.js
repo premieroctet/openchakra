@@ -194,7 +194,7 @@ class userServices extends React.Component {
     localStorage.removeItem("recipient");
 
     let isToday = moment(this.state.date).isSame(moment(new Date()), 'day');
-    console.log(isToday);
+
     this.setState({
       isToday: isToday
     });

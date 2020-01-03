@@ -14,7 +14,7 @@ import moment from "moment";
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
 import io from "socket.io-client";
-import Tooltip from "@material-ui/core/Tooltip";
+
 
 moment.locale("fr");
 
@@ -227,7 +227,6 @@ class DetailsReservation extends React.Component {
         this.socket.emit("booking", this.state.bookingObj._id)
       })
       this.socket.on("displayStatus", data => {
-        console.log(data);
         this.setState({bookingObj: data})
       })
     });

@@ -2,10 +2,8 @@ import React, { Fragment } from "react";
 import Link from "next/link";
 import Layout from "../../hoc/Layout/Layout";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import Footer from "../../hoc/Layout/Footer/Footer";
-import { toast } from "react-toastify";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import _ from 'lodash';
@@ -238,20 +236,7 @@ class Messages extends React.Component {
     this.setState({ tabs: false });
   };
 
-  createChat() {
-    axios
-      .post("http://localhost:3122/myAlfred/api/chatRooms/addAndConnect", {
-        emitter: this.state.idEmitter,
-        recipient: this.state.idRecipient
-      })
-      .then(res => {
-        console.log(res);
-        this.componentDidMount();
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
+
 
   render() {
     const { classes } = this.props;

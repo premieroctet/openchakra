@@ -136,12 +136,10 @@ class Verypractical extends React.Component {
                     this.setState({service: service})
 
                   })
-                  .catch(err => console.log(err))
+                  .catch()
             }
         )
-        .catch(error => {
-          console.log(error)
-        });
+        .catch();
   }
 
   render() {

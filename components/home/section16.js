@@ -8,6 +8,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
+import Link from 'next/link';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -99,12 +100,10 @@ class section16 extends React.Component {
                             this.setState({service: service})
 
                         })
-                        .catch(err => console.log(err))
+                        .catch()
                 }
             )
-            .catch(error => {
-                console.log(error)
-            });
+            .catch();
     }
 
     render() {

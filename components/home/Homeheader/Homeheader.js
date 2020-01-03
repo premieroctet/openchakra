@@ -4,14 +4,10 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { Typography } from '@material-ui/core';
-import Link from 'next/link';
 import Router from 'next/router';
 import axios from 'axios';
-import MenuItem from "@material-ui/core/MenuItem";
-import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import DatePicker, {registerLocale} from "react-datepicker";
 import AlgoliaPlaces from "algolia-places-react";
-import Select from 'react-select';
 import fr from 'date-fns/locale/fr';
 import moment from 'moment';
 registerLocale('fr', fr);
@@ -170,12 +166,6 @@ const styles = theme => ({
   },
 });
 
-const Input2 = ({value,  onClick }) => (
-    <Button value={value} color={"inherit"} variant={"outlined"} style={{color:"gray"}} className="example-custom-input" onClick={onClick}>
-      {value}
-    </Button>
-);
-
 class Homeheader extends React.Component {
 
   constructor(props) {
@@ -198,7 +188,7 @@ class Homeheader extends React.Component {
         .then(res => {
           this.setState({allService: res.data})
         })
-        .catch(err => console.log(err))
+        .catch()
   }
 
 
@@ -243,10 +233,7 @@ class Homeheader extends React.Component {
   render() {
     const {classes} = this.props;
     const {popopen} = this.state;
-    const options = this.state.allService.map(service => ({
-      label: service.label,
-          value: service._id
-    }));
+
 
     return (
         <Fragment>
