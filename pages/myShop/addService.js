@@ -819,7 +819,7 @@ class addService extends React.Component {
       .catch(error => {
         console.log(error);
       });
-    axios.get(url+'myAlfred/api/category/all')
+    axios.get(url+'myAlfred/api/category/currentAlfred')
       .then(response => {
         let categories = response.data;
         if (categories === null) {
