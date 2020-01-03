@@ -121,9 +121,9 @@ router.get('/endConfirmedBookings', passport.authenticate('jwt', { session : fal
 
             const hourBooking = parseInt(b.end_time.slice(0,2));
             if (moment().isAfter(date)) {
-                console.log('enter first cond');
+
                 if (hourNow >= hourBooking) {
-                    console.log('enter second cond');
+
                     Booking.findByIdAndUpdate(b._id, { status: 'Terminée' }, { new: true })
                         .then(newB => {
                             res.json(newB);
@@ -136,7 +136,7 @@ router.get('/endConfirmedBookings', passport.authenticate('jwt', { session : fal
 
 router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
     const random = crypto.randomBytes(Math.ceil(5/2)).toString('hex').slice(0,5);
-    console.log(req.body);
+
     const bookingFields = {};
     bookingFields.reference = req.body.reference + '_' + random;
     bookingFields.service = req.body.service;

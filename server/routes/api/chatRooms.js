@@ -49,38 +49,6 @@ router.get('/userChatRoom/:id', passport.authenticate('jwt', {session: false}), 
     })
 })
 
-// Add chatRoom and connect users to it
-/*router.post('/addAndConnect', (req, res) => {
-  const emitter = mongoose.Types.ObjectId(req.body.emitter);
-  const recipient = mongoose.Types.ObjectId(req.body.recipient);
-  const random = uuidv4();
-  ChatRooms.findOne({ attendees: {$all: [ req.body.emitter, req.body.recipient ]}})
-    .then(users => {
-      if (!users) {
-        chatRoomFields = {};
-        chatRoomFields.name = 'room-' + random;
-        chatRoomFields.emitter = emitter;
-        chatRoomFields.recipient = recipient;
-
-        const newChat = new ChatRooms(chatRoomFields);
-        newChat.save().then(chat => res.json(chat)).catch(err => console.log(err));
-      }
-
-      if (users) {
-        return res.status(400).json({msg: 'chat déjà existant'})
-      }
-    })
-    .catch(err => console.log(err));
-})
-
-router.put('/saveMessages/:id', (req, res) => {
-  ChatRooms.findByIdAndUpdate(req.params.id, { messages: req.body.messages })
-    .then(chatroom => {
-      if (!chatroom) return res.status(404).json({msg: 'no chatroom found'})
-      if (chatroom) return res.json();
-    })
-    .catch(err => console.log(err));
-})*/
 
 // Add chatRoom and connect users to it
 router.post('/addAndConnect', (req, res) => {
@@ -121,7 +89,6 @@ router.put('/viewMessages/:id', passport.authenticate('jwt', {session: false}), 
     .then(chatroom => {
       chatroom.messages.forEach(message => {
         if (message.idsender != req.user.id) {
-          console.log(message.idsender, req.user.id);
           message.viewed = true;
         }
       })
@@ -150,7 +117,6 @@ router.get('/nonViewedMessages', passport.authenticate('jwt', { session: false }
     populate: { path: 'user' }
   })
   .then(chatrooms => {
-    console.log(chatrooms);
     let nonReadChats = [[], []]
     chatrooms.forEach(chatroom => {
       for (let i = 0; i < chatroom.messages.length; i++) {
@@ -179,7 +145,6 @@ router.put('/addBookingId/:id', ( req, res ) => {
 })
 
 new CronJob('0 */30 * * * *', function() {
-  console.log('You will see this message 30 minutes');
   ChatRooms.find()
     .populate('emitter')
     .populate('recipient')

@@ -13,8 +13,6 @@ router.get('/test',(req, res) => res.json({msg: 'Availability Works!'}) );
 // access private
 router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
 
-    console.log("Adding availability:"+JSON.stringify(req.body));
-
     const newAvailability = new Availability({user:req.user.id, ...req.body});
     newAvailability.save().then(availability => res.json(availability)).catch(err => console.log(err));
 });
@@ -23,8 +21,6 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
 // update an availability for one user
 // access private
 router.post('/update',passport.authenticate('jwt',{session: false}),(req,res)=> {
-
-    console.log("Updating availability:"+JSON.stringify(req.body));
 
     const newAvailability = new Availability({user:req.user.id, ...req.body});
     newAvailability.delete()
@@ -220,7 +216,6 @@ router.delete('/currentAlfred',passport.authenticate('jwt',{session:false}),(req
 // Delete one availability
 router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
-    console.log("Deleting availability:"+req.params.id);
     Availability.findById(req.params.id)
         .then(availability => {
             availability.remove().then(() => res.json({msg: 'Ok'})).catch(error => console.log(error))

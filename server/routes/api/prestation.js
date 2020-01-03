@@ -103,10 +103,10 @@ router.post('/all/search', (req,res)=> {
 // View all prestations per service and filter
 router.get('/:service/:filter',passport.authenticate('jwt',{session:false}), (req, res) => {
 
-  console.log("Before getting user:"+req.user.id);
+
   let result = User.findById(req.user.id);
   
-  console.log("After getting user:"+Object.keys(result.mongooseCollection));
+
 
   Prestation.find({
     service: req.params.service,
@@ -128,7 +128,7 @@ router.get('/:service/:filter',passport.authenticate('jwt',{session:false}), (re
 // View all prestations per tags
 router.get('/all/tags/:tags',(req,res)=> {
 
-    console.log("Getting prestation/all/tags/:tag");
+
 
     Prestation.find({tags: req.params.tags})
         .sort({'label':1})
@@ -149,7 +149,7 @@ router.get('/all/tags/:tags',(req,res)=> {
 // View one prestation
 router.get('/:id',(req,res)=> {
 
-    console.log("Getting api/prestation/:id");
+
 
     Prestation.findById(req.params.id)
         .populate('category')
