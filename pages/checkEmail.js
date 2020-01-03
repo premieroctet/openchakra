@@ -80,7 +80,7 @@ class checkEmail extends React.Component {
                             </Grid>
                             <Grid item className={classes.responsiveButton}>
                                 <Grid item style={{marginRight:'1%' }}>
-                                    <Link href={'/'}>
+                                    <Link href={'/#register_done'}>
                                         <a style={{textDecoration:'none'}}>
                                             <Button variant={"contained"} color={"primary"} style={{color:"white"}}>Commencez à explorer</Button>
                                         </a>
