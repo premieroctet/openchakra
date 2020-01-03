@@ -879,7 +879,7 @@ class searchLogin extends React.Component {
                                 }
                             </Grid>
                         </Grid>
-                        <Grid container className={classes.respfilter} style={{position: 'sticky', top: '120px', zIndex: 10}}>
+                        <Grid container className={classes.respfilter} style={{position: 'sticky', top: '125px', zIndex: 10}}>
                             <Grid item xs={12} style={{height: 50}}>
                                 <Grid container>
                                     {this.state.clickedstatut ?

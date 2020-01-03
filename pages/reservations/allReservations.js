@@ -399,7 +399,7 @@ class AllReservations extends React.Component {
                                     this.state.userReservations.map(booking => {
                                         return (
                                             <Grid container className={classes.mobilerow} style={{borderBottom: '1px #8281813b solid'}}>
-                                                <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
+                                                <Grid item xs={2} md={1} style={{marginRight: '5%'}}>
                                                     <img src={`../../${booking.alfred.picture}`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
                                                 </Grid>
                                                 <Grid item xs={5} md={7} style={{paddingRight: "5%", paddingLeft: "5%",}}>
@@ -407,7 +407,7 @@ class AllReservations extends React.Component {
                                                     <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
                                                     <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.service}</Typography>
                                                 </Grid>
-                                                <Grid item xs={1} style={{}}>
+                                                <Grid item xs={2} style={{}}>
                                                     <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{booking.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€</Typography>
                                                 </Grid>
                                                 <Grid item xs={2} style={{}}>
@@ -424,7 +424,7 @@ class AllReservations extends React.Component {
                                   this.state.alfredReservations.map(booking => {
                                       return (
                                         <Grid container className={classes.mobilerow} style={{borderBottom: '1px #8281813b solid'}}>
-                                            <Grid item xs={3} md={1} style={{marginRight: '5%'}}>
+                                            <Grid item xs={2} md={1} style={{marginRight: '5%'}}>
                                                 <img src={`../../${booking.user.picture}`} alt={'picture'} style={{width: '80px', height: '80px',borderRadius: '50%', objectFit:'cover'}}></img>
                                             </Grid>
                                             <Grid item xs={5} md={7} style={{paddingRight: "5%", paddingLeft: "5%", fontSize: '0.8rem'}}>
@@ -433,7 +433,7 @@ class AllReservations extends React.Component {
                                                 <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.service}</Typography>
 
                                             </Grid>
-                                            <Grid item xs={1} style={{}}>
+                                            <Grid item xs={2} style={{}}>
                                                 <Typography style={{color: '#4FBDD7', fontWeight: '600', paddingTop: '45%'}}>{(booking.amount - (booking.fees * 2)).toFixed(2)}€</Typography>
                                             </Grid>
                                             <Grid item xs={2} style={{}}>

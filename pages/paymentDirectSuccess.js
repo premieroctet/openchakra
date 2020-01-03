@@ -55,7 +55,7 @@ class paymentDirectSuccess extends React.Component {
                     Router.push({ pathname: "/login" });
                 }
             });
-        axios.put(url +  'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: 'Confirmée'})
+        axios.put(url +  'myAlfred/api/booking/modifyBooking/' + this.props.id, {status: 'Confirmée'})
 
     }
 
