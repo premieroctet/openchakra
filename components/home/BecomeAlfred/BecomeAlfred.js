@@ -187,7 +187,7 @@ class becomeAlfred extends React.Component{
                         vos tarifs et profitez d’un complément de revenu !
                       </Typography>
                     </CardContent>
-                    <Link href={'/becomeAlfredForm'}>
+                    <Link href={this.state.logged && this.state.alfred ?  '/myShop/services'  : this.state.logged && !this.state.alfred ? '/becomeAlfredForm' : '/signup'}>
                       <a style={{textDecoration:'none'}}>
                         <Button variant="contained" color={"primary"} className={classes.margin}>
                           Créer ma boutique
