@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 
 const Service = require('../../models/Service');
+const ServiceUser = require('../../models/ServiceUser');
 
 router.get('/test',(req, res) => res.json({msg: 'Service Works!'}) );
 
@@ -76,7 +77,7 @@ router.get('/:id',(req,res)=> {
 
 });
 
-// @Route GET /myAlfred/api/service/:category
+// @Route GET /myAlfred/api/service/all/:category
 // View all service per category
 router.get('/all/:category',(req,res)=> {
 
@@ -97,28 +98,30 @@ router.get('/all/:category',(req,res)=> {
 
 });
 
-// @Route GET /myAlfred/api/service/:category/currentAlfred
-// View all service per category for current Alfred (i.e. don't display currentAlfred's services)
-router.get('/all/:category/currentAlfred',passport.authenticate('jwt',{session:false}),(req,res)=> {
+// @Route GET /myAlfred/api/service/currentAlfred/:category
+// View all service per category filtered by already provided Alfred's services
+router.get('/currentAlfred/:category', passport.authenticate('jwt',{session:false}), async (req,res)=> {
 
-    console.log("Current user is "+JSON.stringify(req.user.id));
+    let serviceUsers = await ServiceUser.find({user:req.user});
+    serviceUsers = serviceUsers.map(s => s.service);
+    console.log("Count:"+JSON.stringify(serviceUsers));
 
-    Service.find({category: req.params.category})
-      .sort({'label':1})
-      .populate('tags')
-      .populate('equipments')
-      .populate('category')
-      .exec( (err, services) => {
-        console.log(JSON.stringify(services))
-        services.forEach( service => {
-           ServiceUser.findOne({service: service, user: req.user})
-             .then( su => { console.log("Doublon");})
-             .catch( err => { console.log("Pas de doublon"); res.json(service)})
-        } )
-      });
- 
+    Service.find({category: req.params.category, _id : { $nin: serviceUsers}})
+        .sort({'label':1})
+        .populate('tags')
+        .populate('equipments')
+        .populate('category')
+        .then(services => {
+            if(typeof services !== 'undefined' && services.length > 0){
+                res.json(services);
+            } else {
+                return res.status(400).json({msg: 'No service found'});
+            }
+
+        })
+        .catch(err => res.status(404).json({ service: 'No service found:error' }));
+
 });
-
 
 // @Route GET /myAlfred/api/service/all/tags/:tags
 // View all service per tags

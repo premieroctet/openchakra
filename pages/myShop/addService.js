@@ -374,7 +374,7 @@ class Wizard extends React.Component {
                       })
                     axios.put(url+'myAlfred/api/users/users/becomeAlfred')
                       .then(res => {
-                        toast.info('Boutique créée avec succès');
+                        toast.info('Service ajouté avec succès');
                         Router.push('/myShop/services');
 
                       })
@@ -854,7 +854,9 @@ class addService extends React.Component {
       loading: true
     });
     categorie.map((categorie, catInd) => {
-      axios.get(`${url}myAlfred/api/service/all/${categorie.value}/currentAlfred`)
+
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.get(`${url}myAlfred/api/service/currentAlfred/${categorie.value}`)
         .then((response) => {
           const services = response.data;
           if (formikCtx.form.values.categories[catInd][categorie.label.replace(/\s/g, '') + 'Services'].length > 0) {
