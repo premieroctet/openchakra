@@ -8,6 +8,7 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
+import io from "socket.io-client";
 
 
 const { config } = require('../config/config');
@@ -55,7 +56,16 @@ class paymentDirectSuccess extends React.Component {
                     Router.push({ pathname: "/login" });
                 }
             });
-        axios.put(url +  'myAlfred/api/booking/modifyBooking/' + this.props.id, {status: 'Confirmée'})
+        this.socket = io();
+        this.socket.on("connect", socket => {
+            this.socket.emit("booking", id)
+            axios.put(url + 'myAlfred/api/booking/modifyBooking/' + id, {status: 'Confirmée'})
+                .then(res => {
+                    setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
+
+                })
+                .catch()
+        })
 
     }
 

@@ -148,10 +148,8 @@ class Cancel extends React.Component {
   changeStatus(status) {
     axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: status})
         .then(res => {
-          this.setState({
-
-            bookingObj: res.data
-          }, () => this.socket.emit("changeStatus", res.data))
+          this.setState({bookingObj: res.data});
+          setTimeout(()=> this.socket.emit("changeStatus", res.data),100)
         })
 
         .catch(err => console.log(err))

@@ -192,18 +192,16 @@ class Confirm extends React.Component {
       axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, { status: 'Confirmée' })
 
           .then(res => {
-          this.setState({
-            bookingObj: res.data
-          }, () => this.socket.emit("changeStatus", res.data))
+          this.setState({bookingObj: res.data})
+            setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
         })
         .catch(err => console.log(err))
       return null;
     } else {
       axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
           .then(res => {
-            this.setState({
-              bookingObj: res.data
-            }, () => this.socket.emit("changeStatus", res.data))
+            this.setState({bookingObj: res.data})
+            setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
           })
           .catch(err => console.log(err))
     }

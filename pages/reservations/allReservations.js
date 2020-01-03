@@ -404,7 +404,7 @@ class AllReservations extends React.Component {
                                                 </Grid>
                                                 <Grid item xs={5} md={7} style={{paddingRight: "5%", paddingLeft: "5%",}}>
                                                     <Typography style={{marginTop: '2%', fontSize: '0.8rem', color: booking.status === 'Confirmée' ? '#419F41' : booking.status === 'Demande d\'infos' || booking.status === "En attente de confirmation" ? '#F87280' : booking.status === 'Pré-approuvée' ? '#F89B72' : '#5D5D5D'}}>{booking.status} - {booking.alfred.firstname}</Typography>
-                                                    <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
+                                                    <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.date_prestation} - {moment(booking.time_prestation).format('HH:mm')}</Typography>
                                                     <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.service}</Typography>
                                                 </Grid>
                                                 <Grid item xs={2} style={{}}>
@@ -429,7 +429,7 @@ class AllReservations extends React.Component {
                                             </Grid>
                                             <Grid item xs={5} md={7} style={{paddingRight: "5%", paddingLeft: "5%", fontSize: '0.8rem'}}>
                                                 <Typography style={{marginTop: '2%', fontSize: '0.8rem', color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"}}>{booking.status} - {booking.user.firstname}</Typography>
-                                                <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.date_prestation} - {booking.time_prestation}</Typography>
+                                                <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.date_prestation} - {moment(booking.time_prestation).format('HH:mm')}</Typography>
                                                 <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>{booking.service}</Typography>
 
                                             </Grid>

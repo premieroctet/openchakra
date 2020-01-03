@@ -165,7 +165,8 @@ class paymentChoice extends React.Component {
         };
         axios.post(url+'myAlfred/api/payment/payIn',data)
             .then(res => {
-                axios.put(url +  'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: 'Confirmée'})
+                //axios.put(url +  'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: 'Confirmée'})
+                localStorage.setItem('booking_id',this.state.booking_id);
                 let payIn = res.data;
                 Router.push(payIn.RedirectURL)
             })

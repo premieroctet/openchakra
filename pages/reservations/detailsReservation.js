@@ -1931,7 +1931,8 @@ class DetailsReservation extends React.Component {
                                           backgroundColor: "#F8727F",
                                           lineHeight: 2.5,
                                           borderRadius: "50px",
-                                          marginTop: "20%"
+                                          marginTop: "20%",
+                                          cursor:'pointer'
                                         }}
                                     >
 
@@ -2138,7 +2139,8 @@ class DetailsReservation extends React.Component {
                                             backgroundColor: "#F8727F",
                                             lineHeight: 2.5,
                                             borderRadius: "50px",
-                                            marginTop: "20%"
+                                            marginTop: "20%",
+                                            cursor:'pointer'
                                           }}
                                       >
                                         <a

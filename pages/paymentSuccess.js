@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
 import {toast} from 'react-toastify';
-
+import io from "socket.io-client";
 
 
 const { config } = require('../config/config');
@@ -36,7 +36,6 @@ class paymentSuccess extends React.Component {
     componentDidMount() {
 
         localStorage.setItem('path',Router.pathname);
-        const booking_id = localStorage.getItem('bookingId');
         axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
         axios
             .get(url + "myAlfred/api/users/current")
@@ -50,6 +49,19 @@ class paymentSuccess extends React.Component {
                     Router.push({ pathname: "/login" });
                 }
             });
+        const booking_id = localStorage.getItem('booking_id');
+        this.socket = io();
+        this.socket.on("connect", socket => {
+            this.socket.emit("booking", booking_id)
+            axios.put(url + 'myAlfred/api/booking/modifyBooking/' + booking_id, {status: 'Confirmée'})
+                .then(res => {
+                    setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
+                    localStorage.removeItem('booking_id');
+                })
+                .catch()
+        })
+
+
     }
 
 
