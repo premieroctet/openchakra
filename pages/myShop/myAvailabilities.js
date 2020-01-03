@@ -119,12 +119,10 @@ class myAvailabilities extends React.Component {
     }
 
     availabilityCreated(avail) {
-      console.log("CB created availability:"+JSON.stringify(avail));
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
       axios.post(url+'myAlfred/api/availability/add',avail)
           .then(res => {
-              console.log("Added:"+JSON.stringify(res.data));
               toast.info('Disponibilité ajoutée avec succès !');
               let new_availabilities = [res.data, ...this.state.availabilities];
               this.setState({availabilities: new_availabilities});
@@ -136,12 +134,10 @@ class myAvailabilities extends React.Component {
     }
 
     availabilityDelete(avail) {
-      console.log("CB delete availability:"+JSON.stringify(avail));
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
       axios.delete(url+'myAlfred/api/availability/'+avail)
           .then(res => {
-              console.log("Deleting:"+JSON.stringify(res.data));
               toast.info('Disponibilité supprimée avec succès !');
               let new_availabilities=[];
               this.state.availabilities.forEach( a => {

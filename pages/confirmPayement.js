@@ -209,7 +209,7 @@ class ConfirmPayement extends React.Component {
     if (!_.isEmpty(sumArr)) {
       fees = 0.09 * (sumArr.reduce(reducer) + this.state.optionPrice);
       fees = parseFloat(fees.toFixed(2));
-      console.log(fees);
+
 
       this.setState({ total: sumArr.reduce(reducer) + this.state.optionPrice });
       this.setState({ fees: fees });

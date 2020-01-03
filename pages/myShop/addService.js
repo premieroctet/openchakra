@@ -189,7 +189,6 @@ class Wizard extends React.Component {
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(url+'myAlfred/api/users/current')
       .then(res => {
-        console.log(res);
         if (typeof res.data.id_card !== 'undefined') this.setState({ hasId: true });
       })
       .catch(error => {
@@ -813,7 +812,6 @@ class addService extends React.Component {
     }
 
     availabilityCreated(avail) {
-      console.log("CB created availability:"+JSON.stringify(avail));
       this.setState({availabilities: [avail, ...this.state.availabilities]});
     }
 

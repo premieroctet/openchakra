@@ -198,7 +198,6 @@ class ComingReservations extends React.Component {
       "token"
     );
     axios.get(url + "myAlfred/api/users/current").then(res => {
-      console.log(res.data);
       this.setState({ user: res.data });
       if(res.data.is_alfred === true){
         this.setState({isAlfred: true})

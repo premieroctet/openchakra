@@ -6,9 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import axios from 'axios';
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
+
 
 
 const styles = theme => ({
@@ -98,12 +96,7 @@ class Otter extends React.Component{
     }
 
     componentDidMount() {
-        axios.get(url+'myAlfred/api/users/home/alfred')
-            .then(response => {
-                let alfred = response.data;
 
-                this.setState({alfred:alfred})
-            })
     }
 
     render() {

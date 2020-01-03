@@ -194,7 +194,6 @@ class Wizard extends React.Component {
       const isLastPage = page === React.Children.count(children) - 1;
       if (isLastPage) {
           values.submission.forEach(e => {
-              console.log("Submission:"+JSON.stringify(e))
               let arrayPrestations = [];
               let arrayEquipments = [];
               const service = e.serviceId;
@@ -583,7 +582,7 @@ class Wizard extends React.Component {
                                                           const div = document.getElementById('bigDiv');
                                                           div.scrollTop = 0;
                                                       } else {
-                                                          console.log("Whole form:"+JSON.stringify(form))
+
                                                           toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
                                                               if (typeof service === 'undefined') {
                                                                   return null
@@ -894,7 +893,6 @@ class Form extends React.Component {
     }
 
     availabilityCreated(avail) {
-      console.log("CB created availability:"+JSON.stringify(avail));
       this.setState({availabilities: [avail, ...this.state.availabilities]});
     }
 
@@ -1179,7 +1177,6 @@ class Form extends React.Component {
                                            value={arrayHelpers.form.values.categories}
                                            options={this.state.categories}
                                           onChange={categorie => {
-                                              console.log("Catégories:"+this.state.categories);
                                                   if (categorie === null) {
                                                       arrayHelpers.form.setFieldValue('categories', []);
                                                     } else {
@@ -2100,7 +2097,7 @@ class Form extends React.Component {
                                                                                         <Field
                                                                                                 name={`submission.${index}.certification.year`}
                                                                                                 render={({field}) => {
-                                                                                                    console.log("Fields");
+
 
                                                                                                     return (
                                                                                                         <TextField

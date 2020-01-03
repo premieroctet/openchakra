@@ -7,14 +7,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import Footer from '../hoc/Layout/Footer/Footer';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from "@material-ui/core/Radio";
-import Tooltip from '@material-ui/core/Tooltip';
 import Cards from 'react-credit-cards';
 import {
     formatCreditCardNumber,

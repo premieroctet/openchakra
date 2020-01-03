@@ -7,10 +7,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import Button from '@material-ui/core/Button';
-import Avatar from "@material-ui/core/Avatar";
 import axios from 'axios';
-import Link from 'next/link';
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
 
@@ -126,17 +123,11 @@ class Assureback extends React.Component{
 
   constructor(props) {
     super(props);
-    this.state = {
-      alfred: []
-    }
+
   }
 
   componentDidMount() {
-    axios.get(url+'myAlfred/api/users/home/alfred')
-        .then(response => {
-          let alfred = response.data;
-          this.setState({alfred:alfred})
-        })
+
   }
 
   render() {
