@@ -11,7 +11,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import styled from 'styled-components';
 import { TextField } from '@material-ui/core';
-import Footer from '../../hoc/Layout/Footer/Footer';
+import Footer2 from '../../hoc/Layout/Footer/Footer2';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/EditOutlined';
 import Modal from '@material-ui/core/Modal';
@@ -129,7 +129,7 @@ const styles = theme => ({
             marginRight: 0,
         }
         },
-            display:'none'}},
+            display:'none',
     respfooterr:{
         [theme.breakpoints.down('sm')]: {
             marginBottom: '66px!important'
@@ -797,7 +797,7 @@ class services extends React.Component {
                                             </Grid>
                                             <Grid container className={classes.responsiveCard}>
                                                 <Grid item md={3} xs={12} style={{ borderBottom : '150px', borderLeft : '150px', cursor: 'pointer'}}>
-                                                    <Link /*href={'/myShop/previewService?id='+e._id}*/>
+                                                    <Link href={'/myShop/previewService?id='+e._id}>
                                                         <img className={classes.respimg} src={'../../'+e.service.picture} alt={'picture'} width={'85%'}/>
                                                     </Link>
                                                 </Grid>
@@ -925,7 +925,7 @@ class services extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-
+                </Layout>
             </Fragment>
         );
     };

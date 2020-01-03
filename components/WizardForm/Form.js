@@ -1314,7 +1314,7 @@ class Form extends React.Component {
                                                                 .then(res => {
                                                                     let servCompObj = { 
                                                                         CategoryLabel : res.data.category.label,
-
+                                                                        location: res.data.location,
                                                                         serviceId: res.data._id, 
                                                                         serviceLabel: res.data.label,
                                                                         descService: '', 
@@ -1951,11 +1951,11 @@ class Form extends React.Component {
                                                                                 placeholder="Vos années d'expériences"
                                                                                 value={arrayHelpers.form.values.submission[index].experienceYears}
                                                                                 options={[
-                                                                                    {value: '', label: "Aucune année d'expérience"},
-                                                                                    {value: 'ZeroOrOne', label: 'Entre 0 et 1 an'},
-                                                                                    {value: 'OneToFive', label: 'Entre 1 et 5 ans'},
-                                                                                    {value: 'FiveToTen', label: 'Entre 5 et 10 ans'},
-                                                                                    {value: 'MoreThanTen', label: 'Plus de 10 ans'},
+                                                                                    {value: '0', label: "Aucune année d'expérience"},
+                                                                                    {value: '1', label: 'Entre 0 et 1 an'},
+                                                                                    {value: '2', label: 'Entre 1 et 5 ans'},
+                                                                                    {value: '3', label: 'Entre 5 et 10 ans'},
+                                                                                    {value: '4', label: 'Plus de 10 ans'},
                                                                                 ]}
                                                                                 onChange={async exp => {
                                                                                     await arrayHelpers.form.setFieldValue(`submission[${index}].experienceYears`, exp);

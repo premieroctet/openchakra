@@ -246,14 +246,14 @@ class myAvailabilities extends React.Component {
                               </Link>
                           </Grid>
                           <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                              <Link href={'/myShop/messages'}>
+                              <Link href={'/reservations/messages'}>
                                   <a style={{textDecoration:'none'}}>
                                       <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
                                   </a>
                               </Link>
                           </Grid>
                           <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                              <Link href={'/myShop/mesreservations'}>
+                              <Link href={'/reservations/allReservations'}>
                                   <a style={{textDecoration:'none'}}>
                                       <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                                   </a>
@@ -267,7 +267,7 @@ class myAvailabilities extends React.Component {
                               </Link>
                           </Grid>
                           <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                              <Link href={'/myShop/performances'}>
+                              <Link href={'/performances/revenus'}>
                                   <a style={{textDecoration:'none'}}>
                                       <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
                                   </a>
@@ -296,12 +296,12 @@ class myAvailabilities extends React.Component {
                       </Link>
                   </Grid>
                   <Grid item xs={2} style={{textAlign:"center"}}>
-                      <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                      <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
                           <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
                       </a></Link>
                   </Grid>
                   <Grid item xs={2} style={{textAlign:"center"}}>
-                      <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                      <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
                           <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
                       </a></Link>
                   </Grid>
@@ -311,7 +311,7 @@ class myAvailabilities extends React.Component {
                       </a></Link>
                   </Grid>
                   <Grid item xs={2} style={{textAlign:"center"}}>
-                      <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                      <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
                           <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
                       </a></Link>
                   </Grid>

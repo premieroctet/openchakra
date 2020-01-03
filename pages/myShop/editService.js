@@ -708,12 +708,12 @@ class editService extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                                <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
                                     <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
                                 </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                                <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
                                     <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
                                 </Link>
                             </Grid>
@@ -723,7 +723,7 @@ class editService extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                                <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
                                     <p style={{color: "white",cursor: 'pointer'}}>Performance</p></a>
                                 </Link>
                             </Grid>
@@ -1262,12 +1262,15 @@ class editService extends React.Component {
                                     select
                                     style={{width: '250px'}}
                                     variant="outlined"
+                                    value={serviceUser.level}
+                                    name={'level'}
                                     onChange={this.onChange}
                                 >
-                                    <MenuItem value="ZeroOrOne">Entre 0 et 1 an</MenuItem>
-                                    <MenuItem value="OneToFive">Entre 1 et 5 ans</MenuItem>
-                                    <MenuItem value="FiveToTen">Entre 5 et 10 ans</MenuItem>
-                                    <MenuItem value="MoreThanTen">Plus de 10 ans</MenuItem>
+                                    <MenuItem value="0">...</MenuItem>
+                                    <MenuItem value="1">Entre 0 et 1 an</MenuItem>
+                                    <MenuItem value="2">Entre 1 et 5 ans</MenuItem>
+                                    <MenuItem value="3">Entre 5 et 10 ans</MenuItem>
+                                    <MenuItem value="4">Plus de 10 ans</MenuItem>
                                 </TextField>
                             </Grid>
                             <Grid item xs={12} sm={12} lg={12} className={classes.responsiveGrade}>
@@ -1587,13 +1590,13 @@ class editService extends React.Component {
                              </Link>
                          </Grid>
                          <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                            <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
                          </Grid>
 
                          <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                            <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
                          </Grid>
@@ -1605,7 +1608,7 @@ class editService extends React.Component {
                          </Grid>
 
                          <Grid item xs={2} style={{textAlign:"center"}}>
-                            <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+                            <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                             </a></Link>
                          </Grid>

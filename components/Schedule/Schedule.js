@@ -2,7 +2,6 @@ import React from 'react'
 import { Calendar, Views, momentLocalizer   } from 'react-big-calendar';
 import _ from 'lodash'
 import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 import Modal from '@material-ui/core/Modal';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
