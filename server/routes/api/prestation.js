@@ -80,11 +80,8 @@ router.get('/:service',(req,res)=> {
 // View all prestations per service and filter
 router.get('/:service/:filter',passport.authenticate('jwt',{session:false}), (req, res) => {
 
-  console.log("Before getting user:"+req.user.id);
   let result = User.findById(req.user.id);
   
-  console.log("After getting user:"+Object.keys(result.mongooseCollection));
-
   Prestation.find({
     service: req.params.service,
     filter_presentation: req.params.filter,
