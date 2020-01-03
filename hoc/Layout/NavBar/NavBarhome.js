@@ -333,7 +333,7 @@ const menuitemdouble1= [<MenuItem key={1} onClick={this.handleAvatarMenuOpen}>
       </Menu>
     );
 
-    menuitemdouble2=[
+    const menuitemdouble2=[
 <MenuItem key={1} onClick={this.handleMobileMenuOpen}>
           <Typography>
             <Link href={'/login'}>
