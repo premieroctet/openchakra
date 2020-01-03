@@ -220,6 +220,14 @@ class Wizard extends React.Component {
     const { page } = this.state;
     const isLastPage = page === React.Children.count(children) - 1;
     if (isLastPage) {
+
+      console.log("Sending availabilities");
+      axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+      this.props.availabilities.forEach( avail => {
+        axios.post(url + "myAlfred/api/availability/add", avail);
+      });
+      console.log("After sending availabilities");
+
       values.submission.forEach(e => {
         let arrayPrestations = [];
         let arrayEquipments = [];
@@ -301,9 +309,9 @@ class Wizard extends React.Component {
         formData.append('price',price.toString());
         formData.append('description',description);
 
-                formData.append('home',e.location.client);
-                formData.append('alfred',e.location.alfred);
-                formData.append('visio',e.location.visio);
+        formData.append('home',e.location.client);
+        formData.append('alfred',e.location.alfred);
+        formData.append('visio',e.location.visio);
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         console.log("FormData is:"+JSON.stringify(formData));
@@ -395,6 +403,7 @@ class Wizard extends React.Component {
             console.log(err);
           })
       });
+ 
 
     } else {
       bag.setTouched({});
@@ -839,6 +848,14 @@ class addService extends React.Component {
         this.setState({all_options: options});
       })
       .catch(err => console.log(err));
+
+    axios.get(url+'myAlfred/api/availability/currentAlfred')
+      .then(res => {
+        let availabilities = res.data;
+        this.setState({availabilities: availabilities});
+      })
+      .catch(err => console.log(err));
+
   }
 
   notify() {
@@ -959,7 +976,7 @@ class addService extends React.Component {
             </Grid>
         </Grid>
           <div className="App" style={{width: '100%'}}>
-            <Wizard
+            <Wizard availabilities = {this.state.availabilities}
               initialValues={{
                 categories: [],
                 services: [],

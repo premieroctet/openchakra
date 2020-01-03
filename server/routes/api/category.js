@@ -13,7 +13,6 @@ router.get('/currentAlfred', passport.authenticate('jwt',{session:false}), async
 
     let serviceUsers = await ServiceUser.find({user:req.user});
     serviceUsers = serviceUsers.map(s => s.service);
-    console.log("ServiceUsers:"+JSON.stringify(serviceUsers));
 
     Service.find( {_id : { $nin: serviceUsers}} )
         .sort({'label': 1})
@@ -22,7 +21,6 @@ router.get('/currentAlfred', passport.authenticate('jwt',{session:false}), async
         .sort({'category.label': 1})
         .then(services => {
             if(typeof services !== 'undefined' && services.length > 0){
-                console.log("Services:"+JSON.stringify(services.length, null, 2));
                 let categories = services.map( s => s.category);
                 categories = [...new Set(categories)];
                 categories.sort( (c1, c2) => (c1.label > c2.label) ? 1 : -1);

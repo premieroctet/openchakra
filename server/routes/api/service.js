@@ -12,7 +12,6 @@ router.get('/test',(req, res) => res.json({msg: 'Service Works!'}) );
 // View all service
 router.get('/all',(req,res)=> {
 
-   console.log("All services");
         Service.find()
             .sort({'label':1})
             .populate('tags')
@@ -104,7 +103,6 @@ router.get('/currentAlfred/:category', passport.authenticate('jwt',{session:fals
 
     let serviceUsers = await ServiceUser.find({user:req.user});
     serviceUsers = serviceUsers.map(s => s.service);
-    console.log("Count:"+JSON.stringify(serviceUsers));
 
     Service.find({category: req.params.category, _id : { $nin: serviceUsers}})
         .sort({'label':1})

@@ -15,7 +15,9 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
     console.log("Adding availability:"+JSON.stringify(req.body));
 
     const newAvailability = new Availability({user:req.user.id, ...req.body});
+    
     newAvailability.save().then(availability => res.json(availability)).catch(err => console.log(err));
+    console.log("After adding availability:"+JSON.stringify(req.body));
 });
 
 // @Route POST /myAlfred/api/availability/update
