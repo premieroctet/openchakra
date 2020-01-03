@@ -126,7 +126,7 @@ class facon extends React.Component{
                                     décrivant l'ensemble de vos prestations. Vous pouvez à tout moment
                                     revenir sur votre boutique, ajouter ou supprimer des services. Les
                                     différentes étapes de création de votre boutique sont extrêmement
-                                    simple. À vous de jouer !
+                                    simples. À vous de jouer !
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -161,7 +161,7 @@ class facon extends React.Component{
                             <Grid item xs={12}>
                                 <Typography className={classes.contentBox}>
                                     C'est à vous de fixer les prix de vos services et nos outils de tarifications
-                                    sont la  pour vous aider à proposer le meilleur prix pour être sélectionné.
+                                    sont là  pour vous aider à proposer le meilleur prix pour être sélectionné.
                                     Vous pouvez facilement ajouter des éléments personnalisés, notamment : - des tarifs de week end - des tarifs de nuit -
                                     des packages de services...
                                 </Typography>
