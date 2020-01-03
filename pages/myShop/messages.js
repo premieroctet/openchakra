@@ -5,8 +5,13 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { withStyles } from '@material-ui/core/styles';
 import Footer from '../../hoc/Layout/Footer/Footer';
+const jwt = require('jsonwebtoken');
+
+const {config} = require('../../config/config');
+const url = config.apiUrl;
 
 import { MYSHOP_MESSAGE, MYSHOP_SUBTITLE, MYSHOP_TITLE } from '../../utils/messages.js';
+import axios from 'axios';
 
 const styles = theme => ({
     bigContainer: {
@@ -37,6 +42,28 @@ const styles = theme => ({
 class Messages extends React.Component {
     constructor(props) {
         super(props);
+        this.state={
+            alfred: false,
+        }
+    }
+
+    componentDidMount() {
+        const token = localStorage.getItem('token');
+        if (token) {
+            this.setState({logged:true});
+            const token2 = localStorage.getItem('token').split(' ')[1];
+            const decode = jwt.decode(token2);
+            this.setState({alfred: decode.is_alfred});
+
+            axios.defaults.headers.common['Authorization'] = token;
+            axios
+              .get(url+'myAlfred/api/users/current')
+              .then(res => {
+                  let user = res.data;
+                  this.setState({alfred:user.is_alfred});
+              })
+              .catch(err => console.log(err))
+        }
     }
 
     render() {
@@ -93,7 +120,7 @@ class Messages extends React.Component {
                                 <p>
                                     {MYSHOP_MESSAGE}
                                 </p>
-                                <Button color={"primary"} style={{borderRadius:'30px'}} variant={"contained"}><a style={{textDecoration:'none',color:'white'}} href="mailto:hello@my-alfred.io">Je m'inscris !</a></Button>
+                                <Button color={"primary"} style={{borderRadius:'30px'}} variant={"contained"}><a style={{textDecoration:'none',color:'white'}} href={this.state.alfred ? '/myShop/services' : '/becomeAlfredForm'}> {this.state.alfred ? 'Ma boutique' : 'Créer ma boutique'}</a></Button>
                             </Grid>
                             <Grid item md={7} xs={12} style={{backgroundImage:'url(../../static/background/pagesina.svg)',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover', width: '100%', height: '100vh'}}/>
                         </Grid>
@@ -107,22 +134,22 @@ class Messages extends React.Component {
                     </Grid>
                     <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
                         <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
                         </a></Link>
                     </Grid>
                     <Grid item xs={2} style={{textAlign:"center"}}>
                         <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
                         </a></Link>
                     </Grid>
                     <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
                         <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
                         </a></Link>
                     </Grid>
                     <Grid item xs={2} style={{textAlign:"center"}}>
                         <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
+                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
                         </a></Link>
                     </Grid>
                 </Grid>
