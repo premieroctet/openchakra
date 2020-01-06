@@ -152,8 +152,8 @@ class profiteandlearn extends React.Component {
               </Grid>
               <Grid item xs={12} className={classes.contentTextBox}>
                 <Typography className={classes.textBox3}>
-                  Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement les prestations que vous souhaitez proposer en vous appuyant sur une liste de plus de 2000 services
-                   proposées sur My-Alfred. Un service n'apparaît pas ? Proposez-le à nos équipes !
+                  Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement vos prestations en vous appuyant sur une liste de plus de 2000 services
+                   proposées sur My-Alfred. Un service n'apparaît pas ? Soumettez-le à nos équipes !
                 </Typography>
               </Grid>
             </Grid>
@@ -169,7 +169,7 @@ class profiteandlearn extends React.Component {
                 </Grid>
                 <Grid item xs={12} className={classes.contentTextBox}>
                   <Typography className={classes.textBox3}>
-                    Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Et si vous avez besoin d'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences !                  </Typography>
+                    Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Si vous avez besoin d'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences !                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -185,7 +185,7 @@ class profiteandlearn extends React.Component {
                 </Grid>
                 <Grid item xs={12} className={classes.contentTextBox}>
                   <Typography className={classes.textBox3}>
-                    Une fois votre boutique en ligne, les personnes intéressées par vos prestations pourront réserver en ligne vos services. Si vous avez des questions avant la prestation, vous pourrez les contacter !                  </Typography>
+                    Une fois votre boutique ouverte, les personnes intéressées par vos prestations pourront réserver vos services en ligne. Si vous avez des questions avant la prestation, vous pourrez les contacter !                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
