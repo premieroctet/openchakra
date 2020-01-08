@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dev = process.env.NODE_DEV !== 'production'; //true false
 const prod = process.env.NODE_DEV === 'production'; //true false
-const nextApp = next({ prod });
+const nextApp = next({ dev });
 const routes = require('./routes');
 const routerHandler = routes.getRequestHandler(nextApp);
 const passport = require('passport');
