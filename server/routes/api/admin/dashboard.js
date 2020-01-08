@@ -164,7 +164,7 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
     const admin = decode.is_admin;
 
     if(admin) {
-        User.find({is_admin: false})
+        User.find({})
             .then(user => {
                 if (!user) {
                     res.status(400).json({msg: 'No users found'});
