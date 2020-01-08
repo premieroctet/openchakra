@@ -12,7 +12,8 @@ const passport = require('passport');
 const glob = require('glob');
 const cors = require('cors');
 const { config } = require('../config/config');
-
+const https = require('https')
+const fs = require('fs')
 const users = require('./routes/api/users');
 const category = require('./routes/api/category');
 const billing = require('./routes/api/billing');
@@ -104,6 +105,14 @@ nextApp.prepare().then(() => {
         if (!controllerPath.includes('.test.js')) require(controllerPath)(app)
     })
     app.get('*', routerHandler);
-    app.listen(config.serverPort, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`));
+    //app.listen(config.serverPort, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`));
+/**
+Intermediate-Certificate.txt  Main-Certificate-x509.txt  PKCS7-Certificate.txt  Root-Certificate.txt
+*/
+    https.createServer({
+        cert: fs.readFileSync('/home/seb/.ssh/Main-Certificate-x509.txt'),
+        key: fs.readFileSync('/home/seb/.ssh/www_my-alfred_io.key'),
+      },
+      app).listen(443, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`))    
 });
 
