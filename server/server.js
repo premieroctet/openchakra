@@ -110,8 +110,8 @@ nextApp.prepare().then(() => {
 Intermediate-Certificate.txt  Main-Certificate-x509.txt  PKCS7-Certificate.txt  Root-Certificate.txt
 */
     https.createServer({
-        cert: fs.readFileSync('/home/seb/.ssh/Main-Certificate-x509.txt'),
-        key: fs.readFileSync('/home/seb/.ssh/www_my-alfred_io.key'),
+        cert: fs.readFileSync('/home/ec2-user/.ssh/Main-Certificate-x509.txt'),
+        key: fs.readFileSync('/home/ec2-user/.ssh/www_my-alfred_io.key'),
       },
       app).listen(443, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`))    
 });
