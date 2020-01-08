@@ -215,7 +215,7 @@ class Footer extends Component {
                     <Grid item xs={4}></Grid><Grid item xs={4}><hr style={{border:'none', backgroundColor: 'white', height: '1px'}}/></Grid><Grid item xs={4}></Grid>
                     <Grid item xs={4}></Grid><Grid item xs={4}><Typography style={{color: 'white', textAlign: 'center', marginBottom: 15}}>© 2019 My-Alfred. All rights reserved.</Typography></Grid><Grid item xs={4}></Grid>
                 </Grid>
-
+                <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/5065724.js"></script>
             </React.Fragment>
         )
     }
