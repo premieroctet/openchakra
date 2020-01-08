@@ -5,13 +5,14 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dev = process.env.NODE_DEV !== 'production'; //true false
 const prod = process.env.NODE_DEV === 'production'; //true false
-const nextApp = next({ dev });
+const nextApp = next({ prod });
 const routes = require('./routes');
 const routerHandler = routes.getRequestHandler(nextApp);
 const passport = require('passport');
 const glob = require('glob');
 const cors = require('cors');
 const { config } = require('../config/config');
+const http = require('http')
 const https = require('https')
 const fs = require('fs')
 const users = require('./routes/api/users');
@@ -104,11 +105,19 @@ nextApp.prepare().then(() => {
     glob.sync(rootPath + '/server/api/*.js').forEach(controllerPath => {
         if (!controllerPath.includes('.test.js')) require(controllerPath)(app)
     })
+    app.use(function(req, res, next) {
+            console.log("In redirection, req:"+JSON.stringify(req.secure));
+            console.log("In redirection, host+originalUrl:"+req.hostname+","+req.originalUrl);
+    if (!req.secure ) {
+            console.log("Redirecting to"+JSON.stringify(req.originalUrl));
+            res.redirect (301, 'https://' + req.hostname);
+    }
+    next();
+    });
     app.get('*', routerHandler);
-    //app.listen(config.serverPort, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`));
-/**
-Intermediate-Certificate.txt  Main-Certificate-x509.txt  PKCS7-Certificate.txt  Root-Certificate.txt
-*/
+    // HTTP only handling redirect to HTTPS
+    http.createServer(app).listen(80);
+    // HTTPS server using certificates
     https.createServer({
         cert: fs.readFileSync('/home/ec2-user/.ssh/Main-Certificate-x509.txt'),
         key: fs.readFileSync('/home/ec2-user/.ssh/www_my-alfred_io.key'),
