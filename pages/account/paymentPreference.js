@@ -414,7 +414,9 @@ class paymentPreference extends React.Component {
                             </Grid>
                         </Grid>
                     </Layout>
+                  <Grid style={{position: 'absolute', bottom: 0, width: '100%'}}>
                     {haveAccount ? editfooter : addfooter}
+                  </Grid>
                 </Fragment>
             );
         }
