@@ -74,6 +74,8 @@ router.get('/billing/all',passport.authenticate('jwt',{session:false}),(req,res)
     const admin = decode.is_admin;
     if(admin) {
         Billing.find()
+            .collation({ locale: "en" })
+            .sort({label: 1})
             .then(billings => {
                 if (!billings) {
                     return res.status(400).json({msg: 'No billing found'});
@@ -165,6 +167,8 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
 
     if(admin) {
         User.find({})
+            .collation({ locale: "en" })
+            .sort({name: 1})
             .then(user => {
                 if (!user) {
                     res.status(400).json({msg: 'No users found'});
@@ -311,6 +315,8 @@ router.get('/users/alfred',passport.authenticate('jwt',{session:false}),(req,res
 
     if(admin) {
         User.find({is_alfred: true})
+            .collation({ locale: "en" })
+            .sort({name: 1})
             .then(user => {
                 if (!user) {
                     res.status(400).json({msg: 'No alfred found'});
@@ -434,6 +440,8 @@ router.get('/users/admin',passport.authenticate('jwt',{session: false}),(req, re
     const admin = decode.is_admin;
     if(admin){
         User.find({is_admin: true})
+            .collation({ locale: "en" })
+            .sort({ name: 1})
             .then(user => {
                 if(!user) {
                     res.status(400).json({msg: 'No admin found'});
@@ -736,6 +744,8 @@ router.get('/filterPresentation/all', passport.authenticate('jwt',{session: fals
     const admin = decode.is_admin;
     if(admin) {
         FilterPresentation.find()
+            .collation({ locale: "en" })
+            .sort({label: 1})
             .then(filterPresentation => {
                 if(!filterPresentation){
                     return res.status(400).json({msg: 'No filterPresentation found'});
@@ -859,6 +869,8 @@ router.get('/job/all', passport.authenticate('jwt',{session: false}),(req,res)=>
     const admin = decode.is_admin;
     if(admin) {
         Job.find()
+            .collation({ locale: "en" })
+            .sort({label: 1})
             .then(job => {
                 if(!job){
                     return res.status(400).json({msg: 'No job found'});
@@ -1105,6 +1117,8 @@ router.get('/tags/all', passport.authenticate('jwt',{session: false}),(req,res)=
     const admin = decode.is_admin;
     if(admin) {
         Tags.find()
+            .collation({ locale: "en" })
+            .sort({label: 1})
             .then(tags => {
                 if(!tags){
                     return res.status(400).json({msg: 'No tags found'});
@@ -1264,7 +1278,8 @@ router.get('/category/all', passport.authenticate('jwt',{session: false}),(req,r
     const admin = decode.is_admin;
     if(admin) {
         Category.find()
-	    .sort({'label': 1})
+            .collation({ locale: "en" })
+	        .sort({'label': 1})
             .populate('tags')
             .then(category => {
                 if(!category){
@@ -1427,6 +1442,8 @@ router.get('/equipment/all', passport.authenticate('jwt',{session: false}),(req,
     const admin = decode.is_admin;
     if(admin) {
         Equipment.find()
+            .collation({ locale: "en" })
+            .sort({ label: 1})
             .then(equipment => {
                 if(!equipment){
                     return res.status(400).json({msg: 'No equipment found'});
@@ -1589,7 +1606,8 @@ router.get('/service/all',passport.authenticate('jwt',{session:false}),(req,res)
     if(req.query.category != null) {
         let label = req.query.category;
         Service.find({category: mongoose.Types.ObjectId(label) })
-	    .sort({'label': 1})
+            .collation({ locale: "en" })
+	        .sort({'label': 1})
             .populate('tags', ['label'])
             .populate('equipments', 'label')
             .populate('category', 'label')
@@ -1605,7 +1623,8 @@ router.get('/service/all',passport.authenticate('jwt',{session:false}),(req,res)
 
         if(admin) {
         Service.find()
-	    .sort({'label': 1})
+            .collation({ locale: "en" })
+	        .sort({'label': 1})
             .populate('tags', ['label'])
             .populate('equipments', 'label')
             .populate('category', 'label')
@@ -1789,6 +1808,7 @@ router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,r
 
     if(admin) {
         Prestation.find()
+            .collation({ locale: "en" })
             .sort({label:1, category:1})
             .populate('category')
             .populate('job')
@@ -1971,6 +1991,8 @@ router.get('/shopBanner/all',passport.authenticate('jwt',{session: false}),(req,
 
     if(admin) {
     ShopBanner.find()
+        .collation({ locale: "en" })
+        .sort({label: 1})
         .then(banner => {
             if(!banner){
                 return res.status(400).json({msg: 'No banner found'});
