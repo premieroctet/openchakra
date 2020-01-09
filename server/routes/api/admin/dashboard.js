@@ -74,7 +74,6 @@ router.get('/billing/all',passport.authenticate('jwt',{session:false}),(req,res)
     const admin = decode.is_admin;
     if(admin) {
         Billing.find()
-            .collation({ locale: "en" })
             .sort({label: 1})
             .then(billings => {
                 if (!billings) {
@@ -167,7 +166,6 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
 
     if(admin) {
         User.find({})
-            .collation({ locale: "en" })
             .sort({name: 1})
             .then(user => {
                 if (!user) {
@@ -315,7 +313,6 @@ router.get('/users/alfred',passport.authenticate('jwt',{session:false}),(req,res
 
     if(admin) {
         User.find({is_alfred: true})
-            .collation({ locale: "en" })
             .sort({name: 1})
             .then(user => {
                 if (!user) {
@@ -440,7 +437,6 @@ router.get('/users/admin',passport.authenticate('jwt',{session: false}),(req, re
     const admin = decode.is_admin;
     if(admin){
         User.find({is_admin: true})
-            .collation({ locale: "en" })
             .sort({ name: 1})
             .then(user => {
                 if(!user) {
@@ -744,7 +740,6 @@ router.get('/filterPresentation/all', passport.authenticate('jwt',{session: fals
     const admin = decode.is_admin;
     if(admin) {
         FilterPresentation.find()
-            .collation({ locale: "en" })
             .sort({label: 1})
             .then(filterPresentation => {
                 if(!filterPresentation){
@@ -869,7 +864,6 @@ router.get('/job/all', passport.authenticate('jwt',{session: false}),(req,res)=>
     const admin = decode.is_admin;
     if(admin) {
         Job.find()
-            .collation({ locale: "en" })
             .sort({label: 1})
             .then(job => {
                 if(!job){
@@ -1117,7 +1111,6 @@ router.get('/tags/all', passport.authenticate('jwt',{session: false}),(req,res)=
     const admin = decode.is_admin;
     if(admin) {
         Tags.find()
-            .collation({ locale: "en" })
             .sort({label: 1})
             .then(tags => {
                 if(!tags){
@@ -1278,8 +1271,7 @@ router.get('/category/all', passport.authenticate('jwt',{session: false}),(req,r
     const admin = decode.is_admin;
     if(admin) {
         Category.find()
-            .collation({ locale: "en" })
-	        .sort({'label': 1})
+	    .sort({'label': 1})
             .populate('tags')
             .then(category => {
                 if(!category){
@@ -1442,7 +1434,6 @@ router.get('/equipment/all', passport.authenticate('jwt',{session: false}),(req,
     const admin = decode.is_admin;
     if(admin) {
         Equipment.find()
-            .collation({ locale: "en" })
             .sort({ label: 1})
             .then(equipment => {
                 if(!equipment){
@@ -1606,8 +1597,7 @@ router.get('/service/all',passport.authenticate('jwt',{session:false}),(req,res)
     if(req.query.category != null) {
         let label = req.query.category;
         Service.find({category: mongoose.Types.ObjectId(label) })
-            .collation({ locale: "en" })
-	        .sort({'label': 1})
+	    .sort({'label': 1})
             .populate('tags', ['label'])
             .populate('equipments', 'label')
             .populate('category', 'label')
@@ -1623,8 +1613,7 @@ router.get('/service/all',passport.authenticate('jwt',{session:false}),(req,res)
 
         if(admin) {
         Service.find()
-            .collation({ locale: "en" })
-	        .sort({'label': 1})
+	    .sort({'label': 1})
             .populate('tags', ['label'])
             .populate('equipments', 'label')
             .populate('category', 'label')
@@ -1808,7 +1797,6 @@ router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,r
 
     if(admin) {
         Prestation.find()
-            .collation({ locale: "en" })
             .sort({label:1, category:1})
             .populate('category')
             .populate('job')
@@ -1991,7 +1979,6 @@ router.get('/shopBanner/all',passport.authenticate('jwt',{session: false}),(req,
 
     if(admin) {
     ShopBanner.find()
-        .collation({ locale: "en" })
         .sort({label: 1})
         .then(banner => {
             if(!banner){
