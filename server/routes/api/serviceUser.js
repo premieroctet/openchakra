@@ -578,7 +578,7 @@ router.get('/all/nearOther/:id/:service',passport.authenticate('jwt',{session:fa
 router.get('/home',(req,res)=> {
 
     ServiceUser.find()
-        .populate('user')
+        .populate('user',['picture','firstname'])
         .populate('service')
         .then(service => {
             if(typeof service !== 'undefined' && service.length > 0){
