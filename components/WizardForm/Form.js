@@ -66,11 +66,6 @@ const styles = theme => ({
   newContainer: {
     padding: 20,
   },
-  imgDiv: {
-    [theme.breakpoints.down('sm')]: {
-        display: 'none',
-    },
-  },
   delayDivResponsive: {
     [theme.breakpoints.down('sm')]: {
         textAlign: 'center',
@@ -470,247 +465,215 @@ class Wizard extends React.Component {
 
 console.log("Render, availabilities:"+JSON.stringify(availabilities));
 
-        return (
-            <Formik
-                initialValues={values}
-                enableReinitialize={false}
-                validationSchema={schemaArray[page]}
-                validate={this.validate}
-                onSubmit={this.handleSubmit}
-                render={({ values, handleSubmit }) => (
-                    <React.Fragment>
-                        {page !== 0 && <div style={{backgroundColor: 'white'}}>
-                            {page === 1 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez votre catégorie puis votre service </h3> : null}
-                            {page === 2 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de votre service - {textLabel}</h3> : null}
-                            {page === 3 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
-                            {page === 4 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
-                            {page === 5 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
-                            <div>
-                                <Bar style={{backgroundColor: '#cacfe4'}}>
-                                    {page === 1 ? <Fill width={'20%'} /> : null}
-                                    {page === 2 ? <Fill width={'40%'} /> : null}
-                                    {page === 3 ? <Fill width={'60%'} /> : null}
-                                    {page === 4 ? <Fill width={'80%'} /> : null}
-                                    {page === 5 ? <Fill width={'100%'} /> : null}
-                                </Bar>
-                            </div>
-                        </div>}
-                      <form onSubmit={handleSubmit} style={{display: 'flex', flexFlow: 'row', height: '94vh'}}>
-                        <div style={{position: 'relative', backgroundColor: 'white', width: page === 0 ? '100%' : 'none', height: '100%', overflow: 'hidden'}}>
-                          <div id="bigDiv" className="noscrollbar" style={{height: page === 0 ? '100%' : '81%', overflowY: page === 3 ? 'hidden' : 'scroll', position: 'relative'}}>
-                            {activePage}
-                          </div>
-                          <div className={page === 2 || page === 5 ? 'step3buttons' : null} style={{position: 'absolute', bottom: page === 0 ? 0 : '7%', left: 0, width: '100%', padding: page !== 2 || page !== 5 ? '0rem 3rem 3rem 3rem' : null, backgroundColor: page === 5 ? 'white' : 'transparent', zIndex: '999'}}>
-                            <div style={{display: 'flex', justifyContent: 'space-between', flexFlow: page === 0 ? 'row-reverse' : 'row'}}>
-                              {page !== 0 && <React.Fragment><Button
-                                  color="primary"
-                                  type="button"
-                                  onClick={() => {
-                                      const div = document.getElementById('bigDiv');
-                                      div.scrollTop = 0;
-                                      this.previous();
-                                  }}
-                                  disabled={page === 0}
-                              >
-                                  Retour
-                              </Button>
-                              </React.Fragment>}
-                              {page === 0 && <Button
-                                  type="submit"
-                                  variant="contained"
-                                  color="secondary"
-                                  style={{color: 'white'}}
-                              >
-                                  Suivant
-                              </Button>}
-                              {page === 1 && <Button
-                                  type="submit"
-                                  variant="contained"
-                                  color="secondary"
-                                  style={{color: 'white'}}
-                                  disabled={values.submission.length <= 0}
-                                  onClick={() => {
-                                      const div = document.getElementById('bigDiv');
-                                      div.scrollTop = 0;
-                                  }}
-                              >
-                                  Suivant
-                              </Button>}
-                              {page === 2 &&
-                                  <Field render={({form}) => {
-                                      const checkArr = [];
-                                      form.values.submission.map(pc => {
-                                          if (pc.prestationsCount > 0) {
-                                              return checkArr.push(true);
-                                          } else {
-                                              return checkArr.push(false);
-                                          }
-                                      });
+  return (
+    <Formik
+      initialValues={values}
+      enableReinitialize={false}
+      validationSchema={schemaArray[page]}
+      validate={this.validate}
+      onSubmit={this.handleSubmit}
+      render={({ values, handleSubmit }) => (
+        <React.Fragment>
+          {page !== 0 && <div style={{backgroundColor: 'white'}}>
+            {page === 1 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Choisissez votre catégorie puis votre service </h3> : null}
+            {page === 2 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 1 - Configuration de votre service - {textLabel}</h3> : null}
+            {page === 3 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+            {page === 4 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 2 - Indiquez vos disponibilités et conditions</h3> : null}
+            {page === 5 ? <h3 style={{fontFamily: 'Helvetica', marginLeft: 10, color: 'black', paddingTop: '1.5rem'}}>Etape 3 - Présentez vous !</h3> : null}
+            <div>
+              <Bar style={{backgroundColor: '#cacfe4'}}>
+                {page === 1 ? <Fill width={'20%'} /> : null}
+                {page === 2 ? <Fill width={'40%'} /> : null}
+                {page === 3 ? <Fill width={'60%'} /> : null}
+                {page === 4 ? <Fill width={'80%'} /> : null}
+                {page === 5 ? <Fill width={'100%'} /> : null}
+              </Bar>
+            </div>
+            </div>}
+          <form onSubmit={handleSubmit}>
+            <Grid container style={{width:'100%'}}>
+              <Grid className="responsiveForm" style={{width : page === 3 ? "100%" : "50%"}}>
+                <div>
+                  {activePage}
+                    <div style={{display: 'flex', justifyContent: 'space-between', flexDirection:  page === 0 ? 'row-reverse' : 'row', margin: '5%'}}>
+                      {
+                        page !== 0 &&
+                          <React.Fragment>
+                            <Button
+                              color="primary"
+                              type="button"
+                              onClick={() => {
+                                this.previous();
+                              }}
+                              disabled={page === 0}
+                            >
+                             Retour
+                            </Button>
+                          </React.Fragment>
+                      }
+                      {
+                        page === 0 &&
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          color="secondary"
+                          style={{color: 'white'}}
+                        >
+                        Suivant
+                      </Button>}
+                      {page === 1 && <Button
+                        type="submit"
+                        variant="contained"
+                        color="secondary"
+                        style={{color: 'white'}}
+                        disabled={values.submission.length <= 0}
+                      >
+                        Suivant
+                      </Button>}
+                      {page === 2 &&
+                      <Field render={({form}) => {
+                        const checkArr = [];
+                        form.values.submission.map(pc => {
+                          if (pc.prestationsCount > 0) {
+                            return checkArr.push(true);
+                          } else {
+                            return checkArr.push(false);
+                          }
+                        });
+                        const check = el => {
+                          return el === false;
+                        };
+                        return (
+                          <React.Fragment>
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              color="secondary"
+                              style={{color: !checkArr.some(check) ? 'white' : null }}
+                              disabled={checkArr.some(check)}
+                              onClick={() => {
+                                if (typeof form.errors.submission === 'undefined') {
 
-                                      const check = el => {
-                                          return el === false;
-                                      };
-
-                                      return (
-                                          <React.Fragment>
-                                              <Button
-                                                  type="submit"
-                                                  variant="contained"
-                                                  color="secondary"
-                                                  style={{color: !checkArr.some(check) ? 'white' : null }}
-                                                  disabled={checkArr.some(check)}
-                                                  onClick={() => {
-                                                      if (typeof form.errors.submission === 'undefined') {
-                                                          const div = document.getElementById('bigDiv');
-                                                          div.scrollTop = 0;
-                                                      } else {
-                                                          console.log("Whole form:"+JSON.stringify(form))
-                                                          toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
-                                                              if (typeof service === 'undefined') {
-                                                                  return null
-                                                              } else {
-                                                                  return <p>{form.values.submission[i].serviceLabel}</p>
-                                                              }
-                                                          })}</div>)
-                                                      }
-                                                  }}
-                                              >
-                                                  Suivant
-                                              </Button>
-                                          </React.Fragment>
-                                      )
-                                  }}
-                              />}
-                              {page === 3 &&
-                              <Field render={({form}) => {
-                                  return (
-                                      <Button
-                                          type="submit"
-                                          variant="contained"
-                                          color="secondary"
-                                          style={{ color: 'white'}}
-                                          onClick={() => {
-                                              if (true) {
-                                                  const data = {
-                                                      active: form.values.servicesAvailability.active,
-                                                      month_begin: form.values.servicesAvailability.month_begin,
-                                                      month_end: form.values.servicesAvailability.month_end,
-                                                      monday_event: form.values.servicesAvailability
-                                                      .monday_event,
-                                                      tuesday_event: form.values.servicesAvailability
-                                                      .tuesday_event,
-                                                      wednesday_event: form.values.servicesAvailability
-                                                      .wednesday_event,
-                                                      thursday_event: form.values.servicesAvailability
-                                                      .thursday_event,
-                                                      friday_event: form.values.servicesAvailability
-                                                      .friday_event,
-                                                      saturday_event: form.values.servicesAvailability
-                                                      .saturday_event,
-                                                      sunday_event: form.values.servicesAvailability
-                                                      .sunday_event
-                                                  };
-
-                                                  axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-                                                      "token"
-                                                  );
-
-                                                  availabilities.forEach( avail => {
-                                                  axios
-                                                      .post(url + "myAlfred/api/availability/add", avail)
-                                                      .then(() => {
-                                                      toast.info("Disponibilité(s) ajoutée(s) avec succès");
-                                                      form.setFieldValue(`servicesAvailability.monday_event`, []);
-                                                      form.setFieldValue(`servicesAvailability.tuesday_event`, []);
-                                                      form.setFieldValue(`servicesAvailability.wednesday_event`, []);
-                                                      form.setFieldValue(`servicesAvailability.thursday_event`, []);
-                                                      form.setFieldValue(`servicesAvailability.friday_event`, []);
-                                                      form.setFieldValue(`servicesAvailability.saturday_event`, []);
-                                                      form.setFieldValue(`servicesAvailability.sunday_event`, []);
-                                                  })
-                                                      .catch(err => console.log(err));
-                                                  })
-
-                                                  const div = document.getElementById('bigDiv');
-                                                  div.scrollTop = 0;
-                                              } else {
-                                                  const div = document.getElementById('bigDiv');
-                                                  div.scrollTop = 0;
-                                              }
-
-                                          }}
-                                      >
-                                          Suivant
-                                      </Button>
-                                  )
-                              }}/>
+                                } else {
+                                  console.log("Whole form:"+JSON.stringify(form))
+                                  toast.error(<div>Les services suivants n'ont pas été correctement configurés :<br />{form.errors.submission.map((service, i) => {
+                                    if (typeof service === 'undefined') {
+                                      return null
+                                    } else {
+                                      return <p>{form.values.submission[i].serviceLabel}</p>
+                                    }
+                                  })}</div>)
+                                }
+                              }}
+                            >
+                              Suivant
+                            </Button>
+                          </React.Fragment>
+                        )
+                      }}
+                      />}
+                      {page === 3 &&
+                      <Field render={({form}) => {
+                        return (
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="secondary"
+                            style={{ color: 'white'}}
+                            onClick={() => {
+                              if (true) {
+                                axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+                                  "token"
+                                );
+                                availabilities.forEach( avail => {
+                                  axios
+                                    .post(url + "myAlfred/api/availability/add", avail)
+                                    .then(() => {
+                                      toast.info("Disponibilité(s) ajoutée(s) avec succès");
+                                      form.setFieldValue(`servicesAvailability.monday_event`, []);
+                                      form.setFieldValue(`servicesAvailability.tuesday_event`, []);
+                                      form.setFieldValue(`servicesAvailability.wednesday_event`, []);
+                                      form.setFieldValue(`servicesAvailability.thursday_event`, []);
+                                      form.setFieldValue(`servicesAvailability.friday_event`, []);
+                                      form.setFieldValue(`servicesAvailability.saturday_event`, []);
+                                      form.setFieldValue(`servicesAvailability.sunday_event`, []);
+                                    })
+                                    .catch(err => console.log(err));
+                                })
                               }
-                              {page === 4 &&
-                              <Field render={({form}) => {
-                                  let cancel = true;
+                            }}
+                          >
+                            Suivant
+                          </Button>
+                        )
+                      }}/>
+                      }
+                      {page === 4 &&
+                      <Field render={({form}) => {
+                        let cancel = true;
 
-                                  if (form.values.createShop.flexible_cancel === true || form.values.createShop.moderate_cancel === true || form.values.createShop.strict_cancel === true) {
-                                      cancel = false;
-                                  } else {
-                                      cancel = true;
-                                  }
+                        if (form.values.createShop.flexible_cancel === true || form.values.createShop.moderate_cancel === true || form.values.createShop.strict_cancel === true) {
+                          cancel = false;
+                        } else {
+                          cancel = true;
+                        }
 
-                                  return (
-                                      <Button type="submit" variant="contained" color="secondary" style={{color: !cancel ? 'white' : null }} disabled={cancel} onClick={() => {
-                                          const div = document.getElementById('bigDiv');
-                                          div.scrollTop = 0;
-                                      }}>
-                                          Suivant
-                                      </Button>
-                                  )
-                              }} />}
-                              {page === 5 &&
-                                  <Field render={({form}) => {
-                                      let check = true;
+                        return (
+                          <Button type="submit" variant="contained" color="secondary" style={{color: !cancel ? 'white' : null }} disabled={cancel} onClick={() => {
+                          }}>
+                            Suivant
+                          </Button>
+                        )
+                      }} />}
+                      {page === 5 &&
+                      <Field render={({form}) => {
+                        let check = true;
 
-                                      if (form.values.createShop.is_particular === true && form.values.createShop.isEngaged === true) {
-                                          check = false;
-                                      } else if(form.values.createShop.is_professional === true && form.values.createShop.siret === "" && form.values.createShop.denomination === "" || form.values.createShop.isEngaged === false) {
-                                          check = true;
-                                      }
-                                      else if (form.values.createShop.is_professional === true && form.values.createShop.isCertified === false) {
-                                          check = true
-                                      } else if(form.values.createShop.is_professional === true && form.values.createShop.siret !== "" && form.values.createShop.denomination !== "" || form.values.createShop.isEngaged === false) {
-                                          check = false;
-                                      } else {
-                                          check = true;
-                                      }
+                        if (form.values.createShop.is_particular === true && form.values.createShop.isEngaged === true) {
+                          check = false;
+                        } else if(form.values.createShop.is_professional === true && form.values.createShop.siret === "" && form.values.createShop.denomination === "" || form.values.createShop.isEngaged === false) {
+                          check = true;
+                        }
+                        else if (form.values.createShop.is_professional === true && form.values.createShop.isCertified === false) {
+                          check = true
+                        } else if(form.values.createShop.is_professional === true && form.values.createShop.siret !== "" && form.values.createShop.denomination !== "" || form.values.createShop.isEngaged === false) {
+                          check = false;
+                        } else {
+                          check = true;
+                        }
 
-                                      return (
-                                          <Button
-                                              type="submit"
-                                              variant="contained"
-                                              style={{color: !check ? 'white' : null }}
-                                              color="secondary"
-                                              disabled={check}
-                                              onClick={() => {
-                                                  if (form.values.createShop.siret !== '' && form.values.createShop.siret.length === 14 || form.values.createShop.is_professional === false) {
-                                                      return null;
-                                                  } else {
-                                                      toast.error(<div>Veuillez renseigner un numéro siret</div>);
-                                                  }
-                                              }}
-                                          >
-                                              Envoyer
-                                          </Button>
-                                      )
-                                  }} />}
-                                    </div>
-                                </div>
-                            </div>
-                        <div className="imgDiv" style={{width: page === 3 ? '0%' : '100%', overflow: 'hidden', backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : page === 4 || page === 5 ? 'url("../../static/Creation_shop_step3.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: page !== 3 ? 'center' : null}}>
-                            </div>
-                        </form>
-                    </React.Fragment>
-
-                )}
-            />
-        );
+                        return (
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            style={{color: !check ? 'white' : null }}
+                            color="secondary"
+                            disabled={check}
+                            onClick={() => {
+                              if (form.values.createShop.siret !== '' && form.values.createShop.siret.length === 14 || form.values.createShop.is_professional === false) {
+                                return null;
+                              } else {
+                                toast.error(<div>Veuillez renseigner un numéro siret</div>);
+                              }
+                            }}
+                          >
+                            Envoyer
+                          </Button>
+                        )
+                      }} />}
+                </div>
+              </div>
+              </Grid>
+              <Grid style={{display: page === 3 ? 'none' : ''}} className="imgDiv">
+                <div style={{backgroundImage: page === 0 || page === 1 || page === 2 ? 'url("../../static/Creation_shop_step1.png")' : page === 4 || page === 5 ? 'url("../../static/Creation_shop_step3.png")' : null , backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: page !== 3 ? 'center' : null, width: '100%', height:'100%'}}>
+                </div>
+              </Grid>
+            </Grid>
+            </form>
+          </React.Fragment>
+      )}
+    />
+  );
     }
 }
 
