@@ -72,7 +72,7 @@ class checkEmail extends React.Component {
                             <h2 className={classes.title}>Inscription terminée</h2>
                         </div>
                         <div className={classes.newContainer}>
-                            <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
+                            <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20, height: 100}}>
                                 <img src='../static/happy_castor.svg' style={{width: 100}} alt={'success'}/>
                             </Grid>
                             <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10, textAlign: 'justify'}}>
