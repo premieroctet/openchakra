@@ -331,15 +331,18 @@ class Wizard extends React.Component {
                                               })
 
                                           const profilePicture = values.alfredUpdate.profile_picture_user;
-                                          const formDataPicture = new FormData();
-                                          formDataPicture.append('myImage',profilePicture);
-                                          axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
-                                              .then(res => {
+                                          if (profilePicture) {
+                                            console.log("profilePicture:"+JSON.stringify(profilePicture));
+                                            const formDataPicture = new FormData();
+                                            formDataPicture.append('myImage',profilePicture);
+                                            axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
+                                                .then(res => {
 
-                                              })
-                                              .catch(err => {
-                                                  console.log(err);
-                                              })
+                                                })
+                                                .catch(err => {
+                                                    console.log(err);
+                                                })
+                                          }
                                           axios.put(url+'myAlfred/api/users/users/becomeAlfred')
                                               .then(res => {
                                                   toast.info('Boutique créée avec succès');
