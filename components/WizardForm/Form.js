@@ -345,35 +345,36 @@ class Wizard extends React.Component {
                                           }
                                           axios.post(url+'myAlfred/api/users/profile/idCard',formDataIdProfile)
                                               .then(res => {
+                                                  const profilePicture = values.alfredUpdate.profile_picture_user;
+                                                  const formDataPicture = new FormData();
+                                                  formDataPicture.append('myImage',profilePicture);
+                                                  axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
+                                                      .then(res => {
+
+                                                      })
+                                                      .catch(err => {
+                                                          console.log(err);
+                                                      })
+                                                  axios.put(url+'myAlfred/api/users/users/becomeAlfred')
+                                                      .then(res => {
+                                                          axios.post(url + 'myAlfred/api/payment/createKycDocument')
+                                                              .then(() => {
+                                                                  toast.info('Boutique créée avec succès');
+                                                                  Router.push('/myShop/services');
+                                                              })
+                                                              .catch(err => console.log(err))
+
+                                                      })
+                                                      .catch(err => {
+                                                          console.log(err);
+                                                      })
 
                                               })
                                               .catch(err => {
                                                   console.log(err);
                                               })
 
-                                          const profilePicture = values.alfredUpdate.profile_picture_user;
-                                          const formDataPicture = new FormData();
-                                          formDataPicture.append('myImage',profilePicture);
-                                          axios.post(url+'myAlfred/api/users/profile/picture',formDataPicture)
-                                              .then(res => {
 
-                                                })
-                                                .catch(err => {
-                                                    console.log(err);
-                                                })
-                                            axios.put(url+'myAlfred/api/users/users/becomeAlfred')
-                                                .then(res => {
-                                                    axios.post(url + 'myAlfred/api/payment/createKycDocument')
-                                                        .then(() => {
-                                                            toast.info('Boutique créée avec succès');
-                                                            Router.push('/myShop/services');
-                                                        })
-                                                        .catch(err => console.log(err))
-                                                    
-                                                })
-                                                .catch(err => {
-                                                    console.log(err);
-                                                })
 
                                           return console.log(values);
 
