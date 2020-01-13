@@ -21,7 +21,7 @@ const styles = theme => ({
     width: '100%',
     height:'100vh',
     [theme.breakpoints.down('sm')]: {
-      height:'65vh',
+      //height:'65vh',
     }
 },
   loginContainer: {
@@ -35,6 +35,10 @@ const styles = theme => ({
     padding: '1.5rem 3rem',
     width: 400,
     marginTop: '15%',
+    [theme.breakpoints.down('sm')]: {
+      width: 'auto',
+
+    }
   },
   cardContant: {
     flexDirection: 'column',
