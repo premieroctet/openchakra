@@ -26,7 +26,7 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
     const userId = mongoose.Types.ObjectId(req.user.id);
     Booking.find({ alfred: userId })
         .sort([["date", -1]])
-        .populate('user')
+        .populate('user',['name','firstname','picture'])
         .populate('chatroom')
         .then(alfred => {
             if (!alfred) {
@@ -43,7 +43,7 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
     const userId = mongoose.Types.ObjectId(req.user.id);
     Booking.find({ user: userId })
         .sort([["date", -1]])
-        .populate('alfred')
+        .populate('alfred','-id_card')
         .populate({
             path: 'chatroom',
             populate: { path: 'emitter' }
@@ -223,8 +223,8 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
 // View 3 last booking for shop page
 router.get('/last/:id',(req,res) => {
     Booking.find({alfred: req.params.id,status:'Terminée'},{},{sort:{'date': -1}}).limit(3)
-        .populate('alfred')
-        .populate('user')
+        .populate('alfred','-id_card')
+        .populate('user','-id_card')
         .populate('prestation')
         .populate({path:'prestation',populate:{path: 'service'}})
         .then(booking => {
@@ -246,7 +246,7 @@ router.get('/last/:id',(req,res) => {
 // @access private
 router.get('/getPaid',passport.authenticate('jwt',{session:false}),(req,res)=> {
     Booking.find({alfred: req.user.id, paid:true})
-        .populate('user')
+        .populate('user','-id_card')
         .then(booking => {
             res.json(booking)
         })
@@ -258,7 +258,7 @@ router.get('/getPaid',passport.authenticate('jwt',{session:false}),(req,res)=> {
 // @access private
 router.get('/getPaidSoon',passport.authenticate('jwt',{session:false}),(req,res)=> {
     Booking.find({alfred: req.user.id, paid:false, status: 'Confirmée'})
-        .populate('user')
+        .populate('user','-id_card')
         .then(booking => {
             res.json(booking)
         })
@@ -270,7 +270,7 @@ router.get('/getPaidSoon',passport.authenticate('jwt',{session:false}),(req,res)
 // @access private
 router.get('/account/paid',passport.authenticate('jwt',{session:false}),(req,res)=> {
     Booking.find({user: req.user.id, paid:true})
-        .populate('alfred')
+        .populate('alfred','-id_card')
         .then(booking => {
             res.json(booking)
         })
@@ -282,7 +282,7 @@ router.get('/account/paid',passport.authenticate('jwt',{session:false}),(req,res
 // @access private
 router.get('/account/paidSoon',passport.authenticate('jwt',{session:false}),(req,res)=> {
     Booking.find({user: req.user.id, paid:false,status: 'Confirmée'})
-        .populate('alfred')
+        .populate('alfred','-id_card')
         .then(booking => {
             res.json(booking)
         })
@@ -295,8 +295,8 @@ router.get('/account/paidSoon',passport.authenticate('jwt',{session:false}),(req
 router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
     Booking.findById(req.params.id)
-        .populate('alfred')
-        .populate('user')
+        .populate('alfred','-id_card')
+        .populate('user','-id_card')
         .populate('prestation')
         .populate('equipments')
         .then(booking => {

@@ -80,7 +80,7 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
 router.get('/all',(req,res)=> {
 
     Shop.find()
-        .populate('alfred')
+        .populate('alfred','-id_card')
         .populate('services')
         .populate({path:'services',populate:{path: 'service',select:'label'}})
         .then(shop => {
@@ -103,7 +103,7 @@ router.get('/all',(req,res)=> {
 router.get('/all/:id',(req,res)=> {
 
     Shop.findById(req.params.id)
-        .populate('alfred')
+        .populate('alfred','-id_card')
         .populate({path:'services.label',populate:{path: 'service',select:'label'}})
         .then(shop => {
             if(Object.keys(shop).length === 0 && shop.constructor === Object){
@@ -123,7 +123,7 @@ router.get('/alfred/:id_alfred',(req,res)=> {
 
     Shop.findOne({alfred: req.params.id_alfred})
         .populate('services')
-        .populate('alfred')
+        .populate('alfred','-id_card')
         .populate({path:'services',populate:{path: 'service',select:['label','picture']}})
         .then(shop => {
             if(Object.keys(shop).length === 0 && shop.constructor === Object){

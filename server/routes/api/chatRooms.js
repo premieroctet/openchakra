@@ -21,8 +21,8 @@ router.get('/userChatRooms', passport.authenticate('jwt',{session:false}), (req,
         recipient: user
       }
     ] })
-     .populate("emitter")
-    .populate("recipient")
+     .populate("emitter",'-id_card')
+    .populate("recipient",'-id_card')
     .then(chatrooms => {
       if (!chatrooms) {
         res.status(404).json({msg: 'Aucun chat trouvé'})
@@ -106,8 +106,8 @@ router.get('/nonViewedMessages', passport.authenticate('jwt', { session: false }
       recipient: user
     }
   ] })
-  .populate('emitter')
-  .populate('recipient')
+  .populate('emitter','-id_card')
+  .populate('recipient','-id_card')
   .populate({
     path: 'booking',
     populate: { path: 'alfred' }

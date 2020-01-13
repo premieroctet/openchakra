@@ -578,7 +578,7 @@ class DetailsReservation extends React.Component {
                                       ? (bookingObj.amount - bookingObj.fees * 2).toFixed(
                                           2
                                       )
-                                      : bookingObj.amount}
+                                      : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
                               €
                             </Typography>
                           </Grid>
@@ -2608,7 +2608,7 @@ class DetailsReservation extends React.Component {
                             ? (bookingObj.amount - bookingObj.fees * 2).toFixed(
                                 2
                               )
-                            : bookingObj.amount}
+                            : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
                           €
                         </Typography>
                       </Grid>
@@ -2758,7 +2758,7 @@ class DetailsReservation extends React.Component {
                                       bookingObj.amount -
                                       bookingObj.fees * 2
                                     ).toFixed(2)
-                                  : bookingObj.amount}
+                                  : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
                                 €
                               </Typography>
                             </Grid>

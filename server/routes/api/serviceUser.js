@@ -340,7 +340,7 @@ router.post('/addCertification/:id',upload.single('file_certification'),passport
 router.get('/all',(req,res)=> {
 
     ServiceUser.find()
-        .populate('user')
+        .populate('user','-id_card')
         .populate('service')
         .then(service => {
             if(typeof service !== 'undefined' && service.length > 0){
@@ -359,7 +359,7 @@ router.get('/all',(req,res)=> {
 router.get('/all/category/:category',(req,res)=> {
     let allServices = [];
     ServiceUser.find()
-        .populate('user')
+        .populate('user','-id_card')
         .populate('service')
         .then(service => {
             if(typeof service !== 'undefined' && service.length > 0){
@@ -382,7 +382,7 @@ router.get('/all/category/:category',(req,res)=> {
 router.get('/category/:id',(req,res)=> {
 
     ServiceUser.find()
-        .populate('user')
+        .populate('user','-id_card')
         .populate('service')
         .then(service => {
             if(typeof service !== 'undefined' && service.length > 0){
@@ -409,7 +409,7 @@ router.get('/near',passport.authenticate('jwt',{session:false}),(req,res)=> {
     User.findById(req.user.id)
         .then(user => {
             ServiceUser.find()
-                .populate('user')
+                .populate('user','-id_card')
                 .populate('service')
                 .then(service => {
                     const gps = user.billing_address.gps;
@@ -447,7 +447,7 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
     User.findById(req.user.id)
         .then(user => {
             ServiceUser.find({service:req.params.service})
-                .populate('user')
+                .populate('user','-id_card')
                 .populate('service')
                 .then(service => {
                     const gps = user.billing_address.gps;
@@ -483,7 +483,7 @@ router.post('/nearCity',(req,res)=> {
     const dat = req.body.city;
     const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), "[eéèêaàoôuù]");
             ServiceUser.find({'service_address.city':{ $regex : data, $options : 'i' }})
-                .populate('user')
+                .populate('user','-id_card')
                 .populate('service')
                 .then(service => {
 
@@ -502,7 +502,7 @@ router.get('/nearOther/:id',passport.authenticate('jwt',{session:false}),(req,re
     User.findById(req.user.id)
         .then(user => {
             ServiceUser.find()
-                .populate('user')
+                .populate('user','-id_card')
                 .populate('service')
                 .then(service => {
                     const addressIndex = user.service_address.findIndex(i =>i._id == req.params.id);
@@ -541,7 +541,7 @@ router.get('/all/nearOther/:id/:service',passport.authenticate('jwt',{session:fa
     User.findById(req.user.id)
         .then(user => {
             ServiceUser.find({service: req.params.service})
-                .populate('user')
+                .populate('user','-id_card')
                 .populate('service')
                 .then(service => {
                     const addressIndex = user.service_address.findIndex(i =>i._id == req.params.id);
@@ -628,7 +628,7 @@ router.post('/home/search',(req,res)=> {
 
     ServiceUser.find({service: service,'service_address.city':city})
         .populate('service')
-        .populate('user')
+        .populate('user','-id_card')
         .populate({path: 'service', populate: { path: 'category' }})
         .then(serviceUser => {
             serviceUser.forEach(s => {
@@ -695,7 +695,7 @@ router.post('/home/search',(req,res)=> {
 router.get('/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
 
     ServiceUser.findById(req.params.id)
-        .populate('user')
+        .populate('user','-id_card')
         .populate('service')
         .populate({path: 'prestations.prestation', populate: { path: 'filter_presentation' }})
         .populate('equipments')

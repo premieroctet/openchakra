@@ -98,7 +98,7 @@ router.get('/statistics/totalBookings',passport.authenticate('jwt',{session:fals
         .then(booking => {
 
             booking.forEach(b => {
-                totalIncomes += parseInt(b.amount);
+                totalIncomes += parseFloat(b.amount);
                 totalPrestations += b.prestations.length
 
             });
@@ -152,7 +152,7 @@ router.post('/statistics/bookings/service',passport.authenticate('jwt',{session:
         .then(booking => {
 
             booking.forEach(b => {
-                totalIncomes += parseInt(b.amount);
+                totalIncomes += parseFloat(b.amount);
                 totalPrestations += b.prestations.length
 
             });
@@ -183,7 +183,7 @@ router.get('/statistics/reviews/:service',passport.authenticate('jwt',{session:f
 // @Access private
 router.get('/evaluations/allReviews',passport.authenticate('jwt',{session:false}),(req,res)=> {
     Reviews.find({alfred: req.user.id,note_client:undefined})
-        .populate('user')
+        .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
         .then(reviews => {

@@ -130,7 +130,7 @@ router.get('/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
 router.get('/customerReviewsCurrent', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.user.id);
     Reviews.find({ alfred: userId,note_client:undefined })
-        .populate('user')
+        .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
         .then(review => {
@@ -142,7 +142,7 @@ router.get('/customerReviewsCurrent', passport.authenticate('jwt', { session: fa
 router.get('/alfredReviewsCurrent', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.user.id);
     Reviews.find({ user: userId, note_alfred:undefined })
-        .populate('alfred')
+        .populate('alfred','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
         .then(review => {
@@ -154,7 +154,7 @@ router.get('/alfredReviewsCurrent', passport.authenticate('jwt', { session: fals
 router.get('/profile/customerReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.params.id);
     Reviews.find({ alfred: userId, note_client: undefined })
-        .populate('user')
+        .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
         .then(review => {
@@ -166,7 +166,7 @@ router.get('/profile/customerReviewsCurrent/:id', passport.authenticate('jwt', {
 router.get('/profile/alfredReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.params.id);
     Reviews.find({ user: userId, note_alfred: undefined })
-        .populate('alfred')
+        .populate('alfred','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
         .then(review => {
