@@ -46,6 +46,16 @@ const styles = theme => ({
       position: 'relative',
       objectFit: 'cover',
     },
+    mobilevoir: {
+        [theme.breakpoints.up("md")]: {
+            display: "none!important"
+        }
+    },
+    webvoir: {
+        [theme.breakpoints.down("sm")]: {
+            display: "none!important"
+        }
+    },
     respfilter:{
         [theme.breakpoints.down('sm')]: {
             top: 200,
@@ -859,15 +869,23 @@ class searchNotLogin extends React.Component {
                                 />
 
                             </Grid>
-                            <Grid item xs={3}>
+                            
+                            <Grid item xs={3} className={classes.webvoir} style={{display:"flex",alignItems:"center"}}>
                                 {this.state.research.length === 0 || !this.state.research.trim() ?
-                                    <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white'}}>Rechercher</Button>
+                                    <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white', borderRadius: '100px'}}>Rechercher</Button>
                                     :
-                                    <Button variant={"contained"}  onClick={()=>this.searchWithWord()} color={"primary"} style={{color:'white'}}>Rechercher</Button>
+                                    <Button variant={"contained"}  onClick={()=>this.searchWithWord()} color={"primary"} style={{color:'white', borderRadius: '100px'}}>Rechercher</Button>
+                                }
+                            </Grid>
+                            <Grid item xs={3} className={classes.mobilevoir} style={{display:"flex",alignItems:"center"}}>
+                                {this.state.research.length === 0 || !this.state.research.trim() ?
+                                    <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white', borderRadius: '100px'}}><img src="../../static/search-solid1.svg" style={{width: 15, height: 15}}/></Button>
+                                    :
+                                    <Button variant={"contained"}  onClick={()=>this.searchWithWord()} color={"primary"} style={{color:'white', borderRadius: '100px'}}><img src="../../static/search-solid1.svg" style={{width: 15, height: 15}}/></Button>
                                 }
                             </Grid>
                         </Grid>
-                            <Grid container className={classes.respfilter} style={{position: 'sticky', top: '110px', zIndex: 10}}>
+                            <Grid container className={classes.respfilter} style={{position: 'sticky', top: '110px', zIndex: 10, background: 'white', height: 60}}>
                             <Grid item xs={12} style={{height: 50}}>
                                 <Grid container>
                                     {this.state.clickedstatut ?
