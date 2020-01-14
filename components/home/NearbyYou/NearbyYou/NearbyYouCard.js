@@ -100,6 +100,7 @@ const nearbyYouCard = (props) => {
 
 
     <Card className={classes.card}>
+      <Link href={`/shop?id_alfred=${shop}`}>
       <CardActionArea style={{cursor:'default'}}>
 
         <CardMedia className={classes.media} image={img} title={alfred}>
@@ -132,7 +133,7 @@ const nearbyYouCard = (props) => {
         </CardContent>
 
       </CardActionArea>
-
+      </Link>
     </Card>
   );
 };

@@ -1,40 +1,36 @@
 import React, { Fragment } from 'react';
 import AlfredBanner from '../components/shop/AlfredBanner/AlfredBanner';
-import CanDo from '../components/shop/CanDo/CanDo';
 import MyBestSellers from '../components/shop/MyBestSellers/myBestSellers';
 import Bio from '../components/shop/Bio/Bio';
 import Review from '../components/shop/Review/Review';
 import Layout from '../hoc/Layout/Layout';
-
-
-
-
+import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
+import NavBarSwitchStatus from '../components/NavBar/NavBarSwitchStatus/NavBarSwitchStatus';
 
 class shop extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: ''
+            id: '',
+            logged: false
         }
     }
     static getInitialProps ({ query: { id_alfred } }) {
         return { aboutId: id_alfred }
-
     }
 
     componentWillMount() {
         this.setState({id: this.props.aboutId});
+        console.log(this.state.id,'test')
     }
 
     render() {
-
-
-
         return (
             <Fragment>
                 <Layout>
                     <AlfredBanner shop={this.state.id}/>
-                    <CanDo shop={this.state.id}/>
+                    <NavBarShop/>
+                    <NavBarSwitchStatus/>
                     <MyBestSellers shop={this.state.id}/>
                     <Bio shop={this.state.id}/>
                     <Review shop={this.state.id}/>

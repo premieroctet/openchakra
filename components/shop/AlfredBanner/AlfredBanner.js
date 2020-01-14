@@ -152,22 +152,10 @@ class alfredBanner extends React.Component{
                                         Partager
                                     </Typography>
                                 </Grid>
-                                <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <FavoriteBorderOutlined style={{ color: 'white' }} onClick={this.addFavoris} />
-                                    <Typography variant="body1" style={{ color: 'white', fontSize: 15 }}>
-                                        Ajouter à la wishlist
-                                    </Typography>
-                                </Grid>
                             </Grid>
                             <Grid item className={classes.itemAvatar}>
                                 <Avatar alt="photo de profil" src={`../../../../${alfred.picture}`} className={classes.avatar} />
                                 <Typography style={{marginTop:20}} className={classes.textAvatar}>Boutique de {alfred.firstname}</Typography>
-                            </Grid>
-                            <Grid item className={classes.itemDispo}>
-                                <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <PermContactCalendar style={{ color: 'white' }} />
-                                    <Typography style={{ fontSize: 15 }} variant="body1" className={classes.textDispo}>Disponibilité</Typography>
-                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
