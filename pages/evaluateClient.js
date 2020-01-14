@@ -134,8 +134,8 @@ class EvaluateClient extends React.Component {
 
     }
 
-    static getInitialProps ({ query: { id,client } }) {
-        return { service_id: id,client_id:client }
+    static getInitialProps ({ query: { booking,id,client } }) {
+        return { booking:booking,service_id: id,client_id:client }
 
     }
 
@@ -191,6 +191,7 @@ class EvaluateClient extends React.Component {
 
     evaluate() {
         const id = this.props.service_id;
+        const booking = this.props.booking;
         const client = this.props.client_id;
         const content = this.state.content;
         const accueil = this.state.accueil;
@@ -198,6 +199,7 @@ class EvaluateClient extends React.Component {
         const relational = this.state.relational;
 
         const obj = {
+            booking: booking,
             client: client,
             service: id,
             accueil: accueil,

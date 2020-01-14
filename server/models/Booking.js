@@ -89,6 +89,14 @@ const BookingSchema = new Schema({
     serviceUserId: {
         type: String
     },
+    alfred_evaluated: {
+      type: Boolean,
+      default: false
+    },
+    user_evaluated: {
+        type: Boolean,
+        default: false
+    },
     paid: {
         type: Boolean,
         default: false

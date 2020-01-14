@@ -1500,6 +1500,7 @@ class DetailsReservation extends React.Component {
                                       paddingBottom: "7%"
                                     }}
                                 >
+                                  <Grid container>
                                   <Typography
                                       style={{
                                         marginTop: "-3%",
@@ -1509,19 +1510,29 @@ class DetailsReservation extends React.Component {
                                   >
                                     Commentaires
                                   </Typography>
+                                  </Grid>
                                   <div style={{ display: "flex", flexFlow: "row" }}>
+                                    {bookingObj.user_evaluated ?
+                                        <Grid container>
+                                          <Grid item md={12} xs={12} style={{marginBottom: '35px'}}>
+                                            <Typography>
+                                              Vous avez déjà évalué votre client.
+                                            </Typography>
+                                          </Grid>
+                                        </Grid>
+                                        :
                                     <Grid container>
                                       <Grid item md={6} xs={12}>
                                         <Typography>
-                                          Vous avez 15 jours pour évaluer votre Alfred. Une
-                                          fois que votre Alfred aura rédigé son commentaire,
+                                          Vous avez 15 jours pour évaluer votre client. Une
+                                          fois que votre client aura rédigé son commentaire,
                                           il pourra consulter votre évaluation et vous
                                           pourrez consulter la sienne !
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={2}></Grid>
                                       <Grid item md={4} xs={12}>
-                                        <Link href={`/evaluateClient?id=${bookingObj.serviceUserId}&client=${bookingObj.user._id}`}>
+                                        <Link href={`/evaluateClient?booking=${bookingObj._id}&id=${bookingObj.serviceUserId}&client=${bookingObj.user._id}`}>
                                         <div
                                             style={{
                                               textAlign: "center",
@@ -1530,6 +1541,7 @@ class DetailsReservation extends React.Component {
                                               backgroundColor: "#F8727F",
                                               lineHeight: 2.5,
                                               borderRadius: "50px",
+                                              cursor: 'pointer'
                                             }}
                                         >
 
@@ -1544,12 +1556,13 @@ class DetailsReservation extends React.Component {
                                         </div>
                                           </Link>
                                       </Grid>
-                                    </Grid>
+                                    </Grid> }
 
 
                                   </div>
                                 </Grid>
                             ) : (
+
                                 <Grid
                                     container
                                     style={{
@@ -1558,6 +1571,7 @@ class DetailsReservation extends React.Component {
                                       paddingBottom: "7%"
                                     }}
                                 >
+                                  <Grid container>
                                   <Typography
                                       style={{
                                         marginTop: "-3%",
@@ -1567,7 +1581,18 @@ class DetailsReservation extends React.Component {
                                   >
                                     Commentaires
                                   </Typography>
+                                  </Grid>
+
                                   <div style={{ display: "flex", flexFlow: "row" }}>
+                                    {bookingObj.alfred_evaluated ?
+                                        <Grid container>
+                                          <Grid item md={12} xs={12} style={{marginBottom: '35px'}}>
+                                            <Typography>
+                                              Vous avez déjà évalué votre Alfred.
+                                            </Typography>
+                                          </Grid>
+                                        </Grid>
+                                        :
                                     <Grid container>
                                       <Grid item md={6} xs={12} style={{marginBottom: '35px'}}>
                                         <Typography>
@@ -1580,7 +1605,7 @@ class DetailsReservation extends React.Component {
                                       <Grid item xs={2}></Grid>
                                       <Grid item md={4} xs={12}>
                                         <Link
-                                            href={`/evaluate?id=${bookingObj.serviceUserId}`}
+                                            href={`/evaluate?booking=${bookingObj._id}&id=${bookingObj.serviceUserId}`}
                                         >
                                         <div
                                             style={{
@@ -1590,6 +1615,7 @@ class DetailsReservation extends React.Component {
                                               backgroundColor: "#F8727F",
                                               lineHeight: 2.5,
                                               borderRadius: "50px",
+                                              cursor:'pointer'
                                             }}
                                         >
 
@@ -1604,11 +1630,12 @@ class DetailsReservation extends React.Component {
                                         </div>
                                           </Link>
                                       </Grid>
-                                    </Grid>
+                                    </Grid> }
 
 
                                   </div>
                                 </Grid>
+
                             )
                         ) : null}
                         <Grid container style={{ borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%" }}a>

@@ -221,13 +221,25 @@ class MessagesDetails extends React.Component {
       Notification.permission !== 'denied' ||
       Notification.permission === 'default'
     ) {
-      Notification.requestPermission().then(result => {
-        if (result === 'granted') {
-          new Notification(
-            'Vous recevrez des notifications pour cette conversation'
-          );
+      try {
+        Notification.requestPermission().then(result => {
+          if (result === 'granted') {
+            new Notification(
+                'Vous recevrez des notifications pour cette conversation'
+            );
+          }
+        });
+      } catch (err) {
+        if (err instanceof TypeError) {
+          Notification.requestPermission((result) => {
+            if (result === 'granted') {
+              new Notification(
+                  'Vous recevrez des notifications pour cette conversation'
+              );
+            }
+          })
         }
-      });
+      }
     }
   };
 

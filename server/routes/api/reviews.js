@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 
 const Reviews = require('../../models/Reviews');
 const User = require('../../models/User');
+const Booking = require('../../models/Booking');
 
 router.get('/test',(req, res) => res.json({msg: 'Reviews Works!'}) );
 
@@ -35,7 +36,9 @@ router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res
                 reviewFields.note_alfred.global = (quality + relational + prestation)/3;
 
                 const newReviews = new Reviews(reviewFields);
-                newReviews.save().then(reviews => res.json(reviews)).catch(err => console.log(err));
+                newReviews.save().then(() => {
+                    Booking.findByIdAndUpdate(req.body.booking,{alfred_evaluated: true}).then(()=>res.json('ok')).catch(error => console.log(error))
+                }).catch(err => console.log(err));
 
                 User.findByIdAndUpdate(req.body.alfred, {
                     $inc: {number_of_reviews: 1}
@@ -80,7 +83,9 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
     reviewFields.note_client.global = (reception + relational + accuracy)/3;
 
     const newReviews = new Reviews(reviewFields);
-    newReviews.save().then(reviews => res.json(reviews)).catch(err => console.log(err));
+    newReviews.save().then(() => {
+        Booking.findByIdAndUpdate(req.body.booking,{user_evaluated: true}).then(()=>res.json('ok')).catch(error => console.log(error))
+    }).catch(err => console.log(err));
 
     User.findByIdAndUpdate(req.body.client, {
         $inc: {number_of_reviews_client: 1}
