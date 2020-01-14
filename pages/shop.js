@@ -6,6 +6,7 @@ import Review from '../components/shop/Review/Review';
 import Layout from '../hoc/Layout/Layout';
 import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
 import NavBarSwitchStatus from '../components/NavBar/NavBarSwitchStatus/NavBarSwitchStatus';
+import About from '../components/About/About';
 
 class shop extends React.Component {
     constructor(props) {
@@ -31,6 +32,7 @@ class shop extends React.Component {
                     <AlfredBanner shop={this.state.id}/>
                     <NavBarShop/>
                     <NavBarSwitchStatus/>
+                    <About/>
                     <MyBestSellers shop={this.state.id}/>
                     <Bio shop={this.state.id}/>
                     <Review shop={this.state.id}/>
