@@ -1,5 +1,4 @@
 import Grid from '@material-ui/core/Grid';
-import Link from 'next/link';
 import LinkMaterial from '@material-ui/core/Link';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -11,7 +10,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import FolderIcon from '@material-ui/icons/Folder';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import HighlightOff from '@material-ui/icons/HighlightOff';
 import CalendarToday from '@material-ui/icons/CalendarToday';
@@ -20,14 +18,6 @@ import Pets from '@material-ui/icons/Pets';
 import StarIcon from '@material-ui/icons/Star';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
-
-function generate(element) {
-  return [0, 1, 2].map(value =>
-    React.cloneElement(element, {
-      key: value,
-    }),
-  );
-}
 
 class About extends React.Component{
   constructor(props){
@@ -44,10 +34,10 @@ class About extends React.Component{
     const preventDefault = event => event.preventDefault();
 
     return (
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+      <Grid container className={classes.mainContainer}>
+        <Grid item>
           <Typography variant="h6" className={classes.title}>
-            A propos de Maelis
+            A propos de Maëlis
           </Typography>
           <div>
             <List dense={this.state.dense}>

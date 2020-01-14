@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import Grid from '@material-ui/core/Grid';
 import AlfredBanner from '../components/shop/AlfredBanner/AlfredBanner';
 import MyBestSellers from '../components/shop/MyBestSellers/myBestSellers';
 import Bio from '../components/shop/Bio/Bio';
@@ -7,6 +8,7 @@ import Layout from '../hoc/Layout/Layout';
 import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
 import NavBarSwitchStatus from '../components/NavBar/NavBarSwitchStatus/NavBarSwitchStatus';
 import About from '../components/About/About';
+import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
 
 class shop extends React.Component {
     constructor(props) {
@@ -31,11 +33,20 @@ class shop extends React.Component {
                 <Layout>
                     <AlfredBanner shop={this.state.id}/>
                     <NavBarShop/>
-                    <NavBarSwitchStatus/>
-                    <About/>
-                    <MyBestSellers shop={this.state.id}/>
-                    <Bio shop={this.state.id}/>
-                    <Review shop={this.state.id}/>
+                    {/*<NavBarSwitchStatus/>*/}
+                    <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
+                        <Grid style={{display:'flex', alignItems: 'baseline'}}>
+                            <Grid style={{width: '50%', display:'flex', alignItems: 'center'}}>
+                                <About/>
+                            </Grid>
+                            <Grid style={{width: '50%', display:'flex', alignItems: 'center'}}>
+                                <SkillsAlfred/>
+                            </Grid>
+                        </Grid>
+                        <MyBestSellers shop={this.state.id}/>
+                        <Bio shop={this.state.id}/>
+                        <Review shop={this.state.id}/>
+                    </Grid>
                 </Layout>
             </Fragment>
         )
