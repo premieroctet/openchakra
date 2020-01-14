@@ -2213,7 +2213,7 @@ class Form extends React.Component {
                                                     label={<React.Fragment>
                                                         <p style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Conditions My-Alfred</p>
                                                 <p style={{marginTop: 0, fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
-                                                    Numéro de téléphone confirmé, adresse e-mail, informations de paiement et acceptation du règlement intérieur.
+                                                  Adresse email et numéro de téléphone confirmés, information de paiement et acceptation du règlement intérieur.
                                             </p>
                                         </React.Fragment>}
                                                 />
@@ -2271,7 +2271,7 @@ class Form extends React.Component {
                                                     label={<React.Fragment>
                                                     <p style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Pièce d'identité officielle</p>
                                                     <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
-                                                        Ces utilisateurs ont vérifié leur identité.
+                                                      Ces utilisateurs ont vérifié leur pièce d'identité.
                                                     </p>
                                                 </React.Fragment>}
                                                 />
@@ -2300,7 +2300,7 @@ class Form extends React.Component {
                                                     label={<React.Fragment>
                                                         <Typography style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Recommandations d'autres Alfred</Typography>
                                                         <Typography style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
-                                                            Ces utilisateurs ont déjà utilisé des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commentaires négatifs.
+                                                          Ces utilisateurs ont déjà utilisé des services avec My-Alfred, sont recommandés par d'autres Alfred et non pas reçu de commentaires négatifs.
                                                         </Typography>
                                                     </React.Fragment>}
 
