@@ -890,9 +890,9 @@ class searchLogin extends React.Component {
                             </Grid>
                             <Grid item xs={3} className={classes.mobilevoir} style={{display:"flex",alignItems:"center"}}>
                                 {this.state.research.length === 0 || !this.state.research.trim() ?
-                                    <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white', borderRadius: '100px'}}><img src="../../static/search-solid1.svg" style={{width: 15, height: 15}}/></Button>
+                                    <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white'}}><img src="../../static/search-solid1.svg" style={{width: 15, height: 15}}/></Button>
                                     :
-                                    <Button variant={"contained"}  onClick={()=>this.searchWithWord()} color={"primary"} style={{color:'white', borderRadius: '100px'}}><img src="../../static/search-solid1.svg" style={{width: 15, height: 15}}/></Button>
+                                    <Button variant={"contained"}  onClick={()=>this.searchWithWord()} color={"primary"} style={{color:'white'}}><img src="../../static/search-solid1.svg" style={{width: 15, height: 15}}/></Button>
                                 }
                             </Grid>
                         </Grid>
