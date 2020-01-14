@@ -19,7 +19,7 @@ import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import 'react-dates/initialize';
-import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
+import {DateRangePicker, SingleDatePicker, DayPickerRangeController, VERTICAL_ORIENTATION} from 'react-dates';
 import moment from "moment";
 import StarRatings from 'react-star-ratings';
 import 'react-dates/lib/css/_datepicker.css';
@@ -871,22 +871,106 @@ class searchNotLogin extends React.Component {
                             <Grid item xs={12} style={{height: 50}}>
                                 <Grid container>
                                     {this.state.clickedstatut ?
-                                        <Grid item xs={5} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Statut</Typography>
+                                        <Grid item xs={5} md={3}  style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', height: '45px', margin: 10}}>
+                                            <Typography onClick={()=> this.yes()} style={{textAlign: 'center', color:'white', fontSize: '0.8rem', paddingTop: 13, height:43}}>Statut</Typography>
+
+                                            <Grid id="status" item xs={12}  style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', marginTop: 8,padding:10,zIndex: 1}}>
+                                                <Grid container>
+                                                    <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                                        {this.state.checkedParticulier ? <Grid item xs={3}></Grid> :
+
+                                                            <Grid item xs={6} sm={4} md={3} style={{textAlign:'center', margin: 'auto'}}>
+                                                                <FormControlLabel
+                                                                    control={
+                                                                        <Switch
+                                                                            checked={this.state.checkedB}
+                                                                            onChange={e=>{this.handleChange(e);this.filter()}}
+                                                                            value={this.state.checkedB}
+                                                                            color="primary"
+                                                                            name={'checkedB'}
+                                                                        />
+                                                                    }
+                                                                    label="Pro"
+                                                                />
+                                                            </Grid>
+                                                        }
+                                                    </Grid>
+
+                                                    <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                                        {this.state.checkedB ? null :
+
+                                                            <Grid item xs={6} sm={4} md={3} style={{textAlign:'center', margin: 'auto'}}>
+                                                                <FormControlLabel
+                                                                    control={
+                                                                        <Switch
+                                                                            checked={this.state.checkedParticulier}
+                                                                            onChange={e=>{this.handleChange(e);this.filterParticulier()}}
+                                                                            value={this.state.checkedParticulier}
+                                                                            color="primary"
+                                                                            name={'checkedParticulier'}
+                                                                        />
+                                                                    }
+                                                                    label="Particulier"
+                                                                />
+                                                            </Grid>
+
+                                                        }
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
                                         </Grid> 
                                     : 
-                                        <Grid item xs={5} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Statut</Typography>
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', height:43,paddingTop: 13}}>Statut</Typography>
                                         </Grid> 
                                     }
                                     {this.state.clickeddate ?
-                                        <Grid item xs={5} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', color:'white', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
+                                        <>
+
+                                        <Grid item xs={5} md={3}  style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', height: '45px', margin: 10}}>
+                                            <Typography onClick={()=> this.yes2()} style={{textAlign: 'center', color:'white', fontSize: '0.8rem',paddingTop:13,height:43}}>Quelle(s) date(s) ?</Typography>
+                                            <Grid id="thedate" item xs={12} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: 'auto', marginTop: 8,zIndex: 1, padding: 10}}>
+                                                <Grid container>
+                                                    <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                                        <DateRangePicker
+                                                            style={{width: '50px'}}
+                                                            startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+                                                            startDatePlaceholderText={'Début'}
+                                                            endDatePlaceholderText={'Fin'}
+                                                            startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                                                            endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+                                                            endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                                                            onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
+                                                            focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                                                            onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+                                                            minimumNights={0}
+
+
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                                        <Grid container>
+                                                            <Grid item xs={6}>
+                                                                <Button style={{fontSize: '0.8rem',}} onClick={()=>this.cancelDateFilter()}>Annuler</Button>
+                                                            </Grid>
+                                                            <Grid item xs={6}>
+                                                                <Button style={{fontSize: '0.8rem',}} onClick={()=>this.filterDate()}>Valider</Button>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
                                         </Grid>
+
+
+                                        </>
+
                                     :
-                                        <Grid item xs={5} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', paddingTop: 13, height: '45px', margin: 10}}>
-                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem', lineHeight: '1.5'}}>Quelle(s) date(s) ?</Typography>
+                                        <Grid item xs={5} md={3} onClick={()=> this.yes2()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
+                                            <Typography style={{textAlign: 'center', fontSize: '0.8rem',paddingTop:13,height:43 }}>Quelle(s) date(s) ?</Typography>
                                         </Grid>
+
                                     }
                                 </Grid>
 
@@ -896,89 +980,6 @@ class searchNotLogin extends React.Component {
                             </Grid>
 
 
-                            <Grid container>
-                                {this.state.clickedstatut ?
-                                <Grid id="status" item xs={10} sm={4} md={3} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1}}>
-                                    <Grid container>
-                                        <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
-                                            {this.state.checkedParticulier ? <Grid item xs={3}></Grid> :
-                                                
-                                                <Grid item xs={6} sm={4} md={3} style={{textAlign:'center', margin: 'auto'}}>
-                                                    <FormControlLabel
-                                                        control={
-                                                            <Switch
-                                                                checked={this.state.checkedB}
-                                                                onChange={e=>{this.handleChange(e);this.filter()}}
-                                                                value={this.state.checkedB}
-                                                                color="primary"
-                                                                name={'checkedB'}
-                                                            />
-                                                        }
-                                                        label="Pro"
-                                                    />
-                                                </Grid>
-                                            }
-                                        </Grid>
-
-                                        <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
-                                            {this.state.checkedB ? null : 
-
-                                            <Grid item xs={6} sm={4} md={3} style={{textAlign:'center', margin: 'auto'}}>
-                                                    <FormControlLabel
-                                                        control={
-                                                            <Switch
-                                                                checked={this.state.checkedParticulier}
-                                                                onChange={e=>{this.handleChange(e);this.filterParticulier()}}
-                                                                value={this.state.checkedParticulier}
-                                                                color="primary"
-                                                                name={'checkedParticulier'}
-                                                            />
-                                                        }
-                                                        label="Particulier"
-                                                    />
-                                                </Grid>
-
-                                            }
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                : null}
-                                {this.state.clickeddate ?
-                                <Fragment>
-                                    <Grid id="thedate" item xs={10} sm={4} md={3} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', margin: 10,zIndex: 1, padding: 10}}>
-                                        <Grid container>
-                                            <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
-                                                <DateRangePicker
-                                                    style={{width: '50px'}}
-                                                    startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                                                    startDatePlaceholderText={'Début'}
-                                                    endDatePlaceholderText={'Fin'}
-                                                    startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                                                    endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-                                                    endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                                                    onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
-                                                    focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                                                    onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
-                                                    minimumNights={0}
-                                                />
-                                            </Grid>
-                                            
-                                            <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
-                                                <Grid container>
-                                                    <Grid item xs={6}>
-                                                        <Button style={{fontSize: '0.8rem',}} onClick={()=>this.cancelDateFilter()}>Annuler</Button>
-                                                    </Grid>
-                                                    <Grid item xs={6}>
-                                                        <Button style={{fontSize: '0.8rem',}} onClick={()=>this.filterDate()}>Valider</Button>
-                                                    </Grid> 
-                                                </Grid>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                    
-                                </Fragment>
-                                : null}
-                            </Grid>
                         </Grid>
 
                         {click ?
