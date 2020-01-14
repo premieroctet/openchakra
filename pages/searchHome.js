@@ -769,6 +769,7 @@ class searchHome extends React.Component {
                                                             focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
                                                             onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
                                                             minimumNights={0}
+                                                            numberOfMonths={1}
                                                         />
                                                     </Grid>
 
