@@ -361,7 +361,7 @@ class NavBar extends Component {
         { alfred ?
         maboutique
      :
-     doublemenuitem
+     becomealfred
         }
         {test ?
               <MenuItem onClick={this.handleMobileMenuOpen}>
