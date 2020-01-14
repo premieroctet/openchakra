@@ -872,9 +872,9 @@ class searchNotLogin extends React.Component {
                             
                             <Grid item xs={3} className={classes.webvoir} style={{display:"flex",alignItems:"center"}}>
                                 {this.state.research.length === 0 || !this.state.research.trim() ?
-                                    <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white', borderRadius: '100px'}}>Rechercher</Button>
+                                    <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white'}}>Rechercher</Button>
                                     :
-                                    <Button variant={"contained"}  onClick={()=>this.searchWithWord()} color={"primary"} style={{color:'white', borderRadius: '100px'}}>Rechercher</Button>
+                                    <Button variant={"contained"}  onClick={()=>this.searchWithWord()} color={"primary"} style={{color:'white'}}>Rechercher</Button>
                                 }
                             </Grid>
                             <Grid item xs={3} className={classes.mobilevoir} style={{display:"flex",alignItems:"center"}}>
