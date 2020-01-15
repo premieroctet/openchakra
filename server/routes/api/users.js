@@ -17,8 +17,8 @@ const User = require('../../models/User');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require("multer");
-const nodemailer = require("nodemailer");
 
+const {sendMail} = require('../../../utils/mailer');
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
 
@@ -59,6 +59,24 @@ const upload2 = multer({ storage: storage2,fileFilter: function (req, file, call
         callback(null, true)
     } });
 
+const sendAccountValidation = (request, user) => {
+
+  let link=new URL('/validateAccount?user='+user._id, "https://"+request.headers.host);
+
+  let message=
+    `Bonjour ${user.firstname}\nBienvenue au sein de la communauté My-Alfred !\n\n`+
+    'Afin de finaliser votre inscription, veuillez confirmer votre adresse e-mail en cliquant sur le lien ci-dessous:\n'+
+    `<a href="${link}">Je confirme mon adresse email</a>\n\nToute l\'équipe My-Alfred reste à votre disposition !\n`+
+    'A très bientôt !\nL\'équipe My-Alfred'
+
+  sendMail(
+    'no-reply@my-alfred.io',
+    user.email,
+    'Confirmation email My-Alfred',
+    message,
+    '<h1>'+message.replace(/\n/g, '</br>')+'</h1>'
+  )
+}
 
 router.get('/test',(req, res) => res.json({msg: 'Users Works!'}) );
 
@@ -107,22 +125,7 @@ router.post('/register',(req,res) =>{
                         newUser.save()
                             .then(user => {
                                 res.json(user);
-                                let transporter = nodemailer.createTransport({
-                                    host: 'smtp.ethereal.email',
-                                    port: 587,
-                                    auth: {
-                                        user: 'kirstin85@ethereal.email',
-                                        pass: '1D7q6PCENKSX5cj622'
-                                    }
-                                });
-
-                                let info = transporter.sendMail({
-                                    from: 'kirstin85@ethereal.email', // sender address
-                                    to: `${user.email}`, // list of receivers
-                                    subject: "Valider votre compte", // Subject line
-                                    text: `${url}/validateAccount?user=${user._id}`, // plain text body
-                                    html: '<a href='+url+'validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
-                                });
+                                sendAccountValidation(req, user);
                             })
                             .catch(err => console.log(err));
                     })
@@ -137,22 +140,7 @@ router.post('/register',(req,res) =>{
 router.get('/sendMailVerification',passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findById(req.user.id)
         .then(user => {
-            let transporter = nodemailer.createTransport({
-                host: 'smtp.ethereal.email',
-                port: 587,
-                auth: {
-                    user: 'kirstin85@ethereal.email',
-                    pass: '1D7q6PCENKSX5cj622'
-                }
-            });
-
-            let info = transporter.sendMail({
-                from: 'kirstin85@ethereal.email', // sender address
-                to: `${user.email}`, // list of receivers
-                subject: "Valider votre compte", // Subject line
-                text: `${url}validateAccount?user=${user._id}`, // plain text body
-                html: '<a href='+url+'validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
-            });
+          sendAccountValidation(req, user);
         })
         .catch(err => {
             console.log(err)
@@ -624,29 +612,16 @@ router.get('/current',passport.authenticate('jwt',{session:false}),(req,res) => 
 
 // @Route POST /myAlfred/api/users/email/check
 //  email
-router.post('/email/check',(req,res) => {
+router.get('/email/check',(req,res) => {
 
-    User.findOne({email: req.body.email})
+    User.findOne({email: req.query.email})
         .then(user => {
-            let transporter = nodemailer.createTransport({
-                host: 'smtp.ethereal.email',
-                port: 587,
-                auth: {
-                    user: 'kirstin85@ethereal.email',
-                    pass: '1D7q6PCENKSX5cj622'
-                }
-            });
-
-            let info = transporter.sendMail({
-                from: 'kirstin85@ethereal.email', // sender address
-                to: `${user.email}`, // list of receivers
-                subject: "Valider votre compte", // Subject line
-                text: `${url}validateAccount?user=${user._id}`, // plain text body
-                html: '<a href='+url+'validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
-            });
+          sendAccountValidation(req, user);
+          res.json(user);
         })
         .catch(err => {
             console.log(err);
+          res.json(null);
         })
 
 });
@@ -654,6 +629,7 @@ router.post('/email/check',(req,res) => {
 // @Route POST /myAlfred/api/users/forgotPassword
 // Send email with link for reset password
 router.post('/forgotPassword',(req,res) => {
+
     const email = req.body.email;
 
     User.findOne({email: email})
@@ -667,22 +643,13 @@ router.post('/forgotPassword',(req,res) => {
                     user.update({resetToken: token._id}).catch(err => console.log(err));
                 });
 
-                let transporter = nodemailer.createTransport({
-                    host: 'smtp.ethereal.email',
-                    port: 587,
-                    auth: {
-                        user: 'kirstin85@ethereal.email',
-                        pass: '1D7q6PCENKSX5cj622'
-                    }
-                });
-
-                let info = transporter.sendMail({
-                    from: 'kirstin85@ethereal.email', // sender address
-                    to: `${user.email}`, // list of receivers
-                    subject: "Reset password", // Subject line
-                    text: `http://localhost:3000/resetPassword?token=${token}`, // plain text body
-                    html: '<a href='+url+'resetPassword?token='+token+'>Cliquez içi</a>' // html body
-                });
+                sendMail(
+                    'no-reply@my-alfred.io', // sender address
+                    `${user.email}`, // list of receivers
+                    "Reset password", // Subject line
+                    `http://localhost:3000/resetPassword?token=${token}`, // plain text body
+                    '<a href='+url+'resetPassword?token='+token+'>Cliquez içi</a>' // html body
+                );
             }
         })
 });
