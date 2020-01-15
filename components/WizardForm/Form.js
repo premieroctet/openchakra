@@ -408,9 +408,6 @@ class Wizard extends React.Component {
         createShop: Yup.object().shape({
             is_professional: Yup.boolean(),
             id_recto: Yup.lazy(() => {
-                if (this.state.hasId === false) {
-                    return Yup.mixed().required('Veuillez uploader le recto de votre carte d\'identité ou bien votre passeport');
-                }
                 return Yup.mixed().notRequired();
             }),
             id_verso: Yup.mixed(),
