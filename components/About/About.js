@@ -33,6 +33,12 @@ class About extends React.Component{
     const {classes} = this.props;
     const preventDefault = event => event.preventDefault();
 
+    const StyledRating = withStyles({
+      iconFilled: {
+        color: '#4fbdd7',
+      },
+    })(Rating);
+
     return (
       <Grid container className={classes.mainContainer}>
         <Grid item>
@@ -40,7 +46,7 @@ class About extends React.Component{
             <List dense={this.state.dense}>
               <ListItem>
                 <Box component="fieldset" mb={3} borderColor="transparent">
-                  <Rating name="read-only" value={this.state.valueRating} readOnly />
+                  <StyledRating name="read-only" value={this.state.valueRating} readOnly/>
                 </Box>
               </ListItem>
               <ListItem>

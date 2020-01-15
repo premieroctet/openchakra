@@ -33,6 +33,12 @@ class CardPreview extends React.Component{
   render(){
     const {classes} = this.props;
 
+    const StyledRating = withStyles({
+      iconFilled: {
+        color: '#4fbdd7',
+      },
+    })(Rating);
+
     return (
       <Grid>
         <Card className={classes.card}>
@@ -47,15 +53,15 @@ class CardPreview extends React.Component{
                 <Typography variant="body2" color="textSecondary" component="p">
                   Beaute bien être
                 </Typography>
-                <Grid style={{display:'flex'}}>
-                  <Typography variant="body2" color="textSecondary" component="p">
+                <Grid style={{display:'flex', marginBottom: '2%'}}>
+                  <Typography component="p">
                     Coiffure par Maëlis
                   </Typography>
                   <CheckCircleIcon className={classes.checkCircleIcon}/>
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
                   <Badge badgeContent={99} color="primary">
-                    <Rating name="read-only" value={this.state.value} readOnly className={classes.rating} />
+                    <StyledRating name="read-only" value={this.state.value} readOnly className={classes.rating} />
                   </Badge>
                 </Box>
               </Grid>
@@ -94,7 +100,7 @@ class CardPreview extends React.Component{
                     <FolderIcon />
                   </ListItemIcon>
                   <ListItemText
-                    primary="2 ans d'expérience"
+                    primary="Expériementé(e)"
                   />
                 </ListItem>
               </List>

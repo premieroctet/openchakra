@@ -25,12 +25,14 @@ export default theme => ({
     margin: theme.spacing(1),
   },
   boxRating:{
-    margin: 0
+    margin: 0,
   },
   checkCircleIcon:{
-    marginLeft: 5
+    marginLeft: 5,
 },
   rating:{
     marginLeft: -15
-  }
+  },
+
 });
+
