@@ -36,9 +36,6 @@ class About extends React.Component{
     return (
       <Grid container className={classes.mainContainer}>
         <Grid item>
-          <Typography variant="h6" className={classes.title}>
-            A propos de Maëlis
-          </Typography>
           <div>
             <List dense={this.state.dense}>
               <ListItem>

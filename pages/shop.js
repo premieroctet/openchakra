@@ -6,9 +6,9 @@ import Bio from '../components/shop/Bio/Bio';
 import Review from '../components/shop/Review/Review';
 import Layout from '../hoc/Layout/Layout';
 import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
-import NavBarSwitchStatus from '../components/NavBar/NavBarSwitchStatus/NavBarSwitchStatus';
 import About from '../components/About/About';
 import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
+import Typography from '@material-ui/core/Typography';
 
 class shop extends React.Component {
     constructor(props) {
@@ -35,12 +35,25 @@ class shop extends React.Component {
                     <NavBarShop/>
                     {/*<NavBarSwitchStatus/>*/}
                     <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
-                        <Grid style={{display:'flex', alignItems: 'baseline'}}>
-                            <Grid style={{width: '50%', display:'flex', alignItems: 'center'}}>
+                        <Grid style={{display:'flex', alignItems: 'baseline', justifyContent: 'space-evenly'}}>
+                            <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column'}}>
+                                <Typography variant="h6" style={{width: '100%'}}>
+                                    A propos de Maëlis
+                                </Typography>
                                 <About/>
                             </Grid>
-                            <Grid style={{width: '50%', display:'flex', alignItems: 'center'}}>
+                            <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column'}}>
+                                <Typography variant="h6" style={{width: '100%'}}>
+                                   Les compliments reçus par Maelis
+                                </Typography>
                                 <SkillsAlfred/>
+                            </Grid>
+                        </Grid>
+                        <Grid style={{display: 'flex'}}>
+                            <Grid>
+                                <Typography variant="h6" style={{width: '100%'}}>
+                                    Les compliments reçus par Maelis
+                                </Typography>
                             </Grid>
                         </Grid>
                         <MyBestSellers shop={this.state.id}/>
