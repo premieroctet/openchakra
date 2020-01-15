@@ -36,7 +36,7 @@ class shop extends React.Component {
                     <NavBarShop/>
                     {/*<NavBarSwitchStatus/>*/}
                     <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
-                        <Grid style={{display:'flex', alignItems: 'baseline', justifyContent: 'space-evenly'}}>
+                        <Grid style={{display:'flex', alignItems: 'baseline', justifyContent: 'space-between', marginLeft: '5%', marginRight: '5%' }}>
                             <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column', marginTop: '3%'}}>
                                 <Typography variant="h6" style={{width: '100%'}}>
                                     A propos de Maëlis
@@ -52,11 +52,11 @@ class shop extends React.Component {
                         </Grid>
                         <Grid style={{display: 'flex', marginLeft: '5%', marginRight: '5%', flexDirection: 'column', marginTop: '3%'}}>
                             <Grid style={{width: '100%'}}>
-                                <Typography variant="h6" style={{marginLeft: '5%'}}>
+                                <Typography variant="h6">
                                     Les compliments reçus par Maelis
                                 </Typography>
                             </Grid>
-                            <Grid style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly', marginTop:'3%'}}>
+                            <Grid style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginTop:'3%'}}>
                                 <CardPreview/>
                                 <CardPreview/>
                                 <CardPreview/>

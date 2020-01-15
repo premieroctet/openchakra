@@ -4,16 +4,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './CardPreviewStyle'
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 import Badge from '@material-ui/core/Badge';
@@ -24,6 +18,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import FolderIcon from '@material-ui/icons/Folder';
 import ListItemText from '@material-ui/core/ListItemText';
+import RoomIcon from '@material-ui/icons/Room';
+
+
 
 class CardPreview extends React.Component{
   constructor(props){
@@ -63,9 +60,12 @@ class CardPreview extends React.Component{
                 </Box>
               </Grid>
               <Grid style={{width:'50%', display:'flex', flexDirection:'column', alignItems: 'center'}}>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  A partir de 15 €
-                </Typography>
+                <Grid style={{display:'flex'}}>
+                  <Typography variant="body2" color="textSecondary" component="p">
+                    Rouen
+                  </Typography>
+                  <RoomIcon className={classes.checkCircleIcon}/>
+                </Grid>
                 <Button variant="contained" color="primary" className={classes.button}>
                   Visualiser
                 </Button>
