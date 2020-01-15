@@ -9,6 +9,7 @@ import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
 import About from '../components/About/About';
 import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
 import Typography from '@material-ui/core/Typography';
+import CardPreview from '../components/CardPreview/CardPreview';
 
 class shop extends React.Component {
     constructor(props) {
@@ -36,7 +37,7 @@ class shop extends React.Component {
                     {/*<NavBarSwitchStatus/>*/}
                     <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
                         <Grid style={{display:'flex', alignItems: 'baseline', justifyContent: 'space-evenly'}}>
-                            <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column'}}>
+                            <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column', marginTop: '3%'}}>
                                 <Typography variant="h6" style={{width: '100%'}}>
                                     A propos de Maëlis
                                 </Typography>
@@ -49,11 +50,20 @@ class shop extends React.Component {
                                 <SkillsAlfred/>
                             </Grid>
                         </Grid>
-                        <Grid style={{display: 'flex'}}>
-                            <Grid>
-                                <Typography variant="h6" style={{width: '100%'}}>
+                        <Grid style={{display: 'flex', marginLeft: '5%', marginRight: '5%', flexDirection: 'column', marginTop: '3%'}}>
+                            <Grid style={{width: '100%'}}>
+                                <Typography variant="h6" style={{marginLeft: '5%'}}>
                                     Les compliments reçus par Maelis
                                 </Typography>
+                            </Grid>
+                            <Grid style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly', marginTop:'3%'}}>
+                                <CardPreview/>
+                                <CardPreview/>
+                                <CardPreview/>
+                                <CardPreview/>
+                                <CardPreview/>
+                                <CardPreview/>
+                                <CardPreview/>
                             </Grid>
                         </Grid>
                         <MyBestSellers shop={this.state.id}/>

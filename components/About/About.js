@@ -45,17 +45,13 @@ class About extends React.Component{
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
-                  <Avatar>
-                    <StarIcon />
-                  </Avatar>
+                  <StarIcon />
                 </ListItemAvatar>
                 <LinkMaterial href="#" onClick={preventDefault} color="primary "className={classes.link}>10 Commentaires</LinkMaterial>
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
-                  <Avatar>
-                    <CheckCircle />
-                  </Avatar>
+                  <CheckCircle />
                 </ListItemAvatar>
                 <ListItemText
                   primary="Pièce d’identité vérifiée"
@@ -65,9 +61,7 @@ class About extends React.Component{
               {this.state.isChecked ?
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar>
-                      <HighlightOff />
-                    </Avatar>
+                    <HighlightOff />
                   </ListItemAvatar>
                   <ListItemText
                     primary="Pièce d’identité non vérifiée"
@@ -78,9 +72,7 @@ class About extends React.Component{
               }
               <ListItem>
                 <ListItemAvatar>
-                  <Avatar>
-                    <CalendarToday />
-                  </Avatar>
+                  <CalendarToday />
                 </ListItemAvatar>
                 <ListItemText
                   primary="Membre depuis Juin 2019"
@@ -89,9 +81,7 @@ class About extends React.Component{
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
-                  <Avatar>
-                    <Pets />
-                  </Avatar>
+                  <Pets />
                 </ListItemAvatar>
                 <ListItemText
                   primary="Alfred depuis Juin 2019 "
@@ -100,9 +90,7 @@ class About extends React.Component{
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
-                  <Avatar>
-                    <Chat />
-                  </Avatar>
+                  <Chat />
                 </ListItemAvatar>
                 <ListItemText
                   primary="Langue: français - anglais"
