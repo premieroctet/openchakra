@@ -201,7 +201,7 @@ class paymentPreference extends React.Component {
             return (
                 <Fragment>
                     <Layout>
-                        <Grid container className={classes.bigContainer}>
+                        <Grid container className={classes.bigContainer} style={{minHeight:530}}>
 
                         <Grid className={classes.toggle}  item xs={3} style={{}}>
                          

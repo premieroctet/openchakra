@@ -98,7 +98,7 @@ router.get('/statistics/totalBookings',passport.authenticate('jwt',{session:fals
         .then(booking => {
 
             booking.forEach(b => {
-                totalIncomes += parseFloat(b.amount);
+                totalIncomes += parseFloat(b.amount)-(b.fees*2);
                 totalPrestations += b.prestations.length
 
             });
@@ -152,11 +152,11 @@ router.post('/statistics/bookings/service',passport.authenticate('jwt',{session:
         .then(booking => {
 
             booking.forEach(b => {
-                totalIncomes += parseFloat(b.amount);
+                totalIncomes += parseFloat(b.amount)-(b.fees*2);
                 totalPrestations += b.prestations.length
 
             });
-            res.json({incomes:totalIncomes,prestations: totalPrestations})
+            res.json({incomes:totalIncomes.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0],prestations: totalPrestations})
 
         })
         .catch(err => res.status(404).json({ booking: 'No booking found' }));

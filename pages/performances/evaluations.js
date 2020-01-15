@@ -137,14 +137,14 @@ class Evaluations extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/messages'}>
+                                <Link href={'/reservations/messages'}>
                                     <a style={{textDecoration:'none'}}>
                                         <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
                                     </a>
                                 </Link>
                             </Grid>
                             <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/mesreservations'}>
+                                <Link href={'/reservations/allReservations'}>
                                     <a style={{textDecoration:'none'}}>
                                         <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                                     </a>
@@ -259,7 +259,7 @@ class Evaluations extends React.Component {
                             </Grid>
                         </Grid>
 
-                        <Grid item xs={9} style={{paddingLeft: 20, borderLeft: '#9f919178 solid 1px', marginBottom: '20px',minHeight:530}}>
+                        <Grid item xs={9} style={{paddingLeft: 20, marginBottom: '20px',minHeight:530}}>
                             <Grid container style={{marginBottom:20}}>
                                 <Grid item xs={12}>
                                     <h1 style={{color: '#7E7E7E',fontWeight: '100'}}>Mes évaluations</h1>
@@ -364,13 +364,13 @@ class Evaluations extends React.Component {
                     </Grid>
 
                     <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                        <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
                             <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                         </a></Link>
                     </Grid>
 
                     <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                        <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
                             <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                         </a></Link>
                     </Grid>

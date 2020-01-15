@@ -202,14 +202,14 @@ class Historique extends React.Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/messages'}>
+                                <Link href={'/reservations/messages'}>
                                     <a style={{textDecoration:'none'}}>
                                         <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
                                     </a>
                                 </Link>
                             </Grid>
                             <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/mesreservations'}>
+                                <Link href={'/reservations/allReservations'}>
                                     <a style={{textDecoration:'none'}}>
                                         <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                                     </a>
@@ -324,7 +324,7 @@ class Historique extends React.Component {
                             </Grid>
                         </Grid>
 
-                        <Grid item xs={9} style={{paddingLeft: 20, borderLeft: '#9f919178 solid 1px', marginBottom: '20px',minHeight:530}}>
+                        <Grid item xs={9} style={{paddingLeft: 20, marginBottom: '20px',minHeight:530}}>
                             <Grid container className={classes.tabweb} style={{paddingRight:30}}>
                                 <Grid item xs={6} style={{textAlign:"center"}}>
                                     <div>
@@ -417,7 +417,7 @@ class Historique extends React.Component {
                                                         <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.user.firstname} - {e.date_prestation} - {e.service}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}>
-                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount-(e.fees*2)}€</Typography>
+                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{(e.amount-(e.fees*2)).toFixed(2)}€</Typography>
                                                     </Grid>
                                                 </Grid>
                                             ))}
@@ -441,13 +441,13 @@ class Historique extends React.Component {
                     </Grid>
 
                     <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                        <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
                             <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                         </a></Link>
                     </Grid>
 
                     <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                        <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
                             <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                         </a></Link>
                     </Grid>

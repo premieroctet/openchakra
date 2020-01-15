@@ -119,7 +119,7 @@ class Statistiques extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            totalIncomes: 0,
+            totalIncomes: '0',
             totalPrestations: 0,
             totalViewsServices: 0,
             totalReviews: 0,
@@ -134,7 +134,7 @@ class Statistiques extends React.Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/performances/statistics/totalBookings')
             .then(res => {
-                this.setState({totalIncomes: res.data.incomes,totalPrestations: res.data.prestations})
+                this.setState({totalIncomes: res.data.incomes.toString(),totalPrestations: res.data.prestations})
             })
             .catch(err => console.log(err));
 
@@ -199,14 +199,14 @@ class Statistiques extends React.Component {
                             </Link>
                         </Grid>
                         <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                            <Link href={'/myShop/messages'}>
+                            <Link href={'/reservations/messages'}>
                                 <a style={{textDecoration:'none'}}>
                                     <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
                                 </a>
                             </Link>
                         </Grid>
                         <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                            <Link href={'/myShop/mesreservations'}>
+                            <Link href={'/reservations/allReservations'}>
                                 <a style={{textDecoration:'none'}}>
                                     <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
                                 </a>
@@ -321,7 +321,7 @@ class Statistiques extends React.Component {
                             </Grid>
                         </Grid>
 
-                        <Grid item xs={9} style={{paddingLeft: 20, borderLeft: '#9f919178 solid 1px', marginBottom: '20px'}}>
+                        <Grid item xs={9} style={{paddingLeft: 20,  marginBottom: '20px'}}>
                             <Grid container style={{marginBottom:20}}>
                                 <Grid item xs={12}>
                                     <h1 style={{color: '#7E7E7E',fontWeight: '100'}}>Mes statistiques</h1>
@@ -329,7 +329,7 @@ class Statistiques extends React.Component {
                                 <Grid container style={{marginTop: '40px'}}>
                                     <Grid item className={classes.webview} md={2}></Grid>
                                     <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
-                                        <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state.totalIncomes}€</span> <br/>Générés depuis l'inscription</Typography>
+                                        <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state.totalIncomes.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€</span> <br/>Générés depuis l'inscription</Typography>
                                     </Grid>
                                     <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
                                         <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state.totalPrestations}</span> <br/>Prestation(s) réalisée(s)</Typography>
@@ -465,13 +465,13 @@ class Statistiques extends React.Component {
                     </Grid>
 
                     <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+                        <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
                             <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                         </a></Link>
                     </Grid>
 
                     <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+                        <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
                             <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
                         </a></Link>
                     </Grid>

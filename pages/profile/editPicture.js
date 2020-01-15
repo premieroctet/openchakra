@@ -194,7 +194,7 @@ class editPicture extends React.Component {
         return (
             <Fragment>
                 <Layout>
-                    <Grid container className={classes.bigContainer}>
+                    <Grid container className={classes.bigContainer} style={{minHeight:530}}>
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
                          <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
@@ -303,7 +303,7 @@ class editPicture extends React.Component {
                         </Grid>
 
 
-                        <Grid item xs={9} style={{paddingLeft: 55}}>
+                        <Grid item xs={9} style={{paddingLeft: 55,marginBottom:15}}>
                             <Grid container>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Photo</h1>
                             </Grid>

@@ -65,7 +65,7 @@ const styles = theme => ({
             }
         }
     },
-    tabweb:{width:'100%', position:'sticky', top:'115px', fontSize:15, backgroundColor:'white', zIndex:'20',
+    tabweb:{width:'100%', position:'sticky', top:'64px', fontSize:15, backgroundColor:'white', zIndex:'20',
         [theme.breakpoints.down('sm')]: {
             display:'none'}},
     trait:{
