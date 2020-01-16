@@ -623,7 +623,7 @@ class Messages extends React.Component {
                                       <Typography
                                           style={{
                                             height: "45px",
-                                            backgroundColor: "#BCBCBC",
+                                            backgroundColor: "#2FBCD3",
                                             color: "white",
                                             textAlign: "center",
                                             cursor: "pointer",
@@ -711,7 +711,7 @@ class Messages extends React.Component {
                                       <Typography
                                           style={{
                                             height: "45px",
-                                            backgroundColor: "#BCBCBC",
+                                            backgroundColor: "#2FBCD3",
                                             color: "white",
                                             textAlign: "center",
                                             cursor: "pointer",
@@ -804,7 +804,7 @@ class Messages extends React.Component {
                                         <Typography
                                             style={{
                                               height: "45px",
-                                              backgroundColor: "#BCBCBC",
+                                              backgroundColor: "#2FBCD3",
                                               color: "white",
                                               textAlign: "center",
                                               cursor: "pointer",
@@ -894,7 +894,7 @@ class Messages extends React.Component {
                                         <Typography
                                             style={{
                                               height: "45px",
-                                              backgroundColor: "#BCBCBC",
+                                              backgroundColor: "#2FBCD3",
                                               color: "white",
                                               textAlign: "center",
                                               cursor: "pointer",

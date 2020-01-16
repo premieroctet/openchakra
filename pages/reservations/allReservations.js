@@ -730,7 +730,7 @@ class AllReservations extends React.Component {
                                                                     className={classes.webvoir}
                                                                     style={{
                                                                         height: "45px",
-                                                                        backgroundColor: "#BCBCBC",
+                                                                        backgroundColor: "#2FBCD3",
                                                                         color: "white",
                                                                         textAlign: "center",
                                                                         cursor: "pointer",
@@ -857,7 +857,7 @@ class AllReservations extends React.Component {
                                                                     className={classes.mobilevoir}
                                                                     style={{
                                                                         height: "45px",
-                                                                        backgroundColor: "#BCBCBC",
+                                                                        backgroundColor: "#2FBCD3",
                                                                         color: "white",
                                                                         textAlign: "center",
                                                                         cursor: "pointer",
@@ -976,7 +976,7 @@ class AllReservations extends React.Component {
                                                             className={classes.webvoir}
                                                             style={{
                                                                 height: "45px",
-                                                                backgroundColor: "#BCBCBC",
+                                                                backgroundColor: "#2FBCD3",
                                                                 color: "white",
                                                                 textAlign: "center",
                                                                 cursor: "pointer",
@@ -1083,7 +1083,7 @@ class AllReservations extends React.Component {
                                                             className={classes.mobilevoir}
                                                             style={{
                                                                 height: "45px",
-                                                                backgroundColor: "#BCBCBC",
+                                                                backgroundColor: "#2FBCD3",
                                                                 color: "white",
                                                                 textAlign: "center",
                                                                 cursor: "pointer",
