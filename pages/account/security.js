@@ -177,7 +177,7 @@ class security extends React.Component {
                     <Grid className={classes.toggle}  item xs={3}>
                          <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
-                                <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 30,width: 271.25}} className={classes.hidesm}>
                                     <Link href={'/account/notifications'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -187,7 +187,7 @@ class security extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 30,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 30,width: 271.25}} className={classes.hidelg}>
                                     <Link href={'/account/notifications'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
@@ -219,7 +219,7 @@ class security extends React.Component {
                                     </Link>
                                 </Grid>
                                 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 271.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -229,7 +229,7 @@ class security extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 271.25}} className={classes.hidelg}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 4}}/>
@@ -239,7 +239,7 @@ class security extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 271.25}} className={classes.hidesm}>
                                     <Link href={'/account/transactions'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -249,7 +249,7 @@ class security extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 271.25}} className={classes.hidelg}>
                                     <Link href={'/account/transactions'}>
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 4}}/>
@@ -260,7 +260,7 @@ class security extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 271.25}} className={classes.hidesm}>
                                     <Link href={'/account/security'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/locked-padlock-2.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -270,7 +270,7 @@ class security extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 271.25}} className={classes.hidelg}>
                                     <Link href={'/account/security'}>
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/locked-padlock-2.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
@@ -281,7 +281,7 @@ class security extends React.Component {
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 271.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -291,7 +291,7 @@ class security extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                <Grid item style={{marginTop: 10,width: 271.25}} className={classes.hidelg}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
