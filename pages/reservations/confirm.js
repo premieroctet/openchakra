@@ -157,6 +157,7 @@ class Confirm extends React.Component {
             minDate: end,
             begin: end,
             time_prestation: this.state.bookingObj.time_prestation,
+            hourToSend: moment(new Date(this.state.bookingObj.time_prestation).setHours(new Date(this.state.bookingObj.time_prestation).getHours() + 1)).utc()._d
           })
 
           let isToday = moment(this.state.currDate).isSame(moment(new Date()), 'day');
@@ -1225,7 +1226,12 @@ class Confirm extends React.Component {
                                           let isToday = moment(date).isSame(moment(new Date()), 'day');
                                           this.setState({
                                             end:date,
-                                            isToday: isToday
+                                            isToday: isToday,
+                                          }, () => {
+                                            this.setState({
+                                              hourToSend: moment(this.state.begin).isSame(this.state.end, 'day') ? moment(new Date(this.state.bookingObj.time_prestation).setHours(new Date(this.state.bookingObj.time_prestation).getHours() + 1)).utc()._d : moment(this.state.currDate).utc()._d
+                                            })
+
                                           })
                                         }}
                                         customInput={<Input2 />}
@@ -1234,13 +1240,13 @@ class Confirm extends React.Component {
                                         dateFormat="dd/MM/yyyy"
                                         minDate={this.state.begin}
                                     /> - {<DatePicker
-                                        selected={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.time_prestation) : this.state.currDate}
+                                            selected={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1) : this.state.currDate}
                                         onChange={
                                           moment(this.state.begin).isSame(this.state.end, 'day') ?
                                               (date) => this.setState({
-                                                time_prestation: date,
+                                                time_prestation: moment(date.setHours(date.getHours() - 1)).utc()._d,
                                                 hour: date,
-                                                hourToSend: date
+                                                hourToSend: moment(date.setHours(date.getHours() + 1)).utc()._d
                                               })
                                               :
                                               (date) => this.setState({
@@ -1255,7 +1261,7 @@ class Confirm extends React.Component {
                                         showTimeSelect
                                         showTimeSelectOnly
                                         timeIntervals={15}
-                                        minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.bookingObj.time_prestation) : this.state.isToday ? this.state.currDate : null}
+                                        minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.bookingObj.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1) : this.state.isToday ? this.state.currDate : null}
                                         maxTime={moment(this.state.begin).isSame(this.state.end, 'day') || this.state.isToday ? moment().endOf('day').toDate() : null}
                                         timeCaption="Heure"
                                         dateFormat="HH:mm"
