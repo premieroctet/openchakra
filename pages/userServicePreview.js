@@ -3103,7 +3103,13 @@ class userServices extends React.Component {
                             <Grid container style={{textAlign: 'center', marginTop: '20px'}}>
                               <Grid item xs={6}>
                                 <Button
-                                    disabled={this.state.user._id === serviceUser.user._id}
+                                    disabled={this.state.user._id === serviceUser.user._id || convertDistance(
+                                        getDistance(
+                                            {latitude:user.billing_address.gps.lat,longitude:user.billing_address.gps.lng},
+                                            {latitude:serviceUser.service_address.gps.lat, longitude: serviceUser.service_address.gps.lng}
+                                        ),
+                                        'km'
+                                    ).toFixed(2) > serviceUser.perimeter}
                                     color={'primary'}
                                     onClick={() => this.moreInfos()}
                                 >
@@ -3111,7 +3117,13 @@ class userServices extends React.Component {
                                 </Button>
                               </Grid>
                               <Grid item xs={6}>
-                                <Button disabled={this.state.user._id === serviceUser.user._id} variant={"contained"} color={"secondary"} style={{color:'white', cursor: 'pointer'}} onClick={() => this.reservationPage()}>
+                                <Button disabled={this.state.user._id === serviceUser.user._id || convertDistance(
+                                    getDistance(
+                                        {latitude:user.billing_address.gps.lat,longitude:user.billing_address.gps.lng},
+                                        {latitude:serviceUser.service_address.gps.lat, longitude: serviceUser.service_address.gps.lng}
+                                    ),
+                                    'km'
+                                ).toFixed(2) > serviceUser.perimeter} variant={"contained"} color={"secondary"} style={{color:'white', cursor: 'pointer'}} onClick={() => this.reservationPage()}>
                                   Réserver
                                 </Button>
                               </Grid>
