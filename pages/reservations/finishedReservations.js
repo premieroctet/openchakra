@@ -892,7 +892,7 @@ class FinishedReservations extends React.Component {
                           {/* Web */}
                           <Grid
                             container
-                            className={classes.mobilerow}
+                            className={classes.webrow}
                             style={{ borderBottom: "1px #8281813b solid" }}
                           >
                             <Grid
@@ -933,7 +933,7 @@ class FinishedReservations extends React.Component {
                                 style={{
                                   color: "#4FBDD7",
                                   fontWeight: "600",
-                                  paddingTop: "15%"
+                                  paddingTop: "25%"
                                 }}
                               >
                                 {
@@ -979,7 +979,7 @@ class FinishedReservations extends React.Component {
                           {/* Mobile */}
                           <Grid
                             container
-                            className={classes.mobilerow}
+                            className={classes.mobilerow1}
                             style={{
                               boxShadow: "0px 0px 6px lightgray",
                               borderRadius: "5px",
@@ -1040,7 +1040,8 @@ class FinishedReservations extends React.Component {
                                   color: "#4FBDD7",
                                   fontWeight: "600",
                                   paddingTop: "5%",
-                                  fontSize: "0.8rem"
+                                  fontSize: "0.8rem",
+                                  textAlign: "center"
                                 }}
                               >
                                 {
@@ -1060,7 +1061,7 @@ class FinishedReservations extends React.Component {
                                   textAlign: "center",
                                   cursor: "pointer",
                                   lineHeight: "3",
-                                  marginTop: "15%"
+                                  marginTop: "5%"
                                 }}
                               >
                                 <Link
