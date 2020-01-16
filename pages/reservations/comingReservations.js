@@ -746,7 +746,7 @@ class ComingReservations extends React.Component {
                                               className={classes.webvoir}
                                               style={{
                                                 height: "45px",
-                                                backgroundColor: "#BCBCBC",
+                                                backgroundColor: "#2FBCD3",
                                                 color: "white",
                                                 textAlign: "center",
                                                 cursor: "pointer",
@@ -870,7 +870,7 @@ class ComingReservations extends React.Component {
                                           <Typography
                                               style={{
                                                 height: "45px",
-                                                backgroundColor: "#BCBCBC",
+                                                backgroundColor: "#2FBCD3",
                                                 color: "white",
                                                 textAlign: "center",
                                                 cursor: "pointer",
@@ -986,7 +986,7 @@ class ComingReservations extends React.Component {
                                     <Typography
                                         style={{
                                           height: "45px",
-                                          backgroundColor: "#BCBCBC",
+                                          backgroundColor: "#2FBCD3",
                                           color: "white",
                                           textAlign: "center",
                                           cursor: "pointer",
@@ -1091,7 +1091,7 @@ class ComingReservations extends React.Component {
                                     <Typography
                                         style={{
                                           height: "45px",
-                                          backgroundColor: "#BCBCBC",
+                                          backgroundColor: "#2FBCD3",
                                           color: "white",
                                           textAlign: "center",
                                           cursor: "pointer",

@@ -10,6 +10,7 @@ import Footer from "../../hoc/Layout/Footer/Footer";
 import dynamic from "next/dynamic";
 import io from "socket.io-client";
 import Router from 'next/router';
+import Typography from "@material-ui/core/Typography";
 
 moment.locale("fr");
 const _ = require("lodash");
@@ -218,9 +219,23 @@ class Cancel extends React.Component {
                   <br></br>
 
                   <div>
-                    <Grid container>
-                      <Grid item xs={12} style={{}}>
-                        <br></br>
+                    <Grid container style={{ width: "90%"}}>
+                      <Grid item xs={12} style={{padding: 25, marginBottom: 10}}>
+                        <Typography>
+                          Si vous annulez cette réservation, vous ferez l'objet de pénalités :
+                          <br/>
+                          - Le retrait du statut de super Alfred pendant 1 an
+                          <br/>
+                          - Un commentaire public montrant que vous avez annulé
+                          <br/>
+                          - Le paiement des frais d'annulation ou le blocage des périodes de la prestation sur votre calendrier
+                          <br/>
+                          <br/>
+                          Si vous avez accepté la réservation instantannée, vous n'aurez pas ces pénalités si vous avez annulé moins de 3 prestations dans l'année
+                        </Typography>
+                        <Grid container style={{ marginTop: 20, marginBottom: 20}}>
+                            <hr style={{background: "lightgray", height: 2, width: "100%", border: "none"}} />
+                        </Grid>
                       </Grid>
                     </Grid>
                   </div>
