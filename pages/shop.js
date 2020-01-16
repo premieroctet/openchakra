@@ -16,7 +16,7 @@ class shop extends React.Component {
         super(props);
         this.state = {
             id: '',
-            logged: false
+            logged: false,
         }
     }
     static getInitialProps ({ query: { id_alfred } }) {
@@ -29,6 +29,7 @@ class shop extends React.Component {
     }
 
     render() {
+        const {classes} = this.props;
         return (
             <Fragment>
                 <Layout>
@@ -56,14 +57,20 @@ class shop extends React.Component {
                                     Les compliments reçus par Maelis
                                 </Typography>
                             </Grid>
-                            <Grid style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginTop:'3%'}}>
-                                <CardPreview/>
-                                <CardPreview/>
-                                <CardPreview/>
-                                <CardPreview/>
-                                <CardPreview/>
-                                <CardPreview/>
-                                <CardPreview/>
+                            <Grid container style={{marginTop:'3%'}} spacing={1}>
+                                <Grid container item lg={4} spacing={3}>
+                                    <CardPreview/>
+                                </Grid>
+                                <Grid container item lg={4} spacing={3}>
+                                    <CardPreview/>
+                                </Grid>
+                                <Grid container item lg={4} spacing={3}>
+                                    <CardPreview/>
+                                </Grid>
+                                <Grid container item lg={4} spacing={3}>
+                                    <CardPreview/>
+                                </Grid>
+
                             </Grid>
                         </Grid>
                         <MyBestSellers shop={this.state.id}/>

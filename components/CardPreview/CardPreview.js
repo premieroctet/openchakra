@@ -7,7 +7,6 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 import Badge from '@material-ui/core/Badge';
@@ -22,9 +21,6 @@ import RoomIcon from '@material-ui/icons/Room';
 import Chip from '@material-ui/core/Chip';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-
-
-
 
 class CardPreview extends React.Component{
   constructor(props){
