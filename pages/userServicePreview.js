@@ -724,12 +724,12 @@ class userServices extends React.Component {
 
                   axios
                       .post(url + "myAlfred/api/booking/add", bookingObj)
-                      .then(res => {
-                        axios.put(url + 'myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: res.data._id })
+                      .then(response => {
+                        axios.put(url + 'myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: response.data._id })
                             .then(() => {
                               Router.push({
-                                pathname: "/reservations/detailsReservation",
-                                query: { id: res.data._id }
+                                pathname: "/reservations/messagesDetails",
+                                query: { id: bookingObj.chatroom, booking:response.data._id }
                               });
                             })
                       })
