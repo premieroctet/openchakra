@@ -42,11 +42,13 @@ class CardPreview extends React.Component{
     return (
       <Grid>
         <Card className={classes.card}>
-          <div className={classes.cardMedia}>
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-          </div>
+          <Grid className={classes.cardMedia}>
+            <Grid style={{backgroundColor: 'red'}}>
+              <IconButton aria-label="add to favorites">
+                <FavoriteIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
           <CardContent>
             <Grid style={{display:'flex', flexDirection:'row'}}>
               <Grid style={{width: '50%',display:'flex', flexDirection:'column'}}>
