@@ -19,6 +19,10 @@ import ListItem from '@material-ui/core/ListItem';
 import FolderIcon from '@material-ui/icons/Folder';
 import ListItemText from '@material-ui/core/ListItemText';
 import RoomIcon from '@material-ui/icons/Room';
+import Chip from '@material-ui/core/Chip';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+
 
 
 
@@ -43,10 +47,20 @@ class CardPreview extends React.Component{
       <Grid>
         <Card className={classes.card}>
           <Grid className={classes.cardMedia}>
-            <Grid style={{backgroundColor: 'red'}}>
-              <IconButton aria-label="add to favorites">
-                <FavoriteIcon />
-              </IconButton>
+            <Grid className={classes.statusMedia}>
+              <Chip label="PRO" className={classes.chipStyle}/>
+            </Grid>
+            <Grid>
+              <Grid className={classes.actionMediaEdit}>
+                <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
+                  <EditIcon style={{color: '#4fbdd7'}}/>
+                </IconButton>
+              </Grid>
+              <Grid className={classes.actionMediaRemove}>
+                <IconButton aria-label="remove" className={classes.iconButtonStyle}>
+                  <DeleteForeverIcon style={{color: '#f87280'}} />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
           <CardContent>

@@ -19,7 +19,8 @@ export default theme => ({
     display: 'block',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center'
+    backgroundPosition: 'center',
+    position: 'relative'
   },
   button: {
     margin: theme.spacing(1),
@@ -32,6 +33,44 @@ export default theme => ({
 },
   rating:{
     marginLeft: -15
+  },
+  actionMediaEdit:{
+    position: 'absolute',
+    top : '5%',
+    right: '18%',
+    [theme.breakpoints.down('sm')]: {
+      right: '20%',
+    }
+  },
+  actionMediaRemove:{
+    position: 'absolute',
+    top : '5%',
+    right: '5%',
+    [theme.breakpoints.down('sm')]: {
+      right: '5%'
+    }
+  },
+  statusMedia:{
+    position: 'absolute',
+    top: '5%',
+    left: '5%'
+  },
+  iconButtonStyle:{
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    width: 40,
+    height: 40,
+    '&:hover': {
+      backgroundColor: 'white',
+    },
+    [theme.breakpoints.down('sm')]: {
+        height:50,
+        width:50,
+  }},
+  chipStyle:{
+    backgroundColor: '#f87280',
+    color:'white',
+    fontWeight: 'bold',
+    border: '2px solid white'
   },
 
 });
