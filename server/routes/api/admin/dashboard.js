@@ -1547,7 +1547,10 @@ router.post('/service/all', uploadService.single('picture'),passport.authenticat
                         tags: JSON.parse(req.body.tags),
                         picture: req.file.path,
                         description: req.body.description,
-                        majoration: req.body.majoration
+                        majoration: req.body.majoration,
+                        'location.home':req.body.home,
+                        'location.alfred':req.body.alfred,
+                        'location.visio':req.body.visio
 
                     });
 

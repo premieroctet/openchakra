@@ -72,6 +72,9 @@ class add extends React.Component {
             equipments: [],
             description: '',
             majoration: '',
+            home: false,
+            alfred: false,
+            visio: false,
             isChecked: false,
             all_category: [],
             all_tags: [],
@@ -148,6 +151,18 @@ class add extends React.Component {
         this.setState({isChecked: !this.state.isChecked});
     }
 
+    handleChecked2 () {
+        this.setState({home: !this.state.home});
+    }
+
+    handleChecked3 () {
+        this.setState({alfred: !this.state.alfred});
+    }
+
+    handleChecked4 () {
+        this.setState({visio: !this.state.visio});
+    }
+
 
     onSubmit = e => {
         e.preventDefault();
@@ -177,6 +192,9 @@ class add extends React.Component {
         formData.append('equipments',JSON.stringify(arrayEquipments));
         formData.append('description',this.state.description);
         formData.append('majoration',this.state.majoration);
+        formData.append('home',this.state.home);
+        formData.append('alfred',this.state.alfred);
+        formData.append('visio',this.state.visio);
 
         axios
             .post(url+'myAlfred/api/admin/service/all', formData)
@@ -316,6 +334,51 @@ class add extends React.Component {
                                         error={errors.description}
                                     />
                                     <em>{errors.description}</em>
+                                </Grid>
+                                <Grid item>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.home}
+                                                onChange={()=>this.handleChecked2()}
+                                                value={this.state.home}
+                                                color="primary"
+                                                name={"home"}
+                                            />
+                                        }
+                                        label="Home"
+                                    />
+
+                                </Grid>
+                                <Grid item>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.alfred}
+                                                onChange={()=>this.handleChecked3()}
+                                                value={this.state.alfred}
+                                                color="primary"
+                                                name={"alfred"}
+                                            />
+                                        }
+                                        label="Alfred"
+                                    />
+
+                                </Grid>
+                                <Grid item>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.visio}
+                                                onChange={()=>this.handleChecked4()}
+                                                value={this.state.visio}
+                                                color="primary"
+                                                name={"visio"}
+                                            />
+                                        }
+                                        label="Visio"
+                                    />
+
                                 </Grid>
                                 <Grid item>
                                     <FormControlLabel
