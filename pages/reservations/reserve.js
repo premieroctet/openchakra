@@ -1133,7 +1133,7 @@ class Reserve extends React.Component {
                           </Grid>
                           <Grid item xs={9} style={{ width: "70%" }}>
                             <p>Adresse de la prestation:</p>{" "}
-                            <p>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</p>
+                            <p>{bookingObj.user.billing_address.address}, {bookingObj.user.billing_address.city} {bookingObj.user.billing_address.zip_code}</p>
                           </Grid>
                         </Grid>
                         <Grid item xs={12} style={{}}>
