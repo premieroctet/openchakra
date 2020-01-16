@@ -81,6 +81,10 @@ class view extends React.Component {
             tags: [],
             equipments: [],
             majoration: '',
+            location: {},
+            home: false,
+            alfred: false,
+            visio: false,
             isChecked: false,
             selectedOption: null,
             selectedTags: null,
@@ -105,7 +109,7 @@ class view extends React.Component {
             .then(response => {
                 let service = response.data;
                 this.setState({service: service, current_tags: service.tags, current_equipments: service.equipments, current_category: service.category,
-                category: service.category._id});
+                category: service.category._id,location:service.location,home:service.location.home, alfred:service.location.alfred,visio: service.location.visio});
 
                 if(service.majoration != null) {
                     this.setState({isChecked: true})
@@ -194,6 +198,15 @@ class view extends React.Component {
     handleChecked () {
         this.setState({isChecked: !this.state.isChecked});
     }
+    handleChecked2 () {
+        this.setState({home: !this.state.home});
+    }
+    handleChecked3 () {
+        this.setState({alfred: !this.state.alfred});
+    }
+    handleChecked4 () {
+        this.setState({visio: !this.state.visio});
+    }
     onSubmit = e => {
         e.preventDefault();
         let arrayEquipments = [];
@@ -217,9 +230,12 @@ class view extends React.Component {
         const tags = arrayTags;
         const category = this.state.category;
         const equipments = arrayEquipments;
+        const home = this.state.home;
+        const alfred = this.state.alfred;
+        const visio = this.state.visio;
         const { label,description,majoration } = this.state.service;
         const id = this.props.service_id;
-        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,equipments,majoration})
+        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,equipments,majoration,home,alfred,visio})
             .then(res => {
 
                 alert('Service modifié avec succès');
@@ -389,6 +405,48 @@ class view extends React.Component {
                                         label="Majoration ?"
                                     />
 
+                                </Grid>
+                                <Grid item>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.state.home}
+                                            onChange={()=>this.handleChecked2()}
+                                            value={this.state.home}
+                                            color="primary"
+                                            name={"home"}
+                                        />
+                                    }
+                                    label="Home"
+                                />
+                            </Grid>
+                                <Grid item>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.alfred}
+                                                onChange={()=>this.handleChecked3()}
+                                                value={this.state.alfred}
+                                                color="primary"
+                                                name={"alfred"}
+                                            />
+                                        }
+                                        label="Alfred"
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.visio}
+                                                onChange={()=>this.handleChecked4()}
+                                                value={this.state.visio}
+                                                color="primary"
+                                                name={"visio"}
+                                            />
+                                        }
+                                        label="Visio"
+                                    />
                                 </Grid>
                                 {isChecked ?
                                     <Grid item>

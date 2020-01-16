@@ -1685,7 +1685,8 @@ router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req
             {
                 $set: { label: req.body.label, equipments: req.body.equipments,category: mongoose.Types.ObjectId(req.body.category),
                     tags: req.body.tags,
-                     description: req.body.description, majoration: req.body.majoration},
+                     description: req.body.description, majoration: req.body.majoration,'location.home':req.body.home,'location.alfred':req.body.alfred,
+                        'location.visio':req.body.visio},
 
             } , {new: true})
             .then(service => {
