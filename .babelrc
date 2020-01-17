@@ -1,0 +1,13 @@
+{
+    "presets": [
+        [
+            "@babel/preset-react",
+            {
+                "throwIfNamespace": false
+            }
+        ]
+    ],
+    "plugins": [
+        "@babel/plugin-proposal-class-properties",
+    ]
+}
