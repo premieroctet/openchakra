@@ -1,6 +1,7 @@
 export default theme => ({
   card: {
     width: 400,
+    height:400,
     marginBottom: '5%'
 },
   expand: {
@@ -24,15 +25,17 @@ export default theme => ({
   },
   button: {
     margin: theme.spacing(1),
+    color: 'white'
   },
   boxRating:{
     margin: 0,
   },
   checkCircleIcon:{
     marginLeft: 5,
-},
+    color: '#4fbdd7'
+  },
   rating:{
-    marginLeft: -15
+    marginLeft: -15,
   },
   actionMediaEdit:{
     position: 'absolute',
@@ -72,6 +75,9 @@ export default theme => ({
     fontWeight: 'bold',
     border: '2px solid white'
   },
-
+  badgeStyle:{
+    '& span:nth-child(+n+6)':{
+    }
+  }
 });
 

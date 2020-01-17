@@ -72,7 +72,7 @@ class CardPreview extends React.Component{
                   <CheckCircleIcon className={classes.checkCircleIcon}/>
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                  <Badge badgeContent={99} color="primary">
+                  <Badge badgeContent={99} color="primary" className={classes.badgeStyle}>
                     <StyledRating name="read-only" value={this.state.value} readOnly className={classes.rating} />
                   </Badge>
                 </Box>

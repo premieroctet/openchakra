@@ -10,7 +10,7 @@ import About from '../components/About/About';
 import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
 import Typography from '@material-ui/core/Typography';
 import CardPreview from '../components/CardPreview/CardPreview';
-import CardAddService from '../components/CardaAddServie/CardAddService';
+import CardAddService from '../components/CardAddService/CardAddService';
 
 class shop extends React.Component {
     constructor(props) {
