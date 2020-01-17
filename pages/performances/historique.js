@@ -400,7 +400,7 @@ class Historique extends React.Component {
                                                         <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.user.firstname} - {e.date_prestation} - {e.service}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}>
-                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount-(e.fees*2)}€</Typography>
+                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{(e.amount-(e.fees*2)).toFixed(2)}€</Typography>
                                                     </Grid>
                                                 </Grid>
                                             ))}
