@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
 import {toast} from 'react-toastify';
-import io from "socket.io-client";
+
 
 
 const { config } = require('../config/config');
@@ -23,12 +23,13 @@ const styles = theme => ({
 
 });
 
-class paymentSuccess extends React.Component {
+class PaymentFailed extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             user: {},
-            success: false,
+
+
         };
 
     }
@@ -36,6 +37,7 @@ class paymentSuccess extends React.Component {
     componentDidMount() {
 
         localStorage.setItem('path',Router.pathname);
+        let bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
         axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
         axios
             .get(url + "myAlfred/api/users/current")
@@ -49,26 +51,6 @@ class paymentSuccess extends React.Component {
                     Router.push({ pathname: "/login" });
                 }
             });
-        axios.get(url+'myAlfred/api/payment/transactions')
-            .then(result => {
-                let transaction = result.data;
-                if(transaction.Status === 'FAILED'){
-                    Router.push('/paymentFailed')
-                } else {
-                    const booking_id = localStorage.getItem('booking_id');
-                    this.socket = io();
-                    this.socket.on("connect", socket => {
-                        this.socket.emit("booking", booking_id)
-                        axios.put(url + 'myAlfred/api/booking/modifyBooking/' + booking_id, {status: 'Confirmée'})
-                            .then(res => {
-                                setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
-                                localStorage.removeItem('booking_id');
-                            })
-                            .catch()
-                    })
-                }
-            })
-
 
 
     }
@@ -99,7 +81,7 @@ class paymentSuccess extends React.Component {
                                 <Grid container>
 
                                     <Grid item xs={12} style={{marginTop:50, marginBottom:30}}>
-                                        <h2 style={{fontSize: '2.5rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: '100', textAlign:'center'}}>Résevation enregistrée !</h2>
+                                        <h2 style={{fontSize: '2.5rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: '100', textAlign:'center'}}>Oups !</h2>
 
                                     </Grid>
                                 </Grid>
@@ -112,10 +94,10 @@ class paymentSuccess extends React.Component {
                                     <Grid container>
 
                                         <Grid item xs={12} style={{textAlign:'center'}}>
-                                            <p style={{fontSize:'30px'}}>Toute l’équipe de My-Alfred vous remercie pour votre réservation. </p>
+                                            <p style={{fontSize:'30px'}}>Une erreur est survenue lors du paiement. </p>
 
-                                            <Link href={'/reservations/allReservations'}>
-                                                <Button variant={"contained"} color={"primary"} style={{color:'white'}}>Mes réservations</Button>
+                                            <Link href={'/search'}>
+                                                <Button variant={"contained"} color={"primary"} style={{color:'white'}}>Retour à l'accueil</Button>
                                             </Link>
 
 
@@ -154,4 +136,4 @@ class paymentSuccess extends React.Component {
 
 
 
-export default withStyles(styles)(paymentSuccess);
+export default withStyles(styles)(PaymentFailed);

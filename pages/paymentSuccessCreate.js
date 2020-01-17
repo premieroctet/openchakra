@@ -28,6 +28,7 @@ class PaymentSuccessCreate extends React.Component {
         super(props);
         this.state = {
             user: {},
+            success: false
 
         };
 
@@ -50,47 +51,52 @@ class PaymentSuccessCreate extends React.Component {
                     Router.push({ pathname: "/login" });
                 }
             });
+        axios.get(url+'myAlfred/api/payment/transactions')
+            .then(result => {
+                let transaction = result.data;
+                if(transaction.Status === 'FAILED'){
+                    Router.push('/paymentFailed')
+                } else {
+                    this.setState({
+                        emitter: localStorage.getItem("emitter"),
+                        recipient: localStorage.getItem("recipient"),
+                        prestations: bookingObj.prestations,
+                        bookingObj: bookingObj,
+                        city: bookingObj.address.city,
+                        address: bookingObj.address.address,
+                        zip_code: bookingObj.address.zip_code,
+                        date: bookingObj.date_prestation,
+                        hour: bookingObj.time_prestation,
+                        fees: bookingObj.fees,
+                        grandTotal: bookingObj.amount
+                    }, () => {
+                        axios
+                            .post(url + "myAlfred/api/chatRooms/addAndConnect", {
+                                emitter: localStorage.getItem("emitter"),
+                                recipient: localStorage.getItem("recipient")
+                            })
+                            .then(res => {
+                                let booking = this.state.bookingObj;
+                                booking.chatroom = res.data._id;
 
-        this.setState({
-            emitter: localStorage.getItem("emitter"),
-            recipient: localStorage.getItem("recipient"),
-            prestations: bookingObj.prestations,
-            bookingObj: bookingObj,
-            city: bookingObj.address.city,
-            address: bookingObj.address.address,
-            zip_code: bookingObj.address.zip_code,
-            date: bookingObj.date_prestation,
-            hour: bookingObj.time_prestation,
-            fees: bookingObj.fees,
-            grandTotal: bookingObj.amount
-        }, () => {
-            axios
-                .post(url + "myAlfred/api/chatRooms/addAndConnect", {
-                    emitter: localStorage.getItem("emitter"),
-                    recipient: localStorage.getItem("recipient")
-                })
-                .then(res => {
-                    let booking = this.state.bookingObj;
-                    booking.chatroom = res.data._id;
+                                axios
+                                    .post(url + "myAlfred/api/booking/add", booking)
+                                    .then(result => {
+                                        axios
+                                            .put(
+                                                url + "myAlfred/api/chatRooms/addBookingId/" + booking.chatroom,
+                                                { booking: result.data._id }
+                                            )
+                                            .then(() => {
+                                                this.setState({success:true})
+                                            });
+                                    })
+                                    .catch(err => console.log(err));
+                            });
+                    });
+                }
+            })
 
-                    axios
-                        .post(url + "myAlfred/api/booking/add", booking)
-                        .then(result => {
-                            axios
-                                .put(
-                                    url + "myAlfred/api/chatRooms/addBookingId/" + booking.chatroom,
-                                    { booking: result.data._id }
-                                )
-                                .then(() => {
-                                    Router.push({
-                                        pathname: "/reservations/detailsReservation",
-                                        query: { id: result.data._id }
-                                    });
-                                });
-                        })
-                        .catch(err => console.log(err));
-                });
-        });
     }
 
 
@@ -98,76 +104,138 @@ class PaymentSuccessCreate extends React.Component {
 
     render() {
         const {classes} = this.props;
+        const {success} = this.state;
 
 
 
         return (
-            <Fragment>
-                <Layout>
-                    <Grid container className={classes.bigContainer}>
+            success ?
+                    <Fragment>
+                        <Layout>
+                            <Grid container className={classes.bigContainer}>
 
-                        {/*Le Header */}
+                                {/*Le Header */}
 
-                        {/*Le Contenu */}
-                        <Grid container>
-                            <br></br>
-                            {/*Contenu à Gauche*/}
-
-                            {/*Petite Description*/}
-                            <Grid item md={5} xs={12} style={{textAlign: 'left',margin: '0 auto', float:'right', paddingLeft:'3%'}}>
-                                <div style={{margin: '20px 11%', marginTop: '5%',width: '90%'}}></div>
+                                {/*Le Contenu */}
                                 <Grid container>
+                                    <br></br>
+                                    {/*Contenu à Gauche*/}
 
-                                    <Grid item xs={12} style={{marginTop:50, marginBottom:30}}>
-                                        <h2 style={{fontSize: '2.5rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: '100', textAlign:'center'}}>Résevation enregistrée !</h2>
+                                    {/*Petite Description*/}
+                                    <Grid item md={5} xs={12} style={{textAlign: 'left',margin: '0 auto', float:'right', paddingLeft:'3%'}}>
+                                        <div style={{margin: '20px 11%', marginTop: '5%',width: '90%'}}></div>
+                                        <Grid container>
 
-                                    </Grid>
-                                </Grid>
-                                <br></br>
+                                            <Grid item xs={12} style={{marginTop:50, marginBottom:30}}>
+                                                <h2 style={{fontSize: '2.5rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: '100', textAlign:'center'}}>Résevation enregistrée !</h2>
 
-
-
-                                <div>
-
-                                    <Grid container>
-
-                                        <Grid item xs={12} style={{textAlign:'center'}}>
-                                            <p style={{fontSize:'30px'}}>Toute l’équipe de My-Alfred vous remercie pour votre réservation. </p>
-
-                                            <Link href={'/reservations/allReservations'}>
-                                                <Button variant={"contained"} color={"primary"} style={{color:'white'}}>Mes réservations</Button>
-                                            </Link>
-
-
-                                            <br></br>
-
+                                            </Grid>
                                         </Grid>
+                                        <br></br>
+
+
+
+                                        <div>
+
+                                            <Grid container>
+
+                                                <Grid item xs={12} style={{textAlign:'center'}}>
+                                                    <p style={{fontSize:'30px'}}>Toute l’équipe de My-Alfred vous remercie pour votre réservation. </p>
+
+                                                    <Link href={'/reservations/allReservations'}>
+                                                        <Button variant={"contained"} color={"primary"} style={{color:'white'}}>Mes réservations</Button>
+                                                    </Link>
+
+
+                                                    <br></br>
+
+                                                </Grid>
+
+                                            </Grid>
+
+                                        </div>
+
+
+
+                                        {/*cadre avec couleur et checkbox*/}
+
+
+
+
+
 
                                     </Grid>
 
-                                </div>
+                                    {/*Contenu à droite*/}
+                                    <Grid item xs={12} md={7} style={{marginTop: '2%', marginBottom: '5%'}}>
+                                        <Grid container style={{ backgroundImage: `url('../../static/resa.svg')`,backgroundPosition: "cover", backgroundRepeat:'no-repeat', border: 'thin solid transparent',maxWidth: '100%', height:'90vh', padding:'2%', position: 'sticky', top: 100,}}>
+
+                                        </Grid> </Grid>
+                                </Grid>    </Grid>
+                        </Layout>
+                        <Footer/>
+
+                    </Fragment>
+                    :
+
+                    <Fragment>
+                        <Layout>
+                            <Grid container className={classes.bigContainer}>
+
+                                {/*Le Header */}
+
+                                {/*Le Contenu */}
+                                <Grid container>
+                                    <br></br>
+                                    {/*Contenu à Gauche*/}
+
+                                    {/*Petite Description*/}
+                                    <Grid item md={5} xs={12} style={{textAlign: 'left',margin: '0 auto', float:'right', paddingLeft:'3%'}}>
+                                        <div style={{margin: '20px 11%', marginTop: '5%',width: '90%'}}></div>
+                                        <Grid container>
+
+                                            <Grid item xs={12} style={{marginTop:50, marginBottom:30}}>
+                                                <h2 style={{fontSize: '2.5rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: '100', textAlign:'center'}}>Paiement en cours...</h2>
+
+                                            </Grid>
+                                        </Grid>
+                                        <br></br>
 
 
 
-                                {/*cadre avec couleur et checkbox*/}
+                                        <div>
+
+                                            <Grid container>
+
+
+                                            </Grid>
+
+                                        </div>
+
+
+
+                                        {/*cadre avec couleur et checkbox*/}
 
 
 
 
 
 
-                            </Grid>
+                                    </Grid>
 
-                            {/*Contenu à droite*/}
-                            <Grid item xs={12} md={7} style={{marginTop: '2%', marginBottom: '5%'}}>
-                                <Grid container style={{ backgroundImage: `url('../../static/resa.svg')`,backgroundPosition: "cover", backgroundRepeat:'no-repeat', border: 'thin solid transparent',maxWidth: '100%', height:'90vh', padding:'2%', position: 'sticky', top: 100,}}>
+                                    {/*Contenu à droite*/}
+                                    <Grid item xs={12} md={7} style={{marginTop: '2%', marginBottom: '5%'}}>
+                                        <Grid container style={{ backgroundImage: `url('../../static/resa.svg')`,backgroundPosition: "cover", backgroundRepeat:'no-repeat', border: 'thin solid transparent',maxWidth: '100%', height:'90vh', padding:'2%', position: 'sticky', top: 100,}}>
 
-                                </Grid> </Grid>
-                        </Grid>    </Grid>
-                </Layout>
-                <Footer/>
+                                        </Grid> </Grid>
+                                </Grid>    </Grid>
+                        </Layout>
+                        <Footer/>
 
-            </Fragment>
+                    </Fragment>
+
+
+
         );
     };
 }

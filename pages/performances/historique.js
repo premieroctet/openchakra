@@ -396,7 +396,7 @@ class Historique extends React.Component {
                                             {bookingsPaidSoon.map((e,index) => (
                                                 <Grid key={index} container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
                                                     <Grid item xs={8}>
-                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.end_date}</Typography>
+                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{moment(e.end_date).format('DD/MM/YYYY')}</Typography>
                                                         <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.user.firstname} - {e.date_prestation} - {e.service}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}>

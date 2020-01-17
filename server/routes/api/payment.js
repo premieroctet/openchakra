@@ -171,6 +171,7 @@ router.post('/payInCreate',passport.authenticate('jwt',{session:false}),(req,res
                         CreditedWalletId: wallet_id
                     })
                         .then(data => {
+                            console.log(data);
                             res.json(data)
                         })
                 })
@@ -374,6 +375,28 @@ router.get('/activeAccount',passport.authenticate('jwt',{session:false}),(req,re
                         }
                     });
                     res.json(allAccount);
+                })
+        })
+});
+
+// GET /myAlfred/api/payment/transactions
+// View transaction for a user
+// @access private
+router.get('/transactions',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const allTransactions = [];
+    User.findById(req.user.id)
+        .then(user => {
+            const id_mangopay = user.id_mangopay;
+            let options = {
+                parameters: {
+                    page: 1,
+                    per_page: 100
+                }
+            };
+            api.Users.getTransactions(id_mangopay,null,options)
+                .then(transactions => {
+                    const reverse = _.reverse(transactions);
+                    res.json(reverse[0])
                 })
         })
 });
