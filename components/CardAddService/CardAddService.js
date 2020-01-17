@@ -25,14 +25,12 @@ class CardAddService extends React.Component{
         <Card className={classes.card}>
           <CardActionArea>
             <Grid className={classes.cardMedia} style={{height:300}}>
-              <Grid className={classes.fabPosition}>
-                <Fab color="primary" aria-label="add" className={classes.fab}>
-                  <AddIcon style={{color:'white'}}/>
-                </Fab>
-              </Grid>
+              <Fab color="primary" aria-label="add" className={classes.fab}>
+                <AddIcon style={{color:'white'}}/>
+              </Fab>
             </Grid>
             <CardContent className={classes.textPosition}>
-              <Typography componen={'p'} className={classes.textStyle}>
+              <Typography className={classes.textStyle}>
                 Ajouter un service
               </Typography>
             </CardContent>

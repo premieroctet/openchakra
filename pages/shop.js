@@ -4,13 +4,15 @@ import AlfredBanner from '../components/shop/AlfredBanner/AlfredBanner';
 import MyBestSellers from '../components/shop/MyBestSellers/myBestSellers';
 import Bio from '../components/shop/Bio/Bio';
 import Review from '../components/shop/Review/Review';
-import Layout from '../hoc/Layout/Layout';
 import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
 import About from '../components/About/About';
 import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
 import Typography from '@material-ui/core/Typography';
 import CardPreview from '../components/CardPreview/CardPreview';
 import CardAddService from '../components/CardAddService/CardAddService';
+import Layout from '../hoc/Layout/Layout';
+import Commentary from '../components/Commentary/Commentary';
+import Link from '@material-ui/core/Link';
 
 class shop extends React.Component {
     constructor(props) {
@@ -31,6 +33,8 @@ class shop extends React.Component {
 
     render() {
         const {classes} = this.props;
+        const preventDefault = event => event.preventDefault();
+
         return (
             <Fragment>
                 <Layout>
@@ -76,9 +80,31 @@ class shop extends React.Component {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <MyBestSellers shop={this.state.id}/>
-                        <Bio shop={this.state.id}/>
-                        <Review shop={this.state.id}/>
+                        <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
+                            <Grid>
+                                <h3>Commentaires</h3>
+                            </Grid>
+                            <Grid>
+                                <Grid style={{width : '100%'}}>
+                                    <Commentary/>
+                                </Grid>
+                                <hr style={{marginTop: 30, marginBottom: 30}}/>
+                                <Grid style={{width : '100%'}}>
+                                    <Commentary/>
+                                </Grid>
+                                    <hr style={{marginTop: 30, marginBottom: 30}}/>
+                                <Grid style={{width : '100%'}}>
+                                    <Commentary/>
+                                </Grid>
+                            </Grid>
+                            <Grid style={{marginTop:50, marginBottom: 50}}>
+                                <Typography>
+                                    <Link href="#" onClick={preventDefault}>
+                                        Voir plus de commentaires
+                                    </Link>
+                                </Typography>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Layout>
             </Fragment>

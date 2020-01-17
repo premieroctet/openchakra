@@ -61,19 +61,15 @@ class Commentary extends React.Component{
          </Grid>
          <Grid style={{width: '50%'}}>
            <Grid>
-             <p>
-               Compliments
-             </p>
+             <h4>Compliments</h4>
            </Grid>
            <Grid style={{display:'flex'}}>
              <Grid className={classes.cardSkills}>
                <Avatar alt="careful_work" src="../../static/assets/img/skillsAlfred/careful_work.svg" className={classes.avatarSize}/>
-               <Chip label="3" />
                <p>Travail soigneux</p>
              </Grid>
              <Grid className={classes.cardSkills}>
                <Avatar alt="punctuality" src="../../static/assets/img/skillsAlfred/punctuality.svg" className={classes.avatarSize}/>
-               <Chip label="3" />
                <p>Ponctualité</p>
              </Grid>
            </Grid>

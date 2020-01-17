@@ -13,13 +13,11 @@ export default theme => ({
     backgroundPosition: 'center',
     position: 'relative'
   },
-  fabPosition:{
+  fab: {
     position: 'absolute',
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
-  },
-  fab: {
     margin: theme.spacing(1),
   },
   textPosition:{
