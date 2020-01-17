@@ -1006,7 +1006,7 @@ class ComingReservations extends React.Component {
                                               color: "white"
                                             }}
                                         >
-                                          Voir
+                                          Voir la réservation
                                         </a>
                                       </Link>
                                     </Typography>
