@@ -157,6 +157,7 @@ class Confirm extends React.Component {
             minDate: end,
             begin: end,
             time_prestation: this.state.bookingObj.time_prestation,
+            min_time_prestation: this.state.bookingObj.time_prestation,
             hourToSend: moment(new Date(this.state.bookingObj.time_prestation).setHours(new Date(this.state.bookingObj.time_prestation).getHours() + 1)).utc()._d
           })
 
@@ -1229,7 +1230,7 @@ class Confirm extends React.Component {
                                             isToday: isToday,
                                           }, () => {
                                             this.setState({
-                                              hourToSend: moment(this.state.begin).isSame(this.state.end, 'day') ? moment(new Date(this.state.bookingObj.time_prestation).setHours(new Date(this.state.bookingObj.time_prestation).getHours() + 1)).utc()._d : moment(this.state.currDate).utc()._d
+                                              hourToSend: moment(this.state.begin).isSame(this.state.end, 'day') ? moment(new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1)).utc()._d : moment(this.state.currDate).utc()._d
                                             })
 
                                           })
@@ -1261,7 +1262,7 @@ class Confirm extends React.Component {
                                         showTimeSelect
                                         showTimeSelectOnly
                                         timeIntervals={15}
-                                        minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.bookingObj.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1) : this.state.isToday ? this.state.currDate : null}
+                                        minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.min_time_prestation).setHours(new Date(this.state.min_time_prestation).getHours() + 1) : this.state.isToday ? this.state.currDate : null}
                                         maxTime={moment(this.state.begin).isSame(this.state.end, 'day') || this.state.isToday ? moment().endOf('day').toDate() : null}
                                         timeCaption="Heure"
                                         dateFormat="HH:mm"

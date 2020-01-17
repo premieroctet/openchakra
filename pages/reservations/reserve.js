@@ -147,9 +147,9 @@ class Reserve extends React.Component {
   changeStatus() {
     const endDate = moment(this.state.date).format('DD/MM/YYYY');
     const endHour = moment(this.state.hour).format('HH:mm');
-    let dateObj;
+    const dateObj = { end_date: endDate, end_time: endHour, status: 'Pré-approuvée' };
 
-    if (typeof this.state.bookingObj.end_date !== 'undefined' && typeof this.state.bookingObj.end_time) {
+    /*if (typeof this.state.bookingObj.end_date !== 'undefined' && typeof this.state.bookingObj.end_time) {
       if (this.state.currentUser._id === this.state.bookingObj.alfred._id) {
         dateObj = { status: 'Pré-approuvée' };
       } else {
@@ -163,7 +163,7 @@ class Reserve extends React.Component {
         dateObj = { end_date: endDate, end_time: endHour, status: 'En attente de confirmation' };
       }
 
-    }
+    }*/
 
 
     axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)

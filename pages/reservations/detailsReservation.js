@@ -2114,7 +2114,36 @@ class DetailsReservation extends React.Component {
                     >
                       <Grid item xs={12}>
                         <Typography style={{ fontSize: "1.4rem" }}>
-                          Paiement si acceptation
+                          {bookingObj === null || currentUser === null ?
+                              <span>Revenus potentiels</span>
+                              :
+                              currentUser._id === bookingObj.alfred._id ?
+                                  bookingObj.status === 'Refusée' ?
+                                      <span>Paiement non réalisé</span>
+                                      :
+                                      bookingObj.status === 'Annulée' || bookingObj.status === 'Expirée' ?
+                                          <span>Revenus potentiels</span>
+                                          :
+                                          bookingObj.status === 'Terminée' || bookingObj.status === 'Confirmée' ?
+                                              <span>Versement</span>
+                                              :
+                                              bookingObj.status === 'Demande d\'infos' || bookingObj.status === 'Pré-approuvée' || bookingObj.status === 'En attente de confirmation' ?
+                                                  <span>Revenus potentiels</span>
+                                                  :
+                                                  <span>Revenus potentiels</span>
+                                  :
+                                  bookingObj.status === 'Refusée' || bookingObj.status === 'Annulée' || bookingObj.status === 'Expirée' ?
+                                      <span>Paiement non réalisé</span>
+                                      :
+                                      bookingObj.status === 'Terminée' ?
+                                          <span>Paiement</span>
+                                          :
+                                          bookingObj.status === 'Confirmée' || bookingObj.status === 'Pré-approuvée' || bookingObj.status === 'Demande d\'infos' || bookingObj.status === 'Pré-approuvée' || bookingObj.status === 'En attente de confirmation' ?
+                                              <span>Paiement si acceptation</span>
+                                              :
+                                              <span>Revenus potentiels</span>
+                          }
+
                         </Typography>
                       </Grid>
                       <Grid item xs={12}>
@@ -2310,7 +2339,7 @@ class DetailsReservation extends React.Component {
                       </Grid>
                       <Grid item xs={12}>
                       {bookingObj === null ? null : bookingObj.status ===
-                        "Confirmée" ? (
+                        "Confirmée" || bookingObj.status === 'Terminée' ?  (
                         <Typography style={{ fontSize: "1rem" }}>
                           Fin le{" "}
                           {bookingObj === null ? null : moment(bookingObj.end_date).format('DD/MM/YYYY')} à{" "}
