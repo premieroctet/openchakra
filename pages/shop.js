@@ -10,6 +10,7 @@ import About from '../components/About/About';
 import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
 import Typography from '@material-ui/core/Typography';
 import CardPreview from '../components/CardPreview/CardPreview';
+import CardAddService from '../components/CardaAddServie/CardAddService';
 
 class shop extends React.Component {
     constructor(props) {
@@ -57,20 +58,22 @@ class shop extends React.Component {
                                     Les compliments reçus par Maelis
                                 </Typography>
                             </Grid>
-                            <Grid container style={{marginTop:'3%'}} spacing={1}>
-                                <Grid container item lg={4} spacing={3}>
+                            <Grid container style={{marginTop:'3%'}} spacing={10}>
+                                <Grid container item lg={4}>
                                     <CardPreview/>
                                 </Grid>
-                                <Grid container item lg={4} spacing={3}>
+                                <Grid container item lg={4}>
                                     <CardPreview/>
                                 </Grid>
-                                <Grid container item lg={4} spacing={3}>
+                                <Grid container item lg={4}>
                                     <CardPreview/>
                                 </Grid>
-                                <Grid container item lg={4} spacing={3}>
+                                <Grid container item lg={4}>
                                     <CardPreview/>
                                 </Grid>
-
+                                <Grid container item lg={4}>
+                                    <CardAddService/>
+                                </Grid>
                             </Grid>
                         </Grid>
                         <MyBestSellers shop={this.state.id}/>
