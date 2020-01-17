@@ -1014,9 +1014,9 @@ class searchLogin extends React.Component {
                                 </Grid>
                                 <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
                                     {categories.map((e,index) => (
-                                        <Grid key={index} style={{display: 'inline-block', width: '350px', margin: 'auto 20px'}}>
+                                        <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
                                             <Link href={'/serviceByCategory?category='+e._id}>
-                                            <Card  style={{width: '350px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
+                                            <Card  style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                                                 <CardActionArea>
                                                     <CardMedia
                                                         style={{height:200}}
