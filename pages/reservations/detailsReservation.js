@@ -1401,7 +1401,8 @@ class DetailsReservation extends React.Component {
                                               backgroundColor: "#F8727F",
                                               lineHeight: 2.5,
                                               borderRadius: "50px",
-                                              marginTop: "20%"
+                                              marginTop: "20%",
+                                              cursor: "pointer"
                                             }}
                                         >
 
@@ -2515,153 +2516,7 @@ class DetailsReservation extends React.Component {
               </Grid>
             </Grid> : null}
 
-            {modal1 ? (
-              <React.Fragment>
-                <Grid
-                  onClick={() => this.handleClose()}
-                  style={{
-                    height: "100%",
-                    width: "250vh",
-                    position: "fixed",
-                    background: "#82818191",
-                    zIndex: "9999",
-                    top: 0
-                  }}
-                ></Grid>
-                <Grid
-                  style={{
-                    height: "400px",
-                    width: "700px",
-                    position: "fixed",
-                    background: "#f1f1f1",
-                    zIndex: "99999",
-                    top: "25%",
-                    left: 0,
-                    right: 0,
-                    margin: "auto"
-                  }}
-                >
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src="https://www.youtube.com/embed/RK1K2bCg4J8"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                  ></iframe>
-                </Grid>
-              </React.Fragment>
-            ) : null}
-
-            {modal2 ? (
-              <React.Fragment>
-                <Grid
-                  onClick={() => this.handleClose()}
-                  style={{
-                    height: "100%",
-                    width: "250vh",
-                    position: "fixed",
-                    background: "#82818191",
-                    zIndex: "9999",
-                    top: 0
-                  }}
-                ></Grid>
-                <Grid
-                  style={{
-                    height: "400px",
-                    width: "700px",
-                    position: "fixed",
-                    background: "#f1f1f1",
-                    zIndex: "99999",
-                    top: "25%",
-                    left: 0,
-                    right: 0,
-                    margin: "auto"
-                  }}
-                >
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src="https://www.youtube.com/embed/RK1K2bCg4J8"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                  ></iframe>
-                </Grid>
-              </React.Fragment>
-            ) : null}
-
-            {modal3 ? (
-              <React.Fragment>
-                <Grid
-                  onClick={() => this.handleClose()}
-                  style={{
-                    height: "100%",
-                    width: "250vh",
-                    position: "fixed",
-                    background: "#82818191",
-                    zIndex: "9999",
-                    top: 0
-                  }}
-                ></Grid>
-                <Grid
-                  style={{
-                    height: "400px",
-                    width: "700px",
-                    position: "fixed",
-                    background: "#f1f1f1",
-                    zIndex: "99999",
-                    top: "25%",
-                    left: 0,
-                    right: 0,
-                    margin: "auto"
-                  }}
-                >
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src="https://www.youtube.com/embed/RK1K2bCg4J8"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                  ></iframe>
-                </Grid>
-              </React.Fragment>
-            ) : null}
-
-            {modal4 ? (
-              <React.Fragment>
-                <Grid
-                  onClick={() => this.handleClose()}
-                  style={{
-                    height: "100%",
-                    width: "250vh",
-                    position: "fixed",
-                    background: "#82818191",
-                    zIndex: "9999",
-                    top: 0
-                  }}
-                ></Grid>
-                <Grid
-                  style={{
-                    height: "400px",
-                    width: "700px",
-                    position: "fixed",
-                    background: "#f1f1f1",
-                    zIndex: "99999",
-                    top: "25%",
-                    left: 0,
-                    right: 0,
-                    margin: "auto"
-                  }}
-                >
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src="https://www.youtube.com/embed/RK1K2bCg4J8"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                  ></iframe>
-                </Grid>
-              </React.Fragment>
-            ) : null}
+            
 
             <Footer />
           </>
