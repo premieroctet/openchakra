@@ -33,7 +33,7 @@ class About extends React.Component{
               <h4>Conditions My-Alfred</h4>
             </Grid>
             <Grid>
-              Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H.
+              Adresse email et numéro de téléphone confirmés, information de paiement et acceptation du règlement intérieur.
             </Grid>
           </Grid>
           <Grid style={{display:'flex', flexDirection: 'column', alignItems: 'center', width: 300}}>
@@ -41,7 +41,7 @@ class About extends React.Component{
               <h4>Photo de profil </h4>
             </Grid>
             <Grid>
-              Si vous activez cette condition, vous ne pourrez voir les photos de profil des voyageurs qu'une fois la réservation confirmée.
+              Ces utilisateurs ont fourni une photo de profile.
             </Grid>
           </Grid>
           <Grid style={{display:'flex', flexDirection: 'column', alignItems: 'center', width: 300}}>
@@ -49,7 +49,7 @@ class About extends React.Component{
               <h4>Pièce d'identité officielle </h4>
             </Grid>
             <Grid>
-              Ces utilisateurs ont vérifié leur identité.
+              Ces utilisateurs ont vérifié leur pièce d'identité.
             </Grid>
           </Grid>
         </Grid>
