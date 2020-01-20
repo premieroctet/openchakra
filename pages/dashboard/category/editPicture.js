@@ -12,6 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
+import EditPicture from '../../../components/Dashboard/EditPicture/EditPicture';
 
 
 const {config} = require('../../../config/config');
@@ -120,30 +121,7 @@ class editPicture extends React.Component {
 
         return (
             <Layout>
-                <Grid container className={classes.loginContainer}>
-                    <Card className={classes.card}>
-                        <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>{category.label}</Typography>
-                            </Grid>
-                            <form onSubmit={this.onSubmit}>
-                                <img src={`../../../${category.picture}`} alt='image' width={100}/>
-                                <Grid item>
-                                    <input type="file" name="picture" onChange= {this.onChange} accept="image/*" />
-                                </Grid>
-
-
-                                <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                                        Modifier
-                                    </Button>
-
-
-                                </Grid>
-                            </form>
-                        </Grid>
-                    </Card>
-                </Grid>
+                <EditPicture/>
             </Layout>
         );
     };

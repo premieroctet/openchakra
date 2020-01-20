@@ -2,16 +2,12 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
-import Link from 'next/link';
 import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-
-
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
+import EditPicture from '../../../components/Dashboard/EditPicture/EditPicture';
 
 
 const {config} = require('../../../config/config');
@@ -54,7 +50,7 @@ class editPicture extends React.Component {
         this.state = {
             prestation: {},
             picture: null,
-
+            typePrestation: "test"
         };
 
 
@@ -72,7 +68,7 @@ class editPicture extends React.Component {
             .then(response => {
                 let prestation = response.data;
                 this.setState({prestation: prestation});
-
+                console.log(this.state.prestation, 'test')
             })
             .catch(err => {
                 console.log(err);
@@ -117,33 +113,9 @@ class editPicture extends React.Component {
         const {prestation} = this.state;
 
 
-
         return (
             <Layout>
-                <Grid container className={classes.loginContainer}>
-                    <Card className={classes.card}>
-                        <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>{prestation.label}</Typography>
-                            </Grid>
-                            <form onSubmit={this.onSubmit}>
-                                <img src={`../../../${prestation.picture}`} alt='image' width={100}/>
-                                <Grid item>
-                                    <input type="file" name="picture" onChange= {this.onChange} accept="image/*" />
-                                </Grid>
-
-
-                                <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                                        Modifier
-                                    </Button>
-
-
-                                </Grid>
-                            </form>
-                        </Grid>
-                    </Card>
-                </Grid>
+                <EditPicture typePrestation={this.state.typePrestation}/>
             </Layout>
         );
     };
