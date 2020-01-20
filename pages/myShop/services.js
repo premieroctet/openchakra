@@ -607,7 +607,7 @@ class services extends React.Component {
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
                                                     <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>+ Photo de profil</h4>
-                                                    <p>Si vous activez cette condition, vous ne pourrez voir les photos de profil des voyageurs qu'une fois la réservation confirmée. En savoir plus</p>
+                                                    <p>Si vous activez cette condition, vous ne pourrez voir les photos de profil des voyageurs qu'une fois la réservation confirmée.</p>
                                                 </Grid>
                                             </Grid>
                                             <Grid container className={classes.marginbot}>
