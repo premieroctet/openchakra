@@ -5,16 +5,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './AboutStyle'
 import ListItem from '@material-ui/core/ListItem';
-import Avatar from '@material-ui/core/Avatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import HighlightOff from '@material-ui/icons/HighlightOff';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import Chat from '@material-ui/icons/Chat';
-import Pets from '@material-ui/icons/Pets';
 import StarIcon from '@material-ui/icons/Star';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
@@ -87,7 +84,7 @@ class About extends React.Component{
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
-                  <Pets />
+                  <img src={'../../static/assets/img/iconCardAlfred/iconCastor.svg'} alt={'iconCastor'} title={'iconCastor'}/>
                 </ListItemAvatar>
                 <ListItemText
                   primary="Alfred depuis Juin 2019 "

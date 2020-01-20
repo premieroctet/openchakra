@@ -15,7 +15,6 @@ import Button from '@material-ui/core/Button';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import FolderIcon from '@material-ui/icons/Folder';
 import ListItemText from '@material-ui/core/ListItemText';
 import RoomIcon from '@material-ui/icons/Room';
 import Chip from '@material-ui/core/Chip';
@@ -93,7 +92,7 @@ class CardPreview extends React.Component{
               <List dense={this.state.dense} style={{display: 'flex'}}>
                 <ListItem style={{padding:0}}>
                   <ListItemIcon style={{minWidth:30}}>
-                    <FolderIcon />
+                    <img src={'../../static/assets/img/iconCardAlfred/Diplome.svg'} alt={'Diplome'} title={'Diplome'}/>
                   </ListItemIcon>
                   <ListItemText
                     primary="Diplômé(e)"
@@ -101,7 +100,7 @@ class CardPreview extends React.Component{
                 </ListItem>
                 <ListItem style={{padding:0}}>
                   <ListItemIcon  style={{minWidth:30}}>
-                    <FolderIcon />
+                    <img src={'../../static/assets/img/iconCardAlfred/Certifié.svg'} alt={'Certifié'} title={'Certifié'}/>
                   </ListItemIcon>
                   <ListItemText
                     primary="Certifié(e)"
@@ -109,7 +108,7 @@ class CardPreview extends React.Component{
                 </ListItem>
                 <ListItem style={{padding:0}}>
                   <ListItemIcon  style={{minWidth:30}}>
-                    <FolderIcon />
+                    <img src={'../../static/assets/img/iconCardAlfred/experience.svg'} alt={'Expériementé'} title={'Expériementé'}/>
                   </ListItemIcon>
                   <ListItemText
                     primary="Expériementé(e)"
