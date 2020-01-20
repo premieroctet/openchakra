@@ -3,11 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './CommentaryStyle';
-import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
-import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Rating from '@material-ui/lab/Rating';
@@ -22,6 +18,12 @@ class Commentary extends React.Component{
 
   render(){
     const {classes} = this.props;
+
+    const StyledRating = withStyles({
+      iconFilled: {
+        color: '#4fbdd7',
+      },
+    })(Rating);
 
     return (
      <Grid>
@@ -43,19 +45,19 @@ class Commentary extends React.Component{
            <Grid style={{height: 50}}>
              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
              <p>Accueil</p>
-               <Rating name="read-only" value={this.state.value} readOnly className={classes.ratingStyle}/>
+               <StyledRating name="read-only" value={this.state.value} readOnly className={classes.ratingStyle}/>
              </Box>
            </Grid>
            <Grid style={{height: 50}}>
              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
                <p>Qualité-prix</p>
-               <Rating name="read-only" value={this.state.value} readOnly className={classes.ratingStyle} />
+               <StyledRating name="read-only" value={this.state.value} readOnly className={classes.ratingStyle} />
              </Box>
            </Grid>
            <Grid style={{height: 50}}>
              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
                <p>Communication</p>
-               <Rating name="read-only" value={this.state.value} readOnly className={classes.ratingStyle}/>
+               <StyledRating name="read-only" value={this.state.value} readOnly className={classes.ratingStyle}/>
              </Box>
            </Grid>
          </Grid>

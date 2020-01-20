@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './AlfredConditionsStyle'
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 class About extends React.Component{
   constructor(props){
@@ -16,40 +17,96 @@ class About extends React.Component{
 
     return (
       <Grid container>
-        <Grid style={{display:'flex', justifyContent: 'space-between', width: '100%'}}>
+        <Grid className={classes.mainContainer}>
+          <Grid className={classes.containerBooking}>
+            <Grid>
+              <h3>Les paramétres de réservation de Maelis</h3>
+            </Grid>
+            <Grid>
+              <Button color="secondary" className={classes.button}>
+                Modifier
+              </Button>
+            </Grid>
+          </Grid>
+          <hr className={classes.hrStyle}/>
           <Grid>
             <h3>Les conditions de réservation de Maelis</h3>
           </Grid>
-          <Grid>
-            <Button color="secondary" className={classes.button}>
-              Modifier
-            </Button>
+          <Grid className={classes.containerBooking}>
+            <Grid className={classes.conditionsAlfred}>
+              <Grid>
+                <h4>Conditions My-Alfred</h4>
+              </Grid>
+              <Grid className={classes.textStyle}>
+                <p>Adresse email et numéro de téléphone confirmés, information de paiement et acceptation du règlement intérieur.</p>
+              </Grid>
+            </Grid>
+            <Grid className={classes.conditionsAlfredPosition}>
+              <Grid>
+                <h4>Photo de profil </h4>
+              </Grid>
+              <Grid>
+                <p>Ces utilisateurs ont fourni une photo de profil.</p>
+              </Grid>
+            </Grid>
+            <Grid className={classes.conditionsAlfredPosition}>
+              <Grid>
+                <h4>Pièce d'identité officielle </h4>
+              </Grid>
+              <Grid>
+                <p>Ces utilisateurs ont vérifié leur pièce d'identité.</p>
+              </Grid>
+            </Grid>
+        </Grid>
+          <hr className={classes.hrStyle}/>
+          <Grid className={classes.containerPosition}>
+            <Grid className={classes.contentPosition}>
+              <Grid>
+                <h3>Comment réserver Maelis</h3>
+              </Grid>
+              <Grid>
+                <h4>Maelïs dispose de 24h pour répondre aux demandes de réservation</h4>
+              </Grid>
+              <Grid>
+                <p>Dans le cadre d’une demande réservation d’un de ses services, Maëlis vous confirmera la réservation dans un délai maximum de 24h.</p>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
-        <hr style={{width : '100%'}}/>
-        <Grid style={{display: 'flex', width:'100%', justifyContent: 'space-between'}}>
-          <Grid style={{display:'flex', flexDirection: 'column', alignItems: 'center', width: 300}}>
+        <hr className={classes.hrStyle}/>
+        <Grid className={classes.containerPosition}>
+          <Grid className={classes.contentPosition}>
             <Grid>
-              <h4>Conditions My-Alfred</h4>
+              <h3>Conditions d’annulation de Maelis</h3>
             </Grid>
             <Grid>
-              Adresse email et numéro de téléphone confirmés, information de paiement et acceptation du règlement intérieur.
-            </Grid>
-          </Grid>
-          <Grid style={{display:'flex', flexDirection: 'column', alignItems: 'center', width: 300}}>
-            <Grid>
-              <h4>Photo de profil </h4>
+              <h4>Flexible</h4>
             </Grid>
             <Grid>
-              Ces utilisateurs ont fourni une photo de profile.
+              <p>En cas d’annulation jusqu’à 1 jour de la prestation, Maelîs procédera au remboursement intégral de la réservation. </p>
             </Grid>
           </Grid>
-          <Grid style={{display:'flex', flexDirection: 'column', alignItems: 'center', width: 300}}>
+        </Grid>
+        <hr className={classes.hrStyle}/>
+        <Grid>
+          <h3>Message de bienvenue</h3>
+        </Grid>
+        <Grid className={classes.containerPosition}>
+          <Grid className={classes.contentWelcomePosition}>
             <Grid>
-              <h4>Pièce d'identité officielle </h4>
+              <img src={'../../static/assets/img/iconCardAlfred/Castor applaudit.svg'} alt={'fatCastor'} title={'fatCastor'} className={classes.imgFatCastor}/>
             </Grid>
-            <Grid>
-              Ces utilisateurs ont vérifié leur pièce d'identité.
+            <Grid className={classes.texfieldContent}>
+              <TextField
+                id="outlined-multiline-static"
+                label="Message de bienvenue"
+                multiline
+                rows="4"
+                defaultValue="Merci pour votre réservation !"
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+              />
             </Grid>
           </Grid>
         </Grid>

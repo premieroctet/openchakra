@@ -2243,7 +2243,7 @@ class Form extends React.Component {
                                                     label={<React.Fragment>
                                                     <p style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Photo de profil</p>
                                                     <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
-                                                      Ces utilisateurs ont fourni une photo de profile.
+                                                      Ces utilisateurs ont fourni une photo de profil.
                                                     </p>
                                                 </React.Fragment>}
                                                 />

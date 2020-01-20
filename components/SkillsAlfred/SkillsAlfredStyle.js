@@ -14,5 +14,8 @@ export default theme=>({
   avatarSize:{
     width: 100,
     height: 100
+  },
+  chipStyle:{
+    margin : 15
   }
 })

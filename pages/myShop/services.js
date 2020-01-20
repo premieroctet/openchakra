@@ -607,7 +607,7 @@ class services extends React.Component {
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
                                                     <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Photo de profil</h4>
-                                                    <p>Ces utilisateurs ont fourni une photo de profile.</p>
+                                                    <p>Ces utilisateurs ont fourni une photo de profil.</p>
                                                 </Grid>
                                             </Grid>
                                             <Grid container className={classes.marginbot}>

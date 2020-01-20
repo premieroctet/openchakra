@@ -26,27 +26,27 @@ class SkillsAlfred extends React.Component{
           <Grid className={classes.mainContainer}>
             <Grid className={classes.cardSkills}>
               <Avatar alt="careful_work" src="../../static/assets/img/skillsAlfred/careful_work.svg" className={classes.avatarSize}/>
-              <Chip label="3" />
+              <Chip label="3" className={classes.chipStyle} />
               <Typography>Travail soigneux</Typography>
             </Grid>
             <Grid className={classes.cardSkills}>
               <Avatar alt="punctuality" src="../../static/assets/img/skillsAlfred/punctuality.svg" className={classes.avatarSize}/>
-              <Chip label="3" />
+              <Chip label="3" className={classes.chipStyle}/>
               <Typography>Ponctualité</Typography>
             </Grid>
             <Grid className={classes.cardSkills}>
               <Avatar alt="flexibility" src="../../static/assets/img/skillsAlfred/flexibility.svg" className={classes.avatarSize}/>
-              <Chip label="3" />
+              <Chip label="3" className={classes.chipStyle}/>
               <Typography>Flexibilité</Typography>
             </Grid>
             <Grid className={classes.cardSkills}>
               <Avatar alt="attentive" src="../../static/assets/img/skillsAlfred/attentive.svg" className={classes.avatarSize}/>
-              <Chip label="3" />
+              <Chip label="3" className={classes.chipStyle}/>
               <Typography>Attentive</Typography>
             </Grid>
             <Grid className={classes.cardSkills}>
               <Avatar alt="reactivity" src="../../static/assets/img/skillsAlfred/reactivity.svg" className={classes.avatarSize}/>
-              <Chip label="3" />
+              <Chip label="3" className={classes.chipStyle}/>
               <Typography>reactivity</Typography>
             </Grid>
           </Grid>

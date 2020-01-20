@@ -39,18 +39,18 @@ class About extends React.Component{
     return (
       <Grid container className={classes.mainContainer}>
         <Grid item>
-          <div>
-            <List dense={this.state.dense}>
+          <Grid>
+            <List dense={this.state.dense} className={classes.listStyle}>
               <ListItem>
-                <Box component="fieldset" mb={3} borderColor="transparent">
+                <Box component="fieldset" mb={3} borderColor="transparent" className={classes.raiting}>
                   <StyledRating name="read-only" value={this.state.valueRating} readOnly/>
                 </Box>
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
-                  <StarIcon />
+                  <StarIcon className={classes.iconStar}/>
                 </ListItemAvatar>
-                <LinkMaterial href="#" onClick={preventDefault} color="primary "className={classes.link}>10 Commentaires</LinkMaterial>
+                <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>10 Commentaires</LinkMaterial>
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
@@ -101,10 +101,10 @@ class About extends React.Component{
                 />
               </ListItem>
               <ListItem>
-                <LinkMaterial href="#" onClick={preventDefault} color="primary "className={classes.link}>Voir le profil</LinkMaterial>
+                <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>Voir le profil</LinkMaterial>
               </ListItem>
             </List>
-          </div>
+          </Grid>
         </Grid>
       </Grid>
     )
