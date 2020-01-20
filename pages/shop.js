@@ -41,7 +41,6 @@ class shop extends React.Component {
                 <Layout>
                     <AlfredBanner shop={this.state.id}/>
                     <NavBarShop/>
-                    {/*<NavBarSwitchStatus/>*/}
                     <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
                         <Grid style={{display:'flex', alignItems: 'baseline', justifyContent: 'space-between', marginLeft: '5%', marginRight: '5%' }}>
                             <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column', marginTop: '3%'}}>
