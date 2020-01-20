@@ -20,8 +20,8 @@ const AvailabilitySchema = new Schema({
                   },
                   value: {
                     type: Schema.Types.ObjectId,
-                    ref: 'service',
-                  },
+                    ref: 'service'
+                  }
               }],
               all_services: {
                   type: Boolean,

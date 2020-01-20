@@ -15,7 +15,7 @@ const CategorySchema = new Schema({
     tags: [{
     type: Schema.Types.ObjectId,
     ref: 'tag'
-    }],
+    }]
 });
 
 module.exports = Category = mongoose.model('category',CategorySchema);
