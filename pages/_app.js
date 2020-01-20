@@ -51,7 +51,11 @@ class MyApp extends App {
     return (
       <Container>
         <Head>
-          <title>MyAlfred</title>
+          <title>My Alfred</title>
+	    <meta property="og:image" content="https://www.my-alfred.io/static/presentation.png" />
+            <meta property="og:description" content="Réserveez et proposez tous types de services immédiatement et très simplement autour de chez vous" />
+            <meta property="og:url"content="https://www.my-alfred.io" />
+            <meta property="og:title" content="My Alfred - services autour de chez vous" />
           <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
                 integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
                 crossOrigin=""/>

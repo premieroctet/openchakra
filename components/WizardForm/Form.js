@@ -408,9 +408,6 @@ class Wizard extends React.Component {
         createShop: Yup.object().shape({
             is_professional: Yup.boolean(),
             id_recto: Yup.lazy(() => {
-                if (this.state.hasId === false) {
-                    return Yup.mixed().required('Veuillez uploader le recto de votre carte d\'identité ou bien votre passeport');
-                }
                 return Yup.mixed().notRequired();
             }),
             id_verso: Yup.mixed(),
@@ -1856,7 +1853,11 @@ class Form extends React.Component {
                                                                 <div>
                                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Décrivez brievement votre expertise !</Typography>
                                                                     <Typography>
-                                                                        Mettez en évidence vos compétences et votre expertise dans ce service. Les utilisateurs auront accès à ces informations, n’hésitez pas à valoriser votre expérience, vos réalisations et vos atouts pour ce service !
+                                                                      Décrivez votre expertise et précisez votre service !
+                                                                      Mettez en évidence vos compétences et votre expertise dans ce service.
+                                                                      Vous pouvez également préciser la façon dont les utilisateurs doivent indiquer les quantités pour réserver.
+                                                                      Par exemple, si vous proposez un service de confection de tapis, vous pouvez indiquer les heures nécessaires pour différentes dimension de tapis.
+                                                                      Précisez tout ce qui peut aider votre client à réserver correctement votre service !
                                                                     </Typography>
                                                                     <Field
                                                                         name={`submission[${index}].descService`}
@@ -2213,7 +2214,7 @@ class Form extends React.Component {
                                                     label={<React.Fragment>
                                                         <p style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Conditions My-Alfred</p>
                                                 <p style={{marginTop: 0, fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
-                                                    Numéro de téléphone confirmé, adresse e-mail, informations de paiement et acceptation du règlement intérieur.
+                                                  Adresse email et numéro de téléphone confirmés, information de paiement et acceptation du règlement intérieur.
                                             </p>
                                         </React.Fragment>}
                                                 />
@@ -2242,7 +2243,7 @@ class Form extends React.Component {
                                                     label={<React.Fragment>
                                                     <p style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Photo de profil</p>
                                                     <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
-                                                        Si vous activez cette condition, vous ne pourrez voir les photos de profil des utilisateurs qu'une fois la réservation confirmée.
+                                                      Ces utilisateurs ont fourni une photo de profile.
                                                     </p>
                                                 </React.Fragment>}
                                                 />
@@ -2271,7 +2272,7 @@ class Form extends React.Component {
                                                     label={<React.Fragment>
                                                     <p style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Pièce d'identité officielle</p>
                                                     <p style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
-                                                        Ces utilisateurs ont vérifié leur identité.
+                                                      Ces utilisateurs ont vérifié leur pièce d'identité.
                                                     </p>
                                                 </React.Fragment>}
                                                 />
@@ -2300,7 +2301,7 @@ class Form extends React.Component {
                                                     label={<React.Fragment>
                                                         <Typography style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Recommandations d'autres Alfred</Typography>
                                                         <Typography style={{marginTop: 0,fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
-                                                            Ces utilisateurs ont déjà utilisé des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commentaires négatifs.
+                                                          Ces utilisateurs ont déjà utilisé des services avec My-Alfred, sont recommandés par d'autres Alfred et non pas reçu de commentaires négatifs.
                                                         </Typography>
                                                     </React.Fragment>}
 

@@ -588,7 +588,7 @@ class services extends React.Component {
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
                                                     <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Conditions My-Alfred</h4>
-                                                    <p>Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H. </p>
+                                                    <p>Adresse email et numéro de téléphone confirmés, information de paiement et acceptation du règlement intérieur.</p>
                                                 </Grid>
                                             </Grid>
                                             <Grid container className={classes.marginbot}>
@@ -606,8 +606,8 @@ class services extends React.Component {
                                                     />
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
-                                                    <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>+ Photo de profil</h4>
-                                                    <p>Si vous activez cette condition, vous ne pourrez voir les photos de profil des voyageurs qu'une fois la réservation confirmée.</p>
+                                                    <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Photo de profil</h4>
+                                                    <p>Ces utilisateurs ont fourni une photo de profile.</p>
                                                 </Grid>
                                             </Grid>
                                             <Grid container className={classes.marginbot}>
@@ -626,7 +626,7 @@ class services extends React.Component {
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
                                                     <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Pièce d'identité<span className={classes.hiddenone}> officielle</span></h4><h4 style={{fontWeight: '100', lineHeight: '0.5!important'}} className={classes.revealedone}>officielle</h4>
-                                                    <p>Ces utilisateurs ont vérifié leur identité.</p>
+                                                    <p>Ces utilisateurs ont vérifié leur pièce d'identité.</p>
                                                 </Grid>
                                             </Grid>
                                             <Grid container className={classes.marginbot}>
@@ -645,7 +645,7 @@ class services extends React.Component {
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
                                                     <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Recommandations<span className={classes.hiddenone}> d'autres Alfred</span></h4><h4 style={{fontWeight: '100', lineHeight: '0.5!important'}} className={classes.revealedone}>d'autres Alfred</h4>
-                                                    <p>Ces utilisateurs ont déjà utilisés des services avec My-Alfred, sont recommandés par d'autres Alfred et n'ont pas reçu de commentaires négatifs.</p>
+                                                    <p>Ces utilisateurs ont déjà utilisé des services avec My-Alfred, sont recommandés par d'autres Alfred et non pas reçu de commentaires négatifs.</p>
                                                 </Grid>
                                             </Grid>
                                         </Grid>

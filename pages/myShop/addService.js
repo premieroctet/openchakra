@@ -1775,7 +1775,11 @@ class addService extends React.Component {
                                     <div>
                                       <Typography variant="h6" style={{marginBottom: '.5rem'}}>Décrivez brievement votre expertise !</Typography>
                                       <Typography>
-                                        Mettez en évidence vos compétences et votre expertise dans ce service. Les utilisateurs auront accès à ces informations, n’hésitez pas à valoriser votre expérience, vos réalisations et vos atouts pour ce service !
+                                        Décrivez votre expertise et précisez votre service !
+                                        Mettez en évidence vos compétences et votre expertise dans ce service.
+                                        Vous pouvez également préciser la façon dont les utilisateurs doivent indiquer les quantités pour réserver.
+                                        Par exemple, si vous proposez un service de confection de tapis, vous pouvez indiquer les heures nécessaires pour différentes dimension de tapis.
+                                        Précisez tout ce qui peut aider votre client à réserver correctement votre service !
                                       </Typography>
                                       <Field
                                         name={`submission[${index}].descService`}
