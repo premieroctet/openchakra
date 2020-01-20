@@ -13,6 +13,7 @@ import CardAddService from '../components/CardAddService/CardAddService';
 import Layout from '../hoc/Layout/Layout';
 import Commentary from '../components/Commentary/Commentary';
 import Link from '@material-ui/core/Link';
+import AlfredConditions from '../components/AlfredConditions/AlfredConditions';
 
 class shop extends React.Component {
     constructor(props) {
@@ -103,6 +104,9 @@ class shop extends React.Component {
                                         Voir plus de commentaires
                                     </Link>
                                 </Typography>
+                            </Grid>
+                            <Grid>
+                                <AlfredConditions/>
                             </Grid>
                         </Grid>
                     </Grid>
