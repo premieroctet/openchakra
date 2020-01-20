@@ -8,10 +8,10 @@ export default theme => ({
     paddingTop: '56.25%', // 16:9
     backgroundImage:  "url(" + "../../static/assets/img/skillsAlfred/bgCardAddService.svg" + ")",
     display: 'block',
-    backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-    position: 'relative'
+    backgroundPosition: 'right',
+    position: 'relative',
+    height:300
   },
   fab: {
     position: 'absolute',
@@ -27,7 +27,8 @@ export default theme => ({
     height: 100,
   },
   textStyle:{
-    color: '#505050',
-    fontWeight: 'bold'
+    color: '#4fbdd7',
+    fontWeight: 'bold',
+    fontSize: 'large'
   }
 })

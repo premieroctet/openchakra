@@ -18,19 +18,21 @@ class About extends React.Component{
     return (
       <Grid container>
         <Grid className={classes.mainContainer}>
-          <Grid className={classes.containerBooking}>
+          <Grid>
             <Grid>
               <h3>Les paramétres de réservation de Maelis</h3>
+            </Grid>
+          </Grid>
+          <hr className={classes.hrStyle}/>
+          <Grid className={classes.containerBooking}>
+            <Grid>
+              <h3>Les conditions de réservation de Maelis</h3>
             </Grid>
             <Grid>
               <Button color="secondary" className={classes.button}>
                 Modifier
               </Button>
             </Grid>
-          </Grid>
-          <hr className={classes.hrStyle}/>
-          <Grid>
-            <h3>Les conditions de réservation de Maelis</h3>
           </Grid>
           <Grid className={classes.containerBooking}>
             <Grid className={classes.conditionsAlfred}>

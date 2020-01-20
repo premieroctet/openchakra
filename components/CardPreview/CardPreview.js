@@ -59,25 +59,25 @@ class CardPreview extends React.Component{
             </Grid>
           </Grid>
           <CardContent>
-            <Grid style={{display:'flex', flexDirection:'row'}}>
-              <Grid style={{width: '50%',display:'flex', flexDirection:'column'}}>
+            <Grid  className={classes.cardContent}>
+              <Grid className={classes.cardContentPosition}>
                 <Typography variant="body2" color="textSecondary" component="p">
                   Beaute bien être
                 </Typography>
-                <Grid style={{display:'flex', marginBottom: '2%'}}>
+                <Grid className={classes.cardContentHeader}>
                   <Typography component="p">
                     Coiffure par Maëlis
                   </Typography>
                   <CheckCircleIcon className={classes.checkCircleIcon}/>
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                  <Badge badgeContent={99} color="primary" className={classes.badgeStyle}>
+                  <Badge badgeContent={99} color={'primary'} className={classes.badgeStyle}>
                     <StyledRating name="read-only" value={this.state.value} readOnly className={classes.rating} />
                   </Badge>
                 </Box>
               </Grid>
-              <Grid style={{width:'50%', display:'flex', flexDirection:'column', alignItems: 'center'}}>
-                <Grid style={{display:'flex'}}>
+              <Grid className={classes.cardContentRight}>
+                <Grid className={classes.flexPosition}>
                   <Typography variant="body2" color="textSecondary" component="p">
                     Rouen
                   </Typography>
@@ -89,25 +89,25 @@ class CardPreview extends React.Component{
               </Grid>
             </Grid>
             <Grid>
-              <List dense={this.state.dense} style={{display: 'flex'}}>
-                <ListItem style={{padding:0}}>
-                  <ListItemIcon style={{minWidth:30}}>
+              <List dense={this.state.dense} className={classes.flexPosition}>
+                <ListItem className={classes.noPadding}>
+                  <ListItemIcon className={classes.minWidth}>
                     <img src={'../../static/assets/img/iconCardAlfred/Diplome.svg'} alt={'Diplome'} title={'Diplome'}/>
                   </ListItemIcon>
                   <ListItemText
                     primary="Diplômé(e)"
                   />
                 </ListItem>
-                <ListItem style={{padding:0}}>
-                  <ListItemIcon  style={{minWidth:30}}>
+                <ListItem className={classes.noPadding}>
+                  <ListItemIcon  className={classes.minWidth}>
                     <img src={'../../static/assets/img/iconCardAlfred/Certifié.svg'} alt={'Certifié'} title={'Certifié'}/>
                   </ListItemIcon>
                   <ListItemText
                     primary="Certifié(e)"
                   />
                 </ListItem>
-                <ListItem style={{padding:0}}>
-                  <ListItemIcon  style={{minWidth:30}}>
+                <ListItem className={classes.noPadding}>
+                  <ListItemIcon className={classes.minWidth}>
                     <img src={'../../static/assets/img/iconCardAlfred/experience.svg'} alt={'Expériementé'} title={'Expériementé'}/>
                   </ListItemIcon>
                   <ListItemText

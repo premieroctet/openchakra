@@ -49,7 +49,8 @@ export default theme => ({
     alignItems: 'center'
   },
   texfieldContent:{
-    width: '100%'
+    width: '100%',
+    marginLeft: 30,
   },
   imgFatCastor:{
     width: 100

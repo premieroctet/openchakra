@@ -76,8 +76,37 @@ export default theme => ({
     border: '2px solid white'
   },
   badgeStyle:{
+    color: "white",
     '& span:nth-child(+n+6)':{
     }
+  },
+  cardContent:{
+    display:'flex',
+    flexDirection:'row'
+  },
+  cardContentPosition:{
+    width: '50%',
+    display:'flex',
+    flexDirection:'column'
+  },
+  cardContentHeader:{
+    display:'flex',
+    marginBottom: '2%'
+  },
+  cardContentRight:{
+    width:'50%',
+    display:'flex',
+    flexDirection:'column',
+    alignItems: 'center'
+  },
+  flexPosition:{
+    display:'flex'
+  },
+  minWidth:{
+    minWidth:30
+  },
+  noPadding:{
+    padding:0
   }
 });
 
