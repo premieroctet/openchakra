@@ -666,7 +666,7 @@ class faq extends React.Component {
                                             </p>
                                             <p>
                                                 Photo de profil<br/>
-                                                Si vous activez cette condition, vous ne pourrez voir les photos de profil des utilisateurs qu'une fois la réservation confirmée.
+                                                Ces utilisateurs ont fourni une photo de profile.
 
                                             </p>
                                             <p>
