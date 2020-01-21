@@ -11,10 +11,8 @@ const ServiceSchema = new Schema({
         ref: 'category'
     },
     equipments: [{
-
             type: Schema.Types.ObjectId,
             ref: 'equipment'
-
     }],
     tags: [{
         type: Schema.Types.ObjectId,
@@ -29,11 +27,10 @@ const ServiceSchema = new Schema({
     majoration: {
         type: String
     },
-
     location: {
       home   : Boolean,
       alfred : Boolean,
-      visio  : Boolean,
+      visio  : Boolean
     }
 });
 
