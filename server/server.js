@@ -121,6 +121,7 @@ nextApp.prepare().then(() => {
     https.createServer({
         cert: fs.readFileSync(process.env.HOME+'/.ssh/Main-Certificate-x509.txt'),
         key: fs.readFileSync(process.env.HOME+'/.ssh/www_my-alfred_io.key'),
+        ca: fs.readFileSync(process.env.HOME+'/.ssh/Intermediate-Certificate.txt'),
       },
       app).listen(443, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`))    
 });
