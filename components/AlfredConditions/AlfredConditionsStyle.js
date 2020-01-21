@@ -15,23 +15,12 @@ export default theme => ({
     justifyContent: 'space-between',
     width: '100%'
   },
+  containerAlfred:{
+    display: 'flex',
+    flexDirection: 'column'
+  },
   hrStyle:{
     width : '100%'
-  },
-  conditionsAlfred:{
-    display:'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: 300
-  },
-  textStyle:{
-    textAlign: 'center'
-  },
-  conditionsAlfredPosition:{
-    display:'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: 300
   },
   containerPosition:{
     display: 'flex',
@@ -39,7 +28,8 @@ export default theme => ({
   },
   contentPosition:{
     display:'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    width: '100%'
   },
   contentWelcomePosition:{
     display:'flex',
@@ -54,5 +44,9 @@ export default theme => ({
   },
   imgFatCastor:{
     width: 100
+  },
+  alignCheckbox:{
+    display: 'flex',
+    alignItems: 'center'
   }
 });

@@ -5,11 +5,15 @@ import { withStyles } from '@material-ui/core/styles';
 import styles from './AlfredConditionsStyle'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
+import Checkbox from '@material-ui/core/Checkbox';
 
 class About extends React.Component{
   constructor(props){
     super(props);
     this.state = {
+      flexible_cancel:true
     }
   }
   render(){
@@ -18,11 +22,6 @@ class About extends React.Component{
     return (
       <Grid container>
         <Grid className={classes.mainContainer}>
-          <Grid>
-            <Grid>
-              <h3>Les paramétres de réservation de Maelis</h3>
-            </Grid>
-          </Grid>
           <hr className={classes.hrStyle}/>
           <Grid className={classes.containerBooking}>
             <Grid>
@@ -34,58 +33,111 @@ class About extends React.Component{
               </Button>
             </Grid>
           </Grid>
-          <Grid className={classes.containerBooking}>
-            <Grid className={classes.conditionsAlfred}>
+          <Grid className={classes.containerAlfred}>
+            <Grid className={classes.alignCheckbox}>
               <Grid>
-                <h4>Conditions My-Alfred</h4>
+                <Checkbox
+                  checked={this.state.flexible_cancel}
+                  onChange={this.handleChangeF}
+                  value={'flexible_cancel'}
+                  color="primary"
+                  inputProps={{
+                    'aria-label': 'secondary checkbox',
+                  }}
+                  icon={<CircleUnchecked/>}
+                  checkedIcon={<RadioButtonCheckedIcon />}
+                />
               </Grid>
-              <Grid className={classes.textStyle}>
-                <p>Adresse email et numéro de téléphone confirmés, information de paiement et acceptation du règlement intérieur.</p>
+              <Grid>
+                <p>Conditions My-Alfred (adresse email & numéro de téléphone confirmés).</p>
               </Grid>
             </Grid>
-            <Grid className={classes.conditionsAlfredPosition}>
+            <Grid className={classes.alignCheckbox}>
               <Grid>
-                <h4>Photo de profil </h4>
+                <Checkbox
+                  checked={this.state.flexible_cancel}
+                  onChange={this.handleChangeF}
+                  value={'flexible_cancel'}
+                  color="primary"
+                  inputProps={{
+                    'aria-label': 'secondary checkbox',
+                  }}
+                  icon={<CircleUnchecked/>}
+                  checkedIcon={<RadioButtonCheckedIcon />}
+                />
               </Grid>
               <Grid>
-                <p>Ces utilisateurs ont fourni une photo de profil.</p>
+                <p>Photo de profil.</p>
               </Grid>
             </Grid>
-            <Grid className={classes.conditionsAlfredPosition}>
+            <Grid className={classes.alignCheckbox}>
               <Grid>
-                <h4>Pièce d'identité officielle </h4>
+                <Checkbox
+                  checked={this.state.flexible_cancel}
+                  onChange={this.handleChangeF}
+                  value={'flexible_cancel'}
+                  color="primary"
+                  inputProps={{
+                    'aria-label': 'secondary checkbox',
+                  }}
+                  icon={<CircleUnchecked/>}
+                  checkedIcon={<RadioButtonCheckedIcon />}
+                />
               </Grid>
               <Grid>
-                <p>Ces utilisateurs ont vérifié leur pièce d'identité.</p>
+                <p>Pièce d'identité officielle.</p>
               </Grid>
             </Grid>
         </Grid>
           <hr className={classes.hrStyle}/>
           <Grid className={classes.containerPosition}>
             <Grid className={classes.contentPosition}>
-              <Grid>
-                <h3>Comment réserver Maelis</h3>
+              <Grid className={classes.containerBooking}>
+                <Grid>
+                  <h3>Comment réserver Maelis</h3>
+                </Grid>
+                <Grid>
+                  <Button color="secondary" className={classes.button}>
+                    Modifier
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid>
-                <h4>Maelïs dispose de 24h pour répondre aux demandes de réservation</h4>
+              <Grid className={classes.alignCheckbox}>
+                <Grid>
+                  <Checkbox
+                    checked={this.state.flexible_cancel}
+                    onChange={this.handleChangeF}
+                    value={'flexible_cancel'}
+                    color="primary"
+                    inputProps={{
+                      'aria-label': 'secondary checkbox',
+                    }}
+                    icon={<CircleUnchecked/>}
+                    checkedIcon={<RadioButtonCheckedIcon />}
+                  />
+                </Grid>
+                <Grid>
+                  <p>Maelïs dispose de 24h pour répondre aux demandes de réservation</p>
+                </Grid>
               </Grid>
-              <Grid>
-                <p>Dans le cadre d’une demande réservation d’un de ses services, Maëlis vous confirmera la réservation dans un délai maximum de 24h.</p>
+              <Grid className={classes.alignCheckbox}>
+                <Grid>
+                  <Checkbox
+                    checked={this.state.flexible_cancel}
+                    onChange={this.handleChangeF}
+                    value={'flexible_cancel'}
+                    color="primary"
+                    inputProps={{
+                      'aria-label': 'secondary checkbox',
+                    }}
+                    icon={<CircleUnchecked/>}
+                    checkedIcon={<RadioButtonCheckedIcon />}
+                  />
+                </Grid>
+                <Grid>
+                  <p>Les utilisateurs peuvent réserver les services de Maêlis sans demande de réservation.</p>
+                </Grid>
               </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        <hr className={classes.hrStyle}/>
-        <Grid className={classes.containerPosition}>
-          <Grid className={classes.contentPosition}>
-            <Grid>
-              <h3>Conditions d’annulation de Maelis</h3>
-            </Grid>
-            <Grid>
-              <h4>Flexible</h4>
-            </Grid>
-            <Grid>
-              <p>En cas d’annulation jusqu’à 1 jour de la prestation, Maelîs procédera au remboursement intégral de la réservation. </p>
             </Grid>
           </Grid>
         </Grid>
@@ -112,6 +164,91 @@ class About extends React.Component{
             </Grid>
           </Grid>
         </Grid>
+        <hr className={classes.hrStyle}/>
+        <Grid className={classes.containerPosition}>
+          <Grid className={classes.contentPosition}>
+            <Grid className={classes.containerBooking}>
+              <Grid>
+                <h3>Conditions d’annulation de Maelis</h3>
+              </Grid>
+              <Grid>
+                <Button color="secondary" className={classes.button}>
+                  Modifier
+                </Button>
+              </Grid>
+            </Grid>
+            <Grid className={classes.alignCheckbox}>
+              <Grid>
+                <Grid>
+                  <Checkbox
+                    checked={this.state.flexible_cancel}
+                    onChange={this.handleChangeF}
+                    value={'flexible_cancel'}
+                    color="primary"
+                    inputProps={{
+                      'aria-label': 'secondary checkbox',
+                    }}
+                    icon={<CircleUnchecked/>}
+                    checkedIcon={<RadioButtonCheckedIcon />}
+                  />
+                </Grid>
+              </Grid>
+              <Grid>
+                <p>
+                  Flexible : en cas d’annulation jusqu’à 1 jour de la prestation, Maelîs procédera au
+                  remboursement intégral de la réservation.
+                </p>
+              </Grid>
+            </Grid>
+            <Grid className={classes.alignCheckbox}>
+              <Grid>
+                <Grid>
+                  <Checkbox
+                    checked={this.state.flexible_cancel}
+                    onChange={this.handleChangeF}
+                    value={'flexible_cancel'}
+                    color="primary"
+                    inputProps={{
+                      'aria-label': 'secondary checkbox',
+                    }}
+                    icon={<CircleUnchecked/>}
+                    checkedIcon={<RadioButtonCheckedIcon />}
+                  />
+                </Grid>
+              </Grid>
+              <Grid>
+                <p>
+                  Modéré : en cas d’annulation jusqu’à 5 jour de la prestation, Maelîs procédera
+                  au remboursement intégral de la réservation.
+                </p>
+              </Grid>
+            </Grid>
+            <Grid className={classes.alignCheckbox}>
+              <Grid>
+                <Grid>
+                  <Checkbox
+                    checked={this.state.flexible_cancel}
+                    onChange={this.handleChangeF}
+                    value={'flexible_cancel'}
+                    color="primary"
+                    inputProps={{
+                      'aria-label': 'secondary checkbox',
+                    }}
+                    icon={<CircleUnchecked/>}
+                    checkedIcon={<RadioButtonCheckedIcon />}
+                  />
+                </Grid>
+              </Grid>
+              <Grid>
+                <p>
+                  Stricte: en cas d’annulation jusqu’à 10 jour de la prestation, Maelîs procédera au
+                  remboursement intégral de la réservation.
+                </p>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <hr className={classes.hrStyle}/>
       </Grid>
     )
   }

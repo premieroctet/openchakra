@@ -80,6 +80,9 @@ class shop extends React.Component {
                                 </Grid>
                             </Grid>
                         </Grid>
+                        <Grid>
+                            <AlfredConditions/>
+                        </Grid>
                         <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
                             <Grid>
                                 <h3>Commentaires</h3>
@@ -103,9 +106,6 @@ class shop extends React.Component {
                                         Voir plus de commentaires
                                     </Link>
                                 </Typography>
-                            </Grid>
-                            <Grid>
-                                <AlfredConditions/>
                             </Grid>
                         </Grid>
                     </Grid>
