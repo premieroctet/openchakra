@@ -560,8 +560,8 @@ class Wizard extends React.Component {
                     {page === 1 &&
                       <Field render={({form}) => {
                         const checkArr = [];
-                        form.values.submission.map(pc => {
-                          if (pc.prestationsCount > 0) {
+                        form.values.submission.map((pc, index) => {
+                          if (pc.prestationsCount > 0 && pc.filters[index].prestations[index].price > 0) {
                             return checkArr.push(true);
                           } else {
                             return checkArr.push(false);
@@ -795,8 +795,7 @@ class addService extends React.Component {
         option_presta_home: true,
         option_presta_visio: true,
         availabilities: [],
-        checked_presta: false
-
+        checked_presta: false,
         };
       this.toggleCheckbox = this.toggleCheckbox.bind(this);
       this.handleChecked = this.handleChecked.bind(this);
@@ -1337,6 +1336,9 @@ class addService extends React.Component {
                                                                     value={field.value}
                                                                     label={`Prix`}
                                                                     type="number"
+                                                                    onChange={(e)=>{
+                                                                      arrayHelpers.form.setFieldValue(`submission.${index}.filters[${indexf}].prestations[${indexp}].price`, e.target.value);
+                                                                    }}
                                                                     className={classes.textField}
                                                                     disabled={!p.checked}
                                                                     InputProps={{
@@ -1354,6 +1356,7 @@ class addService extends React.Component {
                                                             name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`}
                                                             placeholder="méthode de facturation"
                                                             render={({field, form}) => {
+                                                              console.log(form.values.submission[0].filters[0].prestations[0].billingChoice[0].label,'form')
                                                               return (
                                                                 <React.Fragment>
                                                                   <MaterialSelect
