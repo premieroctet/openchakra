@@ -662,12 +662,11 @@ class faq extends React.Component {
                                             </p>
                                             <p>
                                                 Conditions My-Alfred<br/>
-                                                Numéro de téléphone confirmé, adresse e-mail confirmée, informations de paiement et acceptation du règlement intérieur.
-
+                                                Adresse email et numéro de téléphone confirmés
                                             </p>
                                             <p>
                                                 Photo de profil<br/>
-                                                Si vous activez cette condition, vous ne pourrez voir les photos de profil des utilisateurs qu'une fois la réservation confirmée.
+                                                Ces utilisateurs ont fourni une photo de profile.
 
                                             </p>
                                             <p>

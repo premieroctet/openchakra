@@ -105,12 +105,13 @@ nextApp.prepare().then(() => {
     glob.sync(rootPath + '/server/api/*.js').forEach(controllerPath => {
         if (!controllerPath.includes('.test.js')) require(controllerPath)(app)
     })
+    app.use(express.static('static'))
     app.use(function(req, res, next) {
             console.log("In redirection, req:"+JSON.stringify(req.secure));
             console.log("In redirection, host+originalUrl:"+req.hostname+","+req.originalUrl);
     if (!req.secure ) {
             console.log("Redirecting to"+JSON.stringify(req.originalUrl));
-            res.redirect (301, 'https://' + req.hostname);
+            res.redirect (301, 'https://' + req.hostname + req.originalUrl);
     }
     next();
     });

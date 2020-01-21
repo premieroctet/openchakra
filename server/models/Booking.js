@@ -41,8 +41,6 @@ const BookingSchema = new Schema({
         type: String,
         enum: ['Acceptée','Refusée','En attente']
     }
-
-
 });
 
 module.exports = Booking = mongoose.model('booking',BookingSchema);

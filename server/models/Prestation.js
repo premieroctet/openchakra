@@ -7,7 +7,7 @@ const PrestationSchema = new Schema({
         required: true
     },
     price: {
-        type: String,
+        type: String
     },
     service: {
         type: Schema.Types.ObjectId,

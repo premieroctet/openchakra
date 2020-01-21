@@ -46,12 +46,10 @@ const ShopSchema = new Schema({
         default: false
     },
     is_particular: {
-        type: Boolean,
-
+        type: Boolean
     },
     is_professional: {
-        type: Boolean,
-
+        type: Boolean
     },
     company: {
         name: {

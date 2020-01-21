@@ -588,7 +588,8 @@ class services extends React.Component {
                                                 </Grid>
                                                 <Grid item xs={9} sm={10} md={11}>
                                                     <h4 style={{fontWeight: '100', lineHeight: '0!important'}}>Conditions My-Alfred</h4>
-                                                    <p>Adresse email et numéro de téléphone confirmés, information de paiement et acceptation du règlement intérieur.</p>
+                                                    <p>Adresse email et numéro de téléphone confirmés
+                                                    </p>
                                                 </Grid>
                                             </Grid>
                                             <Grid container className={classes.marginbot}>
