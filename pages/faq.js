@@ -662,8 +662,7 @@ class faq extends React.Component {
                                             </p>
                                             <p>
                                                 Conditions My-Alfred<br/>
-                                                Numéro de téléphone confirmé, adresse e-mail confirmée, informations de paiement et acceptation du règlement intérieur.
-
+                                                Adresse email et numéro de téléphone confirmés
                                             </p>
                                             <p>
                                                 Photo de profil<br/>

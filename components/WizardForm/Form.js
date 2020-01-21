@@ -2214,8 +2214,8 @@ class Form extends React.Component {
                                                     label={<React.Fragment>
                                                         <p style={{marginBottom: 0,fontSize: '1rem', fontWeight:500, fontFamily: 'helvetica'}}>Conditions My-Alfred</p>
                                                 <p style={{marginTop: 0, fontSize: '1rem', fontWeight:400, fontFamily: 'helvetica'}}>
-                                                  Adresse email et numéro de téléphone confirmés, information de paiement et acceptation du règlement intérieur.
-                                            </p>
+                                                  Adresse email et numéro de téléphone confirmés
+                                                </p>
                                         </React.Fragment>}
                                                 />
                                             )
