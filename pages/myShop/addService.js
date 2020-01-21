@@ -1356,7 +1356,6 @@ class addService extends React.Component {
                                                             name={`submission.${index}.filters[${indexf}].prestations[${indexp}].billing`}
                                                             placeholder="méthode de facturation"
                                                             render={({field, form}) => {
-                                                              console.log(form.values.submission[0].filters[0].prestations[0].billingChoice[0].label,'form')
                                                               return (
                                                                 <React.Fragment>
                                                                   <MaterialSelect
