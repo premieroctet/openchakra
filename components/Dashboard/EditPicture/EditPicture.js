@@ -7,37 +7,9 @@ import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-
+import styles from './EditPictureStyle'
 const {config} = require('../../../config/config');
 const url = config.apiUrl;
-
-const styles = {
-  loginContainer: {
-    alignItems: 'center',
-    height: '100vh',
-    justifyContent: 'center',
-    flexDirection: 'column',
-  },
-  card: {
-    padding: '1.5rem 3rem',
-    width: 400,
-  },
-  cardContant: {
-    flexDirection: 'column',
-  },
-  linkText: {
-    textDecoration: 'none',
-    color: 'black',
-    fontSize: 12,
-  },
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    margin: 2,
-  },
-};
 
 class EditPicture extends React.Component {
 
