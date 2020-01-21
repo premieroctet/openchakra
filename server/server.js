@@ -110,7 +110,7 @@ nextApp.prepare().then(() => {
             console.log("In redirection, host+originalUrl:"+req.hostname+","+req.originalUrl);
     if (!req.secure ) {
             console.log("Redirecting to"+JSON.stringify(req.originalUrl));
-            res.redirect (301, 'https://' + req.hostname);
+            res.redirect (301, 'https://' + req.hostname + req.originalUrl);
     }
     next();
     });
