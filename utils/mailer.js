@@ -1,9 +1,9 @@
 nodemailer = require('nodemailer');
+const Email = require('email-templates');
 
-const sendMail = (from, to, subject, text, html) => {
-  console.log("Send mail from "+from+" to "+to+", subject:"+subject);
-  console.log("Text is "+text);
-  console.log("Html is "+html);
+const sendMail = (from, to, template, locals) => {
+  console.log("Send mail from "+from+" to "+to);
+
   let transporter = nodemailer.createTransport({
     host: 'smtp.free.fr',
     port: 587,
@@ -12,15 +12,25 @@ const sendMail = (from, to, subject, text, html) => {
       pass: '600Bimota'
     }
   })
-                                
-  let info = transporter.sendMail({
-    from: from, // sender address
-    to: to, // list of receivers
-    subject: subject, // Subject line
-    //text: text, // plain text body
-    html: html, // html body
+
+  const email = new Email({
+    message: {
+      from: from
+    },
+    send: true,
+    transport: transporter
   })
 
+  email
+    .send({
+      template: template,
+      message: {
+        to: to
+      },
+      locals: locals
+    })
+    .then(console.log)
+    .catch(console.error);
 };
 
 module.exports = {sendMail};
