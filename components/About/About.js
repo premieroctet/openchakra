@@ -15,19 +15,59 @@ import Chat from '@material-ui/icons/Chat';
 import StarIcon from '@material-ui/icons/Star';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
+import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
+import Moment from 'moment';
+
+const { config } = require('../../config/config');
+const url = config.apiUrl;
+
 
 class About extends React.Component{
   constructor(props){
     super(props);
     this.state = {
+      alfred: [],
+      languages: [],
       dense: false,
-      secondary: false,
-      valueRating: 3,
-      isChecked: false
+      valueRating: 0,
+      isChecked: false,
+      nbCommentary: 0
     }
   }
+
+  componentDidMount() {
+    let self = this;
+
+    const id_alfred = self.props.shop;
+    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
+      .then(function (response) {
+        let shop = response.data;
+        console.log(shop,'shop');
+        self.setState({
+          alfred: shop.alfred,
+          idAlfred: shop.alfred._id,
+          languages: shop.alfred.languages,
+          shop:shop
+        });
+        let idAlfred = shop.alfred._id;
+        axios.put(`${url}myAlfred/api/users/alfredViews/${idAlfred}`)
+          .then(function (result) {
+            console.log('Views updated');
+          })
+          .catch(function (err) {
+            console.log(err);
+          })
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   render(){
     const {classes} = this.props;
+    const {alfred} = this.state;
+    const {languages} = this.state;
     const preventDefault = event => event.preventDefault();
 
     const StyledRating = withStyles({
@@ -40,6 +80,11 @@ class About extends React.Component{
       <Grid container className={classes.mainContainer}>
         <Grid item>
           <Grid>
+            <Grid>
+              <Typography variant="h6" style={{width: '100%'}}>
+                A propos de {alfred.firstname}
+              </Typography>
+            </Grid>
             <List dense={this.state.dense} className={classes.listStyle}>
               <ListItem>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.raiting}>
@@ -50,15 +95,14 @@ class About extends React.Component{
                 <ListItemAvatar>
                   <StarIcon className={classes.iconStar}/>
                 </ListItemAvatar>
-                <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>10 Commentaires</LinkMaterial>
+                <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>{this.state.nbCommentary} Commentaires</LinkMaterial>
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
                   <CheckCircle />
                 </ListItemAvatar>
                 <ListItemText
-                  primary="Pièce d’identité vérifiée"
-                  secondary={this.state.secondary ? 'Secondary text' : null}
+                  primary={"Pièce d’identité vérifiée"}
                 />
               </ListItem>
               {this.state.isChecked ?
@@ -78,8 +122,7 @@ class About extends React.Component{
                   <CalendarToday />
                 </ListItemAvatar>
                 <ListItemText
-                  primary="Membre depuis Juin 2019"
-                  secondary={this.state.secondary ? 'Secondary text' : null}
+                  primary={"Membre depuis " + Moment(this.state.alfred.creation_date).format('MMMM YYYY')}
                 />
               </ListItem>
               <ListItem>
@@ -87,18 +130,17 @@ class About extends React.Component{
                   <img src={'../../static/assets/img/iconCardAlfred/iconCastor.svg'} alt={'iconCastor'} title={'iconCastor'}/>
                 </ListItemAvatar>
                 <ListItemText
-                  primary="Alfred depuis Juin 2019 "
-                  secondary={this.state.secondary ? 'Secondary text' : null}
+                  //TODO A MODIFIER QUAND DATE CREATION BOUTIQUE SERA STOCKE
+                  primary={this.state.alfred.creation_shop ? "Alfred depuis " + Moment(this.state.alfred.creation_shop).format('MMMM YYYY') : "Alfred depuis " + Moment(this.state.alfred.creation_date).format('MMMM YYYY')}
                 />
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
                   <Chat />
                 </ListItemAvatar>
-                <ListItemText
-                  primary="Langue: français - anglais"
-                  secondary={this.state.secondary ? 'Secondary text' : null}
-                />
+                  <ListItemText
+                    primary={languages > 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
+                  />
               </ListItem>
               <ListItem>
                 <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>Voir le profil</LinkMaterial>

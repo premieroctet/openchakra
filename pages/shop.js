@@ -44,10 +44,7 @@ class shop extends React.Component {
                     <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
                         <Grid style={{display:'flex', alignItems: 'baseline', justifyContent: 'space-between', marginLeft: '5%', marginRight: '5%' }}>
                             <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column', marginTop: '3%'}}>
-                                <Typography variant="h6" style={{width: '100%'}}>
-                                    A propos de Maëlis
-                                </Typography>
-                                <About/>
+                                <About shop={this.state.id}/>
                             </Grid>
                             <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column'}}>
                                 <Typography variant="h6" style={{width: '100%'}}>
