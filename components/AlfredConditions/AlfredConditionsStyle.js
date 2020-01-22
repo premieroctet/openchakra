@@ -1,3 +1,6 @@
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
+
 export default theme => ({
   button: {
     margin: theme.spacing(1),
@@ -13,23 +16,24 @@ export default theme => ({
   containerBooking:{
     display:'flex',
     justifyContent: 'space-between',
-    width: '100%'
+    width: '95%'
   },
   containerAlfred:{
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    marginLeft : 15
   },
   hrStyle:{
-    width : '100%'
+    width : '90%'
   },
   containerPosition:{
     display: 'flex',
-    width:'100%'
   },
   contentPosition:{
     display:'flex',
     flexDirection: 'column',
-    width: '100%'
+    marginLeft : 'auto',
+    width :'95%'
   },
   contentWelcomePosition:{
     display:'flex',
@@ -48,5 +52,9 @@ export default theme => ({
   alignCheckbox:{
     display: 'flex',
     alignItems: 'center'
+  },
+  containerPositionWelcome:{
+    display: 'flex',
+    marginLeft: 30
   }
 });
