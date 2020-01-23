@@ -17,6 +17,7 @@ import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
 import Moment from 'moment';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 class About extends React.Component{
   constructor(props){
@@ -26,14 +27,15 @@ class About extends React.Component{
       languages: [],
       dense: false,
       valueRating: 0,
-      isChecked: false,
-      nbCommentary: 0
+      nbCommentary: 0,
+      shop:[]
     }
   }
 
   render(){
-    const {classes, alfred, languages} = this.props;
+    const {classes, alfred, languages, shop} = this.props;
     const preventDefault = event => event.preventDefault();
+    console.log(shop.identity_card, 'identity');
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -62,25 +64,24 @@ class About extends React.Component{
                 </ListItemAvatar>
                 <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>{this.state.nbCommentary} Commentaires</LinkMaterial>
               </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <CheckCircle />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={"Pièce d’identité vérifiée"}
-                />
-              </ListItem>
-              {this.state.isChecked ?
+              {shop.identity_card ?
                 <ListItem>
                   <ListItemAvatar>
-                    <HighlightOff />
+                    <CheckCircle />
                   </ListItemAvatar>
                   <ListItemText
-                    primary="Pièce d’identité non vérifiée"
-                    secondary={this.state.secondary ? 'Secondary text' : null}
+                    primary={"Pièce d’identité vérifiée"}
                   />
                 </ListItem>
-                : null
+                :
+                <ListItem>
+                  <ListItemAvatar>
+                    <CancelIcon />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={"Pièce d’identité non vérifiée"}
+                  />
+                </ListItem>
               }
               <ListItem>
                 <ListItemAvatar>

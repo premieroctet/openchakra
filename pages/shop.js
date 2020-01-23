@@ -58,7 +58,6 @@ class shop extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
         const preventDefault = event => event.preventDefault();
 
         return (
@@ -69,7 +68,7 @@ class shop extends React.Component {
                     <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
                         <Grid style={{display:'flex', alignItems: 'baseline', justifyContent: 'space-between', marginLeft: '5%', marginRight: '5%' }}>
                             <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column', marginTop: '3%'}}>
-                                <About alfred={this.state.alfred} languages={this.state.languages}/>
+                                <About alfred={this.state.alfred} languages={this.state.languages} shop={this.state.shop}/>
                             </Grid>
                             <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column'}}>
                                 <Typography variant="h6" style={{width: '100%'}}>
