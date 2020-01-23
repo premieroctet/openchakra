@@ -10,11 +10,11 @@ class AlfredWelcomedMessage extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      flexible_cancel:true
+      shop:[]
     }
   }
   render(){
-    const {classes} = this.props;
+    const {classes, shop} = this.props;
 
     return (
       <Grid className={classes.contentPosition}>
@@ -32,10 +32,14 @@ class AlfredWelcomedMessage extends React.Component{
                 label="Message de bienvenue"
                 multiline
                 rows="4"
-                defaultValue="Merci pour votre réservation !"
+                defaultValue={shop.welcome_message}
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
+                inputProps={{ readOnly: true }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
           </Grid>

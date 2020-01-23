@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './AlfredConditionsBookingStyle'
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -13,11 +12,13 @@ class AlfredConditionsBooking extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      flexible_cancel:true
+      flexible_cancel:true,
+      alfred: [],
+      shop:[]
     }
   }
   render(){
-    const {classes} = this.props;
+    const {classes, alfred, shop} = this.props;
 
     return (
       <Grid container>
@@ -26,7 +27,7 @@ class AlfredConditionsBooking extends React.Component{
             <Grid className={classes.contentPosition}>
               <Grid className={classes.containerBooking}>
                 <Grid>
-                  <h3>Comment réserver Maelis</h3>
+                  <h3>Comment réserver {alfred.firstname}</h3>
                 </Grid>
                 <Grid>
                   <Button color="secondary" className={classes.button}>
@@ -38,37 +39,29 @@ class AlfredConditionsBooking extends React.Component{
                 <Grid className={classes.alignCheckbox}>
                   <Grid>
                     <Checkbox
-                      checked={this.state.flexible_cancel}
-                      onChange={this.handleChangeF}
-                      value={'flexible_cancel'}
+                      checked={!!shop.booking_request}
+                      value={shop.booking_request}
                       color="primary"
-                      inputProps={{
-                        'aria-label': 'secondary checkbox',
-                      }}
                       icon={<CircleUnchecked/>}
                       checkedIcon={<RadioButtonCheckedIcon />}
                     />
                   </Grid>
                   <Grid>
-                    <p>Maelïs dispose de 24h pour répondre aux demandes de réservation</p>
+                    <p>{alfred.firstname} dispose de 24h pour répondre aux demandes de réservation</p>
                   </Grid>
                 </Grid>
                 <Grid className={classes.alignCheckbox}>
                   <Grid>
                     <Checkbox
-                      checked={this.state.flexible_cancel}
-                      onChange={this.handleChangeF}
-                      value={'flexible_cancel'}
+                      checked={!shop.booking_request}
+                      value={!shop.booking_request}
                       color="primary"
-                      inputProps={{
-                        'aria-label': 'secondary checkbox',
-                      }}
                       icon={<CircleUnchecked/>}
                       checkedIcon={<RadioButtonCheckedIcon />}
                     />
                   </Grid>
                   <Grid>
-                    <p>Les utilisateurs peuvent réserver les services de Maêlis sans demande de réservation.</p>
+                    <p>Les utilisateurs peuvent réserver les services de {alfred.firstname} sans demande de réservation.</p>
                   </Grid>
                 </Grid>
               </Grid>

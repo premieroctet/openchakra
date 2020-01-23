@@ -32,8 +32,7 @@ class CardPreview extends React.Component{
     }
   }
   render(){
-    const {classes, service, alfred, shop, services} = this.props;
-    console.log(services, 'aaaa');
+    const {classes, service, shop, services} = this.props;
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -68,7 +67,7 @@ class CardPreview extends React.Component{
             <Grid  className={classes.cardContent}>
               <Grid className={classes.cardContentPosition}>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  Beaute bien être
+                  {service.category.label}
                 </Typography>
                 <Grid className={classes.cardContentHeader}>
                   <Typography component="p">

@@ -1,9 +1,6 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import AlfredBanner from '../components/shop/AlfredBanner/AlfredBanner';
-import MyBestSellers from '../components/shop/MyBestSellers/myBestSellers';
-import Bio from '../components/shop/Bio/Bio';
-import Review from '../components/shop/Review/Review';
 import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
 import About from '../components/About/About';
 import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
@@ -12,15 +9,15 @@ import CardPreview from '../components/CardPreview/CardPreview';
 import CardAddService from '../components/CardAddService/CardAddService';
 import Layout from '../hoc/Layout/Layout';
 import Commentary from '../components/Commentary/Commentary';
-import Link from '@material-ui/core/Link';
 import AlfredConditions from '../components/AlfredConditions/AlfredConditions';
 import axios from 'axios';
 import AlfredConditionsBooking from '../components/AlfredConditionsBooking/AlfredConditionsBooking';
 import AlfredConditionsCancel from '../components/AlfredConditionsCancel/AlfredConditionsCancel';
 import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWelcomedMessage';
+import Footer from '../hoc/Layout/Footer/Footer';
 
 const { config } = require('../config/config');
-const url = config.apiUrl
+const url = config.apiUrl;
 
 class shop extends React.Component {
     constructor(props) {
@@ -34,17 +31,17 @@ class shop extends React.Component {
             services: []
         }
     }
+
     static getInitialProps ({ query: { id_alfred } }) {
         return { aboutId: id_alfred }
     }
+
     componentWillMount() {
         this.setState({id: this.props.aboutId});
-
     }
 
     componentDidMount() {
         let self = this;
-        const id_alfred = self.props.shop;
         axios.get(`${url}myAlfred/api/shop/alfred/${this.state.id}`)
           .then(function (response) {
               let shop = response.data;
@@ -63,8 +60,6 @@ class shop extends React.Component {
     }
 
     render() {
-        const preventDefault = event => event.preventDefault();
-
         return (
             <Fragment>
                 <Layout>
@@ -102,12 +97,12 @@ class shop extends React.Component {
                         <Grid>
                             <AlfredConditions alfred={this.state.alfred} shop={this.state.shop}/>
                             <hr style={{width : '90%'}}/>
-                            <AlfredConditionsBooking/>
-                            <AlfredWelcomedMessage/>
+                            <AlfredConditionsBooking alfred={this.state.alfred} shop={this.state.shop}/>
+                            <AlfredWelcomedMessage shop={this.state.shop}/>
                             <hr  style={{width : '90%'}}/>
-                            <AlfredConditionsCancel/>
-                            <hr  style={{width : '90%'}}/>
+                            <AlfredConditionsCancel alfred={this.state.alfred} shop={this.state.shop}/>
                         </Grid>
+                        {/*
                         <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
                             <Grid>
                                 <h3>Commentaires</h3>
@@ -132,8 +127,9 @@ class shop extends React.Component {
                                     </Link>
                                 </Typography>
                             </Grid>
-                        </Grid>
+                        </Grid>*/}
                     </Grid>
+                    <Footer/>
                 </Layout>
             </Fragment>
         )
