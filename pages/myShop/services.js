@@ -879,10 +879,10 @@ class services extends React.Component {
                 </Layout>
 
                 <Dialog
-                    open={this.state.open2}
-                    onClose={()=>this.handleClose2()}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
+                  open={this.state.open2}
+                  onClose={()=>this.handleClose2()}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
                 >
                     <DialogTitle id="alert-dialog-title">{"Supprimer un service"}</DialogTitle>
                     <DialogContent>

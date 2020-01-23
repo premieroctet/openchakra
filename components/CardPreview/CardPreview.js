@@ -19,6 +19,17 @@ import RoomIcon from '@material-ui/icons/Room';
 import Chip from '@material-ui/core/Chip';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import Link from 'next/link';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
+import Dialog from '@material-ui/core/Dialog';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
+const { config } = require('../../config/config');
+const url = config.apiUrl;
 
 class CardPreview extends React.Component{
   constructor(props){
@@ -28,9 +39,31 @@ class CardPreview extends React.Component{
       dense: true,
       service: [],
       alfred:[],
-      shop:[]
+      shop:[],
+      open: false,
+      id_service: '',
+      page: false
     }
   }
+
+  handleClickOpen(id) {
+    this.setState({id_service: id, open:true});
+  }
+  
+  handleClose() {
+    this.setState({id_service:'', open:false});
+  }
+
+  deleteService(id) {
+    axios.delete(url + 'myAlfred/api/serviceUser/' + id)
+      .then(() => {
+        toast.error('Service supprimé');
+        this.setState({open:false,id_service:''});
+        this.props.needRefresh();
+      })
+      .catch(err => console.log(err))
+  }
+
   render(){
     const {classes, service, shop, services} = this.props;
 
@@ -43,7 +76,7 @@ class CardPreview extends React.Component{
     return (
       <Grid>
         <Card className={classes.card}>
-          <Grid className={classes.cardMedia} style={{ backgroundImage:  'url(' + service.picture + ')'}}>
+          <Grid className={classes.cardMedia} style={{ backgroundImage:  'url(' + service.picture.replace(/\s/g, '') + ')'}}>
             { shop.is_professional ?
               <Grid className={classes.statusMedia}>
                 <Chip label="PRO" className={classes.chipStyle}/>
@@ -52,13 +85,15 @@ class CardPreview extends React.Component{
             }
             <Grid>
               <Grid className={classes.actionMediaEdit}>
-                <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
-                  <EditIcon style={{color: '#4fbdd7'}}/>
-                </IconButton>
+                <Link href={'/myShop/editService?id=' + services._id}>
+                  <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
+                    <EditIcon style={{color: '#4fbdd7'}}/>
+                  </IconButton>
+                </Link>
               </Grid>
               <Grid className={classes.actionMediaRemove}>
                 <IconButton aria-label="remove" className={classes.iconButtonStyle}>
-                  <DeleteForeverIcon style={{color: '#f87280'}} />
+                  <DeleteForeverIcon onClick={()=>this.handleClickOpen(services._id)} style={{color: '#f87280'}} />
                 </IconButton>
               </Grid>
             </Grid>
@@ -122,7 +157,29 @@ class CardPreview extends React.Component{
             </Grid>
           </CardContent>
         </Card>
+        <Dialog
+          open={this.state.open}
+          onClose={()=>this.handleClose()}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Supprimer un service"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Voulez-vous vraiment supprimer ce service de votre boutique ?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={()=>this.handleClose2()} color="primary">
+              Annuler
+            </Button>
+            <Button onClick={()=>this.deleteService(this.state.id_service)} color="secondary" autoFocus>
+              Supprimer
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Grid>
+
     )
   }
 }

@@ -28,8 +28,9 @@ class shop extends React.Component {
             logged: false,
             shop:[],
             languages:[],
-            services: []
-        }
+            services: [],
+        };
+        this.needRefresh = this.needRefresh.bind(this);
     }
 
     static getInitialProps ({ query: { id_alfred } }) {
@@ -59,6 +60,10 @@ class shop extends React.Component {
           });
     }
 
+    needRefresh(){
+        this.componentDidMount();
+    }
+
     render() {
         return (
             <Fragment>
@@ -84,7 +89,7 @@ class shop extends React.Component {
                                 { Object.keys(this.state.services).map( result => {
                                     return (
                                       <Grid container item lg={4}>
-                                          <CardPreview alfred={this.state.alfred} shop={this.state.shop} service={this.state.services[result].service} services={this.state.services[result]}/>
+                                          <CardPreview alfred={this.state.alfred} shop={this.state.shop} service={this.state.services[result].service} services={this.state.services[result]} needRefresh={this.needRefresh}/>
                                       </Grid>
                                     )
                                 })
@@ -129,8 +134,8 @@ class shop extends React.Component {
                             </Grid>
                         </Grid>*/}
                     </Grid>
-                    <Footer/>
                 </Layout>
+                <Footer/>
             </Fragment>
         )
     };
