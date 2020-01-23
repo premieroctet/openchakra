@@ -10,7 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 import Badge from '@material-ui/core/Badge';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Button from '@material-ui/core/Button';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import List from '@material-ui/core/List';
@@ -25,12 +24,16 @@ class CardPreview extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      value:3,
-      dense: true
+      value:0,
+      dense: true,
+      service: [],
+      alfred:[],
+      shop:[]
     }
   }
   render(){
-    const {classes} = this.props;
+    const {classes, service, alfred, shop, services} = this.props;
+    console.log(services, 'aaaa');
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -41,10 +44,13 @@ class CardPreview extends React.Component{
     return (
       <Grid>
         <Card className={classes.card}>
-          <Grid className={classes.cardMedia}>
-            <Grid className={classes.statusMedia}>
-              <Chip label="PRO" className={classes.chipStyle}/>
-            </Grid>
+          <Grid className={classes.cardMedia} style={{ backgroundImage:  'url(' + service.picture + ')'}}>
+            { shop.is_professional ?
+              <Grid className={classes.statusMedia}>
+                <Chip label="PRO" className={classes.chipStyle}/>
+              </Grid>
+              :null
+            }
             <Grid>
               <Grid className={classes.actionMediaEdit}>
                 <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
@@ -66,12 +72,11 @@ class CardPreview extends React.Component{
                 </Typography>
                 <Grid className={classes.cardContentHeader}>
                   <Typography component="p">
-                    Coiffure par Maëlis
+                    {service.label}
                   </Typography>
-                  <CheckCircleIcon className={classes.checkCircleIcon}/>
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                  <Badge badgeContent={99} color={'primary'} className={classes.badgeStyle}>
+                  <Badge badgeContent={0} color={'primary'} className={classes.badgeStyle}>
                     <StyledRating name="read-only" value={this.state.value} readOnly className={classes.rating} />
                   </Badge>
                 </Box>
@@ -92,15 +97,15 @@ class CardPreview extends React.Component{
               <List dense={this.state.dense} className={classes.flexPosition}>
                 <ListItem className={classes.noPadding}>
                   <ListItemIcon className={classes.minWidth}>
-                    <img src={'../../static/assets/img/iconCardAlfred/Diplome.svg'} alt={'Diplome'} title={'Diplome'}/>
+                    <img src={services.graduated ? '../../static/assets/img/iconCardAlfred/graduated.svg' : '../../static/assets/img/iconCardAlfred/no_graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
                   </ListItemIcon>
                   <ListItemText
-                    primary="Diplômé(e)"
+                    primary={"Diplômé(e)"}
                   />
                 </ListItem>
                 <ListItem className={classes.noPadding}>
                   <ListItemIcon  className={classes.minWidth}>
-                    <img src={'../../static/assets/img/iconCardAlfred/Certifié.svg'} alt={'Certifié'} title={'Certifié'}/>
+                    <img src={services.is_certified ? '../../static/assets/img/iconCardAlfred/certificate.svg' : '../../static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
                   </ListItemIcon>
                   <ListItemText
                     primary="Certifié(e)"
@@ -108,7 +113,7 @@ class CardPreview extends React.Component{
                 </ListItem>
                 <ListItem className={classes.noPadding}>
                   <ListItemIcon className={classes.minWidth}>
-                    <img src={'../../static/assets/img/iconCardAlfred/experience.svg'} alt={'Expériementé'} title={'Expériementé'}/>
+                    <img src={'../../static/assets/img/iconCardAlfred/experience.svg'} alt={'Expériementé'} title={'Expériementé'} className={classes.imageStyle}/>
                   </ListItemIcon>
                   <ListItemText
                     primary="Expériementé(e)"

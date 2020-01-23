@@ -35,7 +35,6 @@ class About extends React.Component{
   render(){
     const {classes, alfred, languages, shop} = this.props;
     const preventDefault = event => event.preventDefault();
-    console.log(shop.identity_card, 'identity');
 
     const StyledRating = withStyles({
       iconFilled: {

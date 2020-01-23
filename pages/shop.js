@@ -15,6 +15,9 @@ import Commentary from '../components/Commentary/Commentary';
 import Link from '@material-ui/core/Link';
 import AlfredConditions from '../components/AlfredConditions/AlfredConditions';
 import axios from 'axios';
+import AlfredConditionsBooking from '../components/AlfredConditionsBooking/AlfredConditionsBooking';
+import AlfredConditionsCancel from '../components/AlfredConditionsCancel/AlfredConditionsCancel';
+import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWelcomedMessage';
 
 const { config } = require('../config/config');
 const url = config.apiUrl
@@ -27,7 +30,8 @@ class shop extends React.Component {
             id: '',
             logged: false,
             shop:[],
-            languages:[]
+            languages:[],
+            services: []
         }
     }
     static getInitialProps ({ query: { id_alfred } }) {
@@ -49,6 +53,7 @@ class shop extends React.Component {
                   alfred: shop.alfred,
                   idAlfred: shop.alfred._id,
                   languages: shop.alfred.languages,
+                  services: shop.services,
                   shop:shop
               });
           })
@@ -71,38 +76,37 @@ class shop extends React.Component {
                                 <About alfred={this.state.alfred} languages={this.state.languages} shop={this.state.shop}/>
                             </Grid>
                             <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column'}}>
-                                <Typography variant="h6" style={{width: '100%'}}>
-                                   Les compliments reçus par Maelis
-                                </Typography>
-                                <SkillsAlfred/>
+                                <SkillsAlfred alfred={this.state.alfred}/>
                             </Grid>
                         </Grid>
                         <Grid style={{display: 'flex', marginLeft: '5%', marginRight: '5%', flexDirection: 'column', marginTop: '3%'}}>
                             <Grid style={{width: '100%'}}>
                                 <Typography variant="h6">
-                                    Les compliments reçus par Maelis
+                                    Les services de {this.state.alfred.firstname}
                                 </Typography>
                             </Grid>
-                            <Grid container style={{marginTop:'3%'}} spacing={10}>
-                                <Grid container item lg={4}>
-                                    <CardPreview/>
-                                </Grid>
-                                <Grid container item lg={4}>
-                                    <CardPreview/>
-                                </Grid>
-                                <Grid container item lg={4}>
-                                    <CardPreview/>
-                                </Grid>
-                                <Grid container item lg={4}>
-                                    <CardPreview/>
-                                </Grid>
+                            <Grid container style={{marginTop:30}}>
+                                { Object.keys(this.state.services).map( result => {
+                                    return (
+                                      <Grid container item lg={4}>
+                                          <CardPreview alfred={this.state.alfred} shop={this.state.shop} service={this.state.services[result].service} services={this.state.services[result]}/>
+                                      </Grid>
+                                    )
+                                })
+                                }
                                 <Grid container item lg={4}>
                                     <CardAddService/>
                                 </Grid>
                             </Grid>
                         </Grid>
                         <Grid>
-                            <AlfredConditions/>
+                            <AlfredConditions alfred={this.state.alfred} shop={this.state.shop}/>
+                            <hr style={{width : '90%'}}/>
+                            <AlfredConditionsBooking/>
+                            <AlfredWelcomedMessage/>
+                            <hr  style={{width : '90%'}}/>
+                            <AlfredConditionsCancel/>
+                            <hr  style={{width : '90%'}}/>
                         </Grid>
                         <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
                             <Grid>

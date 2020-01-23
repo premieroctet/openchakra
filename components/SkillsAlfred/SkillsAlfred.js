@@ -11,44 +11,57 @@ class SkillsAlfred extends React.Component{
   constructor(props){
     super(props);
     this.state = {
+      alfred:[],
       dense: false,
       secondary: false,
       valueRating: 3,
-      isChecked: false
+      isChecked: false,
+      skills: {
+        skillOne: {
+          label: 'Travail soigneux',
+          picsLabel: 'careful_work'
+        },
+        skillTwo: {
+          label: 'Ponctualité',
+          picsLabel: 'punctuality'
+        },
+        skillThree: {
+          label: 'Flexibilité',
+          picsLabel: 'flexibility'
+        },
+        skillFour: {
+          label: 'Attentive',
+          picsLabel: 'attentive'
+        },
+        skillFive: {
+          label: 'Réactivité',
+          picsLabel: 'reactivity'
+        },
+      }
+
     }
   }
   render(){
-    const {classes} = this.props;
+    const {classes, alfred} = this.props;
 
     return (
-      <Grid container spacing={2}>
+      <Grid container>
         <Grid item>
+          <Typography variant="h6">
+            Les compliments reçus par {alfred.firstname}
+          </Typography>
           <Grid className={classes.mainContainer}>
-            <Grid className={classes.cardSkills}>
-              <Avatar alt="careful_work" src="../../static/assets/img/skillsAlfred/careful_work.svg" className={classes.avatarSize}/>
-              <Chip label="3" className={classes.chipStyle} />
-              <Typography>Travail soigneux</Typography>
-            </Grid>
-            <Grid className={classes.cardSkills}>
-              <Avatar alt="punctuality" src="../../static/assets/img/skillsAlfred/punctuality.svg" className={classes.avatarSize}/>
-              <Chip label="3" className={classes.chipStyle}/>
-              <Typography>Ponctualité</Typography>
-            </Grid>
-            <Grid className={classes.cardSkills}>
-              <Avatar alt="flexibility" src="../../static/assets/img/skillsAlfred/flexibility.svg" className={classes.avatarSize}/>
-              <Chip label="3" className={classes.chipStyle}/>
-              <Typography>Flexibilité</Typography>
-            </Grid>
-            <Grid className={classes.cardSkills}>
-              <Avatar alt="attentive" src="../../static/assets/img/skillsAlfred/attentive.svg" className={classes.avatarSize}/>
-              <Chip label="3" className={classes.chipStyle}/>
-              <Typography>Attentive</Typography>
-            </Grid>
-            <Grid className={classes.cardSkills}>
-              <Avatar alt="reactivity" src="../../static/assets/img/skillsAlfred/reactivity.svg" className={classes.avatarSize}/>
-              <Chip label="3" className={classes.chipStyle}/>
-              <Typography>reactivity</Typography>
-            </Grid>
+            {
+              Object.keys(this.state.skills).map(result =>{
+                return(
+                  <Grid className={classes.cardSkills}>
+                    <Avatar alt="careful_work" src={'../../static/assets/img/skillsAlfred/' + this.state.skills[result].picsLabel + '.svg'} className={classes.avatarSize}/>
+                    <Chip label="0" className={classes.chipStyle} />
+                    <Typography>{this.state.skills[result].label}</Typography>
+                  </Grid>
+                )
+              })
+            }
           </Grid>
         </Grid>
       </Grid>
