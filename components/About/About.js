@@ -16,12 +16,7 @@ import StarIcon from '@material-ui/icons/Star';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
-import axios from 'axios';
 import Moment from 'moment';
-
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 
 class About extends React.Component{
   constructor(props){
@@ -36,38 +31,8 @@ class About extends React.Component{
     }
   }
 
-  componentDidMount() {
-    let self = this;
-
-    const id_alfred = self.props.shop;
-    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
-      .then(function (response) {
-        let shop = response.data;
-        console.log(shop,'shop');
-        self.setState({
-          alfred: shop.alfred,
-          idAlfred: shop.alfred._id,
-          languages: shop.alfred.languages,
-          shop:shop
-        });
-        let idAlfred = shop.alfred._id;
-        axios.put(`${url}myAlfred/api/users/alfredViews/${idAlfred}`)
-          .then(function (result) {
-            console.log('Views updated');
-          })
-          .catch(function (err) {
-            console.log(err);
-          })
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
-
   render(){
-    const {classes} = this.props;
-    const {alfred} = this.state;
-    const {languages} = this.state;
+    const {classes, alfred, languages} = this.props;
     const preventDefault = event => event.preventDefault();
 
     const StyledRating = withStyles({
@@ -81,7 +46,7 @@ class About extends React.Component{
         <Grid item>
           <Grid>
             <Grid>
-              <Typography variant="h6" style={{width: '100%'}}>
+              <Typography variant="h6">
                 A propos de {alfred.firstname}
               </Typography>
             </Grid>
@@ -122,7 +87,7 @@ class About extends React.Component{
                   <CalendarToday />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={"Membre depuis " + Moment(this.state.alfred.creation_date).format('MMMM YYYY')}
+                  primary={"Membre depuis " + Moment(alfred.creation_date).format('MMMM YYYY')}
                 />
               </ListItem>
               <ListItem>
@@ -131,7 +96,7 @@ class About extends React.Component{
                 </ListItemAvatar>
                 <ListItemText
                   //TODO A MODIFIER QUAND DATE CREATION BOUTIQUE SERA STOCKE
-                  primary={this.state.alfred.creation_shop ? "Alfred depuis " + Moment(this.state.alfred.creation_shop).format('MMMM YYYY') : "Alfred depuis " + Moment(this.state.alfred.creation_date).format('MMMM YYYY')}
+                  primary={alfred.creation_shop ? "Alfred depuis " + Moment(alfred.creation_shop).format('MMMM YYYY') : "Alfred depuis " + Moment(alfred.creation_date).format('MMMM YYYY')}
                 />
               </ListItem>
               <ListItem>
@@ -139,7 +104,7 @@ class About extends React.Component{
                   <Chat />
                 </ListItemAvatar>
                   <ListItemText
-                    primary={languages > 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
+                    primary={languages.length > 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
                   />
               </ListItem>
               <ListItem>
@@ -156,6 +121,7 @@ class About extends React.Component{
 About.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
+
 };
 
 export default  withStyles(styles, { withTheme: true })(About);

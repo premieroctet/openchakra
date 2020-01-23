@@ -14,22 +14,47 @@ import Layout from '../hoc/Layout/Layout';
 import Commentary from '../components/Commentary/Commentary';
 import Link from '@material-ui/core/Link';
 import AlfredConditions from '../components/AlfredConditions/AlfredConditions';
+import axios from 'axios';
+
+const { config } = require('../config/config');
+const url = config.apiUrl
 
 class shop extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            alfred:[],
             id: '',
             logged: false,
+            shop:[],
+            languages:[]
         }
     }
     static getInitialProps ({ query: { id_alfred } }) {
         return { aboutId: id_alfred }
     }
-
     componentWillMount() {
         this.setState({id: this.props.aboutId});
-        console.log(this.state.id,'test')
+
+    }
+
+    componentDidMount() {
+        let self = this;
+        const id_alfred = self.props.shop;
+        axios.get(`${url}myAlfred/api/shop/alfred/${this.state.id}`)
+          .then(function (response) {
+              let shop = response.data;
+              console.log(shop,'shop');
+              self.setState({
+                  alfred: shop.alfred,
+                  idAlfred: shop.alfred._id,
+                  languages: shop.alfred.languages,
+                  shop:shop
+              });
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
     }
 
     render() {
@@ -44,7 +69,7 @@ class shop extends React.Component {
                     <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
                         <Grid style={{display:'flex', alignItems: 'baseline', justifyContent: 'space-between', marginLeft: '5%', marginRight: '5%' }}>
                             <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column', marginTop: '3%'}}>
-                                <About shop={this.state.id}/>
+                                <About alfred={this.state.alfred} languages={this.state.languages}/>
                             </Grid>
                             <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column'}}>
                                 <Typography variant="h6" style={{width: '100%'}}>
