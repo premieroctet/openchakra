@@ -17,7 +17,7 @@ const sendMail = (from, to, template, locals) => {
     message: {
       from: from
     },
-    send: true,
+    //send: true,
     transport: transporter
   })
 
