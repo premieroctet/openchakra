@@ -125,6 +125,15 @@ router.get('/alfred/:id_alfred',(req,res)=> {
         .populate('services')
         .populate('alfred')
         .populate({path:'services',populate:{path: 'service',select:['label','picture']}})
+        .populate({
+            path:'services',
+            populate:{
+              path:'service',
+              populate:{
+                path: 'category', select:['label','picture']
+              }
+            }
+        })
         .then(shop => {
             if(Object.keys(shop).length === 0 && shop.constructor === Object){
                 return res.status(400).json({msg: 'No shop found'});

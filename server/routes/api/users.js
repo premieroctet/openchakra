@@ -63,18 +63,15 @@ const sendAccountValidation = (request, user) => {
 
   let link=new URL('/validateAccount?user='+user._id, "https://"+request.headers.host);
 
-  let message=
-    `Bonjour ${user.firstname}\nBienvenue au sein de la communauté My-Alfred !\n\n`+
-    'Afin de finaliser votre inscription, veuillez confirmer votre adresse e-mail en cliquant sur le lien ci-dessous:\n'+
-    `<a href="${link}">Je confirme mon adresse email</a>\n\nToute l\'équipe My-Alfred reste à votre disposition !\n`+
-    'A très bientôt !\nL\'équipe My-Alfred'
-
   sendMail(
     'no-reply@my-alfred.io',
     user.email,
-    'Confirmation email My-Alfred',
-    message,
-    '<h1>'+message.replace(/\n/g, '</br>')+'</h1>'
+    'validation',
+    {
+      name: user.name,
+      firstname: user.firstname,
+      url: link,
+    }
   )
 }
 
