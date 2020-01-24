@@ -18,7 +18,7 @@ class AlfredConditionsBooking extends React.Component{
     }
   }
   render(){
-    const {classes, alfred, shop} = this.props;
+    const {classes, alfred, shop, userState, isOwner} = this.props;
 
     return (
       <Grid container>
@@ -29,41 +29,48 @@ class AlfredConditionsBooking extends React.Component{
                 <Grid>
                   <h3>Comment réserver {alfred.firstname}</h3>
                 </Grid>
-                <Grid>
-                  <Button color="secondary" className={classes.button}>
-                    Modifier
-                  </Button>
-                </Grid>
+                {userState && isOwner?
+                  <Grid>
+                    <Button color="secondary" className={classes.button}>
+                      Modifier
+                    </Button>
+                  </Grid>
+                  : null
+                }
               </Grid>
               <Grid className={classes.containerAlfred}>
-                <Grid className={classes.alignCheckbox}>
-                  <Grid>
-                    <Checkbox
-                      checked={!!shop.booking_request}
-                      value={shop.booking_request}
-                      color="primary"
-                      icon={<CircleUnchecked/>}
-                      checkedIcon={<RadioButtonCheckedIcon />}
-                    />
-                  </Grid>
-                  <Grid>
-                    <p>{alfred.firstname} dispose de 24h pour répondre aux demandes de réservation</p>
-                  </Grid>
-                </Grid>
-                <Grid className={classes.alignCheckbox}>
-                  <Grid>
-                    <Checkbox
-                      checked={!shop.booking_request}
-                      value={!shop.booking_request}
-                      color="primary"
-                      icon={<CircleUnchecked/>}
-                      checkedIcon={<RadioButtonCheckedIcon />}
-                    />
-                  </Grid>
-                  <Grid>
-                    <p>Les utilisateurs peuvent réserver les services de {alfred.firstname} sans demande de réservation.</p>
-                  </Grid>
-                </Grid>
+                {shop.booking_request ?
+                  <Grid className={classes.alignCheckbox}>
+                    <Grid>
+                      <Checkbox
+                        checked={!!shop.booking_request}
+                        value={shop.booking_request}
+                        color="primary"
+                        icon={<CircleUnchecked/>}
+                        checkedIcon={<RadioButtonCheckedIcon />}
+                      />
+                    </Grid>
+                    <Grid>
+                      <p>{alfred.firstname} dispose de 24h pour répondre aux demandes de réservation</p>
+                    </Grid>
+                  </Grid> : null
+                }
+                {!shop.booking_request ?
+                  <Grid className={classes.alignCheckbox}>
+                    <Grid>
+                      <Checkbox
+                        checked={!shop.booking_request}
+                        value={!shop.booking_request}
+                        color="primary"
+                        icon={<CircleUnchecked/>}
+                        checkedIcon={<RadioButtonCheckedIcon />}
+                      />
+                    </Grid>
+                    <Grid>
+                      <p>Les utilisateurs peuvent réserver les services de {alfred.firstname} sans demande de réservation.</p>
+                    </Grid>
+                  </Grid> : null
+                }
               </Grid>
             </Grid>
           </Grid>

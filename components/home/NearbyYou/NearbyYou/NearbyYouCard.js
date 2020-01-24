@@ -94,6 +94,7 @@ const styles = theme => ({
 const nearbyYouCard = (props) => {
   // eslint-disable-next-line object-curly-newline
   const { classes, img, title,alfred,avatar,shop } = props;
+  console.log(shop, 'alfred here');
 
   return (
 

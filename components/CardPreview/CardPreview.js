@@ -42,14 +42,14 @@ class CardPreview extends React.Component{
       shop:[],
       open: false,
       id_service: '',
-      page: false
+      page: false,
     }
   }
 
   handleClickOpen(id) {
     this.setState({id_service: id, open:true});
   }
-  
+
   handleClose() {
     this.setState({id_service:'', open:false});
   }
@@ -65,7 +65,7 @@ class CardPreview extends React.Component{
   }
 
   render(){
-    const {classes, service, shop, services} = this.props;
+    const {classes, service, shop, services, userState, isOwner} = this.props;
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -83,20 +83,23 @@ class CardPreview extends React.Component{
               </Grid>
               :null
             }
-            <Grid>
-              <Grid className={classes.actionMediaEdit}>
-                <Link href={'/myShop/editService?id=' + services._id}>
-                  <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
-                    <EditIcon style={{color: '#4fbdd7'}}/>
+            {userState && isOwner ?
+              <Grid>
+                <Grid className={classes.actionMediaEdit}>
+                  <Link href={'/myShop/editService?id=' + services._id}>
+                    <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
+                      <EditIcon style={{color: '#4fbdd7'}}/>
+                    </IconButton>
+                  </Link>
+                </Grid>
+                <Grid className={classes.actionMediaRemove}>
+                  <IconButton aria-label="remove" className={classes.iconButtonStyle}>
+                    <DeleteForeverIcon onClick={()=>this.handleClickOpen(services._id)} style={{color: '#f87280'}} />
                   </IconButton>
-                </Link>
+                </Grid>
               </Grid>
-              <Grid className={classes.actionMediaRemove}>
-                <IconButton aria-label="remove" className={classes.iconButtonStyle}>
-                  <DeleteForeverIcon onClick={()=>this.handleClickOpen(services._id)} style={{color: '#f87280'}} />
-                </IconButton>
-              </Grid>
-            </Grid>
+              : null
+            }
           </Grid>
           <CardContent>
             <Grid  className={classes.cardContent}>

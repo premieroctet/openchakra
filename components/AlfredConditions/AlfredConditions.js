@@ -20,7 +20,7 @@ class AlfredConditions extends React.Component{
     }
   }
   render(){
-    const {classes, alfred, shop} = this.props;
+    const {classes, alfred, shop, userState, isOwner} = this.props;
 
     return (
       <Grid container>
@@ -31,57 +31,66 @@ class AlfredConditions extends React.Component{
               <Grid>
                 <h3>Les conditions de réservation de {alfred.firstname}</h3>
               </Grid>
-              <Grid>
-                <Button color="secondary" className={classes.button}>
-                  Modifier
-                </Button>
-              </Grid>
+              {userState && isOwner ?
+                <Grid>
+                  <Button color="secondary" className={classes.button}>
+                    Modifier
+                  </Button>
+                </Grid>
+                : null
+              }
             </Grid>
             <Grid className={classes.containerAlfred}>
-              <Grid className={classes.alignCheckbox}>
-                <Grid>
-                  <Checkbox
-                    checked={!!shop.my_alfred_conditions }
-                    value={this.state.is_conditionMyAlfred}
-                    color="primary"
-                    icon={<CircleUnchecked/>}
-                    checkedIcon={<RadioButtonCheckedIcon />}
-                  />
-                </Grid>
-                <Grid>
-                  <p>Conditions My-Alfred (adresse email & numéro de téléphone confirmés).</p>
-                </Grid>
-              </Grid>
-              <Grid className={classes.alignCheckbox}>
-                <Grid>
-                  <Checkbox
-                    checked={!!shop.profile_picture}
-                    value={this.state.is_profilPicture}
-                    color="primary"
-                    icon={<CircleUnchecked/>}
-                    checkedIcon={<RadioButtonCheckedIcon />}
-                  />
-                </Grid>
-                <Grid>
-                  <p>Photo de profil.</p>
-                </Grid>
-              </Grid>
-              <Grid className={classes.alignCheckbox}>
-                <Grid>
-                  <Checkbox
-                    checked={!!shop.identity_card}
-                    value={this.state.is_idCard}
-                    color="primary"
-                    icon={<CircleUnchecked/>}
-                    checkedIcon={<RadioButtonCheckedIcon />}
-                  />
-                </Grid>
-                <Grid>
-                  <p>Pièce d'identité officielle.</p>
-                </Grid>
-              </Grid>
+              {shop.my_alfred_conditions ?
+                <Grid className={classes.alignCheckbox}>
+                  <Grid>
+                    <Checkbox
+                      checked={!!shop.my_alfred_conditions }
+                      value={this.state.is_conditionMyAlfred}
+                      color="primary"
+                      icon={<CircleUnchecked/>}
+                      checkedIcon={<RadioButtonCheckedIcon />}
+                    />
+                  </Grid>
+                  <Grid>
+                    <p>Conditions My-Alfred (adresse email & numéro de téléphone confirmés).</p>
+                  </Grid>
+                </Grid> : null
+              }
+              {shop.profile_picture?
+                <Grid className={classes.alignCheckbox}>
+                  <Grid>
+                    <Checkbox
+                      checked={!!shop.profile_picture}
+                      value={this.state.is_profilPicture}
+                      color="primary"
+                      icon={<CircleUnchecked/>}
+                      checkedIcon={<RadioButtonCheckedIcon />}
+                    />
+                  </Grid>
+                  <Grid>
+                    <p>Photo de profil.</p>
+                  </Grid>
+                </Grid> : null
+              }
+              {shop.identity_card ?
+                <Grid className={classes.alignCheckbox}>
+                  <Grid>
+                    <Checkbox
+                      checked={!!shop.identity_card}
+                      value={this.state.is_idCard}
+                      color="primary"
+                      icon={<CircleUnchecked/>}
+                      checkedIcon={<RadioButtonCheckedIcon />}
+                    />
+                  </Grid>
+                  <Grid>
+                    <p>Pièce d'identité officielle.</p>
+                  </Grid>
+                </Grid>: null
+              }
           </Grid>
-        </Grid>
+         </Grid>
         </Grid>
       </Grid>
     )

@@ -8,13 +8,13 @@ import Typography from '@material-ui/core/Typography';
 import CardPreview from '../components/CardPreview/CardPreview';
 import CardAddService from '../components/CardAddService/CardAddService';
 import Layout from '../hoc/Layout/Layout';
-import Commentary from '../components/Commentary/Commentary';
 import AlfredConditions from '../components/AlfredConditions/AlfredConditions';
 import axios from 'axios';
 import AlfredConditionsBooking from '../components/AlfredConditionsBooking/AlfredConditionsBooking';
 import AlfredConditionsCancel from '../components/AlfredConditionsCancel/AlfredConditionsCancel';
 import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWelcomedMessage';
 import Footer from '../hoc/Layout/Footer/Footer';
+import Router from 'next/router';
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
@@ -29,6 +29,11 @@ class shop extends React.Component {
             shop:[],
             languages:[],
             services: [],
+            userState: false,
+            userId: '',
+            shopUserId: '',
+            isOwner:false,
+            idShopUser: []
         };
         this.needRefresh = this.needRefresh.bind(this);
     }
@@ -39,26 +44,51 @@ class shop extends React.Component {
 
     componentWillMount() {
         this.setState({id: this.props.aboutId});
+
     }
 
     componentDidMount() {
         let self = this;
+
+        axios.get(url+'myAlfred/api/users/current').then(res => {
+            let user = res.data;
+            if(user) {
+                self.setState({
+                    userState: true,
+                    userId: user._id
+                })
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+
         axios.get(`${url}myAlfred/api/shop/alfred/${this.state.id}`)
           .then(function (response) {
               let shop = response.data;
-              console.log(shop,'shop');
               self.setState({
                   alfred: shop.alfred,
                   idAlfred: shop.alfred._id,
                   languages: shop.alfred.languages,
                   services: shop.services,
-                  shop:shop
+                  shop:shop,
               });
+              self.checkIfOwner();
           })
           .catch(function (error) {
               console.log(error);
           });
     }
+
+    checkIfOwner() {
+        Object.keys(this.state.services).map( result =>{
+          if(this.state.services[result].user === this.state.userId){
+              this.setState({isOwner: true});
+          }else{
+
+          }
+        });
+    }
+
 
     needRefresh(){
         this.componentDidMount();
@@ -89,23 +119,27 @@ class shop extends React.Component {
                                 { Object.keys(this.state.services).map( result => {
                                     return (
                                       <Grid container item lg={4}>
-                                          <CardPreview alfred={this.state.alfred} shop={this.state.shop} service={this.state.services[result].service} services={this.state.services[result]} needRefresh={this.needRefresh}/>
+                                          <CardPreview isOwner={this.state.isOwner} userState={this.state.userState} alfred={this.state.alfred} shop={this.state.shop} service={this.state.services[result].service} services={this.state.services[result]} needRefresh={this.needRefresh}/>
                                       </Grid>
                                     )
                                 })
                                 }
-                                <Grid container item lg={4}>
-                                    <CardAddService/>
-                                </Grid>
+                                {this.state.userState && this.state.isOwner  ?
+                                    <Grid container item lg={4}>
+                                        <CardAddService/>
+                                    </Grid>
+                                  : null
+                                }
+
                             </Grid>
                         </Grid>
                         <Grid>
-                            <AlfredConditions alfred={this.state.alfred} shop={this.state.shop}/>
+                            <AlfredConditions isOwner={this.state.isOwner} userState={this.state.userState} alfred={this.state.alfred} shop={this.state.shop}/>
                             <hr style={{width : '90%'}}/>
-                            <AlfredConditionsBooking alfred={this.state.alfred} shop={this.state.shop}/>
+                            <AlfredConditionsBooking isOwner={this.state.isOwner} userState={this.state.userState}  alfred={this.state.alfred} shop={this.state.shop}/>
                             <AlfredWelcomedMessage shop={this.state.shop}/>
                             <hr  style={{width : '90%'}}/>
-                            <AlfredConditionsCancel alfred={this.state.alfred} shop={this.state.shop}/>
+                            <AlfredConditionsCancel isOwner={this.state.isOwner} userState={this.state.userState} alfred={this.state.alfred} shop={this.state.shop}/>
                         </Grid>
                         {/*
                         <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>

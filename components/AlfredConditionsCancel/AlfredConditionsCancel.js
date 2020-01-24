@@ -17,7 +17,7 @@ class AlfredConditionsCancel extends React.Component{
     }
   }
   render(){
-    const {classes, shop, alfred} = this.props;
+    const {classes, shop, alfred, userState, isOwner} = this.props;
 
     return (
       <Grid container>
@@ -28,73 +28,83 @@ class AlfredConditionsCancel extends React.Component{
                 <Grid>
                   <h3>Conditions d’annulation de {alfred.firstname}</h3>
                 </Grid>
-                <Grid>
-                  <Button color="secondary" className={classes.button}>
-                    Modifier
-                  </Button>
-                </Grid>
+                {userState && isOwner ?
+                  <Grid>
+                    <Button color="secondary" className={classes.button}>
+                      Modifier
+                    </Button>
+                  </Grid>
+                  : null
+                }
               </Grid>
               <Grid className={classes.containerAlfred}>
-                <Grid className={classes.alignCheckbox}>
-                  <Grid>
-                    <Checkbox
-                      checked={!!shop.flexible_cancel}
-                      value={!!shop.flexible_cancel}
-                      color="primary"
-                      inputProps={{
-                        'aria-label': 'secondary checkbox',
-                      }}
-                      icon={<CircleUnchecked/>}
-                      checkedIcon={<RadioButtonCheckedIcon />}
-                    />
-                  </Grid>
-                  <Grid>
-                    <p>
-                      Flexible : en cas d’annulation jusqu’à 1 jour de la prestation, Maelîs procédera au
-                      remboursement intégral de la réservation.
-                    </p>
-                  </Grid>
-                </Grid>
-                <Grid className={classes.alignCheckbox}>
-                  <Grid>
-                    <Checkbox
-                      checked={!!shop.moderate_cancel}
-                      value={!!shop.moderate_cancel}
-                      color="primary"
-                      inputProps={{
-                        'aria-label': 'secondary checkbox',
-                      }}
-                      icon={<CircleUnchecked/>}
-                      checkedIcon={<RadioButtonCheckedIcon />}
-                    />
-                  </Grid>
-                  <Grid>
-                    <p>
-                      Modéré : en cas d’annulation jusqu’à 5 jour de la prestation, Maelîs procédera
-                      au remboursement intégral de la réservation.
-                    </p>
-                  </Grid>
-                </Grid>
-                <Grid className={classes.alignCheckbox}>
-                  <Grid>
-                    <Checkbox
-                      checked={!!shop.strict_cancel}
-                      value={!!shop.strict_cancel}
-                      color="primary"
-                      inputProps={{
-                        'aria-label': 'secondary checkbox',
-                      }}
-                      icon={<CircleUnchecked/>}
-                      checkedIcon={<RadioButtonCheckedIcon />}
-                    />
-                  </Grid>
-                  <Grid>
-                    <p>
-                      Stricte: en cas d’annulation jusqu’à 10 jour de la prestation, Maelîs procédera au
-                      remboursement intégral de la réservation.
-                    </p>
-                  </Grid>
-                </Grid>
+                {shop.flexible_cancel ?
+                  <Grid className={classes.alignCheckbox}>
+                    <Grid>
+                      <Checkbox
+                        checked={!!shop.flexible_cancel}
+                        value={!!shop.flexible_cancel}
+                        color="primary"
+                        inputProps={{
+                          'aria-label': 'secondary checkbox',
+                        }}
+                        icon={<CircleUnchecked/>}
+                        checkedIcon={<RadioButtonCheckedIcon />}
+                      />
+                    </Grid>
+                    <Grid>
+                      <p>
+                        Flexible : en cas d’annulation jusqu’à 1 jour de la prestation, Maelîs procédera au
+                        remboursement intégral de la réservation.
+                      </p>
+                    </Grid>
+                  </Grid> : null
+                }
+                { shop.moderate_cancel ?
+                  <Grid className={classes.alignCheckbox}>
+                    <Grid>
+                      <Checkbox
+                        checked={!!shop.moderate_cancel}
+                        value={!!shop.moderate_cancel}
+                        color="primary"
+                        inputProps={{
+                          'aria-label': 'secondary checkbox',
+                        }}
+                        icon={<CircleUnchecked/>}
+                        checkedIcon={<RadioButtonCheckedIcon />}
+                      />
+                    </Grid>
+                    <Grid>
+                      <p>
+                        Modéré : en cas d’annulation jusqu’à 5 jour de la prestation, Maelîs procédera
+                        au remboursement intégral de la réservation.
+                      </p>
+                    </Grid>
+                  </Grid> : null
+                }
+                { shop.strict_cancel ?
+                  <Grid className={classes.alignCheckbox}>
+                    <Grid>
+                      <Checkbox
+                        checked={!!shop.strict_cancel}
+                        value={!!shop.strict_cancel}
+                        color="primary"
+                        inputProps={{
+                          'aria-label': 'secondary checkbox',
+                        }}
+                        icon={<CircleUnchecked/>}
+                        checkedIcon={<RadioButtonCheckedIcon />}
+                      />
+                    </Grid>
+                    <Grid>
+                      <p>
+                        Stricte: en cas d’annulation jusqu’à 10 jour de la prestation, Maelîs procédera au
+                        remboursement intégral de la réservation.
+                      </p>
+                    </Grid>
+                  </Grid> : null
+                }
+
               </Grid>
             </Grid>
           </Grid>
