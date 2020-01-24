@@ -1,23 +1,35 @@
 nodemailer = require('nodemailer');
 const Email = require('email-templates');
+const {mailConfig} = require('../config/config.js')
+var xoauth2 = require('xoauth2')
+
+console.log("mailConfig:"+JSON.stringify(mailConfig))
 
 const sendMail = (from, to, template, locals) => {
   console.log("Send mail from "+from+" to "+to);
 
-  let transporter = nodemailer.createTransport({
-    host: 'smtp.free.fr',
-    port: 587,
-    auth: {
-      user: 'sebastien.auvray@free.fr',
-      pass: '600Bimota'
+  auth = {
+      type: 'OAuth2',
+      user: mailConfig.user,
+      clientId: mailConfig.clientId,
+      clientSecret: mailConfig.clientSecret,
+      refreshToken: mailConfig.refreshToken,
+      accessToken: mailConfig.accessToken
     }
+
+  console.log("GMail auth:"+JSON.stringify(auth))
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: auth
   })
 
   const email = new Email({
     message: {
       from: from
     },
-    //send: true,
+    send: true,
     transport: transporter
   })
 
