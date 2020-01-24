@@ -16,7 +16,6 @@ export default theme => ({
   },
   cardMedia: {
     paddingTop: '56.25%', // 16:9
-    backgroundImage:  "url(" + "../../static/assureback.jpg" + ")",
     display: 'block',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
@@ -107,6 +106,10 @@ export default theme => ({
   },
   noPadding:{
     padding:0
+  },
+  imageStyle:{
+    width: 25,
+    height: 25
   }
 });
 

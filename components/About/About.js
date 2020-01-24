@@ -15,19 +15,25 @@ import Chat from '@material-ui/icons/Chat';
 import StarIcon from '@material-ui/icons/Star';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
+import Typography from '@material-ui/core/Typography';
+import Moment from 'moment';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 class About extends React.Component{
   constructor(props){
     super(props);
     this.state = {
+      alfred: [],
+      languages: [],
       dense: false,
-      secondary: false,
-      valueRating: 3,
-      isChecked: false
+      valueRating: 0,
+      nbCommentary: 0,
+      shop:[]
     }
   }
+
   render(){
-    const {classes} = this.props;
+    const {classes, alfred, languages, shop} = this.props;
     const preventDefault = event => event.preventDefault();
 
     const StyledRating = withStyles({
@@ -40,6 +46,11 @@ class About extends React.Component{
       <Grid container className={classes.mainContainer}>
         <Grid item>
           <Grid>
+            <Grid>
+              <Typography variant="h6">
+                A propos de {alfred.firstname}
+              </Typography>
+            </Grid>
             <List dense={this.state.dense} className={classes.listStyle}>
               <ListItem>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.raiting}>
@@ -50,36 +61,33 @@ class About extends React.Component{
                 <ListItemAvatar>
                   <StarIcon className={classes.iconStar}/>
                 </ListItemAvatar>
-                <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>10 Commentaires</LinkMaterial>
+                <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>{this.state.nbCommentary} Commentaires</LinkMaterial>
               </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <CheckCircle />
-                </ListItemAvatar>
-                <ListItemText
-                  primary="Pièce d’identité vérifiée"
-                  secondary={this.state.secondary ? 'Secondary text' : null}
-                />
-              </ListItem>
-              {this.state.isChecked ?
+              {shop.identity_card ?
                 <ListItem>
                   <ListItemAvatar>
-                    <HighlightOff />
+                    <CheckCircle />
                   </ListItemAvatar>
                   <ListItemText
-                    primary="Pièce d’identité non vérifiée"
-                    secondary={this.state.secondary ? 'Secondary text' : null}
+                    primary={"Pièce d’identité vérifiée"}
                   />
                 </ListItem>
-                : null
+                :
+                <ListItem>
+                  <ListItemAvatar>
+                    <CancelIcon />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={"Pièce d’identité non vérifiée"}
+                  />
+                </ListItem>
               }
               <ListItem>
                 <ListItemAvatar>
                   <CalendarToday />
                 </ListItemAvatar>
                 <ListItemText
-                  primary="Membre depuis Juin 2019"
-                  secondary={this.state.secondary ? 'Secondary text' : null}
+                  primary={"Membre depuis " + Moment(alfred.creation_date).format('MMMM YYYY')}
                 />
               </ListItem>
               <ListItem>
@@ -87,18 +95,17 @@ class About extends React.Component{
                   <img src={'../../static/assets/img/iconCardAlfred/iconCastor.svg'} alt={'iconCastor'} title={'iconCastor'}/>
                 </ListItemAvatar>
                 <ListItemText
-                  primary="Alfred depuis Juin 2019 "
-                  secondary={this.state.secondary ? 'Secondary text' : null}
+                  //TODO A MODIFIER QUAND DATE CREATION BOUTIQUE SERA STOCKE
+                  primary={alfred.creation_shop ? "Alfred depuis " + Moment(alfred.creation_shop).format('MMMM YYYY') : "Alfred depuis " + Moment(alfred.creation_date).format('MMMM YYYY')}
                 />
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
                   <Chat />
                 </ListItemAvatar>
-                <ListItemText
-                  primary="Langue: français - anglais"
-                  secondary={this.state.secondary ? 'Secondary text' : null}
-                />
+                  <ListItemText
+                    primary={languages.length > 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
+                  />
               </ListItem>
               <ListItem>
                 <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>Voir le profil</LinkMaterial>
@@ -114,6 +121,7 @@ class About extends React.Component{
 About.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
+
 };
 
 export default  withStyles(styles, { withTheme: true })(About);

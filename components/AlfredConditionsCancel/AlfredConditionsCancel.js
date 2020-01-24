@@ -2,34 +2,30 @@ import Grid from '@material-ui/core/Grid';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './AlfredConditionsStyle'
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import Checkbox from '@material-ui/core/Checkbox';
+import styles from './AlfredCondtionsCancelStyle'
 
-class AlfredConditions extends React.Component{
+class AlfredConditionsCancel extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      flexible_cancel:true,
-      is_profilPicture:false,
-      is_idCard: false,
-      is_conditionMyAlfred: false,
-      alfred:[]
+      flexible_cancel:true
     }
   }
   render(){
-    const {classes, alfred, shop} = this.props;
+    const {classes} = this.props;
 
     return (
       <Grid container>
-        <Grid className={classes.mainContainer}>
-          <hr className={classes.hrStyle}/>
+        <Grid className={classes.containerPosition}>
           <Grid className={classes.contentPosition}>
             <Grid className={classes.containerBooking}>
               <Grid>
-                <h3>Les conditions de réservation de {alfred.firstname}</h3>
+                <h3>Conditions d’annulation de Maelis</h3>
               </Grid>
               <Grid>
                 <Button color="secondary" className={classes.button}>
@@ -41,56 +37,77 @@ class AlfredConditions extends React.Component{
               <Grid className={classes.alignCheckbox}>
                 <Grid>
                   <Checkbox
-                    checked={!!shop.my_alfred_conditions }
-                    value={this.state.is_conditionMyAlfred}
+                    checked={this.state.flexible_cancel}
+                    onChange={this.handleChangeF}
+                    value={'flexible_cancel'}
                     color="primary"
+                    inputProps={{
+                      'aria-label': 'secondary checkbox',
+                    }}
                     icon={<CircleUnchecked/>}
                     checkedIcon={<RadioButtonCheckedIcon />}
                   />
                 </Grid>
                 <Grid>
-                  <p>Conditions My-Alfred (adresse email & numéro de téléphone confirmés).</p>
+                  <p>
+                    Flexible : en cas d’annulation jusqu’à 1 jour de la prestation, Maelîs procédera au
+                    remboursement intégral de la réservation.
+                  </p>
                 </Grid>
               </Grid>
               <Grid className={classes.alignCheckbox}>
                 <Grid>
                   <Checkbox
-                    checked={!!shop.profile_picture}
-                    value={this.state.is_profilPicture}
+                    checked={this.state.flexible_cancel}
+                    onChange={this.handleChangeF}
+                    value={'flexible_cancel'}
                     color="primary"
+                    inputProps={{
+                      'aria-label': 'secondary checkbox',
+                    }}
                     icon={<CircleUnchecked/>}
                     checkedIcon={<RadioButtonCheckedIcon />}
                   />
                 </Grid>
                 <Grid>
-                  <p>Photo de profil.</p>
+                  <p>
+                    Modéré : en cas d’annulation jusqu’à 5 jour de la prestation, Maelîs procédera
+                    au remboursement intégral de la réservation.
+                  </p>
                 </Grid>
               </Grid>
               <Grid className={classes.alignCheckbox}>
                 <Grid>
                   <Checkbox
-                    checked={!!shop.identity_card}
-                    value={this.state.is_idCard}
+                    checked={this.state.flexible_cancel}
+                    onChange={this.handleChangeF}
+                    value={'flexible_cancel'}
                     color="primary"
+                    inputProps={{
+                      'aria-label': 'secondary checkbox',
+                    }}
                     icon={<CircleUnchecked/>}
                     checkedIcon={<RadioButtonCheckedIcon />}
                   />
                 </Grid>
                 <Grid>
-                  <p>Pièce d'identité officielle.</p>
+                  <p>
+                    Stricte: en cas d’annulation jusqu’à 10 jour de la prestation, Maelîs procédera au
+                    remboursement intégral de la réservation.
+                  </p>
                 </Grid>
               </Grid>
+            </Grid>
           </Grid>
-        </Grid>
         </Grid>
       </Grid>
     )
   }
 }
 
-AlfredConditions.propTypes = {
+AlfredConditionsCancel.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true })(AlfredConditions);
+export default  withStyles(styles, { withTheme: true })(AlfredConditionsCancel);
