@@ -6,7 +6,7 @@ const serverPort = process.env.PORT || 3122;
 const apiUrl = "/";
 
 const source=require("./client_id.json")
-console.log("Source:"+JSON.stringify(source))
+console.log("Source:"+JSON.stringify(source, null, 2))
 
 const completeConfig = {
 
@@ -36,8 +36,8 @@ const mailConfig = {
   user: "sebastien.auvray@my-alfred.io",
   clientId: source.web.client_id,
   clientSecret: source.web.client_secret,
-  refreshToken: "1//044sTFLFf0dFSCgYIARAAGAQSNwF-L9IrVzy4mV3DG0ndhW05lonr3ZqJh1Gr8nBS2EN0vZcviGkta29YtS8me5JR6_-aGKj7t7I",
-  accessToken: "ya29.Il-6B1jFCx9LXWjr75_C5G9YWm66SFmztzJVxpfqEfY-auWbLosSCGBhZkjL_XQj_md8Zo1xPj4xj2Wq5ZpktKShPQ4G-_ibg8lmXpA-xU-InUYdQaROh95Lefnwq-CHaQ"
+  refreshToken: '1//040qqd968fTUmCgYIARAAGAQSNwF-L9Iry-KzNeNu-Eg4YJGYtS9_zn5K4rnt7hxvcsPvh69BEUwhoqslW3oAETeYWLWBxo8zKtk',
+  accessToken: 'ya29.Il-7B9vPQ9meRKDhLu1cARHVXyGEiGiIidmgeLCB7LLszjByPxRVWJ8mw_u2AQh5ZXeUiXgPyAX9H-KjgXX7pwArP6Bp_TC1OrMR-fOFAMITK0OuOPWKjk11Z0AUhP4dxw'
 }
 
 // Public API

@@ -70,7 +70,7 @@ const sendAccountValidation = (request, user) => {
     {
       name: user.name,
       firstname: user.firstname,
-      url: link,
+      validation_url: link,
     }
   )
 }
