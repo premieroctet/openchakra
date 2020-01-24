@@ -1,5 +1,5 @@
 const appName = 'myalfred';
-const databaseName = 'test-myAlfred';
+const databaseName = 'test-myAlfred-V2';
 const serverPort = process.env.PORT || 3122;
 
 const apiUrl = "http://localhost:3122/";
@@ -32,6 +32,7 @@ const completeConfig = {
 
 // Public API
 module.exports = {
+    databaseName: databaseName,
     config: { ...completeConfig.default, ...completeConfig[process.env.NODE_ENV] },
     completeConfig
 }
