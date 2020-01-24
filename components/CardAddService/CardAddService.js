@@ -23,8 +23,9 @@ class CardAddService extends React.Component{
 
     return (
       <Grid>
-        <Card className={classes.card}>
-          <CardActionArea>
+        <Link href={'/myShop/addService'}>
+          <Card className={classes.card}>
+            <CardActionArea>
               <Grid className={classes.cardMedia}>
                 <Fab color="primary" aria-label="add" className={classes.fab}>
                   <AddIcon style={{color:'white'}}/>
@@ -35,8 +36,9 @@ class CardAddService extends React.Component{
                   Ajouter un service
                 </Typography>
               </CardContent>
-          </CardActionArea>
-        </Card>
+            </CardActionArea>
+          </Card>
+        </Link>
       </Grid>
     )
   }

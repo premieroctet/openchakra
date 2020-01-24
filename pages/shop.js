@@ -33,7 +33,8 @@ class shop extends React.Component {
             userId: '',
             shopUserId: '',
             isOwner:false,
-            idShopUser: []
+            idShopUser: [],
+            serviceUser:[]
         };
         this.needRefresh = this.needRefresh.bind(this);
     }
@@ -52,6 +53,7 @@ class shop extends React.Component {
 
         axios.get(url+'myAlfred/api/users/current').then(res => {
             let user = res.data;
+            console.log(user._id, 'id en cours moi')
             if(user) {
                 self.setState({
                     userState: true,
@@ -63,8 +65,9 @@ class shop extends React.Component {
         });
 
         axios.get(`${url}myAlfred/api/shop/alfred/${this.state.id}`)
-          .then(function (response) {
+          .then( response  =>  {
               let shop = response.data;
+              console.log(shop, 'shop ID');
               self.setState({
                   alfred: shop.alfred,
                   idAlfred: shop.alfred._id,
@@ -77,14 +80,21 @@ class shop extends React.Component {
           .catch(function (error) {
               console.log(error);
           });
+        axios.get(`${url}myAlfred/api/serviceUser/5d91f73af66e01140941c594`)
+          .then(res => {
+              let serviceUser = res.data;
+              console.log(serviceUser, 'serviceuser')
+              self.setState({serviceUser: serviceUser});
+          })
+          .catch(err =>
+            console.log(err)
+          );
     }
 
     checkIfOwner() {
         Object.keys(this.state.services).map( result =>{
           if(this.state.services[result].user === this.state.userId){
               this.setState({isOwner: true});
-          }else{
-
           }
         });
     }
