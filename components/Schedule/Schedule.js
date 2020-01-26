@@ -319,6 +319,7 @@ class Schedule extends React.Component {
     return (
       <div style={{height:700}}>
         <Calendar
+          scrollToTime={new Date(1970, 1, 1, 7)}
           selectable
           popup={false}
           culture='fr-FR'
