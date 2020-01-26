@@ -27,6 +27,12 @@ const ServiceSchema = new Schema({
     majoration: {
         type: String
     },
+    travel_expense: {
+        type: String
+    },
+    picking_expense: {
+        type: String
+    },
     location: {
       home   : Boolean,
       alfred : Boolean,

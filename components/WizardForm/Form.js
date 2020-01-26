@@ -1564,7 +1564,7 @@ class Form extends React.Component {
                                                                     <Typography variant="h6" style={{marginBottom: '.5rem'}}>Frais de déplacement</Typography>
                                                                     <Typography style={{marginBottom: '1rem'}}>
                                                                         Les frais de déplacement s'appliquent pour toutes les prestations réalisées à l'adresse de
-                                                                        préstation indiquée par votre client. Si vous choisissez d'appliquer des frais de déplacements,
+                                                                        prestation indiquée par votre client. Si vous choisissez d'appliquer des frais de déplacements,
                                                                         ils seront automatiquement appliqués lors de la réservation.
                                                                     </Typography>
                                                                     <form noValidate autoComplete="off">
@@ -1609,6 +1609,7 @@ class Form extends React.Component {
                                                                                       endAdornment: <InputAdornment position="start">€</InputAdornment>,
                                                                                       className: classes.inputTextField
                                                                                     }}
+                                                                                    onChange={event => {console.log('Frais déplacement changed'+event.target.value)}}
                                                                                   />
                                                                                 </div>
                                                                             </div>
