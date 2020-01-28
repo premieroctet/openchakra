@@ -31,6 +31,7 @@ const Menu = () => {
             children={<Icon name="search" color="gray.300" />}
           />
           <Input
+            color="gray.300"
             placeholder="Search component…"
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setSearchTerm(event.target.value)
@@ -38,7 +39,9 @@ const Menu = () => {
           />
         </InputGroup>
 
-        {COMPONENTS.filter(c => c.includes(searchTerm)).map(component => (
+        {COMPONENTS.filter(c =>
+          c.toLowerCase().includes(searchTerm.toLowerCase())
+        ).map(component => (
           <DragItem name={component} type={component as ComponentType}>
             {component}
           </DragItem>

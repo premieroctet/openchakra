@@ -1,11 +1,15 @@
 import React from "react";
-import { Badge, BadgeProps } from "@chakra-ui/core";
+import { Badge } from "@chakra-ui/core";
 import { useInteractive } from "../../../hooks/useInteractive";
 
 const BadgePreview: React.FC<{ component: IComponent }> = ({ component }) => {
-  const { props }: { props: BadgeProps } = useInteractive(component);
+  const { props, ref } = useInteractive(component);
 
-  return <Badge {...props}>{component.props.children || "Lorem Ipsum"}</Badge>;
+  return (
+    <Badge ref={ref} {...props}>
+      {component.props.children || "Lorem Ipsum"}
+    </Badge>
+  );
 };
 
 export default BadgePreview;

@@ -34,54 +34,24 @@ import { GoRepo } from "react-icons/go";
 import { FaMagic } from "react-icons/fa";
 
 const Inspector = () => {
-  const {
-    components,
-    selectedComponent,
-    setComponents,
-    selectedType
-  } = useBuilderContext();
+  const { components, selectedComponent, setComponents } = useBuilderContext();
 
   const [quickProps, setQuickProps] = useState("");
   const { setValue, setValueFromEvent } = useForm();
 
   if (!selectedComponent) {
-    if (selectedType) {
-      return (
-        <Box px={3} pt={4}>
-          <Text textTransform="capitalize" fontSize="md" fontWeight="bold">
-            {selectedType}
-          </Text>
-          <Divider />
-          <Text fontSize="sm" my={2}>
-            {docs[selectedType as ComponentType]}
-          </Text>
-          <Link
-            fontSize="sm"
-            name="question-outline"
-            color="gray.400"
-            cursor="pointer"
-            onClick={() => {
-              window.open(`https://chakra-ui.com/${selectedType}`, "_blank");
-            }}
-          >
-            Open Documentation
-          </Link>
-        </Box>
-      );
-    }
-
     return (
       <Flex
         alignItems="center"
+        justifyContent="center"
         direction="column"
         height="100%"
         textAlign="center"
         color="gray.400"
-        pt="40%"
         px={4}
       >
         <Box mb={4} color="gray.300" as={FaMagic} fontSize="6xl" />
-        Select a component to display its props
+        Select an element on the editor to activate this panel
       </Flex>
     );
   }

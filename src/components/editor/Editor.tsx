@@ -1,13 +1,15 @@
 import React, { memo } from "react";
-import { Box, Text, Link } from "@chakra-ui/core";
+import { Box, Text, Link, Badge } from "@chakra-ui/core";
 import { useBuilderContext } from "../../contexts/BuilderContext";
 import ComponentPreview from "./ComponentPreview";
 import { useDropComponent } from "../../hooks/useDropComponent";
 import SplitPane from "react-split-pane";
 import CodePanel from "../CodePanel";
+import { useEditorContext } from "../../contexts/EditorContext";
 
 const Editor: React.FC = () => {
   const { components, showCode } = useBuilderContext();
+  const { overlay } = useEditorContext();
   const { drop } = useDropComponent("root");
 
   const isEmpty = !components.root.children.length;
@@ -24,6 +26,7 @@ const Editor: React.FC = () => {
       justifyContent="center"
       alignItems="center"
       ref={drop}
+      position="relative"
       flexDirection="column"
     >
       {isEmpty && (
@@ -36,6 +39,24 @@ const Editor: React.FC = () => {
       {components.root.children.map((key: string) => (
         <ComponentPreview component={components[key]} />
       ))}
+      {overlay && (
+        <Box
+          pointerEvents="none"
+          cursor="pointer"
+          zIndex={20}
+          borderWidth={1}
+          borderColor="teal.300"
+          position="absolute"
+          width={overlay.rect.width + 10}
+          height={overlay.rect.height + 10}
+          top={`${overlay.rect.top - 53}px`}
+          left={`${overlay.rect.left - 229}px`}
+        >
+          <Badge ml={1} variantColor="teal">
+            {overlay.type}
+          </Badge>
+        </Box>
+      )}
     </Box>
   );
 

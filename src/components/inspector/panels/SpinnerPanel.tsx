@@ -57,7 +57,7 @@ const SpinnerPanel = () => {
         enableHues
       />
 
-      <FormControl label="spedd">
+      <FormControl label="Speed">
         <Input
           size="sm"
           value={values.speed || "s"}

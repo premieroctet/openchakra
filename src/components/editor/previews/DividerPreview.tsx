@@ -3,8 +3,8 @@ import { Divider } from "@chakra-ui/core";
 import { useInteractive } from "../../../hooks/useInteractive";
 
 const DividerPreview: React.FC<{ component: IComponent }> = ({ component }) => {
-  const { props }: { props: any } = useInteractive(component);
-  return <Divider {...props} />;
+  const { props, ref } = useInteractive(component);
+  return <Divider ref={ref} {...props} />;
 };
 
 export default DividerPreview;

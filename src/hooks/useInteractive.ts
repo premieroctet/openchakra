@@ -1,29 +1,29 @@
-import { useState } from "react";
+import { useRef, MouseEvent } from "react";
 import { useBuilderContext } from "../contexts/BuilderContext";
-import { useColorMode } from "@chakra-ui/core";
+import { useEditorContext } from "../contexts/EditorContext";
 
 export const useInteractive = (component: IComponent) => {
-  const [isHover, setIsHover] = useState(false);
-  const { colorMode } = useColorMode();
+  const { setOverlay } = useEditorContext();
+  const { showLayout, setSelectedComponent } = useBuilderContext();
 
-  const {
-    selectedComponent,
-    setSelectedComponent,
-    showLayout
-  } = useBuilderContext();
-
+  const ref = useRef<HTMLDivElement>(null);
   let props = {
     ...component.props,
-    onMouseOut: (e: MouseEvent) => {
-      e.stopPropagation();
-      setIsHover(false);
+    onMouseOver: (event: MouseEvent) => {
+      if (ref && ref.current) {
+        event.stopPropagation();
+        setOverlay({
+          name: component.name,
+          type: component.type,
+          rect: ref.current.getBoundingClientRect()
+        });
+      }
     },
-    onMouseOver: (e: MouseEvent) => {
-      e.stopPropagation();
-      setIsHover(true);
+    onMouseOut: () => {
+      setOverlay(undefined);
     },
-    onClick: (e: Event) => {
-      e.stopPropagation();
+    onClick: (event: MouseEvent) => {
+      event.stopPropagation();
       setSelectedComponent(component.name);
     }
   };
@@ -33,21 +33,10 @@ export const useInteractive = (component: IComponent) => {
   if (showLayout && dropTypes.includes(component.type)) {
     props = {
       ...props,
-      border: `1px dashed ${colorMode === "light" ? "grey" : "#718096"}`,
+      border: `1px dashed #718096`,
       padding: props.p || props.padding ? props.p || props.padding : 4
     };
   }
 
-  if (isHover) {
-    props = {
-      ...props,
-      border: `1px solid ${colorMode === "light" ? "grey" : "#718096"}`
-    };
-  }
-
-  if (component.name === selectedComponent) {
-    //props = { ...props, border: "1px solid #319795" };
-  }
-
-  return { props };
+  return { props, ref };
 };

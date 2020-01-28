@@ -3,8 +3,9 @@ import { ChangeEvent } from "react";
 
 export const useForm = () => {
   const { setComponents, components, selectedComponent } = useBuilderContext();
+
   const values: any = selectedComponent
-    ? components[selectedComponent].props
+    ? components[selectedComponent]?.props
     : {};
 
   const setValueFromEvent = ({
