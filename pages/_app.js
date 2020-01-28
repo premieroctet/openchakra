@@ -54,6 +54,7 @@ class MyApp extends App {
           <title>My Alfred</title>
 	    <meta property="og:image" content="https://my-alfred.io/static/presentation.jpg" />
             <meta property="og:description" content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous" />
+            <meta property="description" content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous" />
             <meta property="og:type" content="website" />
             <meta property="og:url"content="https://my-alfred.io" />
             <meta property="og:image:secure_url" content="https://my-alfred.io/static/presentation.jpg" />
