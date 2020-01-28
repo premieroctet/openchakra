@@ -17,7 +17,9 @@ type ComponentType =
   | "Checkbox"
   | "Link"
   | "Spinner"
-  | "CloseButton";
+  | "CloseButton"
+  | "Divider"
+  | "Code";
 
 interface IComponent {
   children: string[];
@@ -57,4 +59,6 @@ type PreviewDefaultProps = {
   Link?: LinkProps;
   Spinner?: SpinnerProps;
   CloseButton?: CloseButtonProps;
+  Divider?: any;
+  Code?: any;
 };

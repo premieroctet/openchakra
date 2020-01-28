@@ -23,7 +23,9 @@ export const COMPONENTS: ComponentType[] = [
   "AvatarBadge",
   "IconButton",
   "Spinner",
-  "CloseButton"
+  "CloseButton",
+  "Divider",
+  "Code"
 ];
 
 const App = () => (

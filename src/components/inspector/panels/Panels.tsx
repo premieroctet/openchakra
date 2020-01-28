@@ -14,6 +14,7 @@ import ProgressPanel from "./ProgressPanel";
 import LinkPanel from "./LinkPanel";
 import SpinnerPanel from "./SpinnerPanel";
 import CloseButtonPanel from "./CloseButtonPanel";
+import DividerPanel from "./DividerPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -35,6 +36,7 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "AvatarBadge" && <AvatarBadgePanel />}
       {type === "Spinner" && <SpinnerPanel />}
       {type === "CloseButton" && <CloseButtonPanel />}
+      {type === "Divider" && <DividerPanel />}
     </>
   );
 };

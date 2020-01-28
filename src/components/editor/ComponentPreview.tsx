@@ -16,6 +16,8 @@ import ProgressPreview from "./previews/ProgressPreview";
 import LinkPreview from "./previews/LinkPreview";
 import SpinnerPreview from "./previews/SpinnerPreview";
 import CloseButtonPreview from "./previews/CloseButtonPreview";
+import DividerPreview from "./previews/DividerPreview";
+import CodePreview from "./previews/CodePreview";
 
 const ComponentPreview: React.FC<{ component: IComponent }> = ({
   component
@@ -51,6 +53,10 @@ const ComponentPreview: React.FC<{ component: IComponent }> = ({
       return <CloseButtonPreview component={component} />;
     case "Checkbox":
       return <CheckboxPreview component={component} />;
+    case "Divider":
+      return <DividerPreview component={component} />;
+    case "Code":
+      return <CodePreview component={component} />;
     default:
       return null;
   }
