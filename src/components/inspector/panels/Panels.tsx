@@ -9,6 +9,11 @@ import AvatarPanel from "./AvatarPanel";
 import AvatarGroupPanel from "./AvatarGroupPanel";
 import AvatarBadgePanel from "./AvatarBadgePanel";
 import CheckboxPanel from "./CheckboxPanel";
+import IconButtonPanel from "./IconButtonPanel";
+import ProgressPanel from "./ProgressPanel";
+import LinkPanel from "./LinkPanel";
+import SpinnerPanel from "./SpinnerPanel";
+import CloseButtonPanel from "./CloseButtonPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -21,10 +26,15 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "Badge" && <BadgePanel />}
       {type === "Image" && <ImagePanel />}
       {type === "Icon" && <IconPanel />}
+      {type === "IconButton" && <IconButtonPanel />}
+      {type === "Progress" && <ProgressPanel />}
       {type === "Text" && <ChildrenControl />}
+      {type === "Link" && <LinkPanel />}
       {type === "Avatar" && <AvatarPanel />}
       {type === "AvatarGroup" && <AvatarGroupPanel />}
       {type === "AvatarBadge" && <AvatarBadgePanel />}
+      {type === "Spinner" && <SpinnerPanel />}
+      {type === "CloseButton" && <CloseButtonPanel />}
     </>
   );
 };

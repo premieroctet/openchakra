@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Box } from "@chakra-ui/core";
+import { Flex, Box, LightMode } from "@chakra-ui/core";
 import { DndProvider } from "react-dnd";
 import Backend from "react-dnd-html5-backend";
 import Editor from "./components/editor/Editor";
@@ -16,40 +16,47 @@ export const COMPONENTS: ComponentType[] = [
   "Badge",
   "Icon",
   "Text",
+  "Progress",
   "Avatar",
+  "Link",
   "AvatarGroup",
-  "AvatarBadge"
+  "AvatarBadge",
+  "IconButton",
+  "Spinner",
+  "CloseButton"
 ];
 
 const App = () => (
-  <DndProvider backend={Backend}>
-    <Global
-      styles={() => ({
-        "*": { borderBox: "box-sizing" }
-      })}
-    />
+  <LightMode>
+    <DndProvider backend={Backend}>
+      <Global
+        styles={() => ({
+          "*": { borderBox: "box-sizing" }
+        })}
+      />
 
-    <Header />
+      <Header />
 
-    <Flex minHeight="calc(100vh - 3rem)">
-      <Box bg="white" flex={1} zIndex={10} position="relative">
-        <Editor />
-      </Box>
+      <Flex minHeight="calc(100vh - 3rem)">
+        <Box bg="white" flex={1} zIndex={10} position="relative">
+          <Editor />
+        </Box>
 
-      <Sidebar />
+        <Sidebar />
 
-      <Box
-        maxH="calc(100vh - 3rem)"
-        flex="0 0 15rem"
-        roundedRight={10}
-        bg="#f7fafc"
-        overflowY="scroll"
-        borderLeft="1px solid #cad5de"
-      >
-        <Inspector />
-      </Box>
-    </Flex>
-  </DndProvider>
+        <Box
+          maxH="calc(100vh - 3rem)"
+          flex="0 0 15rem"
+          roundedRight={10}
+          bg="#f7fafc"
+          overflowY="scroll"
+          borderLeft="1px solid #cad5de"
+        >
+          <Inspector />
+        </Box>
+      </Flex>
+    </DndProvider>
+  </LightMode>
 );
 
 export default App;

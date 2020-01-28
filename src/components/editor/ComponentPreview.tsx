@@ -11,6 +11,11 @@ import AvatarPreview, {
   AvatarGroupPreview
 } from "./previews/AvatarPreview";
 import CheckboxPreview from "./previews/CheckboxPreview";
+import IconButtonPreview from "./previews/IconButtonPreview";
+import ProgressPreview from "./previews/ProgressPreview";
+import LinkPreview from "./previews/LinkPreview";
+import SpinnerPreview from "./previews/SpinnerPreview";
+import CloseButtonPreview from "./previews/CloseButtonPreview";
 
 const ComponentPreview: React.FC<{ component: IComponent }> = ({
   component
@@ -24,16 +29,26 @@ const ComponentPreview: React.FC<{ component: IComponent }> = ({
       return <ButtonPreview component={component} />;
     case "Icon":
       return <IconPreview component={component} />;
+    case "IconButton":
+      return <IconButtonPreview component={component} />;
     case "Image":
       return <ImagePreview component={component} />;
     case "Text":
       return <TextPreview component={component} />;
+    case "Progress":
+      return <ProgressPreview component={component} />;
     case "Avatar":
       return <AvatarPreview component={component} />;
     case "AvatarBadge":
       return <AvatarBadgePreview component={component} />;
     case "AvatarGroup":
       return <AvatarGroupPreview component={component} />;
+    case "Link":
+      return <LinkPreview component={component} />;
+    case "Spinner":
+      return <SpinnerPreview component={component} />;
+    case "CloseButton":
+      return <CloseButtonPreview component={component} />;
     case "Checkbox":
       return <CheckboxPreview component={component} />;
     default:

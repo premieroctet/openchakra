@@ -1,5 +1,4 @@
-/// <reference types="react-scripts" />
-
+/// <reference types="react-scripts" />;
 declare module "prettier/standalone";
 declare module "coloreact";
 
@@ -8,12 +7,17 @@ type ComponentType =
   | "Box"
   | "Button"
   | "Icon"
+  | "IconButton"
   | "Image"
   | "Text"
+  | "Progress"
   | "AvatarBadge"
   | "AvatarGroup"
   | "Avatar"
-  | "Checkbox";
+  | "Checkbox"
+  | "Link"
+  | "Spinner"
+  | "CloseButton";
 
 interface IComponent {
   children: string[];
@@ -42,10 +46,15 @@ type PreviewDefaultProps = {
   Box?: BoxProps;
   Button?: ButtonProps;
   Icon?: IconProps;
+  IconButton?: IconButtonProps;
   Image?: ImageProps;
   Text?: BoxProps;
+  Progress?: ProgressProps;
   AvatarBadge?: AvatarBadgeProps;
   AvatarGroup?: Omit<AvatarGroupProps, "children">;
   Avatar?: AvatarProps;
   Checkbox?: CheckboxProps;
+  Link?: LinkProps;
+  Spinner?: SpinnerProps;
+  CloseButton?: CloseButtonProps;
 };
