@@ -17,14 +17,19 @@ const CircularProgressPanel = () => {
   return (
     <>
       <FormControl label="Valeur">
-        <Input
-          size="sm"
-          value={values.value || "75"}
-          type="text"
-          name="value"
-          onChange={setValueFromEvent}
-        />
+        <Slider
+          onChange={value => setValue("value", value)}
+          min={0}
+          max={100}
+          step={1}
+          defaultValue={100}
+        >
+          <SliderTrack />
+          <SliderFilledTrack />
+          <SliderThumb />
+        </Slider>
       </FormControl>
+
       <FormControl label="Size">
         <Input
           size="sm"
