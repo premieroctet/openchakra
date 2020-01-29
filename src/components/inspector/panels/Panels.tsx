@@ -15,6 +15,7 @@ import LinkPanel from "./LinkPanel";
 import SpinnerPanel from "./SpinnerPanel";
 import CloseButtonPanel from "./CloseButtonPanel";
 import DividerPanel from "./DividerPanel";
+import CodePanel from "./CodePanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -35,6 +36,7 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "AvatarGroup" && <AvatarGroupPanel />}
       {type === "AvatarBadge" && <AvatarBadgePanel />}
       {type === "Spinner" && <SpinnerPanel />}
+      {type === "Code" && <CodePanel />}
       {type === "CloseButton" && <CloseButtonPanel />}
       {type === "Divider" && <DividerPanel />}
     </>

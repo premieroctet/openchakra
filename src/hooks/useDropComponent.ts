@@ -12,6 +12,7 @@ const DEFAULT_PROPS: PreviewDefaultProps = {
   Text: {},
   Progress: {},
   Link: {},
+  Code: {},
   Spinner: {},
   CloseButton: {},
   AvatarBadge: {},

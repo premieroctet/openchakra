@@ -4,7 +4,7 @@ import { useInteractive } from "../../../hooks/useInteractive";
 
 const CodePreview: React.FC<{ component: IComponent }> = ({ component }) => {
   const { props }: { props: any } = useInteractive(component);
-  return <Code {...props} />;
+  return <Code {...props}>{props.children || "Lorem Ipsum"}</Code>;
 };
 
 export default CodePreview;
