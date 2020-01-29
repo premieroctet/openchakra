@@ -7,6 +7,7 @@ import Inspector from "./components/inspector/Inspector";
 import Sidebar from "./components/sidebar/Sidebar";
 import Header from "./components/Header";
 import { Global } from "@emotion/core";
+import { EditorProvider } from "./contexts/EditorContext";
 
 export const COMPONENTS: ComponentType[] = [
   "Box",
@@ -41,7 +42,9 @@ const App = () => (
 
       <Flex minHeight="calc(100vh - 3rem)">
         <Box bg="white" flex={1} zIndex={10} position="relative">
-          <Editor />
+          <EditorProvider>
+            <Editor />
+          </EditorProvider>
         </Box>
 
         <Sidebar />

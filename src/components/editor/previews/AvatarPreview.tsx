@@ -11,24 +11,21 @@ import { useDropComponent } from "../../../hooks/useDropComponent";
 import ComponentPreview from "../ComponentPreview";
 import { useBuilderContext } from "../../../contexts/BuilderContext";
 
-export const AvatarPreview = ({
-  component,
-  spacing,
-  isFirstElement
-}: IPreviewProps & {
+const AvatarPreview: React.FC<IPreviewProps & {
   spacing?: BoxProps["marginLeft"];
   isFirstElement?: boolean;
-}) => {
-  const { props } = useInteractive(component);
-  const { drop, isOver } = useDropComponent(component.name);
+}> = ({ component, spacing, isFirstElement }) => {
+  const { drop, isOver } = useDropComponent(component.name, ["AvatarBadge"]);
+  const { props, ref } = useInteractive(component);
   const { components } = useBuilderContext();
+  let boxProps: any = { display: "inline" };
 
   if (isOver) {
     props.bg = "teal.50";
   }
 
   return (
-    <Box ref={drop}>
+    <Box ref={drop(ref)} {...boxProps}>
       <Avatar ml={isFirstElement ? 0 : spacing} {...props}>
         {component.children.map((key: string) => (
           <ComponentPreview component={components[key]} />
@@ -39,16 +36,17 @@ export const AvatarPreview = ({
 };
 
 export const AvatarGroupPreview = ({ component }: IPreviewProps) => {
-  const { drop, isOver } = useDropComponent(component.name);
+  const { props, ref } = useInteractive(component);
+  const { drop, isOver } = useDropComponent(component.name, ["Avatar"]);
   const { components } = useBuilderContext();
-  const { props } = useInteractive(component);
+  let boxProps: any = { display: "inline" };
 
   if (isOver) {
     props.bg = "teal.50";
   }
 
   return (
-    <Box ref={drop}>
+    <Box ref={drop(ref)} {...boxProps}>
       <AvatarGroup size="md" max={3} {...props}>
         {component.children.map((key: string, i: number) => (
           <AvatarPreview
@@ -63,9 +61,9 @@ export const AvatarGroupPreview = ({ component }: IPreviewProps) => {
 };
 
 export const AvatarBadgePreview = ({ component }: IPreviewProps) => {
-  const { props } = useInteractive(component);
+  const { props, ref } = useInteractive(component);
 
-  return <AvatarBadge size="1.25em" bg="green.500" {...props} />;
+  return <AvatarBadge ref={ref} size="1.25em" bg="green.500" {...props} />;
 };
 
 export default AvatarPreview;

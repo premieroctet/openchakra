@@ -1,10 +1,8 @@
 import React from "react";
 import { useDrag } from "react-dnd";
 import { Text, PseudoBox, Icon } from "@chakra-ui/core";
-import { useBuilderContext } from "../../contexts/BuilderContext";
 
 const DragItem: React.FC<ComponentItemProps> = ({ name, type }) => {
-  const { setSelectedType, setSelectedComponent } = useBuilderContext();
   const [, drag] = useDrag({
     item: { name, type }
   });
@@ -13,10 +11,6 @@ const DragItem: React.FC<ComponentItemProps> = ({ name, type }) => {
     <PseudoBox
       boxSizing="border-box"
       transition="margin 200ms"
-      onClick={() => {
-        setSelectedType(type);
-        setSelectedComponent(undefined);
-      }}
       _hover={{
         ml: -1,
         mr: 1,

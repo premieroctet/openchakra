@@ -15,6 +15,9 @@ const DEFAULT_PROPS: PreviewDefaultProps = {
   Code: {},
   Spinner: {},
   CloseButton: {},
+  Checkbox: {
+    isChecked: true
+  },
   AvatarBadge: {},
   AvatarGroup: { spacing: -3, max: 2, size: "md" },
   Avatar: {
@@ -23,11 +26,14 @@ const DEFAULT_PROPS: PreviewDefaultProps = {
   }
 };
 
-export const useDropComponent = (componentName: string) => {
+export const useDropComponent = (
+  componentName: string,
+  accept: ComponentType[] = COMPONENTS
+) => {
   const { components, setComponents } = useBuilderContext();
 
   const [{ isOver }, drop] = useDrop({
-    accept: COMPONENTS,
+    accept,
     collect: monitor => ({
       isOver: monitor.isOver({ shallow: true })
     }),

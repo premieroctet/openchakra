@@ -3,14 +3,12 @@ import { useLocalStorage, writeStorage } from "@rehooks/local-storage";
 
 interface BuilderContextInterface {
   selectedComponent: string | undefined;
-  selectedType: ComponentType | undefined;
   showLayout: boolean;
   showCode: boolean;
   setSelectedComponent: (componentName: string | undefined) => void;
   setShowLayout: (value: boolean) => void;
   setShowCode: (value: boolean) => void;
   setComponents: (components: IComponents) => void;
-  setSelectedType: (type: ComponentType) => void;
   components: IComponents;
 }
 
@@ -28,12 +26,10 @@ const BuilderContext = React.createContext<BuilderContextInterface>({
   showLayout: false,
   showCode: false,
   selectedComponent: undefined,
-  selectedType: undefined,
   setSelectedComponent: () => null,
   setShowLayout: () => null,
   setShowCode: () => null,
-  setComponents: () => null,
-  setSelectedType: () => null
+  setComponents: () => null
 });
 
 interface BuilderProviderProps {
@@ -44,7 +40,6 @@ function BuilderProvider(props: BuilderProviderProps) {
   const [selectedComponent, setSelectedComponent] = useState();
   const [showLayout, setShowLayout] = useState(true);
   const [showCode, setShowCode] = useState(false);
-  const [selectedType, setSelectedType] = useState();
 
   const [componentsInStorage] = useLocalStorage<IComponents>(
     "components",
@@ -63,12 +58,10 @@ function BuilderProvider(props: BuilderProviderProps) {
         showCode,
         showLayout,
         selectedComponent,
-        selectedType,
         setSelectedComponent,
         setShowLayout,
         setComponents,
-        setShowCode,
-        setSelectedType
+        setShowCode
       }}
       {...props}
     />

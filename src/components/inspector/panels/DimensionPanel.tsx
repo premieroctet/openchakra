@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, SimpleGrid, Divider, Select } from "@chakra-ui/core";
+import { Input, SimpleGrid, Select } from "@chakra-ui/core";
 import FormControl from "../controls/FormControl";
 
 type DimensionPanelPropsType = {
@@ -96,7 +96,6 @@ const DimensionPanel = ({ handleChange, values }: DimensionPanelPropsType) => {
           <option>scroll</option>
         </Select>
       </FormControl>
-      <Divider />
     </>
   );
 };

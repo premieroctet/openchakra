@@ -17,6 +17,7 @@ const CodePanel = () => {
 
   return (
     <Box
+      zIndex={40}
       p={4}
       fontSize="sm"
       backgroundColor="#011627"
