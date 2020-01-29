@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton } from "@chakra-ui/core";
+import { IconButton, ButtonGroup } from "@chakra-ui/core";
 import ColorsControl from "../controls/ColorsControl";
 import { GoBold, GoItalic } from "react-icons/go";
 import {
@@ -57,50 +57,47 @@ const TextPanel = ({ handleChange, values }: FlexPanelPropsType) => {
       </FormControl>
 
       <FormControl label="Text align">
-        <IconButton
-          mr={1}
-          aria-label="bold"
-          icon={MdFormatAlignLeft}
-          onClick={() => {
-            setValue("textAlign", "left");
-          }}
-          size="xs"
-          variantColor={values.textAlign === "left" ? "whatsapp" : "gray"}
-          variant={values.textAlign === "left" ? "solid" : "outline"}
-        />
+        <ButtonGroup size="xs" isAttached>
+          <IconButton
+            aria-label="bold"
+            icon={MdFormatAlignLeft}
+            onClick={() => {
+              setValue("textAlign", "left");
+            }}
+            variantColor={values.textAlign === "left" ? "whatsapp" : "gray"}
+            variant={values.textAlign === "left" ? "solid" : "outline"}
+          />
 
-        <IconButton
-          aria-label="italic"
-          icon={MdFormatAlignCenter}
-          onClick={() => {
-            setValue("textAlign", "center");
-          }}
-          size="xs"
-          variantColor={values.textAlign === "center" ? "whatsapp" : "gray"}
-          variant={values.textAlign === "center" ? "solid" : "outline"}
-        />
+          <IconButton
+            aria-label="italic"
+            icon={MdFormatAlignCenter}
+            onClick={() => {
+              setValue("textAlign", "center");
+            }}
+            variantColor={values.textAlign === "center" ? "whatsapp" : "gray"}
+            variant={values.textAlign === "center" ? "solid" : "outline"}
+          />
 
-        <IconButton
-          aria-label="italic"
-          icon={MdFormatAlignRight}
-          onClick={() => {
-            setValue("textAlign", "right");
-          }}
-          size="xs"
-          variantColor={values.textAlign === "right" ? "whatsapp" : "gray"}
-          variant={values.textAlign === "right" ? "solid" : "outline"}
-        />
+          <IconButton
+            aria-label="italic"
+            icon={MdFormatAlignRight}
+            onClick={() => {
+              setValue("textAlign", "right");
+            }}
+            variantColor={values.textAlign === "right" ? "whatsapp" : "gray"}
+            variant={values.textAlign === "right" ? "solid" : "outline"}
+          />
 
-        <IconButton
-          aria-label="italic"
-          icon={MdFormatAlignJustify}
-          onClick={() => {
-            setValue("textAlign", "justify");
-          }}
-          size="xs"
-          variantColor={values.textAlign === "justify" ? "whatsapp" : "gray"}
-          variant={values.textAlign === "justify" ? "solid" : "outline"}
-        />
+          <IconButton
+            aria-label="italic"
+            icon={MdFormatAlignJustify}
+            onClick={() => {
+              setValue("textAlign", "justify");
+            }}
+            variantColor={values.textAlign === "justify" ? "whatsapp" : "gray"}
+            variant={values.textAlign === "justify" ? "solid" : "outline"}
+          />
+        </ButtonGroup>
       </FormControl>
 
       <FormControl label="Font size" htmlFor="fontSize">

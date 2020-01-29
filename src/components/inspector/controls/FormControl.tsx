@@ -1,39 +1,51 @@
 import React, { ReactNode } from "react";
-import { FormLabel, FormControl as ChakraFormControl } from "@chakra-ui/core";
+import {
+  FormLabel,
+  FormControl as ChakraFormControl,
+  Grid,
+  Box
+} from "@chakra-ui/core";
 
 type FormControlPropType = {
   label: ReactNode;
   children: ReactNode;
   htmlFor?: string;
-  width?: string;
+  hasColumn?: boolean;
 };
 
 const FormControl: React.FC<FormControlPropType> = ({
   label,
   htmlFor,
   children,
-  width
-}) => {
-  return (
-    <ChakraFormControl
-      mb={2}
+  hasColumn
+}) => (
+  <ChakraFormControl
+    mb={2}
+    as={Grid}
+    display="flex"
+    alignItems="center"
+    justifyItems="center"
+  >
+    <FormLabel
+      p={0}
+      mr={2}
+      color="gray.500"
+      lineHeight="1rem"
+      width={hasColumn ? "2.5rem" : "90px"}
+      fontSize="xs"
+      htmlFor={htmlFor}
+    >
+      {label}
+    </FormLabel>
+    <Box
       display="flex"
       alignItems="center"
       justifyItems="center"
+      width={hasColumn ? "30px" : "130px"}
     >
-      <FormLabel
-        p={0}
-        mr={2}
-        lineHeight="1rem"
-        width={width || "4rem"}
-        fontSize="xs"
-        htmlFor={htmlFor}
-      >
-        {label}
-      </FormLabel>
       {children}
-    </ChakraFormControl>
-  );
-};
+    </Box>
+  </ChakraFormControl>
+);
 
 export default FormControl;

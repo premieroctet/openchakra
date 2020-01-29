@@ -16,7 +16,7 @@ const AccordionContainer: React.FC<{
   return (
     <AccordionItem defaultIsOpen={defaultIsOpen}>
       <AccordionHeader zIndex={2} px={3} py={2} fontSize="sm">
-        <Box flex="1" fontWeight="semibold" textAlign="left">
+        <Box flex="1" textAlign="left">
           {title}
         </Box>
         <AccordionIcon />

@@ -13,12 +13,17 @@ import { useBuilderContext } from "../../../contexts/BuilderContext";
 
 const AvatarPreview: React.FC<IPreviewProps & {
   spacing?: BoxProps["marginLeft"];
-  isFirstElement?: boolean;
-}> = ({ component, spacing, isFirstElement }) => {
+  index?: number;
+}> = ({ component, spacing, index }) => {
   const { drop, isOver } = useDropComponent(component.name, ["AvatarBadge"]);
   const { props, ref } = useInteractive(component);
   const { components } = useBuilderContext();
-  let boxProps: any = { display: "inline" };
+  let boxProps: any = {
+    display: "inline-block",
+    zIndex: index ? 20 - index : null
+  };
+
+  props.p = 0;
 
   if (isOver) {
     props.bg = "teal.50";
@@ -26,7 +31,7 @@ const AvatarPreview: React.FC<IPreviewProps & {
 
   return (
     <Box ref={drop(ref)} {...boxProps}>
-      <Avatar ml={isFirstElement ? 0 : spacing} {...props}>
+      <Avatar ml={index === 0 ? 0 : spacing} {...props}>
         {component.children.map((key: string) => (
           <ComponentPreview component={components[key]} />
         ))}
@@ -47,10 +52,10 @@ export const AvatarGroupPreview = ({ component }: IPreviewProps) => {
 
   return (
     <Box ref={drop(ref)} {...boxProps}>
-      <AvatarGroup size="md" max={3} {...props}>
+      <AvatarGroup {...props}>
         {component.children.map((key: string, i: number) => (
           <AvatarPreview
-            isFirstElement={i === 0}
+            index={i + 1}
             spacing={props.spacing}
             component={components[key]}
           />

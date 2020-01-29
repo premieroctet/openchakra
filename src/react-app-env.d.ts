@@ -1,4 +1,5 @@
 /// <reference types="react-scripts" />;
+
 declare module "prettier/standalone";
 declare module "coloreact";
 
@@ -23,6 +24,7 @@ type ComponentType =
   | "CircularProgress"
   | "Heading"
   | "Tag"
+  | "Switch"
   | "SimpleGrid"
   | "Code";
 
@@ -71,4 +73,5 @@ type PreviewDefaultProps = {
   Heading?: HeadingProps;
   Tag?: TagProps;
   SimpleGrid?: SimpleGridProps;
+  Switch?: SwitchProps;
 };

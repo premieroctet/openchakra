@@ -43,7 +43,7 @@ const Editor: React.FC = () => {
         <Box
           pointerEvents="none"
           cursor="pointer"
-          zIndex={20}
+          zIndex={40}
           borderWidth={1}
           borderColor="teal.300"
           position="absolute"
