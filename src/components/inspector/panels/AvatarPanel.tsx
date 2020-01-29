@@ -46,7 +46,7 @@ const AvatarPanel = () => {
         />
       </FormControl>
 
-      <FormControl label="Src">
+      <FormControl label="Source">
         <Input
           value={values.src}
           size="sm"

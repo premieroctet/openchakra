@@ -152,7 +152,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
         </PopoverContent>
       </Popover>
       <Input
-        width="6rem"
+        width="100px"
         size="sm"
         name={props.name}
         onChange={setValueFromEvent}
