@@ -19,6 +19,8 @@ type ComponentType =
   | "Spinner"
   | "CloseButton"
   | "Divider"
+  | "TextArea"
+  | "CircularProgress"
   | "Code";
 
 interface IComponent {
@@ -61,4 +63,6 @@ type PreviewDefaultProps = {
   CloseButton?: CloseButtonProps;
   Divider?: any;
   Code?: any;
+  TextArea?: any;
+  CircularProgress?: any;
 };

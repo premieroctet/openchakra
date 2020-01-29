@@ -14,7 +14,9 @@ const DEFAULT_PROPS: PreviewDefaultProps = {
   Link: {},
   Code: {},
   Spinner: {},
+  TextArea: {},
   CloseButton: {},
+  CircularProgress: {},
   Checkbox: {
     isChecked: true
   },

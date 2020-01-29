@@ -26,7 +26,9 @@ export const COMPONENTS: ComponentType[] = [
   "Spinner",
   "CloseButton",
   "Divider",
-  "Code"
+  "Code",
+  "TextArea",
+  "CircularProgress"
 ];
 
 const App = () => (

@@ -1,5 +1,12 @@
 import React from "react";
-import { Switch, Select, Input } from "@chakra-ui/core";
+import {
+  Switch,
+  Select,
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb
+} from "@chakra-ui/core";
 import ColorsControl from "../controls/ColorsControl";
 import FormControl from "../controls/FormControl";
 import { useForm } from "../../../hooks/useForm";
@@ -10,14 +17,19 @@ const ProgressPanel = () => {
   return (
     <>
       <FormControl label="Valeur">
-        <Input
-          size="sm"
-          value={values.value || ""}
-          type="text"
-          name="value"
-          onChange={setValueFromEvent}
-        />
+        <Slider
+          onChange={value => setValue("value", value)}
+          min={0}
+          max={100}
+          step={1}
+          defaultValue={values.value}
+        >
+          <SliderTrack />
+          <SliderFilledTrack />
+          <SliderThumb />
+        </Slider>
       </FormControl>
+
       <FormControl label="Has Stripe" htmlFor="hasStripe">
         <Switch
           name="hasStripe"

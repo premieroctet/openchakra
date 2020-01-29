@@ -1,9 +1,7 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import {
   Select,
-  Text,
   Button,
-  Divider,
   Link,
   InputGroup,
   InputRightElement,
@@ -23,7 +21,6 @@ import DimensionPanel from "./panels/DimensionPanel";
 import BorderPanel from "./panels/BorderPanel";
 import FlexPanel from "./panels/FlexPanel";
 import TextPanel from "./panels/TextPanel";
-import docs from "../../models/doc";
 import { IoIosFlash } from "react-icons/io";
 import FormControl from "./controls/FormControl";
 import AccordionContainer from "./AccordionContainer";
