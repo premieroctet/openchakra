@@ -1532,6 +1532,7 @@ const uploadService = multer({ storage: storageService });
 // Add service for prestation
 // @Access private
 router.post('/service/all', uploadService.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
+    console.log("Req.body is "+JSON.stringify(req.body));
     const {errors, isValid} = validateServiceInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
@@ -1556,7 +1557,11 @@ router.post('/service/all', uploadService.single('picture'),passport.authenticat
                         picture: req.file.path,
                         description: req.body.description,
                         majoration: req.body.majoration,
-                        location : {alfred:true, client:true, visio:true}
+                        location : {
+                          alfred: req.body['location.alfred']=="true", 
+                          client: req.body['location.client']=="true", 
+                          visio:  req.body['location.visio']=="true"
+                        }
                     });
 
                     newService.save().then(service => res.json(service)).catch(err => console.log(err));
