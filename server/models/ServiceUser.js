@@ -108,7 +108,7 @@ const ServiceUserSchema = new Schema({
         default : 0
     },
    location: {
-      home   : Boolean,
+      client   : Boolean,
       alfred : Boolean,
       visio  : Boolean
     }

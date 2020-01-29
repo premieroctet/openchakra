@@ -28,8 +28,11 @@ const ServiceSchema = new Schema({
         type: String
     },
     location: {
-      home   : Boolean,
+      // Adresse du client
+      client   : Boolean,
+      // Adresse de l'Alfred
       alfred : Boolean,
+      // Visioconférence
       visio  : Boolean
     }
 });

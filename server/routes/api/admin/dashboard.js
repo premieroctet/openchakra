@@ -1555,8 +1555,8 @@ router.post('/service/all', uploadService.single('picture'),passport.authenticat
                         tags: JSON.parse(req.body.tags),
                         picture: req.file.path,
                         description: req.body.description,
-                        majoration: req.body.majoration
-
+                        majoration: req.body.majoration,
+                        location : {alfred:true, client:true, visio:true}
                     });
 
                     newService.save().then(service => res.json(service)).catch(err => console.log(err));
@@ -1693,7 +1693,7 @@ router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req
             {
                 $set: { label: req.body.label, equipments: req.body.equipments,category: mongoose.Types.ObjectId(req.body.category),
                     tags: req.body.tags,
-                     description: req.body.description, majoration: req.body.majoration},
+                     description: req.body.description, majoration: req.body.majoration, location:req.body.location},
 
             } , {new: true})
             .then(service => {

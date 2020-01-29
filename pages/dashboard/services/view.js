@@ -6,8 +6,8 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Select2 from 'react-select';
-
-
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
@@ -91,6 +91,7 @@ class view extends React.Component {
         this.handleChecked = this.handleChecked.bind(this);
         this.handleChangeSelect = this.handleChangeSelect.bind(this);
         this.handleChangeTags = this.handleChangeTags.bind(this);
+        this.onChangeLocation = this.onChangeLocation.bind(this);
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -164,6 +165,14 @@ class view extends React.Component {
         state[e.target.name] = e.target.value;
         this.setState({service:state});
     };
+ 
+    onChangeLocation = e => {
+      console.log("Event target value:"+JSON.stringify(e.target.value));
+      console.log("Event target name:"+JSON.stringify(e.target.name));
+      const service = this.state.service;
+      service.location[e.target.name]=e.target.checked
+      this.setState({service: service})
+    }
 
     onChange2 = e => {
         this.setState({ category: e.target.value });
@@ -217,9 +226,11 @@ class view extends React.Component {
         const tags = arrayTags;
         const category = this.state.category;
         const equipments = arrayEquipments;
-        const { label,description,majoration } = this.state.service;
+        const service = this.state.service;
+        const { label,description,majoration } = service;
+        const location = service.location;
         const id = this.props.service_id;
-        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,equipments,majoration})
+        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,{label,description,tags,category,equipments,majoration,location})
             .then(res => {
 
                 alert('Service modifié avec succès');
@@ -255,6 +266,7 @@ class view extends React.Component {
 
     };
 
+   
 
     render()  {
         const { classes } = this.props;
@@ -266,6 +278,8 @@ class view extends React.Component {
         const {all_tags} = this.state;
         const {all_equipments} = this.state;
         const {isChecked} = this.state;
+   
+        console.log("Service:"+JSON.stringify(service));
 
         const categories = all_category.map(e => (
 
@@ -360,6 +374,31 @@ class view extends React.Component {
                                         />
                                     </FormControl>
                                 </Grid>
+                                <Grid item style={{marginTop: 20}}>
+                                    <Typography style={{ fontSize: 20 }}>Options possibles</Typography>
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon />}
+                                       checked={service.location?service.location.alfred:false} value={service.location?service.location.alfred:false} name="alfred" onChange={this.onChangeLocation} />
+                                  }
+                                  label={<React.Fragment> <p style={{fontFamily: 'Helvetica'}}>Chez l'Alfred</p> </React.Fragment>}
+                                 />
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon />}
+                                       checked={service.location?service.location.client:false} value={service.location?service.location.client:false} name="client" onChange={this.onChangeLocation} />
+                                  }
+                                  label={<React.Fragment> <p style={{fontFamily: 'Helvetica'}}>Chez le client</p> </React.Fragment>}
+                                 />
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon />}
+                                       checked={service.location?service.location.visio:false} value={service.location?service.location.visio:false} name="visio" onChange={this.onChangeLocation} />
+                                  }
+                                  label={<React.Fragment> <p style={{fontFamily: 'Helvetica'}}>En visioconférence</p> </React.Fragment>}
+                                 />
+                                </Grid>
+ 
                                 <Grid item style={{marginTop: 20}}>
                                     <Typography style={{ fontSize: 20 }}>Description</Typography>
                                     <TextField

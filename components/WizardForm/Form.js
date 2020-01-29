@@ -270,7 +270,7 @@ class Wizard extends React.Component {
               formData.append('price',price.toString());
               formData.append('description',description);
 
-              formData.append('home',e.location.client);
+              formData.append('client',e.location.client);
               formData.append('alfred',e.location.alfred);
               formData.append('visio',e.location.visio);
 
@@ -297,7 +297,7 @@ class Wizard extends React.Component {
                           const siret = values.createShop.siret;
 
                           const option_presta_user = values.createShop.option_presta_user;
-                          const option_presta_home = values.createShop.option_presta_home;
+                          const option_presta_client = values.createShop.option_presta_client;
                           const option_presta_visio = values.createShop.option_presta_visio;
 
 
@@ -314,7 +314,7 @@ class Wizard extends React.Component {
 
                                   axios.post(url+'myAlfred/api/shop/add',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card
                                   , recommandations, welcome_message,flexible_cancel,moderate_cancel,strict_cancel,is_particular,is_professional,
-                                  self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService,option_presta_user,option_presta_home,option_presta_visio})
+                                  self_employed,individual_company,name,creation_date,naf_ape,siret,arrayService,option_presta_user,option_presta_client,option_presta_visio})
                                       .then(result => {
 
                                           const formDataIdProfile = new FormData();
@@ -823,7 +823,7 @@ class Form extends React.Component {
             checkedB: false,
             checkedC: false,
             option_presta_user: true,
-            option_presta_home: true,
+            option_presta_client: true,
             option_presta_visio: true,
             availabilities: [],
             checked_presta: false
@@ -999,7 +999,7 @@ class Form extends React.Component {
                             nature_juridique: '',
                             isEngaged: false,
                             isCertified: false,
-                            option_presta_home: true,
+                            option_presta_client: true,
                             option_presta_user: true,
                             option_presta_visio: true
                         },
@@ -1503,7 +1503,7 @@ class Form extends React.Component {
                                                                     </Grid>
                                                                     <Grid item>
                                                                       <Field render={({form}) => {
-                                                                        if (s.location.alfred===false) { if (form.values.createShop.option_presta_home!=false) {form.setFieldValue('createShop.option_presta_home', false)}; return "" } else
+                                                                        if (s.location.alfred===false) { if (form.values.createShop.option_presta_client!=false) {form.setFieldValue('createShop.option_presta_client', false)}; return "" } else
                                                                         return(
                                                                       <FormControlLabel
                                                                         control={
@@ -1511,12 +1511,12 @@ class Form extends React.Component {
                                                                               color="primary"
                                                                               icon={<CircleUnchecked/>}
                                                                               checkedIcon={<RadioButtonCheckedIcon />}
-                                                                              checked={form.values.createShop.option_presta_home}
-                                                                              value={form.values.createShop.option_presta_home}
-                                                                              name={"option_presta_home"}
+                                                                              checked={form.values.createShop.option_presta_client}
+                                                                              value={form.values.createShop.option_presta_client}
+                                                                              name={"option_presta_client"}
                                                                               onChange={() => {
-                                                                                form.values.createShop.option_presta_home = !form.values.createShop.option_presta_home;
-                                                                                form.setFieldValue('createShop.option_presta_home', form.values.createShop.option_presta_home);
+                                                                                form.values.createShop.option_presta_client = !form.values.createShop.option_presta_client;
+                                                                                form.setFieldValue('createShop.option_presta_client', form.values.createShop.option_presta_client);
                                                                               }}
                                                                             />
                                                                         }

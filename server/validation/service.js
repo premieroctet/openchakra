@@ -2,6 +2,7 @@ const Validator = require('validator');
 const isEmpty = require('./is-empty');
 
 module.exports = function validateServiceInput(data) {
+
     let errors = {};
 
 
@@ -32,6 +33,9 @@ module.exports = function validateServiceInput(data) {
         errors.description = 'Une description est requise';
     }
 
+    if (data['location.alfred']=="false" && data['location.home']=="false" && data['location.visio']=="false") {
+        errors.location = 'Sélectionnez au moins un lieu de réalisation';
+    }
 
     return {
         errors,

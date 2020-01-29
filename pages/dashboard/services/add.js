@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -7,6 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -67,6 +70,7 @@ class add extends React.Component {
         this.state = {
             label: '',
             picture: null,
+	    location: {alfred: false, home: false, visio: false},
             category: '',
             tags: [],
             equipments: [],
@@ -84,6 +88,7 @@ class add extends React.Component {
         this.onChangeFile = this.onChangeFile.bind(this);
         this.handleChangeSelect = this.handleChangeSelect.bind(this);
         this.handleChangeTags = this.handleChangeTags.bind(this);
+        this.onChangeLocation = this.onChangeLocation.bind(this);
     }
 
     componentDidMount() {
@@ -118,6 +123,14 @@ class add extends React.Component {
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     };
+    
+    onChangeLocation = e => {
+      const location = this.state.location;
+      location[e.target.name]=e.target.checked
+      this.setState({location: location})
+    }
+
+
 
     handleChange = e => {
         this.setState({tags: e.target.value})
@@ -177,6 +190,9 @@ class add extends React.Component {
         formData.append('equipments',JSON.stringify(arrayEquipments));
         formData.append('description',this.state.description);
         formData.append('majoration',this.state.majoration);
+        for (var [k, v] of Object.entries(this.state.location)) {
+          formData.append('location.'+k, v);
+        }
 
         axios
             .post(url+'myAlfred/api/admin/service/all', formData)
@@ -299,9 +315,36 @@ class add extends React.Component {
                                     </FormControl>
                                     <em>{errors.equipments}</em>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
+                                    <Typography style={{ fontSize: 20 }}>Image du service</Typography>
                                     <input type="file" name="picture" onChange= {this.onChangeFile} accept="image/*" />
                                 </Grid>
+                                <Grid item style={{marginTop: 20}}>
+                                    <Typography style={{ fontSize: 20 }}>Options possibles</Typography>
+                                    <div><em style={{color:'red'}}>{errors.location}</em></div>
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon />}
+                                       checked={this.state.location.alfred} value={this.state.location.alfred} name="alfred" onChange={this.onChangeLocation} />
+                                  }
+                                  label={<React.Fragment> <p style={{fontFamily: 'Helvetica'}}>Chez l'Alfred</p> </React.Fragment>}
+                                 />
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon />}
+                                       checked={this.state.location.client} value={this.state.location.client} name="client" onChange={this.onChangeLocation} />
+                                  }
+                                  label={<React.Fragment> <p style={{fontFamily: 'Helvetica'}}>Chez le client</p> </React.Fragment>}
+                                 />
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon />}
+                                       checked={this.state.location.visio} value={this.state.location.visio} name="visio" onChange={this.onChangeLocation} />
+                                  }
+                                  label={<React.Fragment> <p style={{fontFamily: 'Helvetica'}}>En visioconférence</p> </React.Fragment>}
+                                 />
+                                </Grid>
+
                                 <Grid item>
                                     <TextField
                                         id="standard-with-placeholder"
