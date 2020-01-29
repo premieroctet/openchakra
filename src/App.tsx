@@ -28,6 +28,9 @@ export const COMPONENTS: ComponentType[] = [
   "Divider",
   "Code",
   "TextArea",
+  "Heading",
+  "Tag",
+  "SimpleGrid",
   "CircularProgress"
 ];
 

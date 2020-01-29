@@ -20,6 +20,9 @@ import DividerPreview from "./previews/DividerPreview";
 import CodePreview from "./previews/CodePreview";
 import TextAreaPreview from "./previews/TextAreaPreview";
 import CircularProgressPreview from "./previews/CircularProgressPreview";
+import HeadingPreview from "./previews/HeadingPreview";
+import TagPreview from "./previews/TagPreview";
+import SimpleGridPreview from "./previews/SimpleGridPreview";
 
 const ComponentPreview: React.FC<{ component: IComponent }> = ({
   component
@@ -63,6 +66,12 @@ const ComponentPreview: React.FC<{ component: IComponent }> = ({
       return <TextAreaPreview component={component} />;
     case "CircularProgress":
       return <CircularProgressPreview component={component} />;
+    case "Heading":
+      return <HeadingPreview component={component} />;
+    case "Tag":
+      return <TagPreview component={component} />;
+    case "SimpleGrid":
+      return <SimpleGridPreview component={component} />;
     default:
       return null;
   }

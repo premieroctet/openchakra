@@ -18,6 +18,9 @@ import DividerPanel from "./DividerPanel";
 import CodePanel from "./CodePanel";
 import TextAreaPanel from "./TextAreaPanel";
 import CircularProgressPanel from "./CircularProgressPanel";
+import HeadingPanel from "./HeadingPanel";
+import TagPanel from "./TagPanel";
+import SimpleGridPanel from "./SimpleGridPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -43,6 +46,9 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "Divider" && <DividerPanel />}
       {type === "TextArea" && <TextAreaPanel />}
       {type === "CircularProgress" && <CircularProgressPanel />}
+      {type === "Heading" && <HeadingPanel />}
+      {type === "SimpleGrid" && <SimpleGridPanel />}
+      {type === "Tag" && <TagPanel />}
     </>
   );
 };

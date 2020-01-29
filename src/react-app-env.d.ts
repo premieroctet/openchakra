@@ -21,6 +21,9 @@ type ComponentType =
   | "Divider"
   | "TextArea"
   | "CircularProgress"
+  | "Heading"
+  | "Tag"
+  | "SimpleGrid"
   | "Code";
 
 interface IComponent {
@@ -65,4 +68,7 @@ type PreviewDefaultProps = {
   Code?: any;
   TextArea?: any;
   CircularProgress?: any;
+  Heading?: HeadingProps;
+  Tag?: TagProps;
+  SimpleGrid?: SimpleGridProps;
 };

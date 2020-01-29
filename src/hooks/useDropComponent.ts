@@ -15,7 +15,10 @@ const DEFAULT_PROPS: PreviewDefaultProps = {
   Code: {},
   Spinner: {},
   TextArea: {},
+  Heading: {},
   CloseButton: {},
+  Tag: {},
+  SimpleGrid: {},
   CircularProgress: {},
   Checkbox: {
     isChecked: true
