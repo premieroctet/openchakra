@@ -36,7 +36,7 @@ const Inspector = () => {
   const [quickProps, setQuickProps] = useState("");
   const { setValue, setValueFromEvent } = useForm();
 
-  if (!selectedComponent) {
+  if (!selectedComponent || !components[selectedComponent]) {
     return (
       <Flex
         alignItems="center"
@@ -57,13 +57,14 @@ const Inspector = () => {
   const { props, type, name: componentName, parent } = component;
 
   const handleDelete = () => {
-    const updatedComponents: IComponents = omit(components, componentName);
+    let updatedComponents: IComponents = { ...components };
+    updatedComponents = omit(components, componentName);
 
-    const children = components[parent].children.filter(
+    const children = updatedComponents[parent].children.filter(
       (el: string) => el !== componentName
     );
-    updatedComponents[parent].children = children;
 
+    updatedComponents[parent].children = children;
     setComponents(updatedComponents);
   };
 
