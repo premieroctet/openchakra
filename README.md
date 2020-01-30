@@ -4,6 +4,16 @@
 
 ### Features
 
+Before release:
+
+- Reset props
+- Add shortcuts
+
+  - Delete component
+  - Toggle Builder mode
+
+- Improve quick props (handle bool and numbers)
+
 - Editor sort/drag and drop
 - Allow Body styling
 - Improve Perf
@@ -21,10 +31,10 @@
   - [ ] AccordionHeader
   - [ ] AccordionPanel
   - [ ] AccordionIcon
-- [ ] Alert
-  - [ ] AlertIcon
-  - [ ] AlertTitle
-  - [ ] AlertDescription
+- [x] Alert
+  - [x] AlertIcon
+  - [x] AlertTitle
+  - [x] AlertDescription
 - [ ] AlertDialog 🧨
   - [ ] AlertDialogHeader
   - [ ] AlertDialogBody

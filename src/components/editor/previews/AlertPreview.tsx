@@ -11,23 +11,17 @@ import {
   Box
 } from "@chakra-ui/core";
 
-const AlertPreview: React.FC<IPreviewProps & {
-  component: IComponent;
-  index?: number;
-}> = ({ component, index }) => {
+const AlertPreview: React.FC<IPreviewProps> = ({ component }) => {
   const { components } = useBuilderContext();
   const acceptedTypes = [
     "AlertIcon",
     "AlertTitle",
     "AlertDescription"
   ] as ComponentType[];
-  const { props, ref } = useInteractive(component);
+  const { props, ref } = useInteractive(component, false);
   const { drop, isOver } = useDropComponent(component.name, acceptedTypes);
 
-  let boxProps: any = {
-    display: "inline-block",
-    zIndex: index ? 20 - index : null
-  };
+  let boxProps: any = {};
 
   if (isOver) {
     props.bg = "teal.50";
