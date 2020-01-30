@@ -21,7 +21,7 @@ const CodePanel = () => {
       p={4}
       fontSize="sm"
       backgroundColor="#011627"
-      overflow="scroll"
+      overflow="auto"
       position="absolute"
       top={0}
       bottom={0}
