@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import { useSelector } from "react-redux";
 
 import BoxPreview from "./previews/BoxPreview";
 import ButtonPreview from "./previews/ButtonPreview";
@@ -6,10 +7,6 @@ import BadgePreview from "./previews/BadgePreview";
 import IconPreview from "./previews/IconPreview";
 import ImagePreview from "./previews/ImagePreview";
 import TextPreview from "./previews/TextPreview";
-import AvatarPreview, {
-  AvatarBadgePreview,
-  AvatarGroupPreview
-} from "./previews/AvatarPreview";
 import CheckboxPreview from "./previews/CheckboxPreview";
 import IconButtonPreview from "./previews/IconButtonPreview";
 import ProgressPreview from "./previews/ProgressPreview";
@@ -24,13 +21,18 @@ import HeadingPreview from "./previews/HeadingPreview";
 import TagPreview from "./previews/TagPreview";
 import SimpleGridPreview from "./previews/SimpleGridPreview";
 import SwitchPreview from "./previews/SwitchPreview";
+import FlexPreview from "./previews/FlexPreview";
 import AlertPreview, {
   AlertIconPreview,
   AlertTitlePreview,
   AlertDescriptionPreview
 } from "./previews/AlertPreview";
-import { useSelector } from "react-redux";
 import { RootState } from "../..";
+import AvatarPreview, {
+  AvatarBadgePreview,
+  AvatarGroupPreview
+} from "./previews/AvatarPreview";
+import StackPreview from "./previews/StackPreview";
 
 const ComponentPreview: React.FC<{ componentName: string }> = ({
   componentName
@@ -95,6 +97,10 @@ const ComponentPreview: React.FC<{ componentName: string }> = ({
       return <AlertTitlePreview component={component} />;
     case "AlertDescription":
       return <AlertDescriptionPreview component={component} />;
+    case "Flex":
+      return <FlexPreview component={component} />;
+    case "Stack":
+      return <StackPreview component={component} />;
     default:
       return null;
   }

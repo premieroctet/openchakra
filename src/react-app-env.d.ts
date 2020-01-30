@@ -29,6 +29,8 @@ type ComponentType =
   | "AlertIcon"
   | "AlertTitle"
   | "AlertDescription"
+  | "Flex"
+  | "Stack"
   | "Code";
 
 interface IComponent {

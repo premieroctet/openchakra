@@ -27,6 +27,8 @@ import AlertPanel from "./components/AlertPanel";
 import AlertIconPanel from "./components/AlertIconPanel";
 import AlertTitlePanel from "./components/AlertTitlePanel";
 import AlertDescriptionPanel from "./components/AlertDescriptionPanel";
+import FlexPanel from "./styles/FlexPanel";
+import StackPanel from "./components/StackPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -60,6 +62,8 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "AlertTitle" && <AlertTitlePanel />}
       {type === "AlertDescription" && <AlertDescriptionPanel />}
       {type === "Tag" && <TagPanel />}
+      {type === "Flex" && <FlexPanel />}
+      {type === "Stack" && <StackPanel />}
     </>
   );
 };

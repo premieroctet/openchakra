@@ -40,6 +40,8 @@ export const COMPONENTS: ComponentType[] = [
   "Tag",
   "Text",
   "Textarea"
+  "Stack",
+  "Flex"
 ];
 
 export const rootComponents = COMPONENTS.filter(
