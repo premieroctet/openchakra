@@ -22,6 +22,10 @@ import HeadingPanel from "./HeadingPanel";
 import TagPanel from "./TagPanel";
 import SimpleGridPanel from "./SimpleGridPanel";
 import SwitchPanel from "./SwitchPanel";
+import AlertPanel from "./AlertPanel";
+import AlertIconPanel from "./AlertIconPanel";
+import AlertTitlePanel from "./AlertTitlePanel";
+import AlertDescriptionPanel from "./AlertDescriptionPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -50,6 +54,10 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "Heading" && <HeadingPanel />}
       {type === "SimpleGrid" && <SimpleGridPanel />}
       {type === "Switch" && <SwitchPanel />}
+      {type === "Alert" && <AlertPanel />}
+      {type === "AlertIcon" && <AlertIconPanel />}
+      {type === "AlertTitle" && <AlertTitlePanel />}
+      {type === "AlertDescription" && <AlertDescriptionPanel />}
       {type === "Tag" && <TagPanel />}
     </>
   );

@@ -2,7 +2,10 @@ import { useRef, MouseEvent } from "react";
 import { useBuilderContext } from "../contexts/BuilderContext";
 import { useEditorContext } from "../contexts/EditorContext";
 
-export const useInteractive = (component: IComponent) => {
+export const useInteractive = (
+  component: IComponent,
+  enableVisualHelper: boolean = true
+) => {
   const { setOverlay } = useEditorContext();
   const { showLayout, setSelectedComponent } = useBuilderContext();
 
@@ -28,9 +31,9 @@ export const useInteractive = (component: IComponent) => {
     }
   };
 
-  const dropTypes: ComponentType[] = ["Box", "AvatarGroup", "Avatar"];
+  const dropTypes: ComponentType[] = ["Box", "AvatarGroup", "Avatar", "Alert"];
 
-  if (showLayout && dropTypes.includes(component.type)) {
+  if (showLayout && dropTypes.includes(component.type) && enableVisualHelper) {
     props = {
       ...props,
       border: `1px dashed #718096`,

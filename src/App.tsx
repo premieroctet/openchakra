@@ -10,6 +10,10 @@ import { Global } from "@emotion/core";
 import { EditorProvider } from "./contexts/EditorContext";
 
 export const COMPONENTS: ComponentType[] = [
+  "Alert",
+  "AlertDescription",
+  "AlertIcon",
+  "AlertTitle",
   "Avatar",
   "AvatarBadge",
   "AvatarGroup",

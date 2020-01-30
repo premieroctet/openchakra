@@ -4,9 +4,11 @@ import SizeControl from "../controls/SizeControl";
 import ChildrenControl from "../controls/ChildrenControl";
 import VariantsControl from "../controls/VariantsControl";
 import ColorsControl from "../controls/ColorsControl";
+import FormControl from "../controls/FormControl";
+import { Switch } from "@chakra-ui/core";
 
 const TagPanel = () => {
-  const { values } = useForm();
+  const { values, setValue } = useForm();
 
   return (
     <>
@@ -23,6 +25,15 @@ const TagPanel = () => {
         label="Border radius"
         value={values.rounded}
       />
+      <FormControl label="Is Inline" htmlFor="isInline">
+        <Switch
+          name="isInline"
+          id="isInline"
+          size="sm"
+          isChecked={values.isInline || false}
+          onChange={() => setValue("isInline", !values.isInline)}
+        />
+      </FormControl>
     </>
   );
 };
