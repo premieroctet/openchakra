@@ -23,7 +23,8 @@ import {
   Avatar,
   Alert,
   AlertIcon,
-  AlertTitle
+  AlertTitle,
+  AlertDescription
 } from "@chakra-ui/core";
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -51,5 +52,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Avatar: Avatar.defaultProps,
   Alert: Alert.defaultProps,
   AlertIcon: AlertIcon.defaultProps,
-  AlertTitle: AlertTitle.defaultProps
+  AlertTitle: AlertTitle.defaultProps,
+  AlertDescription: AlertDescription.defaultProps
 };
