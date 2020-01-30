@@ -1,38 +1,7 @@
 import { useDrop } from "react-dnd";
 import { COMPONENTS } from "../App";
 import { useBuilderContext } from "../contexts/BuilderContext";
-
-const DEFAULT_PROPS: PreviewDefaultProps = {
-  Badge: {},
-  Box: {},
-  Button: {},
-  IconButton: {},
-  Icon: {},
-  Image: {},
-  Text: {},
-  Progress: {},
-  Link: {},
-  Code: {},
-  Spinner: {},
-  TextArea: {},
-  Heading: {},
-  CloseButton: {},
-  Tag: {},
-  SimpleGrid: {},
-  Switch: {
-    isChecked: true
-  },
-  CircularProgress: {},
-  Checkbox: {
-    isChecked: true
-  },
-  AvatarBadge: {},
-  AvatarGroup: { spacing: -3, max: 2, size: "md" },
-  Avatar: {
-    name: "John Doe",
-    size: "md"
-  }
-};
+import { DEFAULT_PROPS } from "../utils/defaultProps";
 
 export const useDropComponent = (
   componentName: string,
