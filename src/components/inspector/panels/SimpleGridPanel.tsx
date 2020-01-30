@@ -1,7 +1,6 @@
 import React from "react";
 import { Input } from "@chakra-ui/core";
 import { useForm } from "../../../hooks/useForm";
-import SizeControl from "../controls/SizeControl";
 import FormControl from "../controls/FormControl";
 import ChildrenControl from "../controls/ChildrenControl";
 
@@ -11,7 +10,6 @@ const SimpleGridPanel = () => {
   return (
     <>
       <ChildrenControl />
-      <SizeControl name="size" label="Size" value={values.size} />
       <FormControl label="Columns">
         <Input
           size="sm"

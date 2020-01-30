@@ -44,7 +44,7 @@ const ButtonPanel = () => {
         </InputSuggestion>
       </FormControl>
 
-      <FormControl label="Left icon" htmlFor="rightIcon">
+      <FormControl label="Right icon" htmlFor="rightIcon">
         <InputSuggestion
           value={values.rightIcon}
           handleChange={setValueFromEvent}

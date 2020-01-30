@@ -28,7 +28,7 @@ export const useInteractive = (component: IComponent) => {
     }
   };
 
-  const dropTypes: ComponentType[] = ["Box", "AvatarGroup", "Avatar"];
+  const dropTypes: ComponentType[] = ["Box", "AvatarGroup", "Avatar", "Alert"];
 
   if (showLayout && dropTypes.includes(component.type)) {
     props = {

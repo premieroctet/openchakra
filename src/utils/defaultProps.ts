@@ -20,7 +20,10 @@ import {
   Checkbox,
   AvatarBadge,
   AvatarGroup,
-  Avatar
+  Avatar,
+  Alert,
+  AlertIcon,
+  AlertTitle
 } from "@chakra-ui/core";
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -45,5 +48,8 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Checkbox: Checkbox.defaultProps,
   AvatarBadge: AvatarBadge.defaultProps,
   AvatarGroup: AvatarGroup.defaultProps,
-  Avatar: Avatar.defaultProps
+  Avatar: Avatar.defaultProps,
+  Alert: Alert.defaultProps,
+  AlertIcon: AlertIcon.defaultProps,
+  AlertTitle: AlertTitle.defaultProps
 };

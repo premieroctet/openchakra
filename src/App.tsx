@@ -33,7 +33,11 @@ export const COMPONENTS: ComponentType[] = [
   "TextArea",
   "Tag",
   "Text",
-  "TextArea"
+  "TextArea",
+  "Alert",
+  "AlertIcon",
+  "AlertTitle",
+  "AlertDescription"
 ];
 
 const App = () => (

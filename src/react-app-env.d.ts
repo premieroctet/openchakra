@@ -1,5 +1,4 @@
 /// <reference types="react-scripts" />;
-
 declare module "prettier/standalone";
 declare module "coloreact";
 
@@ -26,6 +25,10 @@ type ComponentType =
   | "Tag"
   | "Switch"
   | "SimpleGrid"
+  | "Alert"
+  | "AlertIcon"
+  | "AlertTitle"
+  | "AlertDescription"
   | "Code";
 
 interface IComponent {
@@ -74,4 +77,8 @@ type PreviewDefaultProps = {
   Tag?: TagProps;
   SimpleGrid?: SimpleGridProps;
   Switch?: SwitchProps;
+  Alert?: AlertProps;
+  AlertIcon?: AlertIconProps;
+  AlertTitle?: AlertTitleProps;
+  AlertDescription?: AlertDescriptionProps;
 };

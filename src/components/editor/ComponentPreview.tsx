@@ -24,6 +24,11 @@ import HeadingPreview from "./previews/HeadingPreview";
 import TagPreview from "./previews/TagPreview";
 import SimpleGridPreview from "./previews/SimpleGridPreview";
 import SwitchPreview from "./previews/SwitchPreview";
+import AlertPreview, {
+  AlertIconPreview,
+  AlertTitlePreview,
+  AlertDescriptionPreview
+} from "./previews/AlertPreview";
 
 const ComponentPreview: React.FC<{ component: IComponent }> = ({
   component
@@ -75,6 +80,14 @@ const ComponentPreview: React.FC<{ component: IComponent }> = ({
       return <SimpleGridPreview component={component} />;
     case "Switch":
       return <SwitchPreview component={component} />;
+    case "Alert":
+      return <AlertPreview component={component} />;
+    case "AlertIcon":
+      return <AlertIconPreview component={component} />;
+    case "AlertTitle":
+      return <AlertTitlePreview component={component} />;
+    case "AlertDescription":
+      return <AlertDescriptionPreview component={component} />;
     default:
       return null;
   }
