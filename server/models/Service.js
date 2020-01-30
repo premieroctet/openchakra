@@ -34,6 +34,14 @@ const ServiceSchema = new Schema({
       alfred : Boolean,
       // Visioconférence
       visio  : Boolean
+    },
+    // Frais livraison
+    pick_tax: {
+      type: Boolean
+    },
+    // Frais déplacement
+    travel_tax: {
+      type: Boolean
     }
 });
 

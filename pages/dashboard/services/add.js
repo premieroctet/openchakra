@@ -82,6 +82,8 @@ class add extends React.Component {
             all_equipments: [],
             selectedOption: null,
             selectedTags: null,
+	    travel_tax: false,
+	    pick_tax: false,
             errors: {},
         };
         this.handleChecked = this.handleChecked.bind(this);
@@ -89,6 +91,7 @@ class add extends React.Component {
         this.handleChangeSelect = this.handleChangeSelect.bind(this);
         this.handleChangeTags = this.handleChangeTags.bind(this);
         this.onChangeLocation = this.onChangeLocation.bind(this);
+        this.onTaxChange = this.onTaxChange.bind(this);
     }
 
     componentDidMount() {
@@ -161,6 +164,10 @@ class add extends React.Component {
         this.setState({isChecked: !this.state.isChecked});
     }
 
+    onTaxChange = e => {
+      console.log("onTaxChange");
+      this.setState({[e.target.name]: e.target.checked});
+    }
 
     onSubmit = e => {
         e.preventDefault();
@@ -191,6 +198,9 @@ class add extends React.Component {
         formData.append('equipments',JSON.stringify(arrayEquipments));
         formData.append('description',this.state.description);
         formData.append('majoration',this.state.majoration);
+        formData.append('travel_tax',this.state.travel_tax);
+        formData.append('pick_tax',this.state.pick_tax);
+
         for (var [k, v] of Object.entries(this.state.location)) {
           formData.append('location.'+k, v);
         }
@@ -343,6 +353,21 @@ class add extends React.Component {
                                        checked={this.state.location.visio} value={this.state.location.visio} name="visio" onChange={this.onChangeLocation} />
                                   }
                                   label={<React.Fragment> <p style={{fontFamily: 'Helvetica'}}>En visioconférence</p> </React.Fragment>}
+                                 />
+                                <Typography style={{ fontSize: 20 }}>Frais possibles</Typography>
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon />}
+                                       checked={this.state.travel_tax?"checked":""} value={this.state.travel_tax} name="travel_tax" onChange={this.onTaxChange} />
+                                  }
+                                  label={<React.Fragment> <p style={{fontFamily: 'Helvetica'}}>Frais de déplacement</p> </React.Fragment>}
+                                 />
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon />}
+                                       checked={this.state.pick_tax?"checked":""} value={this.state.pick_tax} name="pick_tax" onChange={this.onTaxChange} />
+                                  }
+                                  label={<React.Fragment> <p style={{fontFamily: 'Helvetica'}}>Frais de retrait&livraison</p> </React.Fragment>}
                                  />
                                 </Grid>
 

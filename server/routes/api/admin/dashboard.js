@@ -1561,7 +1561,9 @@ router.post('/service/all', uploadService.single('picture'),passport.authenticat
                           alfred: req.body['location.alfred']=="true", 
                           client: req.body['location.client']=="true", 
                           visio:  req.body['location.visio']=="true"
-                        }
+                        },
+                        pick_tax: req.body.pick_tax,
+                        travel_tax: req.body.travel_tax
                     });
 
                     newService.save().then(service => res.json(service)).catch(err => console.log(err));
@@ -1689,6 +1691,7 @@ router.delete('/service/all/:id',passport.authenticate('jwt',{session: false}),(
 // Update a service
 // @Access private
 router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
+    console.log("Received:"+JSON.stringify(req.body));
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
@@ -1698,7 +1701,9 @@ router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req
             {
                 $set: { label: req.body.label, equipments: req.body.equipments,category: mongoose.Types.ObjectId(req.body.category),
                     tags: req.body.tags,
-                     description: req.body.description, majoration: req.body.majoration, location:req.body.location},
+                     description: req.body.description, majoration: req.body.majoration, location:req.body.location, 
+                     travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax
+                     },
 
             } , {new: true})
             .then(service => {
