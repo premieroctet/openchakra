@@ -21,6 +21,7 @@ import CircularProgressPanel from "./CircularProgressPanel";
 import HeadingPanel from "./HeadingPanel";
 import TagPanel from "./TagPanel";
 import SimpleGridPanel from "./SimpleGridPanel";
+import SwitchPanel from "./SwitchPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -48,6 +49,7 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "CircularProgress" && <CircularProgressPanel />}
       {type === "Heading" && <HeadingPanel />}
       {type === "SimpleGrid" && <SimpleGridPanel />}
+      {type === "Switch" && <SwitchPanel />}
       {type === "Tag" && <TagPanel />}
     </>
   );

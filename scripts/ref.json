@@ -1,0 +1,273 @@
+{
+  "Avatar": [
+    {
+      "name": "children",
+      "type": { "type": "string" },
+      "description": "The badge at the bottom right corner of the avatar."
+    },
+    {
+      "name": "name",
+      "type": { "type": "string" },
+      "description": "The name of the person in the avatar."
+    },
+    {
+      "name": "showBorder",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the `Avatar` will show a border around it."
+    },
+    {
+      "name": "size",
+      "type": { "type": "string" },
+      "description": "The size of the avatar."
+    },
+    {
+      "name": "src",
+      "type": { "type": "string" },
+      "description": "The image url of the `Avatar`"
+    }
+  ],
+  "AvatarGroup": [
+    { "name": "label", "type": { "type": "string" } },
+    { "name": "size", "type": { "type": "string" } }
+  ],
+  "Badge": [
+    {
+      "name": "variant",
+      "type": { "type": "enum", "choices": ["solid", "subtle", "outline"] },
+      "description": "The variant of the badge"
+    },
+    {
+      "name": "variantColor",
+      "type": { "type": "string" },
+      "description": "The color scheme of the badge"
+    }
+  ],
+  "Button": [
+    {
+      "name": "children",
+      "type": { "type": "string" },
+      "description": "The content of the button."
+    },
+    {
+      "name": "iconSpacing",
+      "type": { "type": "string" },
+      "description": "The space between the button icon and label.\nUse the styled-system tokens or add custom values as a string"
+    },
+    {
+      "name": "isActive",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the button will be styled in it's active state."
+    },
+    {
+      "name": "isDisabled",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the button will be disabled."
+    },
+    {
+      "name": "isFullWidth",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the button will take up the full width of its container."
+    },
+    {
+      "name": "isLoading",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the button will show a spinner."
+    },
+    {
+      "name": "leftIcon",
+      "type": { "type": "string" },
+      "description": "If added, the button will show an icon before the button's label.\nUse the icon key in `theme.iconPath`"
+    },
+    {
+      "name": "loadingText",
+      "type": { "type": "string" },
+      "description": "The label to show in the button when `isLoading` is true\nIf no text is passed, it only shows the spinner"
+    },
+    {
+      "name": "rightIcon",
+      "type": { "type": "string" },
+      "description": "If added, the button will show an icon after the button's label.\nUse the icon key in `theme.iconPath`"
+    },
+    {
+      "name": "size",
+      "type": { "type": "enum", "choices": ["xs", "sm", "md", "lg"] },
+      "description": "The size of the button"
+    },
+    {
+      "name": "type",
+      "type": { "type": "enum", "choices": ["button", "reset", "submit"] },
+      "description": "The html button type to use."
+    },
+    {
+      "name": "variant",
+      "type": {
+        "type": "enum",
+        "choices": ["outline", "ghost", "unstyled", "link", "solid"]
+      },
+      "description": "The variant of the button style to use."
+    },
+    {
+      "name": "variantColor",
+      "type": { "type": "string" },
+      "description": "The color scheme of the button."
+    }
+  ],
+  "Checkbox": [
+    {
+      "name": "children",
+      "type": { "type": "string" },
+      "description": "The children is the label to be displayed to the right of the checkbox."
+    },
+    {
+      "name": "defaultIsChecked",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the checkbox will be initially checked."
+    },
+    {
+      "name": "id",
+      "type": { "type": "string" },
+      "description": "id assigned to input"
+    },
+    {
+      "name": "isChecked",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the checkbox will be checked.\nYou'll need to pass `onChange` to update it's value (since it's now controlled)"
+    },
+    {
+      "name": "isDisabled",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the checkbox will be disabled"
+    },
+    {
+      "name": "isFullWidth",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the checkbox should take up the full width of the parent."
+    },
+    {
+      "name": "isIndeterminate",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the checkbox will be indeterminate.\nThis only affects the icon shown inside checkbox\nand does not modify the isChecked property."
+    },
+    {
+      "name": "isInvalid",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the checkbox is marked as invalid.\nChanges style of unchecked state."
+    },
+    {
+      "name": "isReadOnly",
+      "type": { "type": "boolean" },
+      "description": "If `true`, the checkbox will be readonly"
+    },
+    {
+      "name": "name",
+      "type": { "type": "string" },
+      "description": "The name of the input field in a checkbox\n(Useful for form submission)."
+    },
+    {
+      "name": "onChange",
+      "type": { "type": "string" },
+      "description": "The callback invoked when the checked state of the `Checkbox` changes.."
+    },
+    {
+      "name": "size",
+      "type": { "type": "enum", "choices": ["sm", "md", "lg"] },
+      "description": "The size (width and height) of the checkbox"
+    },
+    {
+      "name": "value",
+      "type": { "type": "string" },
+      "description": "The value to be used in the checkbox input.\nThis is the value that will be returned on form submission."
+    },
+    {
+      "name": "variantColor",
+      "type": { "type": "string" },
+      "description": "The color scheme of the checkbox."
+    }
+  ],
+  "Icon": [
+    {
+      "name": "color",
+      "type": { "type": "string" },
+      "description": "The color of the icon."
+    },
+    {
+      "name": "focusable",
+      "type": { "type": "boolean" },
+      "description": "If `false`, it means the icon is used within interactive\nelement and won't be focuable."
+    },
+    {
+      "name": "name",
+      "type": { "type": "string" },
+      "description": "The name of the icon."
+    },
+    {
+      "name": "role",
+      "type": { "type": "enum", "choices": ["presentation", "img"] },
+      "description": "The role of the icon. `presentation` or `img`"
+    },
+    {
+      "name": "size",
+      "type": { "type": "string" },
+      "description": "The size of the icon."
+    }
+  ],
+  "Image": [
+    {
+      "name": "alt",
+      "type": { "type": "string" },
+      "description": "The alt text that describes the image"
+    },
+    {
+      "name": "fallbackSrc",
+      "type": { "type": "string" },
+      "description": "In event there was an error loading the `src`, specify a fallback\nIn most cases, this can be an avatar or image placeholder"
+    },
+    {
+      "name": "htmlHeight",
+      "type": { "type": "string" },
+      "description": "The native HTML `height` attribute to the passed to the `img`"
+    },
+    {
+      "name": "htmlWidth",
+      "type": { "type": "string" },
+      "description": "The native HTML `width` attribute to the passed to the `img`"
+    },
+    {
+      "name": "ignoreFallback",
+      "type": { "type": "boolean" },
+      "description": "Opt out of the `fallbackSrc` logic and use the `Image` directly"
+    },
+    {
+      "name": "onError",
+      "type": { "type": "callback" },
+      "description": "A callback for when there was an error loading the image `src`"
+    },
+    {
+      "name": "onLoad",
+      "type": { "type": "callback" },
+      "description": "A callback for when the image `src` has been loaded"
+    },
+    {
+      "name": "src",
+      "type": { "type": "string" },
+      "description": "The path to the image source"
+    }
+  ],
+  "Tag": [
+    {
+      "name": "size",
+      "type": { "type": "enum", "choices": ["sm", "md", "lg"] },
+      "description": "The size of the tag."
+    },
+    {
+      "name": "variant",
+      "type": { "type": "string" },
+      "description": "The variant of the tag."
+    },
+    {
+      "name": "variantColor",
+      "type": { "type": "string" },
+      "description": "The color scheme of the tag."
+    }
+  ]
+}

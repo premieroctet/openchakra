@@ -16,7 +16,7 @@ const CircularProgressPanel = () => {
 
   return (
     <>
-      <FormControl label="Valeur">
+      <FormControl label="Value">
         <Slider
           onChange={value => setValue("value", value)}
           min={0}

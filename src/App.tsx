@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Box, LightMode } from "@chakra-ui/core";
+import { Flex, Box } from "@chakra-ui/core";
 import { DndProvider } from "react-dnd";
 import Backend from "react-dnd-html5-backend";
 import Editor from "./components/editor/Editor";
@@ -10,63 +10,63 @@ import { Global } from "@emotion/core";
 import { EditorProvider } from "./contexts/EditorContext";
 
 export const COMPONENTS: ComponentType[] = [
-  "Box",
-  "Checkbox",
-  "Button",
-  "Image",
-  "Badge",
-  "Icon",
-  "Text",
-  "Progress",
   "Avatar",
-  "Link",
-  "AvatarGroup",
   "AvatarBadge",
-  "IconButton",
-  "Spinner",
+  "AvatarGroup",
+  "Badge",
+  "Box",
+  "Button",
+  "Checkbox",
+  "CircularProgress",
   "CloseButton",
-  "Divider",
   "Code",
-  "TextArea",
+  "Divider",
   "Heading",
-  "Tag",
+  "Icon",
+  "IconButton",
+  "Image",
+  "Link",
+  "Progress",
   "SimpleGrid",
-  "CircularProgress"
+  "Switch",
+  "Spinner",
+  "TextArea",
+  "Tag",
+  "Text",
+  "TextArea"
 ];
 
 const App = () => (
-  <LightMode>
-    <DndProvider backend={Backend}>
-      <Global
-        styles={() => ({
-          "*": { borderBox: "box-sizing" }
-        })}
-      />
+  <DndProvider backend={Backend}>
+    <Global
+      styles={() => ({
+        "*": { borderBox: "box-sizing" }
+      })}
+    />
 
-      <Header />
+    <Header />
 
-      <Flex minHeight="calc(100vh - 3rem)">
-        <Box bg="white" flex={1} zIndex={10} position="relative">
-          <EditorProvider>
-            <Editor />
-          </EditorProvider>
-        </Box>
+    <Flex minHeight="calc(100vh - 3rem)">
+      <Box bg="white" flex={1} zIndex={10} position="relative">
+        <EditorProvider>
+          <Editor />
+        </EditorProvider>
+      </Box>
 
-        <Sidebar />
+      <Sidebar />
 
-        <Box
-          maxH="calc(100vh - 3rem)"
-          flex="0 0 15rem"
-          roundedRight={10}
-          bg="#f7fafc"
-          overflowY="scroll"
-          borderLeft="1px solid #cad5de"
-        >
-          <Inspector />
-        </Box>
-      </Flex>
-    </DndProvider>
-  </LightMode>
+      <Box
+        maxH="calc(100vh - 3rem)"
+        flex="0 0 15rem"
+        roundedRight={10}
+        bg="#f7fafc"
+        overflowY="scroll"
+        borderLeft="1px solid #cad5de"
+      >
+        <Inspector />
+      </Box>
+    </Flex>
+  </DndProvider>
 );
 
 export default App;

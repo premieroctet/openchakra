@@ -19,6 +19,9 @@ const DEFAULT_PROPS: PreviewDefaultProps = {
   CloseButton: {},
   Tag: {},
   SimpleGrid: {},
+  Switch: {
+    isChecked: true
+  },
   CircularProgress: {},
   Checkbox: {
     isChecked: true

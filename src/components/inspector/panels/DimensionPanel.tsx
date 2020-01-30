@@ -11,7 +11,7 @@ const DimensionPanel = ({ handleChange, values }: DimensionPanelPropsType) => {
   return (
     <>
       <SimpleGrid columns={2} spacing={1}>
-        <FormControl width="2.5rem" label="Width">
+        <FormControl hasColumn label="Width">
           <Input
             value={values.width || ""}
             size="sm"
@@ -22,7 +22,7 @@ const DimensionPanel = ({ handleChange, values }: DimensionPanelPropsType) => {
           />
         </FormControl>
 
-        <FormControl width="2.5rem" label="Height">
+        <FormControl hasColumn label="Height">
           <Input
             rounded="md"
             value={values.height || ""}
@@ -36,7 +36,7 @@ const DimensionPanel = ({ handleChange, values }: DimensionPanelPropsType) => {
       </SimpleGrid>
 
       <SimpleGrid columns={2} spacing={1}>
-        <FormControl width="2.5rem" label="Min W">
+        <FormControl hasColumn label="Min W">
           <Input
             rounded="md"
             value={values.minWidth || ""}
@@ -48,7 +48,7 @@ const DimensionPanel = ({ handleChange, values }: DimensionPanelPropsType) => {
           />
         </FormControl>
 
-        <FormControl width="2.5rem" label="Min H">
+        <FormControl hasColumn label="Min H">
           <Input
             width="3rem"
             rounded="md"
@@ -60,7 +60,7 @@ const DimensionPanel = ({ handleChange, values }: DimensionPanelPropsType) => {
           />
         </FormControl>
 
-        <FormControl width="2.5rem" label="Max W">
+        <FormControl hasColumn label="Max W">
           <Input
             rounded="md"
             value={values.maxWidth || ""}
@@ -72,7 +72,7 @@ const DimensionPanel = ({ handleChange, values }: DimensionPanelPropsType) => {
           />
         </FormControl>
 
-        <FormControl width="2.5rem" label="Max H">
+        <FormControl hasColumn label="Max H">
           <Input
             rounded="md"
             value={values.maxHeight || ""}

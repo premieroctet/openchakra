@@ -23,6 +23,7 @@ import CircularProgressPreview from "./previews/CircularProgressPreview";
 import HeadingPreview from "./previews/HeadingPreview";
 import TagPreview from "./previews/TagPreview";
 import SimpleGridPreview from "./previews/SimpleGridPreview";
+import SwitchPreview from "./previews/SwitchPreview";
 
 const ComponentPreview: React.FC<{ component: IComponent }> = ({
   component
@@ -72,6 +73,8 @@ const ComponentPreview: React.FC<{ component: IComponent }> = ({
       return <TagPreview component={component} />;
     case "SimpleGrid":
       return <SimpleGridPreview component={component} />;
+    case "Switch":
+      return <SwitchPreview component={component} />;
     default:
       return null;
   }
