@@ -31,6 +31,20 @@ type ComponentType =
   | "AlertDescription"
   | "Flex"
   | "Stack"
+  | "Accordion"
+  | "AccordionItem"
+  | "AccordionHeader"
+  | "AccordionPanel"
+  | "AccordionIcon"
+  | "FormControl"
+  | "FormLabel"
+  | "FormHelperText"
+  | "FormErrorMessage"
+  | "TabList"
+  | "TabPanel"
+  | "TabPanels"
+  | "Tab"
+  | "Tabs"
   | "Code";
 
 interface IComponent {

@@ -6,7 +6,7 @@ import { useInteractive } from "../../../hooks/useInteractive";
 
 const StackPreview: React.FC<{ component: IComponent }> = ({ component }) => {
   const { props, ref } = useInteractive(component);
-  const acceptedTypes = ["Flex"] as ComponentType[];
+  const acceptedTypes = ["Stack"] as ComponentType[];
   let boxProps: any = {};
   const { drop, isOver } = useDropComponent(component.name, acceptedTypes);
   if (isOver) {

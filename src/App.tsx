@@ -13,6 +13,11 @@ import { useSelector } from "react-redux";
 import { RootState } from ".";
 
 export const COMPONENTS: ComponentType[] = [
+  "TabList",
+  "TabPanel",
+  "TabPanels",
+  "Tab",
+  "Tabs",
   "Alert",
   "AlertDescription",
   "AlertIcon",
@@ -28,6 +33,10 @@ export const COMPONENTS: ComponentType[] = [
   "CloseButton",
   "Code",
   "Divider",
+  "FormControl",
+  "FormLabel",
+  "FormHelperText",
+  "FormErrorMessage",
   "Heading",
   "Icon",
   "IconButton",
