@@ -6,7 +6,6 @@ import {
   PopoverContent,
   PopoverArrow,
   Grid,
-  Tooltip,
   PseudoBox,
   PopoverBody,
   IconButton,
@@ -57,29 +56,22 @@ const ColorsControl = (props: ColorControlPropsType) => {
     <>
       <Grid mb={2} templateColumns="repeat(5, 1fr)" gap={0}>
         {Object.keys(themeColors).map(colorName => (
-          <Tooltip
-            hasArrow
-            aria-label={colorName}
-            label={props.enableHues ? `${colorName}.${hue}` : colorName}
-            placement="top"
-            zIndex={3}
-          >
-            <PseudoBox
-              _hover={{ shadow: "lg" }}
-              cursor="pointer"
-              bg={`${colorName}.${props.enableHues ? hue : 500}`}
-              onClick={() =>
-                setValue(
-                  props.name,
-                  props.enableHues ? `${colorName}.${hue}` : colorName
-                )
-              }
-              mt={2}
-              rounded="full"
-              height="30px"
-              width="30px"
-            />
-          </Tooltip>
+          <PseudoBox
+            key={colorName}
+            _hover={{ shadow: "lg" }}
+            cursor="pointer"
+            bg={`${colorName}.${props.enableHues ? hue : 500}`}
+            onClick={() =>
+              setValue(
+                props.name,
+                props.enableHues ? `${colorName}.${hue}` : colorName
+              )
+            }
+            mt={2}
+            rounded="full"
+            height="30px"
+            width="30px"
+          />
         ))}
       </Grid>
 
@@ -120,7 +112,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
           </IconButton>
         </PopoverTrigger>
 
-        <PopoverContent width="200px" usePortal zIndex={1}>
+        <PopoverContent width="200px" zIndex={1}>
           <PopoverArrow />
           <PopoverBody>
             {props.withFullColor ? (

@@ -7,12 +7,8 @@
 Before release:
 
 - Reset props
-- Add shortcuts
-
-  - Delete component
-  - Toggle Builder mode
-
 - Improve quick props (handle bool and numbers)
+- Improve flex panel
 
 - Editor sort/drag and drop
 - Allow Body styling
@@ -22,6 +18,7 @@ Before release:
   - Remove empty props
   - Use integer props
   - Smart imports
+- Tests
 - Infer from TS types (panels)
 
 ### Components

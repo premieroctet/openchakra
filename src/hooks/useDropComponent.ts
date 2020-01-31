@@ -1,13 +1,12 @@
 import { useDrop } from "react-dnd";
-import { COMPONENTS } from "../App";
-import { useBuilderContext } from "../contexts/BuilderContext";
-import { DEFAULT_PROPS } from "../utils/defaultProps";
+import { rootComponents } from "../App";
+import useDispatch from "./useDispatch";
 
 export const useDropComponent = (
-  componentName: string,
-  accept: ComponentType[] = COMPONENTS
+  componentId: string,
+  accept: ComponentType[] = rootComponents
 ) => {
-  const { components, setComponents } = useBuilderContext();
+  const dispatch = useDispatch();
 
   const [{ isOver }, drop] = useDrop({
     accept,
@@ -16,21 +15,9 @@ export const useDropComponent = (
     }),
     drop: (item: ComponentItemProps, monitor) => {
       if (monitor.isOver()) {
-        const name = `comp-${Math.round(new Date().getTime() / 1000)}`;
-
-        setComponents({
-          ...components,
-          [componentName]: {
-            ...components[componentName],
-            children: [...components[componentName].children, name]
-          },
-          [name]: {
-            name,
-            props: DEFAULT_PROPS[item.type] || {},
-            children: [],
-            type: item.type,
-            parent: componentName
-          }
+        dispatch.app.addComponent({
+          parentName: componentId,
+          type: item.type
         });
       }
     }

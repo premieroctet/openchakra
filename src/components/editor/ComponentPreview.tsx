@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import BoxPreview from "./previews/BoxPreview";
 import ButtonPreview from "./previews/ButtonPreview";
@@ -29,11 +29,18 @@ import AlertPreview, {
   AlertTitlePreview,
   AlertDescriptionPreview
 } from "./previews/AlertPreview";
+import { useSelector } from "react-redux";
+import { RootState } from "../..";
 
-const ComponentPreview: React.FC<{ component: IComponent }> = ({
-  component
+const ComponentPreview: React.FC<{ componentName: string }> = ({
+  componentName
 }) => {
-  switch (component.type) {
+  const component = useSelector(
+    (state: RootState) => state.app.components[componentName]
+  );
+  const type = (component && component.type) || null;
+
+  switch (type) {
     case "Badge":
       return <BadgePreview component={component} />;
     case "Box":
@@ -93,4 +100,4 @@ const ComponentPreview: React.FC<{ component: IComponent }> = ({
   }
 };
 
-export default ComponentPreview;
+export default memo(ComponentPreview);

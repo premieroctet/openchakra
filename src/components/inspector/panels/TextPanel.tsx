@@ -107,7 +107,7 @@ const TextPanel = ({ handleChange, values }: FlexPanelPropsType) => {
           name="fontSize"
         >
           {Object.keys(theme.fontSizes).map(option => (
-            <ComboboxOption value={option} />
+            <ComboboxOption key={option} value={option} />
           ))}
         </InputSuggestion>
       </FormControl>
@@ -127,7 +127,7 @@ const TextPanel = ({ handleChange, values }: FlexPanelPropsType) => {
           name="lineHeight"
         >
           {Object.keys(theme.lineHeights).map(option => (
-            <ComboboxOption value={option} />
+            <ComboboxOption key={option} value={option} />
           ))}
         </InputSuggestion>
       </FormControl>
@@ -139,7 +139,7 @@ const TextPanel = ({ handleChange, values }: FlexPanelPropsType) => {
           name="letterSpacing"
         >
           {Object.keys(theme.letterSpacings).map(option => (
-            <ComboboxOption value={option} />
+            <ComboboxOption key={option} value={option} />
           ))}
         </InputSuggestion>
       </FormControl>

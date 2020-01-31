@@ -5,11 +5,7 @@ import { useInteractive } from "../../../hooks/useInteractive";
 const TextPreview: React.FC<{ component: IComponent }> = ({ component }) => {
   const { props, ref } = useInteractive(component);
 
-  return (
-    <Text ref={ref} {...props}>
-      {component.props.children || "Lorem Ipsum"}
-    </Text>
-  );
+  return <Text ref={ref} {...props} />;
 };
 
 export default TextPreview;

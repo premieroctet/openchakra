@@ -1,13 +1,14 @@
 import { useRef, MouseEvent } from "react";
-import { useBuilderContext } from "../contexts/BuilderContext";
-import { useEditorContext } from "../contexts/EditorContext";
+import { useSelector } from "react-redux";
+import { RootState } from "..";
+import useDispatch from "./useDispatch";
 
 export const useInteractive = (
   component: IComponent,
-  enableVisualHelper: boolean = true
+  enableVisualHelper: boolean = false
 ) => {
-  const { setOverlay } = useEditorContext();
-  const { showLayout, setSelectedComponent } = useBuilderContext();
+  const dispatch = useDispatch();
+  const showLayout = useSelector((state: RootState) => state.app.showLayout);
 
   const ref = useRef<HTMLDivElement>(null);
   let props = {
@@ -15,25 +16,23 @@ export const useInteractive = (
     onMouseOver: (event: MouseEvent) => {
       if (ref && ref.current) {
         event.stopPropagation();
-        setOverlay({
-          name: component.name,
+        dispatch.app.setOverlay({
+          name: component.id,
           type: component.type,
           rect: ref.current.getBoundingClientRect()
         });
       }
     },
     onMouseOut: () => {
-      setOverlay(undefined);
+      dispatch.app.setOverlay(undefined);
     },
     onClick: (event: MouseEvent) => {
       event.stopPropagation();
-      setSelectedComponent(component.name);
+      dispatch.app.setSelectedId(component.id);
     }
   };
 
-  const dropTypes: ComponentType[] = ["Box", "AvatarGroup", "Avatar", "Alert"];
-
-  if (showLayout && dropTypes.includes(component.type) && enableVisualHelper) {
+  if (showLayout && enableVisualHelper) {
     props = {
       ...props,
       border: `1px dashed #718096`,

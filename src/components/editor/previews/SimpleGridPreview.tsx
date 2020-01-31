@@ -6,11 +6,7 @@ const SimpleGridPreview: React.FC<{ component: IComponent }> = ({
   component
 }) => {
   const { props, ref } = useInteractive(component);
-  return (
-    <SimpleGrid ref={ref} {...props}>
-      {component.props.children || "Lorem Ipsum"}
-    </SimpleGrid>
-  );
+  return <SimpleGrid ref={ref} {...props} />;
 };
 
 export default SimpleGridPreview;

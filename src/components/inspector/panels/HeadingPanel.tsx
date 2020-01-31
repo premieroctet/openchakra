@@ -1,7 +1,6 @@
 import React from "react";
-import { Input, Switch, Select } from "@chakra-ui/core";
+import { Switch, Select } from "@chakra-ui/core";
 import { useForm } from "../../../hooks/useForm";
-import SizeControl from "../controls/SizeControl";
 import FormControl from "../controls/FormControl";
 import ChildrenControl from "../controls/ChildrenControl";
 
@@ -11,15 +10,21 @@ const HeadingPanel = () => {
   return (
     <>
       <ChildrenControl />
-      <SizeControl name="size" label="Size" value={values.size} />
-      <FormControl label="Font">
-        <Input
+      <FormControl label="Size" htmlFor="size">
+        <Select
+          name="size"
+          id="size"
           size="sm"
-          value={values.fontSize || "20px"}
-          type="text"
-          name="fontSize"
+          value={values.size}
           onChange={setValueFromEvent}
-        />
+        >
+          <option>xs</option>
+          <option>sm</option>
+          <option>md</option>
+          <option>lg</option>
+          <option>xl</option>
+          <option>2xl</option>
+        </Select>
       </FormControl>
       <FormControl label="As">
         <Select

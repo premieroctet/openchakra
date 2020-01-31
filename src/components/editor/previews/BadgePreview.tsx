@@ -5,11 +5,7 @@ import { useInteractive } from "../../../hooks/useInteractive";
 const BadgePreview: React.FC<{ component: IComponent }> = ({ component }) => {
   const { props, ref } = useInteractive(component);
 
-  return (
-    <Badge ref={ref} {...props}>
-      {component.props.children || "Lorem Ipsum"}
-    </Badge>
-  );
+  return <Badge ref={ref} {...props} />;
 };
 
 export default BadgePreview;
