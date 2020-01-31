@@ -9,21 +9,30 @@ const SpinnerPanel = () => {
 
   return (
     <>
-      <FormControl label="label">
+      <FormControl label="Label">
         <Input
           size="sm"
-          value={values.label || "Loading..."}
+          value={values.label || ""}
           type="text"
           name="label"
           onChange={setValueFromEvent}
         />
       </FormControl>
+
       <ColorsControl
         label="Color"
         name="color"
-        value={values.color}
+        value={values.color || ""}
         enableHues
       />
+
+      <ColorsControl
+        label="Empty color"
+        name="emptyColor"
+        value={values.emptyColor || ""}
+        enableHues
+      />
+
       <FormControl label="Size" htmlFor="size">
         <Select
           name="size"
@@ -40,27 +49,21 @@ const SpinnerPanel = () => {
         </Select>
       </FormControl>
 
-      <FormControl label="thickness">
+      <FormControl label="Thickness">
         <Input
           size="sm"
-          value={values.thickness || "px"}
+          value={values.thickness || ""}
           type="text"
           name="thickness"
           onChange={setValueFromEvent}
         />
       </FormControl>
 
-      <ColorsControl
-        label="Half Circle Color"
-        name="emptyColor"
-        value={values.emptyColor}
-        enableHues
-      />
-
       <FormControl label="Speed">
         <Input
+          placeholder="0.45s"
           size="sm"
-          value={values.speed || "s"}
+          value={values.speed || ""}
           type="text"
           name="speed"
           onChange={setValueFromEvent}

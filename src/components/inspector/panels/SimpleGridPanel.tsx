@@ -2,14 +2,12 @@ import React from "react";
 import { Input } from "@chakra-ui/core";
 import { useForm } from "../../../hooks/useForm";
 import FormControl from "../controls/FormControl";
-import ChildrenControl from "../controls/ChildrenControl";
 
 const SimpleGridPanel = () => {
   const { values, setValueFromEvent } = useForm();
 
   return (
     <>
-      <ChildrenControl />
       <FormControl label="Columns">
         <Input
           size="sm"
@@ -23,7 +21,7 @@ const SimpleGridPanel = () => {
       <FormControl label="Spacing X">
         <Input
           size="sm"
-          value={values.spacingX || "px"}
+          value={values.spacingX || ""}
           type="text"
           name="spacingX"
           onChange={setValueFromEvent}
@@ -33,7 +31,7 @@ const SimpleGridPanel = () => {
       <FormControl label="Spacing Y">
         <Input
           size="sm"
-          value={values.spacingY || "px"}
+          value={values.spacingY || ""}
           type="text"
           name="spacingY"
           onChange={setValueFromEvent}
@@ -43,7 +41,7 @@ const SimpleGridPanel = () => {
       <FormControl label="minChildWidth">
         <Input
           size="sm"
-          value={values.minChildWidth || "120px"}
+          value={values.minChildWidth || ""}
           type="text"
           name="minChildWidth"
           onChange={setValueFromEvent}

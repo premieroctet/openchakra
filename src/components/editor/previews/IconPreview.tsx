@@ -5,7 +5,7 @@ import { useInteractive } from "../../../hooks/useInteractive";
 const IconPreview: React.FC<{ component: IComponent }> = ({ component }) => {
   const { props, ref } = useInteractive(component);
 
-  return <Icon ref={ref} name="copy" {...props} />;
+  return <Icon ref={ref} {...props} />;
 };
 
 export default IconPreview;

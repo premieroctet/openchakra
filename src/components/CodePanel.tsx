@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import { Box, Button, useClipboard } from "@chakra-ui/core";
 import { generateCode } from "../utils/code";
@@ -56,4 +56,4 @@ const CodePanel = () => {
   );
 };
 
-export default CodePanel;
+export default memo(CodePanel);

@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Select,
-  Button,
   Link,
   Box,
   Accordion,
@@ -10,7 +9,6 @@ import {
   SliderFilledTrack,
   SliderThumb,
   Flex,
-  ButtonGroup,
   IconButton
 } from "@chakra-ui/core";
 import PaddingPanel from "./panels/PaddingPanel";
@@ -84,6 +82,7 @@ const Inspector = () => {
                 size="xs"
                 variant="ghost"
                 aria-label="Reset"
+                onClick={() => dispatch.app.resetProps(component.id)}
                 icon={IoMdRefresh}
               />
             </Tooltip>

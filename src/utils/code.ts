@@ -1,5 +1,6 @@
 import prettier from "prettier/standalone";
-import parserTS from "prettier/parser-typescript";
+import parserFlow from "prettier/parser-flow";
+import isBoolean from "lodash/isBoolean";
 
 const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1);
@@ -16,8 +17,22 @@ const buildBlock = (component: IComponent, components: IComponents) => {
     const propsNames = Object.keys(childComponent.props);
 
     propsNames.forEach((propName: string) => {
-      if (propName !== "children" && childComponent.props[propName]) {
-        propsContent += `${propName}='${childComponent.props[propName]}' `;
+      const propsValue = childComponent.props[propName];
+
+      if (propName !== "children" && propsValue) {
+        let operand = `='${propsValue}'`;
+
+        if (propsValue === true || propsValue === "true") {
+          operand = ``;
+        } else if (
+          propsValue === "false" ||
+          isBoolean(propsValue) ||
+          !isNaN(propsValue)
+        ) {
+          operand = `={${propsValue}}`;
+        }
+
+        propsContent += `${propName}${operand} `;
       }
     });
 
@@ -70,8 +85,8 @@ export default App;`;
 
   try {
     formattedCode = prettier.format(code, {
-      parser: "typescript",
-      plugins: [parserTS]
+      parser: "flow",
+      plugins: [parserFlow]
     });
   } catch (e) {}
 

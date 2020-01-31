@@ -18,7 +18,7 @@ import SpinnerPreview from "./previews/SpinnerPreview";
 import CloseButtonPreview from "./previews/CloseButtonPreview";
 import DividerPreview from "./previews/DividerPreview";
 import CodePreview from "./previews/CodePreview";
-import TextAreaPreview from "./previews/TextAreaPreview";
+import TextareaPreview from "./previews/TextareaPreview";
 import CircularProgressPreview from "./previews/CircularProgressPreview";
 import HeadingPreview from "./previews/HeadingPreview";
 import TagPreview from "./previews/TagPreview";
@@ -75,8 +75,8 @@ const ComponentPreview: React.FC<{ componentName: string }> = ({
       return <DividerPreview component={component} />;
     case "Code":
       return <CodePreview component={component} />;
-    case "TextArea":
-      return <TextAreaPreview component={component} />;
+    case "Textarea":
+      return <TextareaPreview component={component} />;
     case "CircularProgress":
       return <CircularProgressPreview component={component} />;
     case "Heading":

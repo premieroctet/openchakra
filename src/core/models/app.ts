@@ -68,6 +68,20 @@ const app = createModel({
         overlay
       };
     },
+    resetProps(state: AppState, componentId: string): AppState {
+      const component = state.components[componentId];
+
+      return {
+        ...state,
+        components: {
+          ...state.components,
+          [componentId]: {
+            ...component,
+            props: DEFAULT_PROPS[component.type] || {}
+          }
+        }
+      };
+    },
     updateProps(
       state: AppState,
       payload: { id: string; name: string; value: string }
@@ -115,6 +129,7 @@ const app = createModel({
 
       return {
         ...state,
+        selectedId: id,
         components: {
           ...state.components,
           [payload.parentName]: {
@@ -127,6 +142,46 @@ const app = createModel({
             children: [],
             type: payload.type,
             parent: payload.parentName
+          }
+        }
+      };
+    },
+    moveComponent(
+      state: AppState,
+      payload: { parentId: string; componentId: string }
+    ): AppState {
+      if (state.components[payload.componentId].parent === payload.parentId) {
+        return state;
+      }
+
+      const children = state.components[
+        state.components[payload.componentId].parent
+      ].children.filter(id => id !== payload.componentId);
+
+      const newChildren = state.components[payload.parentId].children.concat(
+        payload.componentId
+      );
+
+      return {
+        ...state,
+        selectedId: state.components[payload.componentId].id,
+        overlay: undefined,
+        components: {
+          ...state.components,
+          // Update parent id
+          [payload.componentId]: {
+            ...state.components[payload.componentId],
+            parent: payload.parentId
+          },
+          // Remove id from legacy children
+          [state.components[payload.componentId].parent]: {
+            ...state.components[state.components[payload.componentId].parent],
+            children
+          },
+          // Add in new parent children
+          [payload.parentId]: {
+            ...state.components[payload.parentId],
+            children: newChildren
           }
         }
       };

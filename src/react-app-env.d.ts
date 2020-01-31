@@ -19,7 +19,7 @@ type ComponentType =
   | "Spinner"
   | "CloseButton"
   | "Divider"
-  | "TextArea"
+  | "Textarea"
   | "CircularProgress"
   | "Heading"
   | "Tag"
@@ -48,7 +48,7 @@ interface IPreviewProps {
 }
 
 interface ComponentItemProps {
-  name: string;
+  id: string;
   type: ComponentType;
-  isUpdated?: boolean;
+  isMoved?: boolean;
 }

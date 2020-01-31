@@ -63,7 +63,7 @@ type PreviewDefaultProps = {
   CloseButton?: CloseButtonProps;
   Divider?: any;
   Code?: any;
-  TextArea?: any;
+  Textarea?: any;
   CircularProgress?: any;
   Heading?: HeadingProps;
   Tag?: TagProps;
@@ -84,19 +84,33 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Box: Box.defaultProps,
   Button: { ...Button.defaultProps, children: "Lorem Ipsum" },
   Divider: { borderColor: "blackAlpha.500" },
-  IconButton: { ...IconButton.defaultProps, "aria-label": "icon" },
-  Icon: Icon.defaultProps,
+  IconButton: {
+    ...IconButton.defaultProps,
+    "aria-label": "icon",
+    icon: "copy",
+    size: "md"
+  },
+  Icon: { ...Icon.defaultProps, name: "copy" },
   Image: {
     ...Image.defaultProps,
     size: "100px",
     fallbackSrc: "https://via.placeholder.com/150"
   },
   Text: { ...Text.defaultProps, children: "Lorem Ipsum" },
-  Progress: Progress.defaultProps,
+  Progress: { ...Progress.defaultProps, size: "md" },
   Link: { ...Link.defaultProps, children: "Lorem Ipsum" },
-  Code: { ...Code.defaultProps, children: "Lorem Ipsum" },
-  Spinner: Spinner.defaultProps,
-  TextArea: { ...Textarea.defaultProps, children: "Lorem Ipsum" },
+  Code: {
+    ...Code.defaultProps,
+    children: "Lorem Ipsum",
+    variantColor: "yellow"
+  },
+  Spinner: {
+    ...Spinner.defaultProps,
+    size: "md",
+    thickness: "2px",
+    speed: "0.45s"
+  },
+  Textarea: Textarea.defaultProps,
   Heading: {
     ...Heading.defaultProps,
     size: "xl",
@@ -107,8 +121,18 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     children: "Lorem Ipsum"
   },
   CloseButton: CloseButton.defaultProps,
-  Tag: { ...Tag.defaultProps, children: "Lorem Ipsum" },
-  SimpleGrid: SimpleGrid.defaultProps,
+  Tag: {
+    ...Tag.defaultProps,
+    children: "Lorem Ipsum",
+    size: "md",
+    variant: "solid"
+  },
+  SimpleGrid: {
+    ...SimpleGrid.defaultProps,
+    columns: 2,
+    spacingX: 1,
+    spacingY: 1
+  },
   Switch: Switch.defaultProps,
   CircularProgress: CircularProgress.defaultProps,
   Checkbox: {
@@ -116,8 +140,18 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     children: "Lorem Ipsum",
     isChecked: true
   },
-  AvatarBadge: AvatarBadge.defaultProps,
-  AvatarGroup: { ...AvatarGroup.defaultProps, max: 2, spacing: -3, size: "md" },
+  AvatarBadge: {
+    ...AvatarBadge.defaultProps,
+    bg: "green.500",
+    size: "1.25em",
+    borderColor: "white"
+  },
+  AvatarGroup: {
+    ...AvatarGroup.defaultProps,
+    max: 2,
+    spacing: -3,
+    size: "md"
+  },
   Avatar: Avatar.defaultProps,
   Alert: Alert.defaultProps,
   AlertIcon: AlertIcon.defaultProps,

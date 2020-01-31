@@ -2,12 +2,13 @@ import React from "react";
 import ColorsControl from "../controls/ColorsControl";
 import InputSuggestion from "../inputs/InputSuggestion";
 import theme from "../../../theme/theme";
-import { Icon, Select, Switch } from "@chakra-ui/core";
+import { Icon, Switch } from "@chakra-ui/core";
 import { Icons } from "@chakra-ui/core/dist/theme/icons";
 import { ComboboxOption, ComboboxOptionText } from "@reach/combobox";
 import FormControl from "../controls/FormControl";
 import { useForm } from "../../../hooks/useForm";
 import VariantsControl from "../controls/VariantsControl";
+import SizeControl from "../controls/SizeControl";
 
 const IconButtonPanel = () => {
   const { values, setValueFromEvent, setValue } = useForm();
@@ -30,19 +31,7 @@ const IconButtonPanel = () => {
         </InputSuggestion>
       </FormControl>
 
-      <FormControl label="Size" htmlFor="size">
-        <Select
-          name="size"
-          id="size"
-          size="sm"
-          value={values.size || ""}
-          onChange={setValueFromEvent}
-        >
-          <option>sm</option>
-          <option>md</option>
-          <option>lg</option>
-        </Select>
-      </FormControl>
+      <SizeControl name="size" label="Size" value={values.size} />
 
       <ColorsControl label="Color" name="variantColor" value={values.color} />
 

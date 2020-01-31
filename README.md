@@ -6,8 +6,6 @@
 
 Before release:
 
-- Reset props
-- Improve quick props (handle bool and numbers)
 - Improve flex panel
 
 - Editor sort/drag and drop

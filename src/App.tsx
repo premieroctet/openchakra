@@ -39,7 +39,7 @@ export const COMPONENTS: ComponentType[] = [
   "Spinner",
   "Tag",
   "Text",
-  "TextArea"
+  "Textarea"
 ];
 
 export const rootComponents = COMPONENTS.filter(

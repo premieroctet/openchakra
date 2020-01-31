@@ -2,22 +2,15 @@ import React from "react";
 import { Input, Select } from "@chakra-ui/core";
 import FormControl from "../controls/FormControl";
 import { useForm } from "../../../hooks/useForm";
-import SizeControl from "../controls/SizeControl";
+import SizeControl, { Size } from "../controls/SizeControl";
 
-const TextAreaPanel = () => {
+const options = ["sm", "md", "lg"] as Size[];
+
+const TextareaPanel = () => {
   const { values, setValueFromEvent } = useForm();
 
   return (
     <>
-      <FormControl label="Valeur">
-        <Input
-          size="sm"
-          value={values.value || ""}
-          type="text"
-          name="value"
-          onChange={setValueFromEvent}
-        />
-      </FormControl>
       <FormControl label="Placeholder">
         <Input
           size="sm"
@@ -27,7 +20,12 @@ const TextAreaPanel = () => {
           onChange={setValueFromEvent}
         />
       </FormControl>
-      <SizeControl name="size" label="Size" value={values.size} />
+      <SizeControl
+        options={options}
+        name="size"
+        label="Size"
+        value={values.size}
+      />
       <FormControl label="Resize" htmlFor="resize">
         <Select
           name="resize"
@@ -45,4 +43,4 @@ const TextAreaPanel = () => {
   );
 };
 
-export default TextAreaPanel;
+export default TextareaPanel;

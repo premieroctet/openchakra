@@ -16,7 +16,7 @@ import SpinnerPanel from "./SpinnerPanel";
 import CloseButtonPanel from "./CloseButtonPanel";
 import DividerPanel from "./DividerPanel";
 import CodePanel from "./CodePanel";
-import TextAreaPanel from "./TextAreaPanel";
+import TextareaPanel from "./TextareaPanel";
 import CircularProgressPanel from "./CircularProgressPanel";
 import HeadingPanel from "./HeadingPanel";
 import TagPanel from "./TagPanel";
@@ -49,7 +49,7 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "Code" && <CodePanel />}
       {type === "CloseButton" && <CloseButtonPanel />}
       {type === "Divider" && <DividerPanel />}
-      {type === "TextArea" && <TextAreaPanel />}
+      {type === "Textarea" && <TextareaPanel />}
       {type === "CircularProgress" && <CircularProgressPanel />}
       {type === "Heading" && <HeadingPanel />}
       {type === "SimpleGrid" && <SimpleGridPanel />}

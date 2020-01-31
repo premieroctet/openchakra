@@ -8,27 +8,17 @@ const LinkPanel = () => {
 
   return (
     <>
-      <FormControl label="href">
+      <FormControl label="Href" htmlFor="href">
         <Input
+          name="href"
+          id="href"
           size="sm"
           value={values.href || ""}
-          type="text"
-          name="href"
           onChange={setValueFromEvent}
         />
       </FormControl>
 
-      <FormControl label="to">
-        <Input
-          size="sm"
-          value={values.to || ""}
-          type="text"
-          name="to"
-          onChange={setValueFromEvent}
-        />
-      </FormControl>
-
-      <FormControl label="Is External" htmlFor="isExternal">
+      <FormControl label="Is external" htmlFor="isExternal">
         <Switch
           name="isExternal"
           id="isExternal"

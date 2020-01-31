@@ -121,7 +121,7 @@ const Header = () => {
             >
               <Link
                 isExternal
-                href="https://github.com/chakra-ui/chakra-ui/tree/master/packages/chakra-ui"
+                href="https://github.com/premieroctet/open-chakra"
               >
                 <Box as={DiGithubBadge} size="8" color="gray.200" />
               </Link>

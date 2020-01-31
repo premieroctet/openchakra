@@ -44,7 +44,7 @@ const Menu = () => {
         {COMPONENTS.filter(c =>
           c.toLowerCase().includes(searchTerm.toLowerCase())
         ).map(type => (
-          <DragItem key={type} name={type} type={type as ComponentType}>
+          <DragItem key={type} id={type} type={type as ComponentType}>
             {type}
           </DragItem>
         ))}
