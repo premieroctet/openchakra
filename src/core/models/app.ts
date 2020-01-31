@@ -104,7 +104,7 @@ const app = createModel({
       if (componentId === "root") {
         return state;
       }
-      
+
       let updatedComponents = { ...state.components };
       let component = updatedComponents[componentId];
 
