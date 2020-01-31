@@ -273,8 +273,8 @@ class Wizard extends React.Component {
         formData.append('pick_tax', values.createShop.pick_tax);
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios
-          .post(url + 'myAlfred/api/serviceUser/add', formData)
+        console.log("FormData is:"+JSON.stringify(formData));
+        axios.post(url+'myAlfred/api/serviceUser/add',formData)
           .then(res => {
             const booking_request = values.createShop.booking_request;
             const no_booking_request = values.createShop.no_booking_request;
@@ -386,8 +386,8 @@ class Wizard extends React.Component {
                 price: Yup.number().when('checked', {
                   is: true,
                   then: Yup.number()
-                    .typeError('Le prix doit être un nombre')
-                    .moreThan(0, 'Le prix doit être supérieur à 0€')
+                    .typeError('Le prix de la prestation doit être un nombre')
+                    .moreThan(0, 'Le prix de la prestation doit être supérieur à 0€')
                     .required('Veuillez entrer un prix'),
                   otherwise: Yup.number().nullable(true)
                 }),
@@ -544,6 +544,7 @@ class Wizard extends React.Component {
                                   style={{ color: !checkArr.some(check) ? 'white' : null }}
                                   disabled={checkArr.some(check)}
                                   onClick={() => {
+                                    console.log("Form.errors.submission:"+JSON.stringify(form.errors.submission));
                                     if (typeof form.errors.submission === 'undefined') {
                                     } else {
                                       toast.error(
@@ -822,7 +823,6 @@ class Form extends React.Component {
       travel_tax: null,
       pick_tax_enabled: false,
       pick_tax: null,
-      checkedC: false,
       option_presta_user: true,
       option_presta_client: true,
       option_presta_visio: true,
@@ -1262,6 +1262,8 @@ class Form extends React.Component {
                                 location: res.data.location,
                                 serviceId: res.data._id,
                                 serviceLabel: res.data.label,
+                                travel_tax: res.data.travel_tax,
+                                pick_tax: res.data.pick_tax,
                                 descService: '',
                                 minimumBasket: '1',
                                 diploma: {
@@ -1572,8 +1574,8 @@ class Form extends React.Component {
                                   />
                                 </Grid>
                               </div>
+                              <div display style={{ display: this.state.allInOneServ[0].travel_tax ? 'inline-block' : 'none' }} >
                               <hr style={{ margin: '1rem 0' }} />
-                              <div>
                                 <Typography variant="h6" style={{ marginBottom: '.5rem' }}>
                                   Frais de déplacement
                                 </Typography>
@@ -1601,7 +1603,6 @@ class Form extends React.Component {
                                               arrayHelpers.form.values.createShop.travel_tax_enabled = !arrayHelpers.form.values.createShop.travel_tax_enabled;
                                               arrayHelpers.form.setFieldValue('createShop.travel_tax_enabled', arrayHelpers.form.values.createShop.travel_tax_enabled);
                                             }}
-                                            //value="checkedG"
                                           />
                                         }
                                       />
@@ -1610,8 +1611,7 @@ class Form extends React.Component {
                                       <label style={{ padding: '1%' }}>Frais de déplacement (montant forfaitaire)</label>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', width: '35%', justifyContent: 'center', marginTop: '-2%' }}>
-                                      <div
-                                        style={{
+                                            <div style={{
                                           display: arrayHelpers.form.values.createShop.travel_tax_enabled ? '' : 'none',
                                           width: '100px',
                                           marginRight: '1px'
@@ -1636,8 +1636,8 @@ class Form extends React.Component {
                                   </div>
                                 </form>
                               </div>
+                              <div display style={{ display: this.state.allInOneServ[0].pick_tax ? 'inline-block' : 'none' }} >
                               <hr style={{ margin: '1rem 0' }} />
-                              <div>
                                 <Typography variant="h6" style={{ marginBottom: '.5rem' }}>
                                   Options
                                 </Typography>
