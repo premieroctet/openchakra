@@ -313,6 +313,9 @@ class Wizard extends React.Component {
         formData.append('alfred',e.location.alfred);
         formData.append('visio',e.location.visio);
 
+        formData.append('travel_tax', values.createShop.travel_tax);
+        formData.append('pick_tax', values.createShop.pick_tax);
+
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         console.log("FormData is:"+JSON.stringify(formData));
         axios.post(url+'myAlfred/api/serviceUser/add',formData)
@@ -789,8 +792,10 @@ class addService extends React.Component {
         diplomaObj: null,
         certifName: null,
         certifObj: null,
-        checkedB: false,
-        checkedC: false,
+      travel_tax_enabled: false,
+      travel_tax: null,
+      pick_tax_enabled: false,
+      pick_tax: null,
         option_presta_user: true,
         option_presta_client: true,
         option_presta_visio: true,
@@ -1006,7 +1011,11 @@ class addService extends React.Component {
                   option_presta_client: true,
                   option_presta_user: true,
                   option_presta_visio: true,
-                },
+              travel_tax_enabled: false,
+              travel_tax: null,
+              pick_tax_enabled: false,
+              pick_tax: null,
+            },
                 alfredUpdate: {
                   phone: null,
                   profile_picture_user: null,
@@ -1497,43 +1506,47 @@ class addService extends React.Component {
                                           display: 'flex',
                                           width: '100%',
                                           flexDirection:'row',
-                                          backgroundColor: this.state.checkedB ? '#47bdd7' : 'white',
+                                      backgroundColor: arrayHelpers.form.values.createShop.travel_tax_enabled ? '#47bdd7' : 'white',
                                           border: '1px solid #47bdd7',
                                           borderRadius: '50px',
-                                          color: this.state.checkedB ? 'white' : '#47bdd7',
+                                      color: arrayHelpers.form.values.createShop.travel_tax_enabled ? 'white' : '#47bdd7'
                                         }}>
                                           <div className={classes.contentCheckBox} style={{marginLeft: '2%', width:'10%'}}>
                                             <FormControlLabel
                                               control={
                                                 <CheckboxCustom
-                                                  checked={this.checkedB}
-                                                  onChange={() => {
-                                                    this.setState({ checkedB: !this.state.checkedB });
-                                                  }}
-                                                  value="checkedG"
+                                            name='travel_tax_enabled'
+                                            value={arrayHelpers.form.values.createShop.travel_tax_enabled}
+                                            checked={arrayHelpers.form.values.createShop.travel_tax_enabled}
+                                            onChange={() => {
+                                              arrayHelpers.form.values.createShop.travel_tax_enabled = !arrayHelpers.form.values.createShop.travel_tax_enabled;
+                                              arrayHelpers.form.setFieldValue('createShop.travel_tax_enabled', arrayHelpers.form.values.createShop.travel_tax_enabled);
+                                            }}
                                                 />
                                               }
                                             />
                                           </div>
                                           <div className={classes.contentCheckBox} style={{ width: '60%'}}>
-                                            <label style={{ padding: '1%'}}>
-                                              Frais de déplacement (montant forfaitaire)
-                                            </label>
+                                      <label style={{ padding: '1%' }}>Frais de déplacement (montant forfaitaire)</label>
                                           </div>
                                           <div style={{display:'flex' , alignItems:'center', width:'35%', justifyContent:'center',  marginTop: '-2%'}}>
                                             <div style={{
-                                              display: this.state.checkedB ? '' : 'none',
+                                          display: arrayHelpers.form.values.createShop.travel_tax_enabled ? '' : 'none',
                                               width:'100px',
                                               marginRight: '1px'
                                             }}>
                                               <CssTextFieldOptions
                                                 label={`Prix`}
                                                 type="number"
+                                          name='travel_tax'
                                                 className={classes.textField}
                                                 inputProps={{
                                                   endAdornment: <InputAdornment position="start">€</InputAdornment>,
                                                   className: classes.inputTextField
                                                 }}
+                                           onChange={e => {
+                                              arrayHelpers.form.setFieldValue('createShop.travel_tax', e.target.value);
+                                            }}
                                               />
                                             </div>
                                           </div>
@@ -1552,20 +1565,22 @@ class addService extends React.Component {
                                           display: 'flex',
                                           width: '100%',
                                           flexDirection:'row',
-                                          backgroundColor: this.state.checkedC ? '#47bdd7' : 'white',
+                                      backgroundColor: arrayHelpers.form.values.createShop.pick_tax_enabled ? '#47bdd7' : 'white',
                                           border: '1px solid #47bdd7',
                                           borderRadius: '50px',
-                                          color: this.state.checkedC ? 'white' : '#47bdd7',
+                                      color: arrayHelpers.form.values.createShop.pick_tax_enabled ? 'white' : '#47bdd7'
                                         }}>
                                           <div className={classes.contentCheckBox} style={{marginLeft: '2%', width:'10%'}}>
                                             <FormControlLabel
                                               control={
                                                 <CheckboxCustom
-                                                  checked={this.checkedC}
-                                                  onChange={() => {
-                                                    this.setState({ checkedC: !this.state.checkedC });
-                                                  }}
-                                                  value="checkedG"
+                                            name='pick_tax_enabled'
+                                            value={arrayHelpers.form.values.createShop.pick_tax_enabled}
+                                            checked={arrayHelpers.form.values.createShop.pick_tax_enabled}
+                                            onChange={() => {
+                                              arrayHelpers.form.values.createShop.pick_tax_enabled = !arrayHelpers.form.values.createShop.pick_tax_enabled;
+                                              arrayHelpers.form.setFieldValue('createShop.pick_tax_enabled', arrayHelpers.form.values.createShop.pick_tax_enabled);
+                                            }}
                                                 />
                                               }
                                             />
@@ -1578,17 +1593,22 @@ class addService extends React.Component {
                                           <div style={{display:'flex' , alignItems:'center', width:'35%'}}>
                                             <div style={{
                                               display: this.state.checkedC ? '' : 'none',
+                                          display: arrayHelpers.form.values.createShop.pick_tax_enabled ? '' : 'none',
                                               width:'100px',
                                               marginRight: '1px'
                                             }}>
                                               <CssTextFieldOptions
                                                 label={`Prix`}
+                                          name='pick_tax'
                                                 type="number"
                                                 className={classes.textField}
                                                 inputProps={{
                                                   className: classes.inputTextField,
                                                   endAdornment: <InputAdornment position="start">€</InputAdornment>,
-                                                }}
+                                          }}
+                                           onChange={e => {
+                                              arrayHelpers.form.setFieldValue('createShop.pick_tax', e.target.value);
+                                            }}
                                               />
                                             </div>
                                           </div>
