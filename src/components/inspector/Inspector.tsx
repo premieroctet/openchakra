@@ -33,8 +33,8 @@ import { Tooltip } from "@chakra-ui/core";
 
 const Inspector = () => {
   const dispatch = useDispatch();
-  const selectedId = useSelector((state: RootState) => state.app.selectedId);
-  const components = useSelector((state: RootState) => state.app.components);
+  const selectedId = useSelector((state: RootState) => state.app.present.selectedId);
+  const components = useSelector((state: RootState) => state.app.present.components);
 
   const { setValue, setValueFromEvent } = useForm();
 

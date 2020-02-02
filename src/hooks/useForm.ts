@@ -5,10 +5,10 @@ import { RootState } from "..";
 
 export const useForm = () => {
   const dispatch = useDispatch();
-  const selectedId = useSelector((state: RootState) => state.app.selectedId);
+  const selectedId = useSelector((state: RootState) => state.app.present.selectedId);
 
   const component = useSelector(
-    (state: RootState) => state.app.components[selectedId]
+    (state: RootState) => state.app.present.components[selectedId]
   );
 
   const values = (component && component.props) || {};

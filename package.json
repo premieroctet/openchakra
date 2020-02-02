@@ -32,6 +32,7 @@
     "react-scripts": "3.3.0",
     "react-split-pane": "^0.1.89",
     "redux": "^4.0.5",
+    "redux-undo": "^1.0.0",
     "typescript": "^3.7.5"
   },
   "scripts": {

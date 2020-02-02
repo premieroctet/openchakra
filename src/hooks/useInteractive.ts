@@ -9,7 +9,9 @@ export const useInteractive = (
   enableVisualHelper: boolean = false
 ) => {
   const dispatch = useDispatch();
-  const showLayout = useSelector((state: RootState) => state.app.showLayout);
+  const showLayout = useSelector(
+    (state: RootState) => state.app.present.showLayout
+  );
   const [, drag] = useDrag({
     item: { id: component.id, type: component.type, isMoved: true }
   });
