@@ -9,10 +9,10 @@ import { RootState } from "../..";
 import useDispatch from "../../hooks/useDispatch";
 
 const Editor: React.FC = () => {
-  const showCode = useSelector((state: RootState) => state.app.showCode);
-  const showLayout = useSelector((state: RootState) => state.app.showLayout);
-  const overlay = useSelector((state: RootState) => state.app.overlay);
-  const components = useSelector((state: RootState) => state.app.components);
+  const showCode = useSelector((state: RootState) => state.app.present.showCode);
+  const showLayout = useSelector((state: RootState) => state.app.present.showLayout);
+  const overlay = useSelector((state: RootState) => state.app.present.overlay);
+  const components = useSelector((state: RootState) => state.app.present.components);
   const dispatch = useDispatch();
 
   const { drop, canDrop } = useDropComponent("root");
