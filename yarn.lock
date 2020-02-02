@@ -10410,6 +10410,11 @@ redux-persist@^5.10.0:
   resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-5.10.0.tgz#5d8d802c5571e55924efc1c3a9b23575283be62b"
   integrity sha512-sSJAzNq7zka3qVHKce1hbvqf0Vf5DuTVm7dr4GtsqQVOexnrvbV47RWFiPxQ8fscnyiuWyD2O92DOxPl0tGCRg==
 
+redux-undo@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/redux-undo/-/redux-undo-1.0.0.tgz#7688f0ae3874e0da35077de4fb1753c5d2e66a7a"
+  integrity sha512-WhCbkQyzY3KgqR+3wF1wR/O9WhvTsYGxKhwX5H1nWLA0q9AHrtHWgj4WQhTIJr5HzUR5uJyHm/Dnu5fiSvqL7w==
+
 redux@^4.0.0, redux@^4.0.4, redux@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.5.tgz#4db5de5816e17891de8a80c424232d06f051d93f"

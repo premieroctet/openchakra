@@ -5,7 +5,9 @@ import { RootState } from "..";
 
 export const useForm = () => {
   const dispatch = useDispatch();
-  const selectedId = useSelector((state: RootState) => state.app.selectedId);
+  const selectedId = useSelector(
+    (state: RootState) => state.app.present.selectedId
+  );
 
   const setValueFromEvent = ({
     target: { name, value }

@@ -17,7 +17,7 @@ const Inspector = () => {
   const dispatch = useDispatch();
   const selectedId = useSelector((state: RootState) => state.app.selectedId);
   const component = useSelector(
-    (state: RootState) => state.app.components[selectedId]
+    (state: RootState) => state.app.components.present.components[selectedId]
   );
 
   if (selectedId === "root" || !component) {
