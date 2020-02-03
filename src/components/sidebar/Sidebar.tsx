@@ -26,7 +26,6 @@ const TYPES_SOON: ComponentType[] = [
   "ControlBox",
   "Menu",
   "NumberInput",
-  "Select",
   "Editable"
 ];
 

@@ -69,7 +69,8 @@ import {
   SelectProps,
   RadioGroupProps,
   RadioGroup,
-  Radio
+  Radio,
+  Select
 } from "@chakra-ui/core";
 import FormLabel, { FormLabelProps } from "@chakra-ui/core/dist/FormLabel";
 
@@ -227,5 +228,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     children: "Error message"
   },
   Radio: { ...Radio.defaultProps, children: "Radio" },
-  RadioGroup: { ...RadioGroup.defaultProps }
+  RadioGroup: { ...RadioGroup.defaultProps },
+  Select: { ...Select.defaultProps, variant: "outline", size: "md" }
 };

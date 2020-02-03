@@ -52,6 +52,7 @@ import TabsPreview, {
 } from "./previews/TabsPreview";
 import InputPreview from "./previews/InputPreview";
 import { RadioPreview, RadioGroupPreview } from "./previews/RadioPreview";
+import SelectPreview from "./previews/SelectPreview";
 
 const ComponentPreview: React.FC<{ componentName: string }> = ({
   componentName
@@ -154,6 +155,8 @@ const ComponentPreview: React.FC<{ componentName: string }> = ({
       return <RadioPreview component={component} />;
     case "RadioGroup":
       return <RadioGroupPreview component={component} />;
+    case "Select":
+      return <SelectPreview component={component} />;
     default:
       return null;
   }

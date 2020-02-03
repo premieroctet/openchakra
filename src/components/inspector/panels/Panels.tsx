@@ -34,6 +34,7 @@ import TabsPanel from "./components/TabsPanel";
 import InputPanel from "./components/InputPanel";
 import RadioPanel from "./components/RadioPanel";
 import RadioGroupPanel from "./components/RadioGroupPanel";
+import SelectPanel from "./components/SelectPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -74,6 +75,7 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "Input" && <InputPanel />}
       {type === "Radio" && <RadioPanel />}
       {type === "RadioGroup" && <RadioGroupPanel />}
+      {type === "Select" && <SelectPanel />}
     </>
   );
 };
