@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, memo } from "react";
 import {
   FormLabel,
   FormControl as ChakraFormControl,
@@ -48,4 +48,4 @@ const FormControl: React.FC<FormControlPropType> = ({
   </ChakraFormControl>
 );
 
-export default FormControl;
+export default memo(FormControl);

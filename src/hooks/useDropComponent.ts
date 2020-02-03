@@ -8,11 +8,10 @@ export const useDropComponent = (
 ) => {
   const dispatch = useDispatch();
 
-  const [{ isOver, canDrop }, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop({
     accept,
     collect: monitor => ({
-      isOver: monitor.isOver({ shallow: true }),
-      canDrop: monitor.canDrop()
+      isOver: monitor.isOver({ shallow: true })
     }),
     drop: (item: ComponentItemProps, monitor: DropTargetMonitor) => {
       if (!monitor.isOver()) {
@@ -33,5 +32,5 @@ export const useDropComponent = (
     }
   });
 
-  return { drop, isOver, canDrop };
+  return { drop, isOver };
 };

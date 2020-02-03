@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, memo } from "react";
 import {
   AccordionItem,
   AccordionHeader,
@@ -28,4 +28,4 @@ const AccordionContainer: React.FC<{
   );
 };
 
-export default AccordionContainer;
+export default memo(AccordionContainer);

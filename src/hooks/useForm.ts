@@ -7,12 +7,6 @@ export const useForm = () => {
   const dispatch = useDispatch();
   const selectedId = useSelector((state: RootState) => state.app.selectedId);
 
-  const component = useSelector(
-    (state: RootState) => state.app.components[selectedId]
-  );
-
-  const values = (component && component.props) || {};
-
   const setValueFromEvent = ({
     target: { name, value }
   }: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
@@ -20,16 +14,12 @@ export const useForm = () => {
   };
 
   const setValue = (name: string, value: any) => {
-    if (component) {
-      const { id } = component;
-
-      dispatch.app.updateProps({
-        id,
-        name,
-        value
-      });
-    }
+    dispatch.app.updateProps({
+      id: selectedId,
+      name,
+      value
+    });
   };
 
-  return { setValue, values, setValueFromEvent };
+  return { setValue, setValueFromEvent, selectedId };
 };

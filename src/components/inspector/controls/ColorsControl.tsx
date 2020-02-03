@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, memo } from "react";
 import {
   theme,
   Popover,
@@ -26,11 +26,11 @@ import { useForm } from "../../../hooks/useForm";
 import omit from "lodash/omit";
 import ColorPicker from "coloreact";
 import "react-color-picker/index.css";
+import usePropsSelector from "../../../hooks/usePropsSelector";
 
 type ColorControlPropsType = {
   name: string;
   label: string | ReactNode;
-  value: string;
   enableHues?: boolean;
   withFullColor?: boolean;
 };
@@ -38,6 +38,7 @@ type ColorControlPropsType = {
 const ColorsControl = (props: ColorControlPropsType) => {
   const { setValue, setValueFromEvent } = useForm();
   const [hue, setHue] = useState(500);
+  const value = usePropsSelector(props.name);
 
   const themeColors: any = omit(theme.colors, [
     "transparent",
@@ -47,9 +48,9 @@ const ColorsControl = (props: ColorControlPropsType) => {
     "white"
   ]);
 
-  let propsIconButton: any = { bg: props.value };
-  if (props.value && themeColors[props.value]) {
-    propsIconButton = { variantColor: props.value };
+  let propsIconButton: any = { bg: value };
+  if (value && themeColors[value]) {
+    propsIconButton = { variantColor: value };
   }
 
   const huesPicker = (
@@ -102,7 +103,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
           <IconButton
             mr={2}
             shadow="md"
-            border={props.value ? "none" : "2px solid grey"}
+            border={value ? "none" : "2px solid grey"}
             isRound
             aria-label="Color"
             size="xs"
@@ -127,7 +128,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
                   <TabPanel>
                     <Box position="relative" height="150px">
                       <ColorPicker
-                        color={props.value}
+                        color={value}
                         onChange={(color: any) => {
                           setValue(props.name, `#${color.hex}`);
                         }}
@@ -148,10 +149,10 @@ const ColorsControl = (props: ColorControlPropsType) => {
         size="sm"
         name={props.name}
         onChange={setValueFromEvent}
-        value={props.value}
+        value={value}
       />
     </FormControl>
   );
 };
 
-export default ColorsControl;
+export default memo(ColorsControl);

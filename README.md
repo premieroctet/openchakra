@@ -1,21 +1,17 @@
 # Open Chakra
 
-## Roadmap
-
-### Features
+## Todo before release
 
 Before release:
 
 - Improve flex panel
-
 - Editor sort/drag and drop
+- Add some shortcuts
+
+## Roadmap
+
 - Allow Body styling
 - Improve Perf
-- Add some shortcuts
-- Bullet proof code generation
-  - Remove empty props
-  - Use integer props
-  - Smart imports
 - Tests
 - Infer from TS types (panels)
 

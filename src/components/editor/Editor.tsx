@@ -15,8 +15,7 @@ const Editor: React.FC = () => {
   const components = useSelector((state: RootState) => state.app.components);
   const dispatch = useDispatch();
 
-  const { drop, canDrop } = useDropComponent("root");
-  console.log(canDrop);
+  const { drop } = useDropComponent("root");
   const isEmpty = !components.root.children.length;
 
   let editorBackgroundProps = {};
