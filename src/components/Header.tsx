@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   Box,
   Switch,
@@ -18,10 +18,32 @@ import useDispatch from "../hooks/useDispatch";
 import { useSelector } from "react-redux";
 import { RootState } from "..";
 
+const CodeSandboxButton = () => {
+  const components = useSelector((state: RootState) => state.app.components);
+
+  return (
+    <Button
+      onClick={() => {
+        const code = generateCode(components);
+        const parameters = buildParameters(code);
+
+        window.open(
+          `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`,
+          "_blank"
+        );
+      }}
+      rightIcon="external-link"
+      variant="ghost"
+      size="xs"
+    >
+      Open in CodeSandbox
+    </Button>
+  );
+};
+
 const Header = () => {
   const showLayout = useSelector((state: RootState) => state.app.showLayout);
   const showCode = useSelector((state: RootState) => state.app.showCode);
-  const components = useSelector((state: RootState) => state.app.components);
   const dispatch = useDispatch();
 
   return (
@@ -84,22 +106,7 @@ const Header = () => {
               />
             </Flex>
             <Divider orientation="vertical" />
-            <Button
-              onClick={() => {
-                const code = generateCode(components);
-                const parameters = buildParameters(code);
-
-                window.open(
-                  `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`,
-                  "_blank"
-                );
-              }}
-              rightIcon="external-link"
-              variant="ghost"
-              size="xs"
-            >
-              Open in CodeSandbox
-            </Button>
+            <CodeSandboxButton />
             <Divider orientation="vertical" />
             <Button
               rightIcon="small-close"
@@ -133,4 +140,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default memo(Header);
