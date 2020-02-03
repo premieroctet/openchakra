@@ -42,8 +42,25 @@ import {
   TagProps,
   SimpleGridProps,
   SwitchProps,
-  AlertProps
+  AlertProps,
+  FlexProps,
+  StackProps,
+  AccordionProps,
+  AccordionHeaderProps,
+  AccordionItemProps,
+  FormControlProps,
+  TabListProps,
+  TabPanelProps,
+  TabPanelsProps,
+  TabsProps,
+  TabPanel,
+  Tab,
+  FormHelperText,
+  FormErrorMessage,
+  InputProps,
+  Input
 } from "@chakra-ui/core";
+import FormLabel, { FormLabelProps } from "@chakra-ui/core/dist/FormLabel";
 
 type PreviewDefaultProps = {
   Badge?: BadgeProps;
@@ -73,6 +90,23 @@ type PreviewDefaultProps = {
   AlertIcon?: IconProps;
   AlertTitle?: BoxProps;
   AlertDescription?: BoxProps;
+  Flex?: FlexProps;
+  Stack?: StackProps;
+  Accordion?: AccordionProps;
+  AccordionHeader?: AccordionHeaderProps;
+  AccordionItem?: AccordionItemProps;
+  AccordionPanel?: any;
+  AccordionIcon?: IconProps;
+  FormControl?: FormControlProps;
+  FormLabel?: FormLabelProps;
+  FormHelperText?: any;
+  FormErrorMessage?: any;
+  TabList?: TabListProps;
+  TabPanel?: TabPanelProps;
+  TabPanels?: TabPanelsProps;
+  Tab?: any;
+  Tabs?: TabsProps;
+  Input?: InputProps;
 };
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -111,6 +145,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     speed: "0.45s"
   },
   Textarea: Textarea.defaultProps,
+  Input: { ...Input.defaultProps, variant: "outline" },
   Heading: {
     ...Heading.defaultProps,
     size: "xl",
@@ -159,5 +194,16 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   AlertDescription: {
     ...AlertDescription.defaultProps,
     children: "Lorem Ipsum"
+  },
+  TabPanel: { ...TabPanel.defaultProps, children: "Tab" },
+  Tab: { ...Tab.defaultProps, children: "Tab" },
+  FormLabel: { ...FormLabel.defaultProps, children: "Label" },
+  FormHelperText: {
+    ...FormHelperText.defaultProps,
+    children: "Helper message"
+  },
+  FormErrorMessage: {
+    ...FormErrorMessage.defaultProps,
+    children: "Error message"
   }
 };

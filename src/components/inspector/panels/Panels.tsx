@@ -27,6 +27,11 @@ import AlertPanel from "./components/AlertPanel";
 import AlertIconPanel from "./components/AlertIconPanel";
 import AlertTitlePanel from "./components/AlertTitlePanel";
 import AlertDescriptionPanel from "./components/AlertDescriptionPanel";
+import FlexPanel from "./styles/FlexPanel";
+import StackPanel from "./components/StackPanel";
+import FormControlPanel from "./components/FormControlPanel";
+import TabsPanel from "./components/TabsPanel";
+import InputPanel from "./components/InputPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -60,6 +65,11 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "AlertTitle" && <AlertTitlePanel />}
       {type === "AlertDescription" && <AlertDescriptionPanel />}
       {type === "Tag" && <TagPanel />}
+      {type === "Flex" && <FlexPanel />}
+      {type === "Stack" && <StackPanel />}
+      {type === "FormControl" && <FormControlPanel />}
+      {type === "Tabs" && <TabsPanel />}
+      {type === "Input" && <InputPanel />}
     </>
   );
 };

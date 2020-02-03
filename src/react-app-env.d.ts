@@ -29,7 +29,24 @@ type ComponentType =
   | "AlertIcon"
   | "AlertTitle"
   | "AlertDescription"
-  | "Code";
+  | "Flex"
+  | "Stack"
+  | "Accordion"
+  | "AccordionItem"
+  | "AccordionHeader"
+  | "AccordionPanel"
+  | "AccordionIcon"
+  | "FormControl"
+  | "FormLabel"
+  | "FormHelperText"
+  | "FormErrorMessage"
+  | "TabList"
+  | "TabPanel"
+  | "TabPanels"
+  | "Tab"
+  | "Tabs"
+  | "Code"
+  | "Input";
 
 interface IComponent {
   children: string[];

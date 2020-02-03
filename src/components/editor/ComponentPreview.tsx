@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import { useSelector } from "react-redux";
 
 import BoxPreview from "./previews/BoxPreview";
 import ButtonPreview from "./previews/ButtonPreview";
@@ -6,10 +7,6 @@ import BadgePreview from "./previews/BadgePreview";
 import IconPreview from "./previews/IconPreview";
 import ImagePreview from "./previews/ImagePreview";
 import TextPreview from "./previews/TextPreview";
-import AvatarPreview, {
-  AvatarBadgePreview,
-  AvatarGroupPreview
-} from "./previews/AvatarPreview";
 import CheckboxPreview from "./previews/CheckboxPreview";
 import IconButtonPreview from "./previews/IconButtonPreview";
 import ProgressPreview from "./previews/ProgressPreview";
@@ -24,13 +21,36 @@ import HeadingPreview from "./previews/HeadingPreview";
 import TagPreview from "./previews/TagPreview";
 import SimpleGridPreview from "./previews/SimpleGridPreview";
 import SwitchPreview from "./previews/SwitchPreview";
+import FlexPreview from "./previews/FlexPreview";
 import AlertPreview, {
   AlertIconPreview,
   AlertTitlePreview,
   AlertDescriptionPreview
 } from "./previews/AlertPreview";
-import { useSelector } from "react-redux";
 import { RootState } from "../..";
+import AvatarPreview, {
+  AvatarBadgePreview,
+  AvatarGroupPreview
+} from "./previews/AvatarPreview";
+import StackPreview from "./previews/StackPreview";
+import AccordionPreview, {
+  AccordionHeaderPreview,
+  AccordionItemPreview,
+  AccordionPanelPreview,
+  AccordionIconPreview
+} from "./previews/AccordionPreview";
+import FormControlPreview, {
+  FormLabelPreview,
+  FormHelperTextPreview,
+  FormErrorMessagePreview
+} from "./previews/FormControlPreview";
+import TabsPreview, {
+  TabListPreview,
+  TabPanelPreview,
+  TabPanelsPreview,
+  TabPreview
+} from "./previews/TabsPreview";
+import InputPreview from "./previews/InputPreview";
 
 const ComponentPreview: React.FC<{ componentName: string }> = ({
   componentName
@@ -95,6 +115,40 @@ const ComponentPreview: React.FC<{ componentName: string }> = ({
       return <AlertTitlePreview component={component} />;
     case "AlertDescription":
       return <AlertDescriptionPreview component={component} />;
+    case "Flex":
+      return <FlexPreview component={component} />;
+    case "Stack":
+      return <StackPreview component={component} />;
+    case "Accordion":
+      return <AccordionPreview component={component} />;
+    case "AccordionHeader":
+      return <AccordionHeaderPreview component={component} />;
+    case "AccordionItem":
+      return <AccordionItemPreview component={component} />;
+    case "AccordionPanel":
+      return <AccordionPanelPreview component={component} />;
+    case "AccordionIcon":
+      return <AccordionIconPreview component={component} />;
+    case "FormControl":
+      return <FormControlPreview component={component} />;
+    case "FormLabel":
+      return <FormLabelPreview component={component} />;
+    case "FormHelperText":
+      return <FormHelperTextPreview component={component} />;
+    case "FormErrorMessage":
+      return <FormErrorMessagePreview component={component} />;
+    case "Tabs":
+      return <TabsPreview component={component} />;
+    case "TabList":
+      return <TabListPreview component={component} />;
+    case "TabPanel":
+      return <TabPanelPreview component={component} />;
+    case "TabPanels":
+      return <TabPanelsPreview component={component} />;
+    case "Tab":
+      return <TabPreview component={component} />;
+    case "Input":
+      return <InputPreview component={component} />;
     default:
       return null;
   }
