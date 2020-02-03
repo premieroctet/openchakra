@@ -3,9 +3,12 @@ declare module "prettier/standalone";
 declare module "coloreact";
 
 type ComponentType =
+  | "AspectRatioBox"
   | "Badge"
   | "Box"
   | "Button"
+  | "Breadcrumb"
+  | "ControlBox"
   | "Icon"
   | "IconButton"
   | "Image"
@@ -46,6 +49,11 @@ type ComponentType =
   | "Tab"
   | "Tabs"
   | "Code"
+  | "Editable"
+  | "Menu"
+  | "NumberInput"
+  | "Radio"
+  | "Select"
   | "Input";
 
 interface IComponent {
@@ -68,4 +76,5 @@ interface ComponentItemProps {
   id: string;
   type: ComponentType;
   isMoved?: boolean;
+  soon?: boolean;
 }

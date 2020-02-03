@@ -101,6 +101,10 @@ const app = createModel({
       };
     },
     deleteComponent(state: AppState, componentId: string) {
+      if (componentId === "root") {
+        return state;
+      }
+      
       let updatedComponents = { ...state.components };
       let component = updatedComponents[componentId];
 

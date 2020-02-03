@@ -58,7 +58,15 @@ import {
   FormHelperText,
   FormErrorMessage,
   InputProps,
-  Input
+  Input,
+  AspectRatioBoxProps,
+  BreadcrumbItemProps,
+  ControlBoxProps,
+  EditableProps,
+  MenuProps,
+  NumberInputProps,
+  RadioProps,
+  SelectProps
 } from "@chakra-ui/core";
 import FormLabel, { FormLabelProps } from "@chakra-ui/core/dist/FormLabel";
 
@@ -106,7 +114,15 @@ type PreviewDefaultProps = {
   TabPanels?: TabPanelsProps;
   Tab?: any;
   Tabs?: TabsProps;
+  Select?: SelectProps;
   Input?: InputProps;
+  AspectRatioBox?: AspectRatioBoxProps;
+  Breadcrumb?: BreadcrumbItemProps;
+  ControlBox?: ControlBoxProps;
+  Editable?: EditableProps;
+  Menu?: MenuProps;
+  NumberInput?: NumberInputProps;
+  Radio?: RadioProps;
 };
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {

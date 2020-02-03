@@ -13,11 +13,6 @@ import { useSelector } from "react-redux";
 import { RootState } from ".";
 
 export const COMPONENTS: ComponentType[] = [
-  "Accordion",
-  "AccordionItem",
-  "AccordionHeader",
-  "AccordionPanel",
-  "AccordionIcon",
   "Alert",
   "AlertDescription",
   "AlertIcon",
@@ -49,14 +44,28 @@ export const COMPONENTS: ComponentType[] = [
   "Spinner",
   "Stack",
   "Switch",
-  "Tab",
-  "Tabs",
-  "TabList",
-  "TabPanel",
-  "TabPanels",
   "Tag",
   "Text",
-  "Textarea"
+  "Textarea",
+  "Tab",
+  "Accordion",
+  "Select",
+  "ControlBox",
+  "Editable",
+  "AspectRatioBox",
+  "Breadcrumb",
+  "Menu",
+  "NumberInput",
+  "Radio"
+
+  /*"AccordionItem",
+  "AccordionHeader",
+  "AccordionPanel",
+  "AccordionIcon",*/
+  /*"Tabs",
+  "TabList",
+  "TabPanel",
+  "TabPanels"*/
 ];
 
 export const rootComponents = COMPONENTS.filter(

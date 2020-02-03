@@ -10,6 +10,27 @@ import {
 import DragItem from "./DragItem";
 import { COMPONENTS } from "../../App";
 
+const TYPES_SOON: ComponentType[] = [
+  "AspectRatioBox",
+  "Accordion",
+  "AccordionItem",
+  "AccordionHeader",
+  "AccordionPanel",
+  "AccordionIcon",
+  "Tab",
+  "Tabs",
+  "TabList",
+  "TabPanel",
+  "TabPanels",
+  "Breadcrumb",
+  "Radio",
+  "ControlBox",
+  "Menu",
+  "NumberInput",
+  "Select",
+  "Editable"
+];
+
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -44,7 +65,12 @@ const Menu = () => {
         {COMPONENTS.filter(c =>
           c.toLowerCase().includes(searchTerm.toLowerCase())
         ).map(type => (
-          <DragItem key={type} id={type} type={type as ComponentType}>
+          <DragItem
+            soon={TYPES_SOON.includes(type)}
+            key={type}
+            id={type}
+            type={type as ComponentType}
+          >
             {type}
           </DragItem>
         ))}
