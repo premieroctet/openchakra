@@ -1,20 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { AppStateWithUndo } from "./core/models/app";
 import { ThemeProvider, CSSReset, theme } from "@chakra-ui/core";
-import { init } from "@rematch/core";
+import { init, RematchRootState } from "@rematch/core";
 import createRematchPersist from "@rematch/persist";
-import { Provider } from "react-redux";
-import { combineReducers } from "redux";
-import undoable from "redux-undo";
-
 import models from "./core/models";
-import filterUndoableActions from "./utils/undo";
+import { Provider } from "react-redux";
 
-export type RootState = {
-  app: AppStateWithUndo;
-};
+export type RootState = RematchRootState<typeof models>;
 
 const persistPlugin = createRematchPersist({
   whitelist: ["app"],
@@ -23,17 +16,6 @@ const persistPlugin = createRematchPersist({
 
 export const store = init({
   models,
-  redux: {
-    combineReducers: reducers => {
-      console.log(reducers);
-      return combineReducers({
-        ...reducers,
-        app: undoable(reducers.app, {
-          filter: filterUndoableActions,
-        })
-      });
-    }
-  },
   plugins: [persistPlugin]
 });
 

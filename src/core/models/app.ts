@@ -11,11 +11,6 @@ type AppState = {
   selectedId: string;
   overlay: undefined | Overlay;
 };
-export type AppStateWithUndo = {
-  past: AppState[];
-  present: AppState;
-  future: AppState[];
-}
 
 const INITIAL_COMPONENTS = {
   root: {

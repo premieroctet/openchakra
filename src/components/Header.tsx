@@ -19,9 +19,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "..";
 
 const Header = () => {
-  const showLayout = useSelector((state: RootState) => state.app.present.showLayout);
-  const showCode = useSelector((state: RootState) => state.app.present.showCode);
-  const components = useSelector((state: RootState) => state.app.present.components);
+  const showLayout = useSelector((state: RootState) => state.app.showLayout);
+  const showCode = useSelector((state: RootState) => state.app.showCode);
+  const components = useSelector((state: RootState) => state.app.components);
   const dispatch = useDispatch();
 
   return (
