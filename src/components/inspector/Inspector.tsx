@@ -17,7 +17,7 @@ const Inspector = () => {
   const dispatch = useDispatch();
   const selectedId = useSelector((state: RootState) => state.app.selectedId);
   const component = useSelector(
-    (state: RootState) => state.app.components.present.components[selectedId]
+    (state: RootState) => state.components.present.components[selectedId]
   );
 
   if (selectedId === "root" || !component) {
@@ -63,7 +63,7 @@ const Inspector = () => {
                 size="xs"
                 variant="ghost"
                 aria-label="Reset"
-                onClick={() => dispatch.app.resetProps(component.id)}
+                onClick={() => dispatch.components.resetProps(component.id)}
                 icon={IoMdRefresh}
               />
             </Tooltip>
@@ -86,7 +86,9 @@ const Inspector = () => {
               <IconButton
                 size="xs"
                 variant="ghost"
-                onClick={() => dispatch.app.deleteComponent(component.id)}
+                onClick={() =>
+                  dispatch.components.deleteComponent(component.id)
+                }
                 aria-label="Remove"
                 icon={FiTrash2}
               />

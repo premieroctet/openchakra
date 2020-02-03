@@ -85,7 +85,7 @@ const keyMap = {
 };
 
 const App = () => {
-  const selectedId = useSelector((state: RootState) => state.app.present.selectedId);
+  const selectedId = useSelector((state: RootState) => state.app.selectedId);
   const dispatch = useDispatch();
 
   const deleteNode = (event: KeyboardEvent | undefined) => {
@@ -94,7 +94,7 @@ const App = () => {
     }
 
     if (selectedId) {
-      dispatch.app.deleteComponent(selectedId);
+      dispatch.components.deleteComponent(selectedId);
     }
   };
 

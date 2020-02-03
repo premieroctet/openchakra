@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { AppStateWithUndo } from "./core/models/app";
+import { AppState } from "./core/models/app";
+import { ComponentsStateWithUndo } from "./core/models/components";
 import { ThemeProvider, CSSReset, theme } from "@chakra-ui/core";
 import { init } from "@rematch/core";
 import { Provider } from "react-redux";
@@ -14,17 +15,15 @@ import models from "./core/models";
 import filterUndoableActions from "./utils/undo";
 
 export type RootState = {
-  app: AppStateWithUndo;
+  app: AppState;
+  components: ComponentsStateWithUndo;
 };
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["app"],
-  version: parseInt(process.env.REACT_APP_VERSION || "1", 10),
-  stateReconciler: (inboundState: RootState) => {
-    return inboundState;
-  }
+  whitelist: ["present"],
+  version: parseInt(process.env.REACT_APP_VERSION || "1", 10)
 };
 
 const persistPlugin = {
@@ -37,15 +36,15 @@ export const store = init({
   models,
   redux: {
     combineReducers: reducers => {
-      return persistReducer(
-        persistConfig,
-        combineReducers({
-          ...reducers,
-          app: undoable(reducers.app, {
+      return combineReducers({
+        ...reducers,
+        components: persistReducer(
+          persistConfig,
+          undoable(reducers.components, {
             filter: filterUndoableActions
           })
-        })
-      );
+        )
+      });
     }
   },
   plugins: [persistPlugin]
