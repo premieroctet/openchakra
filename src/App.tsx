@@ -39,6 +39,8 @@ export const COMPONENTS: ComponentType[] = [
   "Image",
   "Input",
   "Link",
+  "List",
+  "ListItem",
   "Progress",
   "Radio",
   "RadioGroup",

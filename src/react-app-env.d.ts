@@ -55,6 +55,9 @@ type ComponentType =
   | "Radio"
   | "RadioGroup"
   | "Select"
+  | "List"
+  | "ListItem"
+  | "ListIcon"
   | "Input";
 
 interface IComponent {

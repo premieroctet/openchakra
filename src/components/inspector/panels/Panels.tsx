@@ -35,6 +35,9 @@ import InputPanel from "./components/InputPanel";
 import RadioPanel from "./components/RadioPanel";
 import RadioGroupPanel from "./components/RadioGroupPanel";
 import SelectPanel from "./components/SelectPanel";
+import ListPanel from "./components/ListPanel";
+import ListItemPanel from "./components/ListItemPanel";
+import ListIconPanel from "./components/ListIconPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -76,6 +79,9 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "Radio" && <RadioPanel />}
       {type === "RadioGroup" && <RadioGroupPanel />}
       {type === "Select" && <SelectPanel />}
+      {type === "List" && <ListPanel />}
+      {type === "ListItem" && <ListItemPanel />}
+      {type === "ListIcon" && <ListIconPanel />}
     </>
   );
 };

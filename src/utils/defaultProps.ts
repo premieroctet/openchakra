@@ -70,7 +70,10 @@ import {
   RadioGroupProps,
   RadioGroup,
   Radio,
-  Select
+  Select,
+  List,
+  ListIcon,
+  ListItem
 } from "@chakra-ui/core";
 import FormLabel, { FormLabelProps } from "@chakra-ui/core/dist/FormLabel";
 
@@ -128,6 +131,9 @@ type PreviewDefaultProps = {
   NumberInput?: NumberInputProps;
   Radio?: RadioProps;
   RadioGroup?: RadioGroupProps;
+  List?: any;
+  ListIcon?: IconProps;
+  ListItem?: any;
 };
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -229,5 +235,8 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   Radio: { ...Radio.defaultProps, children: "Radio" },
   RadioGroup: { ...RadioGroup.defaultProps },
-  Select: { ...Select.defaultProps, variant: "outline", size: "md" }
+  Select: { ...Select.defaultProps, variant: "outline", size: "md" },
+  List: { ...List.defaultProps, styleType: "none" },
+  ListIcon: { ...ListIcon.defaultProps },
+  ListItem: { ...ListItem.defaultProps, children: "list" }
 };
