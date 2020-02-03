@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, memo } from "react";
 import {
   theme,
   Popover,
@@ -6,7 +6,6 @@ import {
   PopoverContent,
   PopoverArrow,
   Grid,
-  Tooltip,
   PseudoBox,
   PopoverBody,
   IconButton,
@@ -27,11 +26,11 @@ import { useForm } from "../../../hooks/useForm";
 import omit from "lodash/omit";
 import ColorPicker from "coloreact";
 import "react-color-picker/index.css";
+import usePropsSelector from "../../../hooks/usePropsSelector";
 
 type ColorControlPropsType = {
   name: string;
   label: string | ReactNode;
-  value: string;
   enableHues?: boolean;
   withFullColor?: boolean;
 };
@@ -39,6 +38,7 @@ type ColorControlPropsType = {
 const ColorsControl = (props: ColorControlPropsType) => {
   const { setValue, setValueFromEvent } = useForm();
   const [hue, setHue] = useState(500);
+  const value = usePropsSelector(props.name);
 
   const themeColors: any = omit(theme.colors, [
     "transparent",
@@ -48,38 +48,31 @@ const ColorsControl = (props: ColorControlPropsType) => {
     "white"
   ]);
 
-  let propsIconButton: any = { bg: props.value };
-  if (props.value && themeColors[props.value]) {
-    propsIconButton = { variantColor: props.value };
+  let propsIconButton: any = { bg: value };
+  if (value && themeColors[value]) {
+    propsIconButton = { variantColor: value };
   }
 
   const huesPicker = (
     <>
       <Grid mb={2} templateColumns="repeat(5, 1fr)" gap={0}>
         {Object.keys(themeColors).map(colorName => (
-          <Tooltip
-            hasArrow
-            aria-label={colorName}
-            label={props.enableHues ? `${colorName}.${hue}` : colorName}
-            placement="top"
-            zIndex={3}
-          >
-            <PseudoBox
-              _hover={{ shadow: "lg" }}
-              cursor="pointer"
-              bg={`${colorName}.${props.enableHues ? hue : 500}`}
-              onClick={() =>
-                setValue(
-                  props.name,
-                  props.enableHues ? `${colorName}.${hue}` : colorName
-                )
-              }
-              mt={2}
-              rounded="full"
-              height="30px"
-              width="30px"
-            />
-          </Tooltip>
+          <PseudoBox
+            key={colorName}
+            _hover={{ shadow: "lg" }}
+            cursor="pointer"
+            bg={`${colorName}.${props.enableHues ? hue : 500}`}
+            onClick={() =>
+              setValue(
+                props.name,
+                props.enableHues ? `${colorName}.${hue}` : colorName
+              )
+            }
+            mt={2}
+            rounded="full"
+            height="30px"
+            width="30px"
+          />
         ))}
       </Grid>
 
@@ -110,7 +103,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
           <IconButton
             mr={2}
             shadow="md"
-            border={props.value ? "none" : "2px solid grey"}
+            border={value ? "none" : "2px solid grey"}
             isRound
             aria-label="Color"
             size="xs"
@@ -120,7 +113,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
           </IconButton>
         </PopoverTrigger>
 
-        <PopoverContent width="200px" usePortal zIndex={1}>
+        <PopoverContent width="200px" zIndex={1}>
           <PopoverArrow />
           <PopoverBody>
             {props.withFullColor ? (
@@ -135,7 +128,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
                   <TabPanel>
                     <Box position="relative" height="150px">
                       <ColorPicker
-                        color={props.value}
+                        color={value}
                         onChange={(color: any) => {
                           setValue(props.name, `#${color.hex}`);
                         }}
@@ -156,10 +149,10 @@ const ColorsControl = (props: ColorControlPropsType) => {
         size="sm"
         name={props.name}
         onChange={setValueFromEvent}
-        value={props.value}
+        value={value}
       />
     </FormControl>
   );
 };
 
-export default ColorsControl;
+export default memo(ColorsControl);

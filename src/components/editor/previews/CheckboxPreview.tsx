@@ -7,11 +7,7 @@ const CheckboxPreview: React.FC<{ component: IComponent }> = ({
 }) => {
   const { props, ref } = useInteractive(component);
 
-  return (
-    <Checkbox ref={ref} {...props}>
-      {props.children || "Lorem Ipsum"}
-    </Checkbox>
-  );
+  return <Checkbox ref={ref} {...props} />;
 };
 
 export default CheckboxPreview;

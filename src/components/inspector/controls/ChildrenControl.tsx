@@ -2,9 +2,11 @@ import React from "react";
 import { Input } from "@chakra-ui/core";
 import FormControl from "./FormControl";
 import { useForm } from "../../../hooks/useForm";
+import usePropsSelector from "../../../hooks/usePropsSelector";
 
 const ChildrenControl: React.FC = () => {
-  const { setValueFromEvent, values } = useForm();
+  const { setValueFromEvent } = useForm();
+  const children = usePropsSelector("children");
 
   return (
     <FormControl htmlFor="children" label="Text">
@@ -13,7 +15,7 @@ const ChildrenControl: React.FC = () => {
         name="children"
         autoFocus
         size="sm"
-        value={values.children || ""}
+        value={children || ""}
         type="text"
         onChange={setValueFromEvent}
       />

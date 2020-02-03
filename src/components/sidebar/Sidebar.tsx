@@ -16,11 +16,13 @@ const Menu = () => {
   return (
     <DarkMode>
       <Box
+        maxH="calc(100vh - 3rem)"
+        overflowY="auto"
+        overflowX="visible"
         shadow="xl"
         flex="0 0 14rem"
         p={5}
         m={0}
-        overflowY="auto"
         as="menu"
         backgroundColor="#2e3748"
         width="15rem"
@@ -41,9 +43,9 @@ const Menu = () => {
 
         {COMPONENTS.filter(c =>
           c.toLowerCase().includes(searchTerm.toLowerCase())
-        ).map(component => (
-          <DragItem name={component} type={component as ComponentType}>
-            {component}
+        ).map(type => (
+          <DragItem key={type} id={type} type={type as ComponentType}>
+            {type}
           </DragItem>
         ))}
       </Box>

@@ -1,36 +1,32 @@
-import { useDrop } from "react-dnd";
-import { COMPONENTS } from "../App";
-import { useBuilderContext } from "../contexts/BuilderContext";
-import { DEFAULT_PROPS } from "../utils/defaultProps";
+import { useDrop, DropTargetMonitor } from "react-dnd";
+import { rootComponents } from "../App";
+import useDispatch from "./useDispatch";
 
 export const useDropComponent = (
-  componentName: string,
-  accept: ComponentType[] = COMPONENTS
+  componentId: string,
+  accept: ComponentType[] = rootComponents
 ) => {
-  const { components, setComponents } = useBuilderContext();
+  const dispatch = useDispatch();
 
   const [{ isOver }, drop] = useDrop({
     accept,
     collect: monitor => ({
       isOver: monitor.isOver({ shallow: true })
     }),
-    drop: (item: ComponentItemProps, monitor) => {
-      if (monitor.isOver()) {
-        const name = `comp-${Math.round(new Date().getTime() / 1000)}`;
+    drop: (item: ComponentItemProps, monitor: DropTargetMonitor) => {
+      if (!monitor.isOver()) {
+        return;
+      }
 
-        setComponents({
-          ...components,
-          [componentName]: {
-            ...components[componentName],
-            children: [...components[componentName].children, name]
-          },
-          [name]: {
-            name,
-            props: DEFAULT_PROPS[item.type] || {},
-            children: [],
-            type: item.type,
-            parent: componentName
-          }
+      if (item.isMoved) {
+        dispatch.app.moveComponent({
+          parentId: componentId,
+          componentId: item.id
+        });
+      } else {
+        dispatch.app.addComponent({
+          parentName: componentId,
+          type: item.type
         });
       }
     }

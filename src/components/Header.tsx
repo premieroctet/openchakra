@@ -12,20 +12,17 @@ import {
 } from "@chakra-ui/core";
 import { DiGithubBadge } from "react-icons/di";
 import { AiFillThunderbolt } from "react-icons/ai";
-import { useBuilderContext, INITIAL_STATE } from "../contexts/BuilderContext";
 import { buildParameters } from "../utils/codesandbox";
 import { generateCode } from "../utils/code";
+import useDispatch from "../hooks/useDispatch";
+import { useSelector } from "react-redux";
+import { RootState } from "..";
 
 const Header = () => {
-  const {
-    setShowLayout,
-    showLayout,
-    setComponents,
-    components,
-    showCode,
-    setShowCode,
-    setSelectedComponent
-  } = useBuilderContext();
+  const showLayout = useSelector((state: RootState) => state.app.showLayout);
+  const showCode = useSelector((state: RootState) => state.app.showCode);
+  const components = useSelector((state: RootState) => state.app.components);
+  const dispatch = useDispatch();
 
   return (
     <DarkMode>
@@ -64,10 +61,11 @@ const Header = () => {
                 Builder mode
               </FormLabel>
               <Switch
+                defaultIsChecked={showLayout}
                 isChecked={showLayout}
                 color="teal"
                 size="sm"
-                onChange={() => setShowLayout(!showLayout)}
+                onChange={() => dispatch.app.toggleBuilderMode()}
                 id="preview"
               />
             </Flex>
@@ -77,9 +75,11 @@ const Header = () => {
                 Code panel
               </FormLabel>
               <Switch
+                defaultIsChecked={showCode}
+                isChecked={showCode}
                 id="code"
                 color="teal"
-                onChange={() => setShowCode(!showCode)}
+                onChange={() => dispatch.app.toggleCodePanel()}
                 size="sm"
               />
             </Flex>
@@ -106,8 +106,7 @@ const Header = () => {
               size="xs"
               variant="ghost"
               onClick={() => {
-                setSelectedComponent(undefined);
-                setComponents(INITIAL_STATE);
+                dispatch.app.reset();
               }}
             >
               Reset
@@ -122,7 +121,7 @@ const Header = () => {
             >
               <Link
                 isExternal
-                href="https://github.com/chakra-ui/chakra-ui/tree/master/packages/chakra-ui"
+                href="https://github.com/premieroctet/open-chakra"
               >
                 <Box as={DiGithubBadge} size="8" color="gray.200" />
               </Link>

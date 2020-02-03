@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import BoxPreview from "./previews/BoxPreview";
 import ButtonPreview from "./previews/ButtonPreview";
@@ -18,7 +18,7 @@ import SpinnerPreview from "./previews/SpinnerPreview";
 import CloseButtonPreview from "./previews/CloseButtonPreview";
 import DividerPreview from "./previews/DividerPreview";
 import CodePreview from "./previews/CodePreview";
-import TextAreaPreview from "./previews/TextAreaPreview";
+import TextareaPreview from "./previews/TextareaPreview";
 import CircularProgressPreview from "./previews/CircularProgressPreview";
 import HeadingPreview from "./previews/HeadingPreview";
 import TagPreview from "./previews/TagPreview";
@@ -29,11 +29,18 @@ import AlertPreview, {
   AlertTitlePreview,
   AlertDescriptionPreview
 } from "./previews/AlertPreview";
+import { useSelector } from "react-redux";
+import { RootState } from "../..";
 
-const ComponentPreview: React.FC<{ component: IComponent }> = ({
-  component
+const ComponentPreview: React.FC<{ componentName: string }> = ({
+  componentName
 }) => {
-  switch (component.type) {
+  const component = useSelector(
+    (state: RootState) => state.app.components[componentName]
+  );
+  const type = (component && component.type) || null;
+
+  switch (type) {
     case "Badge":
       return <BadgePreview component={component} />;
     case "Box":
@@ -68,8 +75,8 @@ const ComponentPreview: React.FC<{ component: IComponent }> = ({
       return <DividerPreview component={component} />;
     case "Code":
       return <CodePreview component={component} />;
-    case "TextArea":
-      return <TextAreaPreview component={component} />;
+    case "Textarea":
+      return <TextareaPreview component={component} />;
     case "CircularProgress":
       return <CircularProgressPreview component={component} />;
     case "Heading":
@@ -93,4 +100,4 @@ const ComponentPreview: React.FC<{ component: IComponent }> = ({
   }
 };
 
-export default ComponentPreview;
+export default memo(ComponentPreview);

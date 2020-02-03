@@ -1,31 +1,32 @@
-import React from "react";
-import ButtonPanel from "./ButtonPanel";
-import BadgePanel from "./BadgePanel";
-import IconPanel from "./IconPanel";
-import ImagePanel from "./ImagePanel";
-import BoxPanel from "./BoxPanel";
+import React, { memo } from "react";
+
+import ButtonPanel from "./components/ButtonPanel";
+import BadgePanel from "./components/BadgePanel";
+import IconPanel from "./components/IconPanel";
+import ImagePanel from "./components/ImagePanel";
+import BoxPanel from "./components/BoxPanel";
 import ChildrenControl from "../controls/ChildrenControl";
-import AvatarPanel from "./AvatarPanel";
-import AvatarGroupPanel from "./AvatarGroupPanel";
-import AvatarBadgePanel from "./AvatarBadgePanel";
-import CheckboxPanel from "./CheckboxPanel";
-import IconButtonPanel from "./IconButtonPanel";
-import ProgressPanel from "./ProgressPanel";
-import LinkPanel from "./LinkPanel";
-import SpinnerPanel from "./SpinnerPanel";
-import CloseButtonPanel from "./CloseButtonPanel";
-import DividerPanel from "./DividerPanel";
-import CodePanel from "./CodePanel";
-import TextAreaPanel from "./TextAreaPanel";
-import CircularProgressPanel from "./CircularProgressPanel";
-import HeadingPanel from "./HeadingPanel";
-import TagPanel from "./TagPanel";
-import SimpleGridPanel from "./SimpleGridPanel";
-import SwitchPanel from "./SwitchPanel";
-import AlertPanel from "./AlertPanel";
-import AlertIconPanel from "./AlertIconPanel";
-import AlertTitlePanel from "./AlertTitlePanel";
-import AlertDescriptionPanel from "./AlertDescriptionPanel";
+import AvatarPanel from "./components/AvatarPanel";
+import AvatarGroupPanel from "./components/AvatarGroupPanel";
+import AvatarBadgePanel from "./components/AvatarBadgePanel";
+import CheckboxPanel from "./components/CheckboxPanel";
+import IconButtonPanel from "./components/IconButtonPanel";
+import ProgressPanel from "./components/ProgressPanel";
+import LinkPanel from "./components/LinkPanel";
+import SpinnerPanel from "./components/SpinnerPanel";
+import CloseButtonPanel from "./components/CloseButtonPanel";
+import DividerPanel from "./components/DividerPanel";
+import CodePanel from "./components/CodePanel";
+import TextareaPanel from "./components/TextareaPanel";
+import CircularProgressPanel from "./components/CircularProgressPanel";
+import HeadingPanel from "./components/HeadingPanel";
+import TagPanel from "./components/TagPanel";
+import SimpleGridPanel from "./components/SimpleGridPanel";
+import SwitchPanel from "./components/SwitchPanel";
+import AlertPanel from "./components/AlertPanel";
+import AlertIconPanel from "./components/AlertIconPanel";
+import AlertTitlePanel from "./components/AlertTitlePanel";
+import AlertDescriptionPanel from "./components/AlertDescriptionPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -49,7 +50,7 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "Code" && <CodePanel />}
       {type === "CloseButton" && <CloseButtonPanel />}
       {type === "Divider" && <DividerPanel />}
-      {type === "TextArea" && <TextAreaPanel />}
+      {type === "Textarea" && <TextareaPanel />}
       {type === "CircularProgress" && <CircularProgressPanel />}
       {type === "Heading" && <HeadingPanel />}
       {type === "SimpleGrid" && <SimpleGridPanel />}
@@ -63,4 +64,4 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   );
 };
 
-export default Panels;
+export default memo(Panels);

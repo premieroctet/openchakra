@@ -4,11 +4,7 @@ import { useInteractive } from "../../../hooks/useInteractive";
 
 const HeadingPreview: React.FC<{ component: IComponent }> = ({ component }) => {
   const { props, ref } = useInteractive(component);
-  return (
-    <Heading ref={ref} {...props}>
-      {component.props.children || "Lorem Ipsum"}
-    </Heading>
-  );
+  return <Heading ref={ref} {...props} />;
 };
 
 export default HeadingPreview;

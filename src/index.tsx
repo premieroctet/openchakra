@@ -2,14 +2,30 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import { ThemeProvider, CSSReset, theme } from "@chakra-ui/core";
-import { BuilderProvider } from "./contexts/BuilderContext";
+import { init, RematchRootState } from "@rematch/core";
+import createRematchPersist from "@rematch/persist";
+import models from "./core/models";
+import { Provider } from "react-redux";
+
+export type RootState = RematchRootState<typeof models>;
+
+const persistPlugin = createRematchPersist({
+  whitelist: ["app"],
+  version: parseInt(process.env.REACT_APP_VERSION || "1", 10)
+});
+
+export const store = init({
+  models,
+  plugins: [persistPlugin]
+});
 
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <CSSReset />
-    <BuilderProvider>
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <CSSReset />
       <App />
-    </BuilderProvider>
-  </ThemeProvider>,
+    </ThemeProvider>
+  </Provider>,
+
   document.getElementById("root")
 );

@@ -4,11 +4,7 @@ import { useInteractive } from "../../../hooks/useInteractive";
 
 const TagPreview: React.FC<{ component: IComponent }> = ({ component }) => {
   const { props, ref } = useInteractive(component);
-  return (
-    <Tag ref={ref} {...props}>
-      {component.props.children || "Lorem Ipsum"}
-    </Tag>
-  );
+  return <Tag ref={ref} {...props} />;
 };
 
 export default TagPreview;

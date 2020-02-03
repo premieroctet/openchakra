@@ -1,12 +1,11 @@
-import { useBuilderContext } from "../contexts/BuilderContext";
 import { ChangeEvent } from "react";
+import { useSelector } from "react-redux";
+import useDispatch from "./useDispatch";
+import { RootState } from "..";
 
 export const useForm = () => {
-  const { setComponents, components, selectedComponent } = useBuilderContext();
-
-  const values: any = selectedComponent
-    ? components[selectedComponent]?.props
-    : {};
+  const dispatch = useDispatch();
+  const selectedId = useSelector((state: RootState) => state.app.selectedId);
 
   const setValueFromEvent = ({
     target: { name, value }
@@ -15,18 +14,12 @@ export const useForm = () => {
   };
 
   const setValue = (name: string, value: any) => {
-    if (selectedComponent) {
-      const { props, name: componentName } = components[selectedComponent];
-
-      setComponents({
-        ...components,
-        [componentName]: {
-          ...components[componentName],
-          props: { ...props, [name]: value }
-        }
-      });
-    }
+    dispatch.app.updateProps({
+      id: selectedId,
+      name,
+      value
+    });
   };
 
-  return { setValue, values, setValueFromEvent };
+  return { setValue, setValueFromEvent, selectedId };
 };

@@ -9,15 +9,16 @@ import {
 import { useInteractive } from "../../../hooks/useInteractive";
 import { useDropComponent } from "../../../hooks/useDropComponent";
 import ComponentPreview from "../ComponentPreview";
-import { useBuilderContext } from "../../../contexts/BuilderContext";
+import { RootState } from "../../..";
+import { useSelector } from "react-redux";
 
 const AvatarPreview: React.FC<IPreviewProps & {
   spacing?: BoxProps["marginLeft"];
   index?: number;
 }> = ({ component, spacing, index }) => {
-  const { drop, isOver } = useDropComponent(component.name, ["AvatarBadge"]);
+  const { drop, isOver } = useDropComponent(component.id, ["AvatarBadge"]);
   const { props, ref } = useInteractive(component);
-  const { components } = useBuilderContext();
+
   let boxProps: any = {
     display: "inline-block",
     zIndex: index ? 20 - index : null
@@ -33,7 +34,7 @@ const AvatarPreview: React.FC<IPreviewProps & {
     <Box ref={drop(ref)} {...boxProps}>
       <Avatar ml={index === 0 ? 0 : spacing} {...props}>
         {component.children.map((key: string) => (
-          <ComponentPreview component={components[key]} />
+          <ComponentPreview componentName={key} />
         ))}
       </Avatar>
     </Box>
@@ -41,9 +42,9 @@ const AvatarPreview: React.FC<IPreviewProps & {
 };
 
 export const AvatarGroupPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component);
-  const { drop, isOver } = useDropComponent(component.name, ["Avatar"]);
-  const { components } = useBuilderContext();
+  const { props, ref } = useInteractive(component, true);
+  const { drop, isOver } = useDropComponent(component.id, ["Avatar"]);
+  const components = useSelector((state: RootState) => state.app.components);
   let boxProps: any = { display: "inline" };
 
   if (isOver) {

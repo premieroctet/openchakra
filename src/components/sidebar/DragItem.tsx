@@ -2,9 +2,9 @@ import React from "react";
 import { useDrag } from "react-dnd";
 import { Text, PseudoBox, Icon } from "@chakra-ui/core";
 
-const DragItem: React.FC<ComponentItemProps> = ({ name, type }) => {
+const DragItem: React.FC<ComponentItemProps> = ({ id, type }) => {
   const [, drag] = useDrag({
-    item: { name, type }
+    item: { id, type }
   });
 
   return (
@@ -32,11 +32,11 @@ const DragItem: React.FC<ComponentItemProps> = ({ name, type }) => {
         mr={2}
         name="drag-handle"
         onClick={() => {
-          window.open(`https://chakra-ui.com/${name}`, "_blank");
+          window.open(`https://chakra-ui.com/${type}`, "_blank");
         }}
       />
       <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
-        {name}
+        {type}
       </Text>
     </PseudoBox>
   );

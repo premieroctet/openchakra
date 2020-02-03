@@ -5,11 +5,7 @@ import { useInteractive } from "../../../hooks/useInteractive";
 const LinkPreview: React.FC<{ component: IComponent }> = ({ component }) => {
   const { props, ref } = useInteractive(component);
 
-  return (
-    <Link ref={ref} {...props}>
-      {component.props.children || "Link"}
-    </Link>
-  );
+  return <Link ref={ref} {...props} />;
 };
 
 export default LinkPreview;
