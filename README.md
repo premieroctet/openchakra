@@ -17,11 +17,11 @@ Before release:
 
 ### Components
 
-- [ ] Accordion
-  - [ ] AccordionItem
-  - [ ] AccordionHeader
-  - [ ] AccordionPanel
-  - [ ] AccordionIcon
+- [x] Accordion 🚧
+  - [x] AccordionItem
+  - [x] AccordionHeader
+  - [x] AccordionPanel
+  - [x] AccordionIcon
 - [x] Alert
   - [x] AlertIcon
   - [x] AlertTitle
@@ -57,10 +57,10 @@ Before release:
 - [ ] Editable
   - [ ] EditablePreview
   - [ ] EditablePreview
-- [ ] Flex
-- [ ] FormControl
-  - [ ] FormLabel
-  - [ ] FormHelperText
+- [x] Flex
+- [x] FormControl
+  - [x] FormLabel
+  - [x] FormHelperText
 - [ ] Grid
 - [x] Heading
 - [x] Icon
@@ -112,15 +112,18 @@ Before release:
   - [ ] StatHelperText
   - [ ] StatArrow
   - [ ] StatGroup
-- [ ] Stack
+- [x] Stack
 - [x] Switch
-- [ ] Tabs
-  - [ ] TabList
-  - [ ] TabsPanels
-  - [ ] TabsPanel
+- [x] Tabs 🚧
+  - [x] TabList
+  - [x] TabsPanels
+  - [x] TabsPanel
 - [x] Tag
   - [ ] TagLabel
   - [ ] TagIcon
 - [x] Text
 - [x] Textarea
 - [ ] Tooltip 🧨
+
+🧨 contains code logic
+🚧 contains bugs
