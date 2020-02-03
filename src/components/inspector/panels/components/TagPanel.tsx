@@ -18,7 +18,12 @@ const TagPanel = () => {
   return (
     <>
       <ChildrenControl />
-      <SizeControl name="size" label="Size" value={size} />
+      <SizeControl
+        options={["sm", "md", "lg"]}
+        name="size"
+        label="Size"
+        value={size}
+      />
       <FormControl htmlFor="variant" label="Variant">
         <Select
           id="variant"
