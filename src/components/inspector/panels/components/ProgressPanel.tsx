@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Switch,
   Slider,
   SliderTrack,
   SliderFilledTrack,
@@ -11,13 +10,12 @@ import FormControl from "../../controls/FormControl";
 import { useForm } from "../../../../hooks/useForm";
 import SizeControl from "../../controls/SizeControl";
 import usePropsSelector from "../../../../hooks/usePropsSelector";
+import SwitchControl from "../../controls/SwitchControl";
 
 const ProgressPanel = () => {
   const { setValue } = useForm();
 
   const value = usePropsSelector("value");
-  const hasStripe = usePropsSelector("hasStripe");
-  const isAnimated = usePropsSelector("isAnimated");
   const size = usePropsSelector("size");
 
   return (
@@ -36,24 +34,8 @@ const ProgressPanel = () => {
         </Slider>
       </FormControl>
 
-      <FormControl label="Has Stripe" htmlFor="hasStripe">
-        <Switch
-          name="hasStripe"
-          id="hasStripe"
-          size="sm"
-          isChecked={hasStripe || false}
-          onChange={() => setValue("hasStripe", !hasStripe)}
-        />
-      </FormControl>
-      <FormControl label="Is Animated" htmlFor="isAnimated">
-        <Switch
-          name="isAnimated"
-          id="isAnimated"
-          size="sm"
-          isChecked={isAnimated || false}
-          onChange={() => setValue("isAnimated", !isAnimated)}
-        />
-      </FormControl>
+      <SwitchControl label="Has Stripe" name="hasStripe" />
+      <SwitchControl label="Is Animated" name="isAnimated" />
 
       <ColorsControl label="Color" name="color" />
 

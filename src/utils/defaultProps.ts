@@ -66,7 +66,10 @@ import {
   MenuProps,
   NumberInputProps,
   RadioProps,
-  SelectProps
+  SelectProps,
+  RadioGroupProps,
+  RadioGroup,
+  Radio
 } from "@chakra-ui/core";
 import FormLabel, { FormLabelProps } from "@chakra-ui/core/dist/FormLabel";
 
@@ -123,6 +126,7 @@ type PreviewDefaultProps = {
   Menu?: MenuProps;
   NumberInput?: NumberInputProps;
   Radio?: RadioProps;
+  RadioGroup?: RadioGroupProps;
 };
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -221,5 +225,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   FormErrorMessage: {
     ...FormErrorMessage.defaultProps,
     children: "Error message"
-  }
+  },
+  Radio: { ...Radio.defaultProps, children: "Radio" },
+  RadioGroup: { ...RadioGroup.defaultProps }
 };

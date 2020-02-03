@@ -1,13 +1,13 @@
 import React, { memo } from "react";
-import { Input, Select, Switch } from "@chakra-ui/core";
+import { Input, Select } from "@chakra-ui/core";
 import FormControl from "../../controls/FormControl";
 import { useForm } from "../../../../hooks/useForm";
 import usePropsSelector from "../../../../hooks/usePropsSelector";
+import SwitchControl from "../../controls/SwitchControl";
 
 const AvatarPanel = () => {
-  const { setValueFromEvent, setValue } = useForm();
+  const { setValueFromEvent } = useForm();
 
-  const showBorder = usePropsSelector("showBorder");
   const size = usePropsSelector("size");
   const name = usePropsSelector("name");
   const src = usePropsSelector("src");
@@ -32,15 +32,7 @@ const AvatarPanel = () => {
         </Select>
       </FormControl>
 
-      <FormControl label="Show border" htmlFor="showBorder">
-        <Switch
-          name="showBorder"
-          id="showBorder"
-          size="sm"
-          isChecked={showBorder || false}
-          onChange={() => setValue("showBorder", !showBorder)}
-        />
-      </FormControl>
+      <SwitchControl label="Show border" name="showBorder" />
 
       <FormControl label="Name">
         <Input
@@ -51,7 +43,6 @@ const AvatarPanel = () => {
           onChange={setValueFromEvent}
         />
       </FormControl>
-
       <FormControl label="Source">
         <Input
           value={src}

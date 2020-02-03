@@ -1,39 +1,22 @@
 import React from "react";
-import { Switch, Select } from "@chakra-ui/core";
+import { Select } from "@chakra-ui/core";
 import FormControl from "../../controls/FormControl";
 import { useForm } from "../../../../hooks/useForm";
 import ColorsControl from "../../controls/ColorsControl";
 import usePropsSelector from "../../../../hooks/usePropsSelector";
+import SwitchControl from "../../controls/SwitchControl";
 
 const TabsPanel = () => {
-  const { setValue, setValueFromEvent } = useForm();
+  const { setValueFromEvent } = useForm();
 
-  const isManual = usePropsSelector("isManual");
-  const isFitted = usePropsSelector("isFitted");
   const variant = usePropsSelector("variant");
   const orientation = usePropsSelector("orientation");
   const size = usePropsSelector("size");
 
   return (
     <>
-      <FormControl label="is Manual" htmlFor="isManual">
-        <Switch
-          name="isManual"
-          id="isManual"
-          size="sm"
-          isChecked={isManual || false}
-          onChange={() => setValue("isManual", !isManual)}
-        />
-      </FormControl>
-      <FormControl label="is Fitted" htmlFor="isFitted">
-        <Switch
-          name="isFitted"
-          id="isFitted"
-          size="sm"
-          isChecked={isFitted || false}
-          onChange={() => setValue("isFitted", !isFitted)}
-        />
-      </FormControl>
+      <SwitchControl label="Manual" name="isManual" />
+      <SwitchControl label="Fitted" name="isFitted" />
 
       <FormControl label="Variant" htmlFor="variant">
         <Select

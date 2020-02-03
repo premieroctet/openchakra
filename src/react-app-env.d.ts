@@ -53,6 +53,7 @@ type ComponentType =
   | "Menu"
   | "NumberInput"
   | "Radio"
+  | "RadioGroup"
   | "Select"
   | "Input";
 

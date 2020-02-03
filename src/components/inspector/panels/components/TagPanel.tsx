@@ -1,19 +1,19 @@
 import React from "react";
-import { Switch, Select } from "@chakra-ui/core";
+import { Select } from "@chakra-ui/core";
 import { useForm } from "../../../../hooks/useForm";
 import SizeControl from "../../controls/SizeControl";
 import ChildrenControl from "../../controls/ChildrenControl";
 import ColorsControl from "../../controls/ColorsControl";
 import FormControl from "../../controls/FormControl";
 import usePropsSelector from "../../../../hooks/usePropsSelector";
+import SwitchControl from "../../controls/SwitchControl";
 
 const TagPanel = () => {
-  const { setValue, setValueFromEvent } = useForm();
+  const { setValueFromEvent } = useForm();
 
   const size = usePropsSelector("size");
   const variant = usePropsSelector("variant");
   const rounded = usePropsSelector("rounded");
-  const isInline = usePropsSelector("isInline");
 
   return (
     <>
@@ -42,15 +42,7 @@ const TagPanel = () => {
 
       <SizeControl name="rounded" label="Border radius" value={rounded} />
 
-      <FormControl label="Is Inline" htmlFor="isInline">
-        <Switch
-          name="isInline"
-          id="isInline"
-          size="sm"
-          isChecked={isInline || false}
-          onChange={() => setValue("isInline", !isInline)}
-        />
-      </FormControl>
+      <SwitchControl label="Inline" name="isInline" />
     </>
   );
 };

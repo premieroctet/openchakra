@@ -1,16 +1,16 @@
 import React, { memo } from "react";
-import { Switch, Select } from "@chakra-ui/core";
+import { Select } from "@chakra-ui/core";
 import { useForm } from "../../../../hooks/useForm";
 import FormControl from "../../controls/FormControl";
 import ChildrenControl from "../../controls/ChildrenControl";
 import usePropsSelector from "../../../../hooks/usePropsSelector";
+import SwitchControl from "../../controls/SwitchControl";
 
 const HeadingPanel = () => {
-  const { setValueFromEvent, setValue } = useForm();
+  const { setValueFromEvent } = useForm();
 
   const size = usePropsSelector("size");
   const as = usePropsSelector("as");
-  const isTruncated = usePropsSelector("isTruncated");
 
   return (
     <>
@@ -46,15 +46,8 @@ const HeadingPanel = () => {
           <option>h6</option>
         </Select>
       </FormControl>
-      <FormControl label="Is Truncated" htmlFor="isTruncated">
-        <Switch
-          name="isTruncated"
-          id="isTruncated"
-          size="sm"
-          isChecked={isTruncated || false}
-          onChange={() => setValue("isTruncated", !isTruncated)}
-        />
-      </FormControl>
+
+      <SwitchControl label="Truncated" name="isTruncated" />
     </>
   );
 };

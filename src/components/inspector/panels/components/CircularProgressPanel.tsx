@@ -4,20 +4,19 @@ import {
   Slider,
   SliderTrack,
   SliderFilledTrack,
-  SliderThumb,
-  Switch
+  SliderThumb
 } from "@chakra-ui/core";
 import FormControl from "../../controls/FormControl";
 import { useForm } from "../../../../hooks/useForm";
 import ColorsControl from "../../controls/ColorsControl";
 import usePropsSelector from "../../../../hooks/usePropsSelector";
+import SwitchControl from "../../controls/SwitchControl";
 
 const CircularProgressPanel = () => {
   const { setValueFromEvent, setValue } = useForm();
 
   const size = usePropsSelector("size");
   const thickness = usePropsSelector("thickness");
-  const isIndeterminate = usePropsSelector("isIndeterminate");
 
   return (
     <>
@@ -61,15 +60,7 @@ const CircularProgressPanel = () => {
 
       <ColorsControl label="Color" name="color" />
 
-      <FormControl label="Loading" htmlFor="isIndeterminate">
-        <Switch
-          name="isIndeterminate"
-          id="isIndeterminate"
-          size="sm"
-          isChecked={isIndeterminate || false}
-          onChange={() => setValue("isIndeterminate", !isIndeterminate)}
-        />
-      </FormControl>
+      <SwitchControl label="Loading" name="isIndeterminate" />
     </>
   );
 };

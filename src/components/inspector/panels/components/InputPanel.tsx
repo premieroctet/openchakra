@@ -1,18 +1,14 @@
 import React, { memo } from "react";
 import { useForm } from "../../../../hooks/useForm";
-import { Switch, Select } from "@chakra-ui/core";
+import { Select } from "@chakra-ui/core";
 import FormControl from "../../controls/FormControl";
 import usePropsSelector from "../../../../hooks/usePropsSelector";
 import SizeControl from "../../controls/SizeControl";
+import SwitchControl from "../../controls/SwitchControl";
 
 const InputPanel = () => {
-  const { setValue, setValueFromEvent } = useForm();
+  const { setValueFromEvent } = useForm();
 
-  const isInvalid = usePropsSelector("isInvalid");
-  const isDisabled = usePropsSelector("isDisabled");
-  const isRequired = usePropsSelector("isRequired");
-  const isReadOnly = usePropsSelector("isReadOnly");
-  const isFullWidth = usePropsSelector("isFullWidth");
   const size = usePropsSelector("size");
   const variant = usePropsSelector("variant");
 
@@ -35,55 +31,11 @@ const InputPanel = () => {
         </Select>
       </FormControl>
 
-      <FormControl label="Disabled" htmlFor="isDisabled">
-        <Switch
-          name="isDisabled"
-          id="isDisabled"
-          size="sm"
-          isChecked={isDisabled || false}
-          onChange={() => setValue("isDisabled", !isDisabled)}
-        />
-      </FormControl>
-
-      <FormControl label="Invalid" htmlFor="isInvalid">
-        <Switch
-          name="isInvalid"
-          id="isInvalid"
-          size="sm"
-          isChecked={isInvalid || false}
-          onChange={() => setValue("isInvalid", !isInvalid)}
-        />
-      </FormControl>
-
-      <FormControl label="Required" htmlFor="isRequired">
-        <Switch
-          name="isRequired"
-          id="isRequired"
-          size="sm"
-          isChecked={isRequired || false}
-          onChange={() => setValue("isRequired", !isRequired)}
-        />
-      </FormControl>
-
-      <FormControl label="Read Only" htmlFor="isReadOnly">
-        <Switch
-          name="isReadOnly"
-          id="isReadOnly"
-          size="sm"
-          isChecked={isReadOnly || false}
-          onChange={() => setValue("isReadOnly", !isReadOnly)}
-        />
-      </FormControl>
-
-      <FormControl label="Full width" htmlFor="isFullWidth">
-        <Switch
-          name="isFullWidth"
-          id="isFullWidth"
-          size="sm"
-          isChecked={isFullWidth || false}
-          onChange={() => setValue("isFullWidth", !isFullWidth)}
-        />
-      </FormControl>
+      <SwitchControl label="Disabled" name="isDisabled" />
+      <SwitchControl label="Invalid" name="isInvalid" />
+      <SwitchControl label="Required" name="isRequired" />
+      <SwitchControl label="Read Only" name="isReadOnly" />
+      <SwitchControl label="Full width" name="isFullWidth" />
     </>
   );
 };

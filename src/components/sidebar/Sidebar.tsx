@@ -23,7 +23,6 @@ const TYPES_SOON: ComponentType[] = [
   "TabPanel",
   "TabPanels",
   "Breadcrumb",
-  "Radio",
   "ControlBox",
   "Menu",
   "NumberInput",

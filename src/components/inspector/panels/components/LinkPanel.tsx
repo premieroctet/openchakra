@@ -1,13 +1,13 @@
 import React, { memo } from "react";
 import { useForm } from "../../../../hooks/useForm";
-import { Input, Switch } from "@chakra-ui/core";
+import { Input } from "@chakra-ui/core";
 import FormControl from "../../controls/FormControl";
 import usePropsSelector from "../../../../hooks/usePropsSelector";
+import SwitchControl from "../../controls/SwitchControl";
 
 const LinkPanel = () => {
-  const { setValueFromEvent, setValue } = useForm();
+  const { setValueFromEvent } = useForm();
   const href = usePropsSelector("href");
-  const isExternal = usePropsSelector("isExternal");
 
   return (
     <>
@@ -21,15 +21,7 @@ const LinkPanel = () => {
         />
       </FormControl>
 
-      <FormControl label="Is external" htmlFor="isExternal">
-        <Switch
-          name="isExternal"
-          id="isExternal"
-          size="sm"
-          isChecked={isExternal || false}
-          onChange={() => setValue("isExternal", !isExternal)}
-        />
-      </FormControl>
+      <SwitchControl label="External" name="isExternal" />
     </>
   );
 };

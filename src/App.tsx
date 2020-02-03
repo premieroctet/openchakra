@@ -40,6 +40,8 @@ export const COMPONENTS: ComponentType[] = [
   "Input",
   "Link",
   "Progress",
+  "Radio",
+  "RadioGroup",
   "SimpleGrid",
   "Spinner",
   "Stack",
@@ -55,9 +57,7 @@ export const COMPONENTS: ComponentType[] = [
   "AspectRatioBox",
   "Breadcrumb",
   "Menu",
-  "NumberInput",
-  "Radio"
-
+  "NumberInput"
   /*"AccordionItem",
   "AccordionHeader",
   "AccordionPanel",
