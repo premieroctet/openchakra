@@ -10,7 +10,7 @@ import { Global } from "@emotion/core";
 import { HotKeys } from "react-hotkeys";
 import useDispatch from "./hooks/useDispatch";
 import { useSelector } from "react-redux";
-import { ActionCreators as UndoActionCreators } from 'redux-undo'
+import { ActionCreators as UndoActionCreators } from "redux-undo";
 import { RootState } from ".";
 
 export const COMPONENTS: ComponentType[] = [
@@ -80,8 +80,8 @@ const keyMap = {
   DELETE_NODE: "backspace",
   TOGGLE_BUILDER_MODE: "b",
   TOGGLE_CODE_PANEL: "c",
-  UNDO: "ctrl+z",
-  REDO: "ctrl+y",
+  UNDO: ["ctrl+z", "cmd+z"],
+  REDO: ["ctrl+y", "cmd+y"]
 };
 
 const App = () => {
@@ -92,10 +92,7 @@ const App = () => {
     if (event) {
       event.preventDefault();
     }
-
-    if (selected) {
-      dispatch.components.deleteComponent(selected.name);
-    }
+    dispatch.components.deleteComponent(selected.id);
   };
 
   const toggleBuilderMode = (event: KeyboardEvent | undefined) => {
@@ -133,7 +130,7 @@ const App = () => {
     TOGGLE_BUILDER_MODE: toggleBuilderMode,
     TOGGLE_CODE_PANEL: toggleCodePanel,
     UNDO: undo,
-    REDO: redo,
+    REDO: redo
   };
 
   return (

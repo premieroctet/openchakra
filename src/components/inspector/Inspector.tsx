@@ -15,12 +15,12 @@ import { Tooltip } from "@chakra-ui/core";
 
 const Inspector = () => {
   const dispatch = useDispatch();
-  const selectedId = useSelector((state: RootState) => state.app.selectedId);
   const component = useSelector(
-    (state: RootState) => state.components.present.components[selectedId]
+    (state: RootState) =>
+      state.components.present.components[state.app.selected.id]
   );
 
-  if (selectedId === "root" || !component) {
+  if (!component || component.id === "root") {
     return (
       <Flex
         alignItems="center"

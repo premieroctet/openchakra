@@ -19,12 +19,12 @@ export const useDropComponent = (
       }
 
       if (item.isMoved) {
-        dispatch.app.moveComponent({
+        dispatch.components.moveComponent({
           parentId: componentId,
           componentId: item.id
         });
       } else {
-        dispatch.app.addComponent({
+        dispatch.components.addComponent({
           parentName: componentId,
           type: item.type
         });

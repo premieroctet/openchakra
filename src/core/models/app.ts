@@ -1,19 +1,22 @@
 import { createModel } from "@rematch/core";
 
-type Overlay = undefined | { rect: DOMRect; name: string; type: ComponentType };
-type Selected = undefined | { rect: DOMRect; name: string; };
+type Overlay = undefined | { rect: DOMRect; id: string; type: ComponentType };
+type Selected = { rect?: DOMRect; id: string };
+
 export type AppState = {
   showLayout: boolean;
   showCode: boolean;
-  selected: undefined | Selected;
+  selected: Selected;
   overlay: undefined | Overlay;
 };
+
+const DEFAULT_SELECTED = { id: "root" };
 
 const app = createModel({
   state: {
     showLayout: true,
     showCode: false,
-    selected: undefined,
+    selected: DEFAULT_SELECTED,
     overlay: undefined
   } as AppState,
   reducers: {
@@ -32,19 +35,26 @@ const app = createModel({
     select(state: AppState, selected: Selected): AppState {
       return {
         ...state,
-        selected,
-      };
-    },
-    reset(state: AppState): AppState {
-      return {
-        ...state,
-        selected: undefined,
+        selected
       };
     },
     setOverlay(state: AppState, overlay: Overlay | undefined): AppState {
       return {
         ...state,
         overlay
+      };
+    },
+    "components/deleteComponent": (state: AppState): AppState => {
+      return {
+        ...state,
+        selected: DEFAULT_SELECTED,
+        overlay: undefined
+      };
+    },
+    "components/reset": (state: AppState): AppState => {
+      return {
+        ...state,
+        selected: DEFAULT_SELECTED
       };
     }
   }

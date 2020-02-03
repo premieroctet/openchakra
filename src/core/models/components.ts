@@ -10,7 +10,7 @@ export type ComponentsStateWithUndo = {
   past: ComponentsState[];
   present: ComponentsState;
   future: ComponentsState[];
-}
+};
 
 export const INITIAL_COMPONENTS = {
   root: {
@@ -24,13 +24,13 @@ export const INITIAL_COMPONENTS = {
 
 const components = createModel({
   state: {
-    components: INITIAL_COMPONENTS,
+    components: INITIAL_COMPONENTS
   } as ComponentsState,
   reducers: {
     reset(state: ComponentsState): ComponentsState {
       return {
         ...state,
-        components: INITIAL_COMPONENTS,
+        components: INITIAL_COMPONENTS
       };
     },
     loadDemo(state: ComponentsState): ComponentsState {
@@ -90,6 +90,44 @@ const components = createModel({
         components: updatedComponents,
         overlay: undefined,
         selectedComponent: INITIAL_COMPONENTS.root
+      };
+    },
+    moveComponent(
+      state: ComponentsState,
+      payload: { parentId: string; componentId: string }
+    ): ComponentsState {
+      if (state.components[payload.componentId].parent === payload.parentId) {
+        return state;
+      }
+
+      const children = state.components[
+        state.components[payload.componentId].parent
+      ].children.filter(id => id !== payload.componentId);
+
+      const newChildren = state.components[payload.parentId].children.concat(
+        payload.componentId
+      );
+
+      return {
+        ...state,
+        components: {
+          ...state.components,
+          // Update parent id
+          [payload.componentId]: {
+            ...state.components[payload.componentId],
+            parent: payload.parentId
+          },
+          // Remove id from legacy children
+          [state.components[payload.componentId].parent]: {
+            ...state.components[state.components[payload.componentId].parent],
+            children
+          },
+          // Add in new parent children
+          [payload.parentId]: {
+            ...state.components[payload.parentId],
+            children: newChildren
+          }
+        }
       };
     },
     addComponent(

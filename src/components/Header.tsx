@@ -19,7 +19,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "..";
 
 const CodeSandboxButton = () => {
-  const components = useSelector((state: RootState) => state.app.components);
+  const components = useSelector(
+    (state: RootState) => state.components.present.components
+  );
 
   return (
     <Button
@@ -113,7 +115,7 @@ const Header = () => {
               size="xs"
               variant="ghost"
               onClick={() => {
-                dispatch.app.reset();
+                dispatch.components.reset();
               }}
             >
               Reset

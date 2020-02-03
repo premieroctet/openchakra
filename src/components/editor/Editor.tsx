@@ -13,7 +13,9 @@ const Editor: React.FC = () => {
   const showLayout = useSelector((state: RootState) => state.app.showLayout);
   const overlay = useSelector((state: RootState) => state.app.overlay);
   const selected = useSelector((state: RootState) => state.app.selected);
-  const components = useSelector((state: RootState) => state.components.present.components);
+  const components = useSelector(
+    (state: RootState) => state.components.present.components
+  );
   const dispatch = useDispatch();
 
   const { drop } = useDropComponent("root");
@@ -82,7 +84,7 @@ const Editor: React.FC = () => {
         </Box>
       )}
 
-      {selected && (
+      {selected && selected.rect && (
         <Box
           pointerEvents="none"
           cursor="pointer"
