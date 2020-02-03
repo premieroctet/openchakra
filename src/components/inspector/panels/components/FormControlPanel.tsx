@@ -1,10 +1,15 @@
 import React from "react";
 import { Switch } from "@chakra-ui/core";
-import FormControl from "../controls/FormControl";
-import { useForm } from "../../../hooks/useForm";
+import FormControl from "../../controls/FormControl";
+import { useForm } from "../../../../hooks/useForm";
+import usePropsSelector from "../../../../hooks/usePropsSelector";
 
 const FormControlPanel = () => {
-  const { values, setValue } = useForm();
+  const { setValue } = useForm();
+
+  const isInvalid = usePropsSelector("isInvalid");
+  const isRequired = usePropsSelector("isRequired");
+  const isReadOnly = usePropsSelector("isReadOnly");
 
   return (
     <>
@@ -13,26 +18,28 @@ const FormControlPanel = () => {
           name="isInvalid"
           id="isInvalid"
           size="sm"
-          isChecked={values.isInvalid || false}
-          onChange={() => setValue("isInvalid", !values.isInvalid)}
+          isChecked={isInvalid || false}
+          onChange={() => setValue("isInvalid", !isInvalid)}
         />
       </FormControl>
+
       <FormControl label="is Required" htmlFor="isRequired">
         <Switch
           name="isRequired"
           id="isRequired"
           size="sm"
-          isChecked={values.isRequired || false}
-          onChange={() => setValue("isRequired", !values.isRequired)}
+          isChecked={isRequired || false}
+          onChange={() => setValue("isRequired", !isRequired)}
         />
       </FormControl>
+
       <FormControl label="is ReadOnly" htmlFor="isReadOnly">
         <Switch
           name="isReadOnly"
           id="isReadOnly"
           size="sm"
-          isChecked={values.isReadOnly || false}
-          onChange={() => setValue("isReadOnly", !values.isReadOnly)}
+          isChecked={isReadOnly || false}
+          onChange={() => setValue("isReadOnly", !isReadOnly)}
         />
       </FormControl>
     </>

@@ -1,21 +1,25 @@
 import React from "react";
-import { Box, Text, Stack } from "@chakra-ui/core";
+import { Stack, Box } from "@chakra-ui/core";
 import { useDropComponent } from "../../../hooks/useDropComponent";
-
 import { useInteractive } from "../../../hooks/useInteractive";
+import ComponentPreview from "../ComponentPreview";
 
 const StackPreview: React.FC<{ component: IComponent }> = ({ component }) => {
-  const { props, ref } = useInteractive(component);
-  const acceptedTypes = ["Stack"] as ComponentType[];
+  const { drop, isOver } = useDropComponent(component.id);
+  const { props, ref } = useInteractive(component, true);
+
   let boxProps: any = {};
-  const { drop, isOver } = useDropComponent(component.name, acceptedTypes);
+
   if (isOver) {
     props.bg = "teal.50";
   }
+
   return (
-    <Box ref={drop(ref)} {...boxProps}>
+    <Box {...boxProps} ref={drop(ref)}>
       <Stack {...props}>
-        <Text>{props.children || "Lorem Ipsum"}</Text>
+        {component.children.map((key: string) => (
+          <ComponentPreview componentName={key} />
+        ))}
       </Stack>
     </Box>
   );

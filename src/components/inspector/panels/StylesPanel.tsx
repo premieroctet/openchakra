@@ -1,19 +1,19 @@
 import React, { memo } from "react";
+import { Accordion } from "@chakra-ui/core";
+
 import PaddingPanel from "../panels/styles/PaddingPanel";
 import DimensionPanel from "../panels/styles/DimensionPanel";
 import BorderPanel from "../panels/styles/BorderPanel";
-import FlexPanel from "../panels/styles/FlexPanel";
+import DisplayPanel from "../panels/styles/DisplayPanel";
 import TextPanel from "../panels/styles/TextPanel";
 import AccordionContainer from "../AccordionContainer";
 import ColorsControl from "../controls/ColorsControl";
-
-import { Accordion } from "@chakra-ui/core";
 import EffectsPanel from "./styles/EffectsPanel";
 
 const StylesPanel = () => (
   <Accordion defaultIndex={[0]} allowMultiple>
     <AccordionContainer title="Layout">
-      <FlexPanel />
+      <DisplayPanel />
     </AccordionContainer>
 
     <AccordionContainer title="Spacing">

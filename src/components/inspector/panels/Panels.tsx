@@ -31,6 +31,7 @@ import FlexPanel from "./styles/FlexPanel";
 import StackPanel from "./components/StackPanel";
 import FormControlPanel from "./components/FormControlPanel";
 import TabsPanel from "./components/TabsPanel";
+import InputPanel from "./components/InputPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -68,6 +69,7 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "Stack" && <StackPanel />}
       {type === "FormControl" && <FormControlPanel />}
       {type === "Tabs" && <TabsPanel />}
+      {type === "Input" && <InputPanel />}
     </>
   );
 };

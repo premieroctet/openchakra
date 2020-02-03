@@ -9,16 +9,18 @@ import {
   AccordionPanel,
   AccordionIcon
 } from "@chakra-ui/core";
+import ComponentPreview from "../ComponentPreview";
+
+const acceptedTypes = [
+  "AccordionItem",
+  "AccordionHeader",
+  "AccordionPanel",
+  "AccordionIcon"
+] as ComponentType[];
 
 const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
-  const acceptedTypes = [
-    "AccordionItem",
-    "AccordionHeader",
-    "AccordionPanel",
-    "AccordionIcon"
-  ] as ComponentType[];
-  const { props, ref } = useInteractive(component, false);
-  const { drop, isOver } = useDropComponent(component.name, acceptedTypes);
+  const { props, ref } = useInteractive(component, true);
+  const { drop, isOver } = useDropComponent(component.id, acceptedTypes);
 
   let boxProps: any = {};
 
@@ -28,26 +30,62 @@ const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
 
   return (
     <Box ref={drop(ref)} {...boxProps}>
-      <Accordion ref={ref} {...props} />
+      <Accordion {...props}>
+        {component.children.map((key: string) => (
+          <ComponentPreview componentName={key} />
+        ))}
+      </Accordion>
     </Box>
   );
 };
 
 export const AccordionItemPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component);
-  return <AccordionItem ref={ref} {...props} />;
+  const { props, ref } = useInteractive(component, true);
+  const { drop, isOver } = useDropComponent(component.id, acceptedTypes);
+
+  if (isOver) {
+    props.bg = "teal.50";
+  }
+
+  return (
+    <AccordionItem ref={drop(ref)} {...props}>
+      {component.children.map((key: string) => (
+        <ComponentPreview componentName={key} />
+      ))}
+    </AccordionItem>
+  );
 };
 
 export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component);
-  return <AccordionHeader ref={ref} {...props} />;
+  const { props, ref } = useInteractive(component, true);
+  const { drop, isOver } = useDropComponent(component.id, acceptedTypes);
+
+  if (isOver) {
+    props.bg = "teal.50";
+  }
+
+  return (
+    <AccordionHeader ref={drop(ref)} {...props}>
+      {component.children.map((key: string) => (
+        <ComponentPreview componentName={key} />
+      ))}
+    </AccordionHeader>
+  );
 };
 
 export const AccordionPanelPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component);
+  const { props, ref } = useInteractive(component, true);
+  const { drop, isOver } = useDropComponent(component.id);
+
+  if (isOver) {
+    props.bg = "teal.50";
+  }
+
   return (
-    <AccordionPanel ref={ref} {...props}>
-      {props.children || "Lorem Ipsum"}
+    <AccordionPanel ref={drop(ref)} {...props}>
+      {component.children.map((key: string) => (
+        <ComponentPreview componentName={key} />
+      ))}
     </AccordionPanel>
   );
 };

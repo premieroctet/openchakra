@@ -1,7 +1,6 @@
 import React from "react";
-import FormControl from "../controls/FormControl";
-import { useForm } from "../../../hooks/useForm";
-import ChildrenControl from "../controls/ChildrenControl";
+import FormControl from "../../controls/FormControl";
+import { useForm } from "../../../../hooks/useForm";
 import {
   Switch,
   Select,
@@ -10,40 +9,44 @@ import {
   SliderFilledTrack,
   SliderThumb
 } from "@chakra-ui/core";
+import usePropsSelector from "../../../../hooks/usePropsSelector";
 
 const StackPanel = () => {
-  const { values, setValue, setValueFromEvent } = useForm();
+  const { setValue, setValueFromEvent } = useForm();
+
+  const isInline = usePropsSelector("isInline");
+  const isReversed = usePropsSelector("isReversed");
+  const shouldWrapChildren = usePropsSelector("shouldWrapChildren");
+  const direction = usePropsSelector("direction");
+  const spacing = usePropsSelector("spacing");
 
   return (
     <>
-      <ChildrenControl />
-      <FormControl label="Is Inline" htmlFor="isInline">
+      <FormControl label="Inline" htmlFor="isInline">
         <Switch
           name="isInline"
           id="isInline"
           size="sm"
-          isChecked={values.isInline || false}
-          onChange={() => setValue("isInline", !values.isInline)}
+          isChecked={isInline || false}
+          onChange={() => setValue("isInline", !isInline)}
         />
       </FormControl>
-      <FormControl label="Is Reversed" htmlFor="isReversed">
+      <FormControl label="Reversed" htmlFor="isReversed">
         <Switch
           name="isReversed"
           id="isReversed"
           size="sm"
-          isChecked={values.isReversed || false}
-          onChange={() => setValue("isReversed", !values.isReversed)}
+          isChecked={isReversed || false}
+          onChange={() => setValue("isReversed", !isReversed)}
         />
       </FormControl>
-      <FormControl label="shouldWrapChildren" htmlFor="shouldWrapChildren">
+      <FormControl label="Wrap children" htmlFor="shouldWrapChildren">
         <Switch
           name="shouldWrapChildren"
           id="shouldWrapChildren"
           size="sm"
-          isChecked={values.shouldWrapChildren || false}
-          onChange={() =>
-            setValue("shouldWrapChildren", !values.shouldWrapChildren)
-          }
+          isChecked={shouldWrapChildren || false}
+          onChange={() => setValue("shouldWrapChildren", !shouldWrapChildren)}
         />
       </FormControl>
 
@@ -52,7 +55,7 @@ const StackPanel = () => {
           name="direction"
           id="direction"
           size="sm"
-          value={values.direction || "unset"}
+          value={direction || "unset"}
           onChange={setValueFromEvent}
         >
           <option>row</option>
@@ -71,7 +74,7 @@ const StackPanel = () => {
           min={0}
           max={100}
           step={1}
-          defaultValue={values.spacing}
+          defaultValue={spacing}
         >
           <SliderTrack />
           <SliderFilledTrack />

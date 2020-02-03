@@ -50,6 +50,7 @@ import TabsPreview, {
   TabPanelsPreview,
   TabPreview
 } from "./previews/TabsPreview";
+import InputPreview from "./previews/InputPreview";
 
 const ComponentPreview: React.FC<{ componentName: string }> = ({
   componentName
@@ -146,7 +147,8 @@ const ComponentPreview: React.FC<{ componentName: string }> = ({
       return <TabPanelsPreview component={component} />;
     case "Tab":
       return <TabPreview component={component} />;
-
+    case "Input":
+      return <InputPreview component={component} />;
     default:
       return null;
   }

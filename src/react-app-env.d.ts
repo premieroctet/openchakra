@@ -45,7 +45,8 @@ type ComponentType =
   | "TabPanels"
   | "Tab"
   | "Tabs"
-  | "Code";
+  | "Code"
+  | "Input";
 
 interface IComponent {
   children: string[];

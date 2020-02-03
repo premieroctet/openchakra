@@ -1,11 +1,18 @@
 import React from "react";
 import { Switch, Select } from "@chakra-ui/core";
-import FormControl from "../controls/FormControl";
-import { useForm } from "../../../hooks/useForm";
-import ColorsControl from "../controls/ColorsControl";
+import FormControl from "../../controls/FormControl";
+import { useForm } from "../../../../hooks/useForm";
+import ColorsControl from "../../controls/ColorsControl";
+import usePropsSelector from "../../../../hooks/usePropsSelector";
 
 const TabsPanel = () => {
-  const { values, setValue, setValueFromEvent } = useForm();
+  const { setValue, setValueFromEvent } = useForm();
+
+  const isManual = usePropsSelector("isManual");
+  const isFitted = usePropsSelector("isFitted");
+  const variant = usePropsSelector("variant");
+  const orientation = usePropsSelector("orientation");
+  const size = usePropsSelector("size");
 
   return (
     <>
@@ -14,8 +21,8 @@ const TabsPanel = () => {
           name="isManual"
           id="isManual"
           size="sm"
-          isChecked={values.isManual || false}
-          onChange={() => setValue("isManual", !values.isManual)}
+          isChecked={isManual || false}
+          onChange={() => setValue("isManual", !isManual)}
         />
       </FormControl>
       <FormControl label="is Fitted" htmlFor="isFitted">
@@ -23,8 +30,8 @@ const TabsPanel = () => {
           name="isFitted"
           id="isFitted"
           size="sm"
-          isChecked={values.isFitted || false}
-          onChange={() => setValue("isFitted", !values.isFitted)}
+          isChecked={isFitted || false}
+          onChange={() => setValue("isFitted", !isFitted)}
         />
       </FormControl>
 
@@ -33,7 +40,7 @@ const TabsPanel = () => {
           name="variant"
           id="variant"
           size="sm"
-          value={values.variant || ""}
+          value={variant || ""}
           onChange={setValueFromEvent}
         >
           <option>line</option>
@@ -50,7 +57,7 @@ const TabsPanel = () => {
           name="orientation"
           id="orientation"
           size="sm"
-          value={values.orientation || ""}
+          value={orientation || ""}
           onChange={setValueFromEvent}
         >
           <option>horizontal</option>
@@ -63,7 +70,7 @@ const TabsPanel = () => {
           name="size"
           id="size"
           size="sm"
-          value={values.size || ""}
+          value={size || ""}
           onChange={setValueFromEvent}
         >
           <option>sm</option>
@@ -71,11 +78,7 @@ const TabsPanel = () => {
           <option>lg</option>
         </Select>
       </FormControl>
-      <ColorsControl
-        label="Variant Color"
-        name="variantColor"
-        value={values.variantColor}
-      />
+      <ColorsControl label="Variant Color" name="variantColor" />
     </>
   );
 };
