@@ -12,6 +12,7 @@ const Editor: React.FC = () => {
   const showCode = useSelector((state: RootState) => state.app.showCode);
   const showLayout = useSelector((state: RootState) => state.app.showLayout);
   const overlay = useSelector((state: RootState) => state.app.overlay);
+  const selected = useSelector((state: RootState) => state.app.selected);
   const components = useSelector((state: RootState) => state.components.present.components);
   const dispatch = useDispatch();
 
@@ -79,6 +80,21 @@ const Editor: React.FC = () => {
             {overlay.type}
           </Badge>
         </Box>
+      )}
+
+      {selected && (
+        <Box
+          pointerEvents="none"
+          cursor="pointer"
+          zIndex={40}
+          borderWidth={1}
+          borderColor="red.200"
+          position="absolute"
+          width={selected.rect.width + 10}
+          height={selected.rect.height + 10}
+          top={`${selected.rect.top - 53}px`}
+          left={`${selected.rect.left - 229}px`}
+        />
       )}
     </Box>
   );

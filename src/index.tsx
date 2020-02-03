@@ -41,6 +41,7 @@ export const store = init({
         components: persistReducer(
           persistConfig,
           undoable(reducers.components, {
+            limit: 10,
             filter: filterUndoableActions
           })
         )

@@ -16,7 +16,7 @@ export const useForm = () => {
   };
 
   const setValue = (name: string, value: any) => {
-    dispatch.app.updateProps({
+    dispatch.components.updateProps({
       id: selectedId,
       name,
       value

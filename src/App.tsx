@@ -85,7 +85,7 @@ const keyMap = {
 };
 
 const App = () => {
-  const selectedId = useSelector((state: RootState) => state.app.selectedId);
+  const selected = useSelector((state: RootState) => state.app.selected);
   const dispatch = useDispatch();
 
   const deleteNode = (event: KeyboardEvent | undefined) => {
@@ -93,8 +93,8 @@ const App = () => {
       event.preventDefault();
     }
 
-    if (selectedId) {
-      dispatch.components.deleteComponent(selectedId);
+    if (selected) {
+      dispatch.components.deleteComponent(selected.name);
     }
   };
 

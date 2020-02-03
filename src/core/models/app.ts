@@ -1,11 +1,11 @@
 import { createModel } from "@rematch/core";
-import { INITIAL_COMPONENTS } from "./components";
 
 type Overlay = undefined | { rect: DOMRect; name: string; type: ComponentType };
+type Selected = undefined | { rect: DOMRect; name: string; };
 export type AppState = {
   showLayout: boolean;
   showCode: boolean;
-  selectedId: string;
+  selected: undefined | Selected;
   overlay: undefined | Overlay;
 };
 
@@ -13,7 +13,7 @@ const app = createModel({
   state: {
     showLayout: true,
     showCode: false,
-    selectedId: INITIAL_COMPONENTS.root.id,
+    selected: undefined,
     overlay: undefined
   } as AppState,
   reducers: {
@@ -29,16 +29,16 @@ const app = createModel({
         showCode: !state.showCode
       };
     },
-    setSelectedId(state: AppState, selectedId: string): AppState {
+    select(state: AppState, selected: Selected): AppState {
       return {
         ...state,
-        selectedId
+        selected,
       };
     },
     reset(state: AppState): AppState {
       return {
         ...state,
-        selectedId: INITIAL_COMPONENTS.root.id
+        selected: undefined,
       };
     },
     setOverlay(state: AppState, overlay: Overlay | undefined): AppState {
