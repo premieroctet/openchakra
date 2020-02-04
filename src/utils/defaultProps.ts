@@ -61,7 +61,6 @@ import {
   Input,
   AspectRatioBoxProps,
   BreadcrumbItemProps,
-  ControlBoxProps,
   EditableProps,
   MenuProps,
   NumberInputProps,
@@ -73,7 +72,9 @@ import {
   Select,
   List,
   ListIcon,
-  ListItem
+  ListItem,
+  Accordion,
+  AccordionItem
 } from "@chakra-ui/core";
 import FormLabel, { FormLabelProps } from "@chakra-ui/core/dist/FormLabel";
 
@@ -107,9 +108,9 @@ type PreviewDefaultProps = {
   AlertDescription?: BoxProps;
   Flex?: FlexProps;
   Stack?: StackProps;
-  Accordion?: AccordionProps;
+  Accordion?: Omit<AccordionProps, "children">;
   AccordionHeader?: AccordionHeaderProps;
-  AccordionItem?: AccordionItemProps;
+  AccordionItem?: Omit<AccordionItemProps, "children">;
   AccordionPanel?: any;
   AccordionIcon?: IconProps;
   FormControl?: FormControlProps;
@@ -125,7 +126,6 @@ type PreviewDefaultProps = {
   Input?: InputProps;
   AspectRatioBox?: AspectRatioBoxProps;
   Breadcrumb?: BreadcrumbItemProps;
-  ControlBox?: ControlBoxProps;
   Editable?: EditableProps;
   Menu?: MenuProps;
   NumberInput?: NumberInputProps;
@@ -134,6 +134,11 @@ type PreviewDefaultProps = {
   List?: any;
   ListIcon?: IconProps;
   ListItem?: any;
+  // meta components
+  AlertMeta?: any;
+  FormControlMeta?: any;
+  AccordionMeta?: any;
+  ListMeta?: any;
 };
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -238,5 +243,12 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Select: { ...Select.defaultProps, variant: "outline", size: "md" },
   List: { ...List.defaultProps, styleType: "none" },
   ListIcon: { ...ListIcon.defaultProps },
-  ListItem: { ...ListItem.defaultProps, children: "list" }
+  ListItem: { ...ListItem.defaultProps, children: "list" },
+  Accordion: {
+    ...Accordion.defaultProps
+  },
+  AccordionItem: {
+    ...AccordionItem.defaultProps,
+    defaultIsOpen: true
+  }
 };

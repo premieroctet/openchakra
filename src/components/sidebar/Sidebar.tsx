@@ -8,26 +8,80 @@ import {
   DarkMode
 } from "@chakra-ui/core";
 import DragItem from "./DragItem";
-import { COMPONENTS } from "../../App";
 
-const TYPES_SOON: ComponentType[] = [
-  "AspectRatioBox",
-  "Accordion",
-  "AccordionItem",
-  "AccordionHeader",
-  "AccordionPanel",
-  "AccordionIcon",
-  "Tab",
-  "Tabs",
+const menuItems: any = {
+  Accordion: {
+    children: {
+      Accordion: {},
+      AccordionItem: {},
+      AccordionHeader: {},
+      AccordionPanel: {},
+      AccordionIcon: {}
+    }
+  },
+  Alert: {
+    children: {
+      Alert: {},
+      AlertDescription: {},
+      AlertIcon: {},
+      AlertTitle: {}
+    }
+  },
+
+  AvatarGroup: {},
+  Avatar: {},
+  AvatarBadge: {},
+  Badge: {},
+  Box: {},
+  Button: {},
+  Checkbox: {},
+  CircularProgress: {},
+  CloseButton: {},
+  Code: {},
+  Divider: {},
+  Flex: {},
+  FormControl: {
+    children: {
+      FormControl: {},
+      FormLabel: {},
+      FormHelperText: {},
+      FormErrorMessage: {}
+    }
+  },
+  Heading: {},
+  Icon: {},
+  IconButton: {},
+  Image: {},
+  Input: {},
+  Link: {},
+  List: {
+    children: {
+      List: {},
+      ListItem: {}
+    }
+  },
+  Progress: {},
+  Radio: {},
+  RadioGroup: {},
+  SimpleGrid: {},
+  Spinner: {},
+  Select: {},
+  Stack: {},
+  Switch: {},
+  Tag: {},
+  Text: {},
+  Textarea: {},
+  AspectRatioBox: { soon: true },
+  Breadcrumb: { soon: true },
+  Editable: { soon: true },
+  Menu: { soon: true },
+  NumberInput: { soon: true },
+  Tab: { soon: true }
+  /*"Tabs",
   "TabList",
   "TabPanel",
-  "TabPanels",
-  "Breadcrumb",
-  "ControlBox",
-  "Menu",
-  "NumberInput",
-  "Editable"
-];
+  "TabPanels"*/
+};
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,7 +101,7 @@ const Menu = () => {
         width="15rem"
         order={-1}
       >
-        <InputGroup size="sm" mb={2}>
+        <InputGroup size="sm" mb={4}>
           <InputRightElement
             children={<Icon name="search" color="gray.300" />}
           />
@@ -60,18 +114,65 @@ const Menu = () => {
           />
         </InputGroup>
 
-        {COMPONENTS.filter(c =>
+        {Object.keys(menuItems)
+          .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
+          .map(name => {
+            const { children } = menuItems[name];
+
+            if (children) {
+              const elements = Object.keys(children).map(childName => (
+                <DragItem
+                  isChild
+                  key={childName}
+                  label={childName}
+                  type={childName as any}
+                  id={childName as any}
+                >
+                  {childName}
+                </DragItem>
+              ));
+
+              return [
+                <DragItem
+                  isMeta
+                  soon={menuItems[name].soon}
+                  key={`${name}Meta`}
+                  label={name}
+                  type={`${name}Meta` as any}
+                  id={`${name}Meta` as any}
+                >
+                  {name}
+                </DragItem>,
+                ...elements
+              ];
+            }
+
+            return (
+              <DragItem
+                soon={menuItems[name].soon}
+                key={name}
+                label={name}
+                type={name as any}
+                id={name as any}
+              >
+                {name}
+              </DragItem>
+            );
+          })}
+        {/*      {COMPONENTS.filter(c =>
           c.toLowerCase().includes(searchTerm.toLowerCase())
         ).map(type => (
-          <DragItem
-            soon={TYPES_SOON.includes(type)}
-            key={type}
-            id={type}
-            type={type as ComponentType}
-          >
-            {type}
-          </DragItem>
-        ))}
+          <>
+            <DragItem
+              soon={TYPES_SOON.includes(type)}
+              key={type}
+              id={type}
+              type={type as ComponentType}
+            >
+              {type}
+            </DragItem>
+          </>
+        ))}*/}
       </Box>
     </DarkMode>
   );

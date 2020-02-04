@@ -153,6 +153,25 @@ const components = createModel({
           }
         }
       };
+    },
+    addMetaComponent(
+      state: ComponentsState,
+      payload: { components: IComponents; root: string; parent: string }
+    ): ComponentsState {
+      return {
+        ...state,
+        components: {
+          ...state.components,
+          [payload.parent]: {
+            ...state.components[payload.parent],
+            children: [
+              ...state.components[payload.parent].children,
+              payload.root
+            ]
+          },
+          ...payload.components
+        }
+      };
     }
   }
 });

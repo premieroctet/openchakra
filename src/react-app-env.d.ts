@@ -8,7 +8,6 @@ type ComponentType =
   | "Box"
   | "Button"
   | "Breadcrumb"
-  | "ControlBox"
   | "Icon"
   | "IconButton"
   | "Image"
@@ -58,7 +57,11 @@ type ComponentType =
   | "List"
   | "ListItem"
   | "ListIcon"
-  | "Input";
+  | "Input"
+  | "FormControlMeta"
+  | "AccordionMeta"
+  | "ListMeta"
+  | "AlertMeta";
 
 interface IComponent {
   children: string[];
@@ -78,7 +81,10 @@ interface IPreviewProps {
 
 interface ComponentItemProps {
   id: string;
+  label: string;
   type: ComponentType;
   isMoved?: boolean;
+  isChild?: boolean;
+  isMeta?: boolean;
   soon?: boolean;
 }

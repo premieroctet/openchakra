@@ -58,7 +58,7 @@ export const AccordionItemPreview = ({ component }: IPreviewProps) => {
 
 export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
   const { props, ref } = useInteractive(component, true);
-  const { drop, isOver } = useDropComponent(component.id, acceptedTypes);
+  const { drop, isOver } = useDropComponent(component.id);
 
   if (isOver) {
     props.bg = "teal.50";

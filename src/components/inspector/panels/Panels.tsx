@@ -38,6 +38,8 @@ import SelectPanel from "./components/SelectPanel";
 import ListPanel from "./components/ListPanel";
 import ListItemPanel from "./components/ListItemPanel";
 import ListIconPanel from "./components/ListIconPanel";
+import AccordionItemPanel from "./components/AccordionItemPanel";
+import AccordionPanel from "./components/AccordionPanel";
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component;
@@ -82,6 +84,8 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === "List" && <ListPanel />}
       {type === "ListItem" && <ListItemPanel />}
       {type === "ListIcon" && <ListIconPanel />}
+      {type === "Accordion" && <AccordionPanel />}
+      {type === "AccordionItem" && <AccordionItemPanel />}
     </>
   );
 };
