@@ -6,7 +6,6 @@ Before release:
 
 - Editor sorting
 - Fix documentation URL (with preset components)
-- Add InputGroup, InputLeftElement, InputRightElement + create preset
 - Add Menu components (all) + create preset
 
 ## Roadmap
@@ -17,15 +16,6 @@ Before release:
 
 ### Components
 
-- [x] Accordion 🚧
-  - [x] AccordionItem
-  - [x] AccordionHeader
-  - [x] AccordionPanel
-  - [x] AccordionIcon
-- [x] Alert
-  - [x] AlertIcon
-  - [x] AlertTitle
-  - [x] AlertDescription
 - [ ] AlertDialog 🧨
   - [ ] AlertDialogHeader
   - [ ] AlertDialogBody
@@ -34,45 +24,20 @@ Before release:
   - [ ] AlertDialogContent
   - [ ] AlertDialogCloseButton
 - [ ] AspectRatioBox
-- [x] Avatar
-  - [x] AvatarBadge
-  - [x] AvatarGroup
-- [x] Badge
-- [x] Box
 - [ ] Breadcrumb
   - [ ] BreadcrumbItem
   - [ ] BreadcrumbLink
   - [ ] BreadcrumbSeparator
-- [x] Button
-- [x] Checkbox
   - [ ] CheckboxGroup
 - [x] CircularProgress
   - [ ] CircularProgressLabel
-- [x] CloseButton
-- [x] Code
 - [ ] Collapse 🧨
 - [ ] ControlBox 🧨
-- [x] Divider
 - [ ] Drawer 🧨
 - [ ] Editable
   - [ ] EditablePreview
   - [ ] EditablePreview
-- [x] Flex
-- [x] FormControl
-  - [x] FormLabel
-  - [x] FormHelperText
 - [ ] Grid
-- [x] Heading
-- [x] Icon
-- [x] IconButton
-- [x] Image
-- [x] Input
-  - [x] InputGroup
-  - [x] InputLeftAddon
-  - [x] InputRightAddon
-- [x] Link
-- [x] List
-  - [x] ListItem
 - [ ] Menu
   - [ ] MenuButton
   - [ ] MenuList
@@ -95,34 +60,19 @@ Before release:
   - [ ] PopoverFooter
   - [ ] PopoverArrow
   - [ ] PopoverCloseButton
-- [x] Progress
-- [x] PseudoBox
-- [x] Radio
-  - [x] RadioGroup
-- [x] SimpleGrid
-- [x] Select
 - [ ] Slider
   - [ ] SliderTrack
   - [ ] SliderFilledTrack
   - [ ] SliderThumb
-- [x] Spinner
 - [ ] Stat
   - [ ] StatLabel
   - [ ] StatNumber
   - [ ] StatHelperText
   - [ ] StatArrow
   - [ ] StatGroup
-- [x] Stack
-- [x] Switch
-- [x] Tabs 🚧
-  - [x] TabList
-  - [x] TabsPanels
-  - [x] TabsPanel
 - [x] Tag
   - [ ] TagLabel
   - [ ] TagIcon
-- [x] Text
-- [x] Textarea
 - [ ] Tooltip 🧨
 
 🧨 contains code logic

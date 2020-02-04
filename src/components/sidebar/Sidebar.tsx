@@ -6,6 +6,8 @@ import {
   Icon,
   InputRightElement,
   DarkMode,
+  Button,
+  IconButton,
 } from '@chakra-ui/core'
 import DragItem from './DragItem'
 
@@ -110,10 +112,24 @@ const Menu = () => {
         order={-1}
       >
         <InputGroup size="sm" mb={4}>
-          <InputRightElement
-            children={<Icon name="search" color="gray.300" />}
-          />
+          <InputRightElement>
+            {searchTerm ? (
+              <IconButton
+                color="gray.300"
+                aria-label="clear"
+                icon="close"
+                size="xs"
+                onClick={() => setSearchTerm('')}
+              >
+                x
+              </IconButton>
+            ) : (
+              <Icon name="search" color="gray.300" />
+            )}
+          </InputRightElement>
+          )}
           <Input
+            value={searchTerm}
             color="gray.300"
             placeholder="Search component…"
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
