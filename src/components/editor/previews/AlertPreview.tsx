@@ -4,9 +4,7 @@ import { useDropComponent } from "../../../hooks/useDropComponent";
 import ComponentPreview from "../ComponentPreview";
 import {
   Alert,
-  AlertIcon,
   AlertTitle,
-  AlertDescription,
   Box
 } from "@chakra-ui/core";
 
@@ -36,11 +34,6 @@ const AlertPreview: React.FC<IPreviewProps> = ({ component }) => {
   );
 };
 
-export const AlertIconPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component);
-  return <AlertIcon ref={ref} {...props} />;
-};
-
 export const AlertTitlePreview = ({ component }: IPreviewProps) => {
   const { props, ref } = useInteractive(component);
   return (
@@ -48,11 +41,6 @@ export const AlertTitlePreview = ({ component }: IPreviewProps) => {
       {props.children || "Lorem Ipsum"}
     </AlertTitle>
   );
-};
-
-export const AlertDescriptionPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component);
-  return <AlertDescription ref={ref} {...props} />;
 };
 
 export default AlertPreview;

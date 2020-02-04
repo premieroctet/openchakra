@@ -39,23 +39,6 @@ const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
   );
 };
 
-export const AccordionItemPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true);
-  const { drop, isOver } = useDropComponent(component.id, acceptedTypes);
-
-  if (isOver) {
-    props.bg = "teal.50";
-  }
-
-  return (
-    <AccordionItem ref={drop(ref)} {...props}>
-      {component.children.map((key: string) => (
-        <ComponentPreview componentName={key} />
-      ))}
-    </AccordionItem>
-  );
-};
-
 export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
   const { props, ref } = useInteractive(component, true);
   const { drop, isOver } = useDropComponent(component.id);
@@ -71,28 +54,6 @@ export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
       ))}
     </AccordionHeader>
   );
-};
-
-export const AccordionPanelPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true);
-  const { drop, isOver } = useDropComponent(component.id);
-
-  if (isOver) {
-    props.bg = "teal.50";
-  }
-
-  return (
-    <AccordionPanel ref={drop(ref)} {...props}>
-      {component.children.map((key: string) => (
-        <ComponentPreview componentName={key} />
-      ))}
-    </AccordionPanel>
-  );
-};
-
-export const AccordionIconPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component);
-  return <AccordionIcon ref={ref} {...props} />;
 };
 
 export default AccordionPreview;

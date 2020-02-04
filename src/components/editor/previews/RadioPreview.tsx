@@ -1,5 +1,5 @@
 import React from "react";
-import { Radio, RadioGroup, Box } from "@chakra-ui/core";
+import { RadioGroup, Box } from "@chakra-ui/core";
 import { useInteractive } from "../../../hooks/useInteractive";
 import { useDropComponent } from "../../../hooks/useDropComponent";
 import ComponentPreview from "../ComponentPreview";
@@ -25,12 +25,4 @@ export const RadioGroupPreview: React.FC<{ component: IComponent }> = ({
       </RadioGroup>
     </Box>
   );
-};
-
-export const RadioPreview: React.FC<{ component: IComponent }> = ({
-  component
-}) => {
-  const { props, ref } = useInteractive(component);
-
-  return <Radio ref={ref} {...props} />;
-};
+}
