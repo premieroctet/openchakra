@@ -114,14 +114,28 @@ const App = () => {
     if (event) {
       event.preventDefault()
     }
-    dispatch.app.toggleBuilderMode()
+    if (
+      !event?.metaKey &&
+      !event?.shiftKey &&
+      !event?.ctrlKey &&
+      !event?.altKey
+    ) {
+      dispatch.app.toggleBuilderMode()
+    }
   }
 
   const toggleCodePanel = (event: KeyboardEvent | undefined) => {
     if (event) {
       event.preventDefault()
     }
-    dispatch.app.toggleCodePanel()
+    if (
+      !event?.metaKey &&
+      !event?.shiftKey &&
+      !event?.ctrlKey &&
+      !event?.altKey
+    ) {
+      dispatch.app.toggleCodePanel()
+    }
   }
 
   const undo = (event: KeyboardEvent | undefined) => {
