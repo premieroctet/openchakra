@@ -1,20 +1,20 @@
-import React, { memo } from "react";
-import { Select } from "@chakra-ui/core";
-import FormControl from "../../controls/FormControl";
-import { useForm } from "../../../../hooks/useForm";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
-import FlexPanel from "./FlexPanel";
+import React, { memo } from 'react'
+import { Select } from '@chakra-ui/core'
+import FormControl from '../../controls/FormControl'
+import { useForm } from '../../../../hooks/useForm'
+import usePropsSelector from '../../../../hooks/usePropsSelector'
+import FlexPanel from './FlexPanel'
 
 const DisplayPanel = () => {
-  const { setValueFromEvent } = useForm();
-  const display = usePropsSelector("display");
-
+  const { setValueFromEvent } = useForm()
+  const display = usePropsSelector('display')
+  console.log(display)
   return (
     <>
       <FormControl label="Display">
         <Select
           size="sm"
-          value={display || ""}
+          value={display || ''}
           onChange={setValueFromEvent}
           name="display"
         >
@@ -26,9 +26,9 @@ const DisplayPanel = () => {
         </Select>
       </FormControl>
 
-      {display === "flex" && <FlexPanel />}
+      {display === 'flex' && <FlexPanel />}
     </>
-  );
-};
+  )
+}
 
-export default memo(DisplayPanel);
+export default memo(DisplayPanel)

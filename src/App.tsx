@@ -39,6 +39,11 @@ export const COMPONENTS: ComponentType[] = [
   'IconButton',
   'Image',
   'Input',
+  'InputGroup',
+  'InputRightAddon',
+  'InputLeftAddon',
+  //'InputLeftElement',
+  //'InputRightElement',
   'Link',
   'List',
   'ListItem',
@@ -86,7 +91,13 @@ export const rootComponents = COMPONENTS
       ].includes(name),
   )
   // Allow meta components
-  .concat(['AlertMeta', 'FormControlMeta', 'AccordionMeta', 'ListMeta'])
+  .concat([
+    'AlertMeta',
+    'FormControlMeta',
+    'AccordionMeta',
+    'ListMeta',
+    'InputGroupMeta',
+  ])
 
 const keyMap = {
   DELETE_NODE: 'backspace',

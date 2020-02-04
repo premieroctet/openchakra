@@ -67,9 +67,9 @@ Before release:
 - [x] IconButton
 - [x] Image
 - [x] Input
-  - [ ] InputGroup
-  - [ ] InputLeftAddon
-  - [ ] InputRightAddon
+  - [x] InputGroup
+  - [x] InputLeftAddon
+  - [x] InputRightAddon
 - [x] Link
 - [x] List
   - [x] ListItem

@@ -1,31 +1,24 @@
-import React from "react";
-import { useInteractive } from "../../../hooks/useInteractive";
-import { useDropComponent } from "../../../hooks/useDropComponent";
-import {
-  Box,
-  Accordion,
-  AccordionItem,
-  AccordionHeader,
-  AccordionPanel,
-  AccordionIcon
-} from "@chakra-ui/core";
-import ComponentPreview from "../ComponentPreview";
+import React from 'react'
+import { useInteractive } from '../../../hooks/useInteractive'
+import { useDropComponent } from '../../../hooks/useDropComponent'
+import { Box, Accordion, AccordionHeader } from '@chakra-ui/core'
+import ComponentPreview from '../ComponentPreview'
 
 const acceptedTypes = [
-  "AccordionItem",
-  "AccordionHeader",
-  "AccordionPanel",
-  "AccordionIcon"
-] as ComponentType[];
+  'AccordionItem',
+  'AccordionHeader',
+  'AccordionPanel',
+  'AccordionIcon',
+] as ComponentType[]
 
 const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
-  const { props, ref } = useInteractive(component, true);
-  const { drop, isOver } = useDropComponent(component.id, acceptedTypes);
+  const { props, ref } = useInteractive(component, true)
+  const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
 
-  let boxProps: any = {};
+  let boxProps: any = {}
 
   if (isOver) {
-    props.bg = "teal.50";
+    props.bg = 'teal.50'
   }
 
   return (
@@ -36,15 +29,15 @@ const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
         ))}
       </Accordion>
     </Box>
-  );
-};
+  )
+}
 
 export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true);
-  const { drop, isOver } = useDropComponent(component.id);
+  const { props, ref } = useInteractive(component, true)
+  const { drop, isOver } = useDropComponent(component.id)
 
   if (isOver) {
-    props.bg = "teal.50";
+    props.bg = 'teal.50'
   }
 
   return (
@@ -53,7 +46,7 @@ export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
         <ComponentPreview componentName={key} />
       ))}
     </AccordionHeader>
-  );
-};
+  )
+}
 
-export default AccordionPreview;
+export default AccordionPreview

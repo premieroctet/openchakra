@@ -12,10 +12,18 @@ const FlexPanel = () => {
   const justifyContent = usePropsSelector('justifyContent')
 
   useEffect(() => {
-    setValue('flexDirection', 'column')
-    setValue('alignItems', 'flex-start')
-    setValue('justifyContent', 'flex-start')
-  }, [setValue])
+    if (!flexDirection) {
+      setValue('flexDirection', 'column')
+    }
+
+    if (!alignItems) {
+      setValue('alignItems', 'flex-start')
+    }
+
+    if (!justifyContent) {
+      setValue('justifyContent', 'flex-start')
+    }
+  }, [alignItems, flexDirection, justifyContent, setValue])
 
   return (
     <>

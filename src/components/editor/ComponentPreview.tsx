@@ -1,9 +1,7 @@
 import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 
-import AlertPreview, {
-  AlertTitlePreview,
-} from './previews/AlertPreview'
+import AlertPreview, { AlertTitlePreview } from './previews/AlertPreview'
 import { RootState } from '../..'
 import AvatarPreview, {
   AvatarBadgePreview,
@@ -18,6 +16,9 @@ import SelectPreview from './previews/SelectPreview'
 import SimplePreviewContainer from './SimplePreviewContainer'
 import * as Chakra from '@chakra-ui/core'
 import WithChildrenPreviewContainer from './WithChildrenPreviewContainer'
+import InputGroupPreview from './previews/InputGroupPreview'
+import InputLeftAddonPreview from './previews/InputLeftAddonPreview'
+import InputRightAddonPreview from './previews/InputRightAddonPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -72,6 +73,8 @@ const ComponentPreview: React.FC<{
     case 'Tabs':
     case 'TabList':
     case 'TabPanels':
+    case 'InputLeftElement':
+    case 'InputRightElement':
     case 'List':
       return (
         <WithChildrenPreviewContainer
@@ -100,6 +103,12 @@ const ComponentPreview: React.FC<{
       return <RadioGroupPreview component={component} />
     case 'Select':
       return <SelectPreview component={component} />
+    case 'InputGroup':
+      return <InputGroupPreview component={component} />
+    case 'InputLeftAddon':
+      return <InputLeftAddonPreview component={component} />
+    case 'InputRightAddon':
+      return <InputRightAddonPreview component={component} />
     default:
       return null
   }

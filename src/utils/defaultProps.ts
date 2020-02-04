@@ -74,181 +74,192 @@ import {
   ListIcon,
   ListItem,
   Accordion,
-  AccordionItem
-} from "@chakra-ui/core";
-import FormLabel, { FormLabelProps } from "@chakra-ui/core/dist/FormLabel";
+  AccordionItem,
+  InputGroupProps,
+  InputLeftAddon,
+  InputRightAddon,
+} from '@chakra-ui/core'
+import FormLabel, { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
 type PreviewDefaultProps = {
-  Badge?: BadgeProps;
-  Box?: BoxProps;
-  Button?: ButtonProps;
-  Icon?: IconProps;
-  IconButton?: IconButtonProps;
-  Image?: ImageProps;
-  Text?: BoxProps;
-  Progress?: ProgressProps;
-  AvatarBadge?: any;
-  AvatarGroup?: Omit<AvatarGroupProps, "children">;
-  Avatar?: AvatarProps;
-  Checkbox?: CheckboxProps;
-  Link?: LinkProps;
-  Spinner?: SpinnerProps;
-  CloseButton?: CloseButtonProps;
-  Divider?: any;
-  Code?: any;
-  Textarea?: any;
-  CircularProgress?: any;
-  Heading?: HeadingProps;
-  Tag?: TagProps;
-  SimpleGrid?: SimpleGridProps;
-  Switch?: SwitchProps;
-  Alert?: AlertProps;
-  AlertIcon?: IconProps;
-  AlertTitle?: BoxProps;
-  AlertDescription?: BoxProps;
-  Flex?: FlexProps;
-  Stack?: StackProps;
-  Accordion?: Omit<AccordionProps, "children">;
-  AccordionHeader?: AccordionHeaderProps;
-  AccordionItem?: Omit<AccordionItemProps, "children">;
-  AccordionPanel?: any;
-  AccordionIcon?: IconProps;
-  FormControl?: FormControlProps;
-  FormLabel?: FormLabelProps;
-  FormHelperText?: any;
-  FormErrorMessage?: any;
-  TabList?: TabListProps;
-  TabPanel?: TabPanelProps;
-  TabPanels?: TabPanelsProps;
-  Tab?: any;
-  Tabs?: TabsProps;
-  Select?: SelectProps;
-  Input?: InputProps;
-  AspectRatioBox?: AspectRatioBoxProps;
-  Breadcrumb?: BreadcrumbItemProps;
-  Editable?: EditableProps;
-  Menu?: MenuProps;
-  NumberInput?: NumberInputProps;
-  Radio?: RadioProps;
-  RadioGroup?: RadioGroupProps;
-  List?: any;
-  ListIcon?: IconProps;
-  ListItem?: any;
+  Badge?: BadgeProps
+  Box?: BoxProps
+  Button?: ButtonProps
+  Icon?: IconProps
+  IconButton?: IconButtonProps
+  Image?: ImageProps
+  Text?: BoxProps
+  Progress?: ProgressProps
+  AvatarBadge?: any
+  AvatarGroup?: Omit<AvatarGroupProps, 'children'>
+  Avatar?: AvatarProps
+  Checkbox?: CheckboxProps
+  Link?: LinkProps
+  Spinner?: SpinnerProps
+  CloseButton?: CloseButtonProps
+  Divider?: any
+  Code?: any
+  Textarea?: any
+  CircularProgress?: any
+  Heading?: HeadingProps
+  Tag?: TagProps
+  SimpleGrid?: SimpleGridProps
+  Switch?: SwitchProps
+  Alert?: AlertProps
+  AlertIcon?: IconProps
+  AlertTitle?: BoxProps
+  AlertDescription?: BoxProps
+  Flex?: FlexProps
+  Stack?: StackProps
+  Accordion?: Omit<AccordionProps, 'children'>
+  AccordionHeader?: AccordionHeaderProps
+  AccordionItem?: Omit<AccordionItemProps, 'children'>
+  AccordionPanel?: any
+  AccordionIcon?: IconProps
+  FormControl?: FormControlProps
+  FormLabel?: FormLabelProps
+  FormHelperText?: any
+  FormErrorMessage?: any
+  TabList?: TabListProps
+  TabPanel?: TabPanelProps
+  TabPanels?: TabPanelsProps
+  Tab?: any
+  Tabs?: TabsProps
+  Select?: SelectProps
+  Input?: InputProps
+  InputGroup?: InputGroupProps
+  InputLeftAddon?: any
+  InputRightAddon?: any
+  InputLeftElement?: any
+  InputRightElement?: any
+  AspectRatioBox?: AspectRatioBoxProps
+  Breadcrumb?: BreadcrumbItemProps
+  Editable?: EditableProps
+  Menu?: MenuProps
+  NumberInput?: NumberInputProps
+  Radio?: RadioProps
+  RadioGroup?: RadioGroupProps
+  List?: any
+  ListIcon?: IconProps
+  ListItem?: any
   // meta components
-  AlertMeta?: any;
-  FormControlMeta?: any;
-  AccordionMeta?: any;
-  ListMeta?: any;
-};
+  AlertMeta?: any
+  InputGroupMeta?: any
+  FormControlMeta?: any
+  AccordionMeta?: any
+  ListMeta?: any
+}
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
   Badge: {
     ...Badge.defaultProps,
-    children: "Lorem Ipsum",
-    variant: "subtle"
+    children: 'Lorem Ipsum',
+    variant: 'subtle',
   },
   Box: Box.defaultProps,
-  Button: { ...Button.defaultProps, children: "Lorem Ipsum" },
-  Divider: { borderColor: "blackAlpha.500" },
+  Button: { ...Button.defaultProps, children: 'Lorem Ipsum' },
+  Divider: { borderColor: 'blackAlpha.500' },
   IconButton: {
     ...IconButton.defaultProps,
-    "aria-label": "icon",
-    icon: "copy",
-    size: "md"
+    'aria-label': 'icon',
+    icon: 'copy',
+    size: 'md',
   },
-  Icon: { ...Icon.defaultProps, name: "copy" },
+  Icon: { ...Icon.defaultProps, name: 'copy' },
   Image: {
     ...Image.defaultProps,
-    size: "100px",
-    fallbackSrc: "https://via.placeholder.com/150"
+    size: '100px',
+    fallbackSrc: 'https://via.placeholder.com/150',
   },
-  Text: { ...Text.defaultProps, children: "Lorem Ipsum" },
-  Progress: { ...Progress.defaultProps, size: "md" },
-  Link: { ...Link.defaultProps, children: "Lorem Ipsum" },
+  Text: { ...Text.defaultProps, children: 'Lorem Ipsum' },
+  Progress: { ...Progress.defaultProps, size: 'md' },
+  Link: { ...Link.defaultProps, children: 'Lorem Ipsum' },
   Code: {
     ...Code.defaultProps,
-    children: "Lorem Ipsum",
-    variantColor: "yellow"
+    children: 'Lorem Ipsum',
+    variantColor: 'yellow',
   },
   Spinner: {
     ...Spinner.defaultProps,
-    size: "md",
-    thickness: "2px",
-    speed: "0.45s"
+    size: 'md',
+    thickness: '2px',
+    speed: '0.45s',
   },
   Textarea: Textarea.defaultProps,
-  Input: { ...Input.defaultProps, variant: "outline" },
+  Input: { ...Input.defaultProps, variant: 'outline' },
   Heading: {
     ...Heading.defaultProps,
-    size: "xl",
-    as: "h2",
-    lineHeight: "shorter",
-    fontWeight: "bold",
-    fontFamily: "heading",
-    children: "Lorem Ipsum"
+    size: 'xl',
+    as: 'h2',
+    lineHeight: 'shorter',
+    fontWeight: 'bold',
+    fontFamily: 'heading',
+    children: 'Lorem Ipsum',
   },
   CloseButton: CloseButton.defaultProps,
   Tag: {
     ...Tag.defaultProps,
-    children: "Lorem Ipsum",
-    size: "md",
-    variant: "solid"
+    children: 'Lorem Ipsum',
+    size: 'md',
+    variant: 'solid',
   },
   SimpleGrid: {
     ...SimpleGrid.defaultProps,
     columns: 2,
     spacingX: 1,
-    spacingY: 1
+    spacingY: 1,
   },
   Switch: Switch.defaultProps,
   CircularProgress: CircularProgress.defaultProps,
   Checkbox: {
     ...Checkbox.defaultProps,
-    children: "Lorem Ipsum",
-    isChecked: true
+    children: 'Lorem Ipsum',
+    isChecked: true,
   },
   AvatarBadge: {
     ...AvatarBadge.defaultProps,
-    bg: "green.500",
-    size: "1.25em",
-    borderColor: "white"
+    bg: 'green.500',
+    size: '1.25em',
+    borderColor: 'white',
   },
   AvatarGroup: {
     ...AvatarGroup.defaultProps,
     max: 2,
     spacing: -3,
-    size: "md"
+    size: 'md',
   },
   Avatar: Avatar.defaultProps,
   Alert: Alert.defaultProps,
   AlertIcon: AlertIcon.defaultProps,
-  AlertTitle: { ...AlertTitle.defaultProps, children: "Lorem Ipsum" },
+  AlertTitle: { ...AlertTitle.defaultProps, children: 'Lorem Ipsum' },
   AlertDescription: {
     ...AlertDescription.defaultProps,
-    children: "Lorem Ipsum"
+    children: 'Lorem Ipsum',
   },
-  TabPanel: { ...TabPanel.defaultProps, children: "Tab" },
-  Tab: { ...Tab.defaultProps, children: "Tab" },
-  FormLabel: { ...FormLabel.defaultProps, children: "Label" },
+  TabPanel: { ...TabPanel.defaultProps, children: 'Tab' },
+  Tab: { ...Tab.defaultProps, children: 'Tab' },
+  FormLabel: { ...FormLabel.defaultProps, children: 'Label' },
   FormHelperText: {
     ...FormHelperText.defaultProps,
-    children: "Helper message"
+    children: 'Helper message',
   },
   FormErrorMessage: {
     ...FormErrorMessage.defaultProps,
-    children: "Error message"
+    children: 'Error message',
   },
-  Radio: { ...Radio.defaultProps, children: "Radio" },
+  Radio: { ...Radio.defaultProps, children: 'Radio' },
   RadioGroup: { ...RadioGroup.defaultProps },
-  Select: { ...Select.defaultProps, variant: "outline", size: "md" },
-  List: { ...List.defaultProps, styleType: "none" },
+  Select: { ...Select.defaultProps, variant: 'outline', size: 'md' },
+  List: { ...List.defaultProps, styleType: 'none' },
   ListIcon: { ...ListIcon.defaultProps },
-  ListItem: { ...ListItem.defaultProps, children: "list" },
+  ListItem: { ...ListItem.defaultProps, children: 'list' },
   Accordion: {
-    ...Accordion.defaultProps
+    ...Accordion.defaultProps,
   },
   AccordionItem: {
     ...AccordionItem.defaultProps,
-    defaultIsOpen: true
-  }
-};
+    defaultIsOpen: true,
+  },
+  InputLeftAddon: { ...InputLeftAddon.defaultProps, children: 'left' },
+  InputRightAddon: { ...InputRightAddon.defaultProps, children: 'right' },
+}

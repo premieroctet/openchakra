@@ -1,40 +1,40 @@
-import React from "react";
-import { useDrag } from "react-dnd";
-import { Text, PseudoBox, Icon, Box } from "@chakra-ui/core";
+import React from 'react'
+import { useDrag } from 'react-dnd'
+import { Text, PseudoBox, Icon, Box } from '@chakra-ui/core'
 
 const DragItem: React.FC<ComponentItemProps> = ({
   type,
   soon,
   label,
   isMeta,
-  isChild
+  isChild,
 }) => {
   const [, drag] = useDrag({
-    item: { id: type, type, isMeta }
-  });
+    item: { id: type, type, isMeta },
+  })
 
   let boxProps: any = {
-    cursor: "no-drop",
-    color: "whiteAlpha.600"
-  };
+    cursor: 'no-drop',
+    color: 'whiteAlpha.600',
+  }
 
   if (!soon) {
     boxProps = {
       ref: drag,
-      color: "whiteAlpha.800",
-      cursor: "move",
+      color: 'whiteAlpha.800',
+      cursor: 'move',
       _hover: {
         ml: -1,
         mr: 1,
-        bg: "teal.100",
-        shadow: "sm",
-        color: "teal.800"
-      }
-    };
+        bg: 'teal.100',
+        shadow: 'sm',
+        color: 'teal.800',
+      },
+    }
   }
 
   if (isChild) {
-    boxProps = { ...boxProps, ml: 4 };
+    boxProps = { ...boxProps, ml: 4 }
   }
 
   return (
@@ -53,7 +53,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
         mr={2}
         name="drag-handle"
         onClick={() => {
-          window.open(`https://chakra-ui.com/${type}`, "_blank");
+          window.open(`https://chakra-ui.com/${type}`, '_blank')
         }}
       />
 
@@ -71,7 +71,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
           rounded={4}
           px={1}
         >
-          widget
+          preset
         </Box>
       )}
 
@@ -89,7 +89,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
         </Box>
       )}
     </PseudoBox>
-  );
-};
+  )
+}
 
-export default DragItem;
+export default DragItem

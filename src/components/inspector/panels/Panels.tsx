@@ -92,6 +92,8 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === 'FormLabel' && <FormLabelPanel />}
       {type === 'FormHelperText' && <FormHelperTextPanel />}
       {type === 'FormErrorMessage' && <FormErrorMessagePanel />}
+      {type === 'InputRightAddon' && <ChildrenControl />}
+      {type === 'InputLeftAddon' && <ChildrenControl />}
     </>
   )
 }

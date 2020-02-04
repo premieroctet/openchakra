@@ -1,13 +1,13 @@
-import React, { useState, ChangeEvent, memo } from "react";
+import React, { useState, ChangeEvent, memo } from 'react'
 import {
   Box,
   Input,
   InputGroup,
   Icon,
   InputRightElement,
-  DarkMode
-} from "@chakra-ui/core";
-import DragItem from "./DragItem";
+  DarkMode,
+} from '@chakra-ui/core'
+import DragItem from './DragItem'
 
 const menuItems: any = {
   Accordion: {
@@ -16,16 +16,16 @@ const menuItems: any = {
       AccordionItem: {},
       AccordionHeader: {},
       AccordionPanel: {},
-      AccordionIcon: {}
-    }
+      AccordionIcon: {},
+    },
   },
   Alert: {
     children: {
       Alert: {},
       AlertDescription: {},
       AlertIcon: {},
-      AlertTitle: {}
-    }
+      AlertTitle: {},
+    },
   },
 
   AvatarGroup: {},
@@ -45,20 +45,28 @@ const menuItems: any = {
       FormControl: {},
       FormLabel: {},
       FormHelperText: {},
-      FormErrorMessage: {}
-    }
+      FormErrorMessage: {},
+    },
   },
   Heading: {},
   Icon: {},
   IconButton: {},
   Image: {},
   Input: {},
+  InputGroup: {
+    children: {
+      InputGroup: {},
+      Input: {},
+      InputLeftAddon: {},
+      InputRightAddon: {},
+    },
+  },
   Link: {},
   List: {
     children: {
       List: {},
-      ListItem: {}
-    }
+      ListItem: {},
+    },
   },
   Progress: {},
   Radio: {},
@@ -76,15 +84,15 @@ const menuItems: any = {
   Editable: { soon: true },
   Menu: { soon: true },
   NumberInput: { soon: true },
-  Tab: { soon: true }
+  Tab: { soon: true },
   /*"Tabs",
   "TabList",
   "TabPanel",
   "TabPanels"*/
-};
+}
 
 const Menu = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('')
 
   return (
     <DarkMode>
@@ -117,7 +125,7 @@ const Menu = () => {
         {Object.keys(menuItems)
           .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
           .map(name => {
-            const { children } = menuItems[name];
+            const { children } = menuItems[name]
 
             if (children) {
               const elements = Object.keys(children).map(childName => (
@@ -130,7 +138,7 @@ const Menu = () => {
                 >
                   {childName}
                 </DragItem>
-              ));
+              ))
 
               return [
                 <DragItem
@@ -143,8 +151,8 @@ const Menu = () => {
                 >
                   {name}
                 </DragItem>,
-                ...elements
-              ];
+                ...elements,
+              ]
             }
 
             return (
@@ -157,7 +165,7 @@ const Menu = () => {
               >
                 {name}
               </DragItem>
-            );
+            )
           })}
         {/*      {COMPONENTS.filter(c =>
           c.toLowerCase().includes(searchTerm.toLowerCase())
@@ -175,7 +183,7 @@ const Menu = () => {
         ))}*/}
       </Box>
     </DarkMode>
-  );
-};
+  )
+}
 
-export default memo(Menu);
+export default memo(Menu)
