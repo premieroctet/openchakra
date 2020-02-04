@@ -5,7 +5,7 @@ import { RootState } from "..";
 
 export const useForm = () => {
   const dispatch = useDispatch();
-  const selectedId = useSelector((state: RootState) => state.app.selectedId);
+  const componentId = useSelector((state: RootState) => state.app.selected.id);
 
   const setValueFromEvent = ({
     target: { name, value }
@@ -14,12 +14,12 @@ export const useForm = () => {
   };
 
   const setValue = (name: string, value: any) => {
-    dispatch.app.updateProps({
-      id: selectedId,
+    dispatch.components.updateProps({
+      id: componentId,
       name,
       value
     });
   };
 
-  return { setValue, setValueFromEvent, selectedId };
+  return { setValue, setValueFromEvent };
 };

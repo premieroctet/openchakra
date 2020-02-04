@@ -44,7 +44,7 @@ const AvatarPreview: React.FC<IPreviewProps & {
 export const AvatarGroupPreview = ({ component }: IPreviewProps) => {
   const { props, ref } = useInteractive(component, true);
   const { drop, isOver } = useDropComponent(component.id, ["Avatar"]);
-  const components = useSelector((state: RootState) => state.app.components);
+  const components = useSelector((state: RootState) => state.components.present.components);
   let boxProps: any = { display: "inline" };
 
   if (isOver) {

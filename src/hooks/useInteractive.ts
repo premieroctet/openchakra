@@ -22,7 +22,7 @@ export const useInteractive = (
       if (ref && ref.current) {
         event.stopPropagation();
         dispatch.app.setOverlay({
-          name: component.id,
+          id: component.id,
           type: component.type,
           rect: ref.current.getBoundingClientRect()
         });
@@ -32,8 +32,13 @@ export const useInteractive = (
       dispatch.app.setOverlay(undefined);
     },
     onClick: (event: MouseEvent) => {
-      event.stopPropagation();
-      dispatch.app.setSelectedId(component.id);
+      if (ref && ref.current) {
+        event.stopPropagation();
+        dispatch.app.select({
+          id: component.id,
+          rect: ref.current.getBoundingClientRect()
+        });
+      }
     }
   };
 

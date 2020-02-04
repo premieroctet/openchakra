@@ -63,7 +63,7 @@ const ComponentPreview: React.FC<{ componentName: string }> = ({
   componentName
 }) => {
   const component = useSelector(
-    (state: RootState) => state.app.components[componentName]
+    (state: RootState) => state.components.present.components[componentName]
   );
   const type = (component && component.type) || null;
 

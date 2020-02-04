@@ -10,6 +10,7 @@ import { Global } from "@emotion/core";
 import { HotKeys } from "react-hotkeys";
 import useDispatch from "./hooks/useDispatch";
 import { useSelector } from "react-redux";
+import { ActionCreators as UndoActionCreators } from "redux-undo";
 import { RootState } from ".";
 
 export const COMPONENTS: ComponentType[] = [
@@ -80,21 +81,20 @@ export const rootComponents = COMPONENTS.filter(
 const keyMap = {
   DELETE_NODE: "backspace",
   TOGGLE_BUILDER_MODE: "b",
-  TOGGLE_CODE_PANEL: "c"
+  TOGGLE_CODE_PANEL: "c",
+  UNDO: ["ctrl+z", "cmd+z"],
+  REDO: ["ctrl+y", "cmd+y"]
 };
 
 const App = () => {
-  const selectedId = useSelector((state: RootState) => state.app.selectedId);
+  const selected = useSelector((state: RootState) => state.app.selected);
   const dispatch = useDispatch();
 
   const deleteNode = (event: KeyboardEvent | undefined) => {
     if (event) {
       event.preventDefault();
     }
-
-    if (selectedId) {
-      dispatch.app.deleteComponent(selectedId);
-    }
+    dispatch.components.deleteComponent(selected.id);
   };
 
   const toggleBuilderMode = (event: KeyboardEvent | undefined) => {
@@ -111,10 +111,28 @@ const App = () => {
     dispatch.app.toggleCodePanel();
   };
 
+  const undo = (event: KeyboardEvent | undefined) => {
+    if (event) {
+      event.preventDefault();
+    }
+
+    dispatch(UndoActionCreators.undo());
+  };
+
+  const redo = (event: KeyboardEvent | undefined) => {
+    if (event) {
+      event.preventDefault();
+    }
+
+    dispatch(UndoActionCreators.redo());
+  };
+
   const handlers = {
     DELETE_NODE: deleteNode,
     TOGGLE_BUILDER_MODE: toggleBuilderMode,
-    TOGGLE_CODE_PANEL: toggleCodePanel
+    TOGGLE_CODE_PANEL: toggleCodePanel,
+    UNDO: undo,
+    REDO: redo
   };
 
   return (

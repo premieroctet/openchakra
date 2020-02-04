@@ -7,7 +7,7 @@ import { RootState } from "..";
 import { useSelector } from "react-redux";
 
 const CodePanel = () => {
-  const components = useSelector((state: RootState) => state.app.components);
+  const components = useSelector((state: RootState) => state.components.present.components);
   const code = generateCode(components);
 
   const { onCopy, hasCopied } = useClipboard(code);
