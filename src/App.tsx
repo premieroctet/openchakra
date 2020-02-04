@@ -74,9 +74,16 @@ export const rootComponents = COMPONENTS
   // Remove specific components
   .filter(
     name =>
-      !["AlertIcon", "AlertDescription", "AlertTitle", "AvatarBadge"].includes(
-        name
-      )
+      ![
+        "AlertIcon",
+        "AlertDescription",
+        "AlertTitle",
+        "AvatarBadge",
+        "AccordionItem",
+        "AccordionHeader",
+        "AccordionPanel",
+        "AccordionIcon"
+      ].includes(name)
   )
   // Allow meta components
   .concat(["AlertMeta", "FormControlMeta", "AccordionMeta", "ListMeta"]);
