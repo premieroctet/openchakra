@@ -18,6 +18,7 @@ import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
 import { getShowLayout, getShowCode } from '../core/selectors/app'
+import { createShareUrl } from '../utils/share'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -38,6 +39,23 @@ const CodeSandboxButton = () => {
       size="xs"
     >
       Open in CodeSandbox
+    </Button>
+  )
+}
+
+const ShareButton = () => {
+  const components = useSelector(getComponents)
+
+  return (
+    <Button
+      onClick={() => {
+        window.open(createShareUrl(components), '_blank')
+      }}
+      rightIcon="external-link"
+      variant="ghost"
+      size="xs"
+    >
+      Share
     </Button>
   )
 }
@@ -106,6 +124,8 @@ const Header = () => {
             </Flex>
             <Divider orientation="vertical" />
             <CodeSandboxButton />
+            <Divider orientation="vertical" />
+            <ShareButton />
             <Divider orientation="vertical" />
             <Button
               rightIcon="small-close"

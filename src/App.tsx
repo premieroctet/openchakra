@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Flex, Box } from '@chakra-ui/core'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
@@ -10,9 +10,97 @@ import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'
 import useShortcuts, { keyMap } from './hooks/useShortcuts'
 import ErrorBoundary from './components/ErrorBoundary'
+import { decodeShareUrl } from './utils/share'
+import useDispatch from './hooks/useDispatch'
+
+export const COMPONENTS: ComponentType[] = [
+  'Alert',
+  'AlertDescription',
+  'AlertIcon',
+  'AlertTitle',
+  'Avatar',
+  'AvatarBadge',
+  'AvatarGroup',
+  'Badge',
+  'Box',
+  'Button',
+  'Checkbox',
+  'CircularProgress',
+  'CloseButton',
+  'Code',
+  'Divider',
+  'Flex',
+  'FormControl',
+  'FormLabel',
+  'FormHelperText',
+  'FormErrorMessage',
+  'Heading',
+  'Icon',
+  'IconButton',
+  'Image',
+  'Input',
+  'Link',
+  'List',
+  'ListItem',
+  'Progress',
+  'Radio',
+  'RadioGroup',
+  'SimpleGrid',
+  'Spinner',
+  'Select',
+  'Stack',
+  'Switch',
+  'Tag',
+  'Text',
+  'Textarea',
+  'Tab',
+  'Accordion',
+  'Editable',
+  'AspectRatioBox',
+  'Breadcrumb',
+  'Menu',
+  'NumberInput',
+  'AccordionItem',
+  'AccordionHeader',
+  'AccordionPanel',
+  'AccordionIcon',
+  /*"Tabs",
+  "TabList",
+  "TabPanel",
+  "TabPanels"*/
+]
+
+export const rootComponents = COMPONENTS
+  // Remove specific components
+  .filter(
+    name =>
+      ![
+        'AlertIcon',
+        'AlertDescription',
+        'AlertTitle',
+        'AvatarBadge',
+        'AccordionItem',
+        'AccordionHeader',
+        'AccordionPanel',
+        'AccordionIcon',
+      ].includes(name),
+  )
+  // Allow meta components
+  .concat(['AlertMeta', 'FormControlMeta', 'AccordionMeta', 'ListMeta'])
 
 const App = () => {
   const { handlers } = useShortcuts()
+  const dispatch = useDispatch()
+
+  // Init state from url if present
+  useEffect(() => {
+    const components = decodeShareUrl()
+    if (components) {
+      dispatch.components.reset(components)
+      // eslint-disable-next-line
+      history.replaceState(null, 'Openchakra', '/')
+    }
+  }, [dispatch.components])
 
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>
