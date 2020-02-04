@@ -4,13 +4,7 @@
 
 Before release:
 
-- Set default values when switching to flex panel
 - Editor sorting
-- Fix shortcuts
-- Fix selected overlay
-- Fix Variant color in panel button
-- Move Stack spacing to input
-- Add panels for FormControl elements
 - Fix documentation URL (with preset components)
 - Add InputGroup, InputLeftElement, InputRightElement + create preset
 - Add Menu components (all) + create preset

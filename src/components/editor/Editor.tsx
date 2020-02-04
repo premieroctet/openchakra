@@ -7,6 +7,7 @@ import CodePanel from '../CodePanel'
 import { useSelector } from 'react-redux'
 import { RootState } from '../..'
 import useDispatch from '../../hooks/useDispatch'
+import Overlay from './Overlay'
 
 const Editor: React.FC = () => {
   const showCode = useSelector((state: RootState) => state.app.showCode)
@@ -68,37 +69,15 @@ const Editor: React.FC = () => {
       ))}
 
       {overlay && showLayout && (
-        <Box
-          pointerEvents="none"
-          cursor="pointer"
-          zIndex={40}
-          borderWidth={1}
-          borderColor="teal.300"
-          position="absolute"
-          width={overlay.rect.width + 10}
-          height={overlay.rect.height + 10}
-          top={`${overlay.rect.top - 53}px`}
-          left={`${overlay.rect.left - 229}px`}
-        >
+        <Overlay rect={overlay.rect}>
           <Badge ml={1} variantColor="teal">
             {overlay.type}
           </Badge>
-        </Box>
+        </Overlay>
       )}
 
       {selected && selected.rect && showLayout && (
-        <Box
-          pointerEvents="none"
-          cursor="pointer"
-          zIndex={40}
-          borderWidth={1}
-          borderColor="red.200"
-          position="absolute"
-          width={selected.rect.width + 10}
-          height={selected.rect.height + 10}
-          top={`${selected.rect.top - 53}px`}
-          left={`${selected.rect.left - 229}px`}
-        />
+        <Overlay rect={selected.rect} />
       )}
     </Box>
   )

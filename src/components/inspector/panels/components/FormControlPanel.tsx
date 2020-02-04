@@ -1,5 +1,5 @@
-import React from "react";
-import SwitchControl from "../../controls/SwitchControl";
+import React from 'react'
+import SwitchControl from '../../controls/SwitchControl'
 
 const FormControlPanel = () => {
   return (
@@ -7,8 +7,9 @@ const FormControlPanel = () => {
       <SwitchControl label="Invalid" name="isInvalid" />
       <SwitchControl label="Required" name="isRequired" />
       <SwitchControl label="Read only" name="isReadOnly" />
+      <SwitchControl label="Disabled" name="isDisabled" />
     </>
-  );
-};
+  )
+}
 
-export default FormControlPanel;
+export default FormControlPanel

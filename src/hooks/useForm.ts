@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import useDispatch from './useDispatch'
 import { RootState } from '..'
@@ -15,13 +15,16 @@ export const useForm = () => {
     setValue(name, value)
   }
 
-  const setValue = (name: string, value: any) => {
-    dispatch.components.updateProps({
-      id: componentId,
-      name,
-      value,
-    })
-  }
+  const setValue = useCallback(
+    (name: string, value: any) => {
+      dispatch.components.updateProps({
+        id: componentId,
+        name,
+        value,
+      })
+    },
+    [componentId, dispatch.components],
+  )
 
   return { setValue, setValueFromEvent }
 }

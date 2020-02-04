@@ -1,25 +1,24 @@
-import React, { memo } from "react";
-import { Icons } from "@chakra-ui/core/dist/theme/icons";
+import React, { memo } from 'react'
+import { Icons } from '@chakra-ui/core/dist/theme/icons'
 
-import VariantsControl from "../../controls/VariantsControl";
-import ColorsControl from "../../controls/ColorsControl";
-import SizeControl from "../../controls/SizeControl";
-import { Icon } from "@chakra-ui/core";
-import ChildrenControl from "../../controls/ChildrenControl";
-import InputSuggestion from "../../inputs/InputSuggestion";
-import theme from "../../../../theme/theme";
-import { ComboboxOption, ComboboxOptionText } from "@reach/combobox";
-import FormControl from "../../controls/FormControl";
-import { useForm } from "../../../../hooks/useForm";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
+import ColorsControl from '../../controls/ColorsControl'
+import SizeControl from '../../controls/SizeControl'
+import { Icon, Select } from '@chakra-ui/core'
+import ChildrenControl from '../../controls/ChildrenControl'
+import InputSuggestion from '../../inputs/InputSuggestion'
+import theme from '../../../../theme/theme'
+import { ComboboxOption, ComboboxOptionText } from '@reach/combobox'
+import FormControl from '../../controls/FormControl'
+import { useForm } from '../../../../hooks/useForm'
+import usePropsSelector from '../../../../hooks/usePropsSelector'
 
 const ButtonPanel = () => {
-  const { setValueFromEvent } = useForm();
+  const { setValueFromEvent } = useForm()
 
-  const size = usePropsSelector("size");
-  const variant = usePropsSelector("variantColor");
-  const leftIcon = usePropsSelector("leftIcon");
-  const rightIcon = usePropsSelector("rightIcon");
+  const size = usePropsSelector('size')
+  const variant = usePropsSelector('variant')
+  const leftIcon = usePropsSelector('leftIcon')
+  const rightIcon = usePropsSelector('rightIcon')
 
   return (
     <>
@@ -27,7 +26,21 @@ const ButtonPanel = () => {
 
       <SizeControl name="size" label="Size" value={size} />
 
-      <VariantsControl label="Variant" name="variant" value={variant} />
+      <FormControl htmlFor="variant" label="Variant">
+        <Select
+          id="variant"
+          onChange={setValueFromEvent}
+          name="variant"
+          size="sm"
+          value={variant || ''}
+        >
+          <option>outline</option>
+          <option>ghost</option>
+          <option>unstyled</option>
+          <option>link</option>
+          <option>solid</option>
+        </Select>
+      </FormControl>
 
       <ColorsControl label="Variant Color" name="variantColor" />
 
@@ -63,7 +76,7 @@ const ButtonPanel = () => {
         </InputSuggestion>
       </FormControl>
     </>
-  );
-};
+  )
+}
 
-export default memo(ButtonPanel);
+export default memo(ButtonPanel)

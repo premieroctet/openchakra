@@ -1,15 +1,21 @@
-import React, { memo } from "react";
-import { Select } from "@chakra-ui/core";
-import FormControl from "../../controls/FormControl";
-import { useForm } from "../../../../hooks/useForm";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
+import React, { memo, useEffect } from 'react'
+import { Select } from '@chakra-ui/core'
+import FormControl from '../../controls/FormControl'
+import { useForm } from '../../../../hooks/useForm'
+import usePropsSelector from '../../../../hooks/usePropsSelector'
 
 const FlexPanel = () => {
-  const { setValueFromEvent } = useForm();
+  const { setValueFromEvent, setValue } = useForm()
 
-  const alignItems = usePropsSelector("alignItems");
-  const flexDirection = usePropsSelector("flexDirection");
-  const justifyContent = usePropsSelector("justifyContent");
+  const alignItems = usePropsSelector('alignItems')
+  const flexDirection = usePropsSelector('flexDirection')
+  const justifyContent = usePropsSelector('justifyContent')
+
+  useEffect(() => {
+    setValue('flexDirection', 'column')
+    setValue('alignItems', 'flex-start')
+    setValue('justifyContent', 'flex-start')
+  }, [setValue])
 
   return (
     <>
@@ -17,7 +23,7 @@ const FlexPanel = () => {
         <Select
           name="flexDirection"
           size="sm"
-          value={flexDirection || ""}
+          value={flexDirection || ''}
           onChange={setValueFromEvent}
         >
           <option>column</option>
@@ -29,12 +35,12 @@ const FlexPanel = () => {
         <Select
           name="justifyContent"
           size="sm"
-          value={justifyContent || ""}
+          value={justifyContent || ''}
           onChange={setValueFromEvent}
         >
-          <option>start</option>
+          <option>flex-start</option>
           <option>center</option>
-          <option>end</option>
+          <option>flex-end</option>
           <option>space-between</option>
           <option>space-around</option>
         </Select>
@@ -44,18 +50,18 @@ const FlexPanel = () => {
         <Select
           name="alignItems"
           size="sm"
-          value={alignItems || ""}
+          value={alignItems || ''}
           onChange={setValueFromEvent}
         >
-          <option>start</option>
+          <option>flex-start</option>
           <option>center</option>
-          <option>end</option>
+          <option>flex-end</option>
           <option>space-between</option>
           <option>space-around</option>
         </Select>
       </FormControl>
     </>
-  );
-};
+  )
+}
 
-export default memo(FlexPanel);
+export default memo(FlexPanel)
