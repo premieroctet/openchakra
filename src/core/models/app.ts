@@ -12,6 +12,12 @@ export type AppState = {
 
 const DEFAULT_SELECTED = { id: "root" };
 
+export const generateId = () => {
+  return `comp-${Math.random()
+    .toString(36)
+    .substr(2, 9)}`;
+};
+
 const app = createModel({
   state: {
     showLayout: true,

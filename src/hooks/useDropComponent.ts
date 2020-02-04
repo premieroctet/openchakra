@@ -1,6 +1,7 @@
 import { useDrop, DropTargetMonitor } from "react-dnd";
 import { rootComponents } from "../App";
 import useDispatch from "./useDispatch";
+import builder from "../core/models/composer/builder";
 
 export const useDropComponent = (
   componentId: string,
@@ -23,6 +24,8 @@ export const useDropComponent = (
           parentId: componentId,
           componentId: item.id
         });
+      } else if (item.isMeta) {
+        dispatch.components.addMetaComponent(builder[item.type](componentId));
       } else {
         dispatch.components.addComponent({
           parentName: componentId,

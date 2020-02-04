@@ -55,28 +55,31 @@ export const COMPONENTS: ComponentType[] = [
   "Textarea",
   "Tab",
   "Accordion",
-  "ControlBox",
   "Editable",
   "AspectRatioBox",
   "Breadcrumb",
   "Menu",
-  "NumberInput"
-  /*"AccordionItem",
+  "NumberInput",
+  "AccordionItem",
   "AccordionHeader",
   "AccordionPanel",
-  "AccordionIcon",*/
+  "AccordionIcon"
   /*"Tabs",
   "TabList",
   "TabPanel",
   "TabPanels"*/
 ];
 
-export const rootComponents = COMPONENTS.filter(
-  name =>
-    !["AlertIcon", "AlertDescription", "AlertTitle", "AvatarBadge"].includes(
-      name
-    )
-);
+export const rootComponents = COMPONENTS
+  // Remove specific components
+  .filter(
+    name =>
+      !["AlertIcon", "AlertDescription", "AlertTitle", "AvatarBadge"].includes(
+        name
+      )
+  )
+  // Allow meta components
+  .concat(["AlertMeta", "FormControlMeta", "AccordionMeta", "ListMeta"]);
 
 const keyMap = {
   DELETE_NODE: "backspace",

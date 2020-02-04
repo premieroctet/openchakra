@@ -2,9 +2,15 @@ import React from "react";
 import { useDrag } from "react-dnd";
 import { Text, PseudoBox, Icon, Box } from "@chakra-ui/core";
 
-const DragItem: React.FC<ComponentItemProps> = ({ id, type, soon }) => {
+const DragItem: React.FC<ComponentItemProps> = ({
+  type,
+  soon,
+  label,
+  isMeta,
+  isChild
+}) => {
   const [, drag] = useDrag({
-    item: { id, type }
+    item: { id: type, type, isMeta }
   });
 
   let boxProps: any = {
@@ -27,6 +33,10 @@ const DragItem: React.FC<ComponentItemProps> = ({ id, type, soon }) => {
     };
   }
 
+  if (isChild) {
+    boxProps = { ...boxProps, ml: 4 };
+  }
+
   return (
     <PseudoBox
       boxSizing="border-box"
@@ -46,9 +56,25 @@ const DragItem: React.FC<ComponentItemProps> = ({ id, type, soon }) => {
           window.open(`https://chakra-ui.com/${type}`, "_blank");
         }}
       />
+
       <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
-        {type}
+        {label}
       </Text>
+
+      {isMeta && (
+        <Box
+          ml={2}
+          borderWidth="1px"
+          color="teal.300"
+          borderColor="teal.600"
+          fontSize="xs"
+          rounded={4}
+          px={1}
+        >
+          widget
+        </Box>
+      )}
+
       {soon && (
         <Box
           ml={2}

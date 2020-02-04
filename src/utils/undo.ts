@@ -2,9 +2,16 @@ import { Action } from "@rematch/core";
 
 export default function filterActions(action: Action) {
   if (
-    ["components/addComponent", "components/removeComponent", "components/updateProps"].includes(
-      action.type
-    )
+    [
+      "components/reset",
+      "components/loadDemo",
+      "components/resetProps",
+      "components/updateProps",
+      "components/addComponent",
+      "components/deleteComponent",
+      "components/moveComponent",
+      "components/addMetaComponent"
+    ].includes(action.type)
   ) {
     return true;
   }

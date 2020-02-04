@@ -6,7 +6,7 @@ const FormControlPanel = () => {
     <>
       <SwitchControl label="Invalid" name="isInvalid" />
       <SwitchControl label="Required" name="isRequired" />
-      <SwitchControl label="ReadOnly" name="isReadOnly" />
+      <SwitchControl label="Read only" name="isReadOnly" />
     </>
   );
 };
