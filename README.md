@@ -4,14 +4,20 @@
 
 Before release:
 
-- Improve flex panel
-- Editor sort/drag and drop
-- Add some shortcuts
+- Set default values when switching to flex panel
+- Editor sorting
+- Fix shortcuts
+- Fix selected overlay
+- Fix Variant color in panel button
+- Move Stack spacing to input
+- Add panels for FormControl elements
+- Fix documentation URL (with preset components)
+- Add InputGroup, InputLeftElement, InputRightElement + create preset
+- Add Menu components (all) + create preset
 
 ## Roadmap
 
 - Allow Body styling
-- Improve Perf
 - Tests
 - Infer from TS types (panels)
 
@@ -71,8 +77,8 @@ Before release:
   - [ ] InputLeftAddon
   - [ ] InputRightAddon
 - [x] Link
-- [ ] List
-  - [ ] ListItem
+- [x] List
+  - [x] ListItem
 - [ ] Menu
   - [ ] MenuButton
   - [ ] MenuList
@@ -97,10 +103,10 @@ Before release:
   - [ ] PopoverCloseButton
 - [x] Progress
 - [x] PseudoBox
-- [ ] Radio
-  - [ ] RadioGroup
+- [x] Radio
+  - [x] RadioGroup
 - [x] SimpleGrid
-- [ ] Select
+- [x] Select
 - [ ] Slider
   - [ ] SliderTrack
   - [ ] SliderFilledTrack
