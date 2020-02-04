@@ -1,26 +1,26 @@
-import React from "react";
-import { Link, Box, Flex, IconButton } from "@chakra-ui/core";
+import React from 'react'
+import { Link, Box, Flex, IconButton } from '@chakra-ui/core'
 
-import Panels from "./panels/Panels";
-import { GoRepo } from "react-icons/go";
-import { FaMagic } from "react-icons/fa";
-import { FiTrash2 } from "react-icons/fi";
-import { IoMdRefresh } from "react-icons/io";
-import { RootState } from "../..";
-import { useSelector } from "react-redux";
-import useDispatch from "../../hooks/useDispatch";
-import QuickPropsPanel from "./QuickPropsPanel";
-import StylesPanel from "./panels/StylesPanel";
-import { Tooltip } from "@chakra-ui/core";
+import Panels from './panels/Panels'
+import { GoRepo } from 'react-icons/go'
+import { FaMagic } from 'react-icons/fa'
+import { FiTrash2 } from 'react-icons/fi'
+import { IoMdRefresh } from 'react-icons/io'
+import { RootState } from '../..'
+import { useSelector } from 'react-redux'
+import useDispatch from '../../hooks/useDispatch'
+import QuickPropsPanel from './QuickPropsPanel'
+import StylesPanel from './panels/StylesPanel'
+import { Tooltip } from '@chakra-ui/core'
 
 const Inspector = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const component = useSelector(
     (state: RootState) =>
-      state.components.present.components[state.app.selected.id]
-  );
+      state.components.present.components[state.components.present.selected.id],
+  )
 
-  if (!component || component.id === "root") {
+  if (!component || component.id === 'root') {
     return (
       <Flex
         alignItems="center"
@@ -34,10 +34,10 @@ const Inspector = () => {
         <Box mb={4} color="gray.300" as={FaMagic} fontSize="6xl" />
         Select an element on the editor to activate this panel
       </Flex>
-    );
+    )
   }
 
-  const { type } = component;
+  const { type } = component
 
   return (
     <>
@@ -75,8 +75,8 @@ const Inspector = () => {
                 onClick={() => {
                   window.open(
                     `https://chakra-ui.com/${type.toLowerCase()}`,
-                    "_blank"
-                  );
+                    '_blank',
+                  )
                 }}
                 aria-label="Doc"
                 icon={GoRepo}
@@ -104,7 +104,7 @@ const Inspector = () => {
 
       <StylesPanel />
     </>
-  );
-};
+  )
+}
 
-export default Inspector;
+export default Inspector

@@ -1,36 +1,38 @@
-import React, { memo } from "react";
-import { Box, Text, Link, Badge } from "@chakra-ui/core";
-import ComponentPreview from "./ComponentPreview";
-import { useDropComponent } from "../../hooks/useDropComponent";
-import SplitPane from "react-split-pane";
-import CodePanel from "../CodePanel";
-import { useSelector } from "react-redux";
-import { RootState } from "../..";
-import useDispatch from "../../hooks/useDispatch";
+import React, { memo } from 'react'
+import { Box, Text, Link, Badge } from '@chakra-ui/core'
+import ComponentPreview from './ComponentPreview'
+import { useDropComponent } from '../../hooks/useDropComponent'
+import SplitPane from 'react-split-pane'
+import CodePanel from '../CodePanel'
+import { useSelector } from 'react-redux'
+import { RootState } from '../..'
+import useDispatch from '../../hooks/useDispatch'
 
 const Editor: React.FC = () => {
-  const showCode = useSelector((state: RootState) => state.app.showCode);
-  const showLayout = useSelector((state: RootState) => state.app.showLayout);
-  const overlay = useSelector((state: RootState) => state.app.overlay);
-  const selected = useSelector((state: RootState) => state.app.selected);
+  const showCode = useSelector((state: RootState) => state.app.showCode)
+  const showLayout = useSelector((state: RootState) => state.app.showLayout)
+  const overlay = useSelector((state: RootState) => state.app.overlay)
+  const selected = useSelector(
+    (state: RootState) => state.components.present.selected,
+  )
   const components = useSelector(
-    (state: RootState) => state.components.present.components
-  );
-  const dispatch = useDispatch();
+    (state: RootState) => state.components.present.components,
+  )
+  const dispatch = useDispatch()
 
-  const { drop } = useDropComponent("root");
-  const isEmpty = !components.root.children.length;
+  const { drop } = useDropComponent('root')
+  const isEmpty = !components.root.children.length
 
-  let editorBackgroundProps = {};
+  let editorBackgroundProps = {}
 
   if (showLayout) {
     editorBackgroundProps = {
       backgroundImage:
-        "linear-gradient(to right, #d9e2e9 1px, transparent 1px),linear-gradient(to bottom, #d9e2e9 1px, transparent 1px);",
-      backgroundSize: "20px 20px",
-      bg: "#edf2f6",
-      p: 10
-    };
+        'linear-gradient(to right, #d9e2e9 1px, transparent 1px),linear-gradient(to bottom, #d9e2e9 1px, transparent 1px);',
+      backgroundSize: '20px 20px',
+      bg: '#edf2f6',
+      p: 10,
+    }
   }
 
   const Playground = (
@@ -39,7 +41,7 @@ const Editor: React.FC = () => {
       {...editorBackgroundProps}
       height="100%"
       width="100%"
-      display={isEmpty ? "flex" : "block"}
+      display={isEmpty ? 'flex' : 'block'}
       justifyContent="center"
       alignItems="center"
       ref={drop}
@@ -48,10 +50,10 @@ const Editor: React.FC = () => {
     >
       {isEmpty && (
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
-          Drag some component to start coding without code! Or load a{" "}
+          Drag some component to start coding without code! Or load a{' '}
           <Link
             onClick={() => {
-              dispatch.components.loadDemo();
+              dispatch.components.loadDemo()
             }}
             textDecoration="underline"
           >
@@ -65,7 +67,7 @@ const Editor: React.FC = () => {
         <ComponentPreview key={name} componentName={name} />
       ))}
 
-      {overlay && (
+      {overlay && showLayout && (
         <Box
           pointerEvents="none"
           cursor="pointer"
@@ -84,7 +86,7 @@ const Editor: React.FC = () => {
         </Box>
       )}
 
-      {selected && selected.rect && (
+      {selected && selected.rect && showLayout && (
         <Box
           pointerEvents="none"
           cursor="pointer"
@@ -99,26 +101,26 @@ const Editor: React.FC = () => {
         />
       )}
     </Box>
-  );
+  )
 
   if (!showCode) {
-    return Playground;
+    return Playground
   }
 
   return (
     <SplitPane
       defaultSize="50%"
       resizerStyle={{
-        border: "3px solid rgba(1, 22, 39, 0.21)",
+        border: '3px solid rgba(1, 22, 39, 0.21)',
         zIndex: 20,
-        cursor: "row-resize"
+        cursor: 'row-resize',
       }}
       split="horizontal"
     >
       {Playground}
       <CodePanel />
     </SplitPane>
-  );
-};
+  )
+}
 
-export default memo(Editor);
+export default memo(Editor)
