@@ -1,26 +1,22 @@
-import React from "react";
-import { useInteractive } from "../../../hooks/useInteractive";
-import { useDropComponent } from "../../../hooks/useDropComponent";
-import ComponentPreview from "../ComponentPreview";
-import {
-  Alert,
-  AlertTitle,
-  Box
-} from "@chakra-ui/core";
+import React from 'react'
+import { useInteractive } from '../../../hooks/useInteractive'
+import { useDropComponent } from '../../../hooks/useDropComponent'
+import ComponentPreview from '../ComponentPreview'
+import { Alert, AlertTitle, Box, AlertDescription } from '@chakra-ui/core'
 
 const AlertPreview: React.FC<IPreviewProps> = ({ component }) => {
   const acceptedTypes = [
-    "AlertIcon",
-    "AlertTitle",
-    "AlertDescription"
-  ] as ComponentType[];
-  const { props, ref } = useInteractive(component, false);
-  const { drop, isOver } = useDropComponent(component.id, acceptedTypes);
+    'AlertIcon',
+    'AlertTitle',
+    'AlertDescription',
+  ] as ComponentType[]
+  const { props, ref } = useInteractive(component, false)
+  const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
 
-  let boxProps: any = {};
+  let boxProps: any = {}
 
   if (isOver) {
-    props.bg = "teal.50";
+    props.bg = 'teal.50'
   }
 
   return (
@@ -31,16 +27,29 @@ const AlertPreview: React.FC<IPreviewProps> = ({ component }) => {
         ))}
       </Alert>
     </Box>
-  );
-};
+  )
+}
+
+export const AlertDescriptionPreview = ({ component }: IPreviewProps) => {
+  const { props, ref } = useInteractive(component)
+  let boxProps: any = {}
+
+  return (
+    <Box {...boxProps} ref={ref}>
+      <AlertDescription {...props} />
+    </Box>
+  )
+}
 
 export const AlertTitlePreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component);
-  return (
-    <AlertTitle ref={ref} {...props}>
-      {props.children || "Lorem Ipsum"}
-    </AlertTitle>
-  );
-};
+  const { props, ref } = useInteractive(component)
+  let boxProps: any = {}
 
-export default AlertPreview;
+  return (
+    <Box {...boxProps} ref={ref}>
+      <AlertTitle {...props} />
+    </Box>
+  )
+}
+
+export default AlertPreview

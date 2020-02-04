@@ -1,7 +1,10 @@
 import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 
-import AlertPreview, { AlertTitlePreview } from './previews/AlertPreview'
+import AlertPreview, {
+  AlertTitlePreview,
+  AlertDescriptionPreview,
+} from './previews/AlertPreview'
 import { RootState } from '../..'
 import AvatarPreview, {
   AvatarBadgePreview,
@@ -49,7 +52,6 @@ const ComponentPreview: React.FC<{
     case 'Tag':
     case 'Switch':
     case 'AlertIcon':
-    case 'AlertDescription':
     case 'FormLabel':
     case 'FormHelperText':
     case 'FormErrorMessage':
@@ -93,6 +95,8 @@ const ComponentPreview: React.FC<{
       return <AlertPreview component={component} />
     case 'AlertTitle':
       return <AlertTitlePreview component={component} />
+    case 'AlertDescription':
+      return <AlertDescriptionPreview component={component} />
     case 'Stack':
       return <StackPreview component={component} />
     case 'Accordion':
