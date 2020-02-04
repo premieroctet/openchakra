@@ -1,69 +1,58 @@
-import { createModel } from "@rematch/core";
+import { createModel } from '@rematch/core'
 
-type Overlay = undefined | { rect: DOMRect; id: string; type: ComponentType };
-type Selected = { rect?: DOMRect; id: string };
+type Overlay = undefined | { rect: DOMRect; id: string; type: ComponentType }
 
 export type AppState = {
-  showLayout: boolean;
-  showCode: boolean;
-  selected: Selected;
-  overlay: undefined | Overlay;
-};
-
-const DEFAULT_SELECTED = { id: "root" };
+  showLayout: boolean
+  showCode: boolean
+  overlay: undefined | Overlay
+}
 
 export const generateId = () => {
   return `comp-${Math.random()
     .toString(36)
-    .substr(2, 9)}`;
-};
+    .substr(2, 9)}`
+}
 
 const app = createModel({
   state: {
     showLayout: true,
     showCode: false,
-    selected: DEFAULT_SELECTED,
-    overlay: undefined
+    overlay: undefined,
   } as AppState,
   reducers: {
     toggleBuilderMode(state: AppState): AppState {
       return {
         ...state,
-        showLayout: !state.showLayout
-      };
+        showLayout: !state.showLayout,
+      }
     },
     toggleCodePanel(state: AppState): AppState {
       return {
         ...state,
-        showCode: !state.showCode
-      };
+        showCode: !state.showCode,
+      }
     },
-    select(state: AppState, selected: Selected): AppState {
-      return {
-        ...state,
-        selected
-      };
-    },
+
     setOverlay(state: AppState, overlay: Overlay | undefined): AppState {
       return {
         ...state,
-        overlay
-      };
+        overlay,
+      }
     },
-    "components/deleteComponent": (state: AppState): AppState => {
+    'components/deleteComponent': (state: AppState): AppState => {
       return {
         ...state,
-        selected: DEFAULT_SELECTED,
-        overlay: undefined
-      };
+        overlay: undefined,
+      }
     },
-    "components/reset": (state: AppState): AppState => {
+    '@@redux-undo/UNDO': (state: AppState): AppState => {
       return {
         ...state,
-        selected: DEFAULT_SELECTED
-      };
-    }
-  }
-});
+        overlay: undefined,
+      }
+    },
+  },
+})
 
-export default app;
+export default app

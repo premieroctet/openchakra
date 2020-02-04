@@ -1,46 +1,52 @@
-import { createModel } from "@rematch/core";
-import { DEFAULT_PROPS } from "../../utils/defaultProps";
-import omit from "lodash/omit";
-import { airbnbCard } from "../../theme/demo";
+import { createModel } from '@rematch/core'
+import { DEFAULT_PROPS } from '../../utils/defaultProps'
+import omit from 'lodash/omit'
+import { airbnbCard } from '../../theme/demo'
 
+type Selected = { rect?: DOMRect; id: string }
 type ComponentsState = {
-  components: IComponents;
-};
+  components: IComponents
+  selected: Selected
+}
 export type ComponentsStateWithUndo = {
-  past: ComponentsState[];
-  present: ComponentsState;
-  future: ComponentsState[];
-};
+  past: ComponentsState[]
+  present: ComponentsState
+  future: ComponentsState[]
+}
 
 export const INITIAL_COMPONENTS = {
   root: {
-    id: "root",
-    parent: "root",
-    type: "box" as ComponentType,
+    id: 'root',
+    parent: 'root',
+    type: 'box' as ComponentType,
     children: [],
-    props: {}
-  }
-};
+    props: {},
+  },
+}
+
+const DEFAULT_SELECTED = { id: 'root' }
 
 const components = createModel({
   state: {
-    components: INITIAL_COMPONENTS
+    components: INITIAL_COMPONENTS,
+    selected: DEFAULT_SELECTED,
   } as ComponentsState,
   reducers: {
     reset(state: ComponentsState): ComponentsState {
       return {
         ...state,
-        components: INITIAL_COMPONENTS
-      };
+        components: INITIAL_COMPONENTS,
+        selected: DEFAULT_SELECTED,
+      }
     },
     loadDemo(state: ComponentsState): ComponentsState {
       return {
         ...state,
-        components: airbnbCard as any
-      };
+        components: airbnbCard as any,
+      }
     },
     resetProps(state: ComponentsState, componentId: string): ComponentsState {
-      const component = state.components[componentId];
+      const component = state.components[componentId]
 
       return {
         ...state,
@@ -48,14 +54,14 @@ const components = createModel({
           ...state.components,
           [componentId]: {
             ...component,
-            props: DEFAULT_PROPS[component.type]
-          }
-        }
-      };
+            props: DEFAULT_PROPS[component.type],
+          },
+        },
+      }
     },
     updateProps(
       state: ComponentsState,
-      payload: { id: string; name: string; value: string }
+      payload: { id: string; name: string; value: string },
     ) {
       return {
         ...state,
@@ -65,52 +71,53 @@ const components = createModel({
             ...state.components[payload.id],
             props: {
               ...state.components[payload.id].props,
-              [payload.name]: payload.value
-            }
-          }
-        }
-      };
+              [payload.name]: payload.value,
+            },
+          },
+        },
+      }
     },
     deleteComponent(state: ComponentsState, componentId: string) {
-      if (componentId === "root") {
-        return state;
+      if (componentId === 'root') {
+        return state
       }
 
-      let updatedComponents = { ...state.components };
-      let component = updatedComponents[componentId];
+      let updatedComponents = { ...state.components }
+      let component = updatedComponents[componentId]
 
       if (component && component.parent) {
         const children = updatedComponents[component.parent].children.filter(
-          (el: string) => el !== component.id
-        );
+          (el: string) => el !== component.id,
+        )
 
-        updatedComponents[component.parent].children = children;
+        updatedComponents[component.parent].children = children
       }
 
-      updatedComponents = omit(state.components, component.id);
+      updatedComponents = omit(state.components, component.id)
 
       return {
         ...state,
         components: updatedComponents,
         overlay: undefined,
-        selectedComponent: INITIAL_COMPONENTS.root
-      };
+        selectedComponent: INITIAL_COMPONENTS.root,
+        selected: DEFAULT_SELECTED,
+      }
     },
     moveComponent(
       state: ComponentsState,
-      payload: { parentId: string; componentId: string }
+      payload: { parentId: string; componentId: string },
     ): ComponentsState {
       if (state.components[payload.componentId].parent === payload.parentId) {
-        return state;
+        return state
       }
 
       const children = state.components[
         state.components[payload.componentId].parent
-      ].children.filter(id => id !== payload.componentId);
+      ].children.filter(id => id !== payload.componentId)
 
       const newChildren = state.components[payload.parentId].children.concat(
-        payload.componentId
-      );
+        payload.componentId,
+      )
 
       return {
         ...state,
@@ -119,26 +126,26 @@ const components = createModel({
           // Update parent id
           [payload.componentId]: {
             ...state.components[payload.componentId],
-            parent: payload.parentId
+            parent: payload.parentId,
           },
           // Remove id from legacy children
           [state.components[payload.componentId].parent]: {
             ...state.components[state.components[payload.componentId].parent],
-            children
+            children,
           },
           // Add in new parent children
           [payload.parentId]: {
             ...state.components[payload.parentId],
-            children: newChildren
-          }
-        }
-      };
+            children: newChildren,
+          },
+        },
+      }
     },
     addComponent(
       state: ComponentsState,
-      payload: { parentName: string; type: ComponentType }
+      payload: { parentName: string; type: ComponentType },
     ): ComponentsState {
-      const id = `comp-${Math.round(new Date().getTime() / 1000)}`;
+      const id = `comp-${Math.round(new Date().getTime() / 1000)}`
 
       return {
         ...state,
@@ -146,21 +153,21 @@ const components = createModel({
           ...state.components,
           [payload.parentName]: {
             ...state.components[payload.parentName],
-            children: [...state.components[payload.parentName].children, id]
+            children: [...state.components[payload.parentName].children, id],
           },
           [id]: {
             id,
             props: DEFAULT_PROPS[payload.type] || {},
             children: [],
             type: payload.type,
-            parent: payload.parentName
-          }
-        }
-      };
+            parent: payload.parentName,
+          },
+        },
+      }
     },
     addMetaComponent(
       state: ComponentsState,
-      payload: { components: IComponents; root: string; parent: string }
+      payload: { components: IComponents; root: string; parent: string },
     ): ComponentsState {
       return {
         ...state,
@@ -170,14 +177,20 @@ const components = createModel({
             ...state.components[payload.parent],
             children: [
               ...state.components[payload.parent].children,
-              payload.root
-            ]
+              payload.root,
+            ],
           },
-          ...payload.components
-        }
-      };
-    }
-  }
-});
+          ...payload.components,
+        },
+      }
+    },
+    select(state: ComponentsState, selected: Selected): ComponentsState {
+      return {
+        ...state,
+        selected,
+      }
+    },
+  },
+})
 
-export default components;
+export default components

@@ -18,12 +18,12 @@ export const useInteractive = (
 
   useEffect(() => {
     if (ref.current) {
-      dispatch.app.select({
+      dispatch.components.select({
         id: component.id,
         rect: ref.current.getBoundingClientRect(),
       })
     }
-  }, [component.id, component.props, dispatch.app])
+  }, [component.id, component.props, dispatch.components])
 
   let props = {
     ...component.props,
@@ -40,10 +40,13 @@ export const useInteractive = (
     onMouseOut: () => {
       dispatch.app.setOverlay(undefined)
     },
+    onPointerOut: () => {
+      dispatch.app.setOverlay(undefined)
+    },
     onClick: (event: MouseEvent) => {
       if (ref && ref.current) {
         event.stopPropagation()
-        dispatch.app.select({
+        dispatch.components.select({
           id: component.id,
           rect: ref.current.getBoundingClientRect(),
         })

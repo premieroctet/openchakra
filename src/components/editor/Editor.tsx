@@ -12,7 +12,9 @@ const Editor: React.FC = () => {
   const showCode = useSelector((state: RootState) => state.app.showCode)
   const showLayout = useSelector((state: RootState) => state.app.showLayout)
   const overlay = useSelector((state: RootState) => state.app.overlay)
-  const selected = useSelector((state: RootState) => state.app.selected)
+  const selected = useSelector(
+    (state: RootState) => state.components.present.selected,
+  )
   const components = useSelector(
     (state: RootState) => state.components.present.components,
   )
@@ -106,20 +108,18 @@ const Editor: React.FC = () => {
   }
 
   return (
-    <>
-      <SplitPane
-        defaultSize="50%"
-        resizerStyle={{
-          border: '3px solid rgba(1, 22, 39, 0.21)',
-          zIndex: 20,
-          cursor: 'row-resize',
-        }}
-        split="horizontal"
-      >
-        {Playground}
-        <CodePanel />
-      </SplitPane>
-    </>
+    <SplitPane
+      defaultSize="50%"
+      resizerStyle={{
+        border: '3px solid rgba(1, 22, 39, 0.21)',
+        zIndex: 20,
+        cursor: 'row-resize',
+      }}
+      split="horizontal"
+    >
+      {Playground}
+      <CodePanel />
+    </SplitPane>
   )
 }
 

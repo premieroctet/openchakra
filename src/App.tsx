@@ -97,7 +97,9 @@ const keyMap = {
 }
 
 const App = () => {
-  const selected = useSelector((state: RootState) => state.app.selected)
+  const selected = useSelector(
+    (state: RootState) => state.components.present.selected,
+  )
   const showLayout = useSelector((state: RootState) => state.app.showLayout)
   const dispatch = useDispatch()
 

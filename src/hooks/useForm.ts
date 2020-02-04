@@ -1,25 +1,27 @@
-import { ChangeEvent } from "react";
-import { useSelector } from "react-redux";
-import useDispatch from "./useDispatch";
-import { RootState } from "..";
+import { ChangeEvent } from 'react'
+import { useSelector } from 'react-redux'
+import useDispatch from './useDispatch'
+import { RootState } from '..'
 
 export const useForm = () => {
-  const dispatch = useDispatch();
-  const componentId = useSelector((state: RootState) => state.app.selected.id);
+  const dispatch = useDispatch()
+  const componentId = useSelector(
+    (state: RootState) => state.components.present.selected.id,
+  )
 
   const setValueFromEvent = ({
-    target: { name, value }
+    target: { name, value },
   }: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    setValue(name, value);
-  };
+    setValue(name, value)
+  }
 
   const setValue = (name: string, value: any) => {
     dispatch.components.updateProps({
       id: componentId,
       name,
-      value
-    });
-  };
+      value,
+    })
+  }
 
-  return { setValue, setValueFromEvent };
-};
+  return { setValue, setValueFromEvent }
+}
