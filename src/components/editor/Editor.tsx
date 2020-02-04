@@ -45,6 +45,7 @@ const Editor: React.FC = () => {
       display={isEmpty ? 'flex' : 'block'}
       justifyContent="center"
       alignItems="center"
+      overflow="auto"
       ref={drop}
       position="relative"
       flexDirection="column"
