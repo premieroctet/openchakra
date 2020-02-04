@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo } from 'react'
 import {
   Box,
   Switch,
@@ -8,31 +8,31 @@ import {
   Stack,
   FormLabel,
   Divider,
-  DarkMode
-} from "@chakra-ui/core";
-import { DiGithubBadge } from "react-icons/di";
-import { AiFillThunderbolt } from "react-icons/ai";
-import { buildParameters } from "../utils/codesandbox";
-import { generateCode } from "../utils/code";
-import useDispatch from "../hooks/useDispatch";
-import { useSelector } from "react-redux";
-import { RootState } from "..";
+  DarkMode,
+} from '@chakra-ui/core'
+import { DiGithubBadge } from 'react-icons/di'
+import { AiFillThunderbolt } from 'react-icons/ai'
+import { buildParameters } from '../utils/codesandbox'
+import { generateCode } from '../utils/code'
+import useDispatch from '../hooks/useDispatch'
+import { useSelector } from 'react-redux'
+import { RootState } from '..'
 
 const CodeSandboxButton = () => {
   const components = useSelector(
-    (state: RootState) => state.components.present.components
-  );
+    (state: RootState) => state.components.present.components,
+  )
 
   return (
     <Button
       onClick={() => {
-        const code = generateCode(components);
-        const parameters = buildParameters(code);
+        const code = generateCode(components)
+        const parameters = buildParameters(code)
 
         window.open(
           `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`,
-          "_blank"
-        );
+          '_blank',
+        )
       }}
       rightIcon="external-link"
       variant="ghost"
@@ -40,13 +40,13 @@ const CodeSandboxButton = () => {
     >
       Open in CodeSandbox
     </Button>
-  );
-};
+  )
+}
 
 const Header = () => {
-  const showLayout = useSelector((state: RootState) => state.app.showLayout);
-  const showCode = useSelector((state: RootState) => state.app.showCode);
-  const dispatch = useDispatch();
+  const showLayout = useSelector((state: RootState) => state.app.showLayout)
+  const showCode = useSelector((state: RootState) => state.app.showCode)
+  const dispatch = useDispatch()
 
   return (
     <DarkMode>
@@ -70,7 +70,7 @@ const Header = () => {
               as={AiFillThunderbolt}
               mr={1}
               color="teal.100"
-            />{" "}
+            />{' '}
             <Box fontWeight="bold">Open</Box>Chakra
           </Box>
 
@@ -115,14 +115,14 @@ const Header = () => {
               size="xs"
               variant="ghost"
               onClick={() => {
-                dispatch.components.reset();
+                dispatch.components.reset()
               }}
             >
               Reset
             </Button>
 
             <Stack
-              justifyContent="end"
+              justifyContent="flex-end"
               width="13rem"
               align="center"
               isInline
@@ -130,7 +130,7 @@ const Header = () => {
             >
               <Link
                 isExternal
-                href="https://github.com/premieroctet/open-chakra"
+                href="https://github.com/premieroctet/openchakra"
               >
                 <Box as={DiGithubBadge} size="8" color="gray.200" />
               </Link>
@@ -139,7 +139,7 @@ const Header = () => {
         </Flex>
       </Box>
     </DarkMode>
-  );
-};
+  )
+}
 
-export default memo(Header);
+export default memo(Header)

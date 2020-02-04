@@ -6,7 +6,6 @@ import {
   Icon,
   InputRightElement,
   DarkMode,
-  Button,
   IconButton,
 } from '@chakra-ui/core'
 import DragItem from './DragItem'
@@ -183,20 +182,6 @@ const Menu = () => {
               </DragItem>
             )
           })}
-        {/*      {COMPONENTS.filter(c =>
-          c.toLowerCase().includes(searchTerm.toLowerCase())
-        ).map(type => (
-          <>
-            <DragItem
-              soon={TYPES_SOON.includes(type)}
-              key={type}
-              id={type}
-              type={type as ComponentType}
-            >
-              {type}
-            </DragItem>
-          </>
-        ))}*/}
       </Box>
     </DarkMode>
   )
