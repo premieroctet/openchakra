@@ -40,7 +40,8 @@ const Editor: React.FC = () => {
     <Box
       p={2}
       {...editorBackgroundProps}
-      height="100%"
+      height="calc(100vh - 3rem)"
+      minWidth="10rem"
       width="100%"
       display={isEmpty ? 'flex' : 'block'}
       justifyContent="center"

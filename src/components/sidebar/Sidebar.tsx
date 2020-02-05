@@ -108,7 +108,6 @@ const Menu = () => {
         as="menu"
         backgroundColor="#2e3748"
         width="15rem"
-        order={-1}
       >
         <InputGroup size="sm" mb={4}>
           <InputRightElement>
