@@ -1,13 +1,11 @@
 import { ChangeEvent, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import useDispatch from './useDispatch'
-import { RootState } from '..'
+import { getSelectedComponentId } from '../core/selectors/components'
 
 export const useForm = () => {
   const dispatch = useDispatch()
-  const componentId = useSelector(
-    (state: RootState) => state.components.present.selected.id,
-  )
+  const componentId = useSelector(getSelectedComponentId)
 
   const setValueFromEvent = ({
     target: { name, value },

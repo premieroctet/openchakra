@@ -1,7 +1,7 @@
 import useDispatch from './useDispatch'
 import { useSelector } from 'react-redux'
-import { RootState } from '..'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
+import { getSelectedComponent } from '../core/selectors/components'
 
 export const keyMap = {
   DELETE_NODE: 'backspace',
@@ -16,9 +16,7 @@ const hasNoSpecialKeyPressed = (event: KeyboardEvent | undefined) =>
 
 const useShortcuts = () => {
   const dispatch = useDispatch()
-  const selected = useSelector(
-    (state: RootState) => state.components.present.selected,
-  )
+  const selected = useSelector(getSelectedComponent)
 
   const deleteNode = (event: KeyboardEvent | undefined) => {
     if (event) {

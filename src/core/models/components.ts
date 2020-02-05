@@ -3,10 +3,9 @@ import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import omit from 'lodash/omit'
 import { airbnbCard } from '../../theme/demo'
 
-type Selected = { rect?: DOMRect; id: string }
 type ComponentsState = {
   components: IComponents
-  selected: Selected
+  selectedId: IComponent['id']
 }
 export type ComponentsStateWithUndo = {
   past: ComponentsState[]
@@ -24,19 +23,16 @@ export const INITIAL_COMPONENTS: IComponents = {
   },
 }
 
-const DEFAULT_SELECTED = { id: 'root' }
-
 const components = createModel({
   state: {
     components: INITIAL_COMPONENTS,
-    selected: DEFAULT_SELECTED,
+    selectedId: 'root',
   } as ComponentsState,
   reducers: {
     reset(state: ComponentsState): ComponentsState {
       return {
         ...state,
         components: INITIAL_COMPONENTS,
-        selected: DEFAULT_SELECTED,
       }
     },
     loadDemo(state: ComponentsState): ComponentsState {
@@ -114,9 +110,6 @@ const components = createModel({
       return {
         ...state,
         components: updatedComponents,
-        overlay: undefined,
-        selectedComponent: INITIAL_COMPONENTS.root,
-        selected: DEFAULT_SELECTED,
       }
     },
     moveComponent(
@@ -205,10 +198,13 @@ const components = createModel({
         },
       }
     },
-    select(state: ComponentsState, selected: Selected): ComponentsState {
+    select(
+      state: ComponentsState,
+      selectedId: IComponent['id'],
+    ): ComponentsState {
       return {
         ...state,
-        selected,
+        selectedId,
       }
     },
   },

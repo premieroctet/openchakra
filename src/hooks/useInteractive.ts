@@ -1,56 +1,36 @@
-import { useRef, MouseEvent, useEffect } from 'react'
+import { useRef, MouseEvent, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { RootState } from '..'
 import useDispatch from './useDispatch'
 import { useDrag } from 'react-dnd'
+import { getSelectedComponentId } from '../core/selectors/components'
+import { getShowLayout } from '../core/selectors/app'
 
 export const useInteractive = (
   component: IComponent,
   enableVisualHelper: boolean = false,
 ) => {
   const dispatch = useDispatch()
-  const showLayout = useSelector((state: RootState) => state.app.showLayout)
+  const [hover, setHover] = useState(false)
+  const showLayout = useSelector(getShowLayout)
+  const selectedId = useSelector(getSelectedComponentId)
   const [, drag] = useDrag({
     item: { id: component.id, type: component.type, isMoved: true },
   })
 
   const ref = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (ref.current) {
-      dispatch.components.select({
-        id: component.id,
-        rect: ref.current.getBoundingClientRect(),
-      })
-    }
-  }, [component.id, component.props, dispatch.components])
-
   let props = {
     ...component.props,
     onMouseOver: (event: MouseEvent) => {
-      if (ref && ref.current) {
-        event.stopPropagation()
-        dispatch.app.setOverlay({
-          id: component.id,
-          type: component.type,
-          rect: ref.current.getBoundingClientRect(),
-        })
-      }
+      event.stopPropagation()
+      setHover(true)
     },
     onMouseOut: () => {
-      dispatch.app.setOverlay(undefined)
-    },
-    onPointerOut: () => {
-      dispatch.app.setOverlay(undefined)
+      setHover(false)
     },
     onClick: (event: MouseEvent) => {
-      if (ref && ref.current) {
-        event.stopPropagation()
-        dispatch.components.select({
-          id: component.id,
-          rect: ref.current.getBoundingClientRect(),
-        })
-      }
+      event.stopPropagation()
+      dispatch.components.select(component.id)
     },
   }
 
@@ -59,6 +39,13 @@ export const useInteractive = (
       ...props,
       border: `1px dashed #718096`,
       padding: props.p || props.padding ? props.p || props.padding : 4,
+    }
+  }
+
+  if (hover || selectedId === component.id) {
+    props = {
+      ...props,
+      boxShadow: `#4FD1C5 0px 0px 0px 2px inset`,
     }
   }
 

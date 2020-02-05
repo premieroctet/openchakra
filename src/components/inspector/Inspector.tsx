@@ -6,19 +6,16 @@ import { GoRepo } from 'react-icons/go'
 import { FaMagic } from 'react-icons/fa'
 import { FiTrash2 } from 'react-icons/fi'
 import { IoMdRefresh } from 'react-icons/io'
-import { RootState } from '../..'
 import { useSelector } from 'react-redux'
 import useDispatch from '../../hooks/useDispatch'
 import QuickPropsPanel from './QuickPropsPanel'
 import StylesPanel from './panels/StylesPanel'
 import { Tooltip } from '@chakra-ui/core'
+import { getSelectedComponent } from '../../core/selectors/components'
 
 const Inspector = () => {
   const dispatch = useDispatch()
-  const component = useSelector(
-    (state: RootState) =>
-      state.components.present.components[state.components.present.selected.id],
-  )
+  const component = useSelector(getSelectedComponent)
 
   const { type, rootParentType } = component
 

@@ -1,16 +1,16 @@
-import React, { memo } from "react";
-import Highlight, { defaultProps } from "prism-react-renderer";
-import { Box, Button, useClipboard } from "@chakra-ui/core";
-import { generateCode } from "../utils/code";
-import theme from "prism-react-renderer/themes/nightOwl";
-import { RootState } from "..";
-import { useSelector } from "react-redux";
+import React, { memo } from 'react'
+import Highlight, { defaultProps } from 'prism-react-renderer'
+import { Box, Button, useClipboard } from '@chakra-ui/core'
+import { generateCode } from '../utils/code'
+import theme from 'prism-react-renderer/themes/nightOwl'
+import { useSelector } from 'react-redux'
+import { getComponents } from '../core/selectors/components'
 
 const CodePanel = () => {
-  const components = useSelector((state: RootState) => state.components.present.components);
-  const code = generateCode(components);
+  const components = useSelector(getComponents)
+  const code = generateCode(components)
 
-  const { onCopy, hasCopied } = useClipboard(code);
+  const { onCopy, hasCopied } = useClipboard(code)
 
   return (
     <Box
@@ -36,7 +36,7 @@ const CodePanel = () => {
         top={4}
         right="1.25em"
       >
-        {hasCopied ? "copied" : "copy"}
+        {hasCopied ? 'copied' : 'copy'}
       </Button>
 
       <Highlight {...defaultProps} theme={theme} code={code} language="jsx">
@@ -53,7 +53,7 @@ const CodePanel = () => {
         )}
       </Highlight>
     </Box>
-  );
-};
+  )
+}
 
-export default memo(CodePanel);
+export default memo(CodePanel)

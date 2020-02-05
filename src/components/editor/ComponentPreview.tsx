@@ -5,7 +5,6 @@ import AlertPreview, {
   AlertTitlePreview,
   AlertDescriptionPreview,
 } from './previews/AlertPreview'
-import { RootState } from '../..'
 import AvatarPreview, {
   AvatarBadgePreview,
   AvatarGroupPreview,
@@ -22,13 +21,12 @@ import WithChildrenPreviewContainer from './WithChildrenPreviewContainer'
 import InputGroupPreview from './previews/InputGroupPreview'
 import InputLeftAddonPreview from './previews/InputLeftAddonPreview'
 import InputRightAddonPreview from './previews/InputRightAddonPreview'
+import { getComponentBy } from '../../core/selectors/components'
 
 const ComponentPreview: React.FC<{
   componentName: string
 }> = ({ componentName }) => {
-  const component = useSelector(
-    (state: RootState) => state.components.present.components[componentName],
-  )
+  const component = useSelector(getComponentBy(componentName))
   const type = (component && component.type) || null
 
   switch (type) {
