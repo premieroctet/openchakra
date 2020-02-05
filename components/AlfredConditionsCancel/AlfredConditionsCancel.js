@@ -106,7 +106,7 @@ class AlfredConditionsCancel extends React.Component{
                   <h3>Conditions d’annulation de {alfred.firstname}</h3>
                 </Grid>
                 {userState && isOwner ?
-                  <Grid>
+                  <Grid className={classes.editCancelButton}>
                     { this.state.stateEditButton ?
                       <Button color="primary" className={classes.button} onClick={this.onSubmit}>
                         Enregistrer

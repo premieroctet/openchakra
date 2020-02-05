@@ -81,14 +81,6 @@ class shop extends React.Component {
           .catch(function (error) {
               console.log(error);
           });
-        axios.get(`${url}myAlfred/api/serviceUser/5e2ac0db177d7012c8e152ea`)
-          .then(res => {
-              let serviceUser = res.data;
-              self.setState({serviceUser: serviceUser});
-          })
-          .catch(err =>
-            console.log(err)
-          );
     }
 
     checkIfOwner() {
@@ -135,10 +127,10 @@ class shop extends React.Component {
                                     Les services de {this.state.alfred.firstname}
                                 </Typography>
                             </Grid>
-                            <Grid container className={classes.marginTop}>
+                            <Grid container className={classes.cardPreviewContainer}>
                                 { Object.keys(this.state.services).map( result => {
                                     return (
-                                      <Grid item lg={4}>
+                                      <Grid item lg={4} xs={12}>
                                           <CardPreview
                                             isOwner={this.state.isOwner}
                                             userState={this.state.userState}
@@ -152,7 +144,7 @@ class shop extends React.Component {
                                 })
                                 }
                                 {this.state.userState && this.state.isOwner  ?
-                                    <Grid item lg={4}>
+                                    <Grid item lg={4} xs={12}>
                                         <CardAddService/>
                                     </Grid>
                                   : null

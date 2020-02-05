@@ -2,6 +2,9 @@
 export default theme => ({
   button: {
     margin: theme.spacing(1),
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
+    },
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -38,21 +41,45 @@ export default theme => ({
     flexDirection: 'row',
     marginTop:'1%',
     width:'50%',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      width:'90%',
+    },
   },
   texfieldContent:{
     width: '100%',
     marginLeft: 30,
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0,
+    },
   },
   imgFatCastor:{
-    width: 100
+    width: 100,
   },
   alignCheckbox:{
     display: 'flex',
     alignItems: 'center'
   },
-  containerPositionWelcome:{
+  containerPositionWelcome: {
     display: 'flex',
-    marginLeft: 30
+    marginLeft: 30,
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0,
+    },
+  },
+  responsiveContentWelcomePosition:{
+    display:'flex',
+    flexDirection: 'column',
+    marginTop:'1%',
+    width:'50%',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      width:'90%',
+    },
+  },
+  responsiveImgContent:{
+    [theme.breakpoints.down('xs')]: {
+      display : 'none'
+    },
   }
 });

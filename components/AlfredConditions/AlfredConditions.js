@@ -2,7 +2,7 @@ import Grid from '@material-ui/core/Grid';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './AlfredConditionsStyle'
+import styles from '../../static/assets/css/shopPage/componentStyle'
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import axios from 'axios';
@@ -79,11 +79,11 @@ class AlfredConditions extends React.Component{
           <hr className={classes.hrStyle}/>
           <Grid className={classes.contentPosition}>
             <Grid className={classes.containerBooking}>
-              <Grid>
+              <Grid className={classes.containerTitle}>
                 <h3>Les conditions de réservation de {alfred.firstname}</h3>
               </Grid>
               {userState && isOwner ?
-                <Grid>
+                <Grid className={classes.editCancelButton}>
                   { this.state.stateEditButton ?
                     <Button color="primary" className={classes.button} onClick={this.onSubmit}>
                       Enregistrer

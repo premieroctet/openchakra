@@ -98,11 +98,11 @@ class AlfredConditionsBooking extends React.Component{
           <Grid className={classes.containerPosition}>
             <Grid className={classes.contentPosition}>
               <Grid className={classes.containerBooking}>
-                <Grid>
+                <Grid className={classes.containerTitle}>
                   <h3>Comment réserver {alfred.firstname}</h3>
                 </Grid>
                 {userState && isOwner?
-                  <Grid>
+                  <Grid className={classes.editCancelButton}>
                     { this.state.stateEditButton ?
                       <Button color="primary" className={classes.button} onClick={this.onSubmit}>
                         Enregistrer

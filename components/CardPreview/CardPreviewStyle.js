@@ -2,7 +2,11 @@ export default theme => ({
   card: {
     width: 400,
     height:400,
-    marginBottom: '5%'
+    marginBottom: '5%',
+    [theme.breakpoints.down('xs')]: {
+      width:'100%',
+      height: '100%'
+    },
 },
   expand: {
     transform: 'rotate(0deg)',
@@ -31,10 +35,19 @@ export default theme => ({
   },
   checkCircleIcon:{
     marginLeft: 5,
-    color: '#4fbdd7'
+    color: '#4fbdd7',
+    width: 25,
+    height: 25,
+    [theme.breakpoints.down('xs')]: {
+      height: 20,
+      width: 20,
+    }
   },
   rating:{
     marginLeft: -15,
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 'large'
+    }
   },
   actionMediaEdit:{
     position: 'absolute',
@@ -67,7 +80,12 @@ export default theme => ({
     [theme.breakpoints.down('sm')]: {
         height:50,
         width:50,
-  }},
+  },
+    [theme.breakpoints.down('xs')]: {
+      height:20,
+      width:20,
+    }
+  },
   chipStyle:{
     backgroundColor: '#f87280',
     color:'white',
@@ -96,7 +114,10 @@ export default theme => ({
     width:'50%',
     display:'flex',
     flexDirection:'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      alignItems: 'end',
+    }
   },
   flexPosition:{
     display:'flex'
@@ -107,9 +128,18 @@ export default theme => ({
   noPadding:{
     padding:0
   },
-  imageStyle:{
+  imageStyle: {
     width: 25,
-    height: 25
-  }
+    height: 25,
+    [theme.breakpoints.down('xs')]: {
+      height: 20,
+      width: 20,
+    }
+  },
+  sizeText: {
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 'small'
+    }
+  },
 });
 

@@ -45,8 +45,8 @@ class AlfredWelcomedMessage extends React.Component{
           <h3>Message de bienvenue</h3>
         </Grid>
         <Grid className={classes.containerPositionWelcome}>
-          <Grid className={classes.contentWelcomePosition}>
-            <Grid>
+          <Grid className={stateButton.stateEditButton ? classes.responsiveContentWelcomePosition: classes.contentWelcomePosition}>
+            <Grid className={classes.responsiveImgContent}>
               <img src={'../../static/assets/img/iconCardAlfred/Castor applaudit.svg'} alt={'fatCastor'} title={'fatCastor'} className={classes.imgFatCastor}/>
             </Grid>
             <Grid className={classes.texfieldContent}>
@@ -70,7 +70,7 @@ class AlfredWelcomedMessage extends React.Component{
             </Grid>
             {stateButton.stateEditButton ?
               <Grid>
-                <Button disabled={!this.state.stateButton} color={"primary"} onClick={this.sendNewContent}>
+                <Button disabled={!this.state.stateButton} color={"primary"} variant={"contained"} onClick={this.sendNewContent}>
                   Valider
                 </Button>
               </Grid>: null

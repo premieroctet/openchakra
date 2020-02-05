@@ -2,7 +2,10 @@ export default theme => ({
   card: {
     width: 400,
     height:400,
-    marginBottom: '5%'
+    marginBottom: '5%',
+    [theme.breakpoints.down('xs')]: {
+      width:'100%'
+    },
   },
   cardMedia: {
     paddingTop: '56.25%', // 16:9

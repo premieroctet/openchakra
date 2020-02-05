@@ -94,7 +94,7 @@ class CardPreview extends React.Component{
                 </Grid>
                 <Grid className={classes.actionMediaRemove}>
                   <IconButton aria-label="remove" className={classes.iconButtonStyle}>
-                    <DeleteForeverIcon onClick={()=>this.handleClickOpen(services._id)} style={{color: '#f87280'}} />
+                    <DeleteForeverIcon onClick={()=>this.handleClickOpen(services._id)} style={{color: '#f87280'}}/>
                   </IconButton>
                 </Grid>
               </Grid>
@@ -104,11 +104,11 @@ class CardPreview extends React.Component{
           <CardContent>
             <Grid  className={classes.cardContent}>
               <Grid className={classes.cardContentPosition}>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography variant="body2" color="textSecondary" component="p" className={classes.sizeText}>
                   {service.category.label}
                 </Typography>
                 <Grid className={classes.cardContentHeader}>
-                  <Typography component="p">
+                  <Typography component="p" className={classes.sizeText}>
                     {service.label}
                   </Typography>
                 </Grid>
@@ -120,7 +120,7 @@ class CardPreview extends React.Component{
               </Grid>
               <Grid className={classes.cardContentRight}>
                 <Grid className={classes.flexPosition}>
-                  <Typography variant="body2" color="textSecondary" component="p">
+                  <Typography variant="body2" color="textSecondary" component="p" className={classes.sizeText}>
                     Rouen
                   </Typography>
                   <RoomIcon className={classes.checkCircleIcon}/>
@@ -137,6 +137,7 @@ class CardPreview extends React.Component{
                     <img src={services.graduated ? '../../static/assets/img/iconCardAlfred/graduated.svg' : '../../static/assets/img/iconCardAlfred/no_graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
                   </ListItemIcon>
                   <ListItemText
+                    classes={{primary:classes.sizeText}}
                     primary={"Diplômé(e)"}
                   />
                 </ListItem>
@@ -145,6 +146,7 @@ class CardPreview extends React.Component{
                     <img src={services.is_certified ? '../../static/assets/img/iconCardAlfred/certificate.svg' : '../../static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
                   </ListItemIcon>
                   <ListItemText
+                    classes={{primary:classes.sizeText}}
                     primary="Certifié(e)"
                   />
                 </ListItem>
@@ -153,6 +155,7 @@ class CardPreview extends React.Component{
                     <img src={'../../static/assets/img/iconCardAlfred/experience.svg'} alt={'Expériementé'} title={'Expériementé'} className={classes.imageStyle}/>
                   </ListItemIcon>
                   <ListItemText
+                    classes={{primary:classes.sizeText}}
                     primary="Expériementé(e)"
                   />
                 </ListItem>

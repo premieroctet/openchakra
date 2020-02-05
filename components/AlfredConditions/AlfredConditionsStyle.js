@@ -1,7 +1,9 @@
-
 export default theme => ({
   button: {
     margin: theme.spacing(1),
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
+    },
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -14,12 +16,18 @@ export default theme => ({
   containerBooking:{
     display:'flex',
     justifyContent: 'space-between',
-    width: '95%'
+    width: '95%',
+    alignItems: 'center'
   },
   containerAlfred:{
     display: 'flex',
     flexDirection: 'column',
-    marginLeft : 15
+    marginLeft : 15,
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0,
+      marginRight: 0,
+    },
+
   },
   hrStyle:{
     width : '90%'
@@ -49,10 +57,25 @@ export default theme => ({
   },
   alignCheckbox:{
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      width: '90%'
+    },
   },
   containerPositionWelcome:{
     display: 'flex',
     marginLeft: 30
+  },
+  editCancelButton:{
+    display:'flex',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column-reverse',
+    },
+  },
+  containerTitle:{
+    [theme.breakpoints.down('xs')]: {
+      width: '60%',
+    },
   }
+
 });
