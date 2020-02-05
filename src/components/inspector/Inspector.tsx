@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Link, Box, Flex, IconButton } from '@chakra-ui/core'
 
 import Panels from './panels/Panels'
@@ -17,16 +17,6 @@ const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
 
-  const { type, rootParentType } = component
-
-  const docType = useMemo(() => {
-    if (rootParentType) {
-      return rootParentType
-    }
-
-    return type
-  }, [type, rootParentType])
-
   if (!component || component.id === 'root') {
     return (
       <Flex
@@ -43,6 +33,10 @@ const Inspector = () => {
       </Flex>
     )
   }
+
+  const { type, rootParentType } = component
+
+  const docType = rootParentType || type
 
   return (
     <>
