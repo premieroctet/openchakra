@@ -10,7 +10,19 @@ import {
 } from '@chakra-ui/core'
 import DragItem from './DragItem'
 
-const menuItems: any = {
+type MenuItem = {
+  children?: MenuItems
+  soon?: boolean
+  rootParentType?: ComponentType
+}
+
+type MenuItems = Partial<
+  {
+    [k in ComponentType]: MenuItem
+  }
+>
+
+const menuItems: MenuItems = {
   Accordion: {
     children: {
       Accordion: {},
@@ -29,9 +41,13 @@ const menuItems: any = {
     },
   },
 
-  AvatarGroup: {},
+  AvatarGroup: {
+    rootParentType: 'Avatar',
+  },
   Avatar: {},
-  AvatarBadge: {},
+  AvatarBadge: {
+    rootParentType: 'Avatar',
+  },
   Badge: {},
   Box: {},
   Button: {},
@@ -55,6 +71,7 @@ const menuItems: any = {
   Image: {},
   Input: {},
   InputGroup: {
+    rootParentType: 'Input',
     children: {
       InputGroup: {},
       Input: {},
@@ -71,7 +88,9 @@ const menuItems: any = {
   },
   Progress: {},
   Radio: {},
-  RadioGroup: {},
+  RadioGroup: {
+    rootParentType: 'Radio',
+  },
   SimpleGrid: {},
   Spinner: {},
   Select: {},
@@ -137,10 +156,10 @@ const Menu = () => {
           />
         </InputGroup>
 
-        {Object.keys(menuItems)
+        {(Object.keys(menuItems) as ComponentType[])
           .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
           .map(name => {
-            const { children } = menuItems[name]
+            const { children, soon } = menuItems[name] as MenuItem
 
             if (children) {
               const elements = Object.keys(children).map(childName => (
@@ -150,6 +169,7 @@ const Menu = () => {
                   label={childName}
                   type={childName as any}
                   id={childName as any}
+                  rootParentType={menuItems[name]?.rootParentType || name}
                 >
                   {childName}
                 </DragItem>
@@ -158,11 +178,12 @@ const Menu = () => {
               return [
                 <DragItem
                   isMeta
-                  soon={menuItems[name].soon}
+                  soon={soon}
                   key={`${name}Meta`}
                   label={name}
                   type={`${name}Meta` as any}
                   id={`${name}Meta` as any}
+                  rootParentType={menuItems[name]?.rootParentType || name}
                 >
                   {name}
                 </DragItem>,
@@ -172,11 +193,12 @@ const Menu = () => {
 
             return (
               <DragItem
-                soon={menuItems[name].soon}
+                soon={soon}
                 key={name}
                 label={name}
                 type={name as any}
                 id={name as any}
+                rootParentType={menuItems[name]?.rootParentType || name}
               >
                 {name}
               </DragItem>

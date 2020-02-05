@@ -143,7 +143,11 @@ const components = createModel({
     },
     addComponent(
       state: ComponentsState,
-      payload: { parentName: string; type: ComponentType },
+      payload: {
+        parentName: string
+        type: ComponentType
+        rootParentType?: ComponentType
+      },
     ): ComponentsState {
       const id = `comp-${Math.round(new Date().getTime() / 1000)}`
 
@@ -161,6 +165,7 @@ const components = createModel({
             children: [],
             type: payload.type,
             parent: payload.parentName,
+            rootParentType: payload.rootParentType || payload.type,
           },
         },
       }

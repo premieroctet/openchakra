@@ -8,9 +8,10 @@ const DragItem: React.FC<ComponentItemProps> = ({
   label,
   isMeta,
   isChild,
+  rootParentType,
 }) => {
   const [, drag] = useDrag({
-    item: { id: type, type, isMeta },
+    item: { id: type, type, isMeta, rootParentType },
   })
 
   let boxProps: any = {
@@ -53,7 +54,10 @@ const DragItem: React.FC<ComponentItemProps> = ({
         mr={2}
         name="drag-handle"
         onClick={() => {
-          window.open(`https://chakra-ui.com/${type}`, '_blank')
+          window.open(
+            `https://chakra-ui.com/${rootParentType || type}`,
+            '_blank',
+          )
         }}
       />
 

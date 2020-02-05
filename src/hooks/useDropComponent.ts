@@ -30,6 +30,7 @@ export const useDropComponent = (
         dispatch.components.addComponent({
           parentName: componentId,
           type: item.type,
+          rootParentType: item.rootParentType,
         })
       }
     },
