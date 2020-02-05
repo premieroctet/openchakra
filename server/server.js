@@ -118,10 +118,10 @@ nextApp.prepare().then(() => {
     http.createServer(app).listen(80);
     // HTTPS server using certificates
     https.createServer({
-        cert: fs.readFileSync(process.env.HOME+'/.ssh/Main-Certificate-x509.txt'),
-        key: fs.readFileSync(process.env.HOME+'/.ssh/www_my-alfred_io.key'),
-        ca: fs.readFileSync(process.env.HOME+'/.ssh/Intermediate-Certificate.txt'),
+      cert: fs.readFileSync(process.env.HOME+'/.ssh/Main-Certificate-x509.txt'),
+      key: fs.readFileSync(process.env.HOME+'/.ssh/www_my-alfred_io.key'),
+      ca: fs.readFileSync(process.env.HOME+'/.ssh/Intermediate-Certificate.txt'),
       },
-      app).listen(443, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`))    
+      app).listen(443, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`))
 });
 

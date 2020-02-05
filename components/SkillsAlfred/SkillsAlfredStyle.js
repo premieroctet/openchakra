@@ -3,13 +3,20 @@ export default theme=>({
     display: 'flex',
     flexDirection: 'row',
     width:'auto',
-    marginTop: 100
+    marginTop: 100,
+      [theme.breakpoints.down('xs')]: {
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
   },
   cardSkills:{
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: 150
+    width: 150,
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: 30
+      },
   },
   avatarSize:{
     width: 100,

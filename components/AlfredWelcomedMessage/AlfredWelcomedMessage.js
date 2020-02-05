@@ -3,18 +3,41 @@ import TextField from '@material-ui/core/TextField';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './AlfredWelcomedMessageStyle'
+import styles from './AlfredWelcomedMessageStyle';
+import Button from '@material-ui/core/Button';
+
 
 
 class AlfredWelcomedMessage extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      shop:[]
+      shop:[],
+      stateButton: false,
+      newMessage: ""
+    };
+    this.sendNewContent = this.sendNewContent.bind(this)
+  }
+
+  iscontentChange(event){
+    if(event.target.value !== this.props.shop.welcome_message){
+      this.setState({
+        stateButton: !this.state.stateEditButton,
+        newMessage: event.target.value
+      });
+    }else{
+      this.setState({stateButton: false})
     }
   }
+
+  sendNewContent(){
+    this.setState({stateButton: false});
+    this.props.newWelcomedMessage(this.state.newMessage);
+  }
+
+
   render(){
-    const {classes, shop} = this.props;
+    const {classes, shop, stateButton} = this.props;
 
     return (
       <Grid className={classes.contentPosition}>
@@ -36,12 +59,23 @@ class AlfredWelcomedMessage extends React.Component{
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
-                inputProps={{ readOnly: true }}
+                inputProps={{readOnly: !stateButton.stateEditButton}}
+                onChange={(e)=>{
+                  this.iscontentChange(e)
+                }}
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
             </Grid>
+            {stateButton.stateEditButton ?
+              <Grid>
+                <Button disabled={!this.state.stateButton} color={"primary"} onClick={this.sendNewContent}>
+                  Valider
+                </Button>
+              </Grid>: null
+            }
+
           </Grid>
         </Grid>
       </Grid>

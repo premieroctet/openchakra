@@ -1,5 +1,8 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
+import styles from '../static/assets/css/shopPage/shopPage'
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import AlfredBanner from '../components/shop/AlfredBanner/AlfredBanner';
 import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
 import About from '../components/About/About';
@@ -14,7 +17,7 @@ import AlfredConditionsBooking from '../components/AlfredConditionsBooking/Alfre
 import AlfredConditionsCancel from '../components/AlfredConditionsCancel/AlfredConditionsCancel';
 import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWelcomedMessage';
 import Footer from '../hoc/Layout/Footer/Footer';
-import Router from 'next/router';
+
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
@@ -25,18 +28,19 @@ class shop extends React.Component {
         this.state = {
             alfred:[],
             id: '',
-            logged: false,
             shop:[],
             languages:[],
             services: [],
             userState: false,
             userId: '',
-            shopUserId: '',
             isOwner:false,
-            idShopUser: [],
-            serviceUser:[]
+            serviceUser:[],
+            stateEditButtonFromAlfredCondtion: false,
+            newWelcomedMessage: ""
         };
         this.needRefresh = this.needRefresh.bind(this);
+        this.getStatusEditButton = this.getStatusEditButton.bind(this);
+        this.getNewWelcomedMessage = this.getNewWelcomedMessage.bind(this);
     }
 
     static getInitialProps ({ query: { id_alfred } }) {
@@ -45,7 +49,6 @@ class shop extends React.Component {
 
     componentWillMount() {
         this.setState({id: this.props.aboutId});
-
     }
 
     componentDidMount() {
@@ -53,11 +56,10 @@ class shop extends React.Component {
 
         axios.get(url+'myAlfred/api/users/current').then(res => {
             let user = res.data;
-            console.log(user._id, 'id en cours moi')
             if(user) {
                 self.setState({
                     userState: true,
-                    userId: user._id
+                    userId: user._id,
                 })
             }
         }).catch(function (error) {
@@ -67,7 +69,6 @@ class shop extends React.Component {
         axios.get(`${url}myAlfred/api/shop/alfred/${this.state.id}`)
           .then( response  =>  {
               let shop = response.data;
-              console.log(shop, 'shop ID');
               self.setState({
                   alfred: shop.alfred,
                   idAlfred: shop.alfred._id,
@@ -80,10 +81,9 @@ class shop extends React.Component {
           .catch(function (error) {
               console.log(error);
           });
-        axios.get(`${url}myAlfred/api/serviceUser/5d91f73af66e01140941c594`)
+        axios.get(`${url}myAlfred/api/serviceUser/5e2ac0db177d7012c8e152ea`)
           .then(res => {
               let serviceUser = res.data;
-              console.log(serviceUser, 'serviceuser')
               self.setState({serviceUser: serviceUser});
           })
           .catch(err =>
@@ -93,11 +93,20 @@ class shop extends React.Component {
 
     checkIfOwner() {
         Object.keys(this.state.services).map( result =>{
+            console.log(this.state.services[result].user, this.state.userId);
           if(this.state.services[result].user === this.state.userId){
               this.setState({isOwner: true});
           }
         });
     }
+
+    getStatusEditButton = (status) =>{
+        this.setState({stateEditButtonFromAlfredCondtion : status});
+    };
+
+    getNewWelcomedMessage = (newMessage) =>{
+      this.setState({newWelcomedMessage: newMessage});
+    };
 
 
     needRefresh(){
@@ -105,37 +114,45 @@ class shop extends React.Component {
     }
 
     render() {
+        const {classes} = this.props;
         return (
             <Fragment>
                 <Layout>
                     <AlfredBanner shop={this.state.id}/>
                     <NavBarShop/>
-                    <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
-                        <Grid style={{display:'flex', alignItems: 'baseline', justifyContent: 'space-between', marginLeft: '5%', marginRight: '5%' }}>
-                            <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column', marginTop: '3%'}}>
+                    <Grid className={classes.marginMainContainer}>
+                        <Grid className={classes.aboutAndSkillsMainContainer}>
+                            <Grid className={classes.aboutContentContainer}>
                                 <About alfred={this.state.alfred} languages={this.state.languages} shop={this.state.shop}/>
                             </Grid>
-                            <Grid style={{display:'flex', alignItems: 'center', flexDirection: 'column'}}>
+                            <Grid className={classes.skillsContentContainer}>
                                 <SkillsAlfred alfred={this.state.alfred}/>
                             </Grid>
                         </Grid>
-                        <Grid style={{display: 'flex', marginLeft: '5%', marginRight: '5%', flexDirection: 'column', marginTop: '3%'}}>
-                            <Grid style={{width: '100%'}}>
+                        <Grid className={classes.servicesContainer}>
+                            <Grid className={classes.largeWidth}>
                                 <Typography variant="h6">
                                     Les services de {this.state.alfred.firstname}
                                 </Typography>
                             </Grid>
-                            <Grid container style={{marginTop:30}}>
+                            <Grid container className={classes.marginTop}>
                                 { Object.keys(this.state.services).map( result => {
                                     return (
-                                      <Grid container item lg={4}>
-                                          <CardPreview isOwner={this.state.isOwner} userState={this.state.userState} alfred={this.state.alfred} shop={this.state.shop} service={this.state.services[result].service} services={this.state.services[result]} needRefresh={this.needRefresh}/>
+                                      <Grid item lg={4}>
+                                          <CardPreview
+                                            isOwner={this.state.isOwner}
+                                            userState={this.state.userState}
+                                            alfred={this.state.alfred}
+                                            shop={this.state.shop}
+                                            service={this.state.services[result].service}
+                                            services={this.state.services[result]}
+                                            needRefresh={this.needRefresh}/>
                                       </Grid>
                                     )
                                 })
                                 }
                                 {this.state.userState && this.state.isOwner  ?
-                                    <Grid container item lg={4}>
+                                    <Grid item lg={4}>
                                         <CardAddService/>
                                     </Grid>
                                   : null
@@ -144,12 +161,39 @@ class shop extends React.Component {
                             </Grid>
                         </Grid>
                         <Grid>
-                            <AlfredConditions isOwner={this.state.isOwner} userState={this.state.userState} alfred={this.state.alfred} shop={this.state.shop}/>
-                            <hr style={{width : '90%'}}/>
-                            <AlfredConditionsBooking isOwner={this.state.isOwner} userState={this.state.userState}  alfred={this.state.alfred} shop={this.state.shop}/>
-                            <AlfredWelcomedMessage shop={this.state.shop}/>
-                            <hr  style={{width : '90%'}}/>
-                            <AlfredConditionsCancel isOwner={this.state.isOwner} userState={this.state.userState} alfred={this.state.alfred} shop={this.state.shop}/>
+                            <AlfredConditions
+                              isOwner={this.state.isOwner}
+                              userState={this.state.userState}
+                              alfred={this.state.alfred}
+                              shop={this.state.shop}
+                              needRefresh={this.needRefresh}
+                            />
+                            <hr className={classes.hrShop}/>
+                            <AlfredConditionsBooking
+                              isOwner={this.state.isOwner}
+                              userState={this.state.userState}
+                              alfred={this.state.alfred}
+                              shop={this.state.shop}
+                              newMessage={this.state.newWelcomedMessage}
+                              needRefresh={this.needRefresh}
+                              stateButton={this.getStatusEditButton}
+                            />
+                            { this.state.isOwner ?
+                                <AlfredWelcomedMessage
+                                  shop={this.state.shop}
+                                  stateButton={this.state.stateEditButtonFromAlfredCondtion}
+                                  newWelcomedMessage={this.getNewWelcomedMessage}
+                                /> : null
+                            }
+                            <hr className={classes.hrShop}/>
+                            <AlfredConditionsCancel
+                              isOwner={this.state.isOwner}
+                              userState={this.state.userState}
+                              alfred={this.state.alfred}
+                              shop={this.state.shop}
+                              needRefresh={this.needRefresh}
+
+                            />
                         </Grid>
                         {/*
                         <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
@@ -185,4 +229,9 @@ class shop extends React.Component {
     };
 }
 
-export default shop;
+shop.propTypes = {
+    classes: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired,
+};
+
+export default  withStyles(styles, { withTheme: true })(shop);
