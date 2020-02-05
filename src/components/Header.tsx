@@ -71,7 +71,7 @@ const Header = () => {
               mr={1}
               color="teal.100"
             />{' '}
-            <Box fontWeight="bold">Open</Box>Chakra
+            <Box fontWeight="bold">open</Box>chakra
           </Box>
 
           <Flex alignItems="center" pr="1rem" justifyContent="end">

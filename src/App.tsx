@@ -21,20 +21,20 @@ const App = () => {
       <Global
         styles={() => ({
           '*': {
-            borderBox: 'box-sizing',
             transition: showLayout ? 'none !important' : undefined,
           },
+          html: { minWidth: '860px' },
         })}
       />
-      <Header />
 
+      <Header />
       <DndProvider backend={Backend}>
         <Flex minHeight="calc(100vh - 3rem)">
+          <Sidebar />
+
           <Box bg="white" flex={1} zIndex={10} position="relative">
             <Editor />
           </Box>
-
-          <Sidebar />
 
           <Box
             maxH="calc(100vh - 3rem)"
