@@ -17,7 +17,7 @@ const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
 
-  const { type, rootParentType } = component
+  const { type, rootParentType } = component || {}
 
   const docType = useMemo(() => {
     if (rootParentType) {
