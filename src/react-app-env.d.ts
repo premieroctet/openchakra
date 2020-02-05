@@ -76,6 +76,7 @@ interface IComponent {
   parent: string
   id: string
   props: any
+  rootParentType?: ComponentType
 }
 
 interface IComponents {

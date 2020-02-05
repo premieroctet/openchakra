@@ -14,7 +14,7 @@ export type ComponentsStateWithUndo = {
   future: ComponentsState[]
 }
 
-export const INITIAL_COMPONENTS = {
+export const INITIAL_COMPONENTS: IComponents = {
   root: {
     id: 'root',
     parent: 'root',
