@@ -93,7 +93,23 @@ const components = createModel({
         updatedComponents[component.parent].children = children
       }
 
-      updatedComponents = omit(state.components, component.id)
+      const deleteRecursive = (
+        children: IComponent['children'],
+        id: IComponent['id'],
+      ) => {
+        children.forEach(child => {
+          deleteRecursive(
+            updatedComponents[child].children,
+            updatedComponents[child].id,
+          )
+        })
+
+        updatedComponents = omit(updatedComponents, id)
+      }
+
+      deleteRecursive(component.children, component.id)
+
+      updatedComponents = omit(updatedComponents, component.id)
 
       return {
         ...state,
