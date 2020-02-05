@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Link, Box, Flex, IconButton } from '@chakra-ui/core'
 
 import Panels from './panels/Panels'
@@ -20,6 +20,16 @@ const Inspector = () => {
       state.components.present.components[state.components.present.selected.id],
   )
 
+  const { type, rootParentType } = component
+
+  const docType = useMemo(() => {
+    if (rootParentType) {
+      return rootParentType
+    }
+
+    return type
+  }, [type, rootParentType])
+
   if (!component || component.id === 'root') {
     return (
       <Flex
@@ -36,8 +46,6 @@ const Inspector = () => {
       </Flex>
     )
   }
-
-  const { type } = component
 
   return (
     <>
@@ -74,7 +82,7 @@ const Inspector = () => {
                 as={Link}
                 onClick={() => {
                   window.open(
-                    `https://chakra-ui.com/${type.toLowerCase()}`,
+                    `https://chakra-ui.com/${docType.toLowerCase()}`,
                     '_blank',
                   )
                 }}

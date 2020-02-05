@@ -76,6 +76,7 @@ interface IComponent {
   parent: string
   id: string
   props: any
+  rootParentType?: ComponentType
 }
 
 interface IComponents {
@@ -94,4 +95,5 @@ interface ComponentItemProps {
   isChild?: boolean
   isMeta?: boolean
   soon?: boolean
+  rootParentType?: ComponentType
 }

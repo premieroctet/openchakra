@@ -8,7 +8,7 @@ import FlexPanel from './FlexPanel'
 const DisplayPanel = () => {
   const { setValueFromEvent } = useForm()
   const display = usePropsSelector('display')
-  console.log(display)
+
   return (
     <>
       <FormControl label="Display">

@@ -1,6 +1,12 @@
 import Composer from './composer'
 
-export const buildAlert = (parent: string) => {
+type ComposedComponent = {
+  components: IComponents
+  root: string
+  parent: string
+}
+
+export const buildAlert = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
   const nodeId = composer.addNode('Alert')
@@ -18,7 +24,7 @@ export const buildAlert = (parent: string) => {
   }
 }
 
-export const buildFormControl = (parent: string) => {
+export const buildFormControl = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
   const nodeId = composer.addNode('FormControl')
@@ -37,8 +43,8 @@ export const buildFormControl = (parent: string) => {
   }
 }
 
-export const buildAccordion = (parent: string) => {
-  const composer = new Composer()
+export const buildAccordion = (parent: string): ComposedComponent => {
+  const composer = new Composer('Accordion')
 
   const nodeId = composer.addNode('Accordion')
   const itemId = composer.addNode('AccordionItem', nodeId)
@@ -58,8 +64,8 @@ export const buildAccordion = (parent: string) => {
   }
 }
 
-export const buildList = (parent: string) => {
-  const composer = new Composer()
+export const buildList = (parent: string): ComposedComponent => {
+  const composer = new Composer('List')
 
   const nodeId = composer.addNode('List')
   composer.addNode('ListItem', nodeId)
@@ -73,8 +79,8 @@ export const buildList = (parent: string) => {
   }
 }
 
-export const buildInputGroup = (parent: string) => {
-  const composer = new Composer()
+export const buildInputGroup = (parent: string): ComposedComponent => {
+  const composer = new Composer('Input')
 
   const nodeId = composer.addNode('InputGroup')
   composer.addNode('InputLeftAddon', nodeId)
@@ -90,7 +96,13 @@ export const buildInputGroup = (parent: string) => {
   }
 }
 
-const builders: any = {
+type BuilderFn = (parent: string) => ComposedComponent
+
+type ComposerBuilders = {
+  [k: string]: BuilderFn
+}
+
+const builders: ComposerBuilders = {
   AlertMeta: buildAlert,
   FormControlMeta: buildFormControl,
   AccordionMeta: buildAccordion,

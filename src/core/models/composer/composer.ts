@@ -1,11 +1,23 @@
-import { DEFAULT_PROPS } from "../../../utils/defaultProps";
-import { generateId } from "../app";
+import { DEFAULT_PROPS } from '../../../utils/defaultProps'
+import { generateId } from '../app'
 
 class Composer {
-  components: IComponents = {};
+  components: IComponents = {}
 
-  addNode = (type: ComponentType, parent: string = "root"): string => {
-    const id = generateId();
+  rootComponentType: ComponentType | undefined = undefined
+
+  constructor(name?: ComponentType) {
+    if (name) {
+      this.rootComponentType = name
+    }
+  }
+
+  addNode = (type: ComponentType, parent: string = 'root'): string => {
+    const id = generateId()
+
+    if (parent === 'root' && !this.rootComponentType) {
+      this.rootComponentType = type
+    }
 
     this.components = {
       ...this.components,
@@ -14,20 +26,21 @@ class Composer {
         type,
         parent,
         id,
-        props: DEFAULT_PROPS[type] || {}
-      }
-    };
-
-    if (parent !== "root") {
-      this.components[parent].children.push(id);
+        props: DEFAULT_PROPS[type] || {},
+        rootParentType: this.rootComponentType,
+      },
     }
 
-    return id;
-  };
+    if (parent !== 'root') {
+      this.components[parent].children.push(id)
+    }
+
+    return id
+  }
 
   getComponents() {
-    return this.components;
+    return this.components
   }
 }
 
-export default Composer;
+export default Composer
