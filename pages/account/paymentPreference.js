@@ -164,11 +164,11 @@ class paymentPreference extends React.Component {
             const addfooter = clickAdd ? <Footer/> :<Footer2/>;
 
             return (
+                <Fragment>
 			<Helmet>
         <title>compte - Préférences de versement - My Alfred </title>
         <meta property="description" content="My Alfred, des services entre particuliers et auto-entrepreneurs rémunérés ! Choisissez vos méthodes de versement de vos rémunérations pour chacun des services réalisés. Versement 72h après la prestation." />
       </Helmet>
-                <Fragment>
                     <Layout>
                         <Grid container className={classes.bigContainer}>
                         <Grid className={classes.toggle}  item xs={3}>

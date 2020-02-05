@@ -72,11 +72,11 @@ class Messages extends React.Component {
         const {classes} = this.props;
 
         return (
+            <Fragment>
 		<Helmet>
         <title>Mes messages - My Alfred </title>
         <meta property="description" content="Echangez avec des Alfred à proximité au travers de la messagerie My Alfred ! Des milliers de services entre particuliers et professionnels rémunérés.Inscription My Alfred gratuite. Paiement sécurisé." />
       </Helmet>
-            <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>

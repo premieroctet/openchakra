@@ -236,11 +236,11 @@ class signup extends React.Component {
         const { errors } = this.state;
 
         return (
+            <Layout>
 		<Helmet>
         <title>Inscription - My Alfred </title>
         <meta property="description" content="Inscrivez-vous à My Alfred, plateforme de services entre particuliers et autoentrepreneurs. Proposez vos services et trouvez vos clients ! Recherchez vos services et trouvez votre Alfred ! Inscription gratuite et rapide " />
       </Helmet>
-            <Layout>
               <Grid className={classes.fullContainer}></Grid>
               <Grid container className={classes.signupContainer}>
                 <div className="fonts">

@@ -94,11 +94,11 @@ class paymentMethod extends React.Component {
         const {classes} = this.props;
 
         return (
+            <Fragment>
 		<Helmet>
         <title>compte - Mode de paiement - My Alfred </title>
         <meta property="description" content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !" />
       </Helmet>
-            <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                     <Grid className={classes.toggle}  item xs={3} style={{}}>

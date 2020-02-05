@@ -108,12 +108,12 @@ class transactions extends React.Component {
 
 
         return (
+            <Fragment>
 		<Helmet>
         <title>compte - Historique des transactions - My Alfred </title>
         <meta property="description" content="Retrouvez l'ensemble des services rémunérés que vous avez consommé sur My Alfred depuis votre historique des transactions. My Alfred des services entre particuliers assurés, un paiement sécurisé ! " />
       </Helmet>
 
-            <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 

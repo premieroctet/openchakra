@@ -54,12 +54,12 @@ class Home extends React.Component {
 
     render()  {
         return (
+            <Fragment>
 		<Helmet>
         <title>Services rémunérés entre particuliers - My Alfred </title>
         <meta property="description" content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple" />
       </Helmet>
 
-            <Fragment>
                 <Layout />
                 <Homeheader />
                 <SerenityNeed />

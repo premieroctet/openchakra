@@ -72,12 +72,12 @@ class Mesreservations extends React.Component {
         const {classes} = this.props;
 
         return (
+            <Fragment>
 			<Helmet>
         <title>Mes réservations - My Alfred </title>
         <meta property="description" content="Consultez vos réservations de services entre particuliers ! Découvrez le service et les prestations réservés, le lieu, la date et l'ensemble des détails de votre réservation sur My Alfred" />
       </Helmet>
 
-            <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>

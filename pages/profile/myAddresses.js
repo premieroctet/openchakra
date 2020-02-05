@@ -269,11 +269,11 @@ class myAddresses extends React.Component {
         const {address_selected} = this.state;
 
         return (
+            <Fragment>
 		<Helmet>
         <title> Profil - Mes adresses de prestation - My Alfred </title>
         <meta property="description" content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…" />
       </Helmet>
-            <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer} style={{overflowX:"hidden"}}>
                         <Grid className={classes.toggle}  item xs={3} style={{}}>

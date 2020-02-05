@@ -175,11 +175,11 @@ class editProfile extends React.Component {
         const {birthday} = this.state;
 
         return (
+            <Fragment>
 		<Helmet>
         <title>Profil - Modifier mon profil - My Alfred </title>
         <meta property="description" content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !" />
       </Helmet>
-            <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer} style={{overflowX:"hidden"}}>
                     <Grid className={classes.toggle}  item xs={3} style={{}}>

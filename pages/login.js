@@ -127,11 +127,11 @@ class login extends React.Component {
     const {errors} = this.state;
 
     return (
+      <Layout>
 	<Helmet>
         <title> Connexion - My Alfred </title>
         <meta property="description" content="Connectez-vous à My Alfred, application de services entre particuliers. Trouvez des services de bricolage, plomberie, garde d’animaux près de chez vous ! Trouvez, réservez votre Alfred et notez votre service en quelques clics. Plus de 2000 services référencés, trouvez le vôtre dès aujourd’hui " />
       </Helmet>
-      <Layout>
         <Grid className={classes.fullContainer}>
           <Grid container className={classes.loginContainer}>
             <Card className={classes.card}>

@@ -170,11 +170,11 @@ class security extends React.Component {
         const {last_login} = this.state;
 
         return (
+            <Fragment>
 		<Helmet>
         <title>compte - Sécurité - My Alfred </title>
         <meta property="description" content="Modifiez votre mot de passe et gérer la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !" />
       </Helmet>
-            <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                     <Grid className={classes.toggle}  item xs={3}>

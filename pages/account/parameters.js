@@ -193,11 +193,11 @@ class parameters extends React.Component {
         const {user} = this.state;
 
         return (
+            <Fragment>
 		<Helmet>
         <title>compte - Paramètres - My Alfred </title>
         <meta property="description" content="Configurez votre compte My Alfred, votre boutique et l'ensemble des paramètres de votre compte." />
       </Helmet>
-            <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                     <Grid className={classes.toggle}  item xs={3}>
