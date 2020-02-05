@@ -44,7 +44,7 @@ export const buildFormControl = (parent: string): ComposedComponent => {
 }
 
 export const buildAccordion = (parent: string): ComposedComponent => {
-  const composer = new Composer()
+  const composer = new Composer('Accordion')
 
   const nodeId = composer.addNode('Accordion')
   const itemId = composer.addNode('AccordionItem', nodeId)
@@ -65,7 +65,7 @@ export const buildAccordion = (parent: string): ComposedComponent => {
 }
 
 export const buildList = (parent: string): ComposedComponent => {
-  const composer = new Composer()
+  const composer = new Composer('List')
 
   const nodeId = composer.addNode('List')
   composer.addNode('ListItem', nodeId)
@@ -80,7 +80,7 @@ export const buildList = (parent: string): ComposedComponent => {
 }
 
 export const buildInputGroup = (parent: string): ComposedComponent => {
-  const composer = new Composer()
+  const composer = new Composer('Input')
 
   const nodeId = composer.addNode('InputGroup')
   composer.addNode('InputLeftAddon', nodeId)

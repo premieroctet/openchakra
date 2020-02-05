@@ -6,10 +6,16 @@ class Composer {
 
   rootComponentType: ComponentType | undefined = undefined
 
+  constructor(name?: ComponentType) {
+    if (name) {
+      this.rootComponentType = name
+    }
+  }
+
   addNode = (type: ComponentType, parent: string = 'root'): string => {
     const id = generateId()
 
-    if (parent === 'root') {
+    if (parent === 'root' && !this.rootComponentType) {
       this.rootComponentType = type
     }
 
@@ -21,12 +27,12 @@ class Composer {
         parent,
         id,
         props: DEFAULT_PROPS[type] || {},
+        rootParentType: this.rootComponentType,
       },
     }
 
     if (parent !== 'root') {
       this.components[parent].children.push(id)
-      this.components[id].rootParentType = this.rootComponentType
     }
 
     return id
