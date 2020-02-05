@@ -65,10 +65,8 @@ class home extends React.Component {
     }
 
     get_component(url, index) {
-      //console.log("Creating component for:"+url+", index:"+index);
       const regex = /:([a-z_]+)/g;
       const found = url.match(regex) || []
-      //console.log("Found patterns:"+found);
 
 return (
                         <div><Button type="button"
@@ -78,27 +76,24 @@ return (
                                   let id = index+"_"+patt.substring(1);
                                   conv_url = url.replace(patt, this.state[id]);                                  
                                 })
-                                console.log('Converted url to '+conv_url);
                                 axios.get(conv_url).then(response => {
                                   this.setState({[url]: JSON.stringify(response.data, null, 2)});
                                 }
-                                );
+                                ).catch((err) => {this.setState({[url]: "ERREUR:\n"+JSON.stringify(err, null, 2)})});
                               }}
                          >{url}</Button>
                         { found.map(patt => { 
                           let id = index+"_"+patt.substring(1);
                           return (
-                          <input value={this.state[id]} onChange={(e)=>{this.setState({[id]: e.target.value})}}/> )
+                          <input value={patt.substring(1)} onChange={(e)=>{this.setState({[id]: e.target.value})}}/> )
                         })
                         }
                         <textarea value={this.state[url]} /></div>)
     }
     render() {
-        console.log("State:"+JSON.stringify(this.state));
         const { classes } = this.props;
         const admin= this.state.is_admin;
         const apis = this.get_apis();
-        //console.log("APIS:"+JSON.stringify(apis));
         const list =
                     <div>
                         <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
