@@ -14,6 +14,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {Helmet} from 'react-helmet';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -192,6 +193,10 @@ class parameters extends React.Component {
         const {user} = this.state;
 
         return (
+		<Helmet>
+        <title>compte - Paramètres - My Alfred </title>
+        <meta property="description" content="Configurez votre compte My Alfred, votre boutique et l'ensemble des paramètres de votre compte." />
+      </Helmet>
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>

@@ -12,11 +12,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
-
-
-
-
-
+import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
@@ -112,6 +108,11 @@ class transactions extends React.Component {
 
 
         return (
+		<Helmet>
+        <title>compte - Historique des transactions - My Alfred </title>
+        <meta property="description" content="Retrouvez l'ensemble des services rémunérés que vous avez consommé sur My Alfred depuis votre historique des transactions. My Alfred des services entre particuliers assurés, un paiement sécurisé ! " />
+      </Helmet>
+
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>

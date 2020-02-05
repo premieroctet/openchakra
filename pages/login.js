@@ -11,6 +11,8 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
+import {Helmet} from 'react-helmet';
+
 const { config } = require('../config/config');
 const url = config.apiUrl;
 
@@ -125,6 +127,10 @@ class login extends React.Component {
     const {errors} = this.state;
 
     return (
+	<Helmet>
+        <title> Connexion - My Alfred </title>
+        <meta property="description" content="Connectez-vous à My Alfred, application de services entre particuliers. Trouvez des services de bricolage, plomberie, garde d’animaux près de chez vous ! Trouvez, réservez votre Alfred et notez votre service en quelques clics. Plus de 2000 services référencés, trouvez le vôtre dès aujourd’hui " />
+      </Helmet>
       <Layout>
         <Grid className={classes.fullContainer}>
           <Grid container className={classes.loginContainer}>

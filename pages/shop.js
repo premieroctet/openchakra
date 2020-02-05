@@ -18,6 +18,8 @@ import axios from 'axios';
 import AlfredConditionsBooking from '../components/AlfredConditionsBooking/AlfredConditionsBooking';
 import AlfredConditionsCancel from '../components/AlfredConditionsCancel/AlfredConditionsCancel';
 import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWelcomedMessage';
+import {Helmet} from 'react-helmet';
+
 
 const { config } = require('../config/config');
 const url = config.apiUrl
@@ -66,6 +68,10 @@ class shop extends React.Component {
         const preventDefault = event => event.preventDefault();
 
         return (
+		<Helmet>
+        <title> Ma boutique de services sur My Alfred </title>
+        <meta property="description" content="Paramétrez les services que vous souhaitez proposer ! Vous pouvez en ajouter autant que vous le souhaitez : bricolage, jardinage, déménagement, décoration, évènementiel, quel sera votre prochain service ?" />
+      </Helmet>
             <Fragment>
                 <Layout>
                     <AlfredBanner shop={this.state.id}/>

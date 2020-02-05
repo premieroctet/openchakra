@@ -7,6 +7,8 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Footer from '../../hoc/Layout/Footer/Footer';
+import {Helmet} from 'react-helmet';
+
 
 moment.locale('fr');
 
@@ -92,6 +94,10 @@ class paymentMethod extends React.Component {
         const {classes} = this.props;
 
         return (
+		<Helmet>
+        <title>compte - Mode de paiement - My Alfred </title>
+        <meta property="description" content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !" />
+      </Helmet>
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>

@@ -10,6 +10,8 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
+import {Helmet} from 'react-helmet';
+
 
 moment.locale('fr');
 
@@ -168,6 +170,10 @@ class security extends React.Component {
         const {last_login} = this.state;
 
         return (
+		<Helmet>
+        <title>compte - Sécurité - My Alfred </title>
+        <meta property="description" content="Modifiez votre mot de passe et gérer la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !" />
+      </Helmet>
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
