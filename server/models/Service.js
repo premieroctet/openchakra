@@ -27,10 +27,27 @@ const ServiceSchema = new Schema({
     majoration: {
         type: String
     },
+    travel_expense: {
+        type: String
+    },
+    picking_expense: {
+        type: String
+    },
     location: {
-      home   : Boolean,
+      // Adresse du client
+      client   : Boolean,
+      // Adresse de l'Alfred
       alfred : Boolean,
+      // Visioconférence
       visio  : Boolean
+    },
+    // Frais livraison
+    pick_tax: {
+      type: Boolean
+    },
+    // Frais déplacement
+    travel_tax: {
+      type: Boolean
     }
 });
 

@@ -1,0 +1,1 @@
+db.serviceusers.update({}, {$rename: { 'location.home': 'location.client'}}, {multi:1})

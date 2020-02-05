@@ -72,6 +72,7 @@
     "styled-components": "^4.2.0",
     "uuid": "^3.3.3",
     "validator": "^10.11.0",
+    "xoauth2": "^1.2.0",
     "yup": "^0.27.0"
   },
   "devDependencies": {
