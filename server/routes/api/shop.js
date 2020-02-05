@@ -28,49 +28,41 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
     }
     Shop.findOne({alfred: req.user.id})
         .then(shop => {
-            /**
-            if(shop !== null) {
-                console.log('Existe déjà');
-            } else {
-	    */
-                const shopFields = {};
-                shopFields.alfred = req.user.id;
-                shopFields.booking_request = req.body.booking_request;
-                shopFields.no_booking_request = req.body.no_booking_request;
-                shopFields.my_alfred_conditions = req.body.my_alfred_conditions;
-                shopFields.profile_picture = req.body.profile_picture;
-                shopFields.identity_card = req.body.identity_card;
-                shopFields.recommandations = req.body.recommandations;
-                shopFields.welcome_message = req.body.welcome_message;
-                shopFields.flexible_cancel = req.body.flexible_cancel;
-                shopFields.moderate_cancel = req.body.moderate_cancel;
-                shopFields.strict_cancel = req.body.strict_cancel;
-                shopFields.verified_phone = req.body.verified_phone;
-                shopFields.is_particular = req.body.is_particular;
-                shopFields.is_professional = req.body.is_professional;
+              if (shop===null) {
+                  shop = new Shop();
+
+                  shop.alfred = req.user.id;
+                  shop.booking_request = req.body.booking_request;
+                  shop.no_booking_request = req.body.no_booking_request;
+                  shop.my_alfred_conditions = req.body.my_alfred_conditions;
+                  shop.profile_picture = req.body.profile_picture;
+                  shop.identity_card = req.body.identity_card;
+                  shop.recommandations = req.body.recommandations;
+                  shop.welcome_message = req.body.welcome_message;
+                  shop.flexible_cancel = req.body.flexible_cancel;
+                  shop.moderate_cancel = req.body.moderate_cancel;
+                  shop.strict_cancel = req.body.strict_cancel;
+                  shop.verified_phone = req.body.verified_phone;
+                  shop.is_particular = req.body.is_particular;
+                  shop.is_professional = req.body.is_professional;
 
 
-                shopFields.company = {};
-                if (req.body.name) shopFields.company.name = req.body.name;
-                if (req.body.creation_date) shopFields.company.creation_date = req.body.creation_date;
-                if (req.body.siret) shopFields.company.siret = req.body.siret;
-                if (req.body.naf_ape) shopFields.company.naf_ape = req.body.naf_ape;
-                if (req.body.status) shopFields.company.status = req.body.status;
+                  shop.company = {};
+                  if (req.body.name) shop.company.name = req.body.name;
+                  if (req.body.creation_date) shop.company.creation_date = req.body.creation_date;
+                  if (req.body.siret) shop.company.siret = req.body.siret;
+                  if (req.body.naf_ape) shop.company.naf_ape = req.body.naf_ape;
+                  if (req.body.status) shop.company.status = req.body.status;
+
+                  shop.picture = "static/shopBanner/sky-690293_1920.jpg";
+
+                }
 
 
+                shop.services = req.body.arrayService;
 
+                shop.save().then(shop => res.json(shop)).catch(err => console.log(err));
 
-                shopFields.services = req.body.arrayService;
-                shopFields.picture = "static/shopBanner/sky-690293_1920.jpg";
-
-                const newShop = new Shop(shopFields);
-
-                newShop.save().then(shop => res.json(shop)).catch(err => console.log(err));
-
-
-
-
-            //}
         })
 });
 

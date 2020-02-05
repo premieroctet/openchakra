@@ -108,9 +108,17 @@ const ServiceUserSchema = new Schema({
         default : 0
     },
    location: {
-      home   : Boolean,
+      client   : Boolean,
       alfred : Boolean,
       visio  : Boolean
+    },
+    // Frais livraison
+    pick_tax: {
+      type: Number,
+    },
+    // Frais déplacement
+    travel_tax: {
+      type: Number,
     }
 
 });

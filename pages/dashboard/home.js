@@ -65,7 +65,7 @@ class home extends React.Component {
         const list =
                     <Grid>
                         <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                            <Typography style={{ fontSize: 30 }}>Liste table base de données</Typography>
+                            <Typography style={{ fontSize: 30 }}>Tables base de données</Typography>
                         </Grid>
                         <Link href="/dashboard/category/all"><a>Catégories</a></Link><br/>
                         <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
@@ -82,6 +82,10 @@ class home extends React.Component {
                         <Link href="/dashboard/users/all"><a>Utilisateurs</a></Link><br/>
                         <Link href="/dashboard/alfred/all"><a>Alfred</a></Link><br/>
                         <Link href="/dashboard/admin/all"><a>Administrateurs</a></Link><br/>
+                        <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
+                            <Typography style={{ fontSize: 30 }}>Fonctions DEV</Typography>
+                        </Grid>
+                        <Link href="/dashboard/dev/api_calls"><a>Appels API</a></Link><br/>
                     </Grid>;
         const refused = <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
             <Typography style={{ fontSize: 30 }}>Accès refusé</Typography>
