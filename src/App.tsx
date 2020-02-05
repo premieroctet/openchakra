@@ -9,11 +9,11 @@ import Header from './components/Header'
 import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'
 import { useSelector } from 'react-redux'
-import { RootState } from '.'
 import useShortcuts, { keyMap } from './hooks/useShortcuts'
+import { getShowLayout } from './core/selectors/app'
 
 const App = () => {
-  const showLayout = useSelector((state: RootState) => state.app.showLayout)
+  const showLayout = useSelector(getShowLayout)
   const { handlers } = useShortcuts()
 
   return (

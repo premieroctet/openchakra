@@ -1,24 +1,18 @@
 import React, { memo } from 'react'
-import { Box, Text, Link, Badge } from '@chakra-ui/core'
+import { Box, Text, Link } from '@chakra-ui/core'
 import ComponentPreview from './ComponentPreview'
 import { useDropComponent } from '../../hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
 import CodePanel from '../CodePanel'
 import { useSelector } from 'react-redux'
-import { RootState } from '../..'
 import useDispatch from '../../hooks/useDispatch'
-import Overlay from './Overlay'
+import { getComponents } from '../../core/selectors/components'
+import { getShowLayout, getShowCode } from '../../core/selectors/app'
 
 const Editor: React.FC = () => {
-  const showCode = useSelector((state: RootState) => state.app.showCode)
-  const showLayout = useSelector((state: RootState) => state.app.showLayout)
-  const overlay = useSelector((state: RootState) => state.app.overlay)
-  const selected = useSelector(
-    (state: RootState) => state.components.present.selected,
-  )
-  const components = useSelector(
-    (state: RootState) => state.components.present.components,
-  )
+  const showCode = useSelector(getShowCode)
+  const showLayout = useSelector(getShowLayout)
+  const components = useSelector(getComponents)
   const dispatch = useDispatch()
 
   const { drop } = useDropComponent('root')
@@ -68,18 +62,6 @@ const Editor: React.FC = () => {
       {components.root.children.map((name: string) => (
         <ComponentPreview key={name} componentName={name} />
       ))}
-
-      {overlay && showLayout && (
-        <Overlay rect={overlay.rect}>
-          <Badge ml={1} variantColor="teal">
-            {overlay.type}
-          </Badge>
-        </Overlay>
-      )}
-
-      {selected && selected.rect && showLayout && (
-        <Overlay rect={selected.rect} />
-      )}
     </Box>
   )
 

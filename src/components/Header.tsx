@@ -16,12 +16,11 @@ import { buildParameters } from '../utils/codesandbox'
 import { generateCode } from '../utils/code'
 import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
-import { RootState } from '..'
+import { getComponents } from '../core/selectors/components'
+import { getShowLayout, getShowCode } from '../core/selectors/app'
 
 const CodeSandboxButton = () => {
-  const components = useSelector(
-    (state: RootState) => state.components.present.components,
-  )
+  const components = useSelector(getComponents)
 
   return (
     <Button
@@ -44,8 +43,8 @@ const CodeSandboxButton = () => {
 }
 
 const Header = () => {
-  const showLayout = useSelector((state: RootState) => state.app.showLayout)
-  const showCode = useSelector((state: RootState) => state.app.showCode)
+  const showLayout = useSelector(getShowLayout)
+  const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
 
   return (

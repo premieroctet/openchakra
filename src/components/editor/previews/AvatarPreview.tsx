@@ -9,8 +9,8 @@ import {
 import { useInteractive } from '../../../hooks/useInteractive'
 import { useDropComponent } from '../../../hooks/useDropComponent'
 import ComponentPreview from '../ComponentPreview'
-import { RootState } from '../../..'
 import { useSelector } from 'react-redux'
+import { getComponents } from '../../../core/selectors/components'
 
 const AvatarPreview: React.FC<IPreviewProps & {
   spacing?: BoxProps['marginLeft']
@@ -44,9 +44,7 @@ const AvatarPreview: React.FC<IPreviewProps & {
 export const AvatarGroupPreview = ({ component }: IPreviewProps) => {
   const { props, ref } = useInteractive(component, true)
   const { drop, isOver } = useDropComponent(component.id, ['Avatar'])
-  const components = useSelector(
-    (state: RootState) => state.components.present.components,
-  )
+  const components = useSelector(getComponents)
   let boxProps: any = { display: 'inline' }
 
   if (isOver) {
