@@ -130,7 +130,7 @@ class CardPreview extends React.Component{
                 </Button>
               </Grid>
             </Grid>
-            <Grid>
+            <Grid className={classes.responsiveListContainer}>
               <List dense={this.state.dense} className={classes.flexPosition}>
                 <ListItem className={classes.noPadding}>
                   <ListItemIcon className={classes.minWidth}>

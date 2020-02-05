@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './AlfredWelcomedMessageStyle';
+import styles from '../../static/assets/css/shopPage/componentStyle'
 import Button from '@material-ui/core/Button';
 
 
@@ -49,7 +49,7 @@ class AlfredWelcomedMessage extends React.Component{
             <Grid className={classes.responsiveImgContent}>
               <img src={'../../static/assets/img/iconCardAlfred/Castor applaudit.svg'} alt={'fatCastor'} title={'fatCastor'} className={classes.imgFatCastor}/>
             </Grid>
-            <Grid className={classes.texfieldContent}>
+            <Grid className={classes.texfieldContentWelcomedMessage}>
               <TextField
                 id="outlined-multiline-static"
                 label="Message de bienvenue"

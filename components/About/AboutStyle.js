@@ -10,7 +10,7 @@ export default theme => ({
     margin: theme.spacing(4, 0, 2),
   },
   listStyle:{
-    padding: 'inherit'
+    padding: 'inherit',
   },
   raiting:{
     marginBottom: 0,

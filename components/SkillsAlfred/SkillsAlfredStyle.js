@@ -2,12 +2,15 @@ export default theme=>({
   mainContainer:{
     display: 'flex',
     flexDirection: 'row',
-    width:'auto',
-    marginTop: 100,
+    marginTop: 30,
       [theme.breakpoints.down('xs')]: {
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '100%'
     },
+      [theme.breakpoints.up('sm')]: {
+        width: '90%'
+      },
   },
   cardSkills:{
     display: 'flex',

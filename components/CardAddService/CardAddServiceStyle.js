@@ -4,7 +4,12 @@ export default theme => ({
     height:400,
     marginBottom: '5%',
     [theme.breakpoints.down('xs')]: {
-      width:'100%'
+      width:'100%',
+      height: '100%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width:'100%',
+      height: '100%',
     },
   },
   cardMedia: {

@@ -1,12 +1,17 @@
 export default theme => ({
   card: {
     width: 400,
-    height:400,
+    height: 400,
     marginBottom: '5%',
     [theme.breakpoints.down('xs')]: {
       width:'100%',
-      height: '100%'
+      height: '100%',
     },
+    [theme.breakpoints.down('md')]: {
+      width:'100%',
+      height: '100%',
+    },
+
 },
   expand: {
     transform: 'rotate(0deg)',
@@ -114,10 +119,8 @@ export default theme => ({
     width:'50%',
     display:'flex',
     flexDirection:'column',
-    alignItems: 'center',
-    [theme.breakpoints.down('xs')]: {
-      alignItems: 'end',
-    }
+    alignItems: 'end',
+
   },
   flexPosition:{
     display:'flex'
@@ -141,5 +144,8 @@ export default theme => ({
       fontSize: 'small'
     }
   },
+  responsiveListContainer:{
+    marginLeft: '3%'
+  }
 });
 

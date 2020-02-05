@@ -9,7 +9,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import CheckCircle from '@material-ui/icons/CheckCircle';
-import HighlightOff from '@material-ui/icons/HighlightOff';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import Chat from '@material-ui/icons/Chat';
 import StarIcon from '@material-ui/icons/Star';
@@ -44,74 +43,72 @@ class About extends React.Component{
 
     return (
       <Grid container className={classes.mainContainer}>
-        <Grid item>
+        <Grid item style={{width: '100%'}}>
           <Grid>
-            <Grid>
-              <Typography variant="h6">
-                A propos de {alfred.firstname}
-              </Typography>
-            </Grid>
-            <List dense={this.state.dense} className={classes.listStyle}>
-              <ListItem>
-                <Box component="fieldset" mb={3} borderColor="transparent" className={classes.raiting}>
-                  <StyledRating name="read-only" value={this.state.valueRating} readOnly/>
-                </Box>
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <StarIcon className={classes.iconStar}/>
-                </ListItemAvatar>
-                <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>{this.state.nbCommentary} Commentaires</LinkMaterial>
-              </ListItem>
-              {shop.identity_card ?
-                <ListItem>
-                  <ListItemAvatar>
-                    <CheckCircle />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={"Pièce d’identité vérifiée"}
-                  />
-                </ListItem>
-                :
-                <ListItem>
-                  <ListItemAvatar>
-                    <CancelIcon />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={"Pièce d’identité non vérifiée"}
-                  />
-                </ListItem>
-              }
-              <ListItem>
-                <ListItemAvatar>
-                  <CalendarToday />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={"Membre depuis " + Moment(alfred.creation_date).format('MMMM YYYY')}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <img src={'../../static/assets/img/iconCardAlfred/iconCastor.svg'} alt={'iconCastor'} title={'iconCastor'}/>
-                </ListItemAvatar>
-                <ListItemText
-                  //TODO A MODIFIER QUAND DATE CREATION BOUTIQUE SERA STOCKE
-                  primary={alfred.creation_shop ? "Alfred depuis " + Moment(alfred.creation_shop).format('MMMM YYYY') : "Alfred depuis " + Moment(alfred.creation_date).format('MMMM YYYY')}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Chat />
-                </ListItemAvatar>
-                  <ListItemText
-                    primary={languages.length > 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
-                  />
-              </ListItem>
-              <ListItem>
-                <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>Voir le profil</LinkMaterial>
-              </ListItem>
-            </List>
+            <Typography variant="h6">
+              A propos de {alfred.firstname}
+            </Typography>
           </Grid>
+          <List dense={this.state.dense} className={classes.listStyle}>
+            <ListItem>
+              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.raiting}>
+                <StyledRating name="read-only" value={this.state.valueRating} readOnly/>
+              </Box>
+            </ListItem>
+            <ListItem>
+              <ListItemAvatar>
+                <StarIcon className={classes.iconStar}/>
+              </ListItemAvatar>
+              <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>{this.state.nbCommentary} Commentaires</LinkMaterial>
+            </ListItem>
+            {shop.identity_card ?
+              <ListItem>
+                <ListItemAvatar>
+                  <CheckCircle />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={"Pièce d’identité vérifiée"}
+                />
+              </ListItem>
+              :
+              <ListItem>
+                <ListItemAvatar>
+                  <CancelIcon />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={"Pièce d’identité non vérifiée"}
+                />
+              </ListItem>
+            }
+            <ListItem>
+              <ListItemAvatar>
+                <CalendarToday />
+              </ListItemAvatar>
+              <ListItemText
+                primary={"Membre depuis " + Moment(alfred.creation_date).format('MMMM YYYY')}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemAvatar>
+                <img src={'../../static/assets/img/iconCardAlfred/iconCastor.svg'} alt={'iconCastor'} title={'iconCastor'}/>
+              </ListItemAvatar>
+              <ListItemText
+                //TODO A MODIFIER QUAND DATE CREATION BOUTIQUE SERA STOCKE
+                primary={alfred.creation_shop ? "Alfred depuis " + Moment(alfred.creation_shop).format('MMMM YYYY') : "Alfred depuis " + Moment(alfred.creation_date).format('MMMM YYYY')}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemAvatar>
+                <Chat />
+              </ListItemAvatar>
+                <ListItemText
+                  primary={languages.length > 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
+                />
+            </ListItem>
+            <ListItem>
+              <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>Voir le profil</LinkMaterial>
+            </ListItem>
+          </List>
         </Grid>
       </Grid>
     )
