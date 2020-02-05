@@ -69,6 +69,7 @@ class shop extends React.Component {
         axios.get(`${url}myAlfred/api/shop/alfred/${this.state.id}`)
           .then( response  =>  {
               let shop = response.data;
+              console.log(shop, 'shop')
               self.setState({
                   alfred: shop.alfred,
                   idAlfred: shop.alfred._id,
@@ -85,7 +86,6 @@ class shop extends React.Component {
 
     checkIfOwner() {
         Object.keys(this.state.services).map( result =>{
-            console.log(this.state.services[result].user, this.state.userId);
           if(this.state.services[result].user === this.state.userId){
               this.setState({isOwner: true});
           }

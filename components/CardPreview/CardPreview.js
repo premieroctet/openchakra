@@ -65,7 +65,8 @@ class CardPreview extends React.Component{
   }
 
   render(){
-    const {classes, service, shop, services, userState, isOwner} = this.props;
+    const {classes, service, shop, services, userState, isOwner, alfred} = this.props;
+    console.log(alfred, 'alfred')
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -121,7 +122,7 @@ class CardPreview extends React.Component{
               <Grid className={classes.cardContentRight}>
                 <Grid className={classes.flexPosition}>
                   <Typography variant="body2" color="textSecondary" component="p" className={classes.sizeText}>
-                    Rouen
+                    {alfred.billing_address.city}
                   </Typography>
                   <RoomIcon className={classes.checkCircleIcon}/>
                 </Grid>
