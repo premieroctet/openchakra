@@ -34,9 +34,20 @@ const ServiceSchema = new Schema({
         type: String
     },
     location: {
-      home   : Boolean,
+      // Adresse du client
+      client   : Boolean,
+      // Adresse de l'Alfred
       alfred : Boolean,
+      // Visioconférence
       visio  : Boolean
+    },
+    // Frais livraison
+    pick_tax: {
+      type: Boolean
+    },
+    // Frais déplacement
+    travel_tax: {
+      type: Boolean
     }
 });
 

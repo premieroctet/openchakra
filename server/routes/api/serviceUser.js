@@ -32,6 +32,9 @@ const upload = multer({ storage: storage,fileFilter: function (req, file, callba
 // Connect an alfred to a service
 // @Access private
 router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certification',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req,res)=>{
+
+    console.log("API received ServiceUser:"+JSON.stringify(req.body))
+
     ServiceUser.findOne({user: req.user.id, service: req.body.service})
         .then(service => {
                 const fields = {};
@@ -94,11 +97,14 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
             fields.service_address.gps.lng = req.body.lng;
 
             fields.majoration.price = parseInt(req.body.price);
-            console.log("Home:"+JSON.stringify(req.body.home))
             fields.location= {}
-            fields.location.home = req.body.home === 'true'
-            fields.location.alfred = req.body.alfred === 'true'
-            fields.location.visio = req.body.visio === 'true'
+            fields.location.home = req.body.home === 'true';
+            fields.location.alfred = req.body.alfred === 'true';
+            fields.location.visio = req.body.visio === 'true';
+
+            fields.travel_tax = req.body.travel_tax==="null" ? null : req.body.travel_tax;
+            fields.pick_tax = req.body.pick_tax==="null" ? null : req.body.pick_tax;
+
             const newService = new ServiceUser(fields);
             console.log(newService);
             newService.save().then(service => res.json(service)).catch(err => console.log(err));
