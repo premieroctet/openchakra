@@ -123,6 +123,7 @@ class NavBar extends Component {
     avatarMoreAnchorEl: null,
     logged: false,
     alfred: false,
+    userId:""
   };
 
   componentDidMount() {
@@ -138,7 +139,7 @@ class NavBar extends Component {
           .get(url+'myAlfred/api/users/current')
           .then(res => {
             let user = res.data;
-            this.setState({user:user, alfred:user.is_alfred});
+            this.setState({user:user, alfred:user.is_alfred, userId: user._id});
 
             if(typeof user.picture !="undefined") {
               this.setState({picture: true})
@@ -383,7 +384,7 @@ class NavBar extends Component {
             <div className={classes.sectionDesktop}>
               {alfred ?
               <Typography className={classes.navbarItem}>
-                <Link href={'/myShop/services'}>
+                <Link href={`/shop?id_alfred=${this.state.userId}`} >
                   <a className={classes.navbarLink}>
                     Ma boutique
                   </a>

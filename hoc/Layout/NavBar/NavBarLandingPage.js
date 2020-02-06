@@ -14,6 +14,7 @@ import Avatar from '@material-ui/core/Avatar';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
+import React from 'react';
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
 const jwt = require('jsonwebtoken');
@@ -123,6 +124,7 @@ class NavBar extends Component {
     logged: false,
     alfred: false,
     isTop: true,
+    userId: ''
   };
 
   componentDidMount() {
@@ -146,7 +148,7 @@ class NavBar extends Component {
         .get(url+'myAlfred/api/users/current')
         .then(res => {
             let user = res.data;
-            this.setState({user:user, alfred:user.is_alfred});
+            this.setState({user:user, alfred:user.is_alfred, userId: user._id});
 
             if(typeof user.picture !="undefined") {
                 this.setState({picture: true})
@@ -389,7 +391,7 @@ class NavBar extends Component {
             <div className={classes.sectionDesktop}>
               {alfred ?
               <Typography className={classes.navbarItem}>
-                <Link href={'/myShop/services'}>
+                <Link href={`/shop?id_alfred=${this.state.userId}`} >
                   <a className={classes.navbarLink}>
                     Ma boutique
                   </a>
