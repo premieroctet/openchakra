@@ -131,10 +131,10 @@ class shop extends React.Component {
                                   Les services de {this.state.alfred.firstname}
                               </Typography>
                           </Grid>
-                          <Grid container className={classes.cardPreviewContainer}>
+                          <Grid container className={classes.cardPreviewContainer} spacing={2}>
                               { Object.keys(this.state.services).map( result => {
                                   return (
-                                    <Grid item xs={12} sm={12} md={12} lg={4}>
+                                    <Grid item xs={12} sm={12} md={12} lg={6} xl={4}>
                                         <CardPreview
                                           isOwner={this.state.isOwner}
                                           userState={this.state.userState}
@@ -148,7 +148,7 @@ class shop extends React.Component {
                               })
                               }
                               {this.state.userState && this.state.isOwner  ?
-                                <Grid item xs={12} sm={12} md={12} lg={4}>
+                                <Grid item xs={12} sm={12} md={12} lg={6} xl={4}>
                                     <CardAddService/>
                                 </Grid>
                                 : null
