@@ -66,7 +66,7 @@ class CardPreview extends React.Component{
 
   render(){
     const {classes, service, shop, services, userState, isOwner, alfred} = this.props;
-    console.log(alfred, 'alfred')
+    console.log(service,'service')
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -77,7 +77,7 @@ class CardPreview extends React.Component{
     return (
       <Grid>
         <Card className={classes.card}>
-          <Grid className={classes.cardMedia} style={{ backgroundImage:  'url(' + service.picture.replace(/\s/g, '') + ')'}}>
+          <Grid className={classes.cardMedia} style={{ backgroundImage:  'url("' + service.picture + '")'}}>
             { shop.is_professional ?
               <Grid className={classes.statusMedia}>
                 <Chip label="PRO" className={classes.chipStyle}/>
