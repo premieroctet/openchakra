@@ -6,7 +6,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { Share } from '@material-ui/icons';
 import axios from 'axios';
 import styles from './AlfredBannerStyle';
-import {GENERATE_AVATAR} from '../../../utils/generateAvatar'
+import {generate_avatar} from '../../../utils/generateAvatar'
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -39,7 +39,7 @@ class alfredBanner extends React.Component{
           alfred: shop.alfred,
           idAlfred: shop.alfred._id,
           shop:shop,
-          avatarLetters: GENERATE_AVATAR(shop.alfred)
+          avatarLetters: generate_avatar(shop.alfred)
         });
         let idAlfred = shop.alfred._id;
         axios.put(`${url}myAlfred/api/users/alfredViews/${idAlfred}`)

@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react';
+import Avatar from '@material-ui/core/Avatar';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
@@ -16,6 +17,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Footer2 from '../../hoc/Layout/Footer/Footer2';
 import {Helmet} from 'react-helmet';
+import {generate_avatar} from '../../utils/generateAvatar';
 
 
 moment.locale('fr');
@@ -292,7 +294,14 @@ class editPicture extends React.Component {
                             <Grid container style={{marginTop: 20}}>
                                 <Grid item>
                                     <DeleteIcon onClick={()=>this.handleClickOpen()} className={classes.deleteicon} style={{marginLeft: '90%',padding: '2%', marginBottom: '-10%', color: '#616060',  cursor: 'pointer' }}/>
-                                    <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img width={150} height={150} style={{borderRadius: '50%',objectFit:'cover'}} src={`../${user.picture}`} alt={'picture'}/>}
+                                    <Thumb file={this.state.haveapicture} />
+                                    {
+                                       this.state.haveapicture ? 
+                                         null : 
+                                           user.picture ? 
+                                             <img width={150} height={150} style={{borderRadius: '50%',objectFit:'cover'}} src={`../${user.picture}`} alt={'picture'}/>:
+                                             <Avatar alt="photo de profil" className={classes.avatarLetter}>{generate_avatar(user)}</Avatar>
+                                    }
                                 </Grid>
                                 <Grid item xs={12} md={6} style={{marginLeft: '5%'}}>
                                     <form onSubmit={this.onSubmit}>
