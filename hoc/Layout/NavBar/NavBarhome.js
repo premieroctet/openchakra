@@ -416,7 +416,7 @@ class NavBar extends Component {
                 </Link>
               </Typography> :
               <Typography className={classes.navbarItem}>
-                <Link href={'/becomeAlfredForm'}>
+                <Link href={'/creaShop/creaShop'}>
                   <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Créer ma boutique
                   </a>
