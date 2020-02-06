@@ -190,36 +190,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/linux,macos,windows,webstorm+all,visualstudiocode
-static/background
-static/category
-static/checkboxes/
-static/equipments/
-static/i18n/
-static/iconspreview/
-static/prestation/
-static/profile/
-static/service/
-static/shopBanner/
-static/socialicons/
-static/stars/
-package-lock.json
-static/becomeAlfred.jpg
-static/contact_alfred.png
-static/etape1.svg
-static/etape2.svg
-static/etape3.svg
-static/happy_castor.svg
-static/assets/img/iconCardAlfred/Castor applaudit.svg
-static/assets/img/iconCardAlfred/certificate.svg
-static/assets/img/iconCardAlfred/experience.svg
-static/assets/img/iconCardAlfred/graduated.svg
-static/assets/img/iconCardAlfred/iconCastor.svg
-static/assets/img/iconCardAlfred/no_certificate.svg
-static/assets/img/iconCardAlfred/no_experience.svg
-static/assets/img/iconCardAlfred/no_graduated.svg
-static/assets/img/skillsAlfred/attentive.svg
-static/assets/img/skillsAlfred/reactivity.svg
-static/assets/img/skillsAlfred/punctuality.svg
-static/assets/img/skillsAlfred/flexibility.svg
-static/assets/img/skillsAlfred/careful_work.svg
-static/assets/img/skillsAlfred/bgCardAddService.svg
+static/
