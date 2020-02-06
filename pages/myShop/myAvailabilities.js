@@ -9,6 +9,8 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Schedule from '../../components/Schedule/Schedule';
 import { toast } from 'react-toastify';
+import {Helmet} from 'react-helmet';
+
 
 moment.locale('fr');
 
@@ -236,6 +238,10 @@ class myAvailabilities extends React.Component {
 
         return (
           <Fragment>
+		<Helmet>
+        <title> Mes disponibilités - My Alfred </title>
+        <meta property="description" content="Indiquez vos dispoinibilités pour proposer vos services entre particuliers ! Des services à proximité, rémunérés et assurés ! Vos disponibilités permettront à vos futurs clients de vous réserver directement, au créneau souhaité !" />
+      </Helmet>
               <Layout>
                   <Grid container className={classes.bigContainer}>
                       <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>

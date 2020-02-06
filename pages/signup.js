@@ -17,6 +17,8 @@ import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 import Footer from '../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
+import {Helmet} from 'react-helmet';
+
 registerLocale('fr', fr);
 
 
@@ -235,6 +237,10 @@ class signup extends React.Component {
 
         return (
             <Layout>
+		<Helmet>
+        <title>Inscription - My Alfred </title>
+        <meta property="description" content="Inscrivez-vous à My Alfred, plateforme de services entre particuliers et autoentrepreneurs. Proposez vos services et trouvez vos clients ! Recherchez vos services et trouvez votre Alfred ! Inscription gratuite et rapide " />
+      </Helmet>
               <Grid className={classes.fullContainer}></Grid>
               <Grid container className={classes.signupContainer}>
                 <div className="fonts">

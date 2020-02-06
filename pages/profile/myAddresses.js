@@ -17,6 +17,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
@@ -269,6 +270,10 @@ class myAddresses extends React.Component {
 
         return (
             <Fragment>
+		<Helmet>
+        <title> Profil - Mes adresses de prestation - My Alfred </title>
+        <meta property="description" content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…" />
+      </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer} style={{overflowX:"hidden"}}>
                         <Grid className={classes.toggle}  item xs={3} style={{}}>

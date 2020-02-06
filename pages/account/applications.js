@@ -7,8 +7,6 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 
-
-
 const { config } = require('../../config/config');
 const url = config.apiUrl;
 
@@ -106,7 +104,7 @@ class applications extends React.Component {
 
 
         return (
-            <Fragment>
+		            <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 

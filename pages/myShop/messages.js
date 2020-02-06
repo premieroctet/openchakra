@@ -5,6 +5,8 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { withStyles } from '@material-ui/core/styles';
 import Footer from '../../hoc/Layout/Footer/Footer';
+import {Helmet} from 'react-helmet';
+
 const jwt = require('jsonwebtoken');
 
 const {config} = require('../../config/config');
@@ -72,6 +74,10 @@ class Messages extends React.Component {
 
         return (
             <Fragment>
+		<Helmet>
+        <title>Mes messages - My Alfred </title>
+        <meta property="description" content="Echangez avec des Alfred à proximité au travers de la messagerie My Alfred ! Des milliers de services entre particuliers et professionnels rémunérés.Inscription My Alfred gratuite. Paiement sécurisé." />
+      </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>

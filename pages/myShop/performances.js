@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { MYSHOP_MESSAGE, MYSHOP_SUBTITLE, MYSHOP_TITLE } from '../../utils/messages.js';
 import axios from 'axios';
+import {Helmet} from 'react-helmet';
 
 const jwt = require('jsonwebtoken');
 
@@ -72,6 +73,11 @@ class Performances extends React.Component {
 
         return (
             <Fragment>
+		<Helmet>
+        <title> Performance - Mes revenus - My Alfred </title>
+        <meta property="description" content="Découvrez les revenus générés grâce aux services entre particuliers que vous proposez. Retrouvez l'ensemble des revenus par mois et par année, les revenus passés et les revenus à venir sur My Alfred" />
+      </Helmet>
+
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>

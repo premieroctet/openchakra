@@ -16,6 +16,7 @@ import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 
+
 moment.locale('fr');
 
 const { config } = require('../../config/config');

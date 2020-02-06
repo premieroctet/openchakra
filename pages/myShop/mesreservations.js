@@ -7,6 +7,8 @@ import Button from "@material-ui/core/Button";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { MYSHOP_MESSAGE, MYSHOP_SUBTITLE, MYSHOP_TITLE } from '../../utils/messages.js';
 import axios from 'axios';
+import {Helmet} from 'react-helmet';
+
 
 const jwt = require('jsonwebtoken');
 
@@ -72,6 +74,11 @@ class Mesreservations extends React.Component {
 
         return (
             <Fragment>
+			<Helmet>
+        <title>Mes réservations - My Alfred </title>
+        <meta property="description" content="Consultez vos réservations de services entre particuliers ! Découvrez le service et les prestations réservés, le lieu, la date et l'ensemble des détails de votre réservation sur My Alfred" />
+      </Helmet>
+
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>

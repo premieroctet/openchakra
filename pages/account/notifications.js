@@ -10,6 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
+import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
@@ -157,6 +158,11 @@ class notifications extends React.Component {
 
         return (
             <Fragment>
+		<Helmet>
+        <title>compte - Notifications - My Alfred </title>
+        <meta property="description" content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. " />
+      </Helmet>
+		
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                     <Grid className={classes.toggle}  item xs={3} style={{}}>

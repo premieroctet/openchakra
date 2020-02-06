@@ -11,6 +11,8 @@ import TextField from "@material-ui/core/TextField";
 import { toast } from 'react-toastify';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import Footer2 from '../../hoc/Layout/Footer/Footer2';
+import {Helmet} from 'react-helmet';
+
 
 moment.locale('fr');
 
@@ -163,6 +165,10 @@ class paymentPreference extends React.Component {
 
             return (
                 <Fragment>
+			<Helmet>
+        <title>compte - Préférences de versement - My Alfred </title>
+        <meta property="description" content="My Alfred, des services entre particuliers et auto-entrepreneurs rémunérés ! Choisissez vos méthodes de versement de vos rémunérations pour chacun des services réalisés. Versement 72h après la prestation." />
+      </Helmet>
                     <Layout>
                         <Grid container className={classes.bigContainer}>
                         <Grid className={classes.toggle}  item xs={3}>

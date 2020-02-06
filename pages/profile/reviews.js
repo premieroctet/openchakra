@@ -10,10 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Footer from '../../hoc/Layout/Footer/Footer';
-
-
-
-
+import {Helmet} from 'react-helmet';
 
 
 moment.locale('fr');
@@ -114,6 +111,10 @@ class reviews extends React.Component {
 
         return (
             <Fragment>
+		<Helmet>
+        <title>Commentaires - My Alfred </title>
+        <meta property="description" content="Parcourez vos commentaires et notations pour les services rémunérés proposés ou trouvés sur My-Alfred. Chaque service donne lieu à une notation, des commentaires et des compliments. L'inscription est 100% gratuite et vous permet de proposer et trouver des services rémunérés entre particuliers ou freelance. " />
+      </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 

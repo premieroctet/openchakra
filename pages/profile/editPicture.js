@@ -15,6 +15,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Footer2 from '../../hoc/Layout/Footer/Footer2';
+import {Helmet} from 'react-helmet';
+
 
 moment.locale('fr');
 
@@ -196,6 +198,10 @@ class editPicture extends React.Component {
         const user = this.state.user;
         return (
             <Fragment>
+		<Helmet>
+        <title>Profil - Photos - My Alfred </title>
+        <meta property="description" content="Votre photo de profil sur My Alfred, plateforme web et mobile de services entre particuliers et auto entrepreneurs. Trouvez des services près de chez vous ! Paiement sécurisé - Inscription 100% gratuite." />
+      </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                     <Grid className={classes.toggle}  item xs={3} style={{}}>

@@ -26,6 +26,7 @@ import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
 import setAuthToken from '../utils/setAuthToken';
 import Router from "next/router";
+import {Helmet} from 'react-helmet';
 
 class Home extends React.Component {
     constructor(props) {
@@ -54,6 +55,11 @@ class Home extends React.Component {
     render()  {
         return (
             <Fragment>
+		<Helmet>
+        <title>Services rémunérés entre particuliers - My Alfred </title>
+        <meta property="description" content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple" />
+      </Helmet>
+
                 <Layout />
                 <Homeheader />
                 <SerenityNeed />
