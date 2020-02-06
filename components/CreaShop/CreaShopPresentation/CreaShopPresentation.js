@@ -27,7 +27,7 @@ class CreaShopPresentation extends React.Component {
               <Grid style={{width: 500}}>
                 <Grid>
                   <Grid>
-                    <h2 style={{fontFamily: 'Signatra'}}>Etape 1 </h2>
+                    <p style={{fontFamily: 'Signatra'}}>Etape 1 </p>
                     <hr/>
                   </Grid>
                   <Grid>
@@ -41,7 +41,7 @@ class CreaShopPresentation extends React.Component {
                 </Grid>
                 <Grid>
                   <Grid>
-                    <h2>Etape 2 </h2>
+                    <p style={{fontFamily: 'Signatra'}}>Etape 2 </p>
                     <hr/>
                   </Grid>
                   <Grid>
@@ -56,7 +56,7 @@ class CreaShopPresentation extends React.Component {
                 </Grid>
                 <Grid>
                   <Grid>
-                    <h2>Etape 3</h2>
+                    <p style={{fontFamily: 'Signatra'}}>Etape 3</p>
                     <hr/>
                   </Grid>
                   <Grid>
