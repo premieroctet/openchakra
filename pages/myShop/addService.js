@@ -181,7 +181,9 @@ class Wizard extends React.Component {
     this.state = {
       page: 0,
       values: props.initialValues,
-      hasId: false
+      hasId: false,
+      userId: ""
+
     };
   }
 
@@ -189,7 +191,8 @@ class Wizard extends React.Component {
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(url+'myAlfred/api/users/current')
       .then(res => {
-        console.log(res);
+        let user = res.data;
+        this.setState({userId: user._id});
         if (typeof res.data.id_card !== 'undefined') this.setState({ hasId: true });
       })
       .catch(error => {
@@ -386,7 +389,7 @@ class Wizard extends React.Component {
                     axios.put(url+'myAlfred/api/users/users/becomeAlfred')
                       .then(res => {
                         toast.info('Service ajouté avec succès');
-                        Router.push('/myShop/services');
+                        Router.push(`/shop?id_alfred=${this.state.userId}`);
 
                       })
                       .catch(err => {
@@ -406,7 +409,7 @@ class Wizard extends React.Component {
             console.log(err);
           })
       });
- 
+
 
     } else {
       bag.setTouched({});
@@ -801,6 +804,7 @@ class addService extends React.Component {
         option_presta_visio: true,
         availabilities: [],
         checked_presta: false,
+        userId:""
         };
       this.toggleCheckbox = this.toggleCheckbox.bind(this);
       this.handleChecked = this.handleChecked.bind(this);
@@ -818,6 +822,8 @@ class addService extends React.Component {
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(url+'myAlfred/api/users/current')
       .then(res => {
+        let user = res.data
+        this.setState({userId: user._id})
         this.state.phone = res.data.phone;
         this.state.currentUser = res.data;
         this.state.userCity = {label: res.data.billing_address.city, value: res.data.billing_address.city};
@@ -954,7 +960,7 @@ class addService extends React.Component {
         <Grid container className={classes.bigContainer}>
           <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
             <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white'}}>
-                <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                <Link href={`/shop?id_alfred=${this.state.userId}`}><a style={{textDecoration:'none'}}>
                 <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
                 </Link>
             </Grid>
@@ -1592,14 +1598,13 @@ class addService extends React.Component {
                                           </div>
                                           <div style={{display:'flex' , alignItems:'center', width:'35%'}}>
                                             <div style={{
-                                              display: this.state.checkedC ? '' : 'none',
-                                          display: arrayHelpers.form.values.createShop.pick_tax_enabled ? '' : 'none',
+                                               display: arrayHelpers.form.values.createShop.pick_tax_enabled ? '' : 'none',
                                               width:'100px',
                                               marginRight: '1px'
                                             }}>
                                               <CssTextFieldOptions
                                                 label={`Prix`}
-                                          name='pick_tax'
+                                                 name='pick_tax'
                                                 type="number"
                                                 className={classes.textField}
                                                 inputProps={{
@@ -2063,7 +2068,7 @@ class addService extends React.Component {
           </Grid>
           <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
             <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
-              <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+              <Link href={`/shop?id_alfred=${this.state.userId}`}><a style={{textDecoration:'none'}}>
                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}/></p></a>
               </Link>
             </Grid>

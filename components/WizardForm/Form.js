@@ -31,6 +31,7 @@ import { toast } from "react-toastify";
 import Loader from 'react-loader-spinner';
 import Clear from '@material-ui/icons/Clear';
 import Schedule from '../Schedule/Schedule';
+import Link from 'next/link';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -151,6 +152,7 @@ class Wizard extends React.Component {
       page: 0,
       values: props.initialValues,
       hasId: false,
+      userId: ""
     };
   }
 
@@ -158,6 +160,8 @@ class Wizard extends React.Component {
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(url+'myAlfred/api/users/current')
       .then(res => {
+        let user = res.data;
+        this.setState({userId: user._id});
         if (typeof res.data.id_card !== 'undefined') this.setState({ hasId: true });
       })
       .catch(error => {
@@ -305,7 +309,6 @@ class Wizard extends React.Component {
                               .then(response => {
                                   let data = response.data;
                                   let arrayService = [];
-
                                   data.forEach(q => {
 
                                       arrayService.push(q._id);
@@ -346,7 +349,7 @@ class Wizard extends React.Component {
                                           axios.put(url+'myAlfred/api/users/users/becomeAlfred')
                                               .then(res => {
                                                   toast.info('Boutique créée avec succès');
-                                                  Router.push('/myShop/services');
+                                                  Router.push(`/shop?id_alfred=${this.state.userId}`);
 
                                               })
                                               .catch(err => {

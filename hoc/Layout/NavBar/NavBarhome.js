@@ -135,6 +135,7 @@ class NavBar extends Component {
     logged: false,
     alfred: false,
     isTop: true,
+    userId:""
   };
 
   componentDidMount() {
@@ -150,7 +151,8 @@ class NavBar extends Component {
           .get(url+'myAlfred/api/users/current')
           .then(res => {
             let user = res.data;
-            this.setState({user:user, alfred:user.is_alfred});
+
+            this.setState({user:user, alfred:user.is_alfred, userId:user._id});
 
             if(typeof user.picture !="undefined") {
               this.setState({picture: true})
@@ -388,7 +390,7 @@ class NavBar extends Component {
       <div className={classes.root}>
         <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(255, 255, 255)', boxShadow:'inherit'}} position="fixed">
           <Toolbar>
-            <Link href={'/'}>
+            <Link href={`/`}>
               <img src={this.state.isTop ? '../../../static/assets/img/logo.png' : '../../../static/blueLogo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
             </Link>
             <div className={classes.search}>
@@ -407,7 +409,7 @@ class NavBar extends Component {
             <div className={classes.sectionDesktop}>
               {alfred ?
               <Typography className={classes.navbarItem}>
-                <Link href={'/myShop/services'}>
+                <Link href={`/shop?id_alfred=${this.state.userId}`} >
                   <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Ma boutique
                   </a>

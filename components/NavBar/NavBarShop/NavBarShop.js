@@ -10,12 +10,12 @@ class NavBarShop extends React.Component{
     super(props)
   }
   render(){
-    const {classes} = this.props;
+    const {classes, userId} = this.props;
     return (
       <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
 
         <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white'}}>
-          <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+          <Link href={`/shop?id_alfred=${userId}`}><a style={{textDecoration:'none'}}>
             <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
           </Link>
         </Grid>

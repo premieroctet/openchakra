@@ -186,6 +186,7 @@ class addAvailability extends React.Component {
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
+                this.setState({userId: user._id});
                 if(user.is_alfred === false) {
                     Router.push('/becomeAlfredForm');
                 } else {

@@ -113,6 +113,7 @@ class myAvailabilities extends React.Component {
             shop: {},
             availabilities: [],
             services: [],
+            userId: ""
         };
         this.availabilityCreated = this.availabilityCreated.bind(this);
         this.availabilityDelete = this.availabilityDelete.bind(this);
@@ -168,6 +169,7 @@ class myAvailabilities extends React.Component {
           .get(url+'myAlfred/api/users/current')
           .then(res => {
               let user = res.data;
+              this.setState({userId : user._id});
               if(user.is_alfred === false) {
                   Router.push('/becomeAlfredForm');
               } else {
@@ -239,7 +241,7 @@ class myAvailabilities extends React.Component {
                       <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
                           <Grid item xs={1} className={classes.shopbar}/>
                           <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                              <Link href={'/myShop/services'}>
+                              <Link href={`/shop?id_alfred=${this.state.userId}`}>
                                   <a style={{textDecoration:'none'}}>
                                       <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
                                   </a>
@@ -291,7 +293,7 @@ class myAvailabilities extends React.Component {
               </Layout>
               <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
                   <Grid item xs={2} style={{textAlign:"center"}}>
-                      <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                      <Link href={`/shop?id_alfred=${this.state.userId}`}><a style={{textDecoration:'none'}}>
                           <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}/></p></a>
                       </Link>
                   </Grid>

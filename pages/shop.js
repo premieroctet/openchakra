@@ -111,7 +111,7 @@ class shop extends React.Component {
             <Fragment>
                 <Layout>
                     <AlfredBanner shop={this.state.id}/>
-                    <NavBarShop/>
+                    <NavBarShop userId={this.state.userId}/>
                     <Grid className={classes.marginMainContainer}>
                         <Grid className={classes.aboutAndSkillsMainContainer}>
                             <Grid className={classes.aboutContentContainer}>
