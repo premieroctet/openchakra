@@ -18,9 +18,12 @@ class alfredBanner extends React.Component{
       alfred: [],
       idAlfred:'',
       shop: {},
-      have_picture: false
+      have_picture: false,
+      lastName: "",
+      firstName: ""
     };
     this.addFavoris = this.addFavoris.bind(this);
+    this.generateAvatar= this.generateAvatar.bind(this)
   }
 
   componentDidMount() {
@@ -36,8 +39,11 @@ class alfredBanner extends React.Component{
         self.setState({
           alfred: shop.alfred,
           idAlfred: shop.alfred._id,
-          shop:shop
+          shop:shop,
+          lastName: shop.alfred.name,
+          firstName: shop.alfred.firstname
         });
+        self.generateAvatar(self.state.firstName, self.state.lastName);
         let idAlfred = shop.alfred._id;
         axios.put(`${url}myAlfred/api/users/alfredViews/${idAlfred}`)
           .then(function (result) {
@@ -51,6 +57,13 @@ class alfredBanner extends React.Component{
         console.log(error);
       });
   }
+
+  generateAvatar(firstName, lastName){
+    let prenom = firstName.charAt(0);
+    let nom = lastName.charAt(0);
+    this.setState({firstName : prenom, lastName :nom});
+  }
+
     addFavoris() {
 
     const test = {alfred: this.state.idAlfred};
@@ -84,7 +97,13 @@ class alfredBanner extends React.Component{
                         </Grid>
                     </Grid>
                     <Grid item className={classes.itemAvatar}>
-                        <Avatar alt="photo de profil" src={`../../../../${alfred.picture}`} className={classes.avatar} />
+                      {
+                        alfred.picture !== undefined ?
+                          <Avatar alt="photo de profil" src={`../../../../${alfred.picture}`} className={classes.avatar} />
+                          :
+                          <Avatar alt="photo de profil" className={classes.avatarLetter}>{this.state.firstName}{this.state.lastName}</Avatar>
+                      }
+
                         <Typography style={{marginTop:20}} className={classes.textAvatar}>Boutique de {alfred.firstname}</Typography>
                     </Grid>
                 </Grid>

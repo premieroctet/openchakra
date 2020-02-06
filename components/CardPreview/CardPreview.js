@@ -66,7 +66,6 @@ class CardPreview extends React.Component{
 
   render(){
     const {classes, service, shop, services, userState, isOwner, alfred} = this.props;
-    console.log(service,'service')
 
     const StyledRating = withStyles({
       iconFilled: {

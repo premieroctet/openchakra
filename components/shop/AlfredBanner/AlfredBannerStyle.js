@@ -24,6 +24,16 @@ export default theme => ({
     margin: 'auto',
     display: 'block',
   },
+  avatarLetter:{
+    position: 'absolute',
+    top: '15%',
+    left: '0%',
+    right: '0%',
+    height: 150,
+    width: 150,
+    margin: 'auto',
+    fontSize: "xxx-large",
+  },
   itemAvatar: {
     flexDirection: 'column',
   },

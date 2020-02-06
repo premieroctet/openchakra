@@ -17,6 +17,9 @@ import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
 import Moment from 'moment';
 import CancelIcon from '@material-ui/icons/Cancel';
+import moment from 'moment';
+
+moment.locale('fr');
 
 class About extends React.Component{
   constructor(props){
@@ -85,7 +88,7 @@ class About extends React.Component{
                 <CalendarToday />
               </ListItemAvatar>
               <ListItemText
-                primary={"Membre depuis " + Moment(alfred.creation_date).format('MMMM YYYY')}
+                primary={"Membre depuis " + moment(alfred.creation_date).format('MMMM YYYY')}
               />
             </ListItem>
             <ListItem>
@@ -94,7 +97,7 @@ class About extends React.Component{
               </ListItemAvatar>
               <ListItemText
                 //TODO A MODIFIER QUAND DATE CREATION BOUTIQUE SERA STOCKE
-                primary={alfred.creation_shop ? "Alfred depuis " + Moment(alfred.creation_shop).format('MMMM YYYY') : "Alfred depuis " + Moment(alfred.creation_date).format('MMMM YYYY')}
+                primary={alfred.creation_shop ? "Alfred depuis " + moment(alfred.creation_shop).format('MMMM YYYY') : "Alfred depuis " + moment(alfred.creation_date).format('MMMM YYYY')}
               />
             </ListItem>
             <ListItem>
