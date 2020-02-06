@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useCallback, useRef } from 'react'
+import React, { memo } from 'react'
 import {
   Box,
   Switch,
@@ -9,7 +9,6 @@ import {
   FormLabel,
   Divider,
   DarkMode,
-  useClipboard,
 } from '@chakra-ui/core'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
@@ -20,6 +19,7 @@ import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
 import { getShowLayout, getShowCode } from '../core/selectors/app'
 import { createShareUrl } from '../utils/share'
+import useClipboard from '../hooks/useClipboard'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -46,14 +46,12 @@ const CodeSandboxButton = () => {
 
 const ShareButton = () => {
   const components = useSelector(getComponents)
-  const sharedUrl = useMemo(() => {
-    return createShareUrl(components)
-  }, [components])
-  const { onCopy, hasCopied } = useClipboard(sharedUrl)
+
+  const { onCopy, hasCopied } = useClipboard()
 
   const copy = () => {
     if (onCopy) {
-      onCopy()
+      onCopy(createShareUrl(components))
     }
   }
 

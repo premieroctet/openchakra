@@ -18,6 +18,7 @@
     "@types/jest": "^25.1.2",
     "codesandbox": "^2.1.11",
     "coloreact": "^0.3.1",
+    "copy-to-clipboard": "^3.2.1",
     "emotion-theming": "^10.0.27",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
