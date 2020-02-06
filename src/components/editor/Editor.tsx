@@ -25,6 +25,7 @@ const Editor: React.FC = () => {
 
   const { drop } = useDropComponent('root')
   const isEmpty = !components.root.children.length
+  const rootProps = components.root.props
 
   let editorBackgroundProps = {}
 
@@ -34,6 +35,11 @@ const Editor: React.FC = () => {
 
   if (showLayout) {
     editorBackgroundProps = gridStyles
+  }
+
+  editorBackgroundProps = {
+    ...editorBackgroundProps,
+    ...rootProps,
   }
 
   const Playground = (

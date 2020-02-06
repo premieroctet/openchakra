@@ -16,11 +16,12 @@ const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
 
-  const { type, rootParentType, id } = component
+  const { type, rootParentType, id, children } = component
 
   const isRoot = id === 'root'
 
   const docType = rootParentType || type
+  const componentHasChildren = children.length > 0
 
   return (
     <>
@@ -95,7 +96,7 @@ const Inspector = () => {
         <Panels component={component} />
       </Box>
 
-      <StylesPanel isRoot={isRoot} />
+      <StylesPanel isRoot={isRoot} showChildren={componentHasChildren} />
     </>
   )
 }
