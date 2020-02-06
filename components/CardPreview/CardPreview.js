@@ -152,11 +152,11 @@ class CardPreview extends React.Component{
                 </ListItem>
                 <ListItem className={classes.noPadding}>
                   <ListItemIcon className={classes.minWidth}>
-                    <img src={'../../static/assets/img/iconCardAlfred/experience.svg'} alt={'Expériementé'} title={'Expériementé'} className={classes.imageStyle}/>
+                    <img src={'../../static/assets/img/iconCardAlfred/experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
                   </ListItemIcon>
                   <ListItemText
                     classes={{primary:classes.sizeText}}
-                    primary="Expériementé(e)"
+                    primary="Expérimenté(e)"
                   />
                 </ListItem>
               </List>

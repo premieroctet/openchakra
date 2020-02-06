@@ -114,7 +114,10 @@ class shop extends React.Component {
                       <meta property="description" content="Paramétrez les services que vous souhaitez proposer ! Vous pouvez en ajouter autant que vous le souhaitez : bricolage, jardinage, déménagement, décoration, évènementiel, quel sera votre prochain service ?" />
                   </Helmet>
                   <AlfredBanner shop={this.state.id}/>
-                  <NavBarShop userId={this.state.userId}/>
+                  {this.state.isOwner ?
+                    <NavBarShop userId={this.state.userId}/>
+                    : null
+                  }
                   <Grid className={classes.marginMainContainer}>
                       <Grid className={classes.aboutAndSkillsMainContainer}>
                           <Grid className={classes.aboutContentContainer}>
@@ -133,7 +136,7 @@ class shop extends React.Component {
                           <Grid container className={classes.cardPreviewContainer} spacing={2}>
                               { Object.keys(this.state.services).map( result => {
                                   return (
-                                    <Grid item xs={12} sm={12} md={12} lg={6} xl={4}>
+                                    <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                                         <CardPreview
                                           isOwner={this.state.isOwner}
                                           userState={this.state.userState}
@@ -147,7 +150,7 @@ class shop extends React.Component {
                               })
                               }
                               {this.state.userState && this.state.isOwner  ?
-                                <Grid item xs={12} sm={12} md={12} lg={6} xl={4}>
+                                <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                                     <CardAddService/>
                                 </Grid>
                                 : null
