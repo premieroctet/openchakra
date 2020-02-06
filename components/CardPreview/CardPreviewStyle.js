@@ -1,17 +1,7 @@
 export default theme => ({
   card: {
-    width: 400,
-    height: 400,
-    marginBottom: '5%',
-    [theme.breakpoints.down('xs')]: {
-      width:'100%',
-      height: '100%',
-    },
-    [theme.breakpoints.down('md')]: {
-      width:'100%',
-      height: '100%',
-    },
-
+    width: '100%',
+    height: 'auto',
 },
   expand: {
     transform: 'rotate(0deg)',
@@ -119,7 +109,7 @@ export default theme => ({
     width:'50%',
     display:'flex',
     flexDirection:'column',
-    alignItems: 'end',
+    alignItems: 'flex-end',
 
   },
   flexPosition:{
