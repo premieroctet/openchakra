@@ -15,12 +15,11 @@ class alfredBanner extends React.Component{
   constructor(props) {
     super(props);
     this.state ={
-      alfred: [],
+      alfred: [], // to ensure not null
       idAlfred:'',
       shop: {},
       have_picture: false,
-      lastName: "",
-      firstName: ""
+      avaterLetters: "",
     };
     this.addFavoris = this.addFavoris.bind(this);
     this.generateAvatar= this.generateAvatar.bind(this)
@@ -33,17 +32,15 @@ class alfredBanner extends React.Component{
     axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
       .then(function (response) {
         let shop = response.data;
-        if(typeof shop.picture != "undefined") {
+        if(typeof shop.picture != "undefined" && shop.picture != null) {
           self.setState({have_picture: true})
         }
         self.setState({
           alfred: shop.alfred,
           idAlfred: shop.alfred._id,
           shop:shop,
-          lastName: shop.alfred.name,
-          firstName: shop.alfred.firstname
+          avatarLetters: self.generateAvatar(shop.alfred)
         });
-        self.generateAvatar(self.state.firstName, self.state.lastName);
         let idAlfred = shop.alfred._id;
         axios.put(`${url}myAlfred/api/users/alfredViews/${idAlfred}`)
           .then(function (result) {
@@ -58,10 +55,11 @@ class alfredBanner extends React.Component{
       });
   }
 
-  generateAvatar(firstName, lastName){
-    let prenom = firstName.charAt(0);
-    let nom = lastName.charAt(0);
-    this.setState({firstName : prenom, lastName :nom});
+  generateAvatar(alfred){
+    console.log("Avatiar for "+JSON.stringify(alfred, null, 2));
+    let prenom = alfred.firstname.charAt(0);
+    let nom = alfred.name.charAt(0);
+    return prenom+nom;
   }
 
     addFavoris() {
@@ -98,10 +96,10 @@ class alfredBanner extends React.Component{
                     </Grid>
                     <Grid item className={classes.itemAvatar}>
                       {
-                        alfred.picture !== undefined ?
-                          <Avatar alt="photo de profil" src={`../../../../${alfred.picture}`} className={classes.avatar} />
+                        alfred.picture !== undefined  && alfred.picture != null ?
+                          <Avatar alt="photo de profil" src={`../../../../${alfred.picture}`} className={classes.avatarLetter} />
                           :
-                          <Avatar alt="photo de profil" className={classes.avatarLetter}>{this.state.firstName}{this.state.lastName}</Avatar>
+                          <Avatar alt="photo de profil" className={classes.avatarLetter}>{this.state.avatarLetters}</Avatar>
                       }
 
                         <Typography style={{marginTop:20}} className={classes.textAvatar}>Boutique de {alfred.firstname}</Typography>
