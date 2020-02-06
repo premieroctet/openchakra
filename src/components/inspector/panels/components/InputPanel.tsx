@@ -5,6 +5,7 @@ import FormControl from '../../controls/FormControl'
 import usePropsSelector from '../../../../hooks/usePropsSelector'
 import SizeControl from '../../controls/SizeControl'
 import SwitchControl from '../../controls/SwitchControl'
+import TextControl from '../../controls/TextControl'
 
 const InputPanel = () => {
   const { setValueFromEvent } = useForm()
@@ -15,6 +16,8 @@ const InputPanel = () => {
   return (
     <>
       <SizeControl label="Size" options={['sm', 'md', 'lg']} value={size} />
+      <TextControl label="Value" name="value" />
+      <TextControl label="Placeholder" name="placeholder" />
 
       <FormControl htmlFor="variant" label="Variant">
         <Select

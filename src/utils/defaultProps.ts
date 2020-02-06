@@ -78,6 +78,8 @@ import {
   InputGroupProps,
   InputLeftAddon,
   InputRightAddon,
+  Stack,
+  Flex,
 } from '@chakra-ui/core'
 import FormLabel, { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -231,7 +233,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Avatar: Avatar.defaultProps,
   Alert: Alert.defaultProps,
   AlertIcon: AlertIcon.defaultProps,
-  AlertTitle: { ...AlertTitle.defaultProps, children: 'Lorem Ipsum' },
+  AlertTitle: { ...AlertTitle.defaultProps, children: 'Lorem Ipsum', mr: 1 },
   AlertDescription: {
     ...AlertDescription.defaultProps,
     children: 'Lorem Ipsum',
@@ -261,5 +263,10 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     defaultIsOpen: true,
   },
   InputLeftAddon: { ...InputLeftAddon.defaultProps, children: 'left' },
-  InputRightAddon: { ...InputRightAddon.defaultProps, children: 'right' },
+  InputRightAddon: {
+    ...InputRightAddon.defaultProps,
+    children: 'right',
+  },
+  Stack: { ...Stack.defaultProps, display: 'flex' },
+  Flex: { ...Flex.defaultProps, display: 'flex' },
 }

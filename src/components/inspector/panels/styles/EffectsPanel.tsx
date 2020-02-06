@@ -1,29 +1,30 @@
-import React, { memo, useMemo } from "react";
-import FormControl from "../../controls/FormControl";
-import { useForm } from "../../../../hooks/useForm";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
+import React, { memo, useMemo } from 'react'
+import FormControl from '../../controls/FormControl'
+import { useForm } from '../../../../hooks/useForm'
+import usePropsSelector from '../../../../hooks/usePropsSelector'
 import {
   Select,
   Slider,
   SliderTrack,
   SliderFilledTrack,
-  SliderThumb
-} from "@chakra-ui/core";
+  SliderThumb,
+} from '@chakra-ui/core'
 
 const EffectsPanel = () => {
-  const { setValueFromEvent, setValue } = useForm();
-  const opacity = usePropsSelector("opacity");
-  const shadow = usePropsSelector("shadow");
+  const { setValueFromEvent, setValue } = useForm()
+  const opacity = usePropsSelector('opacity')
+  const shadow = usePropsSelector('shadow')
 
   const normalizedOpacity = useMemo(() => {
-    return opacity * 100 || 100;
-  }, [opacity]);
+    return opacity * 100 || 100
+  }, [opacity])
 
   return (
     <>
       <FormControl label="Opacity">
         <Slider
-          onChange={value => setValue("opacity", value / 100)}
+          min={1}
+          onChange={value => setValue('opacity', value / 100)}
           value={normalizedOpacity}
         >
           <SliderTrack />
@@ -45,7 +46,7 @@ const EffectsPanel = () => {
         </Select>
       </FormControl>
     </>
-  );
-};
+  )
+}
 
-export default memo(EffectsPanel);
+export default memo(EffectsPanel)
