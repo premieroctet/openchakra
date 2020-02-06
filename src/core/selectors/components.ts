@@ -19,3 +19,9 @@ export const getPropsForSelectedComponent = (
 
 export const getSelectedComponentId = (state: RootState) =>
   state.components.present.selectedId
+
+export const getSelectedComponentChildren = (state: RootState) => {
+  return getSelectedComponent(state).children.map(child =>
+    getComponentBy(child)(state),
+  )
+}

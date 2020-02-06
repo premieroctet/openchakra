@@ -13,10 +13,12 @@ export type ComponentsStateWithUndo = {
   future: ComponentsState[]
 }
 
+const DEFAULT_ID = 'root'
+
 export const INITIAL_COMPONENTS: IComponents = {
   root: {
-    id: 'root',
-    parent: 'root',
+    id: DEFAULT_ID,
+    parent: DEFAULT_ID,
     type: 'box' as ComponentType,
     children: [],
     props: {},
@@ -26,13 +28,14 @@ export const INITIAL_COMPONENTS: IComponents = {
 const components = createModel({
   state: {
     components: INITIAL_COMPONENTS,
-    selectedId: 'root',
+    selectedId: DEFAULT_ID,
   } as ComponentsState,
   reducers: {
     reset(state: ComponentsState): ComponentsState {
       return {
         ...state,
         components: INITIAL_COMPONENTS,
+        selectedId: DEFAULT_ID,
       }
     },
     loadDemo(state: ComponentsState): ComponentsState {
@@ -110,6 +113,7 @@ const components = createModel({
       return {
         ...state,
         components: updatedComponents,
+        selectedId: DEFAULT_ID,
       }
     },
     moveComponent(
@@ -146,6 +150,30 @@ const components = createModel({
           [payload.parentId]: {
             ...state.components[payload.parentId],
             children: newChildren,
+          },
+        },
+      }
+    },
+    moveSelectedComponentChildren(
+      state: ComponentsState,
+      payload: { fromIndex: number; toIndex: number },
+    ): ComponentsState {
+      const selectedComponent = state.components[state.selectedId]
+      const children = [...selectedComponent.children]
+
+      children.splice(
+        payload.toIndex,
+        0,
+        children.splice(payload.fromIndex, 1)[0],
+      )
+
+      return {
+        ...state,
+        components: {
+          ...state.components,
+          [selectedComponent.id]: {
+            ...state.components[selectedComponent.id],
+            children,
           },
         },
       }
@@ -205,6 +233,12 @@ const components = createModel({
       return {
         ...state,
         selectedId,
+      }
+    },
+    unselect(state: ComponentsState): ComponentsState {
+      return {
+        ...state,
+        selectedId: DEFAULT_ID,
       }
     },
   },

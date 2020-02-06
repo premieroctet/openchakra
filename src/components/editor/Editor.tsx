@@ -28,6 +28,10 @@ const Editor: React.FC = () => {
 
   let editorBackgroundProps = {}
 
+  const onSelectBackground = () => {
+    dispatch.components.unselect()
+  }
+
   if (showLayout) {
     editorBackgroundProps = gridStyles
   }
@@ -46,6 +50,7 @@ const Editor: React.FC = () => {
       ref={drop}
       position="relative"
       flexDirection="column"
+      onClick={onSelectBackground}
     >
       {isEmpty && (
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
