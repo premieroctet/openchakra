@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useMemo, useCallback } from 'react'
 import {
   Box,
   Switch,
@@ -9,6 +9,8 @@ import {
   FormLabel,
   Divider,
   DarkMode,
+  useClipboard,
+  useToast,
 } from '@chakra-ui/core'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
@@ -45,16 +47,26 @@ const CodeSandboxButton = () => {
 
 const ShareButton = () => {
   const components = useSelector(getComponents)
+  const toast = useToast()
+
+  const sharedUrl = useMemo(() => {
+    return createShareUrl(components)
+  }, [components])
+
+  const { onCopy } = useClipboard(sharedUrl)
+
+  const copy = useCallback(() => {
+    if (onCopy) {
+      onCopy()
+    }
+    toast({
+      status: 'success',
+      title: 'Copied URL onto the clipboard',
+    })
+  }, [onCopy, toast])
 
   return (
-    <Button
-      onClick={() => {
-        window.open(createShareUrl(components), '_blank')
-      }}
-      rightIcon="external-link"
-      variant="ghost"
-      size="xs"
-    >
+    <Button onClick={copy} rightIcon="external-link" variant="ghost" size="xs">
       Share
     </Button>
   )
