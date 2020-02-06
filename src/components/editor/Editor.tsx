@@ -25,11 +25,21 @@ const Editor: React.FC = () => {
 
   const { drop } = useDropComponent('root')
   const isEmpty = !components.root.children.length
+  const rootProps = components.root.props
 
   let editorBackgroundProps = {}
 
+  const onSelectBackground = () => {
+    dispatch.components.unselect()
+  }
+
   if (showLayout) {
     editorBackgroundProps = gridStyles
+  }
+
+  editorBackgroundProps = {
+    ...editorBackgroundProps,
+    ...rootProps,
   }
 
   const Playground = (
@@ -46,6 +56,7 @@ const Editor: React.FC = () => {
       ref={drop}
       position="relative"
       flexDirection="column"
+      onClick={onSelectBackground}
     >
       {isEmpty && (
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">

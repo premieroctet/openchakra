@@ -8,29 +8,23 @@ import Sidebar from './components/sidebar/Sidebar'
 import Header from './components/Header'
 import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'
-import { useSelector } from 'react-redux'
 import useShortcuts, { keyMap } from './hooks/useShortcuts'
-import { getShowLayout } from './core/selectors/app'
 import ErrorBoundary from './components/ErrorBoundary'
 
 const App = () => {
-  const showLayout = useSelector(getShowLayout)
   const { handlers } = useShortcuts()
 
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>
       <Global
         styles={() => ({
-          '*': {
-            transition: showLayout ? 'none !important' : undefined,
-          },
           html: { minWidth: '860px' },
         })}
       />
 
       <Header />
       <DndProvider backend={Backend}>
-        <Flex minHeight="calc(100vh - 3rem)">
+        <Flex h="calc(100vh - 3rem)">
           <Sidebar />
 
           <ErrorBoundary>
