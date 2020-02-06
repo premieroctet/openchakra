@@ -78,14 +78,6 @@ class alfredBanner extends React.Component{
               backgroundSize:"cover", backgroundRepeat:"no-repeat"}}>
             <Grid container className={classes.darkOverlay}>
                 <Grid container className={classes.container}>
-                    <Grid item className={classes.itemShare}>
-                        <Grid item style={{ display: 'flex', flexDirection: 'row' }}>
-                            <Share style={{ color: 'white' }} />
-                            <Typography variant="body1" style={{ color: 'white', fontSize: 15 }}>
-                                Partager
-                            </Typography>
-                        </Grid>
-                    </Grid>
                     <Grid item className={classes.itemAvatar}>
                       {
                         alfred.picture !== undefined  && alfred.picture != null ?
