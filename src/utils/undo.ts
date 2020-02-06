@@ -1,20 +1,21 @@
-import { Action } from "@rematch/core";
+import { Action } from '@rematch/core'
 
 export default function filterActions(action: Action) {
   if (
     [
-      "components/reset",
-      "components/loadDemo",
-      "components/resetProps",
-      "components/updateProps",
-      "components/addComponent",
-      "components/deleteComponent",
-      "components/moveComponent",
-      "components/addMetaComponent"
+      'components/reset',
+      'components/loadDemo',
+      'components/resetProps',
+      'components/updateProps',
+      'components/addComponent',
+      'components/deleteComponent',
+      'components/moveComponent',
+      'components/addMetaComponent',
+      'components/moveSelectedComponentChildren',
     ].includes(action.type)
   ) {
-    return true;
+    return true
   }
 
-  return false;
+  return false
 }
