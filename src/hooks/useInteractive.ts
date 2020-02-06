@@ -29,6 +29,7 @@ export const useInteractive = (
       setHover(false)
     },
     onClick: (event: MouseEvent) => {
+      event.preventDefault()
       event.stopPropagation()
       dispatch.components.select(component.id)
     },

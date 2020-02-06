@@ -34,8 +34,10 @@ const FlexPanel = () => {
           value={flexDirection || ''}
           onChange={setValueFromEvent}
         >
-          <option>column</option>
           <option>row</option>
+          <option>row-reverse</option>
+          <option>column</option>
+          <option>column-reverse</option>
         </Select>
       </FormControl>
 

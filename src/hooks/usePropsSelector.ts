@@ -1,9 +1,12 @@
 import { useSelector } from 'react-redux'
-import { getSelectedComponent } from '../core/selectors/components'
+import { RootState } from '../core/store'
 
 const usePropsSelector = (propsName: string) => {
-  const component = useSelector(getSelectedComponent)
-  return component.props[propsName]
+  return useSelector(
+    (state: RootState) =>
+      state.components.present.components[state.components.present.selectedId]
+        .props[propsName],
+  )
 }
 
 export default usePropsSelector
