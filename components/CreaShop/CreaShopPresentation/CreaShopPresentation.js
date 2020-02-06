@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import styles from './CreaShopPresentationStyle';
 import Button from '@material-ui/core/Button';
 
+
 class CreaShopPresentation extends React.Component {
   constructor(props) {
     super(props);
@@ -23,57 +24,60 @@ class CreaShopPresentation extends React.Component {
               <Grid className={classes.contentTitle}>
                 <h2>Nous allons vous aider à créer votre service & devenir un Alfred en 3 minutes !  </h2>
               </Grid>
-              <Grid>
+              <Grid style={{width: 500}}>
                 <Grid>
-                  <h2>Etape 1 </h2>
-                  <hr/>
+                  <Grid>
+                    <h2 style={{fontFamily: 'Signatra'}}>Etape 1 </h2>
+                    <hr/>
+                  </Grid>
+                  <Grid>
+                    <Grid>
+                      <h3>Choisissez votre premier super talent ! </h3>
+                    </Grid>
+                    <Grid>
+                      <p>Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appel un autre, vous pourrez en ajouter autant de services que vous voulez</p>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid>
+                  <Grid>
+                    <h2>Etape 2 </h2>
+                    <hr/>
+                  </Grid>
+                  <Grid>
+                    <Grid>
+                      <h3>Vous êtes chez vous ! Fixez vos règles et vos conditions…</h3>
+                    </Grid>
+                    <Grid>
+                      <p>Indiquez vos disponibilités ,paramètres de
+                        réservation et vos conditions d’annulation</p>
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid>
                   <Grid>
-                    <h3>Choisissez votre premier super talent ! </h3>
+                    <h2>Etape 3</h2>
+                    <hr/>
                   </Grid>
                   <Grid>
-                    <p>Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appel un autre, vous pourrez en ajouter autant de services que vous voulez</p>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid>
-                <Grid>
-                  <h2>Etape 2 </h2>
-                  <hr/>
-                </Grid>
-                <Grid>
-                  <Grid>
-                    <h3>Vous êtes chez vous ! Fixez vos règles et vos conditions…</h3>
-                  </Grid>
-                  <Grid>
-                    <p>Indiquez vos disponibilités ,paramètres de
-                      réservation et vos conditions d’annulation</p>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid>
-                <Grid>
-                  <h2>Etape 3</h2>
-                  <hr/>
-                </Grid>
-                <Grid>
-                  <Grid>
-                    <h3>Présentez-vous ! </h3>
-                  </Grid>
-                  <Grid>
-                    <p>Renseignez votre profil Alfred, partager vos réalisations, et décrivez vous ! </p>
+                    <Grid>
+                      <h3>Présentez-vous ! </h3>
+                    </Grid>
+                    <Grid>
+                      <p>Renseignez votre profil Alfred, partager vos réalisations, et décrivez vous ! </p>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
+            <hr/>
             <Grid className={classes.contentLeftFooter}>
               <Grid style={{display: "flex",justifyContent: "space-between"}}>
                 <Grid>
-                  <Button>Retour</Button>
+                  <Button color="primary">Retour</Button>
                 </Grid>
                 <Grid>
-                  <Button>Suivant</Button>
+                  <Button variant="contained" color="secondary">Suivant</Button>
                 </Grid>
               </Grid>
             </Grid>

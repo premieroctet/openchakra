@@ -1,4 +1,5 @@
 export default theme => ({
+
   mainContainer:{
     width: '100%',
     height: '100%'
@@ -9,7 +10,7 @@ export default theme => ({
     width: '100%'
   },
   contentLeft:{
-    width: '50%',
+    width: '60%',
     height : '100%',
     backgroundColor: 'red',
     display: 'flex',
@@ -17,7 +18,7 @@ export default theme => ({
     justifyContent: 'space-between'
   },
   contentRight: {
-    width: '50%',
+    width: '40%',
     height: '100%',
     backgroundColor: 'green'
   },
@@ -30,6 +31,6 @@ export default theme => ({
     backgroundColor: 'yellow',
   },
   contentTitle:{
-    width: "100%"
+    width: '100%'
   }
 })
