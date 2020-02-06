@@ -34,7 +34,7 @@ const Editor: React.FC = () => {
     <Box
       p={2}
       {...editorBackgroundProps}
-      height="calc(100vh - 3rem)"
+      height="100%"
       minWidth="10rem"
       width="100%"
       display={isEmpty ? 'flex' : 'block'}
@@ -72,6 +72,7 @@ const Editor: React.FC = () => {
 
   return (
     <SplitPane
+      style={{ overflow: 'auto' }}
       defaultSize="50%"
       resizerStyle={{
         border: '3px solid rgba(1, 22, 39, 0.21)',
