@@ -5,7 +5,8 @@ import { Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import { Share } from '@material-ui/icons';
 import axios from 'axios';
-import styles from './AlfredBannerStyle'
+import styles from './AlfredBannerStyle';
+import {GENERATE_AVATAR} from '../../../utils/generateAvatar'
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -22,7 +23,6 @@ class alfredBanner extends React.Component{
       avaterLetters: "",
     };
     this.addFavoris = this.addFavoris.bind(this);
-    this.generateAvatar= this.generateAvatar.bind(this)
   }
 
   componentDidMount() {
@@ -39,7 +39,7 @@ class alfredBanner extends React.Component{
           alfred: shop.alfred,
           idAlfred: shop.alfred._id,
           shop:shop,
-          avatarLetters: self.generateAvatar(shop.alfred)
+          avatarLetters: GENERATE_AVATAR(shop.alfred)
         });
         let idAlfred = shop.alfred._id;
         axios.put(`${url}myAlfred/api/users/alfredViews/${idAlfred}`)
@@ -54,14 +54,6 @@ class alfredBanner extends React.Component{
         console.log(error);
       });
   }
-
-  generateAvatar(alfred){
-    console.log("Avatiar for "+JSON.stringify(alfred, null, 2));
-    let prenom = alfred.firstname.charAt(0);
-    let nom = alfred.name.charAt(0);
-    return prenom+nom;
-  }
-
     addFavoris() {
 
     const test = {alfred: this.state.idAlfred};
