@@ -324,7 +324,7 @@ router.put('/profile/job',passport.authenticate('jwt',{session:false}),(req,res)
 router.post('/profile/picture',upload.single('myImage'),passport.authenticate('jwt',{session:false}),(req,res) => {
     console.log("Posted "+res);
     User.findByIdAndUpdate(req.user.id, {
-        picture: req.file.path
+        picture: req.file ? req.file.path : ""
     },{new:true})
         .then(user => {
             res.json(user)
@@ -828,7 +828,7 @@ router.put('/account/indexGoogle',passport.authenticate('jwt',{session: false}),
 // @Access private
 router.delete('/profile/picture/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
     User.findByIdAndUpdate(req.user.id,{
-        picture: 'static/basicavatar.png'
+        picture: null
     },{new:true})
         .then(user => {
             res.json(user)
