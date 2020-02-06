@@ -9,6 +9,14 @@ import useDispatch from '../../hooks/useDispatch'
 import { getComponents } from '../../core/selectors/components'
 import { getShowLayout, getShowCode } from '../../core/selectors/app'
 
+export const gridStyles = {
+  backgroundImage:
+    'linear-gradient(to right, #d9e2e9 1px, transparent 1px),linear-gradient(to bottom, #d9e2e9 1px, transparent 1px);',
+  backgroundSize: '20px 20px',
+  bg: '#edf2f6',
+  p: 10,
+}
+
 const Editor: React.FC = () => {
   const showCode = useSelector(getShowCode)
   const showLayout = useSelector(getShowLayout)
@@ -21,13 +29,7 @@ const Editor: React.FC = () => {
   let editorBackgroundProps = {}
 
   if (showLayout) {
-    editorBackgroundProps = {
-      backgroundImage:
-        'linear-gradient(to right, #d9e2e9 1px, transparent 1px),linear-gradient(to bottom, #d9e2e9 1px, transparent 1px);',
-      backgroundSize: '20px 20px',
-      bg: '#edf2f6',
-      p: 10,
-    }
+    editorBackgroundProps = gridStyles
   }
 
   const Playground = (

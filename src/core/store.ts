@@ -21,7 +21,7 @@ const persistConfig = {
   storage,
   whitelist: ['present'],
   version,
-  throttle: 1000,
+  throttle: 500,
 }
 
 const persistPlugin = {

@@ -11,6 +11,7 @@ import { HotKeys } from 'react-hotkeys'
 import { useSelector } from 'react-redux'
 import useShortcuts, { keyMap } from './hooks/useShortcuts'
 import { getShowLayout } from './core/selectors/app'
+import ErrorBoundary from './components/ErrorBoundary'
 
 const App = () => {
   const showLayout = useSelector(getShowLayout)
@@ -32,9 +33,11 @@ const App = () => {
         <Flex minHeight="calc(100vh - 3rem)">
           <Sidebar />
 
-          <Box bg="white" flex={1} zIndex={10} position="relative">
-            <Editor />
-          </Box>
+          <ErrorBoundary>
+            <Box bg="white" flex={1} zIndex={10} position="relative">
+              <Editor />
+            </Box>
+          </ErrorBoundary>
 
           <Box
             maxH="calc(100vh - 3rem)"
