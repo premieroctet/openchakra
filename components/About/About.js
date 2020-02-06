@@ -15,7 +15,6 @@ import StarIcon from '@material-ui/icons/Star';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
-import Moment from 'moment';
 import CancelIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
 
