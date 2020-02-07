@@ -15,12 +15,22 @@ export default theme => ({
     backgroundColor: 'red',
     display: 'flex',
     flexDirection : 'column',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    },
   },
   contentRight: {
     width: '40%',
     height: '100%',
-    backgroundColor: 'green'
+    display: 'block',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right',
+    position: 'relative',
+    backgroundImage: "url(" + "../../../static/assets/img/creaShop/bgImage/etape0.svg" + ")",
+    [theme.breakpoints.down('md')]: {
+      display: 'none'
+    },
   },
   contentLeftTop:{
     width : '100%',
@@ -28,5 +38,11 @@ export default theme => ({
   },
   contentTitle:{
     width: '100%'
-  }
+  },
+  contentTextSize:{
+    width : 500,
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    },
+  },
 })

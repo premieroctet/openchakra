@@ -41,7 +41,7 @@ class Stepper extends React.Component {
     const {classes, activeStep} = this.props;
 
     return(
-      <div className={classes.root}>
+      <Grid className={classes.root}>
         <StepperMaterial activeStep={activeStep} alternativeLabel>
           {this.state.steps.map(label => (
             <Step key={label}>
@@ -49,7 +49,7 @@ class Stepper extends React.Component {
             </Step>
           ))}
         </StepperMaterial>
-      </div>
+      </Grid>
     )
   }
 }

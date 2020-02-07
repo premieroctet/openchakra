@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CreaShopPresentation from '../../components/CreaShop/CreaShopPresentation/CreaShopPresentation';
 import Stepper from '../../components/Stepper/Stepper'
 import NavigationBarForm from '../../components/CreaShop/NavigationBarForm/NavigationBarForm';
+import SelectService from '../../components/CreaShop/SelectService/SelectService';
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class creaShop extends React.Component {
       case 0 :
         return <CreaShopPresentation/>;
       case 1 :
-        return <h1>Bonjour</h1>;
+        return <SelectService/>;
     }
   }
 
@@ -40,10 +41,8 @@ class creaShop extends React.Component {
       <Layout>
         <Grid className={classes.spacer}/>
         <Grid className={classes.mainContainer}>
-          <Grid>
-            <Grid>
-              <Stepper activeStep={this.state.activeStep}/>
-            </Grid>
+          <Grid className={classes.contentStepper}>
+            <Stepper activeStep={this.state.activeStep}/>
           </Grid>
           <Grid>
             {this.renderSwitch(this.state.activeStep)}

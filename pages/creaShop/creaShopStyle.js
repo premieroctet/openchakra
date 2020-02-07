@@ -7,5 +7,10 @@ export default theme => ({
     height: '100%',
     marginLeft: 200,
     marginRight : 200
+  },
+  contentStepper:{
+    width: '100%',
+    backgroundColor : 'green',
   }
+
 })

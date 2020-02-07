@@ -3,4 +3,7 @@ export default theme => ({
     width: '100%',
     backgroundColor: 'yellow',
   },
+  nextButton:{
+    color: 'white'
+  }
 })

@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import styles from './NavigationBarFormStyle'
 
-
 class NavigationBarForm extends React.Component {
   constructor(props) {
     super(props);
@@ -40,7 +39,7 @@ class NavigationBarForm extends React.Component {
             </Button>
           </Grid>
           <Grid>
-            <Button variant="contained" color="secondary" onClick={this.handleNext}>
+            <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}>
               Suivant
             </Button>
           </Grid>

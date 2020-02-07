@@ -3,8 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './CreaShopPresentationStyle';
-import Button from '@material-ui/core/Button';
-
 
 class CreaShopPresentation extends React.Component {
   constructor(props) {
@@ -24,7 +22,7 @@ class CreaShopPresentation extends React.Component {
               <Grid className={classes.contentTitle}>
                 <h2>Nous allons vous aider à créer votre service & devenir un Alfred en 3 minutes !  </h2>
               </Grid>
-              <Grid style={{width: 500}}>
+              <Grid className={classes.contentTextSize}>
                 <Grid>
                   <Grid>
                     <p style={{fontFamily: 'Signatra'}}>Etape 1 </p>
@@ -71,8 +69,7 @@ class CreaShopPresentation extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid className={classes.contentRight}>
-          </Grid>
+          <Grid className={classes.contentRight}/>
         </Grid>
       </Grid>
     )
