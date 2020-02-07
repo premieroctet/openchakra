@@ -5,6 +5,7 @@ import styles from './creaShopStyle'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CreaShopPresentation from '../../components/CreaShop/CreaShopPresentation/CreaShopPresentation';
+import Stepper from '../../components/Stepper/Stepper';
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -20,6 +21,11 @@ class creaShop extends React.Component {
       <Layout>
         <Grid className={classes.spacer}/>
         <Grid className={classes.mainContainer}>
+          <Grid>
+            <Grid>
+              <Stepper/>
+            </Grid>
+          </Grid>
           <Grid>
             <CreaShopPresentation/>
           </Grid>
