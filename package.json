@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@bugsnag/js": "^6.5.2",
+    "@bugsnag/plugin-react": "^6.5.0",
     "@chakra-ui/core": "^0.5.2",
     "@emotion/core": "^10.0.27",
     "@emotion/styled": "^10.0.27",

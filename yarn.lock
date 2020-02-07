@@ -1003,6 +1003,35 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@bugsnag/browser@^6.5.2":
+  version "6.5.2"
+  resolved "https://registry.yarnpkg.com/@bugsnag/browser/-/browser-6.5.2.tgz#3f8f911dd739d2ace056fd5a38d5d25283ca4bfc"
+  integrity sha512-XFKKorJc92ivLnlHHhLiPvkP03tZ5y7n0Z2xO6lOU7t+jWF5YapgwqQAda/TWvyYO38B/baWdnOpWMB3QmjhkA==
+
+"@bugsnag/js@^6.5.2":
+  version "6.5.2"
+  resolved "https://registry.yarnpkg.com/@bugsnag/js/-/js-6.5.2.tgz#810383aa7a2246639041bb9031ab316432959527"
+  integrity sha512-4ibw624fM5+Y/WSuo3T/MsJVtslsPV8X0MxFuRxdvpKVUXX216d8hN8E/bG4hr7aipqQOGhBYDqSzeL2wgmh0Q==
+  dependencies:
+    "@bugsnag/browser" "^6.5.2"
+    "@bugsnag/node" "^6.5.2"
+
+"@bugsnag/node@^6.5.2":
+  version "6.5.2"
+  resolved "https://registry.yarnpkg.com/@bugsnag/node/-/node-6.5.2.tgz#7bc2d0d1c7a682784be388404ab728a80b7ae2b9"
+  integrity sha512-KQ1twKoOttMCYsHv7OXUVsommVcrk6RGQ5YoZGlTbREhccbzsvjbiXPKiY31Qc7OXKvaJwSXhnOKrQTpRleFUg==
+  dependencies:
+    byline "^5.0.0"
+    error-stack-parser "^2.0.2"
+    iserror "^0.0.2"
+    pump "^3.0.0"
+    stack-generator "^2.0.3"
+
+"@bugsnag/plugin-react@^6.5.0":
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react/-/plugin-react-6.5.0.tgz#93eec6bd167dab007ca588e69daa544124c3107a"
+  integrity sha512-kbyFSnQ4QLGjN04t9MbuD5KLWI2qQpjrgKrJvJNKM8xyeVIJYpkjx//TsDzG4ujNFVkwaP3bT48j85rf4EJNqA==
+
 "@chakra-ui/core@^0.5.2":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@chakra-ui/core/-/core-0.5.2.tgz#0aa9c059467e7e957098bc07561ed86d80025b0b"
@@ -3056,6 +3085,11 @@ builtins@^1.0.3:
   resolved "https://registry.yarnpkg.com/builtins/-/builtins-1.0.3.tgz#cb94faeb61c8696451db36534e1422f94f0aee88"
   integrity sha1-y5T662HIaWRR2zZTThQi+U8K7og=
 
+byline@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/byline/-/byline-5.0.0.tgz#741c5216468eadc457b03410118ad77de8c1ddb1"
+  integrity sha1-dBxSFkaOrcRXsDQQEYrXfejB3bE=
+
 bytes@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.0.0.tgz#d32815404d689699f85a4ea4fa8755dd13a96048"
@@ -4666,7 +4700,7 @@ error-ex@^1.2.0, error-ex@^1.3.1:
   dependencies:
     is-arrayish "^0.2.1"
 
-error-stack-parser@^2.0.4:
+error-stack-parser@^2.0.2, error-stack-parser@^2.0.4:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/error-stack-parser/-/error-stack-parser-2.0.6.tgz#5a99a707bd7a4c58a797902d48d82803ede6aad8"
   integrity sha512-d51brTeqC+BHlwF0BhPtcYgF5nlzf9ZZ0ZIUQNZpc9ZB9qw5IJ2diTrBY9jlCJkTLITYPjmiX6OWCwH+fuyNgQ==
@@ -6890,6 +6924,11 @@ isarray@1.0.0, isarray@^1.0.0, isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
   integrity sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=
+
+iserror@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/iserror/-/iserror-0.0.2.tgz#bd53451fe2f668b9f2402c1966787aaa2c7c0bf5"
+  integrity sha1-vVNFH+L2aLnyQCwZZnh6qix8C/U=
 
 isexe@^2.0.0:
   version "2.0.0"
@@ -11757,6 +11796,13 @@ stable@^0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.8.tgz#836eb3c8382fe2936feaf544631017ce7d47a3cf"
   integrity sha512-ji9qxRnOVfcuLDySj9qzhGSEFVobyt1kIOSkj1qZzYLzq7Tos/oUUWvotUPQLlrsidqsK6tBH89Bc9kL5zHA6w==
+
+stack-generator@^2.0.3:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/stack-generator/-/stack-generator-2.0.5.tgz#fb00e5b4ee97de603e0773ea78ce944d81596c36"
+  integrity sha512-/t1ebrbHkrLrDuNMdeAcsvynWgoH/i4o8EGGfX7dEYDoTXOYVAkEpFdtshlvabzc6JlJ8Kf9YdFEoz7JkzGN9Q==
+  dependencies:
+    stackframe "^1.1.1"
 
 stack-utils@^1.0.1:
   version "1.0.2"
