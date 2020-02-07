@@ -26,7 +26,7 @@ export default theme => ({
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'right',
     position: 'relative',
-    backgroundImage: "url(" + "../../../static/assets/img/creaShop/bgImage/etape0.svg" + ")",
+    backgroundImage: "url(" + "../../../static/assets/img/creaShop/bgImage/etape2.svg" + ")",
     [theme.breakpoints.down('md')]: {
       display: 'none'
     },

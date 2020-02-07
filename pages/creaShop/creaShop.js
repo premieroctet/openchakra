@@ -8,6 +8,8 @@ import CreaShopPresentation from '../../components/CreaShop/CreaShopPresentation
 import Stepper from '../../components/Stepper/Stepper'
 import NavigationBarForm from '../../components/CreaShop/NavigationBarForm/NavigationBarForm';
 import SelectService from '../../components/CreaShop/SelectService/SelectService';
+import SelectPrestation from '../../components/CreaShop/SelectPrestation/SelectPrestation';
+import SettingService from '../../components/CreaShop/SettingService/SettingService';
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -31,6 +33,10 @@ class creaShop extends React.Component {
         return <CreaShopPresentation/>;
       case 1 :
         return <SelectService/>;
+      case 2 :
+        return <SelectPrestation/>;
+      case 3 :
+        return <SettingService/>;
     }
   }
 
@@ -48,7 +54,7 @@ class creaShop extends React.Component {
             {this.renderSwitch(this.state.activeStep)}
           </Grid>
         </Grid>
-        <Grid className={classes.mainContainer}>
+        <Grid className={classes.footerContainer}>
           <NavigationBarForm nextStep={this.getNextStep} previousStep={this.getPreviousStep}/>
         </Grid>
       </Layout>

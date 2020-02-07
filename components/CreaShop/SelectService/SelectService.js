@@ -62,7 +62,7 @@ function NoOptionsMessage(props) {
       className={props.selectProps.classes.noOptionsMessage}
       {...props.innerProps}
     >
-      {props.children}
+      AUCUN SERVICE
     </Typography>
   );
 }
@@ -284,7 +284,7 @@ class SelectService extends React.Component {
   }
 
   handleChangeSingle = value => {
-    this.setState({setSingle : value});
+    this.setState({single : value});
   };
 
   render() {
@@ -293,7 +293,7 @@ class SelectService extends React.Component {
     const selectStyles = {
       input: base => ({
         ...base,
-        color: "white",
+        color: "black",
         '& input': {
           font: 'inherit',
         },
@@ -325,13 +325,13 @@ class SelectService extends React.Component {
                       styles={selectStyles}
                       inputId="react-select-single"
                       TextFieldProps={{
-                        label: 'Country',
+                        label: 'Services',
                         InputLabelProps: {
                           htmlFor: 'react-select-single',
                           shrink: true,
                         },
                       }}
-                      placeholder="Search a country (start with a)"
+                      placeholder="Chercher un service"
                       options={suggestions}
                       components={components}
                       value={this.state.single}

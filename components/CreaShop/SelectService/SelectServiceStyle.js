@@ -14,7 +14,6 @@ export default theme => ({
   contentLeft:{
     width: '60%',
     height : '100%',
-    backgroundColor: 'red',
     display: 'flex',
     flexDirection : 'column',
     justifyContent: 'space-between',
@@ -29,14 +28,13 @@ export default theme => ({
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'right',
     position: 'relative',
-    backgroundImage: "url(" + "../../../static/assets/img/creaShop/bgImage/etape0.svg" + ")",
+    backgroundImage: "url(" + "../../../static/assets/img/creaShop/bgImage/etape1.svg" + ")",
     [theme.breakpoints.down('md')]: {
       display: 'none'
     },
   },
   contentLeftTop:{
     width : '100%',
-    backgroundColor: 'blue'
   },
   contentTitle:{
     width: '100%'

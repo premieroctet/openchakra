@@ -10,7 +10,12 @@ export default theme => ({
   },
   contentStepper:{
     width: '100%',
-    backgroundColor : 'green',
+  },
+  footerContainer:{
+    height: '100%',
+    marginLeft: 200,
+    marginRight : 200,
+    marginBottom: 50,
+    marginTop: 50
   }
-
 })
