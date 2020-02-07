@@ -112,7 +112,7 @@ class becomeAlfred extends React.Component{
     this.state = {
       logged:false,
       alfred: false,
-
+      userId: ""
     }
   }
 
@@ -129,7 +129,7 @@ class becomeAlfred extends React.Component{
         .get(url+'myAlfred/api/users/current')
         .then(res => {
           let user = res.data;
-          this.setState({user:user, alfred:user.is_alfred});
+          this.setState({user:user, alfred:user.is_alfred, userId: user._id});
         })
         .catch(err => console.log(err))
     }
@@ -159,7 +159,7 @@ class becomeAlfred extends React.Component{
                       répertoriez vos services, indiquez vos disponibilités,
                       vos tarifs et profitez d’un complément de revenu !
                     </Typography>
-                    <Link href={this.state.logged && this.state.alfred ?  '/myShop/services'  : this.state.logged && !this.state.alfred ? '/becomeAlfredForm' : '/signup'}>
+                    <Link href={this.state.logged && this.state.alfred ? `/shop?id_alfred=${this.state.userId}`  : this.state.logged && !this.state.alfred ? '/becomeAlfredForm' : '/signup'}>
                       <a style={{textDecoration:'none'}}>
                     <Button variant="contained" color={"primary"} className={classes.margin}>
                       Créer ma boutique
@@ -187,7 +187,7 @@ class becomeAlfred extends React.Component{
                         vos tarifs et profitez d’un complément de revenu !
                       </Typography>
                     </CardContent>
-                    <Link href={this.state.logged && this.state.alfred ?  '/myShop/services'  : this.state.logged && !this.state.alfred ? '/becomeAlfredForm' : '/signup'}>
+                    <Link href={this.state.logged && this.state.alfred ?  `/shop?id_alfred=${this.state.userId}`  : this.state.logged && !this.state.alfred ? '/becomeAlfredForm' : '/signup'}>
                       <a style={{textDecoration:'none'}}>
                         <Button variant="contained" color={"primary"} className={classes.margin}>
                           Créer ma boutique
