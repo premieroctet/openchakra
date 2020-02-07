@@ -70,17 +70,6 @@ class CreaShopPresentation extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-            <hr/>
-            <Grid className={classes.contentLeftFooter}>
-              <Grid style={{display: "flex",justifyContent: "space-between"}}>
-                <Grid>
-                  <Button color="primary">Retour</Button>
-                </Grid>
-                <Grid>
-                  <Button variant="contained" color="secondary">Suivant</Button>
-                </Grid>
-              </Grid>
-            </Grid>
           </Grid>
           <Grid className={classes.contentRight}>
           </Grid>

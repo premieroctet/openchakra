@@ -26,10 +26,6 @@ export default theme => ({
     width : '100%',
     backgroundColor: 'blue'
   },
-  contentLeftFooter:{
-    width: '100%',
-    backgroundColor: 'yellow',
-  },
   contentTitle:{
     width: '100%'
   }

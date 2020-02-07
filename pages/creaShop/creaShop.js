@@ -5,15 +5,34 @@ import styles from './creaShopStyle'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CreaShopPresentation from '../../components/CreaShop/CreaShopPresentation/CreaShopPresentation';
-import Stepper from '../../components/Stepper/Stepper';
+import Stepper from '../../components/Stepper/Stepper'
+import NavigationBarForm from '../../components/CreaShop/NavigationBarForm/NavigationBarForm';
 
 class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-
+      activeStep: 0
     }
   }
+
+  getNextStep = (step) =>{
+    this.setState({activeStep: step + 1});
+  };
+
+  getPreviousStep = (step) =>{
+    this.setState({activeStep: step - 1})
+  };
+
+  renderSwitch(param) {
+    switch(param) {
+      case 0 :
+        return <CreaShopPresentation/>;
+      case 1 :
+        return <h1>Bonjour</h1>;
+    }
+  }
+
   render() {
     const {classes} = this.props;
 
@@ -23,12 +42,15 @@ class creaShop extends React.Component {
         <Grid className={classes.mainContainer}>
           <Grid>
             <Grid>
-              <Stepper/>
+              <Stepper activeStep={this.state.activeStep}/>
             </Grid>
           </Grid>
           <Grid>
-            <CreaShopPresentation/>
+            {this.renderSwitch(this.state.activeStep)}
           </Grid>
+        </Grid>
+        <Grid className={classes.mainContainer}>
+          <NavigationBarForm nextStep={this.getNextStep} previousStep={this.getPreviousStep}/>
         </Grid>
       </Layout>
     )
