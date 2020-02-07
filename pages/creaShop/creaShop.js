@@ -55,6 +55,7 @@ class creaShop extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.footerContainer}>
+          <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
           <NavigationBarForm nextStep={this.getNextStep} previousStep={this.getPreviousStep}/>
         </Grid>
       </Layout>
