@@ -30,7 +30,7 @@ class SkillsAlfred extends React.Component{
           picsLabel: 'flexibility'
         },
         skillFour: {
-          label: 'Attentive',
+          label: 'Touche d\'attention',
           picsLabel: 'attentive'
         },
         skillFive: {
