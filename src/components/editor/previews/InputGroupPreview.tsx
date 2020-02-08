@@ -18,9 +18,9 @@ const InputGroupPreview: React.FC<{ component: IComponent }> = ({
 
   return (
     <Box {...boxProps} ref={drop(ref)}>
-      <InputGroup ref={drop(ref)} {...props}>
+      <InputGroup {...props}>
         {component.children.map((key: string) => (
-          <ComponentPreview componentName={key} />
+          <ComponentPreview key={key} componentName={key} />
         ))}
       </InputGroup>
     </Box>

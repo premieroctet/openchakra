@@ -1,23 +1,23 @@
-import React, { memo } from "react";
-import ColorsControl from "../../controls/ColorsControl";
-import InputSuggestion from "../../inputs/InputSuggestion";
-import theme from "../../../../theme/theme";
-import { Icon } from "@chakra-ui/core";
-import { Icons } from "@chakra-ui/core/dist/theme/icons";
-import { ComboboxOption, ComboboxOptionText } from "@reach/combobox";
-import FormControl from "../../controls/FormControl";
-import { useForm } from "../../../../hooks/useForm";
-import VariantsControl from "../../controls/VariantsControl";
-import SizeControl from "../../controls/SizeControl";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
-import SwitchControl from "../../controls/SwitchControl";
+import React, { memo } from 'react'
+import ColorsControl from '../../controls/ColorsControl'
+import InputSuggestion from '../../inputs/InputSuggestion'
+import theme from '../../../../theme/theme'
+import { Icon } from '@chakra-ui/core'
+import { Icons } from '@chakra-ui/core/dist/theme/icons'
+import { ComboboxOption, ComboboxOptionText } from '@reach/combobox'
+import FormControl from '../../controls/FormControl'
+import { useForm } from '../../../../hooks/useForm'
+import VariantsControl from '../../controls/VariantsControl'
+import SizeControl from '../../controls/SizeControl'
+import usePropsSelector from '../../../../hooks/usePropsSelector'
+import SwitchControl from '../../controls/SwitchControl'
 
 const IconButtonPanel = () => {
-  const { setValueFromEvent } = useForm();
+  const { setValueFromEvent } = useForm()
 
-  const name = usePropsSelector("name");
-  const size = usePropsSelector("size");
-  const variant = usePropsSelector("variant");
+  const name = usePropsSelector('name')
+  const size = usePropsSelector('size')
+  const variant = usePropsSelector('variant')
 
   return (
     <>
@@ -29,8 +29,8 @@ const IconButtonPanel = () => {
         >
           {Object.keys(theme.icons)
             .filter(icon => icon.includes(name) || !name)
-            .map(icon => (
-              <ComboboxOption value={icon}>
+            .map((icon, index) => (
+              <ComboboxOption key={index} value={icon}>
                 <Icon name={icon as Icons} /> <ComboboxOptionText />
               </ComboboxOption>
             ))}
@@ -47,7 +47,7 @@ const IconButtonPanel = () => {
 
       <VariantsControl label="Variant" name="variant" value={variant} />
     </>
-  );
-};
+  )
+}
 
-export default memo(IconButtonPanel);
+export default memo(IconButtonPanel)

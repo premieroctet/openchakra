@@ -18,7 +18,7 @@ const WithChildrenPreviewContainer: React.FC<{
     type,
     { ...props, pos: 'relative', ref: drop(ref) },
     component.children.map((key: string) => (
-      <ComponentPreview componentName={key} />
+      <ComponentPreview key={key} componentName={key} />
     )),
   )
 }

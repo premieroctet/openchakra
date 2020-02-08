@@ -22,6 +22,7 @@ import InputGroupPreview from './previews/InputGroupPreview'
 import InputLeftAddonPreview from './previews/InputLeftAddonPreview'
 import InputRightAddonPreview from './previews/InputRightAddonPreview'
 import { getComponentBy } from '../../core/selectors/components'
+import WithBoxRefSimplePreviewContainer from './WithRefSimplePreviewContainer'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -49,7 +50,6 @@ const ComponentPreview: React.FC<{
     case 'Heading':
     case 'Tag':
     case 'Switch':
-    case 'AlertIcon':
     case 'FormLabel':
     case 'FormHelperText':
     case 'FormErrorMessage':
@@ -62,13 +62,21 @@ const ComponentPreview: React.FC<{
       return (
         <SimplePreviewContainer component={component} type={Chakra[type]} />
       )
+    // Wrapped functional components
+    case 'AlertIcon':
+    case 'AccordionIcon':
+      return (
+        <WithBoxRefSimplePreviewContainer
+          component={component}
+          type={Chakra[type]}
+        />
+      )
     // Components with childrens
     case 'Box':
     case 'SimpleGrid':
     case 'Flex':
     case 'AccordionPanel':
     case 'AccordionItem':
-    case 'AccordionIcon':
     case 'FormControl':
     case 'Tabs':
     case 'TabList':

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useInteractive } from '../../../hooks/useInteractive'
 import { useDropComponent } from '../../../hooks/useDropComponent'
-import { Box, Accordion, AccordionHeader } from '@chakra-ui/core'
+import { Box, Accordion, AccordionHeader, AccordionIcon } from '@chakra-ui/core'
 import ComponentPreview from '../ComponentPreview'
 
 const acceptedTypes = [
@@ -25,7 +25,7 @@ const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
     <Box ref={drop(ref)} {...boxProps}>
       <Accordion {...props}>
         {component.children.map((key: string) => (
-          <ComponentPreview componentName={key} />
+          <ComponentPreview key={key} componentName={key} />
         ))}
       </Accordion>
     </Box>
@@ -43,7 +43,7 @@ export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
   return (
     <AccordionHeader ref={drop(ref)} {...props}>
       {component.children.map((key: string) => (
-        <ComponentPreview componentName={key} />
+        <ComponentPreview key={key} componentName={key} />
       ))}
     </AccordionHeader>
   )

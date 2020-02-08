@@ -23,7 +23,7 @@ const AlertPreview: React.FC<IPreviewProps> = ({ component }) => {
     <Box ref={drop(ref)} {...boxProps}>
       <Alert {...props}>
         {component.children.map((key: string) => (
-          <ComponentPreview componentName={key} />
+          <ComponentPreview key={key} componentName={key} />
         ))}
       </Alert>
     </Box>
