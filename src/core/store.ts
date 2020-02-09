@@ -30,9 +30,10 @@ const persistPlugin = {
   },
 }
 
-export const store = init({
+export const storeConfig = {
   models,
   redux: {
+    // @ts-ignore
     combineReducers: reducers => {
       return combineReducers({
         ...reducers,
@@ -47,4 +48,7 @@ export const store = init({
     },
   },
   plugins: [persistPlugin],
-})
+}
+
+// @ts-ignore
+export const store = init(storeConfig)

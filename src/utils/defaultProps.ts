@@ -212,7 +212,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     spacingY: 1,
   },
   Switch: Switch.defaultProps,
-  CircularProgress: CircularProgress.defaultProps,
   Checkbox: {
     ...Checkbox.defaultProps,
     children: 'Lorem Ipsum',

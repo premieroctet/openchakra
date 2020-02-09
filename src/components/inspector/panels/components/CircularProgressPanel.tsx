@@ -1,32 +1,33 @@
-import React, { memo } from "react";
+import React, { memo } from 'react'
 import {
   Input,
   Slider,
   SliderTrack,
   SliderFilledTrack,
-  SliderThumb
-} from "@chakra-ui/core";
-import FormControl from "../../controls/FormControl";
-import { useForm } from "../../../../hooks/useForm";
-import ColorsControl from "../../controls/ColorsControl";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
-import SwitchControl from "../../controls/SwitchControl";
+  SliderThumb,
+} from '@chakra-ui/core'
+import FormControl from '../../controls/FormControl'
+import { useForm } from '../../../../hooks/useForm'
+import ColorsControl from '../../controls/ColorsControl'
+import usePropsSelector from '../../../../hooks/usePropsSelector'
+import SwitchControl from '../../controls/SwitchControl'
 
 const CircularProgressPanel = () => {
-  const { setValueFromEvent, setValue } = useForm();
+  const { setValueFromEvent, setValue } = useForm()
 
-  const size = usePropsSelector("size");
-  const thickness = usePropsSelector("thickness");
+  const value = usePropsSelector('value')
+  const size = usePropsSelector('size')
+  const thickness = usePropsSelector('thickness')
 
   return (
     <>
       <FormControl label="Value">
         <Slider
-          onChange={value => setValue("value", value)}
+          onChange={value => setValue('value', value)}
           min={0}
           max={100}
           step={1}
-          defaultValue={100}
+          value={value || 100}
         >
           <SliderTrack />
           <SliderFilledTrack />
@@ -37,7 +38,7 @@ const CircularProgressPanel = () => {
       <FormControl label="Size">
         <Input
           size="sm"
-          value={size || "50px"}
+          value={size || '50px'}
           type="text"
           name="size"
           onChange={setValueFromEvent}
@@ -46,7 +47,7 @@ const CircularProgressPanel = () => {
 
       <FormControl label="Thickness">
         <Slider
-          onChange={value => setValue("thickness", value)}
+          onChange={value => setValue('thickness', value)}
           min={0.1}
           max={1}
           step={0.1}
@@ -62,7 +63,7 @@ const CircularProgressPanel = () => {
 
       <SwitchControl label="Loading" name="isIndeterminate" />
     </>
-  );
-};
+  )
+}
 
-export default memo(CircularProgressPanel);
+export default memo(CircularProgressPanel)

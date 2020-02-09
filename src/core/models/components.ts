@@ -186,9 +186,10 @@ const components = createModel({
         parentName: string
         type: ComponentType
         rootParentType?: ComponentType
+        testId?: string
       },
     ): ComponentsState {
-      const id = generateId()
+      const id = payload.testId || generateId()
 
       return {
         ...state,
