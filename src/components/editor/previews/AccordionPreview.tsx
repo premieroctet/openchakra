@@ -1,7 +1,7 @@
 import React from 'react'
 import { useInteractive } from '../../../hooks/useInteractive'
 import { useDropComponent } from '../../../hooks/useDropComponent'
-import { Box, Accordion, AccordionHeader, AccordionIcon } from '@chakra-ui/core'
+import { Box, Accordion, AccordionHeader } from '@chakra-ui/core'
 import ComponentPreview from '../ComponentPreview'
 
 const acceptedTypes = [

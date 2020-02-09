@@ -216,7 +216,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Checkbox: {
     ...Checkbox.defaultProps,
     children: 'Lorem Ipsum',
-    isChecked: true,
+    isReadOnly: true,
   },
   AvatarBadge: {
     ...AvatarBadge.defaultProps,
