@@ -93,7 +93,7 @@ class ButtonSwitch extends React.Component {
   };
 
   render() {
-    const {classes, isOption, label} = this.props;
+    const {classes, isOption, isPrice, label} = this.props;
 
     return(
       <Grid className={classes.contentFiltre}>
@@ -106,42 +106,45 @@ class ButtonSwitch extends React.Component {
           />
         {label === undefined ? "label introuvable" : label}
         </Grid>
-        <Grid className={classes.responsiveIOSswitchContent}>
-          {this.state.stateButton === true ?
-            <Grid style={{display:'flex'}}>
-              <CssTextField
-                value={this.state.value}
-                label={`Prix`}
-                type="number"
-                className={classes.textField}
-                disabled={!this.state.stateButton}
-                InputProps={{
-                  inputProps: {
-                    min: 0
-                  },
-                  endAdornment: <InputAdornment position="start">€</InputAdornment>,
-                }}
-              />
-              { isOption ?
-                <Select
-                  style={{
-                    width: '100px',
-                    fontSize: '0.8rem'
-                  }}
-                  disabled={!this.state.stateButton}
-                  margin="none"
-                  onChange={this.handleChangeText}
+        { isPrice ?
+          <Grid className={classes.responsiveIOSswitchContent}>
+            {this.state.stateButton === true ?
+              <Grid style={{display:'flex'}}>
+                <CssTextField
                   value={this.state.value}
-                >
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select> : null
-              }
-            </Grid>
-            :null
+                  label={`Prix`}
+                  type="number"
+                  className={classes.textField}
+                  disabled={!this.state.stateButton}
+                  InputProps={{
+                    inputProps: {
+                      min: 0
+                    },
+                    endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                  }}
+                />
+                { isOption ?
+                  <Select
+                    style={{
+                      width: '100px',
+                      fontSize: '0.8rem'
+                    }}
+                    disabled={!this.state.stateButton}
+                    margin="none"
+                    onChange={this.handleChangeText}
+                    value={this.state.value}
+                  >
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                  </Select> : null
+                }
+              </Grid>
+              :null
             }
-        </Grid>
+          </Grid> : null
+        }
+
       </Grid>
     )
   }

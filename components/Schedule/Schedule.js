@@ -214,7 +214,7 @@ class Schedule extends React.Component {
     }
     else {
       this.setState({servicesSelected: e.target.value });
-    } 
+    }
   };
 
   toggleAddModal =  ({ start, end })  => {

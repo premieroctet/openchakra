@@ -11,12 +11,18 @@ import SelectService from '../../components/CreaShop/SelectService/SelectService
 import SelectPrestation from '../../components/CreaShop/SelectPrestation/SelectPrestation';
 import SettingService from '../../components/CreaShop/SettingService/SettingService';
 import BookingPreference from '../../components/CreaShop/BookingPreference/BookingPreference';
+import AssetsService from '../../components/CreaShop/AssetsService/AssetsService';
+import Schedule from '../../components/Schedule/Schedule';
+import BookingConditions from '../../components/CreaShop/BookingConditions/BookingConditions';
+import SettingShop from '../../components/CreaShop/SettingShop/SettingShop';
+import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
 
 class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 0
+      activeStep: 0,
+      availabilities: [],
     }
   }
 
@@ -27,6 +33,10 @@ class creaShop extends React.Component {
   getPreviousStep = (step) =>{
     this.setState({activeStep: step - 1})
   };
+
+  availabilityCreated(avail) {
+    this.setState({availabilities: [avail, ...this.state.availabilities]});
+  }
 
   renderSwitch(param) {
     switch(param) {
@@ -39,7 +49,20 @@ class creaShop extends React.Component {
       case 3 :
         return <SettingService/>;
       case 4 :
-        return <BookingPreference/>
+        return <BookingPreference/>;
+      case 5 :
+        return <AssetsService/>;
+      case 6 :
+        return <Schedule availabilities={this.state.availabilities}
+                         services={[]}
+                         cbAvailabilityCreated={this.availabilityCreated}
+        />;
+      case 7 :
+        return <BookingConditions/>;
+      case 8 :
+        return <SettingShop/>;
+      case 9 :
+        return <IntroduceYou/>;
     }
   }
 
