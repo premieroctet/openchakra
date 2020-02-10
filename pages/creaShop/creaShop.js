@@ -10,6 +10,7 @@ import NavigationBarForm from '../../components/CreaShop/NavigationBarForm/Navig
 import SelectService from '../../components/CreaShop/SelectService/SelectService';
 import SelectPrestation from '../../components/CreaShop/SelectPrestation/SelectPrestation';
 import SettingService from '../../components/CreaShop/SettingService/SettingService';
+import BookingPreference from '../../components/CreaShop/BookingPreference/BookingPreference';
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -37,6 +38,8 @@ class creaShop extends React.Component {
         return <SelectPrestation/>;
       case 3 :
         return <SettingService/>;
+      case 4 :
+        return <BookingPreference/>
     }
   }
 
