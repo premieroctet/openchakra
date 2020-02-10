@@ -81,6 +81,7 @@ import {
   Flex,
   GridProps,
   Grid,
+  NumberInput,
 } from '@chakra-ui/core'
 import FormLabel, { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -279,4 +280,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   Stack: { ...Stack.defaultProps },
   Flex: { ...Flex.defaultProps, display: 'flex' },
+  NumberInput: {
+    ...NumberInput.defaultProps,
+  },
 }

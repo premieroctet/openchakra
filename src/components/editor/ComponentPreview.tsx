@@ -62,6 +62,7 @@ const ComponentPreview: React.FC<{
     case 'Input':
     case 'Radio':
     case 'ListItem':
+    case 'NumberInput':
       return (
         <SimplePreviewContainer component={component} type={Chakra[type]} />
       )
