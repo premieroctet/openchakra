@@ -1,7 +1,9 @@
 import * as LZString from 'lz-string'
 
 export const createShareUrl = (components: IComponents) =>
-  `${document.location.host}/?share=${LZString.compressToEncodedURIComponent(
+  `${document.location.protocol}//${
+    document.location.host
+  }/?share=${LZString.compressToEncodedURIComponent(
     JSON.stringify(components),
   )}`
 

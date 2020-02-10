@@ -5,17 +5,20 @@ import { ThemeProvider, CSSReset, theme } from '@chakra-ui/core'
 import { Provider } from 'react-redux'
 
 import { store } from './core/store'
-import { ErrorBoundary } from './utils/bugsnag'
+import { ErrorBoundary as BugsnagErrorBoundary } from './utils/bugsnag'
+import AppErrorBoundary from './components/errorBoundaries/AppErrorBoundary'
 
 ReactDOM.render(
-  <ErrorBoundary>
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <CSSReset />
-        <App />
-      </ThemeProvider>
-    </Provider>
-  </ErrorBoundary>,
+  <BugsnagErrorBoundary>
+    <ThemeProvider theme={theme}>
+      <AppErrorBoundary>
+        <Provider store={store}>
+          <CSSReset />
+          <App />
+        </Provider>
+      </AppErrorBoundary>
+    </ThemeProvider>
+  </BugsnagErrorBoundary>,
 
   document.getElementById('root'),
 )
