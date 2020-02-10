@@ -78,7 +78,7 @@ class ButtonSwitch extends React.Component {
     super(props);
     this.state = {
       stateButton: false,
-      value: ""
+      value: "",
     };
     this.handleOnchange = this.handleOnchange.bind(this);
     this.handleChangeText = this.handleChangeText.bind(this);
@@ -93,7 +93,7 @@ class ButtonSwitch extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
+    const {classes, isOption, label} = this.props;
 
     return(
       <Grid className={classes.contentFiltre}>
@@ -104,7 +104,7 @@ class ButtonSwitch extends React.Component {
             checked={this.state.stateButton}
             onChange={this.handleOnchange}
           />
-        Label
+        {label === undefined ? "label introuvable" : label}
         </Grid>
         <Grid className={classes.responsiveIOSswitchContent}>
           {this.state.stateButton === true ?
@@ -122,17 +122,22 @@ class ButtonSwitch extends React.Component {
                   endAdornment: <InputAdornment position="start">€</InputAdornment>,
                 }}
               />
-              <Select
-                style={{width: '100px', fontSize: '0.8rem'}}
-                disabled={!this.state.stateButton}
-                margin="none"
-                onChange={this.handleChangeText}
-                value={this.state.value}
-              >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
+              { isOption ?
+                <Select
+                  style={{
+                    width: '100px',
+                    fontSize: '0.8rem'
+                  }}
+                  disabled={!this.state.stateButton}
+                  margin="none"
+                  onChange={this.handleChangeText}
+                  value={this.state.value}
+                >
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select> : null
+              }
             </Grid>
             :null
             }
