@@ -88,6 +88,7 @@ const ComponentPreview: React.FC<{
     case 'List':
     case 'TabList':
     case 'TabPanels':
+    case 'Grid':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -128,6 +129,7 @@ const ComponentPreview: React.FC<{
       return <InputLeftAddonPreview component={component} />
     case 'InputRightAddon':
       return <InputRightAddonPreview component={component} />
+
     default:
       return null
   }
