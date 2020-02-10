@@ -98,6 +98,14 @@ const ComponentPreview: React.FC<{
     case 'FormControl':
     case 'Tabs':
     case 'List':
+      return (
+        <WithChildrenPreviewContainer
+          enableVisualHelper
+          component={component}
+          type={Chakra[type]}
+        />
+      )
+    // Components with childrens
     case 'TabList':
     case 'TabPanels':
     case 'InputLeftElement':
