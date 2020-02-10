@@ -49,6 +49,21 @@ export const buildBreadcrumb = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildSlider = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+  const nodeId = composer.addNode({ type: 'Slider' })
+  composer.addNode({ type: 'SliderTrack', parent: nodeId })
+  composer.addNode({ type: 'SliderFilledTrack', parent: nodeId })
+  composer.addNode({ type: 'SliderThumb', parent: nodeId })
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildFormControl = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
@@ -147,6 +162,7 @@ const builders: ComposerBuilders = {
   ListMeta: buildList,
   InputGroupMeta: buildInputGroup,
   BreadcrumbMeta: buildBreadcrumb,
+  SliderMeta: buildSlider,
 }
 
 export default builders

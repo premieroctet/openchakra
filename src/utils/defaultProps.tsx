@@ -41,6 +41,19 @@ import {
   RadioGroupProps,
   InputGroupProps,
   GridProps,
+  List,
+  ListIcon,
+  ListItem,
+  NumberInput,
+  AspectRatioBox,
+  Slider,
+  SliderProps,
+  Accordion,
+  AccordionItem,
+  InputLeftAddon,
+  InputRightAddon,
+  Stack,
+  Flex,
 } from '@chakra-ui/core'
 import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -108,6 +121,18 @@ type PreviewDefaultProps = {
   List?: any
   ListIcon?: IconProps
   ListItem?: any
+  Slider?: SliderProps
+  SliderTrack?: any
+  SliderFilledTrack?: any
+  SliderThumb?: Omit<any, 'children'>
+  // meta components
+  AlertMeta?: any
+  InputGroupMeta?: any
+  FormControlMeta?: any
+  AccordionMeta?: any
+  ListMeta?: any
+  BreadcrumbMeta?: any
+  SliderMeta?: any
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -259,9 +284,30 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
       </>
     ),
   },
-  List: { styleType: 'none' },
-  Stack: { display: 'flex', spacing: 2 },
-  Flex: { display: 'flex' },
+  Slider: { ...Slider.defaultProps },
+  List: { ...List.defaultProps, styleType: 'none' },
+  ListIcon: { ...ListIcon.defaultProps },
+  ListItem: { ...ListItem.defaultProps, children: 'list' },
+  Accordion: {
+    ...Accordion.defaultProps,
+  },
+  AccordionItem: {
+    ...AccordionItem.defaultProps,
+    defaultIsOpen: true,
+  },
+  InputLeftAddon: { ...InputLeftAddon.defaultProps, children: 'left' },
+  InputRightAddon: {
+    ...InputRightAddon.defaultProps,
+    children: 'right',
+  },
+  Stack: { ...Stack.defaultProps, display: 'flex', spacing: 2 },
+  Flex: { ...Flex.defaultProps, display: 'flex' },
+  NumberInput: {
+    ...NumberInput.defaultProps,
+  },
+  AspectRatioBox: {
+    ...AspectRatioBox.defaultProps,
+  },
   Breadcrumb: {
     separator: '/',
     addSeparator: true,
