@@ -62,6 +62,7 @@ const ComponentPreview: React.FC<{
     case 'SliderTrack':
     case 'SliderFilledTrack':
     case 'SliderThumb':
+    case 'NumberInput':
       return (
         <PreviewContainer
           component={component}
