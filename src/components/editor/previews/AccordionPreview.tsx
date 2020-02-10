@@ -11,7 +11,7 @@ import {
 import ComponentPreview from '../ComponentPreview'
 import { COMPONENTS } from '../../../utils/editor'
 
-const acceptedTypes = ['AccordionItem'] as ComponentType[]
+const acceptedTypes: ComponentType[] = ['AccordionItem']
 const acceptedItemTypes = [
   'AccordionHeader',
   'AccordionPanel',
