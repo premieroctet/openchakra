@@ -16,7 +16,6 @@ import {
   Tag,
   SimpleGrid,
   Switch,
-  CircularProgress,
   Checkbox,
   AvatarBadge,
   AvatarGroup,
@@ -266,6 +265,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     ...InputRightAddon.defaultProps,
     children: 'right',
   },
-  Stack: { ...Stack.defaultProps, display: 'flex' },
+  Stack: { ...Stack.defaultProps },
   Flex: { ...Flex.defaultProps, display: 'flex' },
 }

@@ -1,31 +1,31 @@
-import React, { memo } from "react";
-import { IconButton, ButtonGroup } from "@chakra-ui/core";
-import ColorsControl from "../../controls/ColorsControl";
-import { GoBold, GoItalic } from "react-icons/go";
+import React, { memo } from 'react'
+import { IconButton, ButtonGroup, useTheme } from '@chakra-ui/core'
+import ColorsControl from '../../controls/ColorsControl'
+import { GoBold, GoItalic } from 'react-icons/go'
 import {
   MdFormatAlignLeft,
   MdFormatAlignRight,
   MdFormatAlignCenter,
-  MdFormatAlignJustify
-} from "react-icons/md";
-import FormControl from "../../controls/FormControl";
-import { ComboboxOption } from "@reach/combobox";
-import InputSuggestion from "../../inputs/InputSuggestion";
-import theme from "../../../../theme/theme";
-import { useForm } from "../../../../hooks/useForm";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
+  MdFormatAlignJustify,
+} from 'react-icons/md'
+import FormControl from '../../controls/FormControl'
+import { ComboboxOption } from '@reach/combobox'
+import InputSuggestion from '../../inputs/InputSuggestion'
+import { useForm } from '../../../../hooks/useForm'
+import usePropsSelector from '../../../../hooks/usePropsSelector'
 
-import "@reach/combobox/styles.css";
+import '@reach/combobox/styles.css'
 
 const TextPanel = () => {
-  const { setValue, setValueFromEvent } = useForm();
+  const { setValue, setValueFromEvent } = useForm()
+  const theme = useTheme()
 
-  const fontWeight = usePropsSelector("fontWeight");
-  const fontStyle = usePropsSelector("fontStyle");
-  const textAlign = usePropsSelector("textAlign");
-  const fontSize = usePropsSelector("fontSize");
-  const letterSpacing = usePropsSelector("letterSpacing");
-  const lineHeight = usePropsSelector("lineHeight");
+  const fontWeight = usePropsSelector('fontWeight')
+  const fontStyle = usePropsSelector('fontStyle')
+  const textAlign = usePropsSelector('textAlign')
+  const fontSize = usePropsSelector('fontSize')
+  const letterSpacing = usePropsSelector('letterSpacing')
+  const lineHeight = usePropsSelector('lineHeight')
 
   return (
     <>
@@ -35,11 +35,11 @@ const TextPanel = () => {
           aria-label="bold"
           icon={GoBold}
           onClick={() => {
-            setValue("fontWeight", fontWeight ? null : "bold");
+            setValue('fontWeight', fontWeight ? null : 'bold')
           }}
           size="xs"
-          variantColor={fontWeight ? "whatsapp" : "gray"}
-          variant={fontWeight ? "solid" : "outline"}
+          variantColor={fontWeight ? 'whatsapp' : 'gray'}
+          variant={fontWeight ? 'solid' : 'outline'}
         >
           Bold
         </IconButton>
@@ -47,11 +47,11 @@ const TextPanel = () => {
           aria-label="italic"
           icon={GoItalic}
           onClick={() => {
-            setValue("fontStyle", fontStyle === "italic" ? null : "italic");
+            setValue('fontStyle', fontStyle === 'italic' ? null : 'italic')
           }}
           size="xs"
-          variantColor={fontStyle === "italic" ? "whatsapp" : "gray"}
-          variant={fontStyle === "italic" ? "solid" : "outline"}
+          variantColor={fontStyle === 'italic' ? 'whatsapp' : 'gray'}
+          variant={fontStyle === 'italic' ? 'solid' : 'outline'}
         >
           Italic
         </IconButton>
@@ -63,40 +63,40 @@ const TextPanel = () => {
             aria-label="bold"
             icon={MdFormatAlignLeft}
             onClick={() => {
-              setValue("textAlign", "left");
+              setValue('textAlign', 'left')
             }}
-            variantColor={textAlign === "left" ? "whatsapp" : "gray"}
-            variant={textAlign === "left" ? "solid" : "outline"}
+            variantColor={textAlign === 'left' ? 'whatsapp' : 'gray'}
+            variant={textAlign === 'left' ? 'solid' : 'outline'}
           />
 
           <IconButton
             aria-label="italic"
             icon={MdFormatAlignCenter}
             onClick={() => {
-              setValue("textAlign", "center");
+              setValue('textAlign', 'center')
             }}
-            variantColor={textAlign === "center" ? "whatsapp" : "gray"}
-            variant={textAlign === "center" ? "solid" : "outline"}
+            variantColor={textAlign === 'center' ? 'whatsapp' : 'gray'}
+            variant={textAlign === 'center' ? 'solid' : 'outline'}
           />
 
           <IconButton
             aria-label="italic"
             icon={MdFormatAlignRight}
             onClick={() => {
-              setValue("textAlign", "right");
+              setValue('textAlign', 'right')
             }}
-            variantColor={textAlign === "right" ? "whatsapp" : "gray"}
-            variant={textAlign === "right" ? "solid" : "outline"}
+            variantColor={textAlign === 'right' ? 'whatsapp' : 'gray'}
+            variant={textAlign === 'right' ? 'solid' : 'outline'}
           />
 
           <IconButton
             aria-label="italic"
             icon={MdFormatAlignJustify}
             onClick={() => {
-              setValue("textAlign", "justify");
+              setValue('textAlign', 'justify')
             }}
-            variantColor={textAlign === "justify" ? "whatsapp" : "gray"}
-            variant={textAlign === "justify" ? "solid" : "outline"}
+            variantColor={textAlign === 'justify' ? 'whatsapp' : 'gray'}
+            variant={textAlign === 'justify' ? 'solid' : 'outline'}
           />
         </ButtonGroup>
       </FormControl>
@@ -139,7 +139,7 @@ const TextPanel = () => {
         </InputSuggestion>
       </FormControl>
     </>
-  );
-};
+  )
+}
 
-export default memo(TextPanel);
+export default memo(TextPanel)

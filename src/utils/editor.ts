@@ -52,6 +52,8 @@ export const COMPONENTS: ComponentType[] = [
   'AccordionHeader',
   'AccordionPanel',
   'AccordionIcon',
+  'InputRightElement',
+  'InputLeftElement',
 ]
 
 export const rootComponents = COMPONENTS
