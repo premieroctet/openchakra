@@ -55,6 +55,12 @@ export const COMPONENTS: ComponentType[] = [
   'AccordionIcon',
   'InputRightElement',
   'InputLeftElement',
+  // Allow meta components
+  'AlertMeta',
+  'FormControlMeta',
+  'AccordionMeta',
+  'ListMeta',
+  'InputGroupMeta',
 ]
 
 export const rootComponents = COMPONENTS
@@ -66,17 +72,8 @@ export const rootComponents = COMPONENTS
         'AlertDescription',
         'AlertTitle',
         'AvatarBadge',
-        'AccordionItem',
         'AccordionHeader',
         'AccordionPanel',
         'AccordionIcon',
       ].includes(name),
   )
-  // Allow meta components
-  .concat([
-    'AlertMeta',
-    'FormControlMeta',
-    'AccordionMeta',
-    'ListMeta',
-    'InputGroupMeta',
-  ])

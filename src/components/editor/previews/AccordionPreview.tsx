@@ -1,15 +1,18 @@
 import React from 'react'
 import { useInteractive } from '../../../hooks/useInteractive'
 import { useDropComponent } from '../../../hooks/useDropComponent'
-import { Box, Accordion, AccordionHeader } from '@chakra-ui/core'
+import {
+  Box,
+  Accordion,
+  AccordionHeader,
+  AccordionItem,
+  AccordionPanel,
+} from '@chakra-ui/core'
 import ComponentPreview from '../ComponentPreview'
+import { COMPONENTS } from '../../../utils/editor'
 
-const acceptedTypes = [
-  'AccordionItem',
-  'AccordionHeader',
-  'AccordionPanel',
-  'AccordionIcon',
-] as ComponentType[]
+const acceptedTypes: ComponentType[] = ['AccordionItem']
+const acceptedItemTypes: ComponentType[] = ['AccordionHeader', 'AccordionPanel']
 
 const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
   const { props, ref } = useInteractive(component, true)
@@ -34,7 +37,7 @@ const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
 
 export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
   const { props, ref } = useInteractive(component, true)
-  const { drop, isOver } = useDropComponent(component.id)
+  const { drop, isOver } = useDropComponent(component.id, COMPONENTS)
 
   if (isOver) {
     props.bg = 'teal.50'
@@ -46,6 +49,48 @@ export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
         <ComponentPreview key={key} componentName={key} />
       ))}
     </AccordionHeader>
+  )
+}
+
+export const AccordionItemPreview = ({ component }: IPreviewProps) => {
+  const { props, ref } = useInteractive(component, true)
+  const { drop, isOver } = useDropComponent(component.id, acceptedItemTypes)
+
+  let boxProps: any = {}
+
+  if (isOver) {
+    props.bg = 'teal.50'
+  }
+
+  return (
+    <Box ref={drop(ref)} {...boxProps}>
+      <AccordionItem {...props}>
+        {component.children.map((key: string) => (
+          <ComponentPreview key={key} componentName={key} />
+        ))}
+      </AccordionItem>
+    </Box>
+  )
+}
+
+export const AccordionPanelPreview = ({ component }: IPreviewProps) => {
+  const { props, ref } = useInteractive(component, true)
+  const { drop, isOver } = useDropComponent(component.id, COMPONENTS)
+
+  let boxProps: any = {}
+
+  if (isOver) {
+    props.bg = 'teal.50'
+  }
+
+  return (
+    <Box ref={drop(ref)} {...boxProps}>
+      <AccordionPanel {...props}>
+        {component.children.map((key: string) => (
+          <ComponentPreview key={key} componentName={key} />
+        ))}
+      </AccordionPanel>
+    </Box>
   )
 }
 
