@@ -22,11 +22,16 @@ import InputGroupPreview from './previews/InputGroupPreview'
 import InputLeftAddonPreview from './previews/InputLeftAddonPreview'
 import InputRightAddonPreview from './previews/InputRightAddonPreview'
 import { getComponentBy } from '../../core/selectors/components'
+import WithBoxRefSimplePreviewContainer from './WithRefSimplePreviewContainer'
 
 const ComponentPreview: React.FC<{
   componentName: string
 }> = ({ componentName }) => {
   const component = useSelector(getComponentBy(componentName))
+  if (!component) {
+    console.error(`ComponentPreview unavailable for component ${componentName}`)
+  }
+
   const type = (component && component.type) || null
 
   switch (type) {
@@ -37,19 +42,14 @@ const ComponentPreview: React.FC<{
     case 'IconButton':
     case 'Image':
     case 'Text':
-    case 'Progress':
     case 'Link':
     case 'Spinner':
-    case 'CloseButton':
     case 'Checkbox':
     case 'Divider':
-    case 'Code':
     case 'Textarea':
     case 'CircularProgress':
     case 'Heading':
-    case 'Tag':
     case 'Switch':
-    case 'AlertIcon':
     case 'FormLabel':
     case 'FormHelperText':
     case 'FormErrorMessage':
@@ -58,9 +58,22 @@ const ComponentPreview: React.FC<{
     case 'Input':
     case 'Radio':
     case 'ListItem':
-    case 'ListIcon':
       return (
         <SimplePreviewContainer component={component} type={Chakra[type]} />
+      )
+    // Wrapped functional components
+    case 'AlertIcon':
+    case 'Progress':
+    case 'CloseButton':
+    case 'AccordionIcon':
+    case 'Code':
+    case 'ListIcon':
+    case 'Tag':
+      return (
+        <WithBoxRefSimplePreviewContainer
+          component={component}
+          type={Chakra[type]}
+        />
       )
     // Components with childrens
     case 'Box':
@@ -68,7 +81,6 @@ const ComponentPreview: React.FC<{
     case 'Flex':
     case 'AccordionPanel':
     case 'AccordionItem':
-    case 'AccordionIcon':
     case 'FormControl':
     case 'Tabs':
     case 'TabList':

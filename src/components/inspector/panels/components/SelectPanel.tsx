@@ -40,8 +40,8 @@ const SelectPanel = () => {
         >
           {Object.keys(theme.icons)
             .filter(icon => icon.includes(icon) || !icon)
-            .map(icon => (
-              <ComboboxOption value={icon}>
+            .map((icon, index) => (
+              <ComboboxOption key={index} value={icon}>
                 <Icon name={icon as Icons} /> <ComboboxOptionText />
               </ComboboxOption>
             ))}

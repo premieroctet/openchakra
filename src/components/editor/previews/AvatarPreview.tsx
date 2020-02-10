@@ -34,7 +34,7 @@ const AvatarPreview: React.FC<IPreviewProps & {
     <Box ref={drop(ref)} {...boxProps}>
       <Avatar ml={index === 0 ? 0 : spacing} {...props}>
         {component.children.map((key: string) => (
-          <ComponentPreview componentName={key} />
+          <ComponentPreview key={key} componentName={key} />
         ))}
       </Avatar>
     </Box>
@@ -56,6 +56,7 @@ export const AvatarGroupPreview = ({ component }: IPreviewProps) => {
       <AvatarGroup {...props}>
         {component.children.map((key: string, i: number) => (
           <AvatarPreview
+            key={key}
             index={i + 1}
             spacing={props.spacing}
             component={components[key]}

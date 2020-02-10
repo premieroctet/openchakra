@@ -15,16 +15,19 @@ const ChildrenList: React.FC<Props> = ({
 }) => {
   return (
     <Box mx={2} h="100%">
-      {childrenList.map((child, index) => (
-        <ChildElement
-          key={child.id}
-          type={child.type}
-          index={index}
-          moveItem={moveItem}
-          id={child.id}
-          onSelect={onSelect}
-        />
-      ))}
+      {childrenList.map(
+        (child, index) =>
+          child && (
+            <ChildElement
+              key={child.id}
+              type={child.type}
+              index={index}
+              moveItem={moveItem}
+              id={child.id}
+              onSelect={onSelect}
+            />
+          ),
+      )}
     </Box>
   )
 }

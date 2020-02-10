@@ -84,7 +84,6 @@ const Header = () => {
                 Builder mode
               </FormLabel>
               <Switch
-                defaultIsChecked={showLayout}
                 isChecked={showLayout}
                 color="teal"
                 size="sm"
@@ -98,7 +97,6 @@ const Header = () => {
                 Code panel
               </FormLabel>
               <Switch
-                defaultIsChecked={showCode}
                 isChecked={showCode}
                 id="code"
                 color="teal"

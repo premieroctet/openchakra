@@ -2,6 +2,7 @@ import { createModel } from '@rematch/core'
 import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import omit from 'lodash/omit'
 import { airbnbCard } from '../../theme/demo'
+import { generateId } from './app'
 
 type ComponentsState = {
   components: IComponents
@@ -97,10 +98,11 @@ const components = createModel({
         id: IComponent['id'],
       ) => {
         children.forEach(child => {
-          deleteRecursive(
-            updatedComponents[child].children,
-            updatedComponents[child].id,
-          )
+          updatedComponents[child] &&
+            deleteRecursive(
+              updatedComponents[child].children,
+              updatedComponents[child].id,
+            )
         })
 
         updatedComponents = omit(updatedComponents, id)
@@ -184,9 +186,10 @@ const components = createModel({
         parentName: string
         type: ComponentType
         rootParentType?: ComponentType
+        testId?: string
       },
     ): ComponentsState {
-      const id = `comp-${Math.round(new Date().getTime() / 1000)}`
+      const id = payload.testId || generateId()
 
       return {
         ...state,
