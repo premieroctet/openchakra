@@ -16,7 +16,6 @@ import {
   Tag,
   SimpleGrid,
   Switch,
-  CircularProgress,
   Checkbox,
   AvatarBadge,
   AvatarGroup,

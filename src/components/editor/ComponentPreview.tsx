@@ -63,7 +63,7 @@ const ComponentPreview: React.FC<{
       return (
         <SimplePreviewContainer component={component} type={Chakra[type]} />
       )
-    // Wrapped functional components
+    // Wrapped functional components (forward ref issue)
     case 'AlertIcon':
     case 'Progress':
     case 'CloseButton':
@@ -86,18 +86,11 @@ const ComponentPreview: React.FC<{
     case 'FormControl':
     case 'Tabs':
     case 'List':
-      return (
-        <WithChildrenPreviewContainer
-          enableVisualHelper
-          component={component}
-          type={Chakra[type]}
-        />
-      )
-    // Components with childrens
     case 'TabList':
     case 'TabPanels':
       return (
         <WithChildrenPreviewContainer
+          enableVisualHelper
           component={component}
           type={Chakra[type]}
         />
