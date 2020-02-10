@@ -92,6 +92,9 @@ const ComponentPreview: React.FC<{
     case 'List':
     case 'TabList':
     case 'TabPanels':
+    case 'InputLeftElement':
+    case 'InputRightElement':
+    case 'List':
     case 'Grid':
       return (
         <WithChildrenPreviewContainer
