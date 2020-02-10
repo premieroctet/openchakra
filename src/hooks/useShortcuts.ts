@@ -4,7 +4,7 @@ import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import { getSelectedComponent } from '../core/selectors/components'
 
 export const keyMap = {
-  DELETE_NODE: 'backspace',
+  DELETE_NODE: ['backspace', 'del'],
   TOGGLE_BUILDER_MODE: 'b',
   TOGGLE_CODE_PANEL: 'c',
   UNDO: ['ctrl+z', 'cmd+z'],

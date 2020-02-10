@@ -88,6 +88,7 @@ const ComponentPreview: React.FC<{
     case 'List':
     case 'TabList':
     case 'TabPanels':
+    case 'Grid':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper

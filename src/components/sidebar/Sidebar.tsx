@@ -65,6 +65,7 @@ const menuItems: MenuItems = {
       FormErrorMessage: {},
     },
   },
+  Grid: {},
   Heading: {},
   Icon: {},
   IconButton: {},

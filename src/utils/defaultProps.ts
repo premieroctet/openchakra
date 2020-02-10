@@ -79,6 +79,8 @@ import {
   InputRightAddon,
   Stack,
   Flex,
+  GridProps,
+  Grid,
 } from '@chakra-ui/core'
 import FormLabel, { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -121,6 +123,7 @@ type PreviewDefaultProps = {
   FormLabel?: FormLabelProps
   FormHelperText?: any
   FormErrorMessage?: any
+  Grid?: GridProps
   TabList?: TabListProps
   TabPanel?: TabPanelProps
   TabPanels?: TabPanelsProps
@@ -231,7 +234,11 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Avatar: Avatar.defaultProps,
   Alert: Alert.defaultProps,
   AlertIcon: AlertIcon.defaultProps,
-  AlertTitle: { ...AlertTitle.defaultProps, children: 'Lorem Ipsum', mr: 1 },
+  AlertTitle: {
+    ...AlertTitle.defaultProps,
+    children: 'Lorem Ipsum',
+    mr: 1,
+  },
   AlertDescription: {
     ...AlertDescription.defaultProps,
     children: 'Lorem Ipsum',
@@ -246,6 +253,9 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   FormErrorMessage: {
     ...FormErrorMessage.defaultProps,
     children: 'Error message',
+  },
+  Grid: {
+    ...Grid.defaultProps,
   },
   Radio: { ...Radio.defaultProps, children: 'Radio' },
   RadioGroup: { ...RadioGroup.defaultProps },

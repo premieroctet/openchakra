@@ -69,6 +69,7 @@ type ComponentType =
   | 'ListMeta'
   | 'AlertMeta'
   | 'InputGroupMeta'
+  | 'Grid'
 
 interface IComponent {
   children: string[]
