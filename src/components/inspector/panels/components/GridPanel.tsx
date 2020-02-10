@@ -1,11 +1,9 @@
 import React, { memo } from 'react'
 import TextControl from '../../controls/TextControl'
-import ColorsControl from '../../controls/ColorsControl'
 
 const GridPanel = () => {
   return (
     <>
-      <ColorsControl withFullColor label="Color" name="bg" enableHues />
       <TextControl label="Area" name="gridArea" />
       <TextControl label="Template Areas" name="gridTemplateAreas" />
       <TextControl label="Gap" name="gridGap" />
