@@ -122,7 +122,10 @@ const components = createModel({
       state: ComponentsState,
       payload: { parentId: string; componentId: string },
     ): ComponentsState {
-      if (state.components[payload.componentId].parent === payload.parentId) {
+      if (
+        state.components[payload.componentId].parent === payload.parentId ||
+        payload.parentId === payload.componentId
+      ) {
         return state
       }
 
