@@ -12,10 +12,7 @@ import ComponentPreview from '../ComponentPreview'
 import { COMPONENTS } from '../../../utils/editor'
 
 const acceptedTypes: ComponentType[] = ['AccordionItem']
-const acceptedItemTypes = [
-  'AccordionHeader',
-  'AccordionPanel',
-] as ComponentType[]
+const acceptedItemTypes: ComponentType[] = ['AccordionHeader', 'AccordionPanel']
 
 const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
   const { props, ref } = useInteractive(component, true)
