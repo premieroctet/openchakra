@@ -1,29 +1,23 @@
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 import TextControl from '../../controls/TextControl'
 import ColorsControl from '../../controls/ColorsControl'
 
 const GridPanel = () => {
-  const [propsList] = useState([
-    { name: 'gridArea' },
-    { name: 'gridTemplateAreas' },
-    { name: 'gridGap' },
-    { name: 'gridRowGap' },
-    { name: 'gridColumnGap' },
-    { name: 'gridAutoColumns' },
-    { name: 'gridColumn' },
-    { name: 'gridRow' },
-    { name: 'gridAutoFlow' },
-    { name: 'gridAutoRows' },
-    { name: 'gridTemplateRows' },
-    { name: 'gridTemplateColumns' },
-  ])
-
   return (
     <>
       <ColorsControl withFullColor label="Color" name="bg" enableHues />
-      {propsList.map((e, i) => (
-        <TextControl label={e.name} name={e.name} key={i} />
-      ))}
+      <TextControl label="Area" name="gridArea" />
+      <TextControl label="Template Areas" name="gridTemplateAreas" />
+      <TextControl label="Gap" name="gridGap" />
+      <TextControl label="Rox Gap" name="gridRowGap" />
+      <TextControl label="Column Gap" name="gridColumnGap" />
+      <TextControl label="Auto Columns" name="gridAutoColumns" />
+      <TextControl label="Column" name="gridColumn" />
+      <TextControl label="Row" name="gridRow" />
+      <TextControl label="AutoFlow" name="gridAutoFlow" />
+      <TextControl label="Auto Rows" name="gridAutoRows" />
+      <TextControl label="Template Rows" name="gridTemplateRows" />
+      <TextControl label="Template Columns" name="gridTemplateColumns" />
     </>
   )
 }

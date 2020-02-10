@@ -257,7 +257,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   Grid: {
     ...Grid.defaultProps,
-    children: 'Lorem Ipsum',
   },
   Radio: { ...Radio.defaultProps, children: 'Radio' },
   RadioGroup: { ...RadioGroup.defaultProps },
