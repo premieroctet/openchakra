@@ -1,6 +1,8 @@
+import * as LZString from 'lz-string'
+
 export const createShareUrl = (components: IComponents) =>
-  `${document.location.host}/?share=${btoa(
-    unescape(encodeURIComponent(JSON.stringify(components))),
+  `${document.location.host}/?share=${LZString.compressToEncodedURIComponent(
+    JSON.stringify(components),
   )}`
 
 export const decodeShareUrl = (): IComponents | null => {
@@ -9,7 +11,7 @@ export const decodeShareUrl = (): IComponents | null => {
     const sharedData = searchParams.get('share')
 
     if (sharedData) {
-      return JSON.parse(decodeURIComponent(escape(atob(sharedData))))
+      return JSON.parse(LZString.decompressFromEncodedURIComponent(sharedData))
     }
   } catch (e) {
     console.log(e)
