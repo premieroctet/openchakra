@@ -54,7 +54,7 @@ const components = createModel({
           ...state.components,
           [componentId]: {
             ...component,
-            props: DEFAULT_PROPS[component.type],
+            props: DEFAULT_PROPS[component.type] || {},
           },
         },
       }

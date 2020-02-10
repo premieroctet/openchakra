@@ -3,10 +3,9 @@ import { Icons } from '@chakra-ui/core/dist/theme/icons'
 
 import ColorsControl from '../../controls/ColorsControl'
 import SizeControl from '../../controls/SizeControl'
-import { Icon, Select } from '@chakra-ui/core'
+import { Icon, Select, useTheme } from '@chakra-ui/core'
 import ChildrenControl from '../../controls/ChildrenControl'
 import InputSuggestion from '../../inputs/InputSuggestion'
-import theme from '../../../../theme/theme'
 import { ComboboxOption, ComboboxOptionText } from '@reach/combobox'
 import FormControl from '../../controls/FormControl'
 import { useForm } from '../../../../hooks/useForm'
@@ -14,6 +13,7 @@ import usePropsSelector from '../../../../hooks/usePropsSelector'
 
 const ButtonPanel = () => {
   const { setValueFromEvent } = useForm()
+  const theme = useTheme()
 
   const size = usePropsSelector('size')
   const variant = usePropsSelector('variant')

@@ -83,9 +83,11 @@ export const buildInputGroup = (parent: string): ComposedComponent => {
   const composer = new Composer('Input')
 
   const nodeId = composer.addNode('InputGroup')
-  composer.addNode('InputLeftAddon', nodeId)
+  composer.addNode('InputLeftAddon', nodeId, { children: 'Email' })
   composer.addNode('Input', nodeId)
-  composer.addNode('InputRightAddon', nodeId)
+
+  const elementId = composer.addNode('InputRightElement', nodeId)
+  composer.addNode('Icon', elementId, { name: 'email' })
 
   const components = composer.getComponents()
 

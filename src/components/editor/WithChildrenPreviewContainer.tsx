@@ -6,9 +6,10 @@ import ComponentPreview from './ComponentPreview'
 const WithChildrenPreviewContainer: React.FC<{
   component: IComponent
   type: string | FunctionComponent<any> | ComponentClass<any, any>
-}> = ({ component, type }) => {
+  enableVisualHelper?: boolean
+}> = ({ component, type, enableVisualHelper = false }) => {
   const { drop, isOver } = useDropComponent(component.id)
-  const { props, ref } = useInteractive(component, true)
+  const { props, ref } = useInteractive(component, enableVisualHelper)
 
   if (isOver) {
     props.bg = 'teal.50'
