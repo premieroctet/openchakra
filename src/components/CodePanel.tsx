@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { Box, Button, useClipboard } from '@chakra-ui/core'
 import { generateCode } from '../utils/code'
@@ -8,7 +8,16 @@ import { getComponents } from '../core/selectors/components'
 
 const CodePanel = () => {
   const components = useSelector(getComponents)
-  const code = generateCode(components)
+  const [code, setCode] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    const getCode = async () => {
+      const code = await generateCode(components)
+      setCode(code)
+    }
+
+    getCode()
+  }, [components])
 
   const { onCopy, hasCopied } = useClipboard(code)
 
@@ -38,8 +47,12 @@ const CodePanel = () => {
       >
         {hasCopied ? 'copied' : 'copy'}
       </Button>
-
-      <Highlight {...defaultProps} theme={theme} code={code} language="jsx">
+      <Highlight
+        {...defaultProps}
+        theme={theme}
+        code={code || '// Formatting code… please wait ✨'}
+        language="jsx"
+      >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className} style={style}>
             {tokens.map((line, i) => (

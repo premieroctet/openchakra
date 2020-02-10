@@ -26,8 +26,8 @@ const CodeSandboxButton = () => {
 
   return (
     <Button
-      onClick={() => {
-        const code = generateCode(components)
+      onClick={async () => {
+        const code = await generateCode(components)
         const parameters = buildParameters(code)
 
         window.open(
