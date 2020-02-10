@@ -19,6 +19,7 @@ export const COMPONENTS: ComponentType[] = [
   'FormLabel',
   'FormHelperText',
   'FormErrorMessage',
+  'Grid',
   'Heading',
   'Icon',
   'IconButton',

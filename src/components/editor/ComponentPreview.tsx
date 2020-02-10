@@ -88,6 +88,7 @@ const ComponentPreview: React.FC<{
     case 'InputLeftElement':
     case 'InputRightElement':
     case 'List':
+    case 'Grid':
       return (
         <WithChildrenPreviewContainer
           component={component}
@@ -123,6 +124,7 @@ const ComponentPreview: React.FC<{
       return <InputLeftAddonPreview component={component} />
     case 'InputRightAddon':
       return <InputRightAddonPreview component={component} />
+
     default:
       return null
   }
