@@ -1,12 +1,11 @@
 export default theme => ({
-
   mainContainer:{
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
   contentContainer:{
     display: 'flex',
-    height: 700,
+    height: 'auto',
     width: '100%'
   },
   contentLeft:{
@@ -21,7 +20,7 @@ export default theme => ({
   },
   contentRight: {
     width: '40%',
-    height: '100%',
+    height: 'auto',
     display: 'block',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'right',
@@ -35,12 +34,29 @@ export default theme => ({
     width : '100%',
   },
   contentTitle:{
-    width: '100%'
+    width: '80%',
   },
   contentTextSize:{
     width : 500,
+    marginTop: 50,
     [theme.breakpoints.down('md')]: {
       width: '100%'
     },
   },
+  policySizeTitle:{
+    fontSize: 35
+  },
+  policySizeStep:{
+    fontFamily: 'Signatra',
+    fontSize: 30
+  },
+  policySizeSubtitle:{
+    fontSize: 25
+  },
+  policySizeContent:{
+    fontSize: 16
+  },
+  hrStyle:{
+    color : '#BCBCBC'
+  }
 })

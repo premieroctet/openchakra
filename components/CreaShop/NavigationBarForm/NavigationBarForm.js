@@ -40,7 +40,7 @@ class NavigationBarForm extends React.Component {
           </Grid>
           <Grid>
             <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}>
-              Suivant
+              {this.state.activeStep === 9 ? 'Envoyer' : 'Suivant'}
             </Button>
           </Grid>
         </Grid>

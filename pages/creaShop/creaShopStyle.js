@@ -6,16 +6,19 @@ export default theme => ({
   mainContainer:{
     height: '100%',
     marginLeft: 200,
-    marginRight : 200
+    marginRight : 200,
   },
   contentStepper:{
     width: '100%',
+    marginLeft:' -40px'
   },
   footerContainer:{
     height: '100%',
-    marginLeft: 200,
-    marginRight : 200,
+    width: '100%',
     marginBottom: 50,
     marginTop: 50
+  },
+  contentComponent:{
+    marginTop: 15
   }
 })
