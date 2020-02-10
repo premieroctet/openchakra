@@ -9,7 +9,7 @@ import Header from './components/Header'
 import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'
 import useShortcuts, { keyMap } from './hooks/useShortcuts'
-import ErrorBoundary from './components/ErrorBoundary'
+import EditorErrorBoundary from './components/errorBoundaries/EditorErrorBoundary'
 import { decodeShareUrl } from './utils/share'
 import useDispatch from './hooks/useDispatch'
 
@@ -40,11 +40,11 @@ const App = () => {
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />
 
-          <ErrorBoundary>
+          <EditorErrorBoundary>
             <Box bg="white" flex={1} zIndex={10} position="relative">
               <Editor />
             </Box>
-          </ErrorBoundary>
+          </EditorErrorBoundary>
 
           <Box
             maxH="calc(100vh - 3rem)"

@@ -85,12 +85,16 @@ const components = createModel({
       let updatedComponents = { ...state.components }
       let component = updatedComponents[componentId]
 
+      // Remove self
       if (component && component.parent) {
-        const children = updatedComponents[component.parent].children.filter(
-          (el: string) => el !== component.id,
+        const siblings = updatedComponents[component.parent].children.filter(
+          (el: string) => el !== componentId,
         )
 
-        updatedComponents[component.parent].children = children
+        updatedComponents[component.parent] = {
+          ...updatedComponents[component.parent],
+          children: siblings,
+        }
       }
 
       const deleteRecursive = (
@@ -99,18 +103,15 @@ const components = createModel({
       ) => {
         children.forEach(child => {
           updatedComponents[child] &&
-            deleteRecursive(
-              updatedComponents[child].children,
-              updatedComponents[child].id,
-            )
+            deleteRecursive(updatedComponents[child].children, componentId)
         })
 
         updatedComponents = omit(updatedComponents, id)
       }
 
-      deleteRecursive(component.children, component.id)
+      deleteRecursive(component.children, componentId)
 
-      updatedComponents = omit(updatedComponents, component.id)
+      updatedComponents = omit(updatedComponents, componentId)
 
       return {
         ...state,
