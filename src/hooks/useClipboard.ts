@@ -11,7 +11,7 @@ const useClipboard = () => {
         clearTimeout(timeoutRef.current)
       }
     }
-  })
+  }, [])
 
   const copy = (value: string) => {
     copyToClipboard(value)
