@@ -18,6 +18,8 @@ import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
 import { getShowLayout, getShowCode } from '../core/selectors/app'
+import { createShareUrl } from '../utils/share'
+import useClipboard from '../hooks/useClipboard'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -38,6 +40,24 @@ const CodeSandboxButton = () => {
       size="xs"
     >
       Open in CodeSandbox
+    </Button>
+  )
+}
+
+const ShareButton = () => {
+  const components = useSelector(getComponents)
+
+  const { onCopy, hasCopied } = useClipboard()
+
+  const copy = () => {
+    if (onCopy) {
+      onCopy(createShareUrl(components))
+    }
+  }
+
+  return (
+    <Button onClick={copy} rightIcon="external-link" variant="ghost" size="xs">
+      {hasCopied ? 'Copied' : 'Share'}
     </Button>
   )
 }
@@ -106,6 +126,8 @@ const Header = () => {
             </Flex>
             <Divider orientation="vertical" />
             <CodeSandboxButton />
+            <Divider orientation="vertical" />
+            <ShareButton />
             <Divider orientation="vertical" />
             <Button
               rightIcon="small-close"

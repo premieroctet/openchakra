@@ -4,7 +4,7 @@ import omit from 'lodash/omit'
 import { airbnbCard } from '../../theme/demo'
 import { generateId } from './app'
 
-type ComponentsState = {
+export type ComponentsState = {
   components: IComponents
   selectedId: IComponent['id']
 }
@@ -32,10 +32,10 @@ const components = createModel({
     selectedId: DEFAULT_ID,
   } as ComponentsState,
   reducers: {
-    reset(state: ComponentsState): ComponentsState {
+    reset(state: ComponentsState, components?: IComponents): ComponentsState {
       return {
         ...state,
-        components: INITIAL_COMPONENTS,
+        components: components || INITIAL_COMPONENTS,
         selectedId: DEFAULT_ID,
       }
     },
