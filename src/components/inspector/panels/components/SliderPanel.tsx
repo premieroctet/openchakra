@@ -5,22 +5,17 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Select,
 } from '@chakra-ui/core'
 import { useForm } from '../../../../hooks/useForm'
 import ColorsControl from '../../controls/ColorsControl'
 import usePropsSelector from '../../../../hooks/usePropsSelector'
+import NumberControl from '../../controls/NumberControl'
 
 const SliderPanel = () => {
   const { setValue, setValueFromEvent } = useForm()
   const size = usePropsSelector('size')
   const value = usePropsSelector('value')
-  const max = usePropsSelector('max')
 
   return (
     <>
@@ -39,20 +34,9 @@ const SliderPanel = () => {
         </Slider>
       </FormControl>
 
-      <FormControl label="max">
-        <NumberInput
-          size="sm"
-          onChange={value => setValue('max', value)}
-          value={max}
-          min={1}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-      </FormControl>
+      <NumberControl label="min" name="min" />
+      <NumberControl label="max" name="max" />
+      <NumberControl label="step" name="step" />
 
       <FormControl label="Size" htmlFor="size">
         <Select

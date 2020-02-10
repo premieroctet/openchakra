@@ -1,32 +1,38 @@
-import React, { ReactNode, useCallback } from 'react'
-import { NumberInput, NumberInputProps } from '@chakra-ui/core'
+import React, { ReactNode } from 'react'
+import {
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+} from '@chakra-ui/core'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 
-type NumberControlPropsType = NumberInputProps & {
+type TextControlPropsType = {
   name: string
   label: string | ReactNode
 }
 
-const NumberControl: React.FC<NumberControlPropsType> = ({
-  name,
-  label,
-  ...props
-}) => {
+const NumberControl: React.FC<TextControlPropsType> = ({ name, label }) => {
   const { setValue } = useForm()
   const value = usePropsSelector(name)
 
-  const onChange = useCallback(
-    (val: React.ReactText) => {
-      setValue(name, val)
-    },
-    [name, setValue],
-  )
-
   return (
     <FormControl htmlFor={name} label={label}>
-      <NumberInput size="sm" value={value} onChange={onChange} {...props} />
+      <NumberInput
+        size="sm"
+        onChange={value => setValue(name, value)}
+        value={value || ''}
+        min={1}
+      >
+        <NumberInputField />
+        <NumberInputStepper>
+          <NumberIncrementStepper />
+          <NumberDecrementStepper />
+        </NumberInputStepper>
+      </NumberInput>
     </FormControl>
   )
 }

@@ -59,6 +59,9 @@ const ComponentPreview: React.FC<{
     case 'NumberInput':
     case 'BreadcrumbLink':
     case 'Select':
+    case 'SliderTrack':
+    case 'SliderFilledTrack':
+    case 'SliderThumb':
       return (
         <PreviewContainer
           component={component}
@@ -101,6 +104,7 @@ const ComponentPreview: React.FC<{
     case 'InputRightElement':
     case 'List':
     case 'Grid':
+    case 'Slider':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -154,7 +158,6 @@ const ComponentPreview: React.FC<{
       return <SliderFilledTrackPreview component={component} />
     case 'SliderThumb':
       return <SliderThumbPreview component={component} />
-
     default:
       return null
   }
