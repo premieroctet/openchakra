@@ -9,10 +9,9 @@ import {
   AccordionPanel,
 } from '@chakra-ui/core'
 import ComponentPreview from '../ComponentPreview'
-import { COMPONENTS } from '../../../utils/editor'
+import { COMPONENTS, AccordionWhitelist } from '../../../utils/editor'
 
 const acceptedTypes: ComponentType[] = ['AccordionItem']
-const acceptedItemTypes: ComponentType[] = ['AccordionHeader', 'AccordionPanel']
 
 const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
   const { props, ref } = useInteractive(component, true)
@@ -37,7 +36,7 @@ const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
 
 export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
   const { props, ref } = useInteractive(component, true)
-  const { drop, isOver } = useDropComponent(component.id, COMPONENTS)
+  const { drop, isOver } = useDropComponent(component.id, AccordionWhitelist)
 
   if (isOver) {
     props.bg = 'teal.50'
@@ -54,7 +53,7 @@ export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
 
 export const AccordionItemPreview = ({ component }: IPreviewProps) => {
   const { props, ref } = useInteractive(component, true)
-  const { drop, isOver } = useDropComponent(component.id, acceptedItemTypes)
+  const { drop, isOver } = useDropComponent(component.id, AccordionWhitelist)
 
   let boxProps: any = {}
 
@@ -75,7 +74,7 @@ export const AccordionItemPreview = ({ component }: IPreviewProps) => {
 
 export const AccordionPanelPreview = ({ component }: IPreviewProps) => {
   const { props, ref } = useInteractive(component, true)
-  const { drop, isOver } = useDropComponent(component.id, COMPONENTS)
+  const { drop, isOver } = useDropComponent(component.id, AccordionWhitelist)
 
   let boxProps: any = {}
 

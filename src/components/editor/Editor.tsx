@@ -62,7 +62,8 @@ const Editor: React.FC = () => {
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
           Drag some component to start coding without code! Or load a{' '}
           <Link
-            onClick={() => {
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation()
               dispatch.components.loadDemo()
             }}
             textDecoration="underline"
