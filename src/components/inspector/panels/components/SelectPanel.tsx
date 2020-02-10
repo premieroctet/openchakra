@@ -1,16 +1,16 @@
 import React, { memo } from 'react'
-import { Select, Icon } from '@chakra-ui/core'
+import { Select, Icon, useTheme } from '@chakra-ui/core'
 import FormControl from '../../controls/FormControl'
 import { useForm } from '../../../../hooks/useForm'
 import usePropsSelector from '../../../../hooks/usePropsSelector'
 import SwitchControl from '../../controls/SwitchControl'
 import InputSuggestion from '../../inputs/InputSuggestion'
-import theme from '../../../../theme/theme'
 import { ComboboxOption, ComboboxOptionText } from '@reach/combobox'
 import { Icons } from '@chakra-ui/core/dist/theme/icons'
 
 const SelectPanel = () => {
   const { setValueFromEvent } = useForm()
+  const theme = useTheme()
 
   const size = usePropsSelector('size')
   const icon = usePropsSelector('icon')

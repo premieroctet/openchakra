@@ -12,7 +12,11 @@ class Composer {
     }
   }
 
-  addNode = (type: ComponentType, parent: string = 'root'): string => {
+  addNode = (
+    type: ComponentType,
+    parent: string = 'root',
+    props: any = {},
+  ): string => {
     const id = generateId()
 
     if (parent === 'root' && !this.rootComponentType) {
@@ -26,7 +30,7 @@ class Composer {
         type,
         parent,
         id,
-        props: DEFAULT_PROPS[type] || {},
+        props: { ...DEFAULT_PROPS[type], ...props },
         rootParentType: this.rootComponentType,
       },
     }

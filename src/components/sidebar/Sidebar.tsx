@@ -78,6 +78,8 @@ const menuItems: MenuItems = {
       Input: {},
       InputLeftAddon: {},
       InputRightAddon: {},
+      InputRightElement: {},
+      InputLeftElement: {},
     },
   },
   Link: {},

@@ -1,8 +1,7 @@
 import React, { memo } from 'react'
 import ColorsControl from '../../controls/ColorsControl'
 import InputSuggestion from '../../inputs/InputSuggestion'
-import theme from '../../../../theme/theme'
-import { Icon } from '@chakra-ui/core'
+import { Icon, useTheme } from '@chakra-ui/core'
 import { Icons } from '@chakra-ui/core/dist/theme/icons'
 import { ComboboxOption, ComboboxOptionText } from '@reach/combobox'
 import FormControl from '../../controls/FormControl'
@@ -14,6 +13,7 @@ import SwitchControl from '../../controls/SwitchControl'
 
 const IconButtonPanel = () => {
   const { setValueFromEvent } = useForm()
+  const theme = useTheme()
 
   const name = usePropsSelector('name')
   const size = usePropsSelector('size')
