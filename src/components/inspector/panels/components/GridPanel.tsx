@@ -4,18 +4,18 @@ import TextControl from '../../controls/TextControl'
 const GridPanel = () => {
   return (
     <>
-      <TextControl label="Area" name="gridArea" />
-      <TextControl label="Template Areas" name="gridTemplateAreas" />
-      <TextControl label="Gap" name="gridGap" />
-      <TextControl label="Rox Gap" name="gridRowGap" />
-      <TextControl label="Column Gap" name="gridColumnGap" />
-      <TextControl label="Auto Columns" name="gridAutoColumns" />
-      <TextControl label="Column" name="gridColumn" />
-      <TextControl label="Row" name="gridRow" />
-      <TextControl label="AutoFlow" name="gridAutoFlow" />
-      <TextControl label="Auto Rows" name="gridAutoRows" />
-      <TextControl label="Template Rows" name="gridTemplateRows" />
-      <TextControl label="Template Columns" name="gridTemplateColumns" />
+      <TextControl label="Template Columns" name="templateColumns" />
+      <TextControl label="Template Rows" name="templateRows" />
+      <TextControl label="Gap" name="gap" />
+      <TextControl label="Row Gap" name="rowGap" />
+      <TextControl label="Column Gap" name="columnGap" />
+      <TextControl label="Auto Columns" name="autoColumns" />
+      <TextControl label="Column" name="column" />
+      <TextControl label="Row" name="row" />
+      <TextControl label="AutoFlow" name="autoFlow" />
+      <TextControl label="Auto Rows" name="autoRows" />
+      <TextControl label="Area" name="area" />
+      <TextControl label="Template Areas" name="templateAreas" />
     </>
   )
 }

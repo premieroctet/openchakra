@@ -256,6 +256,8 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   Grid: {
     ...Grid.defaultProps,
+    templateColumns: 'repeat(5, 1fr)',
+    gap: 6,
   },
   Radio: { ...Radio.defaultProps, children: 'Radio' },
   RadioGroup: { ...RadioGroup.defaultProps },
