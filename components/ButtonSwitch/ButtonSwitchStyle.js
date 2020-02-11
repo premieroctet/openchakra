@@ -8,7 +8,6 @@ export default theme => ({
     }
   },
   responsiveIOSswitch:{
-    width: '50%',
     [theme.breakpoints.down('xs')]: {
       width: '50%',
     }

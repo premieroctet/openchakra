@@ -97,7 +97,7 @@ class ButtonSwitch extends React.Component {
 
     return(
       <Grid className={classes.contentFiltre}>
-        <Grid className={classes.responsiveIOSswitch}>
+        <Grid className={classes.responsiveIOSswitch} style={{width : this.props.width}}>
           <IOSSwitch
             color="primary"
             type="checkbox"

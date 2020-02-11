@@ -32,31 +32,31 @@ class SelectPrestation extends React.Component {
               </Grid>
               <Grid container style={{display: 'flex'}} spacing={2}>
                 <Grid item   xl={6}>
-                  <ButtonSwitch isOption={true}/>
+                  <ButtonSwitch isOption={true} width={"50%"}/>
                   <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                 </Grid>
                 <Grid  item   xl={6}>
-                  <ButtonSwitch isOption={true}/>
+                  <ButtonSwitch isOption={true} width={"50%"}/>
                   <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                 </Grid>
                 <Grid  item   xl={6}>
-                  <ButtonSwitch isOption={true}/>
+                  <ButtonSwitch isOption={true} width={"50%"}/>
                   <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                 </Grid>
                 <Grid  item   xl={6}>
-                  <ButtonSwitch isOption={true}/>
+                  <ButtonSwitch isOption={true} width={"50%"}/>
                   <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                 </Grid>
                 <Grid  item   xl={6}>
-                  <ButtonSwitch isOption={true}/>
+                  <ButtonSwitch isOption={true} width={"50%"}/>
                   <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                 </Grid>
                 <Grid  item   xl={6}>
-                  <ButtonSwitch isOption={true}/>
+                  <ButtonSwitch isOption={true} width={"50%"}/>
                   <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                 </Grid>
                 <Grid  item   xl={6}>
-                  <ButtonSwitch isOption={true}/>
+                  <ButtonSwitch isOption={true} width={"50%"}/>
                   <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                 </Grid>
               </Grid>

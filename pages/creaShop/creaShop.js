@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CreaShopPresentation from '../../components/CreaShop/CreaShopPresentation/CreaShopPresentation';
 import Stepper from '../../components/Stepper/Stepper'
-import NavigationBarForm from '../../components/CreaShop/NavigationBarForm/NavigationBarForm';
 import SelectService from '../../components/CreaShop/SelectService/SelectService';
 import SelectPrestation from '../../components/CreaShop/SelectPrestation/SelectPrestation';
 import SettingService from '../../components/CreaShop/SettingService/SettingService';
@@ -25,16 +24,9 @@ class creaShop extends React.Component {
     this.state={
       activeStep: 0,
       availabilities: [],
+      hide: false
     }
   }
-
-  getNextStep = (step) =>{
-    this.setState({activeStep: step + 1});
-  };
-
-  getPreviousStep = (step) =>{
-    this.setState({activeStep: step - 1})
-  };
 
   availabilityCreated(avail) {
     this.setState({availabilities: [avail, ...this.state.availabilities]});
@@ -42,6 +34,11 @@ class creaShop extends React.Component {
 
   handleNext = () => {
     this.setState({activeStep: this.state.activeStep + 1});
+    if(this.state.activeStep === 1 || this.state.activeStep === 5){
+      this.setState({hide: !this.state.hide})
+    }else{
+      this.setState({hide: false})
+    }
   };
 
   handleBack = () => {
@@ -93,10 +90,10 @@ class creaShop extends React.Component {
         </Grid>
         <Grid className={classes.marginContainer}>
           <Grid className={classes.mainContainer}>
-            <Grid className={this.state.activeStep !== 2 ? classes.leftContentComponent : classes.mainContainerNoImg}>
+            <Grid className={this.state.hide ? classes.mainContainerNoImg : classes.leftContentComponent }>
               {this.renderSwitch(this.state.activeStep)}
             </Grid>
-            { this.state.activeStep !== 2 ?
+            { !this.state.hide ?
               <Grid className={classes.rightContentComponent}>
                 <Grid className={classes.contentRight} style={{backgroundImage: `url(../../../static/assets/img/creaShop/bgImage/etape${this.state.activeStep}.svg)`}}/>
               </Grid>
