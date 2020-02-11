@@ -27,6 +27,7 @@ import { getComponentBy } from '../../core/selectors/components'
 import WithBoxRefSimplePreviewContainer from './WithRefSimplePreviewContainer'
 import { InputRightElementPreview } from './previews/InputRightElement'
 import { InputLeftElementPreview } from './previews/InputLeftElement'
+import AspectRatioBoxPreview from './previews/AspectRatioBoxPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -134,6 +135,8 @@ const ComponentPreview: React.FC<{
       return <AccordionItemPreview component={component} />
     case 'AccordionPanel':
       return <AccordionPanelPreview component={component} />
+    case 'AspectRatioBox':
+      return <AspectRatioBoxPreview component={component} />
     default:
       return null
   }

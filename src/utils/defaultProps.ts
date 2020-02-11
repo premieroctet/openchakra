@@ -82,6 +82,7 @@ import {
   GridProps,
   Grid,
   NumberInput,
+  AspectRatioBox,
 } from '@chakra-ui/core'
 import FormLabel, { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -282,5 +283,8 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Flex: { ...Flex.defaultProps, display: 'flex' },
   NumberInput: {
     ...NumberInput.defaultProps,
+  },
+  AspectRatioBox: {
+    ...AspectRatioBox.defaultProps,
   },
 }
