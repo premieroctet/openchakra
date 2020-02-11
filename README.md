@@ -36,17 +36,17 @@ Toggle the code panel for viewing the JSX/React code of your components. You can
 ### Components panel
 
 Drag any component from the left hand panel into this editor. Then start interacting with them.
-You can drag a preset: it's a group of components (like Alert). Just drop a preset to easily setup a complexe component!
+You can drag a preset: it's a group of components (like Alert). Just drop a preset to easily setup a complex component!
 
 ### Inspector
 
 **Update props & style**
 
-On the right hand side, you can find the inspectror panel. You will find the tools to edit the component's props and style.
+On the right hand-side, you can find the inspectror panel. You will find the tools to edit the component's props and style.
 
-**Delete, reset and read doc**
+**Delete, reset and documentation**
 
-Reach the yellow bar on the top to delete, reset and access the Chakra doc of each component.
+Reach the yellow bar on the top to delete, reset and access the Chakra documentation of each component.
 
 **Sort components**
 
@@ -61,6 +61,8 @@ By clicking on a component containing children, you will see a Children panel ap
 | `del`            | Delete selected component |
 | `c`              | Toggle Code panel         |
 | `b`              | Toggle Builder mode       |
+| `p`              | Select parent component   |
+| `Esc`            | Unselect component        |
 
 ## Roadmap
 
@@ -73,3 +75,4 @@ By clicking on a component containing children, you will see a Children panel ap
 - Custom theme
 - Handle PseudoBox state (hover, active…)
 - Fix bugs 🧨
+- Support other UI (Material, Reakit...)
