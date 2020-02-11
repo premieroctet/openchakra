@@ -30,12 +30,15 @@ export const buildAlert = (parent: string): ComposedComponent => {
 export const buildBreadcrumb = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
-  const nodeId = composer.addNode('Breadcrumb')
-  const itemId = composer.addNode('BreadcrumbItem', nodeId)
-  composer.addNode('BreadcrumbLink', itemId)
+  const nodeId = composer.addNode({ type: 'Breadcrumb', parent })
+  const itemId = composer.addNode({ type: 'BreadcrumbItem', parent: nodeId })
+  composer.addNode({ type: 'BreadcrumbLink', parent: itemId })
 
-  const secondItemId = composer.addNode('BreadcrumbItem', nodeId)
-  composer.addNode('BreadcrumbLink', secondItemId)
+  const secondItemId = composer.addNode({
+    type: 'BreadcrumbItem',
+    parent: nodeId,
+  })
+  composer.addNode({ type: 'BreadcrumbLink', parent: secondItemId })
 
   const components = composer.getComponents()
 

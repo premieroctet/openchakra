@@ -104,6 +104,7 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === 'AspectRatioBox' && <AspectRatioPanel />}
       {type === 'Breadcrumb' && <BreadcrumbPanel />}
       {type === 'BreadcrumbItem' && <BreadcrumbItemPanel />}
+      {type === 'BreadcrumbLink' && <LinkPanel />}
     </>
   )
 }
