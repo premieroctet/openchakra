@@ -251,6 +251,14 @@ const components = createModel({
         selectedId: DEFAULT_ID,
       }
     },
+    selectParent(state: ComponentsState): ComponentsState {
+      const selectedComponent = state.components[state.selectedId]
+
+      return {
+        ...state,
+        selectedId: state.components[selectedComponent.parent].id,
+      }
+    },
   },
 })
 
