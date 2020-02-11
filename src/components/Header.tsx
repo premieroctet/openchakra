@@ -18,8 +18,8 @@ import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
 import { getShowLayout, getShowCode } from '../core/selectors/app'
-import { createShareUrl } from '../utils/share'
-import useClipboard from '../hooks/useClipboard'
+// import { createShareUrl } from '../utils/share'
+// import useClipboard from '../hooks/useClipboard'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -29,7 +29,11 @@ const CodeSandboxButton = () => {
       onClick={async () => {
         const code = await generateCode(components)
         const parameters = buildParameters(code)
-        console.log(parameters)
+
+        window.open(
+          `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`,
+          '_blank',
+        )
       }}
       rightIcon="external-link"
       variant="ghost"
@@ -40,6 +44,7 @@ const CodeSandboxButton = () => {
   )
 }
 
+/*
 const ShareButton = () => {
   const components = useSelector(getComponents)
 
@@ -57,6 +62,7 @@ const ShareButton = () => {
     </Button>
   )
 }
+*/
 
 const Header = () => {
   const showLayout = useSelector(getShowLayout)
@@ -123,7 +129,7 @@ const Header = () => {
             <Divider orientation="vertical" />
             <CodeSandboxButton />
             <Divider orientation="vertical" />
-            <ShareButton />
+            {/**<ShareButton />**/}
             <Divider orientation="vertical" />
             <Button
               rightIcon="small-close"

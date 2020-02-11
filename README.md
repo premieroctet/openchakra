@@ -1,8 +1,13 @@
-# OpenChakra ⚡️
+<div align="center" style="display:flex;flex-direction:column;">
+  <a href="https://openchakra.app">
+    <img src="./public/images/github-banner.png" alt="Openchakra: Visual editor for Chakra UI." />
+  </a>
+  <h3>Visual Editor for Chakra UI</h3>
+</div>
 
-> Visual editor for Chakra UI — https://openchakra.app
+OpenChakra is a visual editor for the best component library in town: [Chakra UI](https://chakra-ui.com) 🤗. Quickly draft components with the simple drag and drop UI.
 
-OpenChakra is a visual editor for the best component library in town: [Chakra UI](https://chakra-ui.com)🤗. Quickly draft your component with the simple and modular drag n drop UI.
+## Features
 
 - 🎨 Drag and drop [Chakra UI](https://chakra-ui.com/getting-started) components
 - 💅 Preset components
@@ -11,45 +16,43 @@ OpenChakra is a visual editor for the best component library in town: [Chakra UI
 - 🎈 CodeSandbox export
 - 🔮 Undo/redo edit
 - 💽 Localstorage sync
-- 🐦 Shareable URL
 
-[![Screenshot](splash.png)](https://openchakra.app)
-
-[✨Try creating component without code right now](https://openchakra.app) (⚠️ OpenChakra still under alpha, beta, gamma versions or what you want 👷‍♂️)
-
-## Demo
-
-- Airbnb Card
-- Product Hunt Layout
-- Twitter Timeline
+[![Screenshot](./public/images/screenshot.png)](https://openchakra.app)
 
 ## Getting started
 
-**Builder mode**
+### Builder mode
 
 The Builder mode adds extra padding/border to ease components selection (like containers).
 
 > 💡Toggle the Builder mode with the `b` shortcut
 
-**Code panel**
+### Code panel
 
-Toggle the code panel for viewing the JSX/React code of your components (readonly). You can export your code directly in CodeSandbox!
-
-**Components panel**
-
-You can drag a Chakra UI components or drag a components "preset". A preset is a group of components (like Accordion, FormControl).
-
-**Inspector**
-
-Edit the props of the active components in the top panel. You can also styling your component with the others panels. The top bar allow you to delete, reset your component. And even view the Chakra UI documentation!
-
-**Editor**
-
-You can directly drag an drop components in anothter container but you can't sort them. For that, select the container component and open the Children panel in the Inspector: you can sort the children!
+Toggle the code panel for viewing the JSX/React code of your components. You can even export your code directly to CodeSandbox!
 
 > 💡Toggle the Code panel with the `c` shortcut
 
-**Shortcuts**
+### Components panel
+
+Drag any component from the left hand panel into this editor. Then start interacting with them.
+You can drag a preset: it's a group of components (like Alert). Just drop a preset to easily setup a complexe component!
+
+### Inspector
+
+**Update props & style**
+
+On the right hand side, you can find the inspectror panel. You will find the tools to edit the component's props and style.
+
+**Delete, reset and read doc**
+
+Reach the yellow bar on the top to delete, reset and access the Chakra doc of each component.
+
+**Sort components**
+
+By clicking on a component containing children, you will see a Children panel appearing on the right. It enables sorting the children.
+
+### Editor Shortcuts
 
 | Shortcut         | Description               |
 | ---------------- | ------------------------- |
@@ -70,11 +73,3 @@ You can directly drag an drop components in anothter container but you can't sor
 - Custom theme
 - Handle PseudoBox state (hover, active…)
 - Fix bugs 🧨
-
-* Fix props panel switching bug
-* Popover soon
-* Grid soon
-* heignt 100% stack and flex
-* TypeError: child is undefined
-   \*src/components/inspector/children/ChildrenList.tsx:20
-* Reset props of preset bug
