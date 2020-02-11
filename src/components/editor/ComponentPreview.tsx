@@ -54,6 +54,9 @@ const ComponentPreview: React.FC<{
     case 'NumberInput':
     case 'BreadcrumbLink':
     case 'Select':
+    case 'MenuItem':
+    case 'MenuDivider':
+    case 'MenuItemOption':
       return (
         <PreviewContainer
           component={component}
@@ -93,6 +96,11 @@ const ComponentPreview: React.FC<{
     case 'TabList':
     case 'TabPanels':
     case 'Grid':
+    case 'Menu':
+    case 'MenuButton':
+    case 'MenuList':
+    case 'MenuGroup':
+    case 'MenuOptionGroup':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -112,7 +120,6 @@ const ComponentPreview: React.FC<{
           component={component}
           type={Chakra[type]}
           {...forwardedProps}
-          isBoxWrapped
         />
       )
     // More complex components
