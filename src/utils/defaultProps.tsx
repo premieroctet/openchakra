@@ -33,14 +33,23 @@ import {
   InputProps,
   AspectRatioBoxProps,
   BreadcrumbItemProps,
+  BreadcrumbItem,
   EditableProps,
-  MenuProps,
   NumberInputProps,
   RadioProps,
   SelectProps,
   RadioGroupProps,
   InputGroupProps,
   GridProps,
+  BreadcrumbLink,
+  Menu,
+  MenuList,
+  MenuButton,
+  MenuItem,
+  MenuGroup,
+  MenuDivider,
+  MenuOptionGroup,
+  MenuItemOption,
 } from '@chakra-ui/core'
 import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -101,13 +110,29 @@ type PreviewDefaultProps = {
   BreadcrumbItem?: BreadcrumbItemProps
   BreadcrumbLink?: any
   Editable?: EditableProps
-  Menu?: MenuProps
+  Menu?: any
+  MenuList?: any
+  MenuButton?: any
+  MenuItem?: any
+  MenuGroup?: any
+  MenuDivider?: any
+  MenuOptionGroup?: any
+  MenuItemOption?: any
+
   NumberInput?: NumberInputProps
   Radio?: RadioProps
   RadioGroup?: RadioGroupProps
   List?: any
   ListIcon?: IconProps
   ListItem?: any
+  // meta components
+  AlertMeta?: any
+  InputGroupMeta?: any
+  FormControlMeta?: any
+  AccordionMeta?: any
+  ListMeta?: any
+  BreadcrumbMeta?: any
+  MenuMeta?: any
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -267,6 +292,37 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
     addSeparator: true,
   },
   CloseButton: { size: 'md' },
+  BreadcrumbItem: { ...BreadcrumbItem.defaultProps },
+  BreadcrumbLink: {
+    ...BreadcrumbLink.defaultProps,
+  },
+  Menu: {
+    ...Menu.defaultProps,
+  },
+  MenuList: {
+    ...MenuList.defaultProps,
+  },
+  MenuButton: {
+    ...MenuButton.defaultProps,
+    children: 'Lorem Ipsum',
+  },
+  MenuItem: {
+    ...MenuItem.defaultProps,
+    children: 'Lorem Ipsum',
+  },
+  MenuGroup: {
+    ...MenuGroup.defaultProps,
+  },
+  MenuDivider: {
+    ...MenuDivider.defaultProps,
+  },
+  MenuOptionGroup: {
+    ...MenuOptionGroup.defaultProps,
+  },
+  MenuItemOption: {
+    ...MenuItemOption.defaultProps,
+    children: 'Lorem Ipsum',
+  },
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {
