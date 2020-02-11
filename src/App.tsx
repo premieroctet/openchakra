@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Flex, Box } from '@chakra-ui/core'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
@@ -10,22 +10,13 @@ import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'
 import useShortcuts, { keyMap } from './hooks/useShortcuts'
 import EditorErrorBoundary from './components/errorBoundaries/EditorErrorBoundary'
-import { decodeShareUrl } from './utils/share'
-import useDispatch from './hooks/useDispatch'
+import useProducthunt from './hooks/useProducthunt'
 
 const App = () => {
   const { handlers } = useShortcuts()
-  const dispatch = useDispatch()
 
-  // Init state from url if present
-  useEffect(() => {
-    const components = decodeShareUrl()
-    if (components) {
-      dispatch.components.reset(components)
-      // eslint-disable-next-line
-      history.replaceState(null, 'Openchakra', '/')
-    }
-  }, [dispatch.components])
+  // To remove soon :)
+  useProducthunt()
 
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>

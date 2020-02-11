@@ -65,7 +65,7 @@ const Editor: React.FC = () => {
             color="gray.500"
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
-              dispatch.components.loadDemo()
+              dispatch.components.loadDemo('onboarding')
             }}
             textDecoration="underline"
           >

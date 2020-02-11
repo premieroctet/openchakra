@@ -1,7 +1,7 @@
 import { createModel } from '@rematch/core'
 import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import omit from 'lodash/omit'
-import { onboarding } from '../../templates/onboarding'
+import templates, { TemplateType } from '../../templates'
 import { generateId } from './app'
 
 export type ComponentsState = {
@@ -39,11 +39,11 @@ const components = createModel({
         selectedId: DEFAULT_ID,
       }
     },
-    loadDemo(state: ComponentsState): ComponentsState {
+    loadDemo(state: ComponentsState, type: TemplateType): ComponentsState {
       return {
         ...state,
         selectedId: 'comp-root',
-        components: onboarding,
+        components: templates[type],
       }
     },
     resetProps(state: ComponentsState, componentId: string): ComponentsState {
