@@ -16,7 +16,11 @@ const PreviewContainer: React.FC<{
 }) => {
   const { props, ref } = useInteractive(component, enableVisualHelper)
 
-  const children = React.createElement(type, { ...props, ...forwardedProps })
+  const children = React.createElement(type, {
+    ...props,
+    ...forwardedProps,
+    ref,
+  })
 
   if (isBoxWrapped) {
     let boxProps: any = {}
