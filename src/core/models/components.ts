@@ -220,7 +220,6 @@ const components = createModel({
       state: ComponentsState,
       payload: { components: IComponents; root: string; parent: string },
     ): ComponentsState {
-      console.log(payload)
       return {
         ...state,
         selectedId: payload.root,

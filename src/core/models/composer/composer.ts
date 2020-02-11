@@ -35,7 +35,7 @@ class Composer {
       },
     }
 
-    if (parent !== 'root') {
+    if (parent !== 'root' && this.components[parent]) {
       this.components[parent].children.push(id)
     }
 

@@ -9,7 +9,7 @@ import {
   AccordionPanel,
 } from '@chakra-ui/core'
 import ComponentPreview from '../ComponentPreview'
-import { COMPONENTS, AccordionWhitelist } from '../../../utils/editor'
+import { AccordionWhitelist } from '../../../utils/editor'
 
 const acceptedTypes: ComponentType[] = ['AccordionItem']
 
