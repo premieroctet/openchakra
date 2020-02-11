@@ -70,7 +70,6 @@ class CreaShopPresentation extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid className={classes.contentRight}/>
         </Grid>
       </Grid>
     )

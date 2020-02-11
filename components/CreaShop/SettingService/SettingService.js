@@ -7,13 +7,18 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class SettingService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       activeStep: 0,
-      checked: false
+      checked: false,
+      clientAdress:false,
+      myAddress: false,
+      visioConference: false,
+      outside: false
     }
   }
 
@@ -25,10 +30,10 @@ class SettingService extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <h2>Paramètres votre service</h2>
+                <Typography className={classes.policySizeTitle}>Paramètres votre service</Typography>
               </Grid>
               <Grid >
-                <h3>Quel(s) produit(s) / matériel(s) fournissez-vous dans le cadre de ce service ? </h3>
+                <h3 className={classes.policySizeSubtitle}>Quel(s) produit(s) / matériel(s) fournissez-vous dans le cadre de ce service ? </h3>
               </Grid>
               <Grid className={classes.contentTextSize}>
                 <Grid item xs={3} sm={3} md={2}>
@@ -49,47 +54,87 @@ class SettingService extends React.Component {
               </Grid>
               <Grid>
                 <Grid>
-                  <Typography>
-                    Où acceptez-vous de réaliser votre prestation ?
-                  </Typography>
+                  <h3 className={classes.policySizeSubtitle}>Où acceptez-vous de réaliser votre prestation ?</h3>
                 </Grid>
-                <Grid>
+                <Grid style={{marginLeft : 15}}>
                   <Grid>
-                    <Button variant="outlined" className={classes.button}>
-                      A l’adresse de mon client
-                    </Button>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={this.state.clientAddress}
+                          onChange={()=>{
+                            this.setState({clientAddress : !this.state.clientAddress})
+                          }
+                          }
+                          value={this.state.clientAddress}
+                          color="primary"
+                        />
+                      }
+                      label="A l’adresse de mon client"
+                    />
                   </Grid>
                   <Grid>
-                    <Button variant="outlined" className={classes.button}>
-                      A mon adresse
-                    </Button>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={this.state.myAddress}
+                          onChange={()=>{
+                            this.setState({myAddress : !this.state.myAddress})
+                          }
+                          }
+                          value={this.state.myAddress}
+                          color="primary"
+                        />
+                      }
+                      label="A mon adresse"
+                    />
                   </Grid>
                   <Grid>
-                    <Button variant="outlined" className={classes.button}>
-                      En visioconférence
-                    </Button>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={this.state.visioConference}
+                          onChange={()=>{
+                            this.setState({visioConference : !this.state.visioConference})
+                          }
+                          }
+                          value={this.state.visioConference}
+                          color="primary"
+                        />
+                      }
+                      label="En visio conférence"
+                    />
                   </Grid>
                   <Grid>
-                    <Button variant="outlined" className={classes.button}>
-                      En extérieur
-                    </Button>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={this.state.outside}
+                          onChange={()=>{
+                            this.setState({outside : !this.state.outside})
+                          }
+                          }
+                          value={this.state.outside}
+                          color="primary"
+                        />
+                      }
+                      label="En extérieur"
+                    />
                   </Grid>
                 </Grid>
               </Grid>
               <Grid>
                 <Grid>
-                  <Typography>
-                    Options
-                  </Typography>
+                  <h3 className={classes.policySizeSubtitle}>Options</h3>
                 </Grid>
                 <Grid>
-                  <ButtonSwitch label={"Appliquer un forfait déplacement de"} isOption={false}/>
+                  <ButtonSwitch label={"Appliquer un forfait déplacement de"} isOption={false} isPrice={true}/>
                 </Grid>
                 <Grid>
-                  <ButtonSwitch label={"Proposer un forfait retrait & livraison de"} isOption={false}/>
+                  <ButtonSwitch label={"Proposer un forfait retrait & livraison de"} isOption={false} isPrice={true}/>
                 </Grid>
                 <Grid>
-                  <ButtonSwitch label={"Proposer un forfait cheveux longs de"} isOption={false}/>
+                  <ButtonSwitch label={"Proposer un forfait cheveux longs de"} isOption={false} isPrice={true}/>
                 </Grid>
               </Grid>
             </Grid>

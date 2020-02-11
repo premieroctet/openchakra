@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './SelectPrestationStyle';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
+import { Typography } from '@material-ui/core';
 
 class SelectPrestation extends React.Component {
   constructor(props) {
@@ -22,40 +23,42 @@ class SelectPrestation extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <h2>Indiquez vos prestations</h2>
-              </Grid>
-              <Grid className={classes.contentTextSize}>
-                <p>Quelles prestations souhaitez-vous réaliser ? Indiquez vos tarifs et votre unité de facturation. </p>
+                <Typography className={classes.policySizeTitle}>Indiquez vos prestations</Typography>
               </Grid>
             </Grid>
-            <Grid container style={{display: 'flex'}} spacing={2}>
-              <Grid item   xl={6}>
-                <ButtonSwitch isOption={true}/>
-                <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+            <Grid style={{marginTop: 100}}>
+              <Grid className={classes.contentTextSize}>
+                <p className={classes.policySizeContent}>Quelles prestations souhaitez-vous réaliser ? Indiquez vos tarifs et votre unité de facturation. </p>
               </Grid>
-              <Grid  item   xl={6}>
-                <ButtonSwitch isOption={true}/>
-                <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
-              </Grid>
-              <Grid  item   xl={6}>
-                <ButtonSwitch isOption={true}/>
-                <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
-              </Grid>
-              <Grid  item   xl={6}>
-                <ButtonSwitch isOption={true}/>
-                <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
-              </Grid>
-              <Grid  item   xl={6}>
-                <ButtonSwitch isOption={true}/>
-                <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
-              </Grid>
-              <Grid  item   xl={6}>
-                <ButtonSwitch isOption={true}/>
-                <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
-              </Grid>
-              <Grid  item   xl={6}>
-                <ButtonSwitch isOption={true}/>
-                <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+              <Grid container style={{display: 'flex'}} spacing={2}>
+                <Grid item   xl={6}>
+                  <ButtonSwitch isOption={true}/>
+                  <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+                </Grid>
+                <Grid  item   xl={6}>
+                  <ButtonSwitch isOption={true}/>
+                  <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+                </Grid>
+                <Grid  item   xl={6}>
+                  <ButtonSwitch isOption={true}/>
+                  <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+                </Grid>
+                <Grid  item   xl={6}>
+                  <ButtonSwitch isOption={true}/>
+                  <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+                </Grid>
+                <Grid  item   xl={6}>
+                  <ButtonSwitch isOption={true}/>
+                  <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+                </Grid>
+                <Grid  item   xl={6}>
+                  <ButtonSwitch isOption={true}/>
+                  <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+                </Grid>
+                <Grid  item   xl={6}>
+                  <ButtonSwitch isOption={true}/>
+                  <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

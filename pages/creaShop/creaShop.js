@@ -93,12 +93,15 @@ class creaShop extends React.Component {
         </Grid>
         <Grid className={classes.marginContainer}>
           <Grid className={classes.mainContainer}>
-            <Grid className={classes.leftContentComponent}>
+            <Grid className={this.state.activeStep !== 2 ? classes.leftContentComponent : classes.mainContainerNoImg}>
               {this.renderSwitch(this.state.activeStep)}
             </Grid>
-            <Grid className={classes.rightContentComponent}>
-              <Grid className={classes.contentRight} style={{backgroundImage: `url(../../../static/assets/img/creaShop/bgImage/etape${this.state.activeStep}.svg)`}}/>
-            </Grid>
+            { this.state.activeStep !== 2 ?
+              <Grid className={classes.rightContentComponent}>
+                <Grid className={classes.contentRight} style={{backgroundImage: `url(../../../static/assets/img/creaShop/bgImage/etape${this.state.activeStep}.svg)`}}/>
+              </Grid>
+              : null
+            }
           </Grid>
         </Grid>
         <Grid className={classes.footerMainContainer}>

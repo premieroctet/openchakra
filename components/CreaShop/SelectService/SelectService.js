@@ -6,14 +6,9 @@ import styles from './SelectServiceStyle';
 import Select from 'react-select';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
-import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
-import CancelIcon from '@material-ui/icons/Cancel';
-import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
-import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
-
 
 const suggestions = [
   { label: 'Afghanistan' },
@@ -273,7 +268,6 @@ const components = {
   ValueContainer,
 };
 
-
 class SelectService extends React.Component {
   constructor(props) {
     super(props);
@@ -306,43 +300,46 @@ class SelectService extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <h2>Créez votre boutique de services</h2>
+                <Typography className={classes.policySizeTitle}>Créez votre boutique de services</Typography>
               </Grid>
-              <Grid >
-                <h3>Quel service souhaitez vous réaliser ?</h3>
-              </Grid>
-              <Grid className={classes.contentTextSize}>
-                <p>Identifiez maintenant le premier service que vous souhaitez configurer dans
-                  votre boutique de services. Vous pourrez en ajouter autant que vous voulez dans
-                  votre boutique. Un service n’apparait pas ? Cliquez ici pour l’ajouter.
-                </p>
-              </Grid>
-              <Grid>
-                <div className={classes.root}>
-                  <NoSsr>
-                    <Select
-                      classes={classes}
-                      styles={selectStyles}
-                      inputId="react-select-single"
-                      TextFieldProps={{
-                        label: 'Services',
-                        InputLabelProps: {
-                          htmlFor: 'react-select-single',
-                          shrink: true,
-                        },
-                      }}
-                      placeholder="Chercher un service"
-                      options={suggestions}
-                      components={components}
-                      value={this.state.single}
-                      onChange={this.handleChangeSingle}
-                    />
-                  </NoSsr>
-                </div>
+              <Grid style={{marginTop: 100}}>
+                <Grid>
+                  <Grid>
+                    <h3 className={classes.policySizeSubtitle}>Quel service souhaitez vous réaliser ?</h3>
+                  </Grid>
+                  <Grid className={classes.contentTextSize} >
+                    <p className={classes.policySizeContent}>Identifiez maintenant le premier service que vous souhaitez configurer dans
+                      votre boutique de services. Vous pourrez en ajouter autant que vous voulez dans
+                      votre boutique. Un service n’apparait pas ? Cliquez ici pour l’ajouter.
+                    </p>
+                  </Grid>
+                </Grid>
+                <Grid>
+                  <Grid className={classes.root}>
+                    <NoSsr>
+                      <Select
+                        classes={classes}
+                        styles={selectStyles}
+                        inputId="react-select-single"
+                        TextFieldProps={{
+                          label: 'Services',
+                          InputLabelProps: {
+                            htmlFor: 'react-select-single',
+                            shrink: true,
+                          },
+                        }}
+                        placeholder="Chercher un service"
+                        options={suggestions}
+                        components={components}
+                        value={this.state.single}
+                        onChange={this.handleChangeSingle}
+                      />
+                    </NoSsr>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-          <Grid className={classes.contentRight}/>
         </Grid>
       </Grid>
     )

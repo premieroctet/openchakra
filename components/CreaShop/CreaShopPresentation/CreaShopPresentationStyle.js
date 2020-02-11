@@ -5,7 +5,7 @@ export default theme => ({
   },
   contentContainer:{
     display: 'flex',
-    height: 'auto',
+    height: 700,
     width: '100%'
   },
   contentLeftTop:{

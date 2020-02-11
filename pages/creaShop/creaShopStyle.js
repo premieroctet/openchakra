@@ -38,6 +38,13 @@ export default theme => ({
       width: '100%'
     },
   },
+  mainContainerNoImg:{
+    width: '100%',
+    height : '100%',
+    display: 'flex',
+    flexDirection : 'column',
+    justifyContent: 'space-between',
+  },
   rightContentComponent:{
     width: '40%',
     position: 'relative',
