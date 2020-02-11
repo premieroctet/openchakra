@@ -3,7 +3,6 @@ import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import omit from 'lodash/omit'
 import { onboarding } from '../../templates/onboarding'
 import { generateId } from './app'
-import cloneDeep from 'lodash/cloneDeep'
 
 export type ComponentsState = {
   components: IComponents
@@ -234,25 +233,6 @@ const components = createModel({
             ],
           },
           ...payload.components,
-        },
-      }
-    },
-    copy(state: ComponentsState, componentId: string): ComponentsState {
-      const copyId = generateId()
-      const component = cloneDeep(state.components[componentId])
-      component.id = copyId
-
-      const parentId = component.parent
-
-      return {
-        ...state,
-        components: {
-          ...state.components,
-          [copyId]: component,
-          [parentId]: {
-            ...state.components[parentId],
-            children: [...state.components[parentId].children, copyId],
-          },
         },
       }
     },

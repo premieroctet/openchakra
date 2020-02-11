@@ -413,7 +413,7 @@ export const onboarding: IComponents = {
     rootParentType: 'Icon',
   },
   'comp-root': {
-    id: 'comp-K6GPAJEN4EVNQ',
+    id: 'comp-root',
     props: {
       display: 'flex',
       flexDirection: 'column',
@@ -1006,7 +1006,7 @@ export const onboarding: IComponents = {
     },
     children: ['comp-K6GPAPKNQACEE', 'comp-K6GPCGKZ5S4UA'],
     type: 'Flex',
-    parent: 'comp-K6GPAJEN4EVNQ',
+    parent: 'comp-root',
     rootParentType: 'Flex',
   },
   'comp-K6H1NSQY3KC7W': {
@@ -1017,7 +1017,7 @@ export const onboarding: IComponents = {
     },
     children: [],
     type: 'Text',
-    parent: 'comp-K6GPAJEN4EVNQ',
+    parent: 'comp-root',
     rootParentType: 'Text',
   },
   'comp-K6H1R04NDVRXG': {

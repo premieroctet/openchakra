@@ -29,11 +29,7 @@ const CodeSandboxButton = () => {
       onClick={async () => {
         const code = await generateCode(components)
         const parameters = buildParameters(code)
-
-        window.open(
-          `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`,
-          '_blank',
-        )
+        console.log(parameters)
       }}
       rightIcon="external-link"
       variant="ghost"
