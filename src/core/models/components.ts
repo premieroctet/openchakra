@@ -1,7 +1,7 @@
 import { createModel } from '@rematch/core'
 import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import omit from 'lodash/omit'
-import { airbnbCard } from '../../theme/demo'
+import { onboarding } from '../../templates/onboarding'
 import { generateId } from './app'
 
 export type ComponentsState = {
@@ -20,7 +20,7 @@ export const INITIAL_COMPONENTS: IComponents = {
   root: {
     id: DEFAULT_ID,
     parent: DEFAULT_ID,
-    type: 'box' as ComponentType,
+    type: 'Box' as ComponentType,
     children: [],
     props: {},
   },
@@ -43,7 +43,7 @@ const components = createModel({
       return {
         ...state,
         selectedId: 'comp-root',
-        components: airbnbCard as any,
+        components: onboarding,
       }
     },
     resetProps(state: ComponentsState, componentId: string): ComponentsState {

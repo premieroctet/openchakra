@@ -1,9 +1,9 @@
-export const airbnbCard = {
+export const airbnbCard: IComponents = {
   root: {
     id: 'root',
     parent: 'root',
-    type: 'box',
-    children: ['comp-root'],
+    type: 'Box',
+    children: ['comp-1580479567'],
     props: {},
   },
   'comp-root': {
