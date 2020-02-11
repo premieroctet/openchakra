@@ -28,10 +28,10 @@ const IconButtonPanel = () => {
           name="icon"
         >
           {Object.keys(theme.icons)
-            .filter(icon => icon.includes(icon) || !icon)
-            .map((icon, index) => (
-              <ComboboxOption key={index} value={icon}>
-                <Icon name={icon as Icons} /> <ComboboxOptionText />
+            .filter(item => item.includes(icon) || !icon)
+            .map((item, index) => (
+              <ComboboxOption key={index} value={item}>
+                <Icon name={item as Icons} /> <ComboboxOptionText />
               </ComboboxOption>
             ))}
         </InputSuggestion>

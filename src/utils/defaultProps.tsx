@@ -170,7 +170,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     variant: 'subtle',
   },
   Box: Box.defaultProps,
-  Button: { ...Button.defaultProps, children: 'Lorem Ipsum' },
+  Button: { ...Button.defaultProps, children: 'Lorem Ipsum', variant: 'solid' },
   Divider: { borderColor: 'blackAlpha.500' },
   IconButton: {
     ...IconButton.defaultProps,
@@ -183,7 +183,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     ...Image.defaultProps,
     height: '100px',
     width: '100px',
-    fallbackSrc: 'https://via.placeholder.com/150',
   },
   Text: { ...Text.defaultProps, children: 'Lorem Ipsum' },
   Progress: { ...Progress.defaultProps, size: 'md' },

@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import {
   Box,
   Switch,
@@ -18,16 +18,17 @@ import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
 import { getShowLayout, getShowCode } from '../core/selectors/app'
-// import { createShareUrl } from '../utils/share'
-// import useClipboard from '../hooks/useClipboard'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
+  const [isLoading, setIsLoading] = useState(false)
 
   return (
     <Button
       onClick={async () => {
+        setIsLoading(true)
         const code = await generateCode(components)
+        setIsLoading(false)
         const parameters = buildParameters(code)
 
         window.open(
@@ -35,6 +36,7 @@ const CodeSandboxButton = () => {
           '_blank',
         )
       }}
+      isLoading={isLoading}
       rightIcon="external-link"
       variant="ghost"
       size="xs"
@@ -43,26 +45,6 @@ const CodeSandboxButton = () => {
     </Button>
   )
 }
-
-/*
-const ShareButton = () => {
-  const components = useSelector(getComponents)
-
-  const { onCopy, hasCopied } = useClipboard()
-
-  const copy = () => {
-    if (onCopy) {
-      onCopy(createShareUrl(components))
-    }
-  }
-
-  return (
-    <Button onClick={copy} rightIcon="external-link" variant="ghost" size="xs">
-      {hasCopied ? 'Copied' : 'Share'}
-    </Button>
-  )
-}
-*/
 
 const Header = () => {
   const showLayout = useSelector(getShowLayout)
