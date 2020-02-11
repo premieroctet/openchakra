@@ -7,6 +7,8 @@
 
 OpenChakra is a visual editor for the best component library in town: [Chakra UI](https://chakra-ui.com) 🤗. Quickly draft components with the simple drag and drop UI.
 
+👉 [https://openchakra.app](https://openchakra.app)
+
 ## Features
 
 - 🎨 Drag and drop [Chakra UI](https://chakra-ui.com/getting-started) components
