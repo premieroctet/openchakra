@@ -16,6 +16,7 @@ import Schedule from '../../components/Schedule/Schedule';
 import BookingConditions from '../../components/CreaShop/BookingConditions/BookingConditions';
 import SettingShop from '../../components/CreaShop/SettingShop/SettingShop';
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
+import Link from 'next/link';
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -70,12 +71,18 @@ class creaShop extends React.Component {
     const {classes} = this.props;
 
     return(
-      <Layout>
-        <Grid className={classes.spacer}/>
-        <Grid className={classes.mainContainer}>
+      <Grid>
+        <Grid className={classes.mainHeader}>
+          <Grid className={classes.imageContentHeader}>
+            <Link href={'/'}>
+              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
+            </Link>
+          </Grid>
           <Grid className={classes.contentStepper}>
             <Stepper activeStep={this.state.activeStep}/>
           </Grid>
+        </Grid>
+        <Grid className={classes.mainContainer}>
           <Grid className={classes.contentComponent}>
             {this.renderSwitch(this.state.activeStep)}
           </Grid>
@@ -84,10 +91,9 @@ class creaShop extends React.Component {
             <NavigationBarForm nextStep={this.getNextStep} previousStep={this.getPreviousStep}/>
           </Grid>
         </Grid>
-      </Layout>
+      </Grid>
     )
   }
-
 }
 
 creaShop.propTypes = {

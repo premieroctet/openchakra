@@ -42,7 +42,7 @@ class Stepper extends React.Component {
 
     return(
       <Grid className={classes.root}>
-        <StepperMaterial activeStep={activeStep} alternativeLabel>
+        <StepperMaterial activeStep={activeStep} alternativeLabel className={classes.marginStepper}>
           {this.state.steps.map(label => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
