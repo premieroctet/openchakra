@@ -15,7 +15,7 @@ const IconButtonPanel = () => {
   const { setValueFromEvent } = useForm()
   const theme = useTheme()
 
-  const name = usePropsSelector('name')
+  const icon = usePropsSelector('icon')
   const size = usePropsSelector('size')
   const variant = usePropsSelector('variant')
 
@@ -23,12 +23,12 @@ const IconButtonPanel = () => {
     <>
       <FormControl label="Icon" htmlFor="icon">
         <InputSuggestion
-          value={name}
+          value={icon}
           handleChange={setValueFromEvent}
           name="icon"
         >
           {Object.keys(theme.icons)
-            .filter(icon => icon.includes(name) || !name)
+            .filter(icon => icon.includes(icon) || !icon)
             .map((icon, index) => (
               <ComboboxOption key={index} value={icon}>
                 <Icon name={icon as Icons} /> <ComboboxOptionText />
