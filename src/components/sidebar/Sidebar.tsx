@@ -40,7 +40,7 @@ const menuItems: MenuItems = {
       AlertTitle: {},
     },
   },
-
+  AspectRatioBox: {},
   AvatarGroup: {
     rootParentType: 'Avatar',
   },
@@ -103,7 +103,6 @@ const menuItems: MenuItems = {
   Tag: {},
   Text: {},
   Textarea: {},
-  AspectRatioBox: { soon: true },
   Breadcrumb: { soon: true },
   Editable: { soon: true },
   Menu: { soon: true },
