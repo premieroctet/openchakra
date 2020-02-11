@@ -297,6 +297,11 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   Breadcrumb: { ...Breadcrumb.defaultProps },
   BreadcrumbItem: { ...BreadcrumbItem.defaultProps },
-  BreadcrumbLink: { ...BreadcrumbLink.defaultProps },
-  BreadcrumbSeparator: { ...BreadcrumbSeparator.defaultProps },
+  BreadcrumbLink: {
+    ...BreadcrumbLink.defaultProps,
+    children: 'Lorem Ipsum',
+  },
+  BreadcrumbSeparator: {
+    ...BreadcrumbSeparator.defaultProps,
+  },
 }

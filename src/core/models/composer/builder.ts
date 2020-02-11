@@ -31,10 +31,13 @@ export const buildBreadcrumb = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
   const nodeId = composer.addNode('Breadcrumb')
+  const itemId = composer.addNode('BreadcrumbItem', nodeId)
+  composer.addNode('BreadcrumbLink', itemId)
+  composer.addNode('BreadcrumbSeparator', itemId)
 
-  composer.addNode('BreadcrumbItem', nodeId)
-  composer.addNode('BreadcrumbLink', nodeId)
-  composer.addNode('BreadcrumbSeparator', nodeId)
+  const secondItemId = composer.addNode('BreadcrumbItem', nodeId)
+  composer.addNode('BreadcrumbLink', secondItemId)
+  composer.addNode('BreadcrumbSeparator', secondItemId)
 
   const components = composer.getComponents()
 

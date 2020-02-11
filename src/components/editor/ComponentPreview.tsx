@@ -63,7 +63,6 @@ const ComponentPreview: React.FC<{
     case 'Radio':
     case 'ListItem':
     case 'NumberInput':
-    case 'BreadcrumbItem':
     case 'BreadcrumbLink':
     case 'BreadcrumbSeparator':
       return (
@@ -94,6 +93,7 @@ const ComponentPreview: React.FC<{
     case 'TabList':
     case 'TabPanels':
     case 'Grid':
+    case 'BreadcrumbItem':
     case 'Breadcrumb':
       return (
         <WithChildrenPreviewContainer
