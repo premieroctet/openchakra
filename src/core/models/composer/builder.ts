@@ -9,11 +9,14 @@ type ComposedComponent = {
 export const buildAlert = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
-  const nodeId = composer.addNode('Alert', parent)
+  const nodeId = composer.addNode({
+    type: 'Alert',
+    parent,
+  })
 
-  composer.addNode('AlertIcon', nodeId)
-  composer.addNode('AlertTitle', nodeId)
-  composer.addNode('AlertDescription', nodeId)
+  composer.addNode({ type: 'AlertIcon', parent: nodeId })
+  composer.addNode({ type: 'AlertTitle', parent: nodeId })
+  composer.addNode({ type: 'AlertDescription', parent: nodeId })
 
   const components = composer.getComponents()
 
@@ -27,12 +30,12 @@ export const buildAlert = (parent: string): ComposedComponent => {
 export const buildFormControl = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
-  const nodeId = composer.addNode('FormControl', parent)
+  const nodeId = composer.addNode({ type: 'FormControl', parent })
 
-  composer.addNode('FormLabel', nodeId)
-  composer.addNode('Input', nodeId)
-  composer.addNode('FormHelperText', nodeId)
-  composer.addNode('FormErrorMessage', nodeId)
+  composer.addNode({ type: 'FormLabel', parent: nodeId })
+  composer.addNode({ type: 'Input', parent: nodeId, rootParentType: 'Input' })
+  composer.addNode({ type: 'FormHelperText', parent: nodeId })
+  composer.addNode({ type: 'FormErrorMessage', parent: nodeId })
 
   const components = composer.getComponents()
 
@@ -46,14 +49,14 @@ export const buildFormControl = (parent: string): ComposedComponent => {
 export const buildAccordion = (parent: string): ComposedComponent => {
   const composer = new Composer('Accordion')
 
-  const nodeId = composer.addNode('Accordion', parent)
-  const itemId = composer.addNode('AccordionItem', nodeId)
-  const headerId = composer.addNode('AccordionHeader', itemId)
-  const panelId = composer.addNode('AccordionPanel', itemId)
+  const nodeId = composer.addNode({ type: 'Accordion', parent })
+  const itemId = composer.addNode({ type: 'AccordionItem', parent: nodeId })
+  const headerId = composer.addNode({ type: 'AccordionHeader', parent: itemId })
+  const panelId = composer.addNode({ type: 'AccordionPanel', parent: itemId })
 
-  composer.addNode('Text', headerId)
-  composer.addNode('AccordionIcon', headerId)
-  composer.addNode('Text', panelId)
+  composer.addNode({ type: 'Text', parent: headerId, rootParentType: 'Text' })
+  composer.addNode({ type: 'AccordionIcon', parent: headerId })
+  composer.addNode({ type: 'Text', parent: panelId, rootParentType: 'Text' })
 
   const components = composer.getComponents()
 
@@ -67,8 +70,8 @@ export const buildAccordion = (parent: string): ComposedComponent => {
 export const buildList = (parent: string): ComposedComponent => {
   const composer = new Composer('List')
 
-  const nodeId = composer.addNode('List', parent)
-  composer.addNode('ListItem', nodeId)
+  const nodeId = composer.addNode({ type: 'List', parent })
+  composer.addNode({ type: 'ListItem', parent: nodeId })
 
   const components = composer.getComponents()
 
@@ -82,12 +85,23 @@ export const buildList = (parent: string): ComposedComponent => {
 export const buildInputGroup = (parent: string): ComposedComponent => {
   const composer = new Composer('Input')
 
-  const nodeId = composer.addNode('InputGroup', parent)
-  composer.addNode('InputLeftAddon', nodeId, { children: 'Email' })
-  composer.addNode('Input', nodeId)
+  const nodeId = composer.addNode({ type: 'InputGroup', parent })
+  composer.addNode({
+    type: 'InputLeftAddon',
+    parent: nodeId,
+    props: { children: 'Email' },
+  })
+  composer.addNode({ type: 'Input', parent: nodeId })
 
-  const elementId = composer.addNode('InputRightElement', nodeId)
-  composer.addNode('Icon', elementId, { name: 'email' })
+  const elementId = composer.addNode({
+    type: 'InputRightElement',
+    parent: nodeId,
+  })
+  composer.addNode({
+    type: 'Icon',
+    parent: elementId,
+    props: { name: 'email' },
+  })
 
   const components = composer.getComponents()
 
