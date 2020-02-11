@@ -328,11 +328,9 @@ export const onboarding: IComponents = {
   'comp-K6GOMRTOCHZHD': {
     id: 'comp-K6GOMRTOCHZHD',
     props: {
-      columns: '2',
-      spacingX: '10',
-      spacingY: 1,
-      minChildWidth: '',
-      p: '10',
+      p: 10,
+      gap: '6',
+      templateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
     },
     children: [
       'comp-K6GXBDLT2XCNC',
@@ -340,9 +338,9 @@ export const onboarding: IComponents = {
       'comp-K6H1R04NDVRXG',
       'comp-K6H1HKZ1MFW94',
     ],
-    type: 'SimpleGrid',
+    type: 'Grid',
     parent: 'root',
-    rootParentType: 'SimpleGrid',
+    rootParentType: 'Grid',
   },
   'comp-K6GOPXN2COS0O': {
     id: 'comp-K6GOPXN2COS0O',
@@ -1022,9 +1020,7 @@ export const onboarding: IComponents = {
   },
   'comp-K6H1R04NDVRXG': {
     id: 'comp-K6H1R04NDVRXG',
-    props: {
-      mt: '6',
-    },
+    props: {},
     children: ['comp-K6H1RE2JP0JEX'],
     type: 'Box',
     parent: 'comp-K6GOMRTOCHZHD',

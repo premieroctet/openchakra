@@ -181,7 +181,8 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Icon: { ...Icon.defaultProps, name: 'copy' },
   Image: {
     ...Image.defaultProps,
-    size: '100px',
+    height: '100px',
+    width: '100px',
     fallbackSrc: 'https://via.placeholder.com/150',
   },
   Text: { ...Text.defaultProps, children: 'Lorem Ipsum' },
