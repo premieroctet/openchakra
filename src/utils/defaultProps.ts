@@ -60,6 +60,10 @@ import {
   Input,
   AspectRatioBoxProps,
   BreadcrumbItemProps,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
   EditableProps,
   MenuProps,
   NumberInputProps,
@@ -140,6 +144,9 @@ type PreviewDefaultProps = {
   InputRightElement?: any
   AspectRatioBox?: AspectRatioBoxProps
   Breadcrumb?: BreadcrumbItemProps
+  BreadcrumbItem?: BreadcrumbItemProps
+  BreadcrumbLink?: any
+  BreadcrumbSeparator?: any
   Editable?: EditableProps
   Menu?: MenuProps
   NumberInput?: NumberInputProps
@@ -154,6 +161,7 @@ type PreviewDefaultProps = {
   FormControlMeta?: any
   AccordionMeta?: any
   ListMeta?: any
+  BreadcrumbMeta?: any
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -287,4 +295,8 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   AspectRatioBox: {
     ...AspectRatioBox.defaultProps,
   },
+  Breadcrumb: { ...Breadcrumb.defaultProps },
+  BreadcrumbItem: { ...BreadcrumbItem.defaultProps },
+  BreadcrumbLink: { ...BreadcrumbLink.defaultProps },
+  BreadcrumbSeparator: { ...BreadcrumbSeparator.defaultProps },
 }

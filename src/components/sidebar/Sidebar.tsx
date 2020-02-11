@@ -50,6 +50,13 @@ const menuItems: MenuItems = {
   },
   Badge: {},
   Box: {},
+  Breadcrumb: {
+    children: {
+      BreadcrumbItem: {},
+      BreadcrumbLink: {},
+      BreadcrumbSeparator: {},
+    },
+  },
   Button: {},
   Checkbox: {},
   CircularProgress: {},
@@ -103,8 +110,6 @@ const menuItems: MenuItems = {
   Tag: {},
   Text: {},
   Textarea: {},
-  Breadcrumb: { soon: true },
-  Editable: { soon: true },
   Menu: { soon: true },
   Tab: { soon: true },
   /*"Tabs",

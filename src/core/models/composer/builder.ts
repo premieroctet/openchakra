@@ -27,6 +27,24 @@ export const buildAlert = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildBreadcrumb = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+
+  const nodeId = composer.addNode('Breadcrumb')
+
+  composer.addNode('BreadcrumbItem', nodeId)
+  composer.addNode('BreadcrumbLink', nodeId)
+  composer.addNode('BreadcrumbSeparator', nodeId)
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildFormControl = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
@@ -124,6 +142,7 @@ const builders: ComposerBuilders = {
   AccordionMeta: buildAccordion,
   ListMeta: buildList,
   InputGroupMeta: buildInputGroup,
+  BreadcrumbMeta: buildBreadcrumb,
 }
 
 export default builders

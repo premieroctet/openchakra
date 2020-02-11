@@ -51,6 +51,9 @@ export const COMPONENTS: ComponentType[] = [
   'Editable',
   'AspectRatioBox',
   'Breadcrumb',
+  'BreadcrumbItem',
+  'BreadcrumbLink',
+  'BreadcrumbSeparator',
   'Menu',
   'NumberInput',
   'AccordionItem',
@@ -65,6 +68,7 @@ export const COMPONENTS: ComponentType[] = [
   'AccordionMeta',
   'ListMeta',
   'InputGroupMeta',
+  'BreadcrumbMeta',
 ]
 
 export const AccordionWhitelist: ComponentType[] = COMPONENTS.filter(

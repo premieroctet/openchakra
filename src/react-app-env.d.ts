@@ -65,12 +65,16 @@ type ComponentType =
   | 'InputRightElement'
   | 'FormControlMeta'
   | 'AccordionMeta'
-  | 'AccordionMeta'
   | 'ListMeta'
   | 'AlertMeta'
   | 'InputGroupMeta'
   | 'Grid'
   | 'NumberInput'
+  | 'Breadcrumb'
+  | 'BreadcrumbItem'
+  | 'BreadcrumbLink'
+  | 'BreadcrumbSeparator'
+  | 'BreadcrumbMeta'
 
 interface IComponent {
   children: string[]
