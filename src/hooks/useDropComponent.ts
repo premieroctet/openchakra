@@ -6,13 +6,14 @@ import builder from '../core/models/composer/builder'
 export const useDropComponent = (
   componentId: string,
   accept: ComponentType[] = rootComponents,
+  canDrop: boolean = true,
 ) => {
   const dispatch = useDispatch()
 
   const [{ isOver }, drop] = useDrop({
     accept,
     collect: monitor => ({
-      isOver: monitor.isOver({ shallow: true }),
+      isOver: monitor.isOver({ shallow: true }) && monitor.canDrop(),
     }),
     drop: (item: ComponentItemProps, monitor: DropTargetMonitor) => {
       if (!monitor.isOver()) {
@@ -34,6 +35,7 @@ export const useDropComponent = (
         })
       }
     },
+    canDrop: () => canDrop,
   })
 
   return { drop, isOver }

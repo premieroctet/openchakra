@@ -7,8 +7,12 @@ import ComponentPreview from '../ComponentPreview'
 const AspectRatioBoxPreview: React.FC<{ component: IComponent }> = ({
   component,
 }) => {
-  const { props, ref } = useInteractive(component)
-  const { drop, isOver } = useDropComponent(component.id)
+  const { props, ref } = useInteractive(component, true)
+  const { drop, isOver } = useDropComponent(
+    component.id,
+    undefined,
+    component.children.length === 0,
+  )
   const children = component.children
 
   const boxProps: any = {}
