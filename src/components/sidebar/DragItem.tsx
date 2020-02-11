@@ -49,17 +49,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
       alignItems="center"
       {...boxProps}
     >
-      <Icon
-        fontSize="xs"
-        mr={2}
-        name="drag-handle"
-        onClick={() => {
-          window.open(
-            `https://chakra-ui.com/${rootParentType || type}`,
-            '_blank',
-          )
-        }}
-      />
+      <Icon fontSize="xs" mr={2} name="drag-handle" />
 
       <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
         {label}
