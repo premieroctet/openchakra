@@ -1,8 +1,12 @@
-export const COMPONENTS: ComponentType[] = [
+const ALERT_COMPONENTS: ComponentType[] = [
   'Alert',
   'AlertDescription',
   'AlertIcon',
   'AlertTitle',
+]
+
+export const COMPONENTS: ComponentType[] = [
+  ...ALERT_COMPONENTS,
   'Avatar',
   'AvatarBadge',
   'AvatarGroup',
@@ -62,6 +66,10 @@ export const COMPONENTS: ComponentType[] = [
   'ListMeta',
   'InputGroupMeta',
 ]
+
+export const AccordionWhitelist: ComponentType[] = COMPONENTS.filter(
+  name => !ALERT_COMPONENTS.includes(name),
+)
 
 export const rootComponents = COMPONENTS
   // Remove specific components

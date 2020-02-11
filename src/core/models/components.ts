@@ -42,6 +42,7 @@ const components = createModel({
     loadDemo(state: ComponentsState): ComponentsState {
       return {
         ...state,
+        selectedId: 'comp-root',
         components: airbnbCard as any,
       }
     },
@@ -197,6 +198,7 @@ const components = createModel({
 
       return {
         ...state,
+        selectedId: id,
         components: {
           ...state.components,
           [payload.parentName]: {
@@ -218,8 +220,10 @@ const components = createModel({
       state: ComponentsState,
       payload: { components: IComponents; root: string; parent: string },
     ): ComponentsState {
+      console.log(payload)
       return {
         ...state,
+        selectedId: payload.root,
         components: {
           ...state.components,
           [payload.parent]: {

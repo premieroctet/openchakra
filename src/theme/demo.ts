@@ -3,11 +3,11 @@ export const airbnbCard = {
     id: 'root',
     parent: 'root',
     type: 'box',
-    children: ['comp-1580479567'],
+    children: ['comp-root'],
     props: {},
   },
-  'comp-1580479567': {
-    id: 'comp-1580479567',
+  'comp-root': {
+    id: 'comp-root',
     props: {
       bg: '#ffffff',
       rounded: 'lg',
@@ -25,7 +25,7 @@ export const airbnbCard = {
     props: {},
     children: ['comp-1580479588'],
     type: 'Box',
-    parent: 'comp-1580479567',
+    parent: 'comp-root',
   },
   'comp-1580479588': {
     id: 'comp-1580479588',
@@ -55,7 +55,7 @@ export const airbnbCard = {
       'comp-1580479811',
     ],
     type: 'Box',
-    parent: 'comp-1580479567',
+    parent: 'comp-root',
   },
   'comp-1580479631': {
     id: 'comp-1580479631',

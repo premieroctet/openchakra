@@ -1,18 +1,18 @@
-import React, { ReactNode, memo } from "react";
+import React, { ReactNode, memo } from 'react'
 import {
   AccordionItem,
   AccordionHeader,
   AccordionIcon,
   AccordionPanel,
   Box,
-  AccordionItemProps
-} from "@chakra-ui/core";
+  AccordionItemProps,
+} from '@chakra-ui/core'
 
 const AccordionContainer: React.FC<{
-  title: ReactNode;
-  defaultIsOpen?: boolean;
-  children: ReactNode;
-} & AccordionItemProps> = ({ title, children, defaultIsOpen }) => {
+  title: ReactNode
+  defaultIsOpen?: boolean
+  children: ReactNode
+} & AccordionItemProps> = ({ title, children, defaultIsOpen = true }) => {
   return (
     <AccordionItem defaultIsOpen={defaultIsOpen}>
       <AccordionHeader zIndex={2} px={3} py={2} fontSize="sm">
@@ -25,7 +25,7 @@ const AccordionContainer: React.FC<{
         {children}
       </AccordionPanel>
     </AccordionItem>
-  );
-};
+  )
+}
 
-export default memo(AccordionContainer);
+export default memo(AccordionContainer)
