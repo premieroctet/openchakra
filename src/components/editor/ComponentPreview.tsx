@@ -1,37 +1,27 @@
 import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 
-import AlertPreview, {
-  AlertTitlePreview,
-  AlertDescriptionPreview,
-} from './previews/AlertPreview'
+import AlertPreview from './previews/AlertPreview'
 import AvatarPreview, {
   AvatarBadgePreview,
   AvatarGroupPreview,
 } from './previews/AvatarPreview'
-import StackPreview from './previews/StackPreview'
 import AccordionPreview, {
   AccordionHeaderPreview,
   AccordionItemPreview,
   AccordionPanelPreview,
 } from './previews/AccordionPreview'
-import { RadioGroupPreview } from './previews/RadioPreview'
-import SelectPreview from './previews/SelectPreview'
-import SimplePreviewContainer from './SimplePreviewContainer'
 import * as Chakra from '@chakra-ui/core'
 import WithChildrenPreviewContainer from './WithChildrenPreviewContainer'
-import InputGroupPreview from './previews/InputGroupPreview'
-import InputLeftAddonPreview from './previews/InputLeftAddonPreview'
-import InputRightAddonPreview from './previews/InputRightAddonPreview'
 import { getComponentBy } from '../../core/selectors/components'
-import WithBoxRefSimplePreviewContainer from './WithRefSimplePreviewContainer'
+import PreviewContainer from './PreviewContainer'
 import { InputRightElementPreview } from './previews/InputRightElement'
 import { InputLeftElementPreview } from './previews/InputLeftElement'
 import AspectRatioBoxPreview from './previews/AspectRatioBoxPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
-}> = ({ componentName }) => {
+}> = ({ componentName, ...forwardedProps }) => {
   const component = useSelector(getComponentBy(componentName))
   if (!component) {
     console.error(`ComponentPreview unavailable for component ${componentName}`)
@@ -63,8 +53,13 @@ const ComponentPreview: React.FC<{
     case 'Radio':
     case 'ListItem':
     case 'NumberInput':
+    case 'BreadcrumbLink':
       return (
-        <SimplePreviewContainer component={component} type={Chakra[type]} />
+        <PreviewContainer
+          component={component}
+          type={Chakra[type]}
+          {...forwardedProps}
+        />
       )
     // Wrapped functional components (forward ref issue)
     case 'AlertIcon':
@@ -74,11 +69,17 @@ const ComponentPreview: React.FC<{
     case 'Code':
     case 'Icon':
     case 'ListIcon':
+    case 'AlertDescription':
+    case 'AlertTitle':
+    case 'InputRightAddon':
+    case 'InputLeftAddon':
     case 'Tag':
       return (
-        <WithBoxRefSimplePreviewContainer
+        <PreviewContainer
           component={component}
           type={Chakra[type]}
+          {...forwardedProps}
+          isBoxWrapped
         />
       )
     // Components with childrens
@@ -96,6 +97,21 @@ const ComponentPreview: React.FC<{
           enableVisualHelper
           component={component}
           type={Chakra[type]}
+          {...forwardedProps}
+        />
+      )
+    case 'RadioGroup':
+    case 'Stack':
+    case 'Breadcrumb':
+    case 'InputGroup':
+    case 'BreadcrumbItem':
+      return (
+        <WithChildrenPreviewContainer
+          enableVisualHelper
+          component={component}
+          type={Chakra[type]}
+          {...forwardedProps}
+          isBoxWrapped
         />
       )
     // More complex components
@@ -111,26 +127,10 @@ const ComponentPreview: React.FC<{
       return <AvatarGroupPreview component={component} />
     case 'Alert':
       return <AlertPreview component={component} />
-    case 'AlertTitle':
-      return <AlertTitlePreview component={component} />
-    case 'AlertDescription':
-      return <AlertDescriptionPreview component={component} />
-    case 'Stack':
-      return <StackPreview component={component} />
     case 'Accordion':
       return <AccordionPreview component={component} />
     case 'AccordionHeader':
       return <AccordionHeaderPreview component={component} />
-    case 'RadioGroup':
-      return <RadioGroupPreview component={component} />
-    case 'Select':
-      return <SelectPreview component={component} />
-    case 'InputGroup':
-      return <InputGroupPreview component={component} />
-    case 'InputLeftAddon':
-      return <InputLeftAddonPreview component={component} />
-    case 'InputRightAddon':
-      return <InputRightAddonPreview component={component} />
     case 'AccordionItem':
       return <AccordionItemPreview component={component} />
     case 'AccordionPanel':

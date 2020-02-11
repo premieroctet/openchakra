@@ -46,6 +46,8 @@ import FormErrorMessagePanel from './components/FormErrorMessagePanel'
 import GridPanel from './components/GridPanel'
 import NumberInputPanel from './components/NumberInputPanel'
 import AspectRatioPanel from './components/AspectRatioPanel'
+import BreadcrumbPanel from './components/BreadcrumbPanel'
+import BreadcrumbItemPanel from './components/BreadcrumbItemPanel'
 
 const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
   const { type } = component
@@ -100,6 +102,9 @@ const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
       {type === 'Grid' && <GridPanel />}
       {type === 'NumberInput' && <NumberInputPanel />}
       {type === 'AspectRatioBox' && <AspectRatioPanel />}
+      {type === 'Breadcrumb' && <BreadcrumbPanel />}
+      {type === 'BreadcrumbItem' && <BreadcrumbItemPanel />}
+      {type === 'BreadcrumbLink' && <LinkPanel />}
     </>
   )
 }
