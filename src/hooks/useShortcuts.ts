@@ -9,6 +9,7 @@ export const keyMap = {
   TOGGLE_CODE_PANEL: 'c',
   UNDO: ['ctrl+z', 'cmd+z'],
   REDO: ['ctrl+y', 'cmd+y'],
+  UNSELECT: ['Escape'],
 }
 
 const hasNoSpecialKeyPressed = (event: KeyboardEvent | undefined) =>
@@ -59,12 +60,17 @@ const useShortcuts = () => {
     dispatch(UndoActionCreators.redo())
   }
 
+  const onUnselect = () => {
+    dispatch.components.unselect()
+  }
+
   const handlers = {
     DELETE_NODE: deleteNode,
     TOGGLE_BUILDER_MODE: toggleBuilderMode,
     TOGGLE_CODE_PANEL: toggleCodePanel,
     UNDO: undo,
     REDO: redo,
+    UNSELECT: onUnselect,
   }
 
   return { handlers }
