@@ -42,7 +42,6 @@ const ComponentPreview: React.FC<{
     // Simple components
     case 'Badge':
     case 'Button':
-    case 'Icon':
     case 'IconButton':
     case 'Image':
     case 'Text':
@@ -72,6 +71,7 @@ const ComponentPreview: React.FC<{
     case 'CloseButton':
     case 'AccordionIcon':
     case 'Code':
+    case 'Icon':
     case 'ListIcon':
     case 'Tag':
       return (

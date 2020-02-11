@@ -44,6 +44,15 @@ const Inspector = () => {
           <Box>
             {!isRoot && (
               <>
+                <Tooltip hasArrow aria-label="Copy" label="Copy">
+                  <IconButton
+                    size="xs"
+                    variant="ghost"
+                    aria-label="Copy"
+                    onClick={() => dispatch.components.copy(component.id)}
+                    icon="copy"
+                  />
+                </Tooltip>
                 <Tooltip hasArrow aria-label="Reset" label="Reset">
                   <IconButton
                     size="xs"

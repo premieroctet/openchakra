@@ -9,42 +9,46 @@ const buildBlock = (component: IComponent, components: IComponents) => {
 
   component.children.forEach((key: string) => {
     let childComponent = components[key]
-    const componentName = capitalize(childComponent.type)
-    let propsContent = ''
+    if (!childComponent) {
+      console.error(`invalid component ${key}`)
+    } else {
+      const componentName = capitalize(childComponent.type)
+      let propsContent = ''
 
-    const propsNames = Object.keys(childComponent.props)
+      const propsNames = Object.keys(childComponent.props)
 
-    propsNames.forEach((propName: string) => {
-      const propsValue = childComponent.props[propName]
+      propsNames.forEach((propName: string) => {
+        const propsValue = childComponent.props[propName]
 
-      if (propName !== 'children' && propsValue) {
-        let operand = `='${propsValue}'`
+        if (propName !== 'children' && propsValue) {
+          let operand = `='${propsValue}'`
 
-        if (propsValue === true || propsValue === 'true') {
-          operand = ``
-        } else if (
-          propsValue === 'false' ||
-          isBoolean(propsValue) ||
-          !isNaN(propsValue)
-        ) {
-          operand = `={${propsValue}}`
+          if (propsValue === true || propsValue === 'true') {
+            operand = ``
+          } else if (
+            propsValue === 'false' ||
+            isBoolean(propsValue) ||
+            !isNaN(propsValue)
+          ) {
+            operand = `={${propsValue}}`
+          }
+
+          propsContent += `${propName}${operand} `
         }
+      })
 
-        propsContent += `${propName}${operand} `
-      }
-    })
-
-    if (
-      typeof childComponent.props.children === 'string' &&
-      childComponent.children.length === 0
-    ) {
-      content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
-    } else if (childComponent.children.length) {
-      content += `<${componentName} ${propsContent}>
+      if (
+        typeof childComponent.props.children === 'string' &&
+        childComponent.children.length === 0
+      ) {
+        content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
+      } else if (childComponent.children.length) {
+        content += `<${componentName} ${propsContent}>
       ${buildBlock(childComponent, components)}
       </${componentName}>`
-    } else {
-      content += `<${componentName} ${propsContent} />`
+      } else {
+        content += `<${componentName} ${propsContent} />`
+      }
     }
   })
 
