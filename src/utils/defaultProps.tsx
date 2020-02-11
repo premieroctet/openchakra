@@ -41,6 +41,16 @@ import {
   RadioGroupProps,
   InputGroupProps,
   GridProps,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Popover,
+  PopoverArrow,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverFooter,
 } from '@chakra-ui/core'
 import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -108,6 +118,22 @@ type PreviewDefaultProps = {
   List?: any
   ListIcon?: IconProps
   ListItem?: any
+  // meta components
+  AlertMeta?: any
+  InputGroupMeta?: any
+  FormControlMeta?: any
+  AccordionMeta?: any
+  ListMeta?: any
+  BreadcrumbMeta?: any
+  Popover?: any
+  PopoverTrigger?: any
+  PopoverContent?: any
+  PopoverHeader?: any
+  PopoverBody?: any
+  PopoverArrow?: any
+  PopoverCloseButton?: any
+  PopoverFooter?: any
+  PopoverMeta?: any
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -267,6 +293,35 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
     addSeparator: true,
   },
   CloseButton: { size: 'md' },
+  BreadcrumbItem: { ...BreadcrumbItem.defaultProps },
+  BreadcrumbLink: {
+    ...BreadcrumbLink.defaultProps,
+    children: 'Lorem Ipsum',
+  },
+  Popover: {
+    ...Popover.defaultProps,
+  },
+  PopoverTrigger: {
+    ...PopoverTrigger.defaultProps,
+  },
+  PopoverContent: {
+    ...PopoverContent.defaultProps,
+  },
+  PopoverHeader: {
+    ...PopoverHeader.defaultProps,
+  },
+  PopoverBody: {
+    ...PopoverBody.defaultProps,
+  },
+  PopoverArrow: {
+    ...PopoverArrow.defaultProps,
+  },
+  PopoverCloseButton: {
+    ...PopoverCloseButton.defaultProps,
+  },
+  PopoverFooter: {
+    ...PopoverFooter.defaultProps,
+  },
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {

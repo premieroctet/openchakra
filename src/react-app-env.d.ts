@@ -75,6 +75,15 @@ type MetaComponentType =
   | 'AlertMeta'
   | 'InputGroupMeta'
   | 'BreadcrumbMeta'
+  | 'Popover'
+  | 'PopoverTrigger'
+  | 'PopoverContent'
+  | 'PopoverHeader'
+  | 'PopoverBody'
+  | 'PopoverArrow'
+  | 'PopoverCloseButton'
+  | 'PopoverFooter'
+  | 'PopoverMeta'
 
 interface IComponent {
   children: string[]

@@ -1,23 +1,24 @@
 import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 
-import AlertPreview from '~components/editor/previews/AlertPreview'
+import AlertPreview from '../../components/editor/previews/AlertPreview'
 import AvatarPreview, {
   AvatarBadgePreview,
   AvatarGroupPreview,
-} from '~components/editor/previews/AvatarPreview'
+} from '../../components/editor/previews/AvatarPreview'
 import AccordionPreview, {
   AccordionHeaderPreview,
   AccordionItemPreview,
   AccordionPanelPreview,
-} from '~components/editor/previews/AccordionPreview'
+} from '../../components/editor/previews/AccordionPreview'
 import * as Chakra from '@chakra-ui/core'
-import { getComponentBy } from '~core/selectors/components'
-import { InputRightElementPreview } from '~components/editor/previews/InputRightElement'
-import { InputLeftElementPreview } from '~components/editor/previews/InputLeftElement'
-import AspectRatioBoxPreview from '~components/editor/previews/AspectRatioBoxPreview'
-import PreviewContainer from '~components/editor/PreviewContainer'
-import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
+import WithChildrenPreviewContainer from './WithChildrenPreviewContainer'
+import PopoverTriggerPreview from './previews/PopoverTriggerPreview'
+import { getComponentBy } from '../../core/selectors/components'
+import PreviewContainer from './PreviewContainer'
+import { InputRightElementPreview } from './previews/InputRightElement'
+import { InputLeftElementPreview } from './previews/InputLeftElement'
+import AspectRatioBoxPreview from './previews/AspectRatioBoxPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -54,6 +55,9 @@ const ComponentPreview: React.FC<{
     case 'NumberInput':
     case 'BreadcrumbLink':
     case 'Select':
+    case 'PopoverHeader':
+    case 'PopoverArrow':
+    case 'PopoverCloseButton':
       return (
         <PreviewContainer
           component={component}
@@ -93,6 +97,10 @@ const ComponentPreview: React.FC<{
     case 'TabList':
     case 'TabPanels':
     case 'Grid':
+    case 'Popover':
+    case 'PopoverBody':
+    case 'PopoverContent':
+    case 'PopoverFooter':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -138,6 +146,8 @@ const ComponentPreview: React.FC<{
       return <AccordionPanelPreview component={component} />
     case 'AspectRatioBox':
       return <AspectRatioBoxPreview component={component} />
+    case 'PopoverTrigger':
+      return <PopoverTriggerPreview component={component} />
     default:
       return null
   }

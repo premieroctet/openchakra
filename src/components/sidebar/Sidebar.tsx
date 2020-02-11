@@ -9,7 +9,7 @@ import {
   IconButton,
 } from '@chakra-ui/core'
 import DragItem from './DragItem'
-import { menuItems, MenuItem } from '~componentsList'
+import { menuItems, MenuItem } from '../../componentsList'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -44,7 +44,6 @@ const Menu = () => {
               <Icon name="search" color="gray.300" />
             )}
           </InputRightElement>
-          )}
           <Input
             value={searchTerm}
             color="gray.300"

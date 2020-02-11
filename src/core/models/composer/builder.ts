@@ -53,14 +53,32 @@ export const buildFormControl = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
   const nodeId = composer.addNode({ type: 'FormControl', parent })
-
   composer.addNode({ type: 'FormLabel', parent: nodeId })
   composer.addNode({ type: 'Input', parent: nodeId, rootParentType: 'Input' })
   composer.addNode({ type: 'FormHelperText', parent: nodeId })
   composer.addNode({ type: 'FormErrorMessage', parent: nodeId })
 
   const components = composer.getComponents()
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
 
+export const buildPopover = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+  const nodeId = composer.addNode({ type: 'Popover' })
+  const tiggerId = composer.addNode({ type: 'PopoverTrigger', parent: nodeId })
+  composer.addNode({ type: 'Button', parent: tiggerId })
+  const contentId = composer.addNode({ type: 'PopoverContent', parent: nodeId })
+  composer.addNode({ type: 'PopoverHeader', parent: contentId })
+  composer.addNode({ type: 'PopoverBody', parent: contentId })
+  composer.addNode({ type: 'PopoverArrow', parent: contentId })
+  composer.addNode({ type: 'PopoverCloseButton', parent: contentId })
+  composer.addNode({ type: 'PopoverFooter', parent: contentId })
+  const components = composer.getComponents()
+  console.log(components)
   return {
     components,
     root: nodeId,
@@ -70,12 +88,10 @@ export const buildFormControl = (parent: string): ComposedComponent => {
 
 export const buildAccordion = (parent: string): ComposedComponent => {
   const composer = new Composer('Accordion')
-
   const nodeId = composer.addNode({ type: 'Accordion', parent })
   const itemId = composer.addNode({ type: 'AccordionItem', parent: nodeId })
   const headerId = composer.addNode({ type: 'AccordionHeader', parent: itemId })
   const panelId = composer.addNode({ type: 'AccordionPanel', parent: itemId })
-
   composer.addNode({ type: 'Text', parent: headerId, rootParentType: 'Text' })
   composer.addNode({ type: 'AccordionIcon', parent: headerId })
   composer.addNode({ type: 'Text', parent: panelId, rootParentType: 'Text' })
@@ -147,6 +163,7 @@ const builders: ComposerBuilders = {
   ListMeta: buildList,
   InputGroupMeta: buildInputGroup,
   BreadcrumbMeta: buildBreadcrumb,
+  PopoverMeta: buildPopover,
 }
 
 export default builders
