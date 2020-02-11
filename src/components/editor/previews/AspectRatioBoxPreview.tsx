@@ -19,7 +19,7 @@ const AspectRatioBoxPreview: React.FC<{ component: IComponent }> = ({
 
   return (
     <Box {...boxProps} ref={drop(ref)}>
-      <AspectRatioBox maxW="400px" ratio={4 / 3} {...props}>
+      <AspectRatioBox {...props}>
         {!children.length ? (
           /*
            * We need at least one children because of the implementation
