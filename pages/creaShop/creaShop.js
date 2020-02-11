@@ -17,6 +17,7 @@ import BookingConditions from '../../components/CreaShop/BookingConditions/Booki
 import SettingShop from '../../components/CreaShop/SettingShop/SettingShop';
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
 import Link from 'next/link';
+import Button from '@material-ui/core/Button';
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -38,6 +39,14 @@ class creaShop extends React.Component {
   availabilityCreated(avail) {
     this.setState({availabilities: [avail, ...this.state.availabilities]});
   }
+
+  handleNext = () => {
+    this.setState({activeStep: this.state.activeStep + 1});
+  };
+
+  handleBack = () => {
+    this.setState({activeStep: this.state.activeStep - 1});
+  };
 
   renderSwitch(param) {
     switch(param) {
@@ -75,20 +84,44 @@ class creaShop extends React.Component {
         <Grid className={classes.mainHeader}>
           <Grid className={classes.imageContentHeader}>
             <Link href={'/'}>
-              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
+              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{cursor: "pointer"}} alt={'Logo Bleu'}/>
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>
             <Stepper activeStep={this.state.activeStep}/>
           </Grid>
         </Grid>
-        <Grid className={classes.mainContainer}>
-          <Grid className={classes.contentComponent}>
-            {this.renderSwitch(this.state.activeStep)}
+        <Grid className={classes.marginContainer}>
+          <Grid className={classes.mainContainer}>
+            <Grid className={classes.leftContentComponent}>
+              {this.renderSwitch(this.state.activeStep)}
+            </Grid>
+            <Grid className={classes.rightContentComponent}>
+              <Grid className={classes.contentRight} style={{backgroundImage: `url(../../../static/assets/img/creaShop/bgImage/etape${this.state.activeStep}.svg)`}}/>
+            </Grid>
           </Grid>
+        </Grid>
+        <Grid className={classes.footerMainContainer}>
           <Grid className={classes.footerContainer}>
-            <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
-            <NavigationBarForm nextStep={this.getNextStep} previousStep={this.getPreviousStep}/>
+            <Grid className={classes.marginHr}>
+              <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+            </Grid>
+            <Grid className={classes.navButtonContent}>
+              <Grid>
+                <Button
+                  color="primary"
+                  disabled={this.state.activeStep === 0}
+                  onClick={this.handleBack}
+                >
+                  Retour
+                </Button>
+              </Grid>
+              <Grid>
+                <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}>
+                  {this.state.activeStep === 9 ? 'Envoyer' : 'Suivant'}
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

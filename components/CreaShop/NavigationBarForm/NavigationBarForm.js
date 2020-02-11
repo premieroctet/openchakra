@@ -27,8 +27,11 @@ class NavigationBarForm extends React.Component {
     const {classes} = this.props;
 
     return(
-      <Grid className={classes.contentLeftFooter}>
-        <Grid style={{display: "flex",justifyContent: "space-between"}}>
+      <Grid className={classes.contentFooter}>
+        <Grid>
+          <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+        </Grid>
+        <Grid style={{display: 'flex'}}>
           <Grid>
             <Button
               color="primary"

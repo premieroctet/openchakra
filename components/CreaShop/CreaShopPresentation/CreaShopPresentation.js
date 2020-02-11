@@ -21,7 +21,7 @@ class CreaShopPresentation extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>Nous allons vous aider à créer votre service & devenir un Alfred en 3 minutes !</Typography>
+                <Typography className={classes.policySizeTitle}>Nous allons vous aider à créer votre service & devenir un Alfred en 3 minutes !  </Typography>
               </Grid>
               <Grid className={classes.contentTextSize}>
                 <Grid>
@@ -31,7 +31,7 @@ class CreaShopPresentation extends React.Component {
                   </Grid>
                   <Grid>
                     <Grid>
-                      <Typography className={classes.policySizeSubtitle}>Choisissez votre premier super talent ! </Typography>
+                      <h3 className={classes.policySizeSubtitle}>Choisissez votre premier super talent ! </h3>
                     </Grid>
                     <Grid>
                       <p className={classes.policySizeContent}>Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appel un autre, vous pourrez en ajouter autant de services que vous voulez</p>
@@ -45,7 +45,7 @@ class CreaShopPresentation extends React.Component {
                   </Grid>
                   <Grid>
                     <Grid>
-                      <Typography className={classes.policySizeSubtitle}>Vous êtes chez vous ! Fixez vos règles et vos conditions…</Typography>
+                      <h3 className={classes.policySizeSubtitle}>Vous êtes chez vous ! Fixez vos règles et vos conditions…</h3>
                     </Grid>
                     <Grid>
                       <p className={classes.policySizeContent}>Indiquez vos disponibilités ,paramètres de
@@ -60,7 +60,7 @@ class CreaShopPresentation extends React.Component {
                   </Grid>
                   <Grid>
                     <Grid>
-                      <Typography className={classes.policySizeSubtitle}>Présentez-vous ! </Typography>
+                      <h3 className={classes.policySizeSubtitle}>Présentez-vous ! </h3>
                     </Grid>
                     <Grid>
                       <p className={classes.policySizeContent}>Renseignez votre profil Alfred, partager vos réalisations, et décrivez vous ! </p>
