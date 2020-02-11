@@ -54,7 +54,6 @@ const menuItems: MenuItems = {
     children: {
       BreadcrumbItem: {},
       BreadcrumbLink: {},
-      BreadcrumbSeparator: {},
     },
   },
   Button: {},

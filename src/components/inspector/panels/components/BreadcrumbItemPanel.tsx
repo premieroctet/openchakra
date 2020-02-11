@@ -5,7 +5,7 @@ import SwitchControl from '../../controls/SwitchControl'
 const BreadcrumbItemPanel = () => {
   return (
     <>
-      <SwitchControl label="is Current Page" name="isCurrentPage" />
+      <SwitchControl label="Is current page" name="isCurrentPage" />
     </>
   )
 }

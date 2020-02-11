@@ -73,7 +73,6 @@ type ComponentType =
   | 'Breadcrumb'
   | 'BreadcrumbItem'
   | 'BreadcrumbLink'
-  | 'BreadcrumbSeparator'
   | 'BreadcrumbMeta'
 
 interface IComponent {

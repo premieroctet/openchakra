@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   CloseButton,
   Heading,
@@ -63,7 +64,6 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
   EditableProps,
   MenuProps,
   NumberInputProps,
@@ -146,7 +146,6 @@ type PreviewDefaultProps = {
   Breadcrumb?: BreadcrumbItemProps
   BreadcrumbItem?: BreadcrumbItemProps
   BreadcrumbLink?: any
-  BreadcrumbSeparator?: any
   Editable?: EditableProps
   Menu?: MenuProps
   NumberInput?: NumberInputProps
@@ -271,7 +270,18 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   Radio: { ...Radio.defaultProps, children: 'Radio' },
   RadioGroup: { ...RadioGroup.defaultProps },
-  Select: { ...Select.defaultProps, variant: 'outline', size: 'md' },
+  Select: {
+    ...Select.defaultProps,
+    variant: 'outline',
+    size: 'md',
+    children: (
+      <>
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3">Option 3</option>
+      </>
+    ),
+  },
   List: { ...List.defaultProps, styleType: 'none' },
   ListIcon: { ...ListIcon.defaultProps },
   ListItem: { ...ListItem.defaultProps, children: 'list' },
@@ -295,13 +305,14 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   AspectRatioBox: {
     ...AspectRatioBox.defaultProps,
   },
-  Breadcrumb: { ...Breadcrumb.defaultProps },
+  Breadcrumb: {
+    ...Breadcrumb.defaultProps,
+    separator: '/',
+    addSeparator: true,
+  },
   BreadcrumbItem: { ...BreadcrumbItem.defaultProps },
   BreadcrumbLink: {
     ...BreadcrumbLink.defaultProps,
     children: 'Lorem Ipsum',
-  },
-  BreadcrumbSeparator: {
-    ...BreadcrumbSeparator.defaultProps,
   },
 }

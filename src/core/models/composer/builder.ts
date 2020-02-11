@@ -33,11 +33,9 @@ export const buildBreadcrumb = (parent: string): ComposedComponent => {
   const nodeId = composer.addNode('Breadcrumb')
   const itemId = composer.addNode('BreadcrumbItem', nodeId)
   composer.addNode('BreadcrumbLink', itemId)
-  composer.addNode('BreadcrumbSeparator', itemId)
 
   const secondItemId = composer.addNode('BreadcrumbItem', nodeId)
   composer.addNode('BreadcrumbLink', secondItemId)
-  composer.addNode('BreadcrumbSeparator', secondItemId)
 
   const components = composer.getComponents()
 

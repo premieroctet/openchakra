@@ -53,7 +53,6 @@ export const COMPONENTS: ComponentType[] = [
   'Breadcrumb',
   'BreadcrumbItem',
   'BreadcrumbLink',
-  'BreadcrumbSeparator',
   'Menu',
   'NumberInput',
   'AccordionItem',
