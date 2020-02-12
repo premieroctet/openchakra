@@ -2,7 +2,8 @@ import { createModel } from '@rematch/core'
 import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import omit from 'lodash/omit'
 import templates, { TemplateType } from '../../templates'
-import { generateId } from './app'
+import { generateId } from '../../utils/generateId'
+import { duplicateComponent, deleteComponent } from '../../utils/recursive'
 
 export type ComponentsState = {
   components: IComponents
@@ -98,21 +99,7 @@ const components = createModel({
         }
       }
 
-      const deleteRecursive = (
-        children: IComponent['children'],
-        id: IComponent['id'],
-      ) => {
-        children.forEach(child => {
-          updatedComponents[child] &&
-            deleteRecursive(updatedComponents[child].children, componentId)
-        })
-
-        updatedComponents = omit(updatedComponents, id)
-      }
-
-      deleteRecursive(component.children, componentId)
-
-      updatedComponents = omit(updatedComponents, componentId)
+      updatedComponents = deleteComponent(component, updatedComponents)
 
       return {
         ...state,
@@ -264,29 +251,10 @@ const components = createModel({
       if (selectedComponent.id !== DEFAULT_ID) {
         const parentElement = state.components[selectedComponent.parent]
 
-        const clonedComponents: IComponents = {}
-
-        const cloneComponent = (component: IComponent) => {
-          const newid = generateId()
-          const children = component.children.map(child => {
-            return cloneComponent(state.components[child])
-          })
-
-          clonedComponents[newid] = {
-            ...component,
-            id: newid,
-            props: { ...component.props },
-            children,
-          }
-
-          children.forEach(child => {
-            clonedComponents[child].parent = newid
-          })
-
-          return newid
-        }
-
-        const newId = cloneComponent(selectedComponent)
+        const { newId, clonedComponents } = duplicateComponent(
+          selectedComponent,
+          state.components,
+        )
 
         return {
           ...state,
