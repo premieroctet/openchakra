@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
@@ -415,23 +416,32 @@ router.get('/near',passport.authenticate('jwt',{session:false}),(req,res)=> {
                     const gps = user.billing_address.gps;
                     const latUser = gps.lat;
                     const lngUser = gps.lng;
-
+                    const allService = [];
                     service.forEach(e => {
                         const gpsAlfred = e.service_address.gps;
                         const latAlfred = gpsAlfred.lat;
                         const lngAlfred = gpsAlfred.lng;
 
-                        const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+                        /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
 
                         if(!isNear) {
-                            const removeIndex = service.findIndex(i => i._id === e._id);
+                            const removeIndex = service.findIndex(i => i._id == e._id);
                             service.splice(removeIndex, 1);
+                        }*/
+                        if(geolib.convertDistance(
+                            geolib.getDistance(
+                                {latitude:latUser,longitude:lngUser},
+                                {latitude:latAlfred, longitude: lngAlfred}
+                            ),
+                            'km'
+                        ).toFixed(2) < e.perimeter) {
+                            allService.push(e)
                         }
 
 
                     });
 
-                    res.json(service);
+                    res.json(allService);
 
                 })
                 .catch(err => res.status(404).json({ service: 'No service found' }));
@@ -465,6 +475,8 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
                             const removeIndex = service.findIndex(i => i._id === e._id);
                             service.splice(removeIndex, 1);
                         }
+
+
 
 
                     });
@@ -509,23 +521,34 @@ router.get('/nearOther/:id',passport.authenticate('jwt',{session:false}),(req,re
                     const gps = user.service_address[addressIndex];
                     const latUser = gps.lat;
                     const lngUser = gps.lng;
+                    const allService = [];
 
                     service.forEach(e => {
                         const gpsAlfred = e.service_address.gps;
                         const latAlfred = gpsAlfred.lat;
                         const lngAlfred = gpsAlfred.lng;
 
-                        const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+                        /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
 
                         if(!isNear) {
                             const removeIndex = service.findIndex(i => i._id === e._id);
                             service.splice(removeIndex, 1);
+                        }*/
+                        if(geolib.convertDistance(
+                            geolib.getDistance(
+                                {latitude:latUser,longitude:lngUser},
+                                {latitude:latAlfred, longitude: lngAlfred}
+                            ),
+                            'km'
+                        ).toFixed(2) < e.perimeter) {
+                            allService.push(e)
                         }
+
 
 
                     });
 
-                    res.json(service);
+                    setTimeout(()=>res.json(allService),500);
 
                 })
                 .catch(err => res.status(404).json({ service: 'No service found' }));

@@ -620,6 +620,15 @@ class Messages extends React.Component {
                                       ></Typography>
                                     </Grid>
                                     <Grid item xs={2} style={{}}>
+                                      <Link
+                                          href={{
+                                            pathname: '/reservations/messagesDetails',
+                                            query: {
+                                              id: booking.chatroom._id,
+                                              booking: booking._id
+                                            }
+                                          }}
+                                      >
                                       <Typography
                                           style={{
                                             height: "45px",
@@ -631,15 +640,7 @@ class Messages extends React.Component {
                                             marginTop: "15%"
                                           }}
                                       >
-                                        <Link
-                                            href={{
-                                              pathname: '/reservations/messagesDetails',
-                                              query: {
-                                                id: booking.chatroom._id,
-                                                booking: booking._id
-                                              }
-                                            }}
-                                        >
+
                                           <a
                                               style={{
                                                 textDecoration: "none",
@@ -648,8 +649,8 @@ class Messages extends React.Component {
                                           >
                                             Détail
                                           </a>
-                                        </Link>
                                       </Typography>
+                                        </Link>
                                     </Grid>
                                   </Grid>
 
@@ -708,6 +709,15 @@ class Messages extends React.Component {
                                       ></Typography>
                                     </Grid>
                                     <Grid item xs={12} style={{}}>
+                                      <Link
+                                          href={{
+                                            pathname: '/reservations/messagesDetails',
+                                            query: {
+                                              id: booking.chatroom._id,
+                                              booking: booking._id
+                                            }
+                                          }}
+                                      >
                                       <Typography
                                           style={{
                                             height: "45px",
@@ -719,15 +729,7 @@ class Messages extends React.Component {
                                             marginTop: "5%"
                                           }}
                                       >
-                                        <Link
-                                            href={{
-                                              pathname: '/reservations/messagesDetails',
-                                              query: {
-                                                id: booking.chatroom._id,
-                                                booking: booking._id
-                                              }
-                                            }}
-                                        >
+
                                           <a
                                               style={{
                                                 textDecoration: "none",
@@ -736,8 +738,8 @@ class Messages extends React.Component {
                                           >
                                             Détail
                                           </a>
-                                        </Link>
                                       </Typography>
+                                        </Link>
                                     </Grid>
                                   </Grid>
                                 </React.Fragment>
@@ -801,6 +803,15 @@ class Messages extends React.Component {
                                         ></Typography>
                                       </Grid>
                                       <Grid item xs={2} style={{}}>
+                                        <Link
+                                            href={{
+                                              pathname: '/reservations/messagesDetails',
+                                              query: {
+                                                id: booking.chatroom._id,
+                                                booking: booking._id
+                                              }
+                                            }}
+                                        >
                                         <Typography
                                             style={{
                                               height: "45px",
@@ -812,15 +823,7 @@ class Messages extends React.Component {
                                               marginTop: "15%"
                                             }}
                                         >
-                                          <Link
-                                              href={{
-                                                pathname: '/reservations/messagesDetails',
-                                                query: {
-                                                  id: booking.chatroom._id,
-                                                  booking: booking._id
-                                                }
-                                              }}
-                                          >
+
                                             <a
                                                 style={{
                                                   textDecoration: "none",
@@ -829,8 +832,8 @@ class Messages extends React.Component {
                                             >
                                               Détail
                                             </a>
-                                          </Link>
                                         </Typography>
+                                          </Link>
                                       </Grid>
                                     </Grid>
 
@@ -891,6 +894,15 @@ class Messages extends React.Component {
                                         ></Typography>
                                       </Grid>
                                       <Grid item xs={12} style={{}}>
+                                        <Link
+                                            href={{
+                                              pathname: '/reservations/messagesDetails',
+                                              query: {
+                                                id: booking.chatroom._id,
+                                                booking: booking._id
+                                              }
+                                            }}
+                                        >
                                         <Typography
                                             style={{
                                               height: "45px",
@@ -902,15 +914,7 @@ class Messages extends React.Component {
                                               marginTop: "5%"
                                             }}
                                         >
-                                          <Link
-                                              href={{
-                                                pathname: '/reservations/messagesDetails',
-                                                query: {
-                                                  id: booking.chatroom._id,
-                                                  booking: booking._id
-                                                }
-                                              }}
-                                          >
+
                                             <a
                                                 style={{
                                                   textDecoration: "none",
@@ -919,8 +923,8 @@ class Messages extends React.Component {
                                             >
                                               Détail
                                             </a>
-                                          </Link>
                                         </Typography>
+                                          </Link>
                                       </Grid>
                                     </Grid>
                                   </React.Fragment>

@@ -742,6 +742,13 @@ class ComingReservations extends React.Component {
                                           </Typography>
                                         </Grid>
                                         <Grid item xs={2} style={{}}>
+                                          <Link
+                                              href={{
+                                                pathname:
+                                                    "/reservations/detailsReservation",
+                                                query: { id: booking._id, user: true }
+                                              }}
+                                          >
                                           <Typography
                                               className={classes.webvoir}
                                               style={{
@@ -754,13 +761,7 @@ class ComingReservations extends React.Component {
                                                 marginTop: "15%"
                                               }}
                                           >
-                                            <Link
-                                                href={{
-                                                  pathname:
-                                                      "/reservations/detailsReservation",
-                                                  query: { id: booking._id, user: true }
-                                                }}
-                                            >
+
                                               <a
                                                   style={{
                                                     textDecoration: "none",
@@ -769,8 +770,8 @@ class ComingReservations extends React.Component {
                                               >
                                                 Voir la réservation
                                               </a>
-                                            </Link>
                                           </Typography>
+                                            </Link>
                                         </Grid>
                                       </Grid>
 
@@ -867,6 +868,14 @@ class ComingReservations extends React.Component {
                                           </Typography>
                                         </Grid>
                                         <Grid item xs={12} style={{}}>
+
+                                          <Link
+                                              href={{
+                                                pathname:
+                                                    "/reservations/detailsReservation",
+                                                query: { id: booking._id, user: true }
+                                              }}
+                                          >
                                           <Typography
                                               style={{
                                                 height: "45px",
@@ -878,13 +887,7 @@ class ComingReservations extends React.Component {
                                                 marginTop: "5%"
                                               }}
                                           >
-                                            <Link
-                                                href={{
-                                                  pathname:
-                                                      "/reservations/detailsReservation",
-                                                  query: { id: booking._id, user: true }
-                                                }}
-                                            >
+
                                               <a
                                                   style={{
                                                     textDecoration: "none",
@@ -893,8 +896,8 @@ class ComingReservations extends React.Component {
                                               >
                                                 Voir
                                               </a>
-                                            </Link>
                                           </Typography>
+                                            </Link>
                                         </Grid>
                                       </Grid>
                                     </React.Fragment>
@@ -971,7 +974,7 @@ class ComingReservations extends React.Component {
                                       {booking.service}
                                     </Typography>
                                   </Grid>
-                                  <Grid item xs={1} style={{}}>
+                                  <Grid item xs={1}>
                                     <Typography
                                         style={{
                                           color: "#4FBDD7",
@@ -982,7 +985,13 @@ class ComingReservations extends React.Component {
                                       {booking.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€
                                     </Typography>
                                   </Grid>
-                                  <Grid item xs={2} style={{}}>
+                                  <Grid item xs={2}>
+                                    <Link
+                                        href={{
+                                          pathname: "/reservations/detailsReservation",
+                                          query: { id: booking._id, user: true }
+                                        }}
+                                    >
                                     <Typography
                                         style={{
                                           height: "45px",
@@ -994,12 +1003,7 @@ class ComingReservations extends React.Component {
                                           marginTop: "15%"
                                         }}
                                     >
-                                      <Link
-                                          href={{
-                                            pathname: "/reservations/detailsReservation",
-                                            query: { id: booking._id, user: true }
-                                          }}
-                                      >
+
                                         <a
                                             style={{
                                               textDecoration: "none",
@@ -1008,8 +1012,8 @@ class ComingReservations extends React.Component {
                                         >
                                           Voir la réservation
                                         </a>
-                                      </Link>
                                     </Typography>
+                                      </Link>
                                   </Grid>
                                 </Grid>
 
@@ -1075,7 +1079,7 @@ class ComingReservations extends React.Component {
                                       {booking.service}
                                     </Typography>
                                   </Grid>
-                                  <Grid item xs={12} style={{}}>
+                                  <Grid item xs={12}>
                                     <Typography
                                         style={{
                                           color: "#4FBDD7",
@@ -1087,7 +1091,13 @@ class ComingReservations extends React.Component {
                                       {booking.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€
                                     </Typography>
                                   </Grid>
-                                  <Grid item xs={12} style={{}}>
+                                  <Grid item xs={12}>
+                                    <Link
+                                        href={{
+                                          pathname: "/reservations/detailsReservation",
+                                          query: { id: booking._id, user: true }
+                                        }}
+                                    >
                                     <Typography
                                         style={{
                                           height: "45px",
@@ -1099,12 +1109,7 @@ class ComingReservations extends React.Component {
                                           marginTop: "5%"
                                         }}
                                     >
-                                      <Link
-                                          href={{
-                                            pathname: "/reservations/detailsReservation",
-                                            query: { id: booking._id, user: true }
-                                          }}
-                                      >
+
                                         <a
                                             style={{
                                               textDecoration: "none",
@@ -1113,8 +1118,8 @@ class ComingReservations extends React.Component {
                                         >
                                           Voir
                                         </a>
-                                      </Link>
                                     </Typography>
+                                      </Link>
                                   </Grid>
                                 </Grid>
                               </React.Fragment>

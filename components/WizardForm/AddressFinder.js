@@ -20,12 +20,15 @@ class AddressFinder extends React.Component {
     }
 
     onChange({suggestion}) {
-        this.setState({city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode,country: suggestion.country,
-        lat: suggestion.latlng.lat, lng: suggestion.latlng.lng});
+        this.setState({city: {label:suggestion.city,value:suggestion.city}, address: {label:suggestion.name,value:suggestion.name},
+            zip_code: {label:suggestion.postcode,value:suggestion.postcode},country: {label:suggestion.country,value:suggestion.country},
+        lat: {label:suggestion.latlng.lat,value:suggestion.latlng.lat}, lng: {label:suggestion.latlng.lng,value:suggestion.latlng.lng}});
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.city`, this.state.city);
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.address`, this.state.address);
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.country`, this.state.country);
         this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.postal_code`, this.state.zip_code);
+        this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.lat`, this.state.lat);
+        this.props.formikCtx.form.setFieldValue(`submission.${this.props.index}.lng`, this.state.lng);
     }
 
     render() {
@@ -49,9 +52,10 @@ class AddressFinder extends React.Component {
                    <Grid item>
                        <TextField
                             inputProps={{
-                                readOnly: true
+                                readOnly: true,
+                                style: {cursor:"default"}
                             }}
-                           id="standard-with-placeholder"
+                            InputLabelProps={{ shrink: true }}
                            color="primary"
                            variant="outlined"
                            label="Adresse"
@@ -60,16 +64,17 @@ class AddressFinder extends React.Component {
                            style={{ width: '100%' }}
                            type="text"
                            name="address"
-                           value={this.state.address}
+                           value={this.state.address.value}
                            onChange={this.onChange}
                        />
                    </Grid>
                    <Grid item>
                        <TextField
                             inputProps={{
-                                readOnly: true
+                                readOnly: true,
+                                style: {cursor:"default"}
                             }}
-                           id="standard-with-placeholder"
+                           InputLabelProps={{ shrink: true }}
                            color="primary"
                            variant="outlined"
                            label="Ville"
@@ -78,16 +83,17 @@ class AddressFinder extends React.Component {
                            style={{ width: '100%' }}
                            type="text"
                            name="city"
-                           value={this.state.city}
+                           value={this.state.city.value}
                            onChange={this.onChange}
                        />
                    </Grid>
                    <Grid item>
                        <TextField
                             inputProps={{
-                                readOnly: true
+                                readOnly: true,
+                                style: {cursor:"default"}
                             }}
-                           id="standard-with-placeholder"
+                           InputLabelProps={{ shrink: true }}
                            color="primary"
                            variant="outlined"
                            label="Code postal"
@@ -96,16 +102,18 @@ class AddressFinder extends React.Component {
                            style={{ width: '100%' }}
                            type="text"
                            name="zip_code"
-                           value={this.state.zip_code}
+                           value={this.state.zip_code.value}
                            onChange={this.onChange}
                        />
                    </Grid>
                    <Grid item>
                        <TextField
                             inputProps={{
-                                readOnly: true
+                                readOnly: true,
+                                style: {cursor: "default"}
                             }}
                            id="standard-with-placeholder"
+                           InputLabelProps={{ shrink: true }}
                            color="primary"
                            variant="outlined"
                            label="Pays"
@@ -114,7 +122,7 @@ class AddressFinder extends React.Component {
                            style={{ width: '100%' }}
                            type="text"
                            name="country"
-                           value={this.state.country}
+                           value={this.state.country.value}
                            onChange={this.onChange}
                        />
                    </Grid>

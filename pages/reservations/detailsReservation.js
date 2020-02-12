@@ -221,7 +221,7 @@ class DetailsReservation extends React.Component {
 
     axios.get(url + "myAlfred/api/booking/" + booking_id).then(res => {
       this.setState({ bookingObj: res.data });
-      this.setState({ splitAddress: this.state.bookingObj.user.billing_address.address.split(' ')})
+      this.setState({ splitAddress: this.state.bookingObj.address.address.split(' ')})
 
       this.socket = io();
       this.socket.on("connect", socket => {
@@ -391,7 +391,7 @@ class DetailsReservation extends React.Component {
                           xs={3}
                           style={{
                             height: "100%",
-                            borderRight: "1px #8281813b solid"
+
                           }}
                       >
                         <Grid
@@ -1351,13 +1351,13 @@ class DetailsReservation extends React.Component {
                                 <Typography>
                                   {bookingObj === null
                                       ? null
-                                      : bookingObj.user.billing_address.address}
+                                      : bookingObj.address.address}
                                   <br />
                                   {bookingObj === null
                                       ? null
-                                      : bookingObj.user.billing_address.zip_code +
+                                      : bookingObj.address.zip_code +
                                       " " +
-                                      bookingObj.user.billing_address.city}
+                                      bookingObj.address.city}
                                 </Typography>
                                 <Typography
                                     style={{
@@ -1366,7 +1366,7 @@ class DetailsReservation extends React.Component {
                                       cursor: "pointer"
                                     }}
                                 >
-                                  <a style={{ color: "rgb(47, 188, 211)", fontSize: "0.8rem" }} href={`https://www.google.fr/maps/place/${splitAddress.join('+')},+${bookingObj.user.billing_address.zip_code}+${bookingObj.user.billing_address.city}/@${bookingObj.user.billing_address.gps.lat},${bookingObj.user.billing_address.gps.lng}`} target='_blank'>
+                                  <a style={{ color: "rgb(47, 188, 211)", fontSize: "0.8rem" }} href={`https://www.google.fr/maps/place/${splitAddress.join('+')},+${bookingObj.address.zip_code}+${bookingObj.address.city}/@${bookingObj.address.gps.lat},${bookingObj.address.gps.lng}`} target='_blank'>
                                     Voir sur la map
                                   </a>
                                 </Typography>

@@ -720,7 +720,14 @@ class FinishedReservations extends React.Component {
                                     €
                                   </Typography>
                                 </Grid>
-                                <Grid item xs={2} style={{}}>
+                                <Grid item xs={2}>
+                                  <Link
+                                      href={{
+                                        pathname:
+                                            "/reservations/detailsReservation",
+                                        query: { id: booking._id, user: true }
+                                      }}
+                                  >
                                   <Typography
                                     style={{
                                       height: "45px",
@@ -732,13 +739,7 @@ class FinishedReservations extends React.Component {
                                       marginTop: "15%"
                                     }}
                                   >
-                                    <Link
-                                      href={{
-                                        pathname:
-                                          "/reservations/detailsReservation",
-                                        query: { id: booking._id, user: true }
-                                      }}
-                                    >
+
                                       <a
                                         style={{
                                           textDecoration: "none",
@@ -747,8 +748,8 @@ class FinishedReservations extends React.Component {
                                       >
                                         Voir la réservation
                                       </a>
-                                    </Link>
                                   </Typography>
+                                    </Link>
                                 </Grid>
                               </Grid>
 
@@ -836,7 +837,14 @@ class FinishedReservations extends React.Component {
                                     €
                                   </Typography>
                                 </Grid>
-                                <Grid item xs={12} style={{}}>
+                                <Grid item xs={12}>
+                                  <Link
+                                      href={{
+                                        pathname:
+                                            "/reservations/detailsReservation",
+                                        query: { id: booking._id, user: true }
+                                      }}
+                                  >
                                   <Typography
                                     style={{
                                       height: "45px",
@@ -848,13 +856,7 @@ class FinishedReservations extends React.Component {
                                       marginTop: "5%"
                                     }}
                                   >
-                                    <Link
-                                      href={{
-                                        pathname:
-                                          "/reservations/detailsReservation",
-                                        query: { id: booking._id, user: true }
-                                      }}
-                                    >
+
                                       <a
                                         style={{
                                           textDecoration: "none",
@@ -863,8 +865,8 @@ class FinishedReservations extends React.Component {
                                       >
                                         Voir la réservation
                                       </a>
-                                    </Link>
                                   </Typography>
+                                    </Link>
                                 </Grid>
                               </Grid>
                             </React.Fragment>
@@ -944,7 +946,14 @@ class FinishedReservations extends React.Component {
                                 €
                               </Typography>
                             </Grid>
-                            <Grid item xs={2} style={{}}>
+                            <Grid item xs={2}>
+                              <Link
+                                  href={{
+                                    pathname:
+                                        "/reservations/detailsReservation",
+                                    query: { id: booking._id, user: true }
+                                  }}
+                              >
                               <Typography
                                 style={{
                                   height: "45px",
@@ -956,13 +965,7 @@ class FinishedReservations extends React.Component {
                                   marginTop: "15%"
                                 }}
                               >
-                                <Link
-                                  href={{
-                                    pathname:
-                                      "/reservations/detailsReservation",
-                                    query: { id: booking._id, user: true }
-                                  }}
-                                >
+
                                   <a
                                     style={{
                                       textDecoration: "none",
@@ -971,8 +974,8 @@ class FinishedReservations extends React.Component {
                                   >
                                     Voir la réservation
                                   </a>
-                                </Link>
                               </Typography>
+                                </Link>
                             </Grid>
                           </Grid>
 
@@ -1052,7 +1055,14 @@ class FinishedReservations extends React.Component {
                                 €
                               </Typography>
                             </Grid>
-                            <Grid item xs={12} style={{}}>
+                            <Grid item xs={12}>
+                              <Link
+                                  href={{
+                                    pathname:
+                                        "/reservations/detailsReservation",
+                                    query: { id: booking._id, user: true }
+                                  }}
+                              >
                               <Typography
                                 style={{
                                   height: "45px",
@@ -1064,13 +1074,7 @@ class FinishedReservations extends React.Component {
                                   marginTop: "5%"
                                 }}
                               >
-                                <Link
-                                  href={{
-                                    pathname:
-                                      "/reservations/detailsReservation",
-                                    query: { id: booking._id, user: true }
-                                  }}
-                                >
+
                                   <a
                                     style={{
                                       textDecoration: "none",
@@ -1079,8 +1083,8 @@ class FinishedReservations extends React.Component {
                                   >
                                     Voir la réservation
                                   </a>
-                                </Link>
                               </Typography>
+                                </Link>
                             </Grid>
                           </Grid>
                         </React.Fragment>

@@ -186,39 +186,16 @@ router.put('/profile/billingAddress',passport.authenticate('jwt',{session: false
             user.billing_address.address = req.body.address;
             user.billing_address.zip_code = req.body.zip_code;
             user.billing_address.city = req.body.city;
+            user.billing_address.country = req.body.country;
 
-            if (req.body.country === 'France') {
-                user.billing_address.country = 'France';
-            } else {
-                user.billing_address.country = 'Maroc';
-            }
 
             user.billing_address.gps = {};
+            user.billing_address.gps.lat = req.body.lat;
+            user.billing_address.gps.lng = req.body.lng;
 
-            let address = req.body.address;
-            let city = req.body.city;
-            let zip = req.body.zip_code;
 
-            let newAddress = address.replace(/ /g, '+');
+            user.save().then(user => res.json(user)).catch(err => console.log(err));
 
-            const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
-
-            axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
-                .then(response => {
-
-                    let result = response.data.features;
-
-                    result.forEach(function (element) {
-                        user.billing_address.gps.lat = element.geometry.coordinates[1];
-                        user.billing_address.gps.lng = element.geometry.coordinates[0];
-                    });
-
-                    user.save().then(user => res.json(user)).catch(err => console.log(err));
-
-                })
-                .catch(error => {
-                    console.log(error)
-                });
         })
 });
 

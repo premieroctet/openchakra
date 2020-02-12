@@ -1006,7 +1006,7 @@ class searchNotLogin extends React.Component {
                                 <Grid container>
                                     <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous aujourd'hui ?</h3>
                                 </Grid>
-                                <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
+                                <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                                     {categories.map((e,index) => (
                                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
                                             <Link href={'/serviceByCategory?category='+e._id}>

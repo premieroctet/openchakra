@@ -726,6 +726,13 @@ class AllReservations extends React.Component {
                                                                 </Typography>
                                                             </Grid>
                                                             <Grid item xs={2} style={{}}>
+                                                                <Link
+                                                                    href={{
+                                                                        pathname:
+                                                                            "/reservations/detailsReservation",
+                                                                        query: { id: booking._id, user: true }
+                                                                    }}
+                                                                >
                                                                 <Typography
                                                                     className={classes.webvoir}
                                                                     style={{
@@ -738,13 +745,7 @@ class AllReservations extends React.Component {
                                                                         marginTop: "15%"
                                                                     }}
                                                                 >
-                                                                    <Link
-                                                                        href={{
-                                                                            pathname:
-                                                                                "/reservations/detailsReservation",
-                                                                            query: { id: booking._id, user: true }
-                                                                        }}
-                                                                    >
+
                                                                         <a
                                                                             style={{
                                                                                 textDecoration: "none",
@@ -753,8 +754,8 @@ class AllReservations extends React.Component {
                                                                         >
                                                                             Voir la réservation
                                                                         </a>
-                                                                    </Link>
                                                                 </Typography>
+                                                                    </Link>
                                                             </Grid>
                                                         </Grid>
 
@@ -853,6 +854,13 @@ class AllReservations extends React.Component {
                                                                 </Typography>
                                                             </Grid>
                                                             <Grid item xs={12} style={{}}>
+                                                                <Link
+                                                                    href={{
+                                                                        pathname:
+                                                                            "/reservations/detailsReservation",
+                                                                        query: { id: booking._id, user: true }
+                                                                    }}
+                                                                >
                                                                 <Typography
                                                                     className={classes.mobilevoir}
                                                                     style={{
@@ -865,13 +873,7 @@ class AllReservations extends React.Component {
                                                                         marginTop: "5%"
                                                                     }}
                                                                 >
-                                                                    <Link
-                                                                        href={{
-                                                                            pathname:
-                                                                                "/reservations/detailsReservation",
-                                                                            query: { id: booking._id, user: true }
-                                                                        }}
-                                                                    >
+
                                                                         <a
                                                                             style={{
                                                                                 textDecoration: "none",
@@ -880,8 +882,8 @@ class AllReservations extends React.Component {
                                                                         >
                                                                             Voir
                                                                         </a>
-                                                                    </Link>
                                                                 </Typography>
+                                                                    </Link>
                                                             </Grid>
                                                         </Grid>
                                                     </React.Fragment>
@@ -972,6 +974,12 @@ class AllReservations extends React.Component {
                                                         </Typography>
                                                     </Grid>
                                                     <Grid item xs={2} style={{}}>
+                                                        <Link
+                                                            href={{
+                                                                pathname: "/reservations/detailsReservation",
+                                                                query: { id: booking._id, user: true }
+                                                            }}
+                                                        >
                                                         <Typography
                                                             className={classes.webvoir}
                                                             style={{
@@ -984,12 +992,7 @@ class AllReservations extends React.Component {
                                                                 marginTop: "15%"
                                                             }}
                                                         >
-                                                            <Link
-                                                                href={{
-                                                                    pathname: "/reservations/detailsReservation",
-                                                                    query: { id: booking._id, user: true }
-                                                                }}
-                                                            >
+
                                                                 <a
                                                                     style={{
                                                                         textDecoration: "none",
@@ -998,8 +1001,8 @@ class AllReservations extends React.Component {
                                                                 >
                                                                     Voir la réservation
                                                                 </a>
-                                                            </Link>
                                                         </Typography>
+                                                            </Link>
                                                     </Grid>
                                                 </Grid>
 
@@ -1079,6 +1082,12 @@ class AllReservations extends React.Component {
                                                         </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} style={{}}>
+                                                        <Link
+                                                            href={{
+                                                                pathname: "/reservations/detailsReservation",
+                                                                query: { id: booking._id, user: true }
+                                                            }}
+                                                        >
                                                         <Typography
                                                             className={classes.mobilevoir}
                                                             style={{
@@ -1091,12 +1100,7 @@ class AllReservations extends React.Component {
                                                                 marginTop: "5%"
                                                             }}
                                                         >
-                                                            <Link
-                                                                href={{
-                                                                    pathname: "/reservations/detailsReservation",
-                                                                    query: { id: booking._id, user: true }
-                                                                }}
-                                                            >
+
                                                                 <a
                                                                     style={{
                                                                         textDecoration: "none",
@@ -1105,8 +1109,8 @@ class AllReservations extends React.Component {
                                                                 >
                                                                     Voir
                                                                 </a>
-                                                            </Link>
                                                         </Typography>
+                                                            </Link>
                                                     </Grid>
                                                 </Grid>
                                             </React.Fragment>

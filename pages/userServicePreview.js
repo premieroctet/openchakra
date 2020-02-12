@@ -173,7 +173,8 @@ class userServices extends React.Component {
       hour: Date.now(),
       selectedOption: null,
       errorsPresta: null,
-      isToday: false
+      isToday: false,
+      address: {},
     };
 
     this.handleclick1 = this.handleclick1.bind(this);
@@ -194,6 +195,25 @@ class userServices extends React.Component {
     localStorage.removeItem("recipient");
 
     let isToday = moment(this.state.date).isSame(moment(new Date()), 'day');
+    const address = JSON.parse(localStorage.getItem('address'));
+    if(address !== null) {
+      if(address.gps === undefined){
+        let gps = {
+          lat: address.lat,
+          lng: address.lng
+        }
+        let addressObject = {
+          address: address.address,
+          city: address.city,
+          zip_code: address.zip_code,
+          gps: gps
+        }
+        this.setState({address: addressObject})
+      } else {
+        this.setState({address:address})
+      }
+    }
+
 
     this.setState({
       isToday: isToday
@@ -214,6 +234,9 @@ class userServices extends React.Component {
         .then(res => {
           let user = res.data;
           this.setState({ user: user });
+          if(address === "all" || address === null){
+            this.setState({address: user.billing_address})
+          }
         })
         .catch(err => {
           console.log(err);
@@ -704,7 +727,7 @@ class userServices extends React.Component {
                   let bookingObj = {
                     reference: reference,
                     service: this.state.service.label,
-                    address: this.state.serviceUser.service_address,
+                    address: this.state.address,
                     equipments: this.state.serviceUser.equipments,
                     amount: this.state.grandTotal,
                     date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
@@ -727,6 +750,7 @@ class userServices extends React.Component {
                       .then(response => {
                         axios.put(url + 'myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: response.data._id })
                             .then(() => {
+                              localStorage.removeItem('address');
                               Router.push({
                                 pathname: "/reservations/messagesDetails",
                                 query: { id: bookingObj.chatroom, booking:response.data._id }
@@ -947,7 +971,7 @@ class userServices extends React.Component {
             let bookingObj = {
               reference: reference,
               service: this.state.service.label,
-              address: this.state.serviceUser.service_address,
+              address: this.state.address,
               equipments: this.state.serviceUser.equipments,
               amount: this.state.grandTotal,
               date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
@@ -967,6 +991,7 @@ class userServices extends React.Component {
             localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
             localStorage.setItem("emitter", this.state.user._id);
             localStorage.setItem("recipient", this.state.serviceUser.user._id);
+            localStorage.removeItem('address');
 
             Router.push({
               pathname: "/confirmPayement",
@@ -1093,7 +1118,7 @@ class userServices extends React.Component {
                           >
                             par {serviceUser.user.firstname} ({convertDistance(
                               getDistance(
-                                  {latitude:user.billing_address.gps.lat,longitude:user.billing_address.gps.lng},
+                                  {latitude:this.state.address.gps.lat,longitude:this.state.address.gps.lng},
                                   {latitude:serviceUser.service_address.gps.lat, longitude: serviceUser.service_address.gps.lng}
                               ),
                               'km'
@@ -3105,7 +3130,7 @@ class userServices extends React.Component {
                                 <Button
                                     disabled={this.state.user._id === serviceUser.user._id || convertDistance(
                                         getDistance(
-                                            {latitude:user.billing_address.gps.lat,longitude:user.billing_address.gps.lng},
+                                            {latitude:this.state.address.gps.lat,longitude:this.state.address.gps.lng},
                                             {latitude:serviceUser.service_address.gps.lat, longitude: serviceUser.service_address.gps.lng}
                                         ),
                                         'km'
@@ -3119,7 +3144,7 @@ class userServices extends React.Component {
                               <Grid item xs={6}>
                                 <Button disabled={this.state.user._id === serviceUser.user._id || convertDistance(
                                     getDistance(
-                                        {latitude:user.billing_address.gps.lat,longitude:user.billing_address.gps.lng},
+                                        {latitude:this.state.address.gps.lat,longitude:this.state.address.gps.lng},
                                         {latitude:serviceUser.service_address.gps.lat, longitude: serviceUser.service_address.gps.lng}
                                     ),
                                     'km'

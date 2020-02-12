@@ -380,7 +380,7 @@ class serviceByCategory extends React.Component {
                             <Grid container>
                                         <Grid container>
 
-                                                <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
+                                                <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                                                     {allCategories2.map((e,index) => (
                                                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
                                                             <Link href={'/serviceByCategory?category='+e._id}>

@@ -31,6 +31,7 @@ import { toast } from "react-toastify";
 import Loader from 'react-loader-spinner';
 import Clear from '@material-ui/icons/Clear';
 import Schedule from '../Schedule/Schedule';
+import Debug from './Debug';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;

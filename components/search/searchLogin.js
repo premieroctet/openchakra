@@ -1012,7 +1012,7 @@ class searchLogin extends React.Component {
                                 <Grid container>
                                     <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous {user.firstname} ?</h3>
                                 </Grid>
-                                <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'flow-root', minHeight: '250px'}}>
+                                <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                                     {categories.map((e,index) => (
                                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
                                             <Link href={'/serviceByCategory?category='+e._id}>
@@ -1091,7 +1091,7 @@ class searchLogin extends React.Component {
                                                                                     <Grid item xs={5}>
                                                                                         <Typography style={{marginBottom: '-20px',marginLeft: '10px', fontSize: '0.8rem'}}>à partir de {a.minimum_basket}€</Typography>
                                                                                         <Link href={"/userServicePreview?id="+ a._id}>
-                                                                                            <Button alt={a.service._id} variant="contained" color="primary"
+                                                                                            <Button onClick={()=>localStorage.setItem('address',JSON.stringify(this.state.addressSelected))} alt={a.service._id} variant="contained" color="primary"
                                                                                                     style={{width: '80%', color: 'white', margin: '20px auto auto'}}>
                                                                                                 Réserver
                                                                                             </Button>
@@ -1296,7 +1296,7 @@ class searchLogin extends React.Component {
                                                                                     <Grid item xs={5}>
                                                                                         <Typography style={{marginBottom: '-20px',marginLeft: '10px', fontSize: '0.8rem'}}>à partir de {a.minimum_basket}€</Typography>
                                                                                         <Link href={"/userServicePreview?id="+ a._id}>
-                                                                                            <Button alt={a.service._id} variant="contained" color="primary"
+                                                                                            <Button onClick={()=>localStorage.setItem('address',JSON.stringify(this.state.addressSelected))} alt={a.service._id} variant="contained" color="primary"
                                                                                                     style={{width: '80%', color: 'white', margin: '20px auto auto'}}>
                                                                                                 Réserver
                                                                                             </Button>
@@ -1508,7 +1508,7 @@ class searchLogin extends React.Component {
                                                                                     <Grid item xs={5}>
                                                                                         <Typography style={{marginBottom: '-20px',marginLeft: '10px', fontSize: '0.8rem'}}>à partir de {s.minimum_basket}€</Typography>
                                                                                         <Link href={"/userServicePreview?id="+ s._id}>
-                                                                                            <Button alt={s.service._id} variant="contained" color="primary"
+                                                                                            <Button onClick={()=>localStorage.setItem('address',JSON.stringify(this.state.addressSelected))} alt={s.service._id} variant="contained" color="primary"
                                                                                                     style={{width: '80%', color: 'white', margin: '20px auto auto'}}>
                                                                                                 Réserver
                                                                                             </Button>
@@ -1713,7 +1713,7 @@ class searchLogin extends React.Component {
                                                                                     <Grid item xs={5}>
                                                                                         <Typography style={{marginBottom: '-20px',marginLeft: '10px', fontSize: '0.8rem'}}>à partir de {s.minimum_basket}€</Typography>
                                                                                         <Link href={"/userServicePreview?id="+ s._id}>
-                                                                                            <Button alt={s.service._id} variant="contained" color="primary"
+                                                                                            <Button onClick={()=>localStorage.setItem('address',JSON.stringify(this.state.addressSelected))} alt={s.service._id} variant="contained" color="primary"
                                                                                                     style={{width: '80%', color: 'white', margin: '20px auto auto'}}>
                                                                                                 Réserver
                                                                                             </Button>

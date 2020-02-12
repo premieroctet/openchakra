@@ -97,6 +97,8 @@ class myAddresses extends React.Component {
             currentCity: '',
             currentZip_code: '',
             currentCountry: '',
+            currentLat:'',
+            currentLng: '',
             label_address: '',
             new_address: '',
             new_city: '',
@@ -134,7 +136,8 @@ class myAddresses extends React.Component {
                 this.setState({user:user});
                 if(typeof user.billing_address != 'undefined') {
                     this.setState({address: true, currentAddress: user.billing_address.address,currentCity: user.billing_address.city,
-                        currentZip_code: user.billing_address.zip_code,currentCountry: user.billing_address.country})
+                        currentZip_code: user.billing_address.zip_code,currentCountry: user.billing_address.country,currentLat: user.billing_address.gps.lat,
+                        currentLng: user.billing_address.gps.lng})
                 } else {
                     this.setState({address:false})
                 }
@@ -171,6 +174,11 @@ class myAddresses extends React.Component {
             edit_lat: suggestion.latlng.lat, edit_lng: suggestion.latlng.lng});
     }
 
+    onChangeAlgolia3({ suggestion}) {
+        this.setState({currentCity: suggestion.city, currentAddress: suggestion.name, currentZip_code: suggestion.postcode,
+            currentLat: suggestion.latlng.lat, currentLng: suggestion.latlng.lng,currentCountry: suggestion.country});
+    }
+
     handleClick = (id) => {
       this.setState({clickAdd: false, clickEdit: true});
       axios.get(url+'myAlfred/api/users/profile/address/'+id)
@@ -185,10 +193,12 @@ class myAddresses extends React.Component {
     onSubmit = e => {
       e.preventDefault();
       const address = {
-          address: this.state.currentAddress.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
+          address: this.state.currentAddress,
           city: this.state.currentCity,
           zip_code: this.state.currentZip_code,
-          country: this.state.currentCountry
+          country: this.state.currentCountry,
+          lat: this.state.currentLat,
+          lng: this.state.currentLng
       };
         axios
             .put(url+'myAlfred/api/users/profile/billingAddress', address)
@@ -380,11 +390,29 @@ class myAddresses extends React.Component {
                                 <Grid container>
                                     <Grid item>
                                         <h2 style={{fontWeight: '100'}}>Mon adresse principale</h2>
+                                        <Grid container>
+                                            <Grid item xs={10}>
+                                                <AlgoliaPlaces
+                                                    placeholder='Recherchez votre adresse'
+                                                    options={{
+                                                        appId: 'plKATRG826CP',
+                                                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                                                        language: 'fr',
+                                                        countries: ['fr'],
+                                                        type: 'address',
+                                                    }}
+                                                    onChange={(suggestion) =>this.onChangeAlgolia3(suggestion)}
+                                                />
+                                            </Grid>
+                                        </Grid>
                                         <form onSubmit={this.onSubmit}>
                                             <Grid container className={classes.responsiveContainer}>
                                             <Grid item xs={10}>
                                                 <TextField
-                                                    id="outlined-name"
+                                                    inputProps={{
+                                                        readOnly: true,
+                                                        style: {cursor:"default"}
+                                                    }}
                                                     style={{width: '100%'}}
                                                     value={this.state.currentAddress}
                                                     name={'currentAddress'}
@@ -398,7 +426,10 @@ class myAddresses extends React.Component {
                                                 <Grid container>
                                             <Grid item xs={10} lg={4}>
                                                 <TextField
-                                                    id="outlined-name"
+                                                    inputProps={{
+                                                        readOnly: true,
+                                                        style: {cursor:"default"}
+                                                    }}
                                                     className={classes.textField}
                                                     style={{width: '100%'}}
                                                     value={this.state.currentZip_code}
@@ -413,6 +444,10 @@ class myAddresses extends React.Component {
                                                     <Grid item xs={2}/>
                                                 <Grid item xs={10} lg={4}>
                                                     <TextField
+                                                        inputProps={{
+                                                            readOnly: true,
+                                                            style: {cursor:"default"}
+                                                        }}
                                                         id="outlined-name"
                                                         style={{width: '100%'}}
                                                         value={this.state.currentCity}
@@ -425,10 +460,13 @@ class myAddresses extends React.Component {
                                                     />
                                                 </Grid>
                                                 </Grid>
-                                            <Grid item xs={7}>
+                                            <Grid item xs={10} md={7}>
                                                 <TextField
+                                                    inputProps={{
+                                                        readOnly: true,
+                                                        style: {cursor:"default"}
+                                                    }}
                                                     id="outlined-select-currency"
-                                                    select
                                                     style={{width: '100%'}}
                                                     value={this.state.currentCountry}
                                                     onChange={this.onChange}
@@ -441,13 +479,8 @@ class myAddresses extends React.Component {
                                                     variant="outlined"
                                                     name={'currentCountry'}
                                                     label={'Pays'}
-                                                >
-                                                    <MenuItem value="">
-                                                        <em>...</em>
-                                                    </MenuItem>
-                                                    <MenuItem value={"France"}>France</MenuItem>
-                                                    <MenuItem value={"Maroc"}>Maroc</MenuItem>
-                                                </TextField>
+                                                />
+
                                             </Grid>
                                             </Grid>
                                             <Button size={'large'} type={'submit'} variant="contained" color="secondary"
@@ -513,13 +546,15 @@ class myAddresses extends React.Component {
                                             </Grid>
                                             <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
-                                                    id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.new_address}
                                                     onChange={this.onChange}
+                                                    inputProps={{
+                                                        readOnly: true,
+                                                        style: {cursor:"default"}
+                                                    }}
                                                     margin="normal"
                                                     name={'new_address'}
-                                                    placeholder={'Ecrire ici'}
                                                     variant={"outlined"}
                                                     label={'Rue'}
                                                 />
@@ -527,13 +562,15 @@ class myAddresses extends React.Component {
                                             <Grid container>
                                                 <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                     <TextField
-                                                        id="standard-name"
                                                         style={{ marginTop: 15,width: '100%'}}
                                                         value={this.state.new_zip_code}
                                                         onChange={this.onChange}
+                                                        inputProps={{
+                                                            readOnly: true,
+                                                            style: {cursor:"default"}
+                                                        }}
                                                         margin="normal"
                                                         name={'new_zip_code'}
-                                                        placeholder={'Ecrire ici'}
                                                         variant={"outlined"}
                                                         label={'Code postal'}
                                                     />
@@ -541,13 +578,15 @@ class myAddresses extends React.Component {
                                             </Grid>
                                             <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
-                                                    id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.new_city}
                                                     onChange={this.onChange}
+                                                    inputProps={{
+                                                        readOnly: true,
+                                                        style: {cursor:"default"}
+                                                    }}
                                                     margin="normal"
                                                     name={'new_city'}
-                                                    placeholder={'Ecrire ici'}
                                                     variant={"outlined"}
                                                     label={'Ville'}
                                                 />
@@ -555,7 +594,6 @@ class myAddresses extends React.Component {
                                             <Grid container>
                                               <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                   <TextField
-                                                      id="standard-name"
                                                       style={{ marginTop: 15,width: '100%'}}
                                                       value={this.state.note}
                                                       multiline
@@ -577,7 +615,6 @@ class myAddresses extends React.Component {
                                         </Grid>
                                         <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                             <TextField
-                                                id="standard-name"
                                                 style={{ marginTop: 15,width: '100%'}}
                                                 value={this.state.phone}
                                                 onChange={this.onChange}
@@ -629,7 +666,6 @@ class myAddresses extends React.Component {
                                             </Grid>
                                             <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
-                                                    id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.edit_address}
                                                     onChange={this.onChange}
@@ -643,7 +679,6 @@ class myAddresses extends React.Component {
                                             <Grid container>
                                             <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
-                                                    id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.edit_zip_code}
                                                     onChange={this.onChange}
@@ -657,7 +692,6 @@ class myAddresses extends React.Component {
                                             </Grid>
                                             <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
-                                                    id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.edit_city}
                                                     onChange={this.onChange}
@@ -671,7 +705,6 @@ class myAddresses extends React.Component {
                                             <Grid container>
                                             <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
-                                                    id="standard-name"
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.edit_note}
                                                     multiline
@@ -693,7 +726,6 @@ class myAddresses extends React.Component {
                                         </Grid>
                                         <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                             <TextField
-                                                id="standard-name"
                                                 style={{ marginTop: 15,width: '100%'}}
                                                 value={this.state.edit_phone}
                                                 onChange={this.onChange}
