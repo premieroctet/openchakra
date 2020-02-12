@@ -22,6 +22,7 @@ class SelectPrestation extends React.Component {
     axios.get(`${url}myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
         let data = res.data;
+        console.log(data);
         this.setState({prestations: data});
         for(let i = 0 ; i < data.length; i++){
 
@@ -51,7 +52,7 @@ class SelectPrestation extends React.Component {
                   return (
                     <Grid item xl={6}>
                       <Grid item> {this.state.prestations[result].filter_presentation.label}</Grid>
-                      <ButtonSwitch isOption={true} isPrice={true} width={"50%"} label={this.state.prestations[result].label}/>
+                      <ButtonSwitch isOption={true} isPrice={true} width={"50%"} label={this.state.prestations[result].label} billing={this.state.prestations[result].billing}/>
                       <hr style={{
                         color: "rgb(255, 249, 249, 0.6)",
                         borderRadius: 10
