@@ -2,7 +2,8 @@ import { createModel } from '@rematch/core'
 import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import omit from 'lodash/omit'
 import templates, { TemplateType } from '../../templates'
-import { generateId } from './app'
+import { generateId } from '../../utils/generateId'
+import { duplicateComponent, deleteComponent } from '../../utils/recursive'
 
 export type ComponentsState = {
   components: IComponents
@@ -98,21 +99,7 @@ const components = createModel({
         }
       }
 
-      const deleteRecursive = (
-        children: IComponent['children'],
-        id: IComponent['id'],
-      ) => {
-        children.forEach(child => {
-          updatedComponents[child] &&
-            deleteRecursive(updatedComponents[child].children, componentId)
-        })
-
-        updatedComponents = omit(updatedComponents, id)
-      }
-
-      deleteRecursive(component.children, componentId)
-
-      updatedComponents = omit(updatedComponents, componentId)
+      updatedComponents = deleteComponent(component, updatedComponents)
 
       return {
         ...state,
@@ -258,6 +245,30 @@ const components = createModel({
         ...state,
         selectedId: state.components[selectedComponent.parent].id,
       }
+    },
+    duplicate(state: ComponentsState): ComponentsState {
+      const selectedComponent = state.components[state.selectedId]
+      if (selectedComponent.id !== DEFAULT_ID) {
+        const parentElement = state.components[selectedComponent.parent]
+
+        const { newId, clonedComponents } = duplicateComponent(
+          selectedComponent,
+          state.components,
+        )
+
+        return {
+          ...state,
+          components: {
+            ...state.components,
+            ...clonedComponents,
+            [parentElement.id]: {
+              ...parentElement,
+              children: [...parentElement.children, newId],
+            },
+          },
+        }
+      }
+      return state
     },
   },
 })

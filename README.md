@@ -60,6 +60,7 @@ By clicking on a component containing children, you will see a Children panel ap
 | ---------------- | ------------------------- |
 | `cmd+Z` `ctrl+Z` | Undo last action          |
 | `cmd+Y` `ctrl+y` | Redo action               |
+| `cmd+D` `ctrl+d` | Duplicate component       |
 | `del`            | Delete selected component |
 | `c`              | Toggle Code panel         |
 | `b`              | Toggle Builder mode       |

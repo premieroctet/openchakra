@@ -11,6 +11,7 @@ export const keyMap = {
   REDO: ['ctrl+y', 'cmd+y'],
   UNSELECT: ['Escape'],
   PARENT: 'p',
+  DUPLICATE: ['ctrl+d', 'cmd+d'],
 }
 
 const hasNoSpecialKeyPressed = (event: KeyboardEvent | undefined) =>
@@ -75,6 +76,14 @@ const useShortcuts = () => {
     }
   }
 
+  const onDuplicate = (event: KeyboardEvent | undefined) => {
+    if (event) {
+      event.preventDefault()
+    }
+
+    dispatch.components.duplicate()
+  }
+
   const handlers = {
     DELETE_NODE: deleteNode,
     TOGGLE_BUILDER_MODE: toggleBuilderMode,
@@ -83,6 +92,7 @@ const useShortcuts = () => {
     REDO: redo,
     UNSELECT: onUnselect,
     PARENT: onSelectParent,
+    DUPLICATE: onDuplicate,
   }
 
   return { handlers }

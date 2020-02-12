@@ -49,8 +49,15 @@ import AspectRatioPanel from './components/AspectRatioPanel'
 import BreadcrumbPanel from './components/BreadcrumbPanel'
 import BreadcrumbItemPanel from './components/BreadcrumbItemPanel'
 
-const Panels: React.FC<{ component: IComponent }> = ({ component }) => {
+const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
+  component,
+  isRoot,
+}) => {
   const { type } = component
+
+  if (isRoot) {
+    return null
+  }
 
   return (
     <>
