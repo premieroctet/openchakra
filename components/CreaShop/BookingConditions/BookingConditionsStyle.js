@@ -39,4 +39,27 @@ export default theme => ({
     fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
     color :'#484848',
   },
+  button:{
+    width : '60%',
+    backgroundColor: 'white',
+    border: '1px solid #4fbdd7',
+    borderRadius: 25,
+    height : 30,
+    textAlign: 'left',
+    cursor: 'pointer',
+    '&:hover':{
+      backgroundColor: '#4fbdd7',
+      color: 'white'
+    },
+  },
+  activeButton:{
+    width : '60%',
+    backgroundColor: '#4fbdd7',
+    border: '1px solid #4fbdd7',
+    borderRadius: 25,
+    height : 30,
+    textAlign: 'left',
+    cursor: 'pointer',
+    color: 'white'
+  }
 })

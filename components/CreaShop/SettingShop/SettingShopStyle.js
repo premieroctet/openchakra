@@ -6,29 +6,8 @@ export default theme => ({
   },
   contentContainer:{
     display: 'flex',
+    height: 700,
     width: '100%'
-  },
-  contentLeft:{
-    width: '60%',
-    height : '100%',
-    display: 'flex',
-    flexDirection : 'column',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('md')]: {
-      width: '100%'
-    },
-  },
-  contentRight: {
-    width: '40%',
-    height: 'auto',
-    display: 'block',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'right',
-    position: 'relative',
-    backgroundImage: "url(" + "../../../static/assets/img/creaShop/bgImage/etape4.svg" + ")",
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
-    },
   },
   contentLeftTop:{
     width : '100%',
@@ -49,4 +28,31 @@ export default theme => ({
       marginLeft: 0,
     },
   },
+  policySizeTitle:{
+    margin: 0,
+    overflowWrap: 'break-word !important',
+    fontSize: 24,
+    fontWeight: 800,
+    lineHeight: '1.25em',
+    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
+    color: 'rgb(72, 72, 72)',
+    paddingTop: 2,
+    paddingBottom: 2
+  },
+  policySizeSubtitle:{
+    fontSize: 19,
+    lineHeight: '1.43em',
+    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
+    color :'#484848',
+  },
+  policySizeContent:{
+    fontSize: 16,
+    fontWeight: 400,
+    lineHeight: '1.375em',
+    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
+    color: 'rgb(72, 72, 72)',
+  },
+  textField:{
+    width: '90%',
+  }
 })

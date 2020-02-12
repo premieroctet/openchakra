@@ -17,8 +17,19 @@ class BookingConditions extends React.Component {
       checked: false,
       dates: [],
       isDiplome: false,
-      isCertification: false
+      isCertification: false,
+      beRecommended: false,
+      profilChecked: false,
+      getPicture: false,
+      idChecked: false
     }
+    this.stateButton = this.stateButton.bind(this)
+  }
+
+  stateButton(e){
+    let name = e.target.name;
+    console.log(name);
+    this.setState({[e.target.name]: !this.state[name]});
   }
 
   render() {
@@ -52,69 +63,17 @@ class BookingConditions extends React.Component {
                   <h3 className={classes.policySizeSubtitle}>Pour réserver mes services, les utilisateurs doivent : </h3>
                 </Grid>
                 <Grid>
-                  <Grid>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={this.state.clientAddress}
-                          onChange={()=>{
-                            this.setState({clientAddress : !this.state.clientAddress})
-                          }
-                          }
-                          value={this.state.clientAddress}
-                          color="primary"
-                        />
-                      }
-                      label="Respecter les conditions My-Alfred (profil vérifié)"
-                    />
+                  <Grid style={{marginBottom: 10}}>
+                    <input type={"button"} value={"Respecter les conditions My-Alfred (profil vérifié)"} name={"profilChecked"} onClick={this.stateButton} className={ this.state.profilChecked ? classes.activeButton : classes.button}/>
+                  </Grid>
+                  <Grid style={{marginBottom: 10}}>
+                    <input type={"button"} value={"Avoir une photo de profil"} name={"getPicture"} onClick={this.stateButton} className={ this.state.getPicture ? classes.activeButton : classes.button}/>
+                  </Grid>
+                  <Grid style={{marginBottom: 10}}>
+                    <input type={"button"} value={"Avoir déposer une pièce d’identité officielle"} name={"idChecked"} onClick={this.stateButton} className={ this.state.idChecked ? classes.activeButton : classes.button}/>
                   </Grid>
                   <Grid>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={this.state.clientAddress}
-                          onChange={()=>{
-                            this.setState({clientAddress : !this.state.clientAddress})
-                          }
-                          }
-                          value={this.state.clientAddress}
-                          color="primary"
-                        />
-                      }
-                      label="Avoir une photo de profil"
-                    />
-                  </Grid>
-                  <Grid>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={this.state.clientAddress}
-                          onChange={()=>{
-                            this.setState({clientAddress : !this.state.clientAddress})
-                          }
-                          }
-                          value={this.state.clientAddress}
-                          color="primary"
-                        />
-                      }
-                      label="Avoir déposer une pièce d’identité officielle"
-                    />
-                  </Grid>
-                  <Grid>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={this.state.clientAddress}
-                          onChange={()=>{
-                            this.setState({clientAddress : !this.state.clientAddress})
-                          }
-                          }
-                          value={this.state.clientAddress}
-                          color="primary"
-                        />
-                      }
-                      label="Etre recommandé par d’autres Alfred"
-                    />
+                    <input type={"button"} value={"Etre recommandé par d’autres Alfred"} name={"beRecommended"} onClick={this.stateButton} className={ this.state.beRecommended ? classes.activeButton : classes.button}/>
                   </Grid>
                 </Grid>
               </Grid>

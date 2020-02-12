@@ -31,11 +31,11 @@ class IntroduceYou extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <h2>Indiquez votre message de bienvenue ! </h2>
+                <Typography className={classes.policySizeTitle}>Indiquez votre message de bienvenue ! </Typography>
               </Grid>
               <Grid>
                 <Grid>
-                  <h3>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation. </h3>
+                  <h3 className={classes.policySizeSubtitle}>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation. </h3>
                 </Grid>
               </Grid>
               <Grid>
@@ -57,15 +57,16 @@ class IntroduceYou extends React.Component {
                               checkedIcon={<RadioButtonCheckedIcon />}
                             />
                           }
-                          label={<Typography variant="h6" style={{fontSize: '1rem',fontWeight: 400, marginTop: 15, marginBottom: 10}}>
+                          label={
+                            <p className={classes.policySizeSubtitle}>
                             Je suis un particulier
-                          </Typography>}
+                          </p>}
                         />
                       </Grid>
                       <Grid item xs={11}>
-                        <Typography style={{marginLeft: '2.5rem',fontSize: '1rem', fontWeight:400, fontFamily:'helvetica'}}>
+                        <p className={classes.policySizeContent}>
                           En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés.
-                        </Typography>
+                        </p>
                       </Grid>
                     </Grid>
                     <Grid container style={{ marginTop: 10 }}>
@@ -84,15 +85,17 @@ class IntroduceYou extends React.Component {
                               checkedIcon={<RadioButtonCheckedIcon />}
                             />
                           }
-                          label={<Typography variant="h6" style={{marginBottom: '.5rem',fontSize: '1rem', fontWeight:400,}}>
+                          label={
+                            <p className={classes.policySizeSubtitle}>
                             Je suis un professionnel
-                          </Typography>}
+                          </p>
+                          }
                         />
                       </Grid>
                       <Grid item xs={11}>
-                        <Typography style={{marginLeft: '2.5rem',fontSize: '1rem', fontWeight:400, fontFamily:'helvetica'}}>
+                        <p className={classes.policySizeContent}>
                           Un statut professionnel est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière.
-                        </Typography>
+                        </p>
                         {this.state.is_professional ?
                           <div style={{}}>
                             <Siret formikCtx={"test"}/>
@@ -111,7 +114,7 @@ class IntroduceYou extends React.Component {
                               />
                             }
                             label={
-                              "Je certifie sur l’honneur qu’il s’agit bien de mon entreprise."
+                              <p className={classes.policySizeContent}>Je certifie sur l’honneur qu’il s’agit bien de mon entreprise.</p>
                             }
                           />
                       </Grid>

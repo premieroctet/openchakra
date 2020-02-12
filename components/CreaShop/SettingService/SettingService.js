@@ -5,21 +5,25 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class SettingService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeStep: 0,
       checked: false,
       clientAdress:false,
       myAddress: false,
       visioConference: false,
-      outside: false
-    }
+      outside: false,
+    };
+    this.stateButton = this.stateButton.bind(this);
+  }
+
+  stateButton(e){
+    let name = e.target.name;
+    console.log(name);
+    this.setState({[e.target.name]: !this.state[name]});
   }
 
   render() {
@@ -57,69 +61,17 @@ class SettingService extends React.Component {
                   <h3 className={classes.policySizeSubtitle}>Où acceptez-vous de réaliser votre prestation ?</h3>
                 </Grid>
                 <Grid style={{marginLeft : 15}}>
-                  <Grid>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={this.state.clientAddress}
-                          onChange={()=>{
-                            this.setState({clientAddress : !this.state.clientAddress})
-                          }
-                          }
-                          value={this.state.clientAddress}
-                          color="primary"
-                        />
-                      }
-                      label="A l’adresse de mon client"
-                    />
+                  <Grid style={{marginBottom: 10}}>
+                    <input type={"button"} value={"A l’adresse de mon client"} name={"clientAdress"} onClick={this.stateButton} className={ this.state.clientAdress ? classes.activeButton : classes.button}/>
+                  </Grid>
+                  <Grid style={{marginBottom: 10}}>
+                    <input type={"button"} value={"A mon adresse"} name={"myAddress"} onClick={this.stateButton} className={ this.state.myAddress ? classes.activeButton : classes.button}/>
+                  </Grid>
+                  <Grid style={{marginBottom: 10}}>
+                    <input type={"button"} value={"En visioconférence"} name={"visioConference"} onClick={this.stateButton} className={ this.state.visioConference ? classes.activeButton : classes.button}/>
                   </Grid>
                   <Grid>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={this.state.myAddress}
-                          onChange={()=>{
-                            this.setState({myAddress : !this.state.myAddress})
-                          }
-                          }
-                          value={this.state.myAddress}
-                          color="primary"
-                        />
-                      }
-                      label="A mon adresse"
-                    />
-                  </Grid>
-                  <Grid>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={this.state.visioConference}
-                          onChange={()=>{
-                            this.setState({visioConference : !this.state.visioConference})
-                          }
-                          }
-                          value={this.state.visioConference}
-                          color="primary"
-                        />
-                      }
-                      label="En visio conférence"
-                    />
-                  </Grid>
-                  <Grid>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={this.state.outside}
-                          onChange={()=>{
-                            this.setState({outside : !this.state.outside})
-                          }
-                          }
-                          value={this.state.outside}
-                          color="primary"
-                        />
-                      }
-                      label="En extérieur"
-                    />
+                    <input type={"button"} value={"En extérieur "} name={"outside"} onClick={this.stateButton} className={ this.state.outside ? classes.activeButton : classes.button}/>
                   </Grid>
                 </Grid>
               </Grid>
