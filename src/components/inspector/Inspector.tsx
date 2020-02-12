@@ -46,7 +46,6 @@ const Inspector = () => {
             isInline
             py={2}
             spacing={4}
-            mb={3}
             align="center"
             zIndex={99}
             px={2}
@@ -86,7 +85,7 @@ const Inspector = () => {
 
       <Box bg="white" px={3}>
         {!isRoot && <QuickPropsPanel />}
-        <Panels component={component} />
+        <Panels component={component} isRoot={isRoot} />
       </Box>
 
       <StylesPanel isRoot={isRoot} showChildren={componentHasChildren} />

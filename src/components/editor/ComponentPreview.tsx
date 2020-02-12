@@ -54,6 +54,7 @@ const ComponentPreview: React.FC<{
     case 'ListItem':
     case 'NumberInput':
     case 'BreadcrumbLink':
+    case 'Select':
       return (
         <PreviewContainer
           component={component}
