@@ -5,6 +5,7 @@ type Overlay = undefined | { rect: DOMRect; id: string; type: ComponentType }
 export type AppState = {
   showLayout: boolean
   showCode: boolean
+  focusInputText: boolean
   overlay: undefined | Overlay
 }
 
@@ -12,6 +13,7 @@ const app = createModel({
   state: {
     showLayout: true,
     showCode: false,
+    focusInputText: false,
     overlay: undefined,
   } as AppState,
   reducers: {
@@ -25,6 +27,12 @@ const app = createModel({
       return {
         ...state,
         showCode: !state.showCode,
+      }
+    },
+    toggleInputText(state: AppState): AppState {
+      return {
+        ...state,
+        focusInputText: !state.focusInputText,
       }
     },
 
