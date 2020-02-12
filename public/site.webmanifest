@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "OpenChakra",
+  "short_name": "React JSX visual editor for Chakra UI",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
