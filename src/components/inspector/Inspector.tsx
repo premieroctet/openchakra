@@ -51,7 +51,13 @@ const Inspector = () => {
             zIndex={99}
             px={2}
             flexWrap="wrap"
+            justify="flex-end"
           >
+            <ActionButton
+              label="Duplicate"
+              onClick={() => dispatch.components.duplicate()}
+              icon="copy"
+            />
             <ActionButton
               label="Reset"
               icon={IoMdRefresh}
@@ -67,11 +73,6 @@ const Inspector = () => {
                 )
               }}
               icon={GoRepo}
-            />
-            <ActionButton
-              label="Duplicate"
-              onClick={() => dispatch.components.duplicate()}
-              icon="copy"
             />
             <ActionButton
               bg="red.500"
