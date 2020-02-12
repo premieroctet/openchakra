@@ -12,6 +12,7 @@ export default function filterActions(action: Action) {
       'components/moveComponent',
       'components/addMetaComponent',
       'components/moveSelectedComponentChildren',
+      'components/duplicate',
     ].includes(action.type)
   ) {
     return true
