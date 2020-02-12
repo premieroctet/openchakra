@@ -261,43 +261,46 @@ const components = createModel({
     },
     duplicate(state: ComponentsState): ComponentsState {
       const selectedComponent = state.components[state.selectedId]
-      const parentElement = state.components[selectedComponent.parent]
+      if (selectedComponent.id !== DEFAULT_ID) {
+        const parentElement = state.components[selectedComponent.parent]
 
-      const clonedComponents: IComponents = {}
+        const clonedComponents: IComponents = {}
 
-      const cloneComponent = (component: IComponent) => {
-        const newid = generateId()
-        const children = component.children.map(child => {
-          return cloneComponent(state.components[child])
-        })
+        const cloneComponent = (component: IComponent) => {
+          const newid = generateId()
+          const children = component.children.map(child => {
+            return cloneComponent(state.components[child])
+          })
 
-        clonedComponents[newid] = {
-          ...component,
-          id: newid,
-          props: { ...component.props },
-          children,
+          clonedComponents[newid] = {
+            ...component,
+            id: newid,
+            props: { ...component.props },
+            children,
+          }
+
+          children.forEach(child => {
+            clonedComponents[child].parent = newid
+          })
+
+          return newid
         }
 
-        children.forEach(child => {
-          clonedComponents[child].parent = newid
-        })
+        const newId = cloneComponent(selectedComponent)
 
-        return newid
-      }
-
-      const newId = cloneComponent(selectedComponent)
-
-      return {
-        ...state,
-        components: {
-          ...state.components,
-          ...clonedComponents,
-          [parentElement.id]: {
-            ...parentElement,
-            children: [...parentElement.children, newId],
+        return {
+          ...state,
+          components: {
+            ...state.components,
+            ...clonedComponents,
+            [parentElement.id]: {
+              ...parentElement,
+              children: [...parentElement.children, newId],
+            },
           },
-        },
+        }
       }
+      return state
     },
   },
 })
