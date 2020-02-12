@@ -24,8 +24,32 @@ class creaShop extends React.Component {
     this.state={
       activeStep: 0,
       availabilities: [],
-      hide: false
+      hide: false,
+      shop:{
+        booking_request: false,     // true/false
+        my_alfred_conditions: null, // BASIC/PICTURE/ID_CARD/RECOMMEND
+        welcome_message: "",
+        cancel_mode: "",            // FLEXIBLE/MODERATE/STRICT
+        is_particular: true,        // true/false : particulier.pro
+        company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
+        service: "service_id",
+        prestations: [{prestation_id:"id_prestation", price:0, billing_id:"id_billing"}],
+        equipments: [{equipement_id: "quip_id"}], // Ids des équipements
+        location: {alfred:false, client:false, visio:false}, // Lieu(x) de prestation
+        travel_tax: 0, // Frais de déplacement
+        pick_tax: 0, // Frais de livraison/enlèvmeent
+        minimum_basket: 0,
+        deadline_value: 0, // Valeur de prévenance
+        deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
+        description:"", // Description de l'expertise
+        experience_years: 0,
+        diploma : [{name:"", year:"", picture:""}],
+        certification : [{name:"", year:"", picture:""}],
+        address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
+        perimeter: 0,
     }
+    };
+    this.getDataFromSelectService = this.getDataFromSelectService.bind(this)
   }
 
   availabilityCreated(avail) {
@@ -45,14 +69,23 @@ class creaShop extends React.Component {
     this.setState({activeStep: this.state.activeStep - 1});
   };
 
+  getDataFromSelectService(data){
+    this.setState({
+      shop: {
+        ...this.state.shop,
+        service: data
+      },
+    });
+  }
+
   renderSwitch(param) {
     switch(param) {
       case 0 :
         return <CreaShopPresentation/>;
       case 1 :
-        return <SelectService/>;
+        return <SelectService prestation={this.getDataFromSelectService}/>;
       case 2 :
-        return <SelectPrestation/>;
+        return <SelectPrestation service={this.state.shop.service}/>;
       case 3 :
         return <SettingService/>;
       case 4 :
@@ -72,6 +105,8 @@ class creaShop extends React.Component {
         return <IntroduceYou/>;
     }
   }
+
+
 
   render() {
     const {classes} = this.props;
