@@ -9,46 +9,11 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
+import axios from 'axios';
 
-const suggestions = [
-  { label: 'Afghanistan' },
-  { label: 'Aland Islands' },
-  { label: 'Albania' },
-  { label: 'Algeria' },
-  { label: 'American Samoa' },
-  { label: 'Andorra' },
-  { label: 'Angola' },
-  { label: 'Anguilla' },
-  { label: 'Antarctica' },
-  { label: 'Antigua and Barbuda' },
-  { label: 'Argentina' },
-  { label: 'Armenia' },
-  { label: 'Aruba' },
-  { label: 'Australia' },
-  { label: 'Austria' },
-  { label: 'Azerbaijan' },
-  { label: 'Bahamas' },
-  { label: 'Bahrain' },
-  { label: 'Bangladesh' },
-  { label: 'Barbados' },
-  { label: 'Belarus' },
-  { label: 'Belgium' },
-  { label: 'Belize' },
-  { label: 'Benin' },
-  { label: 'Bermuda' },
-  { label: 'Bhutan' },
-  { label: 'Bolivia, Plurinational State of' },
-  { label: 'Bonaire, Sint Eustatius and Saba' },
-  { label: 'Bosnia and Herzegovina' },
-  { label: 'Botswana' },
-  { label: 'Bouvet Island' },
-  { label: 'Brazil' },
-  { label: 'British Indian Ocean Territory' },
-  { label: 'Brunei Darussalam' },
-].map(suggestion => ({
-  value: suggestion.label,
-  label: suggestion.label,
-}));
+const { config } = require('../../../config/config');
+const url = config.apiUrl;
+
 
 function NoOptionsMessage(props) {
   return (
@@ -274,8 +239,30 @@ class SelectService extends React.Component {
     this.state = {
       single: null,
       setSingle: null,
+      services: [],
+      labelServices: []
     }
   }
+
+  componentDidMount() {
+    axios.get(`${url}myAlfred/api/service/all`)
+      .then((response) => {
+        let services = response.data;
+        this.setState({services: services});
+        for(let i = 0 ; i < this.state.services.length; i++ ){
+          let label = this.state.services[i].label;
+          this.state.labelServices.push(label);
+        }
+        console.log(this.state.labelServices)
+      }).catch(error => {
+      console.log(error);
+    })
+  }
+
+  suggestions (){
+
+  }
+
 
   handleChangeSingle = value => {
     this.setState({single : value});
@@ -329,7 +316,7 @@ class SelectService extends React.Component {
                           },
                         }}
                         placeholder="Chercher un service"
-                        options={suggestions}
+                        options={this.suggestions()}
                         components={components}
                         value={this.state.single}
                         onChange={this.handleChangeSingle}
