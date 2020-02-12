@@ -24,9 +24,7 @@ class SelectPrestation extends React.Component {
         let data = res.data;
         this.setState({prestations: data});
         for(let i = 0 ; i < data.length; i++){
-          if(data.filter_presentation === ){
 
-          }
         }
       }).catch(error => {
       console.log(error);
