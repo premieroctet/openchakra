@@ -34,6 +34,10 @@ export const useInteractive = (
       event.preventDefault()
       event.stopPropagation()
       dispatch.components.select(component.id)
+    },
+    onDoubleClick: (event: MouseEvent) => {
+      event.preventDefault()
+      event.stopPropagation()
       dispatch.app.toggleInputText()
     },
   }
