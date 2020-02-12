@@ -75,6 +75,7 @@ type MetaComponentType =
   | 'AlertMeta'
   | 'InputGroupMeta'
   | 'BreadcrumbMeta'
+  | 'TabsMeta'
 
 interface IComponent {
   children: string[]

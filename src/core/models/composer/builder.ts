@@ -49,6 +49,24 @@ export const buildBreadcrumb = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildTabs = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+  const nodeId = composer.addNode({ type: 'Tabs', parent })
+  const listId = composer.addNode({ type: 'TabList', parent: nodeId })
+  composer.addNode({ type: 'Tab', parent: listId })
+  composer.addNode({ type: 'Tab', parent: listId })
+  const panelId = composer.addNode({ type: 'TabPanels', parent: nodeId })
+  composer.addNode({ type: 'TabPanel', parent: panelId })
+  composer.addNode({ type: 'TabPanel', parent: panelId })
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildFormControl = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
@@ -147,6 +165,7 @@ const builders: ComposerBuilders = {
   ListMeta: buildList,
   InputGroupMeta: buildInputGroup,
   BreadcrumbMeta: buildBreadcrumb,
+  TabsMeta: buildTabs,
 }
 
 export default builders

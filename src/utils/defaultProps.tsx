@@ -29,7 +29,9 @@ import {
   TabListProps,
   TabPanelProps,
   TabPanelsProps,
-  TabsProps,
+  TabPanel,
+  Tab,
+  Tabs,
   InputProps,
   AspectRatioBoxProps,
   BreadcrumbItemProps,
@@ -41,6 +43,8 @@ import {
   RadioGroupProps,
   InputGroupProps,
   GridProps,
+  FormLabel,
+  TabList,
 } from '@chakra-ui/core'
 import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -88,7 +92,7 @@ type PreviewDefaultProps = {
   TabPanel?: TabPanelProps
   TabPanels?: TabPanelsProps
   Tab?: any
-  Tabs?: TabsProps
+  Tabs?: any
   Select?: SelectProps
   Input?: InputProps
   InputGroup?: InputGroupProps
@@ -108,6 +112,14 @@ type PreviewDefaultProps = {
   List?: any
   ListIcon?: IconProps
   ListItem?: any
+  // meta components
+  AlertMeta?: any
+  InputGroupMeta?: any
+  FormControlMeta?: any
+  AccordionMeta?: any
+  ListMeta?: any
+  BreadcrumbMeta?: any
+  TabsMeta?: any
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -159,9 +171,12 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     size: '1.25em',
     borderColor: 'white',
   },
-  TabPanel: { children: 'Tab' },
-  Tab: { children: 'Tab' },
-  FormLabel: { children: 'Label' },
+  TabPanel: { ...TabPanel.defaultProps, children: 'Description' },
+  TabPanels: { ...TabPanel.defaultProps, children: 'TabPanel' },
+  Tab: { ...Tab.defaultProps, children: 'Tab' },
+  Tabs: { ...Tabs.defaultProps },
+  TabList: { ...TabList.defaultProps, children: 'Tab' },
+  FormLabel: { ...FormLabel.defaultProps, children: 'Label' },
   FormHelperText: {
     children: 'Helper message',
   },
