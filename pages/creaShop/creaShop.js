@@ -32,13 +32,8 @@ class creaShop extends React.Component {
         cancel_mode: "",            // FLEXIBLE/MODERATE/STRICT
         is_particular: true,        // true/false : particulier.pro
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
-        service: "service_id",
-        prestations:{
-          prestation_id:{
-            price:0,
-            billing_id:"id_billing"
-          }
-          },
+        service: null,
+        prestations:{},
         equipments: [{equipement_id: "quip_id"}], // Ids des équipements
         location: {alfred:false, client:false, visio:false}, // Lieu(x) de prestation
         travel_tax: 0, // Frais de déplacement
@@ -54,19 +49,26 @@ class creaShop extends React.Component {
         perimeter: 0,
     }
     };
-    this.getDataFromSelectService = this.getDataFromSelectService.bind(this)
+    this.serviceSelected = this.serviceSelected.bind(this)
+    this.nextDisabled = this.nextDisabled.bind(this)
   }
 
+  nextDisabled() {
+    console.log(JSON.stringify(this.state, null, 2));
+    let pageIndex = this.state.param;
+    if (pageIndex==0) { return ""; }
+    if (pageIndex==1) { this.state.shop.service==null ? "" : "disabled"}
+  }
   availabilityCreated(avail) {
     this.setState({availabilities: [avail, ...this.state.availabilities]});
   }
 
   handleNext = () => {
     this.setState({activeStep: this.state.activeStep + 1});
-    if(this.state.activeStep === 1 || this.state.activeStep === 5){
-      this.setState({hide: !this.state.hide})
+    if(this.state.activeStep === 2 || this.state.activeStep === 6){
+      this.setState((prev, props) => ({hide: true}))
     }else{
-      this.setState({hide: false})
+      this.setState((prev, props) => ({hide: false}))
     }
   };
 
@@ -74,13 +76,11 @@ class creaShop extends React.Component {
     this.setState({activeStep: this.state.activeStep - 1});
   };
 
-  getDataFromSelectService(data){
-    this.setState({
-      shop: {
-        ...this.state.shop,
-        service: data
-      },
-    });
+  serviceSelected(service_id){
+    console.log("Service selected:"+service_id);
+    let shop = this.state.shop;
+    shop.service = service_id;
+    this.setState({shop: shop});
   }
 
   renderSwitch(param) {
@@ -88,7 +88,7 @@ class creaShop extends React.Component {
       case 0 :
         return <CreaShopPresentation/>;
       case 1 :
-        return <SelectService prestation={this.getDataFromSelectService}/>;
+        return <SelectService serviceCb={this.serviceSelected}/>;
       case 2 :
         return <SelectPrestation service={this.state.shop.service}/>;
       case 3 :
@@ -157,7 +157,7 @@ class creaShop extends React.Component {
                 </Button>
               </Grid>
               <Grid>
-                <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}>
+                <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}i disabled={this.nextDisabled()}>
                   {this.state.activeStep === 9 ? 'Envoyer' : 'Suivant'}
                 </Button>
               </Grid>
