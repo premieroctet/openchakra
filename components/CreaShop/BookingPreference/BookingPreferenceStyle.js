@@ -1,11 +1,12 @@
 export default theme => ({
+
   mainContainer:{
     width: '100%',
-    height: '100%',
+    height: '100%'
   },
   contentContainer:{
     display: 'flex',
-    height: 'auto',
+    height: 700,
     width: '100%'
   },
   contentLeft:{
@@ -20,12 +21,12 @@ export default theme => ({
   },
   contentRight: {
     width: '40%',
-    height: 'auto',
+    height: '100%',
     display: 'block',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'right',
     position: 'relative',
-    backgroundImage: "url(" + "../../../static/assets/img/creaShop/bgImage/etape0.svg" + ")",
+    backgroundImage: "url(" + "../../../static/assets/img/creaShop/bgImage/etape3.svg" + ")",
     [theme.breakpoints.down('md')]: {
       display: 'none'
     },
@@ -34,29 +35,28 @@ export default theme => ({
     width : '100%',
   },
   contentTitle:{
-    width: '80%',
+    width: '100%'
   },
   contentTextSize:{
     width : 500,
-    marginTop: 50,
     [theme.breakpoints.down('md')]: {
       width: '100%'
     },
   },
-  policySizeTitle:{
-    fontSize: 35
+  buttonAddAndRemove: {
+    width: 30,
+    height: 30,
+    borderRadius: '50%',
+    border: '1px solid #2FBCD3',
+    textAlign: "center",
+    lineHeight: 1.6,
+    cursor: 'pointer',
+    display: 'inline-block',
+    marginRight: 25
   },
-  policySizeStep:{
-    fontFamily: 'Signatra',
-    fontSize: 30
+  selectDelayInputRepsonsive: {
+    [theme.breakpoints.down('sm')]: {
+      width: '100%!important',
+    },
   },
-  policySizeSubtitle:{
-    fontSize: 25
-  },
-  policySizeContent:{
-    fontSize: 16
-  },
-  hrStyle:{
-    color : '#BCBCBC'
-  }
 })

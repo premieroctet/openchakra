@@ -3,8 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './CreaShopPresentationStyle';
-import Button from '@material-ui/core/Button';
-
+import { Typography } from '@material-ui/core';
 
 class CreaShopPresentation extends React.Component {
   constructor(props) {
@@ -22,68 +21,56 @@ class CreaShopPresentation extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <h2>Nous allons vous aider à créer votre service & devenir un Alfred en 3 minutes !  </h2>
+                <Typography className={classes.policySizeTitle}>Nous allons vous aider à créer votre service & devenir un Alfred en 3 minutes !</Typography>
               </Grid>
-              <Grid style={{width: 500}}>
+              <Grid className={classes.contentTextSize}>
                 <Grid>
                   <Grid>
-                    <h2 style={{fontFamily: 'Signatra'}}>Etape 1 </h2>
-                    <hr/>
+                    <Typography className={classes.policySizeStep}>Etape 1 </Typography>
+                    <hr className={classes.hrStyle}/>
                   </Grid>
                   <Grid>
                     <Grid>
-                      <h3>Choisissez votre premier super talent ! </h3>
+                      <Typography className={classes.policySizeSubtitle}>Choisissez votre premier super talent ! </Typography>
                     </Grid>
                     <Grid>
-                      <p>Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appel un autre, vous pourrez en ajouter autant de services que vous voulez</p>
+                      <p className={classes.policySizeContent}>Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appel un autre, vous pourrez en ajouter autant de services que vous voulez</p>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid>
                   <Grid>
-                    <h2>Etape 2 </h2>
-                    <hr/>
+                    <Typography className={classes.policySizeStep}>Etape 2 </Typography>
+                    <hr className={classes.hrStyle}/>
                   </Grid>
                   <Grid>
                     <Grid>
-                      <h3>Vous êtes chez vous ! Fixez vos règles et vos conditions…</h3>
+                      <Typography className={classes.policySizeSubtitle}>Vous êtes chez vous ! Fixez vos règles et vos conditions…</Typography>
                     </Grid>
                     <Grid>
-                      <p>Indiquez vos disponibilités ,paramètres de
+                      <p className={classes.policySizeContent}>Indiquez vos disponibilités ,paramètres de
                         réservation et vos conditions d’annulation</p>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid>
                   <Grid>
-                    <h2>Etape 3</h2>
-                    <hr/>
+                    <Typography className={classes.policySizeStep}>Etape 3</Typography>
+                    <hr className={classes.hrStyle}/>
                   </Grid>
                   <Grid>
                     <Grid>
-                      <h3>Présentez-vous ! </h3>
+                      <Typography className={classes.policySizeSubtitle}>Présentez-vous ! </Typography>
                     </Grid>
                     <Grid>
-                      <p>Renseignez votre profil Alfred, partager vos réalisations, et décrivez vous ! </p>
+                      <p className={classes.policySizeContent}>Renseignez votre profil Alfred, partager vos réalisations, et décrivez vous ! </p>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-            <hr/>
-            <Grid className={classes.contentLeftFooter}>
-              <Grid style={{display: "flex",justifyContent: "space-between"}}>
-                <Grid>
-                  <Button color="primary">Retour</Button>
-                </Grid>
-                <Grid>
-                  <Button variant="contained" color="secondary">Suivant</Button>
-                </Grid>
-              </Grid>
-            </Grid>
           </Grid>
-          <Grid className={classes.contentRight}>
-          </Grid>
+          <Grid className={classes.contentRight}/>
         </Grid>
       </Grid>
     )
