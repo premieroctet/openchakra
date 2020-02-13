@@ -1,12 +1,6 @@
 import React, { forwardRef } from 'react'
-import {
-  Icon,
-  PseudoBox,
-  Text,
-  PseudoBoxProps,
-  Flex,
-  IconButton,
-} from '@chakra-ui/core'
+import { Icon, PseudoBox, Text, PseudoBoxProps, Flex } from '@chakra-ui/core'
+import ActionButton from '../ActionButton'
 
 interface Props extends Pick<IComponent, 'type'> {
   opacity?: number
@@ -38,17 +32,16 @@ const ElementListItem = forwardRef(
       >
         <Flex justify="space-between" align="center" w="100%">
           <Flex align="center">
-            {draggable && <Icon fontSize="xs" mr={2} name="drag-handle" />}
+            {draggable && <Icon fontSize="xs" mr={2} name="arrow-up-down" />}
             <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
               {type}
             </Text>
           </Flex>
-          <IconButton
+          <ActionButton
+            label="Inspect"
             onClick={onSelect}
-            variant="ghost"
-            icon="arrow-forward"
-            size="xs"
-            aria-label={`access ${type} element`}
+            icon="settings"
+            variantColor="blackAlpha"
           />
         </Flex>
       </PseudoBox>

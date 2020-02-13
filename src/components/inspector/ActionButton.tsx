@@ -11,7 +11,8 @@ interface Props
   icon: IconButtonProps['icon']
   as?: IconButtonProps['as']
   label: string
-  onClick?: () => void
+  onClick?: IconButtonProps['onClick']
+  variantColor?: IconButtonProps['variantColor']
 }
 
 const ActionButton: React.FC<Props> = ({
@@ -19,6 +20,7 @@ const ActionButton: React.FC<Props> = ({
   as,
   label,
   onClick,
+  variantColor,
   ...props
 }) => {
   return (
@@ -30,6 +32,7 @@ const ActionButton: React.FC<Props> = ({
         onClick={onClick}
         icon={icon}
         aria-label={label}
+        variantColor={variantColor}
       />
     </Tooltip>
   )
