@@ -1,6 +1,5 @@
 import { createModel } from '@rematch/core'
 import { DEFAULT_PROPS } from '../../utils/defaultProps'
-import omit from 'lodash/omit'
 import templates, { TemplateType } from '../../templates'
 import { generateId } from '../../utils/generateId'
 import { duplicateComponent, deleteComponent } from '../../utils/recursive'
