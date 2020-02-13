@@ -13,7 +13,7 @@ const ChildrenControl: React.FC = () => {
   const focusInput = useSelector(getShowInputText)
   const { setValueFromEvent } = useForm()
   const children = usePropsSelector('children')
-  const test = (event: any) => {
+  const onKeyUp = (event: any) => {
     if (event.keyCode === 13) {
       dispatch.app.toggleInputText(false)
     }
@@ -32,11 +32,11 @@ const ChildrenControl: React.FC = () => {
         id="children"
         name="children"
         size="sm"
-        value={children || ''}
+        value={children}
         type="text"
         onChange={setValueFromEvent}
         ref={textInput}
-        onKeyUp={test}
+        onKeyUp={onKeyUp}
       />
     </FormControl>
   )
