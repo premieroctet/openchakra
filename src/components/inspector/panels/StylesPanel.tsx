@@ -15,11 +15,16 @@ import ParentInspector from '../ParentInspector'
 interface Props {
   isRoot: boolean
   showChildren: boolean
+  parentIsRoot: boolean
 }
 
-const StylesPanel: React.FC<Props> = ({ isRoot, showChildren }) => (
+const StylesPanel: React.FC<Props> = ({
+  isRoot,
+  showChildren,
+  parentIsRoot,
+}) => (
   <Accordion defaultIndex={[0]} allowMultiple>
-    {!isRoot && (
+    {!isRoot && !parentIsRoot && (
       <AccordionContainer title="Parent">
         <ParentInspector />
       </AccordionContainer>

@@ -19,6 +19,7 @@ const Inspector = () => {
   const { type, rootParentType, id, children } = component
 
   const isRoot = id === 'root'
+  const parentIsRoot = component.parent === 'root'
 
   const docType = rootParentType || type
   const componentHasChildren = children.length > 0
@@ -88,7 +89,11 @@ const Inspector = () => {
         <Panels component={component} isRoot={isRoot} />
       </Box>
 
-      <StylesPanel isRoot={isRoot} showChildren={componentHasChildren} />
+      <StylesPanel
+        isRoot={isRoot}
+        showChildren={componentHasChildren}
+        parentIsRoot={parentIsRoot}
+      />
     </>
   )
 }

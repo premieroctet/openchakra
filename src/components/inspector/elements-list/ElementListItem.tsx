@@ -1,5 +1,12 @@
 import React, { forwardRef } from 'react'
-import { Icon, PseudoBox, Text, PseudoBoxProps } from '@chakra-ui/core'
+import {
+  Icon,
+  PseudoBox,
+  Text,
+  PseudoBoxProps,
+  Flex,
+  IconButton,
+} from '@chakra-ui/core'
 
 interface Props extends Pick<IComponent, 'type'> {
   opacity?: number
@@ -23,17 +30,27 @@ const ElementListItem = forwardRef(
         p={1}
         display="flex"
         alignItems="center"
-        cursor={draggable ? 'move' : 'pointer'}
+        cursor={draggable ? 'move' : undefined}
         opacity={opacity}
         ref={ref}
-        onClick={onSelect}
         onMouseOver={onMouseOver}
         onMouseOut={onMouseOut}
       >
-        {draggable && <Icon fontSize="xs" mr={2} name="drag-handle" />}
-        <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
-          {type}
-        </Text>
+        <Flex justify="space-between" align="center" w="100%">
+          <Flex align="center">
+            {draggable && <Icon fontSize="xs" mr={2} name="drag-handle" />}
+            <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
+              {type}
+            </Text>
+          </Flex>
+          <IconButton
+            onClick={onSelect}
+            variant="ghost"
+            icon="arrow-forward"
+            size="xs"
+            aria-label={`access ${type} element`}
+          />
+        </Flex>
       </PseudoBox>
     )
   },

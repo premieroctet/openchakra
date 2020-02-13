@@ -4,7 +4,7 @@ import useDispatch from './useDispatch'
 import { useDrag } from 'react-dnd'
 import {
   getIsSelectedComponent,
-  getHoveredId,
+  getIsHovered,
 } from '../core/selectors/components'
 import { getShowLayout } from '../core/selectors/app'
 
@@ -15,7 +15,7 @@ export const useInteractive = (
   const dispatch = useDispatch()
   const showLayout = useSelector(getShowLayout)
   const isComponentSelected = useSelector(getIsSelectedComponent(component.id))
-  const hoveredId = useSelector(getHoveredId)
+  const isHovered = useSelector(getIsHovered(component.id))
   const [, drag] = useDrag({
     item: { id: component.id, type: component.type, isMoved: true },
   })
@@ -46,7 +46,7 @@ export const useInteractive = (
     }
   }
 
-  if (hoveredId === component.id || isComponentSelected) {
+  if (isHovered || isComponentSelected) {
     props = {
       ...props,
       boxShadow: `#4FD1C5 0px 0px 0px 2px inset`,

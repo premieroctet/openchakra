@@ -35,3 +35,6 @@ export const getSelectedComponentParent = (state: RootState) =>
 
 export const getHoveredId = (state: RootState) =>
   state.components.present.hoveredId
+
+export const getIsHovered = (id: IComponent['id']) => (state: RootState) =>
+  getHoveredId(state) === id
