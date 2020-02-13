@@ -8,6 +8,7 @@ import {
 } from '../core/selectors/components'
 import { getShowLayout } from '../core/selectors/app'
 import { getShowInputText } from '../core/selectors/app'
+import { getFocusedComponent } from '../core/selectors/app'
 
 export const useInteractive = (
   component: IComponent,
@@ -18,6 +19,7 @@ export const useInteractive = (
   const isComponentSelected = useSelector(getIsSelectedComponent(component.id))
   const isHovered = useSelector(getIsHovered(component.id))
   const focusInput = useSelector(getShowInputText)
+  const useComponentFocused = useSelector(getFocusedComponent)
 
   const [, drag] = useDrag({
     item: { id: component.id, type: component.type, isMoved: true },
@@ -37,8 +39,9 @@ export const useInteractive = (
       event.preventDefault()
       event.stopPropagation()
       dispatch.components.select(component.id)
-      if (focusInput === true) {
+      if (focusInput) {
         dispatch.app.toggleInputText()
+        dispatch.app.toggleComponentFocused(false)
       }
     },
     onDoubleClick: (event: MouseEvent) => {
@@ -46,6 +49,7 @@ export const useInteractive = (
       event.stopPropagation()
       if (focusInput === false) {
         dispatch.app.toggleInputText()
+        dispatch.app.toggleComponentFocused()
       }
     },
   }
@@ -62,6 +66,20 @@ export const useInteractive = (
     props = {
       ...props,
       boxShadow: `#4FD1C5 0px 0px 0px 2px inset`,
+    }
+  }
+
+  if (isComponentSelected && focusInput) {
+    props = {
+      ...props,
+      boxShadow: `#4FD1C5 0px 0px 0px 2px inset`,
+    }
+  }
+
+  if (useComponentFocused && isComponentSelected) {
+    props = {
+      ...props,
+      boxShadow: `#b80009 0px 0px 0px 2px inset`,
     }
   }
 
