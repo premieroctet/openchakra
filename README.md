@@ -44,7 +44,7 @@ You can drag a preset: it's a group of components (like Alert). Just drop a pres
 
 **Update props & style**
 
-On the right hand-side, you can find the inspectror panel. You will find the tools to edit the component's props and style.
+On the right hand-side, you can find the inspector panel. You will find the tools to edit the component's props and style.
 
 **Delete, reset and documentation**
 
