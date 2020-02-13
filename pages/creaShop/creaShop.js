@@ -54,10 +54,21 @@ class creaShop extends React.Component {
   }
 
   nextDisabled() {
-    console.log(JSON.stringify(this.state, null, 2));
-    let pageIndex = this.state.param;
+    return "";
+    console.log(JSON.stringify(this.state.shop.service, null, 2));
+    console.log("Page:"+this.state.activeStep)
+    let shop=this.state.shop;
+    let pageIndex = this.state.activeStep;
     if (pageIndex==0) { return ""; }
-    if (pageIndex==1) { this.state.shop.service==null ? "" : "disabled"}
+    if (pageIndex==1) { return shop.service==null ? "disabled" : ""}
+    if (pageIndex==2) { 
+      if (Object.keys(shop.prestations).length==0) return "disabled";
+      Object.values(shop).forEach( v => {
+        if (v.price==0 || v.billing==null) {
+          return "disabled";
+        } 
+      });
+    }
   }
   availabilityCreated(avail) {
     this.setState({availabilities: [avail, ...this.state.availabilities]});
