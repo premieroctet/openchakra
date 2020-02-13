@@ -15,9 +15,10 @@ class SelectPrestation extends React.Component {
     super(props);
     this.state = {
       grouped: [],
-      prestationsSelected:[],
+      prestationsSelected:{},
     };
-    this.getDataFromButtonSwitch = this.getDataFromButtonSwitch.bind(this)
+    this.generatePrestations = this.generatePrestations.bind(this);
+
   }
 
   componentDidMount() {
@@ -33,14 +34,11 @@ class SelectPrestation extends React.Component {
     })
   }
 
-  getDataFromButtonSwitch(data){
-    this.setState({
-      prestationsSelected:{
-      ...this.state.prestationsSelected,
-      }
-    });
-
-    console.log(this.state.prestationsSelected)
+  generatePrestations(id){
+    let prestas = this.state.prestationSelected;
+    let newPresta = {price:0, billing:null};
+    prestas[id] = newPresta;
+    this.setState(({prestationsSelected: prestas[id]}));
   }
 
   render() {
@@ -68,8 +66,15 @@ class SelectPrestation extends React.Component {
                       {prestas.map((p, j) => {
                         return(
                           <React.Fragment key={p._id}>
-                            <ButtonSwitch isOption={true} isPrice={true} width={"50%"} label={p.label} id={p._id}
-                                          billing={p.billing} dataFromButtonSwitch={this.getDataFromButtonSwitch}/>
+                            <ButtonSwitch
+                              isOption={true}
+                              isPrice={true}
+                              width={"50%"}
+                              label={p.label}
+                              billing={p.billing}
+                              getId={this.generatePrestations}
+                              idPrestation={p._id}
+                            />
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                           </React.Fragment>
                       )
