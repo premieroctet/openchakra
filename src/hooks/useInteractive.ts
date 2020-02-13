@@ -19,7 +19,7 @@ export const useInteractive = (
   const isComponentSelected = useSelector(getIsSelectedComponent(component.id))
   const isHovered = useSelector(getIsHovered(component.id))
   const focusInput = useSelector(getShowInputText)
-  const useComponentFocused = useSelector(getFocusedComponent)
+  const useComponentFocused = useSelector(getFocusedComponent(component.id))
 
   const [, drag] = useDrag({
     item: { id: component.id, type: component.type, isMoved: true },
@@ -76,7 +76,7 @@ export const useInteractive = (
     }
   }
 
-  if (useComponentFocused && isComponentSelected) {
+  if (useComponentFocused) {
     props = {
       ...props,
       boxShadow: `#b80009 0px 0px 0px 2px inset`,
