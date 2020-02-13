@@ -49,7 +49,7 @@ class creaShop extends React.Component {
         perimeter: 0,
     }
     };
-    this.getDataFromSelectService = this.getDataFromSelectService.bind(this)
+    this.serviceSelected = this.serviceSelected.bind(this)
   }
 
   availabilityCreated(avail) {
@@ -69,13 +69,11 @@ class creaShop extends React.Component {
     this.setState({activeStep: this.state.activeStep - 1});
   };
 
-  getDataFromSelectService(data){
-    this.setState({
-      shop: {
-        ...this.state.shop,
-        service: data
-      },
-    });
+  serviceSelected(service_id){
+    console.log("Service selected:"+service_id);
+    let shop = this.state.shop;
+    shop.service = service_id;
+    this.setState({shop: shop});
   }
 
   renderSwitch(param) {
@@ -83,7 +81,7 @@ class creaShop extends React.Component {
       case 0 :
         return <CreaShopPresentation/>;
       case 1 :
-        return <SelectService prestation={this.getDataFromSelectService}/>;
+        return <SelectService serviceCb={this.serviceSelected}/>;
       case 2 :
         return <SelectPrestation service={this.state.shop.service}/>;
       case 3 :
