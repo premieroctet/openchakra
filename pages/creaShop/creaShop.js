@@ -50,18 +50,25 @@ class creaShop extends React.Component {
     }
     };
     this.serviceSelected = this.serviceSelected.bind(this)
+    this.nextDisabled = this.nextDisabled.bind(this)
   }
 
+  nextDisabled() {
+    console.log(JSON.stringify(this.state, null, 2));
+    let pageIndex = this.state.param;
+    if (pageIndex==0) { return ""; }
+    if (pageIndex==1) { this.state.shop.service==null ? "" : "disabled"}
+  }
   availabilityCreated(avail) {
     this.setState({availabilities: [avail, ...this.state.availabilities]});
   }
 
   handleNext = () => {
     this.setState({activeStep: this.state.activeStep + 1});
-    if(this.state.activeStep === 1 || this.state.activeStep === 5){
-      this.setState({hide: !this.state.hide})
+    if(this.state.activeStep === 2 || this.state.activeStep === 6){
+      this.setState((prev, props) => ({hide: true}))
     }else{
-      this.setState({hide: false})
+      this.setState((prev, props) => ({hide: true}))
     }
   };
 
@@ -150,8 +157,8 @@ class creaShop extends React.Component {
                 </Button>
               </Grid>
               <Grid>
-                <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}>
-                  {this.state.activeStep === 9 ? 'Envoyer' : 'Suivant'}
+                <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}i disabled={this.nextDisabled()}>
+                  {this.state.activeStep === 9 ? 'Envoyer' : 'Suivant'} 
                 </Button>
               </Grid>
             </Grid>
