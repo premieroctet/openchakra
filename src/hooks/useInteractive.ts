@@ -53,7 +53,6 @@ export const useInteractive = (
       }
     },
   }
-  console.log(focusInput)
 
   if (showLayout && enableVisualHelper) {
     props = {
