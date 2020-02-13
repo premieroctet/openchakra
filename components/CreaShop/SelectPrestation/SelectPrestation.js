@@ -15,6 +15,7 @@ class SelectPrestation extends React.Component {
     super(props);
     this.state = {
       grouped: [],
+      prestationsSelected:[],
     };
     this.getDataFromButtonSwitch = this.getDataFromButtonSwitch.bind(this)
   }
@@ -33,7 +34,8 @@ class SelectPrestation extends React.Component {
   }
 
   getDataFromButtonSwitch(data){
-    console.log(data)
+    this.state.prestationsSelected.push(data);
+    console.log(this.state.prestationsSelected)
   }
 
   render() {
@@ -60,8 +62,8 @@ class SelectPrestation extends React.Component {
                       <Grid item> {fltr}</Grid>
                       {prestas.map((p, j) => {
                         return(
-                          <React.Fragment key={j}>
-                            <ButtonSwitch isOption={true} isPrice={true} width={"50%"} label={p.label}
+                          <React.Fragment key={p._id}>
+                            <ButtonSwitch isOption={true} isPrice={true} width={"50%"} label={p.label} id={p._id}
                                           billing={p.billing} dataFromButtonSwitch={this.getDataFromButtonSwitch}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                           </React.Fragment>

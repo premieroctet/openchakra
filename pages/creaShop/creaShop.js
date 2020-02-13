@@ -33,7 +33,7 @@ class creaShop extends React.Component {
         is_particular: true,        // true/false : particulier.pro
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
         service: null,
-        prestations: [{prestation_id:"id_prestation", price:0, billing_id:"id_billing"}],
+        prestations:{},
         equipments: [{equipement_id: "quip_id"}], // Ids des équipements
         location: {alfred:false, client:false, visio:false}, // Lieu(x) de prestation
         travel_tax: 0, // Frais de déplacement

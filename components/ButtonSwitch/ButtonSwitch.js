@@ -81,32 +81,30 @@ class ButtonSwitch extends React.Component {
       value: this.props.billing[0].label,
       price:0,
       idBilling: "",
-      prestations: [
-        {
-          prestation_id:"",
-          price:0,
-          billing_id:""
-        }],
-
     };
     this.handleOnchange = this.handleOnchange.bind(this);
     this.handleChangeBilling = this.handleChangeBilling.bind(this);
   }
 
   handleOnchange(){
-
-    this.setState({stateButton: !this.state.stateButton})
+    this.setState({stateButton: !this.state.stateButton});
+    this.setState({idPresta: this.props.id});
+    this.props.dataFromButtonSwitch(this.state.idPresta);
   };
 
   handleChangePrice = e =>{
-    this.setState({price: e.target.value});
+
   };
 
   handleChangeBilling(event, index){
     this.setState({
-      value: event.target.value,
-      idBilling: index.key
-    })
+      prestations: {
+        ...this.state.prestations,
+        prestation_id: event.target.value,
+        billing_id: index.key
+      },
+    });
+    this.props.dataFromButtonSwitch(this.state.prestations);
   };
 
   render() {
