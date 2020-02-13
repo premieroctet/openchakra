@@ -7,6 +7,7 @@ import { duplicateComponent, deleteComponent } from '../../utils/recursive'
 export type ComponentsState = {
   components: IComponents
   selectedId: IComponent['id']
+  hoveredId?: IComponent['id']
 }
 export type ComponentsStateWithUndo = {
   past: ComponentsState[]
@@ -268,6 +269,21 @@ const components = createModel({
         }
       }
       return state
+    },
+    hover(
+      state: ComponentsState,
+      componentId: IComponent['id'],
+    ): ComponentsState {
+      return {
+        ...state,
+        hoveredId: componentId,
+      }
+    },
+    unhover(state: ComponentsState): ComponentsState {
+      return {
+        ...state,
+        hoveredId: undefined,
+      }
     },
   },
 })
