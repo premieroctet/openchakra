@@ -7,6 +7,7 @@ import {
   getIsHovered,
 } from '../core/selectors/components'
 import { getShowLayout } from '../core/selectors/app'
+import { getShowInputText } from '../core/selectors/app'
 
 export const useInteractive = (
   component: IComponent,
@@ -16,6 +17,8 @@ export const useInteractive = (
   const showLayout = useSelector(getShowLayout)
   const isComponentSelected = useSelector(getIsSelectedComponent(component.id))
   const isHovered = useSelector(getIsHovered(component.id))
+  const focusInput = useSelector(getShowInputText)
+
   const [, drag] = useDrag({
     item: { id: component.id, type: component.type, isMoved: true },
   })
@@ -34,11 +37,16 @@ export const useInteractive = (
       event.preventDefault()
       event.stopPropagation()
       dispatch.components.select(component.id)
+      if (focusInput === true) {
+        dispatch.app.toggleInputText()
+      }
     },
     onDoubleClick: (event: MouseEvent) => {
       event.preventDefault()
       event.stopPropagation()
-      dispatch.app.toggleInputText()
+      if (focusInput === false) {
+        dispatch.app.toggleInputText()
+      }
     },
   }
 
