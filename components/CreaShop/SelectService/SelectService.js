@@ -7,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {inspect} from 'util';
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
 
@@ -43,8 +42,8 @@ class SelectService extends React.Component {
 
   handleChange(value){
     console.log("OnChange:"+JSON.stringify(value));
-    if(value !== undefined && value !== null){ 
-      this.props.serviceCb(value.id); 
+    if(value !== undefined && value !== null){
+      this.props.serviceCb(value.id);
     }
   }
 

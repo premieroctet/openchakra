@@ -79,7 +79,7 @@ class creaShop extends React.Component {
     if(this.state.activeStep === 2 || this.state.activeStep === 6){
       this.setState((prev, props) => ({hide: true}))
     }else{
-      this.setState((prev, props) => ({hide: true}))
+      this.setState((prev, props) => ({hide: false}))
     }
   };
 
@@ -169,7 +169,7 @@ class creaShop extends React.Component {
               </Grid>
               <Grid>
                 <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}i disabled={this.nextDisabled()}>
-                  {this.state.activeStep === 9 ? 'Envoyer' : 'Suivant'} 
+                  {this.state.activeStep === 9 ? 'Envoyer' : 'Suivant'}
                 </Button>
               </Grid>
             </Grid>
