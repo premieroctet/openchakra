@@ -36,9 +36,6 @@ export const useInteractive = (
       event.preventDefault()
       event.stopPropagation()
       dispatch.components.select(component.id)
-      if (focusInput) {
-        dispatch.app.toggleInputText()
-      }
     },
     onDoubleClick: (event: MouseEvent) => {
       event.preventDefault()
