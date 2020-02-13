@@ -54,7 +54,6 @@ class creaShop extends React.Component {
   }
 
   nextDisabled() {
-    return "";
     console.log(JSON.stringify(this.state.shop.service, null, 2));
     console.log("Page:"+this.state.activeStep)
     let shop=this.state.shop;
