@@ -34,7 +34,12 @@ class SelectPrestation extends React.Component {
   }
 
   getDataFromButtonSwitch(data){
-    this.state.prestationsSelected.push(data);
+    this.setState({
+      prestationsSelected:{
+      ...this.state.prestationsSelected,
+      }
+    });
+
     console.log(this.state.prestationsSelected)
   }
 

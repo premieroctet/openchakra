@@ -35,9 +35,10 @@ class creaShop extends React.Component {
         service: "service_id",
         prestations:{
           prestation_id:{
-            presetation: "id_prestation",
             price:0,
-            billing_id:"id_billing"}},
+            billing_id:"id_billing"
+          }
+          },
         equipments: [{equipement_id: "quip_id"}], // Ids des équipements
         location: {alfred:false, client:false, visio:false}, // Lieu(x) de prestation
         travel_tax: 0, // Frais de déplacement
