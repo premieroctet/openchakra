@@ -305,6 +305,8 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
   MenuButton: {
     ...MenuButton.defaultProps,
     children: 'Lorem Ipsum',
+    as: Button,
+    rightIcon: 'chevron-down',
   },
   MenuItem: {
     ...MenuItem.defaultProps,
