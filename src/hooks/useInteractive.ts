@@ -6,7 +6,7 @@ import {
   getIsSelectedComponent,
   getIsHovered,
 } from '../core/selectors/components'
-import { getShowLayout } from '../core/selectors/app'
+import { getShowLayout, getFocusedComponent } from '../core/selectors/app'
 
 export const useInteractive = (
   component: IComponent,
@@ -16,12 +16,13 @@ export const useInteractive = (
   const showLayout = useSelector(getShowLayout)
   const isComponentSelected = useSelector(getIsSelectedComponent(component.id))
   const isHovered = useSelector(getIsHovered(component.id))
+  const focusInput = useSelector(getFocusedComponent(component.id))
+
   const [, drag] = useDrag({
     item: { id: component.id, type: component.type, isMoved: true },
   })
 
   const ref = useRef<HTMLDivElement>(null)
-
   let props = {
     ...component.props,
     onMouseOver: (event: MouseEvent) => {
@@ -36,6 +37,13 @@ export const useInteractive = (
       event.stopPropagation()
       dispatch.components.select(component.id)
     },
+    onDoubleClick: (event: MouseEvent) => {
+      event.preventDefault()
+      event.stopPropagation()
+      if (focusInput === false) {
+        dispatch.app.toggleInputText()
+      }
+    },
   }
 
   if (showLayout && enableVisualHelper) {
@@ -49,7 +57,7 @@ export const useInteractive = (
   if (isHovered || isComponentSelected) {
     props = {
       ...props,
-      boxShadow: `#4FD1C5 0px 0px 0px 2px inset`,
+      boxShadow: `${focusInput ? '#ffc4c7' : '#4FD1C5'} 0px 0px 0px 2px inset`,
     }
   }
 
