@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const _ = require('lodash');
 
 const Service = require('../../models/Service');
 const ServiceUser = require('../../models/ServiceUser');
-
 router.get('/test',(req, res) => res.json({msg: 'Service Works!'}) );
 
 
@@ -142,7 +142,60 @@ router.get('/all/tags/:tags',(req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/service/keyword/:kw
+// Get services by keyword
+// Search into category(label/description), service(label/description/job), prestation(label/dsecription)
+// Return { category_name : { services} }
+router.get('/keyword/:kw',(req,res)=> {
 
+    var kw = req.params.kw;
+    var regexp = new RegExp(kw,'i');
+    var result={}
+    Category.find({label:{$regex:regexp}})
+      .then(categories => {
+        Service.find({ $or : [{category: {$in: categories.map(c=> c._id)}}, {label:{$regex:regexp}}]})
+          .populate('category')
+          .then(services => {
+             console.log("Services from category or label:"+JSON.stringify(services.map(s => s.label)));
+             services.forEach(s => {
+               result[s.category.label] ? result[s.category.label].push({label:s.label, id:s._id}) : result[s.category.label]=[{label:s.label, id:s._id}];
+             });
+             Prestation.find({label:{$regex:regexp}})
+               .populate({path : 'service', populate: { path:'category'}}).then(prestations => {
+                  prestations.forEach(p => {
+                    let s = p.service;
+                    console.log("Service from prestation:"+p.label);
+                    console.log("Service from prestation:"+s.label);
+                    result[s.category.label] ? result[s.category.label].push({label:s.label, id:s._id}) : result[s.category.label]=[{label:s.label, id:s._id}];
+                  });
+                  Prestation.find()
+                    .populate({path : 'service', populate: { path:'category'}})
+                    .populate({ path: "job", match: {label:{$regex:regexp}}})
+                    .then(prestations => {
+                       prestations.forEach(p => {
+                         if ('job' in p && p['job']!=null) {
+                           let s = p.service;
+                           console.log("Service from prestation's job:"+p.service.label);
+                           console.log("Service from prestation's job:"+p.job);
+                           result[s.category.label] ? result[s.category.label].push({label:s.label, id:s._id}) : result[s.category.label]=[{label:s.label, id:s._id}];
+                         }
+                       });
+                  Object.keys(result).forEach( k => {
+                    result[k] = _.uniqWith(result[k], _.isEqual)
+                    result[k] = _.sortBy(result[k], ['label'])
+                  });
+                  var ordered = {}
+                  Object.keys(result).sort().forEach(key => ordered[key] = result[key])
+                  result = ordered;
+                  res.json(result);
 
+                  });
+
+               });
+           })
+           }
+      )
+      //.catch((err) => res.json("Error:"+JSON.stringify(err)));
+});
 
 module.exports = router;

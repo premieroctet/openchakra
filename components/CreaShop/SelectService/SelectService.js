@@ -7,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
 
@@ -16,25 +15,41 @@ class SelectService extends React.Component {
     super(props);
     this.state = {
       services: [],
-      prestationSelected: ""
     }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  componentDidMount() {
-    axios.get(`${url}myAlfred/api/service/all`)
+  setServices(pattern) {
+    axios.get(`${url}myAlfred/api/service/keyword/e`)
       .then((response) => {
-        this.setState({services: response.data});
+        let data = response.data;
+        let services = []
+        Object.keys(data).forEach( (k) => {
+          data[k].forEach( (s) => {
+            services.push({category: k, label: s.label, id: s.id});
+          });
+        });
+        this.setState({services: services});
       }).catch(error => {
       console.log(error);
     })
   }
 
-  handleChange(value){
-    if(value !== undefined && value !== null){
-      this.props.prestation(value._id);
-    }else{
+  componentDidMount() {
+   this.setServices('e');
+  }
 
+  handleChange(value){
+    console.log("OnChange:"+JSON.stringify(value));
+    if(value !== undefined && value !== null){
+      this.props.serviceCb(value.id);
     }
+  }
+
+  handleKeyDown(event){
+    console.log("OnKeyDown:"+JSON.stringify(event.target.value));
+    this.setServices(event.target.value);
   }
 
 
@@ -66,10 +81,10 @@ class SelectService extends React.Component {
                     <Autocomplete
                       id="grouped-demo"
                       style={{ width: 500 }}
-                      onChange={(event, value) =>{
-                        this.handleChange(value)
-                      }}
+                      onChange={(event, value) =>{ this.handleChange(value) }}
+                      onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       options={this.state.services}
+                      groupBy={option => option.category}
                       getOptionLabel={option => option.label}
                       renderInput={params => (
                         <TextField {...params} label="Tapez votre service" variant="outlined" fullWidth />

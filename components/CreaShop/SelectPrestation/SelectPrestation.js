@@ -36,7 +36,7 @@ class SelectPrestation extends React.Component {
   getDataFromButtonSwitch(data){
     this.setState({
       prestationsSelected:{
-      ...this.state.prestationsSelected,
+      ...this.state.prestationsSelected[data],
       }
     });
 
