@@ -2,7 +2,7 @@ import { useRef, MouseEvent, useState } from 'react'
 import { useSelector } from 'react-redux'
 import useDispatch from './useDispatch'
 import { useDrag } from 'react-dnd'
-import { getSelectedComponentId } from '../core/selectors/components'
+import { getIsSelectedComponent } from '../core/selectors/components'
 import { getShowLayout } from '../core/selectors/app'
 
 export const useInteractive = (
@@ -12,7 +12,8 @@ export const useInteractive = (
   const dispatch = useDispatch()
   const [hover, setHover] = useState(false)
   const showLayout = useSelector(getShowLayout)
-  const selectedId = useSelector(getSelectedComponentId)
+  const isComponentSelected = useSelector(getIsSelectedComponent(component.id))
+
   const [, drag] = useDrag({
     item: { id: component.id, type: component.type, isMoved: true },
   })
@@ -43,7 +44,7 @@ export const useInteractive = (
     }
   }
 
-  if (hover || selectedId === component.id) {
+  if (hover || isComponentSelected) {
     props = {
       ...props,
       boxShadow: `#4FD1C5 0px 0px 0px 2px inset`,
