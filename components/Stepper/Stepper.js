@@ -18,16 +18,16 @@ class Stepper extends React.Component {
 
    getSteps() {
     return [
-      'Bienvenu',
+      'Bienvenue',
       'Créez votre boutique de services',
       'Indiquez vos prestations',
-      'Paramètres votre service',
+      'Paramétrez votre service',
       'Vos préférences de réservation',
-      'Vos atouts pour ce service ! ',
+      'Vos atouts pour ce service !',
       'Indiquez vos disponibilités',
       'Vos conditions de réservation',
       'Paramétrez votre boutique',
-      'Présentez vous !'
+      'Présentez-vous !'
 
     ];
   }

@@ -22,7 +22,7 @@ class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 0,
+      activeStep: 2,
       availabilities: [],
       hide: false,
       shop:{
@@ -32,7 +32,7 @@ class creaShop extends React.Component {
         cancel_mode: "",            // FLEXIBLE/MODERATE/STRICT
         is_particular: true,        // true/false : particulier.pro
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
-        service: null,
+        service: "5d66a0fb08b3d612bd0864e5",
         prestations:{},
         equipments: [{equipement_id: "quip_id"}], // Ids des équipements
         location: {alfred:false, client:false, visio:false}, // Lieu(x) de prestation
@@ -50,6 +50,7 @@ class creaShop extends React.Component {
     }
     };
     this.serviceSelected = this.serviceSelected.bind(this)
+    this.prestaSelected = this.prestaSelected.bind(this)
     this.nextDisabled = this.nextDisabled.bind(this)
   }
 
@@ -61,12 +62,16 @@ class creaShop extends React.Component {
     if (pageIndex==0) { return ""; }
     if (pageIndex==1) { return shop.service==null ? "disabled" : ""}
     if (pageIndex==2) { 
+      console.log("Prestas:"+JSON.stringify(shop.prestations));
       if (Object.keys(shop.prestations).length==0) return "disabled";
-      Object.values(shop).forEach( v => {
-        if (v.price==0 || v.billing==null) {
-          return "disabled";
+      return Object.values(shop.prestations).every( v => {
+        console.log(v.price==0);
+        if (v.price==0 || v.billing==null || v.billing==undefined || Object.keys(v.billing).length==0) {
+          console.log("disabled");
+          return false;
         } 
-      });
+        return true;
+      })? "" : "disabled";
     }
   }
   availabilityCreated(avail) {
@@ -93,6 +98,12 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
+  prestaSelected(presta) {
+    let shop=this.state.shop; 
+    shop.prestations=presta;
+    this.setState({shop: shop});
+  }
+
   renderSwitch(param) {
     switch(param) {
       case 0 :
@@ -100,7 +111,7 @@ class creaShop extends React.Component {
       case 1 :
         return <SelectService serviceCb={this.serviceSelected}/>;
       case 2 :
-        return <SelectPrestation service={this.state.shop.service}/>;
+        return <SelectPrestation service={this.state.shop.service} prestaCb={this.prestaSelected} />;
       case 3 :
         return <SettingService/>;
       case 4 :
@@ -126,6 +137,7 @@ class creaShop extends React.Component {
   render() {
     const {classes} = this.props;
 
+    console.log("Render");
     return(
       <Grid>
         <Grid className={classes.mainHeader}>

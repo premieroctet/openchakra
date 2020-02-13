@@ -10,6 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import styles from './ButtonSwitchStyle'
+import utils from 'util';
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -77,18 +78,27 @@ class ButtonSwitch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      stateButton: false,
-      value: this.props.billing[0].label,
-      idPrestation: null,
+      checked: false,
+      billing: props.isOption ?this.props.billing[0] : null,
       price:0,
-      idBilling: "",
     };
-    this.handleOnchange = this.handleOnchange.bind(this);
+    this.onToggle = this.onToggle.bind(this);
+    this.onChangeBilling = this.onChangeBilling.bind(this);
+    this.onChangePrice = this.onChangePrice.bind(this);
   }
 
-  handleOnchange(){
-    this.props.getId(this.props.idPrestation);
+  onToggle(){
+    this.setState({checked: !this.state.checked}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing));
   };
+
+  onChangeBilling(event, index) {
+    let billing={_id:index.key, label:event.target.value};
+    this.setState({billing: billing}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing));
+  }
+
+  onChangePrice(event) {
+    this.setState({price: parseInt(event.target.value)}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing));
+  }
 
   render() {
     const {classes, isOption, isPrice, label, billing} = this.props;
@@ -98,22 +108,22 @@ class ButtonSwitch extends React.Component {
           <IOSSwitch
             color="primary"
             type="checkbox"
-            checked={this.state.stateButton}
-            onChange={this.handleOnchange}
+            checked={this.state.checked}
+            onChange={this.onToggle}
           />
         {label === undefined ? "label introuvable" : label}
         </Grid>
         { isPrice ?
           <Grid className={classes.responsiveIOSswitchContent}>
-            {this.state.stateButton === true ?
+            {this.state.checked === true ?
               <Grid style={{display:'flex'}}>
                 <CssTextField
                   value={this.state.price}
                   label={`Prix`}
                   type="number"
                   className={classes.textField}
-                  disabled={!this.state.stateButton}
-                  onChange={this.handleChangePrice}
+                  disabled={!this.state.checked}
+                  onChange={this.onChangePrice}
                   InputProps={{
                     inputProps: {
                       min: 0
@@ -127,12 +137,11 @@ class ButtonSwitch extends React.Component {
                       width: '100px',
                       fontSize: '0.8rem'
                     }}
-                    disabled={!this.state.stateButton}
+                    disabled={!this.state.checked}
                     margin="none"
-                    onChange={(event, index) =>{
-                      this.handleChangeBilling(event,index)
-                    }}
-                    value={this.state.value}
+                    onChange={this.onChangeBilling}
+                    value={this.state.billing.label}
+                    key={this.state.billing._id}
                   >
                     {billing.map(option => {
                       return (

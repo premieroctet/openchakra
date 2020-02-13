@@ -60,7 +60,7 @@ class CreaShopPresentation extends React.Component {
                   </Grid>
                   <Grid>
                     <Grid>
-                      <h3 className={classes.policySizeSubtitle}>Présentez-vous ! </h3>
+                      <h3 className={classes.policySizeSubtitle}>Présentez-vous !</h3>
                     </Grid>
                     <Grid>
                       <p className={classes.policySizeContent}>Renseignez votre profil Alfred, partager vos réalisations, et décrivez vous ! </p>

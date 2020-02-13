@@ -34,7 +34,7 @@ class SettingService extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>Paramètres votre service</Typography>
+                <Typography className={classes.policySizeTitle}>Paramétrez votre service</Typography>
               </Grid>
               <Grid >
                 <h3 className={classes.policySizeSubtitle}>Quel(s) produit(s) / matériel(s) fournissez-vous dans le cadre de ce service ? </h3>

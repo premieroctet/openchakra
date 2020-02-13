@@ -15,9 +15,9 @@ class SelectPrestation extends React.Component {
     super(props);
     this.state = {
       grouped: [],
-      prestationsSelected:[],
+      prestations:{},
     };
-    this.getDataFromButtonSwitch = this.getDataFromButtonSwitch.bind(this)
+    this.prestationSelected = this.prestationSelected.bind(this)
   }
 
   componentDidMount() {
@@ -27,20 +27,23 @@ class SelectPrestation extends React.Component {
         let grouped = _.mapValues(_.groupBy(data, 'filter_presentation.label'),
           clist => clist.map(data => _.omit(data, 'filter_presentation.label')));
         this.setState({grouped : grouped});
-        console.log(this.state.grouped)
       }).catch(error => {
       console.log(error);
     })
   }
 
-  getDataFromButtonSwitch(data){
-    this.setState({
-      prestationsSelected:{
-      ...this.state.prestationsSelected[data],
-      }
-    });
-
-    console.log(this.state.prestationsSelected)
+  prestationSelected(prestaId, checked, price, billing){
+    console.log(prestaId+","+checked);
+    let sel=this.state.prestations
+    if (checked) {
+      sel[prestaId]={price:price, billing:billing}
+    } 
+    else {
+      delete sel[prestaId];
+    }
+    this.setState({ prestations: sel});
+    console.log("Selection:"+JSON.stringify(sel));
+    this.props.prestaCb(sel);
   }
 
   render() {
@@ -69,7 +72,7 @@ class SelectPrestation extends React.Component {
                         return(
                           <React.Fragment key={p._id}>
                             <ButtonSwitch isOption={true} isPrice={true} width={"50%"} label={p.label} id={p._id}
-                                          billing={p.billing} dataFromButtonSwitch={this.getDataFromButtonSwitch}/>
+                                          billing={p.billing} onChange={this.prestationSelected}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                           </React.Fragment>
                       )
