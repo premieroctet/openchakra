@@ -7,7 +7,6 @@ import {
   getIsHovered,
 } from '../core/selectors/components'
 import { getShowLayout, getFocusedComponent } from '../core/selectors/app'
-import { getInputTextFocused } from '../core/selectors/app'
 
 export const useInteractive = (
   component: IComponent,
@@ -17,8 +16,7 @@ export const useInteractive = (
   const showLayout = useSelector(getShowLayout)
   const isComponentSelected = useSelector(getIsSelectedComponent(component.id))
   const isHovered = useSelector(getIsHovered(component.id))
-  const focusInput = useSelector(getInputTextFocused)
-  const useComponentFocused = useSelector(getFocusedComponent(component.id))
+  const focusInput = useSelector(getFocusedComponent(component.id))
 
   const [, drag] = useDrag({
     item: { id: component.id, type: component.type, isMoved: true },
@@ -33,9 +31,6 @@ export const useInteractive = (
     },
     onMouseOut: () => {
       dispatch.components.unhover()
-      if (focusInput) {
-        dispatch.app.toggleInputText()
-      }
     },
     onClick: (event: MouseEvent) => {
       event.preventDefault()
