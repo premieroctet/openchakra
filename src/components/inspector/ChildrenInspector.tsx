@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { getSelectedComponentChildren } from '../../core/selectors/components'
-import ChildrenList from './children/ChildrenList'
+import ElementsList from './elements-list/ElementsList'
 import useDispatch from '../../hooks/useDispatch'
 
 const ChildrenInspector = () => {
@@ -19,11 +19,21 @@ const ChildrenInspector = () => {
     dispatch.components.select(id)
   }
 
+  const onHoverChild = (id: IComponent['id']) => {
+    dispatch.components.hover(id)
+  }
+
+  const onUnhoverChild = () => {
+    dispatch.components.unhover()
+  }
+
   return (
-    <ChildrenList
-      childrenList={childrenComponent}
+    <ElementsList
+      elements={childrenComponent}
       moveItem={moveChildren}
       onSelect={onSelectChild}
+      onHover={onHoverChild}
+      onUnhover={onUnhoverChild}
     />
   )
 }

@@ -10,6 +10,7 @@ import AccordionContainer from '../AccordionContainer'
 import ColorsControl from '../controls/ColorsControl'
 import EffectsPanel from './styles/EffectsPanel'
 import ChildrenInspector from '../ChildrenInspector'
+import ParentInspector from '../ParentInspector'
 
 interface Props {
   isRoot: boolean
@@ -18,6 +19,12 @@ interface Props {
 
 const StylesPanel: React.FC<Props> = ({ isRoot, showChildren }) => (
   <Accordion defaultIndex={[0]} allowMultiple>
+    {!isRoot && (
+      <AccordionContainer title="Parent">
+        <ParentInspector />
+      </AccordionContainer>
+    )}
+
     {showChildren && (
       <AccordionContainer title="Children">
         <ChildrenInspector />

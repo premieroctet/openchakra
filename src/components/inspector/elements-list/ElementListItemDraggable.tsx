@@ -1,22 +1,25 @@
 import React, { useRef } from 'react'
 import { XYCoord, useDrop, DragObjectWithType, useDrag } from 'react-dnd'
-import { PseudoBox, Icon, Text } from '@chakra-ui/core'
+import ElementListItem from './ElementListItem'
 
-interface Props extends Pick<IComponent, 'type'> {
+interface Props extends Pick<IComponent, 'type' | 'id'> {
   index: number
-  moveItem: (dragIndex: number, hoverIndex: number) => void
-  id: IComponent['id']
+  moveItem?: (dragIndex: number, hoverIndex: number) => void
   onSelect: (id: IComponent['id']) => void
+  onHover: (id: IComponent['id']) => void
+  onUnhover: () => void
 }
 
-const ITEM_TYPE = 'childElement'
+const ITEM_TYPE = 'elementItem'
 
-const ChildElement: React.FC<Props> = ({
+const ElementListItemDraggable: React.FC<Props> = ({
   type,
   id,
   onSelect,
   moveItem,
   index,
+  onHover,
+  onUnhover,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [, drop] = useDrop({
@@ -42,7 +45,9 @@ const ChildElement: React.FC<Props> = ({
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
         return
       }
-      moveItem(dragIndex, hoverIndex)
+      if (moveItem) {
+        moveItem(dragIndex, hoverIndex)
+      }
       // @ts-ignore
       item.index = hoverIndex
     },
@@ -58,30 +63,25 @@ const ChildElement: React.FC<Props> = ({
 
   drag(drop(ref))
 
-  const onSelectChild = () => {
+  const onSelectElement = () => {
     onSelect(id)
   }
 
+  const onMouseOver = () => {
+    onHover(id)
+  }
+
   return (
-    <PseudoBox
-      boxSizing="border-box"
-      transition="margin 200ms"
-      my={1}
-      rounded="md"
-      p={1}
-      display="flex"
-      alignItems="center"
-      cursor="move"
-      opacity={opacity}
+    <ElementListItem
       ref={ref}
-      onClick={onSelectChild}
-    >
-      <Icon fontSize="xs" mr={2} name="drag-handle" />
-      <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
-        {type}
-      </Text>
-    </PseudoBox>
+      onSelect={onSelectElement}
+      opacity={opacity}
+      onMouseOver={onMouseOver}
+      onMouseOut={onUnhover}
+      type={type}
+      draggable
+    />
   )
 }
 
-export default ChildElement
+export default ElementListItemDraggable

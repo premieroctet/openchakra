@@ -29,3 +29,9 @@ export const getSelectedComponentChildren = (state: RootState) => {
     getComponentBy(child)(state),
   )
 }
+
+export const getSelectedComponentParent = (state: RootState) =>
+  state.components.present.components[getSelectedComponent(state).parent]
+
+export const getHoveredId = (state: RootState) =>
+  state.components.present.hoveredId
