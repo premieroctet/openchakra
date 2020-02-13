@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CreaShopPresentation from '../../components/CreaShop/CreaShopPresentation/CreaShopPresentation';
 import Stepper from '../../components/Stepper/Stepper'
-import NavigationBarForm from '../../components/CreaShop/NavigationBarForm/NavigationBarForm';
 import SelectService from '../../components/CreaShop/SelectService/SelectService';
 import SelectPrestation from '../../components/CreaShop/SelectPrestation/SelectPrestation';
 import SettingService from '../../components/CreaShop/SettingService/SettingService';
@@ -17,6 +16,7 @@ import BookingConditions from '../../components/CreaShop/BookingConditions/Booki
 import SettingShop from '../../components/CreaShop/SettingShop/SettingShop';
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
 import Link from 'next/link';
+import Button from '@material-ui/core/Button';
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -24,19 +24,58 @@ class creaShop extends React.Component {
     this.state={
       activeStep: 0,
       availabilities: [],
+      hide: false,
+      shop:{
+        booking_request: false,     // true/false
+        my_alfred_conditions: null, // BASIC/PICTURE/ID_CARD/RECOMMEND
+        welcome_message: "",
+        cancel_mode: "",            // FLEXIBLE/MODERATE/STRICT
+        is_particular: true,        // true/false : particulier.pro
+        company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
+        service: "service_id",
+        prestations: [{prestation_id:"id_prestation", price:0, billing_id:"id_billing"}],
+        equipments: [{equipement_id: "quip_id"}], // Ids des équipements
+        location: {alfred:false, client:false, visio:false}, // Lieu(x) de prestation
+        travel_tax: 0, // Frais de déplacement
+        pick_tax: 0, // Frais de livraison/enlèvmeent
+        minimum_basket: 0,
+        deadline_value: 0, // Valeur de prévenance
+        deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
+        description:"", // Description de l'expertise
+        experience_years: 0,
+        diploma : [{name:"", year:"", picture:""}],
+        certification : [{name:"", year:"", picture:""}],
+        address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
+        perimeter: 0,
     }
+    };
+    this.getDataFromSelectService = this.getDataFromSelectService.bind(this)
   }
-
-  getNextStep = (step) =>{
-    this.setState({activeStep: step + 1});
-  };
-
-  getPreviousStep = (step) =>{
-    this.setState({activeStep: step - 1})
-  };
 
   availabilityCreated(avail) {
     this.setState({availabilities: [avail, ...this.state.availabilities]});
+  }
+
+  handleNext = () => {
+    this.setState({activeStep: this.state.activeStep + 1});
+    if(this.state.activeStep === 1 || this.state.activeStep === 5){
+      this.setState({hide: !this.state.hide})
+    }else{
+      this.setState({hide: false})
+    }
+  };
+
+  handleBack = () => {
+    this.setState({activeStep: this.state.activeStep - 1});
+  };
+
+  getDataFromSelectService(data){
+    this.setState({
+      shop: {
+        ...this.state.shop,
+        service: data
+      },
+    });
   }
 
   renderSwitch(param) {
@@ -44,9 +83,9 @@ class creaShop extends React.Component {
       case 0 :
         return <CreaShopPresentation/>;
       case 1 :
-        return <SelectService/>;
+        return <SelectService prestation={this.getDataFromSelectService}/>;
       case 2 :
-        return <SelectPrestation/>;
+        return <SelectPrestation service={this.state.shop.service}/>;
       case 3 :
         return <SettingService/>;
       case 4 :
@@ -67,6 +106,8 @@ class creaShop extends React.Component {
     }
   }
 
+
+
   render() {
     const {classes} = this.props;
 
@@ -75,20 +116,47 @@ class creaShop extends React.Component {
         <Grid className={classes.mainHeader}>
           <Grid className={classes.imageContentHeader}>
             <Link href={'/'}>
-              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
+              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{cursor: "pointer"}} alt={'Logo Bleu'}/>
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>
             <Stepper activeStep={this.state.activeStep}/>
           </Grid>
         </Grid>
-        <Grid className={classes.mainContainer}>
-          <Grid className={classes.contentComponent}>
-            {this.renderSwitch(this.state.activeStep)}
+        <Grid className={classes.marginContainer}>
+          <Grid className={classes.mainContainer}>
+            <Grid className={this.state.hide ? classes.mainContainerNoImg : classes.leftContentComponent }>
+              {this.renderSwitch(this.state.activeStep)}
+            </Grid>
+            { !this.state.hide ?
+              <Grid className={classes.rightContentComponent}>
+                <Grid className={classes.contentRight} style={{backgroundImage: `url(../../../static/assets/img/creaShop/bgImage/etape${this.state.activeStep}.svg)`}}/>
+              </Grid>
+              : null
+            }
           </Grid>
+        </Grid>
+        <Grid className={classes.footerMainContainer}>
           <Grid className={classes.footerContainer}>
-            <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
-            <NavigationBarForm nextStep={this.getNextStep} previousStep={this.getPreviousStep}/>
+            <Grid className={classes.marginHr}>
+              <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+            </Grid>
+            <Grid className={classes.navButtonContent}>
+              <Grid>
+                <Button
+                  color="primary"
+                  disabled={this.state.activeStep === 0}
+                  onClick={this.handleBack}
+                >
+                  Retour
+                </Button>
+              </Grid>
+              <Grid>
+                <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}>
+                  {this.state.activeStep === 9 ? 'Envoyer' : 'Suivant'}
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

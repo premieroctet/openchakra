@@ -4,16 +4,8 @@ import styles from './SettingShopStyle'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Clear from '@material-ui/icons/Clear';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
-import AlfredWelcomedMessage from '../../AlfredWelcomedMessage/AlfredWelcomedMessage';
 
 class SettingShop extends React.Component {
   constructor(props) {
@@ -36,11 +28,11 @@ class SettingShop extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <h2>Indiquez votre message de bienvenue ! </h2>
+                <Typography className={classes.policySizeTitle}>Indiquez votre message de bienvenue ! </Typography>
               </Grid>
               <Grid>
                 <Grid>
-                  <h3>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation. </h3>
+                  <h3  className={classes.policySizeSubtitle}>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation. </h3>
                 </Grid>
               </Grid>
               <Grid>
@@ -63,10 +55,10 @@ class SettingShop extends React.Component {
               <Grid>
                 <Grid>
                   <Grid>
-                    <Typography>Indiquez vos conditions d’annulation</Typography>
+                    <h3  className={classes.policySizeSubtitle}>Indiquez vos conditions d’annulation</h3>
                   </Grid>
                   <Grid>
-                    <Typography>Choisissez vos conditions en cas d'annulation de la part des utilisateurs.</Typography>
+                    <p className={classes.policySizeContent}>Choisissez vos conditions en cas d'annulation de la part des utilisateurs.</p>
                   </Grid>
                 </Grid>
                 <Grid>
@@ -83,7 +75,6 @@ class SettingShop extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid className={classes.contentRight}/>
         </Grid>
       </Grid>
     );

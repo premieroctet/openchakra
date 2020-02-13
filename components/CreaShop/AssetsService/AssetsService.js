@@ -44,20 +44,20 @@ class AssetsService extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <h2>Vos atouts pour ce service ! </h2>
+                <Typography className={classes.policySizeTitle} >Vos atouts pour ce service ! </Typography>
               </Grid>
-              <Grid>
-                <Grid>
-                  <h3>Décrivez votre expertise  ! (facultatif)</h3>
-                </Grid>
+              <Grid style={{width: '80%'}}>
                 <Grid>
                   <Grid>
-                    <Typography>
+                    <h3 className={classes.policySizeSubtitle}>Décrivez votre expertise  ! (facultatif)</h3>
+                  </Grid>
+                  <Grid>
+                    <p className={classes.policySizeContent}>
                       Mettez en évidence vos compétences et votre expertise dans ce service.
                       Vous pouvez également donner des précisions sur vos prestations.
                       Par exemple, si vous proposez un service de confection de tapis, vous pouvez indiquer les heures nécessaires pour différentes dimension de tapis.
                       Précisez tout ce qui peut aider votre client à réserver correctement votre service !
-                    </Typography>
+                    </p>
                   </Grid>
                   <Grid>
                     <TextField
@@ -70,17 +70,17 @@ class AssetsService extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid>
+              <Grid style={{width: '80%'}}>
                 <Grid>
-                  <Typography>
+                  <p className={classes.policySizeContent}>
                     Précisez le nombre d’année d’expérience dont vous disposez sur ce service.
                     Si vous possédez des certifications et/ou diplômes pour ce service, mettez les en avant !
                     Après vérification par My-Alfred, vous aurez le statut d’Alfred Expérimenté/ certifié et/ou diplômé sur ce service.
-                  </Typography>
+                  </p>
                 </Grid>
                 <Grid>
                   <Grid item xs={12}>
-                    <h3 style={{color:'#757575'}}>Nombre d'années d'expérience</h3>
+                    <h3 className={classes.policySizeSubtitle}>Nombre d'années d'expérience</h3>
                   </Grid>
                   <Grid item xs={8}>
                     <TextField
@@ -96,16 +96,14 @@ class AssetsService extends React.Component {
                     </TextField>
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre diplôme</Typography>
+                    <h3 className={classes.policySizeSubtitle}>Votre diplôme</h3>
                     {this.state.isDiplome ?
-                      <React.Fragment>
-                        <Grid style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>
-                          <Grid style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}>
-                            <Clear color="secondary"/>
-                          </Grid>
-                          <p>"test"</p>
+                      <Grid style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>
+                        <Grid style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}>
+                          <Clear color="secondary"/>
                         </Grid>
-                      </React.Fragment>
+                        <p>"test"</p>
+                      </Grid>
                       : null
                     }
                     <ExpansionPanel>
@@ -161,14 +159,12 @@ class AssetsService extends React.Component {
                     </ExpansionPanel>
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography style={{margin: '1rem 0', fontSize: 20, color: 'grey'}}>Votre certification</Typography>
+                    <h3 className={classes.policySizeSubtitle}>Votre certification</h3>
                     { this.state.isCertification ?
-                      <React.Fragment>
-                        <Grid style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>
-                          <Grid style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}><Clear color="secondary"/></Grid>
-                          <p>test | test</p>
-                        </Grid>
-                      </React.Fragment>
+                      <Grid style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>
+                        <Grid style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}><Clear color="secondary"/></Grid>
+                        <p>test | test</p>
+                      </Grid>
                       : null
                     }
                     <ExpansionPanel>

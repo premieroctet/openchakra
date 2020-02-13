@@ -78,26 +78,25 @@ class ButtonSwitch extends React.Component {
     super(props);
     this.state = {
       stateButton: false,
-      value: "",
+      value: this.props.billing[0].label,
     };
     this.handleOnchange = this.handleOnchange.bind(this);
-    this.handleChangeText = this.handleChangeText.bind(this);
+    this.handleChangeBilling = this.handleChangeBilling.bind(this);
   }
 
   handleOnchange(){
     this.setState({stateButton: !this.state.stateButton})
   };
 
-  handleChangeText = e =>{
+  handleChangeBilling = e =>{
     this.setState({value: e.target.value})
   };
 
   render() {
-    const {classes, isOption, isPrice, label} = this.props;
-
+    const {classes, isOption, isPrice, label, billing} = this.props;
     return(
       <Grid className={classes.contentFiltre}>
-        <Grid className={classes.responsiveIOSswitch}>
+        <Grid className={classes.responsiveIOSswitch} style={{width : this.props.width}}>
           <IOSSwitch
             color="primary"
             type="checkbox"
@@ -117,6 +116,7 @@ class ButtonSwitch extends React.Component {
                   className={classes.textField}
                   disabled={!this.state.stateButton}
                   InputProps={{
+                    shrink: true,
                     inputProps: {
                       min: 0
                     },
@@ -131,12 +131,16 @@ class ButtonSwitch extends React.Component {
                     }}
                     disabled={!this.state.stateButton}
                     margin="none"
-                    onChange={this.handleChangeText}
+                    onChange={this.handleChangeBilling}
                     value={this.state.value}
                   >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    {billing.map(option => {
+                      return (
+                        <MenuItem key={option._id} value={option.label}>{option.label}</MenuItem>
+                      )
+                    }
+                    )
+                    }
                   </Select> : null
                 }
               </Grid>

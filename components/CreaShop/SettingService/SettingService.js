@@ -5,16 +5,25 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 
 class SettingService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeStep: 0,
-      checked: false
-    }
+      checked: false,
+      clientAdress:false,
+      myAddress: false,
+      visioConference: false,
+      outside: false,
+    };
+    this.stateButton = this.stateButton.bind(this);
+  }
+
+  stateButton(e){
+    let name = e.target.name;
+    console.log(name);
+    this.setState({[e.target.name]: !this.state[name]});
   }
 
   render() {
@@ -25,10 +34,10 @@ class SettingService extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <h2>Paramètres votre service</h2>
+                <Typography className={classes.policySizeTitle}>Paramètres votre service</Typography>
               </Grid>
               <Grid >
-                <h3>Quel(s) produit(s) / matériel(s) fournissez-vous dans le cadre de ce service ? </h3>
+                <h3 className={classes.policySizeSubtitle}>Quel(s) produit(s) / matériel(s) fournissez-vous dans le cadre de ce service ? </h3>
               </Grid>
               <Grid className={classes.contentTextSize}>
                 <Grid item xs={3} sm={3} md={2}>
@@ -49,47 +58,35 @@ class SettingService extends React.Component {
               </Grid>
               <Grid>
                 <Grid>
-                  <Typography>
-                    Où acceptez-vous de réaliser votre prestation ?
-                  </Typography>
+                  <h3 className={classes.policySizeSubtitle}>Où acceptez-vous de réaliser votre prestation ?</h3>
                 </Grid>
-                <Grid>
-                  <Grid>
-                    <Button variant="outlined" className={classes.button}>
-                      A l’adresse de mon client
-                    </Button>
+                <Grid style={{marginLeft : 15}}>
+                  <Grid style={{marginBottom: 10}}>
+                    <input type={"button"} value={"A l’adresse de mon client"} name={"clientAdress"} onClick={this.stateButton} className={ this.state.clientAdress ? classes.activeButton : classes.button}/>
+                  </Grid>
+                  <Grid style={{marginBottom: 10}}>
+                    <input type={"button"} value={"A mon adresse"} name={"myAddress"} onClick={this.stateButton} className={ this.state.myAddress ? classes.activeButton : classes.button}/>
+                  </Grid>
+                  <Grid style={{marginBottom: 10}}>
+                    <input type={"button"} value={"En visioconférence"} name={"visioConference"} onClick={this.stateButton} className={ this.state.visioConference ? classes.activeButton : classes.button}/>
                   </Grid>
                   <Grid>
-                    <Button variant="outlined" className={classes.button}>
-                      A mon adresse
-                    </Button>
-                  </Grid>
-                  <Grid>
-                    <Button variant="outlined" className={classes.button}>
-                      En visioconférence
-                    </Button>
-                  </Grid>
-                  <Grid>
-                    <Button variant="outlined" className={classes.button}>
-                      En extérieur
-                    </Button>
+                    <input type={"button"} value={"En extérieur "} name={"outside"} onClick={this.stateButton} className={ this.state.outside ? classes.activeButton : classes.button}/>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid>
                 <Grid>
-                  <Typography>
-                    Options
-                  </Typography>
+                  <h3 className={classes.policySizeSubtitle}>Options</h3>
                 </Grid>
                 <Grid>
-                  <ButtonSwitch label={"Appliquer un forfait déplacement de"} isOption={false}/>
+                  <ButtonSwitch label={"Appliquer un forfait déplacement de"} isOption={false} isPrice={true}/>
                 </Grid>
                 <Grid>
-                  <ButtonSwitch label={"Proposer un forfait retrait & livraison de"} isOption={false}/>
+                  <ButtonSwitch label={"Proposer un forfait retrait & livraison de"} isOption={false} isPrice={true}/>
                 </Grid>
                 <Grid>
-                  <ButtonSwitch label={"Proposer un forfait cheveux longs de"} isOption={false}/>
+                  <ButtonSwitch label={"Proposer un forfait cheveux longs de"} isOption={false} isPrice={true}/>
                 </Grid>
               </Grid>
             </Grid>

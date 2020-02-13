@@ -1,5 +1,4 @@
-import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
-
+import { emphasize } from '@material-ui/core/styles';
 
 export default theme => ({
   mainContainer:{
@@ -11,36 +10,39 @@ export default theme => ({
     height: 700,
     width: '100%'
   },
-  contentLeft:{
-    width: '60%',
-    height : '100%',
-    display: 'flex',
-    flexDirection : 'column',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('md')]: {
-      width: '100%'
-    },
-  },
-  contentRight: {
-    width: '40%',
-    height: '100%',
-    display: 'block',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'right',
-    position: 'relative',
-    backgroundImage: "url(" + "../../../static/assets/img/creaShop/bgImage/etape1.svg" + ")",
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
-    },
-  },
   contentLeftTop:{
     width : '100%',
   },
   contentTitle:{
-    width: '100%'
+    width: '80%'
+  },
+  policySizeTitle:{
+    margin: 0,
+    overflowWrap: 'break-word !important',
+    fontSize: 24,
+    fontWeight: 800,
+    lineHeight: '1.25em',
+    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
+    color: 'rgb(72, 72, 72)',
+    paddingTop: 2,
+    paddingBottom: 2
+  },
+  policySizeSubtitle:{
+    fontSize: 19,
+    lineHeight: '1.43em',
+    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
+    color :'#484848',
+  },
+  policySizeContent:{
+    fontSize: 16,
+    fontWeight: 400,
+    lineHeight: '1.375em',
+    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
+    color: 'rgb(72, 72, 72)',
   },
   contentTextSize:{
     width : 500,
+    marginTop: 30,
     [theme.breakpoints.down('md')]: {
       width: '100%'
     },
@@ -50,6 +52,7 @@ export default theme => ({
     flexGrow: 1,
     height: 250,
     minWidth: 290,
+    marginTop: 30
   },
   input: {
     display: 'flex',

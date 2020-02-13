@@ -9,33 +9,11 @@ export default theme => ({
     height: 700,
     width: '100%'
   },
-  contentLeft:{
-    width: '60%',
-    height : '100%',
-    display: 'flex',
-    flexDirection : 'column',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('md')]: {
-      width: '100%'
-    },
-  },
-  contentRight: {
-    width: '40%',
-    height: '100%',
-    display: 'block',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'right',
-    position: 'relative',
-    backgroundImage: "url(" + "../../../static/assets/img/creaShop/bgImage/etape3.svg" + ")",
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
-    },
-  },
   contentLeftTop:{
     width : '100%',
   },
   contentTitle:{
-    width: '100%'
+    width: '80%'
   },
   contentTextSize:{
     width : 500,
@@ -43,7 +21,7 @@ export default theme => ({
       width: '100%'
     },
   },
-  buttonAddAndRemove: {
+  buttonRemove: {
     width: 30,
     height: 30,
     borderRadius: '50%',
@@ -54,9 +32,45 @@ export default theme => ({
     display: 'inline-block',
     marginRight: 25
   },
+  buttonAdd: {
+    width: 30,
+    height: 30,
+    borderRadius: '50%',
+    border: '1px solid #2FBCD3',
+    textAlign: "center",
+    lineHeight: 1.6,
+    cursor: 'pointer',
+    display: 'inline-block',
+    marginLeft: 25,
+    marginRight: 25
+  },
   selectDelayInputRepsonsive: {
     [theme.breakpoints.down('sm')]: {
       width: '100%!important',
     },
+  },
+  policySizeTitle:{
+    margin: 0,
+    overflowWrap: 'break-word !important',
+    fontSize: 24,
+    fontWeight: 800,
+    lineHeight: '1.25em',
+    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
+    color: 'rgb(72, 72, 72)',
+    paddingTop: 2,
+    paddingBottom: 2
+  },
+  policySizeSubtitle:{
+    fontSize: 19,
+    lineHeight: '1.43em',
+    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
+    color :'#484848',
+  },
+  policySizeContent:{
+    fontSize: 16,
+    fontWeight: 400,
+    lineHeight: '1.375em',
+    fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
+    color: 'rgb(72, 72, 72)',
   },
 })
