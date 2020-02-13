@@ -6,6 +6,7 @@ export const getShowCode = (state: RootState) => state.app.showCode
 
 export const getFocusedComponent = (id: IComponent['id']) => (
   state: RootState,
-) => state.app.useComponentFocused && state.components.present.selectedId === id
+) => state.app.inputTextFocused && state.components.present.selectedId === id
 
-export const getShowInputText = (state: RootState) => state.app.focusInputText
+export const getInputTextFocused = (state: RootState) =>
+  state.app.inputTextFocused

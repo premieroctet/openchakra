@@ -6,9 +6,8 @@ import {
   getIsSelectedComponent,
   getIsHovered,
 } from '../core/selectors/components'
-import { getShowLayout } from '../core/selectors/app'
-import { getShowInputText } from '../core/selectors/app'
-import { getFocusedComponent } from '../core/selectors/app'
+import { getShowLayout, getFocusedComponent } from '../core/selectors/app'
+import { getInputTextFocused } from '../core/selectors/app'
 
 export const useInteractive = (
   component: IComponent,
@@ -18,7 +17,7 @@ export const useInteractive = (
   const showLayout = useSelector(getShowLayout)
   const isComponentSelected = useSelector(getIsSelectedComponent(component.id))
   const isHovered = useSelector(getIsHovered(component.id))
-  const focusInput = useSelector(getShowInputText)
+  const focusInput = useSelector(getInputTextFocused)
   const useComponentFocused = useSelector(getFocusedComponent(component.id))
 
   const [, drag] = useDrag({
@@ -34,6 +33,9 @@ export const useInteractive = (
     },
     onMouseOut: () => {
       dispatch.components.unhover()
+      if (focusInput) {
+        dispatch.app.toggleInputText()
+      }
     },
     onClick: (event: MouseEvent) => {
       event.preventDefault()
@@ -41,7 +43,6 @@ export const useInteractive = (
       dispatch.components.select(component.id)
       if (focusInput) {
         dispatch.app.toggleInputText()
-        dispatch.app.toggleComponentFocused(false)
       }
     },
     onDoubleClick: (event: MouseEvent) => {
@@ -49,10 +50,10 @@ export const useInteractive = (
       event.stopPropagation()
       if (focusInput === false) {
         dispatch.app.toggleInputText()
-        dispatch.app.toggleComponentFocused()
       }
     },
   }
+  console.log(focusInput)
 
   if (showLayout && enableVisualHelper) {
     props = {
@@ -65,21 +66,7 @@ export const useInteractive = (
   if (isHovered || isComponentSelected) {
     props = {
       ...props,
-      boxShadow: `#4FD1C5 0px 0px 0px 2px inset`,
-    }
-  }
-
-  if (isComponentSelected && focusInput) {
-    props = {
-      ...props,
-      boxShadow: `#4FD1C5 0px 0px 0px 2px inset`,
-    }
-  }
-
-  if (useComponentFocused) {
-    props = {
-      ...props,
-      boxShadow: `#b80009 0px 0px 0px 2px inset`,
+      boxShadow: `${focusInput ? '#ffc4c7' : '#4FD1C5'} 0px 0px 0px 2px inset`,
     }
   }
 

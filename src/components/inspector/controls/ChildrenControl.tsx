@@ -5,12 +5,12 @@ import useDispatch from '../../../hooks/useDispatch'
 import { useForm } from '../../../hooks/useForm'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 import { useSelector } from 'react-redux'
-import { getShowInputText } from '../../../core/selectors/app'
+import { getInputTextFocused } from '../../../core/selectors/app'
 
 const ChildrenControl: React.FC = () => {
   const dispatch = useDispatch()
   const textInput = useRef<HTMLInputElement>(null)
-  const focusInput = useSelector(getShowInputText)
+  const focusInput = useSelector(getInputTextFocused)
   const { setValueFromEvent } = useForm()
   const children = usePropsSelector('children')
   const onKeyUp = (event: any) => {
