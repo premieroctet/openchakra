@@ -14,26 +14,30 @@ class SelectPrestation extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      prestations:[]
-    }
+      grouped: [],
+    };
+    this.getDataFromButtonSwitch = this.getDataFromButtonSwitch.bind(this)
   }
 
   componentDidMount() {
     axios.get(`${url}myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
         let data = res.data;
-        console.log(data);
-        this.setState({prestations: data});
-        for(let i = 0 ; i < data.length; i++){
-
-        }
+        let grouped = _.mapValues(_.groupBy(data, 'filter_presentation.label'),
+          clist => clist.map(data => _.omit(data, 'filter_presentation.label')));
+        this.setState({grouped : grouped});
+        console.log(this.state.grouped)
       }).catch(error => {
       console.log(error);
     })
   }
+
+  getDataFromButtonSwitch(data){
+    console.log(data)
+  }
+
   render() {
     const {classes} = this.props;
-
     return(
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -47,16 +51,22 @@ class SelectPrestation extends React.Component {
               <Grid className={classes.contentTextSize}>
                 <p className={classes.policySizeContent}>Quelles prestations souhaitez-vous réaliser ? Indiquez vos tarifs et votre unité de facturation. </p>
               </Grid>
-              <Grid container style={{display: 'flex', marginTop: 30}} spacing={2}>
-                {Object.keys(this.state.prestations).map( result => {
+
+              <Grid container style={{display: 'flex', marginTop: 30, marginBottom: 50}} spacing={2}>
+                {Object.keys(this.state.grouped).map((fltr, i) =>{
+                  let prestas = this.state.grouped[fltr];
                   return (
-                    <Grid item xl={6}>
-                      <Grid item> {this.state.prestations[result].filter_presentation.label}</Grid>
-                      <ButtonSwitch isOption={true} isPrice={true} width={"50%"} label={this.state.prestations[result].label} billing={this.state.prestations[result].billing}/>
-                      <hr style={{
-                        color: "rgb(255, 249, 249, 0.6)",
-                        borderRadius: 10
-                      }}/>
+                    <Grid item xl={6} key={i}>
+                      <Grid item> {fltr}</Grid>
+                      {prestas.map((p, j) => {
+                        return(
+                          <React.Fragment key={j}>
+                            <ButtonSwitch isOption={true} isPrice={true} width={"50%"} label={p.label}
+                                          billing={p.billing} dataFromButtonSwitch={this.getDataFromButtonSwitch}/>
+                            <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+                          </React.Fragment>
+                      )
+                      })}
                     </Grid>
                   )
                 })

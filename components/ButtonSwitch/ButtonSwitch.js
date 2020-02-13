@@ -79,17 +79,34 @@ class ButtonSwitch extends React.Component {
     this.state = {
       stateButton: false,
       value: this.props.billing[0].label,
+      price:0,
+      idBilling: "",
+      prestations: [
+        {
+          prestation_id:"",
+          price:0,
+          billing_id:""
+        }],
+
     };
     this.handleOnchange = this.handleOnchange.bind(this);
     this.handleChangeBilling = this.handleChangeBilling.bind(this);
   }
 
   handleOnchange(){
+
     this.setState({stateButton: !this.state.stateButton})
   };
 
-  handleChangeBilling = e =>{
-    this.setState({value: e.target.value})
+  handleChangePrice = e =>{
+    this.setState({price: e.target.value});
+  };
+
+  handleChangeBilling(event, index){
+    this.setState({
+      value: event.target.value,
+      idBilling: index.key
+    })
   };
 
   render() {
@@ -110,13 +127,13 @@ class ButtonSwitch extends React.Component {
             {this.state.stateButton === true ?
               <Grid style={{display:'flex'}}>
                 <CssTextField
-                  value={this.state.value}
+                  value={this.state.price}
                   label={`Prix`}
                   type="number"
                   className={classes.textField}
                   disabled={!this.state.stateButton}
+                  onChange={this.handleChangePrice}
                   InputProps={{
-                    shrink: true,
                     inputProps: {
                       min: 0
                     },
@@ -131,7 +148,9 @@ class ButtonSwitch extends React.Component {
                     }}
                     disabled={!this.state.stateButton}
                     margin="none"
-                    onChange={this.handleChangeBilling}
+                    onChange={(event, index) =>{
+                      this.handleChangeBilling(event,index)
+                    }}
                     value={this.state.value}
                   >
                     {billing.map(option => {

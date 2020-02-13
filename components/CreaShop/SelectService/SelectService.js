@@ -16,7 +16,6 @@ class SelectService extends React.Component {
     super(props);
     this.state = {
       services: [],
-      labelServices: [],
       prestationSelected: ""
     }
   }
@@ -25,10 +24,6 @@ class SelectService extends React.Component {
     axios.get(`${url}myAlfred/api/service/all`)
       .then((response) => {
         this.setState({services: response.data});
-        for(let i = 0 ; i < this.state.services.length; i++ ){
-          let label = this.state.services[i].label;
-          this.state.labelServices.push(label);
-        }
       }).catch(error => {
       console.log(error);
     })
