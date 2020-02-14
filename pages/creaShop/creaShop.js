@@ -22,9 +22,8 @@ class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 2,
+      activeStep: 7,
       availabilities: [],
-      hide: false,
       shop:{
         booking_request: false,     // true/false
         my_alfred_conditions: null, // BASIC/PICTURE/ID_CARD/RECOMMEND
@@ -61,7 +60,7 @@ class creaShop extends React.Component {
     let pageIndex = this.state.activeStep;
     if (pageIndex==0) { return ""; }
     if (pageIndex==1) { return shop.service==null ? "disabled" : ""}
-    if (pageIndex==2) { 
+    if (pageIndex==2) {
       console.log("Prestas:"+JSON.stringify(shop.prestations));
       if (Object.keys(shop.prestations).length==0) return "disabled";
       return Object.values(shop.prestations).every( v => {
@@ -69,7 +68,7 @@ class creaShop extends React.Component {
         if (v.price==0 || v.billing==null || v.billing==undefined || Object.keys(v.billing).length==0) {
           console.log("disabled");
           return false;
-        } 
+        }
         return true;
       })? "" : "disabled";
     }
@@ -79,16 +78,13 @@ class creaShop extends React.Component {
   }
 
   handleNext = () => {
-    this.setState({activeStep: this.state.activeStep + 1});
-    if(this.state.activeStep === 2 || this.state.activeStep === 6){
-      this.setState((prev, props) => ({hide: true}))
-    }else{
-      this.setState((prev, props) => ({hide: false}))
-    }
+    this.setState(prevstate => ({ activeStep: prevstate.activeStep + 1}));
+    console.log(this.state.activeStep)
   };
 
   handleBack = () => {
-    this.setState({activeStep: this.state.activeStep - 1});
+    this.setState(prevstate => ({ activeStep: prevstate.activeStep - 1}));
+    console.log(this.state.activeStep)
   };
 
   serviceSelected(service_id){
@@ -99,7 +95,7 @@ class creaShop extends React.Component {
   }
 
   prestaSelected(presta) {
-    let shop=this.state.shop; 
+    let shop=this.state.shop;
     shop.prestations=presta;
     this.setState({shop: shop});
   }
@@ -137,7 +133,6 @@ class creaShop extends React.Component {
   render() {
     const {classes} = this.props;
 
-    console.log("Render");
     return(
       <Grid>
         <Grid className={classes.mainHeader}>
@@ -152,10 +147,10 @@ class creaShop extends React.Component {
         </Grid>
         <Grid className={classes.marginContainer}>
           <Grid className={classes.mainContainer}>
-            <Grid className={this.state.hide ? classes.mainContainerNoImg : classes.leftContentComponent }>
+            <Grid className={ this.state.activeStep === 2 ||  this.state.activeStep === 6 ? classes.mainContainerNoImg : classes.leftContentComponent }>
               {this.renderSwitch(this.state.activeStep)}
             </Grid>
-            { !this.state.hide ?
+            { this.state.activeStep !== 2 ?
               <Grid className={classes.rightContentComponent}>
                 <Grid className={classes.contentRight} style={{backgroundImage: `url(../../../static/assets/img/creaShop/bgImage/etape${this.state.activeStep}.svg)`}}/>
               </Grid>
@@ -179,7 +174,7 @@ class creaShop extends React.Component {
                 </Button>
               </Grid>
               <Grid>
-                <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}i disabled={this.nextDisabled()}>
+                <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext} disabled={this.nextDisabled()}>
                   {this.state.activeStep === 9 ? 'Envoyer' : 'Suivant'}
                 </Button>
               </Grid>

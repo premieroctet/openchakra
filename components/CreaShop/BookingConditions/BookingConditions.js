@@ -38,7 +38,7 @@ class BookingConditions extends React.Component {
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
-          <Grid className={classes.contentLeft}>
+          <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
                 <Typography className={classes.policySizeTitle}>Vos conditions de réservation</Typography>
@@ -49,7 +49,7 @@ class BookingConditions extends React.Component {
                     <h3 className={classes.policySizeSubtitle}>Comment les utilisateurs peuvent réserver vos services ? </h3>
                   </Grid>
                 </Grid>
-                <Grid>
+                <Grid style={{backgroundColor : 'green'}}>
                   <Grid>
                     <ButtonSwitch style={{width : '100%'}} isOption={false} isPrice={false} label={"Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H."}/>
                   </Grid>

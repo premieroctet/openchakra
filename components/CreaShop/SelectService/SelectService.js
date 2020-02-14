@@ -80,7 +80,7 @@ class SelectService extends React.Component {
                   <Grid className={classes.root}>
                     <Autocomplete
                       id="grouped-demo"
-                      style={{ width: 500 }}
+                      className={classes.texField}
                       onChange={(event, value) =>{ this.handleChange(value) }}
                       onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       options={this.state.services}

@@ -75,7 +75,7 @@ class SettingService extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid>
+              <Grid className={classes.options}>
                 <Grid>
                   <h3 className={classes.policySizeSubtitle}>Options</h3>
                 </Grid>
@@ -91,7 +91,6 @@ class SettingService extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid className={classes.contentRight}/>
         </Grid>
       </Grid>
     );

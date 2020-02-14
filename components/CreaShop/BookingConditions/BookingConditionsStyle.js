@@ -12,6 +12,10 @@ export default theme => ({
 
   contentLeftTop:{
     width : '100%',
+    [theme.breakpoints.down('md')]: {
+      display:'flex',
+      flexDirection: 'column',
+    },
   },
   contentTitle:{
     width: '100%'

@@ -10,6 +10,10 @@ export default theme => ({
   },
   contentLeftTop:{
     width : '100%',
+    [theme.breakpoints.down('md')]: {
+      display:'flex',
+      flexDirection: 'column',
+    },
   },
   contentTitle:{
     width: '80%',
@@ -19,6 +23,9 @@ export default theme => ({
     marginTop: 30,
     [theme.breakpoints.down('md')]: {
       width: '100%'
+    },
+    [theme.breakpoints.down('xs')]: {
+     marginBottom: 100
     },
   },
   policySizeTitle:{

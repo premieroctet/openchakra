@@ -1,15 +1,18 @@
 export default theme => ({
   contentFiltre:{
     display:'flex',
-    height:'50px',
     alignItems: 'flex-end',
-    [theme.breakpoints.down('xs')]: {
-      height:'90px',
+    height: 50,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      height: 'auto',
+      alignItems: 'flex-start',
+      flexDirection: 'column',
     }
   },
   responsiveIOSswitch:{
-    [theme.breakpoints.down('xs')]: {
-      width: '50%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
     }
   },
   responsiveIOSswitchContent:{
@@ -17,8 +20,9 @@ export default theme => ({
     width:'50%',
     alignItems: 'flex-end',
     justifyContent:'end',
-    [theme.breakpoints.down('xs')]: {
-      width:'50%',
+    [theme.breakpoints.down('sm')]: {
+      width:'100%',
+      justifyContent:'start',
     }
   },
   textField: {

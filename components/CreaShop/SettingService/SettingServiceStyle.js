@@ -11,6 +11,16 @@ export default theme => ({
   },
   contentLeftTop:{
     width : '100%',
+    [theme.breakpoints.down('md')]: {
+      display:'flex',
+      flexDirection: 'column',
+    },
+  },
+  contentLeft:{
+    width: '100%',
+    height : '100%',
+    display: 'flex',
+    flexDirection : 'column',
   },
   contentTitle:{
     width: '100%'
@@ -18,7 +28,7 @@ export default theme => ({
   contentTextSize:{
     width : 500,
     [theme.breakpoints.down('md')]: {
-      width: '100%'
+      width: '100%',
     },
   },
   policySizeTitle:{
@@ -60,5 +70,11 @@ export default theme => ({
     textAlign: 'left',
     cursor: 'pointer',
     color: 'white'
+  },
+  options:{
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 100
+    },
   }
+
 })
