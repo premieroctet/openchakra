@@ -1,3 +1,11 @@
 const ALL_SERVICES=['Tous les services', null];
 
-export {ALL_SERVICES};
+
+const ALF_CONDS= { // my alfred condiitons
+  BASIC:     "0",
+  PICTURE:   "1",
+  ID_CARD:   "2",
+  RECOMMEND: "3",
+}
+
+export {ALL_SERVICES, ALF_CONDS};

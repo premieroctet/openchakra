@@ -65,5 +65,8 @@ export default theme => ({
     textAlign: 'left',
     cursor: 'pointer',
     color: 'white'
+  },
+  bottomSpacer:{
+    marginBottom: 100
   }
 })

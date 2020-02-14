@@ -11,6 +11,10 @@ export default theme => ({
   },
   contentLeftTop:{
     width : '100%',
+    [theme.breakpoints.down('md')]: {
+      display:'flex',
+      flexDirection: 'column',
+    },
   },
   contentTitle:{
     width: '100%'
@@ -24,7 +28,7 @@ export default theme => ({
   texfieldContentWelcomedMessage:{
     width: '100%',
     marginLeft: 30,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginLeft: 0,
     },
   },
