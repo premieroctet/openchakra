@@ -89,6 +89,7 @@ const componentsToTest = [
   'InputGroup',
   'InputLeftAddon',
   'InputRightAddon',
+  'PopoverMeta',
 ]
 
 test.each(componentsToTest)('Component Preview for %s', componentName => {
