@@ -300,6 +300,7 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
   },
   Popover: {
     ...Popover.defaultProps,
+    isOpen: true,
   },
   PopoverTrigger: {
     ...PopoverTrigger.defaultProps,

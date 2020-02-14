@@ -67,16 +67,26 @@ export const buildFormControl = (parent: string): ComposedComponent => {
 }
 
 export const buildPopover = (parent: string): ComposedComponent => {
-  const composer = new Composer()
+  const composer = new Composer('Popover')
   const nodeId = composer.addNode({ type: 'Popover' })
   const tiggerId = composer.addNode({ type: 'PopoverTrigger', parent: nodeId })
   composer.addNode({ type: 'Button', parent: tiggerId })
   const contentId = composer.addNode({ type: 'PopoverContent', parent: nodeId })
-  composer.addNode({ type: 'PopoverHeader', parent: contentId })
-  composer.addNode({ type: 'PopoverBody', parent: contentId })
   composer.addNode({ type: 'PopoverArrow', parent: contentId })
   composer.addNode({ type: 'PopoverCloseButton', parent: contentId })
-  composer.addNode({ type: 'PopoverFooter', parent: contentId })
+  const headerPop = composer.addNode({
+    type: 'PopoverHeader',
+    parent: contentId,
+  })
+  composer.addNode({ type: 'Text', parent: headerPop, rootParentType: 'Text' })
+  const bodyPop = composer.addNode({ type: 'PopoverBody', parent: contentId })
+  composer.addNode({ type: 'Text', parent: bodyPop, rootParentType: 'Text' })
+
+  const footerPop = composer.addNode({
+    type: 'PopoverFooter',
+    parent: contentId,
+  })
+  composer.addNode({ type: 'Text', parent: footerPop, rootParentType: 'Text' })
   const components = composer.getComponents()
   return {
     components,

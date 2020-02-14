@@ -55,7 +55,6 @@ const ComponentPreview: React.FC<{
     case 'NumberInput':
     case 'BreadcrumbLink':
     case 'Select':
-    case 'PopoverHeader':
     case 'PopoverArrow':
     case 'PopoverCloseButton':
       return (
@@ -101,6 +100,7 @@ const ComponentPreview: React.FC<{
     case 'PopoverBody':
     case 'PopoverContent':
     case 'PopoverFooter':
+    case 'PopoverHeader':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
