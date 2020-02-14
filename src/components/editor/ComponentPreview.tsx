@@ -18,12 +18,7 @@ import PreviewContainer from './PreviewContainer'
 import { InputRightElementPreview } from './previews/InputRightElement'
 import { InputLeftElementPreview } from './previews/InputLeftElement'
 import AspectRatioBoxPreview from './previews/AspectRatioBoxPreview'
-import TabsPreview, {
-  TabListPreview,
-  TabPanelsPreview,
-  TabPanelPreview,
-  TabPreview,
-} from './previews/TabsPreview'
+import TabsPreview from './previews/TabsPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -94,6 +89,10 @@ const ComponentPreview: React.FC<{
     case 'FormControl':
     case 'List':
     case 'Grid':
+    case 'TabList':
+    case 'TabPanels':
+    case 'TabPanel':
+    case 'Tab':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -140,15 +139,7 @@ const ComponentPreview: React.FC<{
     case 'AspectRatioBox':
       return <AspectRatioBoxPreview component={component} />
     case 'Tabs':
-      return <TabsPreview component={component} />
-    case 'TabList':
-      return <TabListPreview component={component} />
-    case 'TabPanels':
-      return <TabPanelsPreview component={component} />
-    case 'TabPanel':
-      return <TabPanelPreview component={component} {...forwardedProps} />
-    case 'Tab':
-      return <TabPreview component={component} />
+      return <TabsPreview component={component} {...forwardedProps} />
     default:
       return null
   }
