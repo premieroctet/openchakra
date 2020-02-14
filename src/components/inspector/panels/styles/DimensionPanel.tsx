@@ -91,7 +91,7 @@ const DimensionPanel = () => {
           />
         </FormControl>
       </SimpleGrid>
-      <FormControl label="Oveflow">
+      <FormControl label="Overflow">
         <Select
           size="sm"
           value={overflow || ""}
