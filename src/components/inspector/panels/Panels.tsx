@@ -52,6 +52,7 @@ import MenuPanel from './components/MenuPanel'
 import MenuOptionGroupPanel from './components/MenuOptionGroupPanel'
 import MenuItemPanel from './components/MenuItemPanel'
 import MenuItemOptionPanel from './components/MenuItemOptionPanel'
+import MenuListPanel from './components/MenuListPanel'
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -120,6 +121,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'MenuOptionGroup' && <MenuOptionGroupPanel />}
       {type === 'MenuItem' && <MenuItemPanel />}
       {type === 'MenuItemOption' && <MenuItemOptionPanel />}
+      {type === 'MenuList' && <MenuListPanel />}
     </>
   )
 }
