@@ -13,8 +13,9 @@ class BookingPreference extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeStep: 0,
-      checked: false
+      booking_unit: "heures",
+      booking_value: 0,
+      minimum_basket: 0,
     }
   }
 
@@ -31,7 +32,7 @@ class BookingPreference extends React.Component {
               <Grid style={{width: '80%'}}>
                 <Grid>
                   <Grid>
-                    <h3 className={classes.policySizeSubtitle}>Quel délai souhaitez vous disposer entre la réservation et la réalisation du service ? </h3>
+                    <h3 className={classes.policySizeSubtitle}>De quel délai souhaitez-vous disposer entre la réservation et la réalisation du service ? </h3>
                   </Grid>
                 </Grid>
                 <Grid>
@@ -47,14 +48,14 @@ class BookingPreference extends React.Component {
                       <Grid className={classes.buttonAdd}>+</Grid>
                     </Grid>
                     <TextField
-                      value={"test"}
+                      value={this.state.booking_unit}
                       style={{width: '30%'}}
                       className={classes.selectDelayInputRepsonsive}
                       select
                       margin="dense"
                       variant="outlined"
-                      label="Heures / jours / semaines"
-                      InputLabelProps={"coucou"}
+                      label="Heures/jours/semaines"
+                      onChange={ v => this.setState({booking_unit: v.target.value}) }
                     >
                       <MenuItem value="heures">heure(s)</MenuItem>
                       <MenuItem value="jours">jour(s)</MenuItem>
@@ -76,17 +77,19 @@ class BookingPreference extends React.Component {
                   <TextField
                     style={{width: '50%'}}
                     type="number"
-                    value={"field.value"}
+                    value={this.state.minimum_basket}
                     fullWidth
                     label="Panier minimum"
                     margin="dense"
                     variant="outlined"
+                    onChange = { e => this.setState({minimum_basket: e.target.value}) }
                     InputProps={{
                       inputProps: {
                         min: 0
                       },
                       endAdornment: <InputAdornment position="start">€</InputAdornment>,
-                    }}
+                    }
+                    }
                   />
                 </Grid>
                 </Grid>
