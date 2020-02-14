@@ -43,7 +43,7 @@ class SelectPrestation extends React.Component {
     }
     this.setState({ prestations: sel});
     console.log("Selection:"+JSON.stringify(sel));
-    this.props.prestaCb(sel);
+    this.props.onChange(sel);
   }
 
   render() {

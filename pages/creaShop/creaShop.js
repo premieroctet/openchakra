@@ -22,7 +22,7 @@ class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 2,
+      activeStep: 3,
       availabilities: [],
       hide: false,
       shop:{
@@ -32,10 +32,10 @@ class creaShop extends React.Component {
         cancel_mode: "",            // FLEXIBLE/MODERATE/STRICT
         is_particular: true,        // true/false : particulier.pro
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
-        service: "5d66a0fb08b3d612bd0864e5",
+        service: "5d66a0fb08b3d612bd0864f4",
         prestations:{},
         equipments: [{equipement_id: "quip_id"}], // Ids des équipements
-        location: {alfred:false, client:false, visio:false}, // Lieu(x) de prestation
+        location: null, // Lieu(x) de prestation
         travel_tax: 0, // Frais de déplacement
         pick_tax: 0, // Frais de livraison/enlèvmeent
         minimum_basket: 0,
@@ -51,11 +51,12 @@ class creaShop extends React.Component {
     };
     this.serviceSelected = this.serviceSelected.bind(this)
     this.prestaSelected = this.prestaSelected.bind(this)
+    this.settingsChanged = this.settingsChanged.bind(this)
     this.nextDisabled = this.nextDisabled.bind(this)
   }
 
   nextDisabled() {
-    console.log(JSON.stringify(this.state.shop.service, null, 2));
+    console.log(JSON.stringify(this.state.shop, null, 2));
     console.log("Page:"+this.state.activeStep)
     let shop=this.state.shop;
     let pageIndex = this.state.activeStep;
@@ -73,7 +74,12 @@ class creaShop extends React.Component {
         return true;
       })? "" : "disabled";
     }
+    if (pageIndex==3) { 
+      if (shop.location==null)  return "disabled";
+      if (Object.values(shop.location).every( v => !v)) return "disabled";
+    }
   }
+
   availabilityCreated(avail) {
     this.setState({availabilities: [avail, ...this.state.availabilities]});
   }
@@ -104,16 +110,25 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
+  settingsChanged(location, travel_tax, pick_tax) {
+    console.log("settingsChanged");
+    let shop=this.state.shop; 
+    shop.location=location;
+    shop.travel_tax=travel_tax; 
+    shop.pick_tax=pick_tax; 
+    this.setState({shop: shop});
+  }
+
   renderSwitch(param) {
     switch(param) {
       case 0 :
         return <CreaShopPresentation/>;
       case 1 :
-        return <SelectService serviceCb={this.serviceSelected}/>;
+        return <SelectService onChange={this.serviceSelected}/>;
       case 2 :
-        return <SelectPrestation service={this.state.shop.service} prestaCb={this.prestaSelected} />;
+        return <SelectPrestation service={this.state.shop.service} onChange={this.prestaSelected} />;
       case 3 :
-        return <SettingService/>;
+        return <SettingService service={this.state.shop.service} onChange={this.settingsChanged} />;
       case 4 :
         return <BookingPreference/>;
       case 5 :
@@ -179,7 +194,7 @@ class creaShop extends React.Component {
                 </Button>
               </Grid>
               <Grid>
-                <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext}i disabled={this.nextDisabled()}>
+                <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext} disabled={this.nextDisabled()}>
                   {this.state.activeStep === 9 ? 'Envoyer' : 'Suivant'}
                 </Button>
               </Grid>
