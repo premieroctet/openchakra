@@ -1,6 +1,5 @@
 import React, { memo } from 'react'
 import {
-  Input,
   Slider,
   SliderTrack,
   SliderFilledTrack,
@@ -11,12 +10,12 @@ import { useForm } from '../../../../hooks/useForm'
 import ColorsControl from '../../controls/ColorsControl'
 import usePropsSelector from '../../../../hooks/usePropsSelector'
 import SwitchControl from '../../controls/SwitchControl'
+import TextControl from '../../controls/TextControl'
 
 const CircularProgressPanel = () => {
-  const { setValueFromEvent, setValue } = useForm()
+  const { setValue } = useForm()
 
   const value = usePropsSelector('value')
-  const size = usePropsSelector('size')
   const thickness = usePropsSelector('thickness')
 
   return (
@@ -35,15 +34,7 @@ const CircularProgressPanel = () => {
         </Slider>
       </FormControl>
 
-      <FormControl label="Size">
-        <Input
-          size="sm"
-          value={size || '50px'}
-          type="text"
-          name="size"
-          onChange={setValueFromEvent}
-        />
-      </FormControl>
+      <TextControl name="size" label="Size" />
 
       <FormControl label="Thickness">
         <Slider

@@ -18,7 +18,7 @@ const ElementsList: React.FC<Props> = ({
   onUnhover,
 }) => {
   return (
-    <Box mx={2} h="100%">
+    <Box h="100%">
       {elements.map(
         (element, index) =>
           element && (

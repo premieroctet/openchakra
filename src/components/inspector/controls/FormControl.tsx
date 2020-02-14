@@ -1,26 +1,26 @@
-import React, { ReactNode, memo } from "react";
+import React, { ReactNode, memo } from 'react'
 import {
   FormLabel,
   FormControl as ChakraFormControl,
   Grid,
-  Box
-} from "@chakra-ui/core";
+  Box,
+} from '@chakra-ui/core'
 
 type FormControlPropType = {
-  label: ReactNode;
-  children: ReactNode;
-  htmlFor?: string;
-  hasColumn?: boolean;
-};
+  label: ReactNode
+  children: ReactNode
+  htmlFor?: string
+  hasColumn?: boolean
+}
 
 const FormControl: React.FC<FormControlPropType> = ({
   label,
   htmlFor,
   children,
-  hasColumn
+  hasColumn,
 }) => (
   <ChakraFormControl
-    mb={2}
+    mb={3}
     as={Grid}
     display="flex"
     alignItems="center"
@@ -31,7 +31,7 @@ const FormControl: React.FC<FormControlPropType> = ({
       mr={2}
       color="gray.500"
       lineHeight="1rem"
-      width={hasColumn ? "2.5rem" : "90px"}
+      width={hasColumn ? '2.5rem' : '90px'}
       fontSize="xs"
       htmlFor={htmlFor}
     >
@@ -41,11 +41,11 @@ const FormControl: React.FC<FormControlPropType> = ({
       display="flex"
       alignItems="center"
       justifyItems="center"
-      width={hasColumn ? "30px" : "130px"}
+      width={hasColumn ? '30px' : '130px'}
     >
       {children}
     </Box>
   </ChakraFormControl>
-);
+)
 
-export default memo(FormControl);
+export default memo(FormControl)

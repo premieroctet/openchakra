@@ -63,16 +63,18 @@ type ComponentType =
   | 'InputRightAddon'
   | 'InputLeftElement'
   | 'InputRightElement'
-  | 'FormControlMeta'
-  | 'AccordionMeta'
-  | 'ListMeta'
-  | 'AlertMeta'
-  | 'InputGroupMeta'
   | 'Grid'
   | 'NumberInput'
   | 'Breadcrumb'
   | 'BreadcrumbItem'
   | 'BreadcrumbLink'
+
+type MetaComponentType =
+  | 'FormControlMeta'
+  | 'AccordionMeta'
+  | 'ListMeta'
+  | 'AlertMeta'
+  | 'InputGroupMeta'
   | 'BreadcrumbMeta'
 
 interface IComponent {

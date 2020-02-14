@@ -84,7 +84,7 @@ const Inspector = () => {
         )}
       </Box>
 
-      <Box bg="white" px={3}>
+      <Box pb={1} bg="white" px={3}>
         {!isRoot && <QuickPropsPanel />}
         <Panels component={component} isRoot={isRoot} />
       </Box>

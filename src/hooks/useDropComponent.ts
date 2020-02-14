@@ -5,7 +5,7 @@ import builder from '../core/models/composer/builder'
 
 export const useDropComponent = (
   componentId: string,
-  accept: ComponentType[] = rootComponents,
+  accept: (ComponentType | MetaComponentType)[] = rootComponents,
   canDrop: boolean = true,
 ) => {
   const dispatch = useDispatch()

@@ -1,29 +1,15 @@
-import React, { memo, useEffect } from 'react'
+import React, { memo } from 'react'
 import { Select } from '@chakra-ui/core'
 import FormControl from '../../controls/FormControl'
 import { useForm } from '../../../../hooks/useForm'
 import usePropsSelector from '../../../../hooks/usePropsSelector'
 
 const FlexPanel = () => {
-  const { setValueFromEvent, setValue } = useForm()
+  const { setValueFromEvent } = useForm()
 
   const alignItems = usePropsSelector('alignItems')
   const flexDirection = usePropsSelector('flexDirection')
   const justifyContent = usePropsSelector('justifyContent')
-
-  useEffect(() => {
-    if (!flexDirection) {
-      setValue('flexDirection', 'column')
-    }
-
-    if (!alignItems) {
-      setValue('alignItems', 'flex-start')
-    }
-
-    if (!justifyContent) {
-      setValue('justifyContent', 'flex-start')
-    }
-  }, [alignItems, flexDirection, justifyContent, setValue])
 
   return (
     <>
@@ -31,7 +17,7 @@ const FlexPanel = () => {
         <Select
           name="flexDirection"
           size="sm"
-          value={flexDirection || ''}
+          value={flexDirection}
           onChange={setValueFromEvent}
         >
           <option>row</option>
@@ -45,7 +31,7 @@ const FlexPanel = () => {
         <Select
           name="justifyContent"
           size="sm"
-          value={justifyContent || ''}
+          value={justifyContent}
           onChange={setValueFromEvent}
         >
           <option>flex-start</option>
@@ -63,6 +49,7 @@ const FlexPanel = () => {
           value={alignItems || ''}
           onChange={setValueFromEvent}
         >
+          <option>stretch</option>
           <option>flex-start</option>
           <option>center</option>
           <option>flex-end</option>
