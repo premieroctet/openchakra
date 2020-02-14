@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './CreaShopPresentationStyle';
+import styles from '../../../static/assets/css/creaShopPage/componentStyle'
 import { Typography } from '@material-ui/core';
 
 class CreaShopPresentation extends React.Component {

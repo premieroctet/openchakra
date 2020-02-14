@@ -4,10 +4,7 @@ import styles from './BookingConditionsStyle'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 
 class BookingConditions extends React.Component {
   constructor(props) {
@@ -22,7 +19,7 @@ class BookingConditions extends React.Component {
       profilChecked: false,
       getPicture: false,
       idChecked: false
-    }
+    };
     this.stateButton = this.stateButton.bind(this)
   }
 
@@ -49,7 +46,7 @@ class BookingConditions extends React.Component {
                     <h3 className={classes.policySizeSubtitle}>Comment les utilisateurs peuvent réserver vos services ? </h3>
                   </Grid>
                 </Grid>
-                <Grid style={{backgroundColor : 'green'}}>
+                <Grid>
                   <Grid>
                     <ButtonSwitch style={{width : '100%'}} isOption={false} isPrice={false} label={"Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H."}/>
                   </Grid>
@@ -58,22 +55,22 @@ class BookingConditions extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid>
+              <Grid className={classes.bottomSpacer}>
                 <Grid>
                   <h3 className={classes.policySizeSubtitle}>Pour réserver mes services, les utilisateurs doivent : </h3>
                 </Grid>
                 <Grid>
                   <Grid style={{marginBottom: 10}}>
-                    <input type={"button"} value={"Respecter les conditions My-Alfred (profil vérifié)"} name={"profilChecked"} onClick={this.stateButton} className={ this.state.profilChecked ? classes.activeButton : classes.button}/>
+                    <ButtonSwitch  isOption={false} isPrice={false} label={"Respecter les conditions My-Alfred (profil vérifié)"}/>
                   </Grid>
                   <Grid style={{marginBottom: 10}}>
-                    <input type={"button"} value={"Avoir une photo de profil"} name={"getPicture"} onClick={this.stateButton} className={ this.state.getPicture ? classes.activeButton : classes.button}/>
+                    <ButtonSwitch isOption={false} isPrice={false} label={"Avoir une photo de profil"}/>
                   </Grid>
                   <Grid style={{marginBottom: 10}}>
-                    <input type={"button"} value={"Avoir déposer une pièce d’identité officielle"} name={"idChecked"} onClick={this.stateButton} className={ this.state.idChecked ? classes.activeButton : classes.button}/>
+                    <ButtonSwitch isOption={false} isPrice={false} label={"Avoir déposer une pièce d’identité officielle"}/>
                   </Grid>
                   <Grid>
-                    <input type={"button"} value={"Etre recommandé par d’autres Alfred"} name={"beRecommended"} onClick={this.stateButton} className={ this.state.beRecommended ? classes.activeButton : classes.button}/>
+                    <ButtonSwitch isOption={false} isPrice={false} label={"Etre recommandé par d’autres Alfred"}/>
                   </Grid>
                 </Grid>
               </Grid>

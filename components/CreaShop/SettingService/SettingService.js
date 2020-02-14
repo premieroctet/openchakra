@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from './SettingServiceStyle'
+import styles from '../../../static/assets/css/creaShopPage/componentStyle'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -84,7 +84,7 @@ class SettingService extends React.Component {
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
-          <Grid className={classes.contentLeft}>
+          <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
                 <Typography className={classes.policySizeTitle}>Paramétrez votre service</Typography>
@@ -92,11 +92,11 @@ class SettingService extends React.Component {
               <Grid >
                 <h3 className={classes.policySizeSubtitle}>Quel(s) produit(s) / matériel(s) fournissez-vous dans le cadre de ce service ? </h3>
               </Grid>
-              <Grid className={classes.contentTextSize}>
-                <Grid container>
-                  {this.state.equipments.map((result, index) => {
+              <Grid className={classes.bottomSpacer}>
+                <Grid container spacing={2}>
+                  {this.state.equipments.map((result) => {
                     return (
-                      <Grid item xl={2}>
+                      <Grid item xl={3} xs={4}>
                         <label style={{cursor: 'pointer'}}>
                           {
                             this.state.selectedStuff.includes(result._id) ?
@@ -139,7 +139,7 @@ class SettingService extends React.Component {
                   }
                 </Grid>
               </Grid>
-              <Grid style={{marginLeft : 15}}>
+              <Grid style={{marginLeft : 15}} className={classes.options}>
                 <Grid>
                   <h3 className={classes.policySizeSubtitle}>Options</h3>
                 </Grid>

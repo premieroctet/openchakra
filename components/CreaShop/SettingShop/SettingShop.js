@@ -11,11 +11,6 @@ class SettingShop extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeStep: 0,
-      checked: false,
-      dates: [],
-      isDiplome: false,
-      isCertification: false
     }
   }
 
@@ -25,7 +20,7 @@ class SettingShop extends React.Component {
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
-          <Grid className={classes.contentLeft}>
+          <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
                 <Typography className={classes.policySizeTitle}>Indiquez votre message de bienvenue ! </Typography>
@@ -52,7 +47,7 @@ class SettingShop extends React.Component {
                   />
                 </Grid>
               </Grid>
-              <Grid>
+              <Grid style={{marginBottom : 100}}>
                 <Grid>
                   <Grid>
                     <h3  className={classes.policySizeSubtitle}>Indiquez vos conditions d’annulation</h3>

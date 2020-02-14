@@ -22,7 +22,7 @@ class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 3,
+      activeStep: 4,
       availabilities: [],
       hide: false,
       shop:{

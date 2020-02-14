@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './SelectServiceStyle';
+import styles from '../../../static/assets/css/creaShopPage/componentStyle'
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
@@ -59,28 +59,28 @@ class SelectService extends React.Component {
     return(
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
-          <Grid className={classes.contentLeft}>
+          <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
                 <Typography className={classes.policySizeTitle}>Créez votre boutique de services</Typography>
               </Grid>
-              <Grid style={{marginTop: 100}}>
+              <Grid>
                 <Grid>
                   <Grid>
                     <h3 className={classes.policySizeSubtitle}>Quel service souhaitez vous réaliser ?</h3>
                   </Grid>
-                  <Grid className={classes.contentTextSize} >
+                  <Grid className={classes.bottomSpacer}>
                     <p className={classes.policySizeContent}>Identifiez maintenant le premier service que vous souhaitez configurer dans
                       votre boutique de services. Vous pourrez en ajouter autant que vous voulez dans
                       votre boutique. Un service n’apparait pas ? Cliquez ici pour l’ajouter.
                     </p>
                   </Grid>
                 </Grid>
-                <Grid>
-                  <Grid className={classes.root}>
+                <Grid >
+                  <Grid>
                     <Autocomplete
                       id="grouped-demo"
-                      className={classes.texField}
+                      className={classes.textFieldSelecteService}
                       onChange={(event, value) =>{ this.handleChange(value) }}
                       onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       options={this.state.services}
