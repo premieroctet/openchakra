@@ -43,7 +43,7 @@ class SelectService extends React.Component {
   handleChange(value){
     console.log("OnChange:"+JSON.stringify(value));
     if(value !== undefined && value !== null){
-      this.props.serviceCb(value.id);
+      this.props.onChange(value.id);
     }
   }
 
