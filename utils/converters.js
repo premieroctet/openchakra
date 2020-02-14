@@ -32,7 +32,6 @@ const computeRecurrency = (period, event, dayOfWeek) => {
     until: rec_end,
   })
   let all_events=[]
-  console.log("Recurrence rules:"+JSON.stringify(rule));
   rule.all().forEach( dt => {
     let start = new Date(dt)
     start.setHours(event.start.getHours(), event.start.getMinutes(),0);
@@ -71,7 +70,6 @@ const availabilities2events= avails => {
 
 
 const eventUI2availabilities= event => {
-  console.log("Event 2 availability:"+JSON.stringify(event, null, 2));
   let avail = {}
 
   let startDate=new Date(event.selectedDateStart);

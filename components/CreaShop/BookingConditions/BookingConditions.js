@@ -70,7 +70,7 @@ class BookingConditions extends React.Component {
                     <input type={"button"} value={"Avoir une photo de profil"} name={"getPicture"} onClick={this.stateButton} className={ this.state.getPicture ? classes.activeButton : classes.button}/>
                   </Grid>
                   <Grid style={{marginBottom: 10}}>
-                    <input type={"button"} value={"Avoir déposer une pièce d’identité officielle"} name={"idChecked"} onClick={this.stateButton} className={ this.state.idChecked ? classes.activeButton : classes.button}/>
+                    <input type={"button"} value={"Avoir déposé une pièce d’identité officielle"} name={"idChecked"} onClick={this.stateButton} className={ this.state.idChecked ? classes.activeButton : classes.button}/>
                   </Grid>
                   <Grid>
                     <input type={"button"} value={"Etre recommandé par d’autres Alfred"} name={"beRecommended"} onClick={this.stateButton} className={ this.state.beRecommended ? classes.activeButton : classes.button}/>

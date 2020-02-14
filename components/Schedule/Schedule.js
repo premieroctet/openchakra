@@ -303,7 +303,7 @@ class Schedule extends React.Component {
 
   onSubmit = e => {
     let avail=eventUI2availabilities(this.state);
-    let res = this.props.cbAvailabilityCreated(avail);
+    let res = this.props.onCreateAvailability(avail);
     this.closeModal();
   };
 

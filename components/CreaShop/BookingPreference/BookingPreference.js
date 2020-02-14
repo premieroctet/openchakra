@@ -8,26 +8,47 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import axios from 'axios';
 
 class BookingPreference extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      booking_unit: "heures",
-      booking_value: 0,
+      deadline_unit: "jours",
+      deadline_value: 0,
       minimum_basket: 0,
+      perimeter: 0,
+      service: null,
     }
+  }
+
+  handleChange(key, value) {
+    this.setState({[key]: value}, () => this.props.onChange(this.state));
+  }
+
+  componentDidMount() {
+   axios.get(`/myAlfred/api/service/${this.props.service}`)
+      .then(response => {
+        let service = response.data;
+        this.setState({service: service});
+      })
+      .catch(error => {
+        console.log(error);
+     })
   }
 
   render() {
     const {classes} = this.props;
+    const {service} = this.state;
+
+    console.log("Render:"+JSON.stringify(this.state)); 
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
           <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>Vos préférences de réservation</Typography>
+                <Typography className={classes.policySizeTitle}>{service ? service.label : ''} : vos préférences de réservation</Typography>
               </Grid>
               <Grid style={{width: '80%'}}>
                 <Grid>
@@ -43,19 +64,19 @@ class BookingPreference extends React.Component {
                 <Grid className={classes.contentTextSize}>
                   <Grid item className={classes.contentAddandRemove}>
                     <Grid className={classes.subContentAddanRemove}>
-                      <Grid className={classes.buttonRemove}>-</Grid>
-                      <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>1</Grid>
-                      <Grid className={classes.buttonAdd}>+</Grid>
+                      <Grid className={classes.buttonRemove} onClick={ () => this.handleChange('deadline_value', Math.max(this.state.deadline_value-1, 0)) } >-</Grid>
+                      <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{this.state.deadline_value}</Grid>
+                      <Grid className={classes.buttonAdd} onClick={() => this.handleChange('deadline_value', this.state.deadline_value+1) } >+</Grid>
                     </Grid>
                     <TextField
-                      value={this.state.booking_unit}
+                      value={this.state.deadline_unit}
                       style={{width: '30%'}}
                       className={classes.selectDelayInputRepsonsive}
                       select
                       margin="dense"
                       variant="outlined"
                       label="Heures/jours/semaines"
-                      onChange={ v => this.setState({booking_unit: v.target.value}) }
+                      onChange={ v => this.handleChange('deadline_unit', v.target.value) }
                     >
                       <MenuItem value="heures">heure(s)</MenuItem>
                       <MenuItem value="jours">jour(s)</MenuItem>
@@ -82,7 +103,7 @@ class BookingPreference extends React.Component {
                     label="Panier minimum"
                     margin="dense"
                     variant="outlined"
-                    onChange = { e => this.setState({minimum_basket: e.target.value}) }
+                    onChange = { e => this.handleChange('minimum_basket', parseInt(e.target.value)) }
                     InputProps={{
                       inputProps: {
                         min: 0
@@ -122,12 +143,12 @@ class BookingPreference extends React.Component {
                   <Grid className={classes.contentTextSize}>
                     <Grid item className={classes.contentAddandRemoveKm}>
                       <Grid className={classes.subContentAddanRemoveKm}>
-                        <Grid className={classes.buttonRemove}>-</Grid>
-                        <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>1</Grid>
-                        <Grid className={classes.buttonAdd}>+</Grid>
+                      <Grid className={classes.buttonRemove} onClick={() => this.handleChange('perimeter', Math.max(this.state.perimeter-1, 0))} >-</Grid>
+                        <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{this.state.perimeter}</Grid>
+                      <Grid className={classes.buttonAdd} onClick={() => this.handleChange('perimeter', this.state.perimeter+1)} >+</Grid>
                       </Grid>
                       <Grid className={classes.contentKilometers}>
-                        <p className={classes.policySizeContent}>Kilométre(s)</p>
+                        <p className={classes.policySizeContent}>kilomètre(s)</p>
                       </Grid>
                     </Grid>
                   </Grid>

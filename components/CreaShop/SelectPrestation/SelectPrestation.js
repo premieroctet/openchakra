@@ -16,6 +16,7 @@ class SelectPrestation extends React.Component {
     this.state = {
       grouped: [],
       prestations:{},
+      service_name: '',
     };
     this.prestationSelected = this.prestationSelected.bind(this)
   }
@@ -24,6 +25,8 @@ class SelectPrestation extends React.Component {
     axios.get(`${url}myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
         let data = res.data;
+        console.log("Prestations:"+JSON.stringify(data[0].service.label));
+        this.setState({service_name: data[0].service.label});
         let grouped = _.mapValues(_.groupBy(data, 'filter_presentation.label'),
           clist => clist.map(data => _.omit(data, 'filter_presentation.label')));
         this.setState({grouped : grouped});
@@ -54,7 +57,7 @@ class SelectPrestation extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>Indiquez vos prestations</Typography>
+                <Typography className={classes.policySizeTitle}>{this.state.service_name} : indiquez vos prestations</Typography>
               </Grid>
             </Grid>
             <Grid style={{marginTop: 30}}>
