@@ -13,13 +13,16 @@ class SettingService extends React.Component {
     super(props);
     this.state = {
       location: {},
-      service: null,
+      service: [],
       travel_tax: null,
-      pick_tax: null
+      pick_tax: null,
+      equipments: [],
+      selectedStuff: []
     };
     this.stateButton = this.stateButton.bind(this);
     this.onLocationChange = this.onLocationChange.bind(this);
     this.onOptionChange = this.onOptionChange.bind(this);
+    this.onEquipmentChecked = this.onEquipmentChecked.bind(this);
   }
 
   stateButton(e){
@@ -33,7 +36,10 @@ class SettingService extends React.Component {
     axios.get(`/myAlfred/api/service/${this.props.service}`)
       .then(response => {
         let service = response.data;
-        this.setState({service: service});
+        this.setState({
+          service: service,
+          equipments: service.equipments
+        });
         let location = {};
         Object.keys(service.location).forEach (k => {
           if (service.location[k]) location[k]=false;
@@ -48,11 +54,28 @@ class SettingService extends React.Component {
   onLocationChange(loc_id, checked) {
     let loc = this.state.location;
     loc[loc_id]=checked;
-    this.setState({location: loc}, () => this.props.onChange(this.state.location, this.state.travel_tax, this.state.pick_tax));
+    this.setState({location: loc}, () => this.fireOnChange());
   }
 
   onOptionChange(opt_id, checked, price) {
-    this.setState({[opt_id]: checked ? price : null}, () => this.props.onChange(this.state.location, this.state.travel_tax, this.state.pick_tax));
+    this.setState({[opt_id]: checked ? price : null}, () => this.fireOnChange());
+  }
+
+  onEquipmentChecked(event){
+    if(this.state.selectedStuff.includes(event.target.name)){
+      let array = [...this.state.selectedStuff];
+      let index = array.indexOf(event.target.name);
+      if (index !== -1) {
+        array.splice(index, 1);
+        this.setState({selectedStuff: array}, () => this.fireOnChange());
+      }
+    }else{
+      this.setState({ selectedStuff: [...this.state.selectedStuff, event.target.name] }, () => this.fireOnChange())
+    }
+  }
+
+  fireOnChange(){
+    this.props.onChange(this.state.location, this.state.travel_tax, this.state.pick_tax, this.state.selectedStuff)
   }
 
   render() {
@@ -70,19 +93,23 @@ class SettingService extends React.Component {
                 <h3 className={classes.policySizeSubtitle}>Quel(s) produit(s) / matériel(s) fournissez-vous dans le cadre de ce service ? </h3>
               </Grid>
               <Grid className={classes.contentTextSize}>
-                <Grid item xs={3} sm={3} md={2}>
-                  {
-                    (this.state.service? this.state.service.equipments : []).forEach( e => {
-                      return ( 
-                        <React.Fragment>
+                <Grid container>
+                  {this.state.equipments.map((result, index) => {
+                    return (
+                      <Grid item xl={2}>
                         <label style={{cursor: 'pointer'}}>
-                        <img src='/static/equipments/Pate_fimo.svg' height={100} width={100} alt={"test"} title={"title"}/>
-                        <Checkbox style={{display: 'none'}} color="primary" type="checkbox" checked={this.state.checked} />
+                          {
+                            this.state.selectedStuff.includes(result._id) ?
+                            <img src={`../../static/equipments/${result.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${result.name_logo.slice(0, -4)}_Selected.svg`} />
+                            :
+                              <img src={`../../static/equipments/${result.logo}`} height={100} width={100} alt={result.name_logo} />}
+
+                          <Checkbox style={{display: 'none'}} color="primary" type="checkbox" name={result._id} checked={this.state.selectedStuff.includes(result._id)} onChange={this.onEquipmentChecked} />
                         </label>
-                        </React.Fragment>
-                      ) 
-                     })
-                    }
+                      </Grid>
+                    )
+                  })
+                  }
                 </Grid>
               </Grid>
               <Grid>
@@ -90,22 +117,22 @@ class SettingService extends React.Component {
                   <h3 className={classes.policySizeSubtitle}>Où acceptez-vous de réaliser votre prestation ?</h3>
                 </Grid>
                 <Grid style={{marginLeft : 15}}>
-                  { "client" in this.state.location ? 
+                  { "client" in this.state.location ?
                     <Grid>
                       <ButtonSwitch label={"A l'adresse de mon client"} isOption={false} isPrice={false} id='client' onChange={this.onLocationChange} />
                     </Grid>:null
                   }
-                  { "alfred" in this.state.location ? 
+                  { "alfred" in this.state.location ?
                   <Grid>
                     <ButtonSwitch label={"A mon adresse"} isOption={false} isPrice={false} id='alfred' onChange={this.onLocationChange} />
                   </Grid>:null
                   }
-                  { "visio" in this.state.location ? 
+                  { "visio" in this.state.location ?
                   <Grid >
                     <ButtonSwitch label={"En visioconférence"} isOption={false} isPrice={false} id='visio' onChange={this.onLocationChange} />
                   </Grid>:null
                   }
-                  { "ext" in this.state.location ? 
+                  { "ext" in this.state.location ?
                   <Grid>
                     <ButtonSwitch label={"En extérieur"} isOption={false} isPrice={false} id='ext' onChange={this.onLocationChange} />
                   </Grid>:null

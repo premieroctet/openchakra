@@ -34,7 +34,7 @@ class creaShop extends React.Component {
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
         service: "5d66a0fb08b3d612bd0864f4",
         prestations:{},
-        equipments: [{equipement_id: "quip_id"}], // Ids des équipements
+        equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
         travel_tax: 0, // Frais de déplacement
         pick_tax: 0, // Frais de livraison/enlèvmeent
@@ -62,7 +62,7 @@ class creaShop extends React.Component {
     let pageIndex = this.state.activeStep;
     if (pageIndex==0) { return ""; }
     if (pageIndex==1) { return shop.service==null ? "disabled" : ""}
-    if (pageIndex==2) { 
+    if (pageIndex==2) {
       console.log("Prestas:"+JSON.stringify(shop.prestations));
       if (Object.keys(shop.prestations).length==0) return "disabled";
       return Object.values(shop.prestations).every( v => {
@@ -70,11 +70,11 @@ class creaShop extends React.Component {
         if (v.price==0 || v.billing==null || v.billing==undefined || Object.keys(v.billing).length==0) {
           console.log("disabled");
           return false;
-        } 
+        }
         return true;
       })? "" : "disabled";
     }
-    if (pageIndex==3) { 
+    if (pageIndex==3) {
       if (shop.location==null)  return "disabled";
       if (Object.values(shop.location).every( v => !v)) return "disabled";
     }
@@ -105,17 +105,18 @@ class creaShop extends React.Component {
   }
 
   prestaSelected(presta) {
-    let shop=this.state.shop; 
+    let shop=this.state.shop;
     shop.prestations=presta;
     this.setState({shop: shop});
   }
 
-  settingsChanged(location, travel_tax, pick_tax) {
+  settingsChanged(location, travel_tax, pick_tax, selectedStuff) {
     console.log("settingsChanged");
-    let shop=this.state.shop; 
+    let shop=this.state.shop;
     shop.location=location;
-    shop.travel_tax=travel_tax; 
-    shop.pick_tax=pick_tax; 
+    shop.travel_tax=travel_tax;
+    shop.pick_tax=pick_tax;
+    shop.equipments=selectedStuff;
     this.setState({shop: shop});
   }
 

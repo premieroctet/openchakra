@@ -26,7 +26,6 @@ export default theme => ({
     width: '100%'
   },
   contentTextSize:{
-    width : 500,
     [theme.breakpoints.down('md')]: {
       width: '100%',
     },
