@@ -85,6 +85,7 @@ const componentsToTest = [
   'InputGroup',
   'InputLeftAddon',
   'InputRightAddon',
+  'Tabs',
 ]
 
 test.each(componentsToTest)('Component Preview for %s', componentName => {

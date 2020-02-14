@@ -1,10 +1,11 @@
 import React from 'react'
 import { Select } from '@chakra-ui/core'
-import FormControl from '~components/inspector/controls/FormControl'
-import { useForm } from '~hooks/useForm'
-import ColorsControl from '~components/inspector/controls/ColorsControl'
-import usePropsSelector from '~hooks/usePropsSelector'
-import SwitchControl from '~components/inspector/controls/SwitchControl'
+import FormControl from '../../controls/FormControl'
+import { useForm } from '../../../../hooks/useForm'
+import ColorsControl from '../../controls/ColorsControl'
+import usePropsSelector from '../../../../hooks/usePropsSelector'
+import SwitchControl from '../../controls/SwitchControl'
+import ChildrenControl from '../../controls/ChildrenControl'
 
 const TabsPanel = () => {
   const { setValueFromEvent } = useForm()
@@ -15,6 +16,7 @@ const TabsPanel = () => {
 
   return (
     <>
+      <ChildrenControl />
       <SwitchControl label="Manual" name="isManual" />
       <SwitchControl label="Fitted" name="isFitted" />
 

@@ -1,23 +1,29 @@
 import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 
-import AlertPreview from '~components/editor/previews/AlertPreview'
+import AlertPreview from '../../components/editor/previews/AlertPreview'
 import AvatarPreview, {
   AvatarBadgePreview,
   AvatarGroupPreview,
-} from '~components/editor/previews/AvatarPreview'
+} from '../../components/editor/previews/AvatarPreview'
 import AccordionPreview, {
   AccordionHeaderPreview,
   AccordionItemPreview,
   AccordionPanelPreview,
-} from '~components/editor/previews/AccordionPreview'
+} from '../../components/editor/previews/AccordionPreview'
 import * as Chakra from '@chakra-ui/core'
-import { getComponentBy } from '~core/selectors/components'
-import { InputRightElementPreview } from '~components/editor/previews/InputRightElement'
-import { InputLeftElementPreview } from '~components/editor/previews/InputLeftElement'
-import AspectRatioBoxPreview from '~components/editor/previews/AspectRatioBoxPreview'
-import PreviewContainer from '~components/editor/PreviewContainer'
-import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
+import WithChildrenPreviewContainer from './WithChildrenPreviewContainer'
+import { getComponentBy } from '../../core/selectors/components'
+import PreviewContainer from './PreviewContainer'
+import { InputRightElementPreview } from './previews/InputRightElement'
+import { InputLeftElementPreview } from './previews/InputLeftElement'
+import AspectRatioBoxPreview from './previews/AspectRatioBoxPreview'
+import TabsPreview, {
+  TabListPreview,
+  TabPanelsPreview,
+  TabPanelPreview,
+  TabPreview,
+} from './previews/TabsPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -46,8 +52,6 @@ const ComponentPreview: React.FC<{
     case 'FormLabel':
     case 'FormHelperText':
     case 'FormErrorMessage':
-    case 'TabPanel':
-    case 'Tab':
     case 'Input':
     case 'Radio':
     case 'ListItem':
@@ -88,10 +92,7 @@ const ComponentPreview: React.FC<{
     case 'SimpleGrid':
     case 'Flex':
     case 'FormControl':
-    case 'Tabs':
     case 'List':
-    case 'TabList':
-    case 'TabPanels':
     case 'Grid':
       return (
         <WithChildrenPreviewContainer
@@ -138,6 +139,16 @@ const ComponentPreview: React.FC<{
       return <AccordionPanelPreview component={component} />
     case 'AspectRatioBox':
       return <AspectRatioBoxPreview component={component} />
+    case 'Tabs':
+      return <TabsPreview component={component} />
+    case 'TabList':
+      return <TabListPreview component={component} />
+    case 'TabPanels':
+      return <TabPanelsPreview component={component} />
+    case 'TabPanel':
+      return <TabPanelPreview component={component} {...forwardedProps} />
+    case 'Tab':
+      return <TabPreview component={component} />
     default:
       return null
   }

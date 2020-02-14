@@ -45,6 +45,7 @@ import {
   GridProps,
   FormLabel,
   TabList,
+  TabPanels,
 } from '@chakra-ui/core'
 import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -171,11 +172,11 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     size: '1.25em',
     borderColor: 'white',
   },
-  TabPanel: { ...TabPanel.defaultProps, children: 'Description' },
-  TabPanels: { ...TabPanel.defaultProps, children: 'TabPanel' },
-  Tab: { ...Tab.defaultProps, children: 'Tab' },
-  Tabs: { ...Tabs.defaultProps },
-  TabList: { ...TabList.defaultProps, children: 'Tab' },
+  TabPanel: { ...TabPanel.defaultProps, children: '' },
+  TabPanels: { ...TabPanels.defaultProps, children: '' },
+  Tab: { ...Tab.defaultProps, children: '' },
+  Tabs: { ...Tabs.defaultProps, defaultIndex: 0 },
+  TabList: { ...TabList.defaultProps, children: '' },
   FormLabel: { ...FormLabel.defaultProps, children: 'Label' },
   FormHelperText: {
     children: 'Helper message',

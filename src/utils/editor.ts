@@ -5,6 +5,14 @@ const ALERT_COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AlertTitle',
 ]
 
+const TABS_COMPONENTS: (ComponentType | MetaComponentType)[] = [
+  'Tab',
+  'TabList',
+  'TabPanels',
+  'Tabs',
+  'TabPanel',
+]
+
 export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   ...ALERT_COMPONENTS,
   'Avatar',
@@ -43,14 +51,10 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Select',
   'Stack',
   'Switch',
+  ...TABS_COMPONENTS,
   'Tag',
   'Text',
   'Textarea',
-  'Tab',
-  'TabList',
-  'TabPanels',
-  'Tabs',
-  'TabPanel',
   'Accordion',
   'Editable',
   'AspectRatioBox',
@@ -79,6 +83,11 @@ export const AccordionWhitelist: (
   | ComponentType
   | MetaComponentType
 )[] = COMPONENTS.filter(name => !ALERT_COMPONENTS.includes(name))
+
+export const TabsWhiteList: (
+  | ComponentType
+  | MetaComponentType
+)[] = COMPONENTS.filter(name => !TABS_COMPONENTS.includes(name))
 
 export const rootComponents = COMPONENTS
   // Remove specific components
