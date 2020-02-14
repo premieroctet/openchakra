@@ -84,11 +84,6 @@ const componentsToTest = [
   'Stack',
   'Accordion',
   // 'AccordionHeader',
-  'RadioGroup',
-  'Select',
-  'InputGroup',
-  'InputLeftAddon',
-  'InputRightAddon',
   'MenuMeta',
 ]
 
