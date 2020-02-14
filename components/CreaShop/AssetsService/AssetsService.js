@@ -41,7 +41,7 @@ class AssetsService extends React.Component {
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
-          <Grid className={classes.contentLeft}>
+          <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
                 <Typography className={classes.policySizeTitle} >Vos atouts pour ce service ! </Typography>
@@ -78,14 +78,14 @@ class AssetsService extends React.Component {
                     Après vérification par My-Alfred, vous aurez le statut d’Alfred Expérimenté/ certifié et/ou diplômé sur ce service.
                   </p>
                 </Grid>
-                <Grid>
+                <Grid style={{marginBottom: 100}}>
                   <Grid item xs={12}>
                     <h3 className={classes.policySizeSubtitle}>Nombre d'années d'expérience</h3>
                   </Grid>
-                  <Grid item xs={8}>
+                  <Grid item xs={12}>
                     <TextField
                       select
-                      style={{width: '250px'}}
+                      className={classes.inputDiplomaCertifResp}
                       variant="outlined"
                       onChange={this.onChange}
                     >
@@ -117,7 +117,6 @@ class AssetsService extends React.Component {
                           <Grid item xs={12}>
                             <TextField
                               value={"this.state.diplomaName"}
-                              style={{width: '50%', marginRight: '5%'}}
                               className={classes.inputDiplomaCertifResp}
                               label="Nom du diplôme"
                               margin="dense"
@@ -127,7 +126,6 @@ class AssetsService extends React.Component {
                           <Grid item xs={12}>
                             <TextField
                               value={"field.value || ''"}
-                              style={{width: '50%', marginRight: '5%'}}
                               className={classes.inputDiplomaCertifResp}
                               label="Année d'obtention"
                               margin="dense"
@@ -178,7 +176,6 @@ class AssetsService extends React.Component {
                           <Grid item xs={12}>
                             <TextField
                               value={"this.state.certifName"}
-                              style={{width: '50%', marginRight: '5%'}}
                               className={classes.inputDiplomaCertifResp}
                               label="Nom du certificat"
                               margin="dense"
@@ -188,7 +185,6 @@ class AssetsService extends React.Component {
                           <Grid item xs={12}>
                             <TextField
                               value={"field.value || '' "}
-                              style={{width: '50%', marginRight: '5%'}}
                               className={classes.inputDiplomaCertifResp}
                               label="Année d'obtention"
                               margin="dense"
@@ -222,7 +218,6 @@ class AssetsService extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid className={classes.contentRight}/>
         </Grid>
       </Grid>
     );

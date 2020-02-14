@@ -16,12 +16,20 @@ export default theme => ({
   },
   contentLeftTop:{
     width : '100%',
+    [theme.breakpoints.down('md')]: {
+      display:'flex',
+      flexDirection: 'column',
+    },
   },
   contentTitle:{
     width: '100%'
   },
   contentTextSize:{
     width : 500,
+    marginTop: 30,
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    },
   },
   policySizeTitle:{
     margin: 0,

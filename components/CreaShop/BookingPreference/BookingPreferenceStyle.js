@@ -11,6 +11,10 @@ export default theme => ({
   },
   contentLeftTop:{
     width : '100%',
+    [theme.breakpoints.down('md')]: {
+      display:'flex',
+      flexDirection: 'column',
+    },
   },
   contentTitle:{
     width: '80%'
@@ -30,7 +34,11 @@ export default theme => ({
     lineHeight: 1.6,
     cursor: 'pointer',
     display: 'inline-block',
-    marginRight: 25
+    marginRight: 25,
+    [theme.breakpoints.down('xs')]: {
+      width: 30,
+      height: 30,
+    },
   },
   buttonAdd: {
     width: 30,
@@ -42,9 +50,14 @@ export default theme => ({
     cursor: 'pointer',
     display: 'inline-block',
     marginLeft: 25,
-    marginRight: 25
+    marginRight: 25,
+    [theme.breakpoints.down('xs')]: {
+      width: 30,
+      height: 30,
+    },
   },
   selectDelayInputRepsonsive: {
+    zIndex: 0,
     [theme.breakpoints.down('sm')]: {
       width: '100%!important',
     },
@@ -73,4 +86,55 @@ export default theme => ({
     fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
     color: 'rgb(72, 72, 72)',
   },
+  contentAddandRemove:{
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+     flexDirection: 'column'
+    },
+  },
+  subContentAddanRemove:{
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    },
+  },
+  textField:{
+    width: '50%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    },
+  },
+  contentCityReferency:{
+    border: '1px solid #C6C6C6',
+    width:'60%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    },
+  },
+  buttonContent:{
+    display:"flex",
+    justifyContent:"flex-end"
+  },
+  styleButton:{
+    color:"white",
+    borderRadius:"unset"
+  },
+  contentIntervention:{
+    [theme.breakpoints.down('md')]: {
+      marginBottom : 100
+    }
+  },
+  contentAddandRemoveKm:{
+    display: 'flex',
+    alignItems : 'center'
+  },
+  subContentAddanRemoveKm:{
+    display: 'flex',
+    alignItems : 'center'
+  },
+  contentKilometers:{
+    [theme.breakpoints.down('sm')]: {
+      width : '100%'
+    }
+  }
 })

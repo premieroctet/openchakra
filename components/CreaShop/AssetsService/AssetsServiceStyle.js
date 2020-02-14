@@ -10,6 +10,10 @@ export default theme => ({
   },
   contentLeftTop:{
     width : '100%',
+    [theme.breakpoints.down('md')]: {
+      display:'flex',
+      flexDirection: 'column',
+    },
   },
   contentTitle:{
     width: '100%'
@@ -44,4 +48,19 @@ export default theme => ({
     fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
     color: 'rgb(72, 72, 72)',
   },
+  inputDiplomaCertifResp:{
+    width: '50%',
+    marginRight: '5%',
+    zIndex:0,
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    },
+  },
+  textField:{
+    width: '50%',
+    zIndex:0,
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    },
+  }
 })

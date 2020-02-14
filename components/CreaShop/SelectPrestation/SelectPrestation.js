@@ -37,7 +37,7 @@ class SelectPrestation extends React.Component {
     let sel=this.state.prestations
     if (checked) {
       sel[prestaId]={price:price, billing:billing}
-    } 
+    }
     else {
       delete sel[prestaId];
     }
@@ -66,12 +66,12 @@ class SelectPrestation extends React.Component {
                 {Object.keys(this.state.grouped).map((fltr, i) =>{
                   let prestas = this.state.grouped[fltr];
                   return (
-                    <Grid item xl={5} key={i}>
+                    <Grid item xl={6} xs={12} key={i}>
                       <Grid item> {fltr=='Aucun' ? '' : fltr}</Grid>
                       {prestas.map((p, j) => {
                         return(
                           <React.Fragment key={p._id}>
-                            <ButtonSwitch isOption={true} isPrice={true} width={"50%"} label={p.label} id={p._id}
+                            <ButtonSwitch isOption={true} isPrice={true} width={"100%"} label={p.label} id={p._id}
                                           billing={p.billing} onChange={this.prestationSelected}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                           </React.Fragment>

@@ -24,7 +24,7 @@ class BookingPreference extends React.Component {
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
-          <Grid className={classes.contentLeft}>
+          <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
                 <Typography className={classes.policySizeTitle}>Vos préférences de réservation</Typography>
@@ -41,8 +41,8 @@ class BookingPreference extends React.Component {
                   </p>
                 </Grid>
                 <Grid className={classes.contentTextSize}>
-                  <Grid item style={{display: 'flex', alignItems: 'center'}}>
-                    <Grid>
+                  <Grid item className={classes.contentAddandRemove}>
+                    <Grid className={classes.subContentAddanRemove}>
                       <Grid className={classes.buttonRemove}>-</Grid>
                       <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>1</Grid>
                       <Grid className={classes.buttonAdd}>+</Grid>
@@ -75,7 +75,7 @@ class BookingPreference extends React.Component {
                 </Grid>
                 <Grid>
                   <TextField
-                    style={{width: '50%'}}
+                    className={classes.textField}
                     type="number"
                     value={this.state.minimum_basket}
                     fullWidth
@@ -102,31 +102,33 @@ class BookingPreference extends React.Component {
                       <Grid item xs={12}>
                         <h3 style={{color: '#757575'}}>Ma ville de référence </h3>
                       </Grid>
-                      <Grid container style={{border: '1px solid #C6C6C6',width:'60%'}}>
+                      <Grid container className={classes.contentCityReferency}>
                         <Grid item xs={8}>
                           <p style={{paddingLeft:20}}>address (code postal)</p>
                         </Grid>
-                        <Grid item xs={4} style={{display:"flex",justifyContent:"flex-end"}}>
-                          <Button onClick={()=>this.setState({clickAddress: true})} color={"secondary"} variant={"contained"} style={{color:"white",borderRadius:"unset"}}>Modifier</Button>
+                        <Grid item xs={4} className={classes.buttonContent}>
+                          <Button onClick={()=>this.setState({clickAddress: true})} color={"secondary"} variant={"contained"} className={classes.styleButton}>Modifier</Button>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid>
+                <Grid className={classes.contentIntervention}>
                   <Grid>
                     <p className={classes.policySizeContent}>
                       Définissez à présent le périmètre que vous souhaitez couvrir :
                     </p>
                   </Grid>
                   <Grid className={classes.contentTextSize}>
-                    <Grid item style={{display : 'flex', flexDirection : 'row'}}>
-                      <Grid>
+                    <Grid item className={classes.contentAddandRemoveKm}>
+                      <Grid className={classes.subContentAddanRemoveKm}>
                         <Grid className={classes.buttonRemove}>-</Grid>
                         <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>1</Grid>
                         <Grid className={classes.buttonAdd}>+</Grid>
                       </Grid>
-                      <p className={classes.policySizeContent}>Kilométre(s)</p>
+                      <Grid className={classes.contentKilometers}>
+                        <p className={classes.policySizeContent}>Kilométre(s)</p>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
