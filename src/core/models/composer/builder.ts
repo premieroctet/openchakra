@@ -60,12 +60,10 @@ export const buildFormControl = (parent: string): ComposedComponent => {
 
 export const buildAccordion = (parent: string): ComposedComponent => {
   const composer = new Composer('Accordion')
-
   const nodeId = composer.addNode({ type: 'Accordion', parent })
   const itemId = composer.addNode({ type: 'AccordionItem', parent: nodeId })
   const headerId = composer.addNode({ type: 'AccordionHeader', parent: itemId })
   const panelId = composer.addNode({ type: 'AccordionPanel', parent: itemId })
-
   composer.addNode({ type: 'Text', parent: headerId, rootParentType: 'Text' })
   composer.addNode({ type: 'AccordionIcon', parent: headerId })
   composer.addNode({ type: 'Text', parent: panelId, rootParentType: 'Text' })
@@ -82,15 +80,16 @@ export const buildAccordion = (parent: string): ComposedComponent => {
 export const buildMenu = (parent: string): ComposedComponent => {
   const composer = new Composer('Menu')
   const nodeId = composer.addNode({ type: 'Menu', parent })
-  composer.addNode({ type: 'MenuButton', parent: nodeId })
+  const menuId = composer.addNode({ type: 'MenuButton', parent: nodeId })
+  composer.addNode({
+    type: 'Button',
+    parent: menuId,
+    props: { leftIcon: 'chevron-down' },
+  })
   const listId = composer.addNode({ type: 'MenuList', parent: nodeId })
-  const groupMenu = composer.addNode({ type: 'MenuGroup', parent: listId })
-  composer.addNode({ type: 'MenuItem', parent: groupMenu })
-  composer.addNode({ type: 'MenuItem', parent: groupMenu })
-  composer.addNode({ type: 'MenuDivider', parent: listId })
-  const optionId = composer.addNode({ type: 'MenuOptionGroup', parent: listId })
-  composer.addNode({ type: 'MenuItemOption', parent: optionId })
-  composer.addNode({ type: 'MenuItemOption', parent: optionId })
+  composer.addNode({ type: 'MenuItem', parent: listId })
+  composer.addNode({ type: 'MenuItem', parent: listId })
+
   const components = composer.getComponents()
   return {
     components,
@@ -101,10 +100,8 @@ export const buildMenu = (parent: string): ComposedComponent => {
 
 export const buildList = (parent: string): ComposedComponent => {
   const composer = new Composer('List')
-
   const nodeId = composer.addNode({ type: 'List', parent })
   composer.addNode({ type: 'ListItem', parent: nodeId })
-
   const components = composer.getComponents()
 
   return {
@@ -116,7 +113,6 @@ export const buildList = (parent: string): ComposedComponent => {
 
 export const buildInputGroup = (parent: string): ComposedComponent => {
   const composer = new Composer('Input')
-
   const nodeId = composer.addNode({ type: 'InputGroup', parent })
   composer.addNode({
     type: 'InputLeftAddon',
@@ -124,7 +120,6 @@ export const buildInputGroup = (parent: string): ComposedComponent => {
     props: { children: 'Email' },
   })
   composer.addNode({ type: 'Input', parent: nodeId })
-
   const elementId = composer.addNode({
     type: 'InputRightElement',
     parent: nodeId,
@@ -134,9 +129,7 @@ export const buildInputGroup = (parent: string): ComposedComponent => {
     parent: elementId,
     props: { name: 'email' },
   })
-
   const components = composer.getComponents()
-
   return {
     components,
     root: nodeId,
