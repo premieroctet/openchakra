@@ -69,8 +69,6 @@ type ComponentType =
   | 'AlertMeta'
   | 'InputGroupMeta'
   | 'Grid'
-  | 'NumberInput'
-  | 'Breadcrumb'
   | 'BreadcrumbItem'
   | 'BreadcrumbLink'
   | 'BreadcrumbMeta'
