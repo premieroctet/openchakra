@@ -494,8 +494,8 @@ class Schedule extends React.Component {
                     </ExpansionPanel>
                   </Grid>
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
-                    <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>Ajouter </Button>
                     <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler </Button>
+                    <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>Ajouter </Button>
                   </Grid>
                 </form>
               </Grid>

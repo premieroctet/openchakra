@@ -17,15 +17,16 @@ import SettingShop from '../../components/CreaShop/SettingShop/SettingShop';
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
+import {ALF_CONDS} from '../../utils/consts.js';
 
 class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 7,
+      activeStep: 8, 
       shop:{
-        booking_request: false,     // true/false
-        my_alfred_conditions: null, // BASIC/PICTURE/ID_CARD/RECOMMEND
+        booking_request: true,     // true/false
+        my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
         welcome_message: "",
         cancel_mode: "",            // FLEXIBLE/MODERATE/STRICT
         is_particular: true,        // true/false : particulier.pro
@@ -48,12 +49,16 @@ class creaShop extends React.Component {
         availabilities: [],
     }
     };
+
     this.serviceSelected = this.serviceSelected.bind(this)
     this.prestaSelected = this.prestaSelected.bind(this)
     this.settingsChanged = this.settingsChanged.bind(this)
     this.preferencesChanged = this.preferencesChanged.bind(this)
     this.assetsChanged = this.assetsChanged.bind(this)
     this.availabilityCreated = this.availabilityCreated.bind(this);
+    this.conditionsChanged = this.conditionsChanged.bind(this);
+    this.settingsChanged = this.settingsChanged.bind(this);
+
     this.nextDisabled = this.nextDisabled.bind(this)
   }
 
@@ -99,7 +104,7 @@ class creaShop extends React.Component {
   }
 
   isRightPanelHidden() {
-    return this.state.activeSetp==2 || this.state.activeStep==6;
+    return this.state.activeStep==2 || this.state.activeStep==6;
   };
 
   handleBack = () => {
@@ -155,8 +160,23 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  renderSwitch(param) {
-    switch(param) {
+  conditionsChanged(book_request, conditions) {
+    console.log("Conditions:"+book_request+","+conditions);
+    let shop=this.state.shop;
+    shop.booking_request=book_request;
+    shop.my_alfred_conditions=conditions;
+    this.setState({shop: shop});
+  }
+
+  settingsChanged(welcome_message, cancel_mode) {
+    let shop=this.state.shop;
+    shop.welcome_message=welcome_message;
+    shop.cancel_mode=cancel_mode;
+    this.setState({shop: shop});
+  }
+
+  renderSwitch(stepIndex) {
+    switch(stepIndex) {
       case 0:
         return <CreaShopPresentation/>;
       case 1:
@@ -172,7 +192,7 @@ class creaShop extends React.Component {
       case 6:
         return <Schedule availabilities={this.state.shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} />;
       case 7:
-        return <BookingConditions/>;
+        return <BookingConditions conditions={this.state.shop.my_alfred_conditions} booking_request={this.state.shop.booking_request}  onChange={this.conditionsChanged} />;
       case 8:
         return <SettingShop/>;
       case 9:
@@ -187,7 +207,7 @@ class creaShop extends React.Component {
 
     let hideRightPanel = this.isRightPanelHidden();
 
-    console.log("Render");
+    console.log("Render:"+JSON.stringify(this.state.shop));
     return(
       <Grid>
         <Grid className={classes.mainHeader}>

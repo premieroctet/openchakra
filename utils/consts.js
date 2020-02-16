@@ -8,4 +8,10 @@ const ALF_CONDS= { // my alfred condiitons
   RECOMMEND: "3",
 }
 
-export {ALL_SERVICES, ALF_CONDS};
+const CANCEL_MODE= {
+  FLEXIBLE: "0",
+  MODERATE: "1",
+  STRICT:   "2"
+}
+
+export {ALL_SERVICES, ALF_CONDS, CANCEL_MODE};

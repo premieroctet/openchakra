@@ -76,7 +76,6 @@ const CssTextField = withStyles({
 
 class ButtonSwitch extends React.Component {
   constructor(props) {
-    console.log("ButtonSwitch:"+JSON.stringify(props.checked));
     super(props);
     this.state = {
       checked: this.props.checked || false,
@@ -102,7 +101,6 @@ class ButtonSwitch extends React.Component {
   }
 
   render() {
-    console.log("ButtonSwitch:"+JSON.stringify(this.props.checked));
     const {classes, isOption, isPrice, label, billing} = this.props;
     return(
       <Grid className={classes.contentFiltre}>

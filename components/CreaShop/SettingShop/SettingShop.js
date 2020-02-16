@@ -6,12 +6,27 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
+import {CANCEL_MODE} from '../../../utils/consts.js';
 
 class SettingShop extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      welcome_message: this.props.description,
+      cancel_mode: this.props.cancel_mode, 
     }
+
+    this.cancel_buttons={}
+    Object.values(CANCEL_MODE).forEach( v => this.cancel_buttons[v]=React.createRef());
+    this.cancelModeChanged=this.cancelModeChanged.bind(this);
+  }
+
+  cancelModeChanged(mode_id, checked) {
+    if (!checked) return;
+    this.setState({cancel_mode: mode_id});
+    Object.values(CANCEL_MODE).forEach( v=> {console.log(v); this.cancel_buttons[v].current.setState({checked: CANCEL_MODE[mode_id]==v })}
+      ,this.props.onChange(this.state.welcome_message, this.state.cancel_mode )
+    );
   }
 
   render() {
@@ -44,6 +59,7 @@ class SettingShop extends React.Component {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    value={this.state.welcome_message}
                   />
                 </Grid>
               </Grid>
@@ -58,13 +74,13 @@ class SettingShop extends React.Component {
                 </Grid>
                 <Grid>
                   <Grid>
-                    <ButtonSwitch isOption={false} label={"Flexibles: Remboursement intégral jusqu'à 1 jour avant la prestation"}/>
+                    <ButtonSwitch id={CANCEL_MODE.FLEXIBLE} checked={this.state.cancel_mode==CANCEL_MODE.FLEXIBLE} isOption={false} label={"Flexibles: Remboursement intégral jusqu'à 1 jour avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.FLEXIBLE]}/>
                   </Grid>
                   <Grid>
-                    <ButtonSwitch isOption={false} isPrice={false} label={"Modérées: Remboursement intégral jusqu'à 5 jours avant la prestatio"}/>
+                    <ButtonSwitch id={CANCEL_MODE.MODERATE} checked={this.state.cancel_mode==CANCEL_MODE.MODERATE} isOption={false} isPrice={false} label={"Modérées: Remboursement intégral jusqu'à 5 jours avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.MODERATE]}/>
                   </Grid>
                   <Grid>
-                    <ButtonSwitch isOption={false} isPrice={false}  label={"Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation"}/>
+                    <ButtonSwitch id={CANCEL_MODE.STRICT} checked={this.state.cancel_mode==CANCEL_MODE.STRICT} isOption={false} isPrice={false}  label={"Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.STRICT]} />
                   </Grid>
                 </Grid>
               </Grid>
