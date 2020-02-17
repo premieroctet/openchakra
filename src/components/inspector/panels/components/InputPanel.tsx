@@ -35,7 +35,6 @@ const InputPanel = () => {
       </FormControl>
 
       <SwitchControl label="Invalid" name="isInvalid" />
-      <SwitchControl label="Required" name="isRequired" />
       <SwitchControl label="Read Only" name="isReadOnly" />
       <SwitchControl label="Full width" name="isFullWidth" />
     </>

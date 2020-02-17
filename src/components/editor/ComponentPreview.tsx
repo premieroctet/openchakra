@@ -39,7 +39,6 @@ const ComponentPreview: React.FC<{
     case 'Link':
     case 'Spinner':
     case 'Checkbox':
-    case 'Divider':
     case 'Textarea':
     case 'CircularProgress':
     case 'Heading':
@@ -70,6 +69,7 @@ const ComponentPreview: React.FC<{
     case 'Code':
     case 'Icon':
     case 'ListIcon':
+    case 'Divider':
     case 'AlertDescription':
     case 'AlertTitle':
     case 'InputRightAddon':

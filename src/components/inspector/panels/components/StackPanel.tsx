@@ -39,6 +39,7 @@ const StackPanel = () => {
           value={alignItems || ''}
           onChange={setValueFromEvent}
         >
+          <option>stretch</option>
           <option>flex-start</option>
           <option>center</option>
           <option>flex-end</option>

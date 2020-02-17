@@ -7,6 +7,7 @@ import SwitchControl from '../../controls/SwitchControl'
 import InputSuggestion from '../../inputs/InputSuggestion'
 import { ComboboxOption, ComboboxOptionText } from '@reach/combobox'
 import { Icons } from '@chakra-ui/core/dist/theme/icons'
+import TextControl from '../../controls/TextControl'
 
 const SelectPanel = () => {
   const { setValueFromEvent } = useForm()
@@ -39,14 +40,16 @@ const SelectPanel = () => {
           name="icon"
         >
           {Object.keys(theme.icons)
-            .filter(icon => icon.includes(icon) || !icon)
-            .map((icon, index) => (
-              <ComboboxOption key={index} value={icon}>
-                <Icon name={icon as Icons} /> <ComboboxOptionText />
+            .filter(item => item.includes(icon) || !icon)
+            .map((item, index) => (
+              <ComboboxOption key={index} value={item}>
+                <Icon name={item as Icons} /> <ComboboxOptionText />
               </ComboboxOption>
             ))}
         </InputSuggestion>
       </FormControl>
+
+      <TextControl label="Icon size" name="iconSize" />
 
       <FormControl label="variant" htmlFor="variant">
         <Select
@@ -64,7 +67,6 @@ const SelectPanel = () => {
       </FormControl>
 
       <SwitchControl label="Invalid" name="isInvalid" />
-      <SwitchControl label="Required" name="isRequired" />
       <SwitchControl label="Read Only" name="isReadOnly" />
     </>
   )

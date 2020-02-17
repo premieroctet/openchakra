@@ -1,16 +1,14 @@
-import React, { memo } from "react";
-import { Input, Select } from "@chakra-ui/core";
-import FormControl from "../../controls/FormControl";
-import { useForm } from "../../../../hooks/useForm";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
-import SwitchControl from "../../controls/SwitchControl";
+import React, { memo } from 'react'
+import { Select } from '@chakra-ui/core'
+import FormControl from '../../controls/FormControl'
+import { useForm } from '../../../../hooks/useForm'
+import usePropsSelector from '../../../../hooks/usePropsSelector'
+import SwitchControl from '../../controls/SwitchControl'
+import TextControl from '../../controls/TextControl'
 
 const AvatarPanel = () => {
-  const { setValueFromEvent } = useForm();
-
-  const size = usePropsSelector("size");
-  const name = usePropsSelector("name");
-  const src = usePropsSelector("src");
+  const { setValueFromEvent } = useForm()
+  const size = usePropsSelector('size')
 
   return (
     <>
@@ -19,7 +17,7 @@ const AvatarPanel = () => {
           name="size"
           id="size"
           size="sm"
-          value={size || ""}
+          value={size || ''}
           onChange={setValueFromEvent}
         >
           <option>2xs</option>
@@ -33,27 +31,10 @@ const AvatarPanel = () => {
       </FormControl>
 
       <SwitchControl label="Show border" name="showBorder" />
-
-      <FormControl label="Name">
-        <Input
-          value={name}
-          size="sm"
-          type="text"
-          name="name"
-          onChange={setValueFromEvent}
-        />
-      </FormControl>
-      <FormControl label="Source">
-        <Input
-          value={src}
-          size="sm"
-          type="text"
-          name="src"
-          onChange={setValueFromEvent}
-        />
-      </FormControl>
+      <TextControl name="name" label="Name" />
+      <TextControl name="src" label="Source" />
     </>
-  );
-};
+  )
+}
 
-export default memo(AvatarPanel);
+export default memo(AvatarPanel)

@@ -1,30 +1,7 @@
 import React from 'react'
+import * as Chakra from '@chakra-ui/core'
+
 import {
-  CloseButton,
-  Heading,
-  Textarea,
-  Spinner,
-  Code,
-  Link,
-  Progress,
-  Text,
-  Image,
-  Icon,
-  IconButton,
-  Button,
-  Box,
-  Badge,
-  Tag,
-  SimpleGrid,
-  Switch,
-  Checkbox,
-  AvatarBadge,
-  AvatarGroup,
-  Avatar,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
   BadgeProps,
   BoxProps,
   ButtonProps,
@@ -53,42 +30,19 @@ import {
   TabPanelProps,
   TabPanelsProps,
   TabsProps,
-  TabPanel,
-  Tab,
-  FormHelperText,
-  FormErrorMessage,
   InputProps,
-  Input,
   AspectRatioBoxProps,
   BreadcrumbItemProps,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   EditableProps,
   MenuProps,
   NumberInputProps,
   RadioProps,
   SelectProps,
   RadioGroupProps,
-  RadioGroup,
-  Radio,
-  Select,
-  List,
-  ListIcon,
-  ListItem,
-  Accordion,
-  AccordionItem,
   InputGroupProps,
-  InputLeftAddon,
-  InputRightAddon,
-  Stack,
-  Flex,
   GridProps,
-  Grid,
-  NumberInput,
-  AspectRatioBox,
 } from '@chakra-ui/core'
-import FormLabel, { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
+import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
 type PreviewDefaultProps = {
   Badge?: BadgeProps
@@ -154,126 +108,149 @@ type PreviewDefaultProps = {
   List?: any
   ListIcon?: IconProps
   ListItem?: any
-  // meta components
-  AlertMeta?: any
-  InputGroupMeta?: any
-  FormControlMeta?: any
-  AccordionMeta?: any
-  ListMeta?: any
-  BreadcrumbMeta?: any
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
   Badge: {
-    ...Badge.defaultProps,
-    children: 'Lorem Ipsum',
-    variant: 'subtle',
+    children: 'Badge name',
   },
-  Box: Box.defaultProps,
-  Button: { ...Button.defaultProps, children: 'Lorem Ipsum', variant: 'solid' },
+  Button: {
+    children: 'Button text',
+  },
   Divider: { borderColor: 'blackAlpha.500' },
   IconButton: {
-    ...IconButton.defaultProps,
     'aria-label': 'icon',
     icon: 'copy',
-    size: 'md',
   },
-  Icon: { ...Icon.defaultProps, name: 'copy' },
+  Icon: { name: 'copy' },
   Image: {
-    ...Image.defaultProps,
     height: '100px',
     width: '100px',
   },
-  Text: { ...Text.defaultProps, children: 'Lorem Ipsum' },
-  Progress: { ...Progress.defaultProps, size: 'md' },
-  Link: { ...Link.defaultProps, children: 'Lorem Ipsum' },
+  Text: { children: 'Text value' },
+  Link: { children: 'Link text' },
   Code: {
-    ...Code.defaultProps,
+    children: 'Code value',
+  },
+  Heading: {
+    children: 'Heading title',
+  },
+  Tag: {
+    children: 'Tag name',
+  },
+  SimpleGrid: {
+    columns: 2,
+    spacingX: 1,
+    spacingY: 1,
+  },
+  Checkbox: {
+    children: 'Label checkbox',
+    isReadOnly: true,
+  },
+  AlertTitle: {
+    children: 'Alert title',
+    mr: 1,
+  },
+  AlertDescription: {
+    children: 'Alert description',
+  },
+  AvatarBadge: {
+    bg: 'green.500',
+    size: '1.25em',
+    borderColor: 'white',
+  },
+  TabPanel: { children: 'Tab' },
+  Tab: { children: 'Tab' },
+  FormLabel: { children: 'Label' },
+  FormHelperText: {
+    children: 'Helper message',
+  },
+  FormErrorMessage: {
+    children: 'Error message',
+  },
+  Grid: {
+    templateColumns: 'repeat(5, 1fr)',
+    gap: 6,
+  },
+  Radio: { children: 'Radio' },
+  ListItem: { children: 'list' },
+  AccordionItem: {
+    defaultIsOpen: true,
+  },
+  InputLeftAddon: { children: 'left' },
+  InputRightAddon: {
+    children: 'right',
+  },
+  BreadcrumbLink: {
     children: 'Lorem Ipsum',
-    variantColor: 'yellow',
+  },
+  AvatarGroup: {
+    spacing: -3,
+    max: 3,
+    size: 'md',
+  },
+  Select: {
+    icon: 'chevron-down',
+  },
+}
+
+export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
+  AlertTitle: {
+    fontWeight: 'bold',
+  },
+  SimpleGrid: {
+    display: 'grid',
+  },
+  Grid: {
+    display: 'grid',
+  },
+  CircularProgress: {
+    size: '48px',
+  },
+  Badge: {
+    variant: 'subtle',
+  },
+  Input: {
+    variant: 'outline',
+  },
+  Button: {
+    variant: 'solid',
+    size: 'md',
+    children: 'Lorem ipsum',
+  },
+  IconButton: {
+    'aria-label': 'icon',
+    size: 'md',
   },
   Spinner: {
-    ...Spinner.defaultProps,
     size: 'md',
     thickness: '2px',
     speed: '0.45s',
   },
-  Textarea: Textarea.defaultProps,
-  Input: { ...Input.defaultProps, variant: 'outline' },
   Heading: {
-    ...Heading.defaultProps,
     size: 'xl',
     as: 'h2',
     lineHeight: 'shorter',
     fontWeight: 'bold',
     fontFamily: 'heading',
-    children: 'Lorem Ipsum',
   },
-  CloseButton: CloseButton.defaultProps,
   Tag: {
-    ...Tag.defaultProps,
-    children: 'Lorem Ipsum',
     size: 'md',
-    variant: 'solid',
+    variant: 'subtle',
   },
-  SimpleGrid: {
-    ...SimpleGrid.defaultProps,
-    columns: 2,
-    spacingX: 1,
-    spacingY: 1,
-  },
-  Switch: Switch.defaultProps,
-  Checkbox: {
-    ...Checkbox.defaultProps,
-    children: 'Lorem Ipsum',
-    isReadOnly: true,
-  },
-  AvatarBadge: {
-    ...AvatarBadge.defaultProps,
-    bg: 'green.500',
-    size: '1.25em',
-    borderColor: 'white',
+  Textarea: {
+    size: 'md',
   },
   AvatarGroup: {
-    ...AvatarGroup.defaultProps,
-    max: 2,
-    spacing: -3,
+    display: 'flex',
+  },
+  Radio: {
     size: 'md',
   },
-  Avatar: Avatar.defaultProps,
-  Alert: Alert.defaultProps,
-  AlertIcon: AlertIcon.defaultProps,
-  AlertTitle: {
-    ...AlertTitle.defaultProps,
-    children: 'Lorem Ipsum',
-    mr: 1,
-  },
-  AlertDescription: {
-    ...AlertDescription.defaultProps,
-    children: 'Lorem Ipsum',
-  },
-  TabPanel: { ...TabPanel.defaultProps, children: 'Tab' },
-  Tab: { ...Tab.defaultProps, children: 'Tab' },
-  FormLabel: { ...FormLabel.defaultProps, children: 'Label' },
-  FormHelperText: {
-    ...FormHelperText.defaultProps,
-    children: 'Helper message',
-  },
-  FormErrorMessage: {
-    ...FormErrorMessage.defaultProps,
-    children: 'Error message',
-  },
-  Grid: {
-    ...Grid.defaultProps,
-    templateColumns: 'repeat(5, 1fr)',
-    gap: 6,
-  },
-  Radio: { ...Radio.defaultProps, children: 'Radio' },
-  RadioGroup: { ...RadioGroup.defaultProps },
   Select: {
-    ...Select.defaultProps,
     variant: 'outline',
     size: 'md',
+    iconSize: '20px',
     children: (
       <>
         <option value="option1">Option 1</option>
@@ -282,37 +259,18 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
       </>
     ),
   },
-  List: { ...List.defaultProps, styleType: 'none' },
-  ListIcon: { ...ListIcon.defaultProps },
-  ListItem: { ...ListItem.defaultProps, children: 'list' },
-  Accordion: {
-    ...Accordion.defaultProps,
-  },
-  AccordionItem: {
-    ...AccordionItem.defaultProps,
-    defaultIsOpen: true,
-  },
-  InputLeftAddon: { ...InputLeftAddon.defaultProps, children: 'left' },
-  InputRightAddon: {
-    ...InputRightAddon.defaultProps,
-    children: 'right',
-  },
-  Stack: { ...Stack.defaultProps },
-  Flex: { ...Flex.defaultProps, display: 'flex' },
-  NumberInput: {
-    ...NumberInput.defaultProps,
-  },
-  AspectRatioBox: {
-    ...AspectRatioBox.defaultProps,
-  },
+  List: { styleType: 'none' },
+  Stack: { display: 'flex', spacing: 2 },
+  Flex: { display: 'flex' },
   Breadcrumb: {
-    ...Breadcrumb.defaultProps,
     separator: '/',
     addSeparator: true,
   },
-  BreadcrumbItem: { ...BreadcrumbItem.defaultProps },
-  BreadcrumbLink: {
-    ...BreadcrumbLink.defaultProps,
-    children: 'Lorem Ipsum',
-  },
+  CloseButton: { size: 'md' },
+}
+
+export const getDefaultFormProps = (type: ComponentType) => {
+  const chakraDefaultProps = Chakra[type].defaultProps
+
+  return { ...chakraDefaultProps, ...DEFAULT_FORM_PROPS[type] }
 }
