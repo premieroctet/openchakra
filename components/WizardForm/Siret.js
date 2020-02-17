@@ -77,7 +77,7 @@ class siret extends React.Component {
                 this.setState({
                   name: data.etablissement.l1_normalisee, 
                   nafape: data.etablissement.activite_principale, 
-                  status: data.etablissement.libelle_status_entreprisei,
+                  status: data.etablissement.libelle_nature_juridique_entreprise,
                   creationDate: result
                   },
                   () => this.props.onChange(this.state)

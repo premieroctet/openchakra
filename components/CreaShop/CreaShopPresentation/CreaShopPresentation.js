@@ -34,7 +34,7 @@ class CreaShopPresentation extends React.Component {
                       <h3 className={classes.policySizeSubtitle}>Choisissez votre premier super talent ! </h3>
                     </Grid>
                     <Grid>
-                      <p className={classes.policySizeContent}>Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appel un autre, vous pourrez en ajouter autant de services que vous voulez</p>
+                      <p className={classes.policySizeContent}>Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appelle un autre, vous pourrez ajouter autant de services que vous voulez</p>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -48,8 +48,7 @@ class CreaShopPresentation extends React.Component {
                       <h3 className={classes.policySizeSubtitle}>Vous êtes chez vous ! Fixez vos règles et vos conditions…</h3>
                     </Grid>
                     <Grid>
-                      <p className={classes.policySizeContent}>Indiquez vos disponibilités ,paramètres de
-                        réservation et vos conditions d’annulation</p>
+                      <p className={classes.policySizeContent}>Indiquez vos disponibilités, paramètres de réservation et vos conditions d’annulation</p>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -63,7 +62,7 @@ class CreaShopPresentation extends React.Component {
                       <h3 className={classes.policySizeSubtitle}>Présentez-vous !</h3>
                     </Grid>
                     <Grid>
-                      <p className={classes.policySizeContent}>Renseignez votre profil Alfred, partager vos réalisations, et décrivez vous ! </p>
+                      <p className={classes.policySizeContent}>Renseignez votre profil Alfred, partagez vos réalisations, et décrivez-vous ! </p>
                     </Grid>
                   </Grid>
                 </Grid>

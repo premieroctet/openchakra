@@ -22,12 +22,14 @@ import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
 const {config} = require('../../config/config');
 const url = config.apiUrl;
 import { toast } from 'react-toastify';
+import Router from "next/router";
 
 class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 9,
+      activeStep: 0,
+      user_id: null,
       shop:{
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
@@ -49,10 +51,10 @@ class creaShop extends React.Component {
         experience_years: 0,
         diploma : [{name:"", year:"", picture:""}],
         certification : [{name:"", year:"", picture:""}],
-        address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
+        service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
         perimeter: 0,
         availabilities: [],
-    }
+      }
     };
 
     this.onServiceChanged = this.onServiceChanged.bind(this)
@@ -68,8 +70,20 @@ class creaShop extends React.Component {
     this.nextDisabled = this.nextDisabled.bind(this)
   }
 
+  componentDidMount() {
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.get(url+'myAlfred/api/users/current')
+      .then(res => {
+        let user = res.data;
+        this.setState({user_id: user._id});
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+
   nextDisabled() {
-    console.log(JSON.stringify(this.state.shop.availabilities, null, 2));
+    console.log(JSON.stringify(this.state.shop, null, 2));
     let shop=this.state.shop;
     let pageIndex = this.state.activeStep;
     if (pageIndex==0) { return false; }
@@ -100,7 +114,11 @@ class creaShop extends React.Component {
       }
     }
     if (pageIndex==9) {
-      if (shop.is_particular==false) return true;
+      if (shop.is_certified==false) return true;
+      if (shop.is_particular==true) return false;
+      // Pro
+      if (shop.company==null) return true;
+      if (Object.values(shop.company).some(v => v==null)) return true;
     }
     return false;
   }
@@ -118,9 +136,12 @@ class creaShop extends React.Component {
     }
     // last page => post
     else {
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      console.log("Storage:"+JSON.stringify(localStorage.getItem('token')));
       axios.post(url+'myAlfred/api/shop/add', this.state.shop)
         .then(res => {
           toast.info("Boutique créée avec succès");
+          Router.push(`/shop?id_alfred=${this.state.user_id}`);
       })
       .catch(err => {
         toast.error(err);

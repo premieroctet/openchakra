@@ -15,12 +15,28 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const Shop = require('../../models/Shop');
+const ServiceUser = require('../../models/ServiceUser');
 const validateShopInput = require('../../validation/shop');
 router.get('/test',(req, res) => res.json({msg: 'Shop Works!'}) );
+
+// FIX import or require
+const ALF_CONDS= { // my alfred condiitons
+  BASIC:     "0",
+  PICTURE:   "1",
+  ID_CARD:   "2",
+  RECOMMEND: "3",
+}
+
+const CANCEL_MODE= {
+  FLEXIBLE: "0",
+  MODERATE: "1",
+  STRICT:   "2"
+}
 
 // @Route POST /myAlfred/api/shop/add
 // Create a shop
 // @Access private
+// FIX : inclure les disponibilites
 router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
     console.log('Creating shop');
     const {isValid, errors} = validateShopInput(req.body);
@@ -28,28 +44,29 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
         console.log("Errors:"+JSON.stringify(errors));
         return res.status(400).json(errors);
     }
+
     console.log("Shop creation received "+JSON.stringify(req.body, null, 2));
-    Shop.findOne({alfred: req.user.id})
+    Shop.findOne({alfred:req.user.id})
         .then(shop => {
               console.log("Found shop:"+JSON.stringify(shop));
               if (shop===null) {
-                  shop = new Shop();
+                shop = new Shop();
+                shop.alfred = req.user.id;
               }
 
-              shop.alfred = req.user.id;
               shop.booking_request = req.body.booking_request;
-              shop.no_booking_request = req.body.no_booking_request;
-              shop.my_alfred_conditions = req.body.my_alfred_conditions;
-              shop.profile_picture = req.body.profile_picture;
-              shop.identity_card = req.body.identity_card;
-              shop.recommandations = req.body.recommandations;
+              shop.no_booking_request = !shop.booking_request;
+              shop.my_alfred_conditions = req.body.my_alfred_conditions==ALF_CONDS.BASIC;
+              shop.profile_picture = req.body.my_alfred_conditions==ALF_CONDS.PICTURE;
+              shop.identity_card = req.body.my_alfred_conditions==ALF_CONDS.ID_CARD;
+              shop.recommandations = req.body.my_alfred_conditions==ALF_CONDS.RECOMMEND;
               shop.welcome_message = req.body.welcome_message;
-              shop.flexible_cancel = req.body.flexible_cancel;
-              shop.moderate_cancel = req.body.moderate_cancel;
-              shop.strict_cancel = req.body.strict_cancel;
+              shop.flexible_cancel = req.body.cancel_mode==CANCEL_MODE.FLEXIBLE;
+              shop.moderate_cancel = req.body.cancel_mode==CANCEL_MODE.MODERATE;
+              shop.strict_cancel = req.body.cancel_mode==CANCEL_MODE.STRICT;
               shop.verified_phone = req.body.verified_phone;
               shop.is_particular = req.body.is_particular;
-              shop.is_professional = req.body.is_professional;
+              shop.is_professional = !shop.is_particular;
 
 
               shop.company = {};
@@ -63,9 +80,45 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
 
 
 
-            shop.services = req.body.arrayService;
             console.log("Saving shop:"+JSON.stringify(shop));
-            shop.save().then(shop => res.json(shop)).catch(err => console.log(err));
+            shop.save()
+            .then(shop => {
+              su=new ServiceUser();
+              su.user = req.user.id;
+              su.service=req.body.service;
+              console.log(1);
+              su.prestations=[]
+              console.log("Prestas:"+JSON.stringify(req.body.prestations));
+              Object.keys(req.body.prestations).forEach( k=> {
+                p= {prestation:k, billing:req.body.prestations[k].billing.label, price:req.body.prestations[k].price};
+                su.prestations.push(p);
+              });
+              console.log(2);
+              su.equipments=req.body.equipments;
+              console.log(3);
+              su.location={alfred:false, client:false, visio:false}
+              Object.assign(su.location, req.body.location);
+              su.travel_tax=req.body.travel_tax||0;
+			  su.pick_tax=req.body.pick_tax||0;
+			  su.minimum_basket=req.body.minimum_basket||0;
+              su.deadline_before_booking=req.body.deadline_value+" "+req.body.deadline_unit;
+              su.description=req.body.description;
+              su.perimeter=req.body.perimeter||0;
+              su.service_address=req.body.service_address;
+
+              su.save()
+                 .then(su => {
+                    console.log("Shop update "+shop._id);
+                    Shop.findOne({alfred:req.user.id}).then(shop => { shop.services.push(su._id); shop.save()});
+                    User.findOneAndUpdate({_id: req.user.id},{is_alfred: true}, {new: true})
+                      .then(user => console.log("Updated alfred"))
+                      .catch(err => console.log("Error:"+JSON.stringify(err)))
+                 })
+                 .catch( err => console.log("Error:"+err))
+              res.json(shop);
+            }
+            )
+            .catch(err => console.log(err));
 
         })
 });

@@ -10,6 +10,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import axios from 'axios';
 import styles from '../../../static/assets/css/creaShopPage/componentStyle'
 
+// FIX : réafficher la ville de référence
+
 class BookingPreference extends React.Component {
   constructor(props) {
     super(props);
@@ -64,9 +66,11 @@ class BookingPreference extends React.Component {
                 <Grid className={classes.contentTextSize}>
                   <Grid item className={classes.contentAddandRemove}>
                     <Grid className={classes.subContentAddanRemove}>
-                      <Grid className={classes.buttonRemove} onClick={ () => this.handleChange('deadline_value', Math.max(this.state.deadline_value-1, 0)) } >-</Grid>
+                      <Grid style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center",
+                                    lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }} className={classes.buttonRemove} onClick={ () => this.handleChange('deadline_value', Math.max(this.state.deadline_value-1, 0)) } >-</Grid>
                       <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{this.state.deadline_value}</Grid>
-                      <Grid className={classes.buttonAdd} onClick={() => this.handleChange('deadline_value', this.state.deadline_value+1) } >+</Grid>
+                      <Grid style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center",
+                                    lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }} className={classes.buttonAdd} onClick={() => this.handleChange('deadline_value', this.state.deadline_value+1) } >+</Grid>
                     </Grid>
                     <TextField
                       value={this.state.deadline_unit}
@@ -120,17 +124,17 @@ class BookingPreference extends React.Component {
                       <h3 className={classes.policySizeSubtitle}>Quel est votre périmètre d’intervention ?</h3>
                     </Grid>
                     <Grid>
-                      <Grid item xs={12}>
+                      {false ?<Grid item xs={12}>
                         <h3 style={{color: '#757575'}}>Ma ville de référence </h3>
-                      </Grid>
-                      <Grid container className={classes.contentCityReferency}>
+                      </Grid>:null}
+                      {false ?<Grid container className={classes.contentCityReferency}>
                         <Grid item xs={8}>
                           <p style={{paddingLeft:20}}>address (code postal)</p>
                         </Grid>
                         <Grid item xs={4} className={classes.buttonContent}>
                           <Button onClick={()=>this.setState({clickAddress: true})} color={"secondary"} variant={"contained"} className={classes.styleButton}>Modifier</Button>
                         </Grid>
-                      </Grid>
+                      </Grid>:null }
                     </Grid>
                   </Grid>
                 </Grid>
@@ -143,9 +147,9 @@ class BookingPreference extends React.Component {
                   <Grid className={classes.contentTextSize}>
                     <Grid item className={classes.contentAddandRemoveKm}>
                       <Grid className={classes.subContentAddanRemoveKm}>
-                      <Grid className={classes.buttonRemove} onClick={() => this.handleChange('perimeter', Math.max(this.state.perimeter-1, 0))} >-</Grid>
+                      <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }} onClick={() => this.handleChange('perimeter', Math.max(this.state.perimeter-1, 0))} >-</div>
                         <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{this.state.perimeter}</Grid>
-                      <Grid className={classes.buttonAdd} onClick={() => this.handleChange('perimeter', this.state.perimeter+1)} >+</Grid>
+                      <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }} onClick={() => this.handleChange('perimeter', this.state.perimeter+1)} >+</div>
                       </Grid>
                       <Grid className={classes.contentKilometers}>
                         <p className={classes.policySizeContent}>kilomètre(s)</p>

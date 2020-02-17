@@ -30,8 +30,8 @@ class AssetsService extends React.Component {
 
   componentDidMount() {
     let dates = [null,];
-    const actualDate = new Date().getFullYear();
-    for (let i = 1950; i <= actualDate; i++) {
+    const currentDate = new Date().getFullYear();
+    for (let i = currentDate; i >=1950; i--) {
       dates.push(i);
     }
     this.setState({dates: dates});
