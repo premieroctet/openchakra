@@ -22,46 +22,50 @@ router.get('/test',(req, res) => res.json({msg: 'Shop Works!'}) );
 // Create a shop
 // @Access private
 router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
+    console.log('Creating shop');
     const {isValid, errors} = validateShopInput(req.body);
     if(!isValid) {
+        console.log("Errors:"+JSON.stringify(errors));
         return res.status(400).json(errors);
     }
+    console.log("Shop creation received "+JSON.stringify(req.body, null, 2));
     Shop.findOne({alfred: req.user.id})
         .then(shop => {
+              console.log("Found shop:"+JSON.stringify(shop));
               if (shop===null) {
                   shop = new Shop();
+              }
 
-                  shop.alfred = req.user.id;
-                  shop.booking_request = req.body.booking_request;
-                  shop.no_booking_request = req.body.no_booking_request;
-                  shop.my_alfred_conditions = req.body.my_alfred_conditions;
-                  shop.profile_picture = req.body.profile_picture;
-                  shop.identity_card = req.body.identity_card;
-                  shop.recommandations = req.body.recommandations;
-                  shop.welcome_message = req.body.welcome_message;
-                  shop.flexible_cancel = req.body.flexible_cancel;
-                  shop.moderate_cancel = req.body.moderate_cancel;
-                  shop.strict_cancel = req.body.strict_cancel;
-                  shop.verified_phone = req.body.verified_phone;
-                  shop.is_particular = req.body.is_particular;
-                  shop.is_professional = req.body.is_professional;
-
-
-                  shop.company = {};
-                  if (req.body.name) shop.company.name = req.body.name;
-                  if (req.body.creation_date) shop.company.creation_date = req.body.creation_date;
-                  if (req.body.siret) shop.company.siret = req.body.siret;
-                  if (req.body.naf_ape) shop.company.naf_ape = req.body.naf_ape;
-                  if (req.body.status) shop.company.status = req.body.status;
-
-                  shop.picture = "static/shopBanner/sky-690293_1920.jpg";
-
-                }
+              shop.alfred = req.user.id;
+              shop.booking_request = req.body.booking_request;
+              shop.no_booking_request = req.body.no_booking_request;
+              shop.my_alfred_conditions = req.body.my_alfred_conditions;
+              shop.profile_picture = req.body.profile_picture;
+              shop.identity_card = req.body.identity_card;
+              shop.recommandations = req.body.recommandations;
+              shop.welcome_message = req.body.welcome_message;
+              shop.flexible_cancel = req.body.flexible_cancel;
+              shop.moderate_cancel = req.body.moderate_cancel;
+              shop.strict_cancel = req.body.strict_cancel;
+              shop.verified_phone = req.body.verified_phone;
+              shop.is_particular = req.body.is_particular;
+              shop.is_professional = req.body.is_professional;
 
 
-                shop.services = req.body.arrayService;
+              shop.company = {};
+              if (req.body.name) shop.company.name = req.body.name;
+              if (req.body.creation_date) shop.company.creation_date = req.body.creation_date;
+              if (req.body.siret) shop.company.siret = req.body.siret;
+              if (req.body.naf_ape) shop.company.naf_ape = req.body.naf_ape;
+              if (req.body.status) shop.company.status = req.body.status;
 
-                shop.save().then(shop => res.json(shop)).catch(err => console.log(err));
+              shop.picture = "static/shopBanner/sky-690293_1920.jpg";
+
+
+
+            shop.services = req.body.arrayService;
+            console.log("Saving shop:"+JSON.stringify(shop));
+            shop.save().then(shop => res.json(shop)).catch(err => console.log(err));
 
         })
 });

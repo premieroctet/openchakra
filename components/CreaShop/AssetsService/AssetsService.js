@@ -18,12 +18,12 @@ class AssetsService extends React.Component {
     super(props);
     this.state = {
       dates: [],      
-      description: '',
-      diplomaYear: '',
-      diplomaName: '',
-      certificationYear: '',
-      certificationName: '',
-      level: '',
+      description: this.props.data.description,
+      diplomaYear: this.props.data.diplomaYear,
+      diplomaName: this.props.data.diplomaName,
+      certificationYear: this.props.data.certificationYear,
+      certificationName: this.props.data.certificationName,
+      level: this.props.data.level,
     }
     this.handleChange = this.handleChange.bind(this);
   }

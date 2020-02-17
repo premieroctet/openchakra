@@ -156,7 +156,6 @@ router.get('/keyword/:kw',(req,res)=> {
         Service.find({ $or : [{category: {$in: categories.map(c=> c._id)}}, {label:{$regex:regexp}}]})
           .populate('category')
           .then(services => {
-             console.log("Services from category or label:"+JSON.stringify(services.map(s => s.label)));
              services.forEach(s => {
                result[s.category.label] ? result[s.category.label].push({label:s.label, id:s._id}) : result[s.category.label]=[{label:s.label, id:s._id}];
              });
@@ -164,8 +163,6 @@ router.get('/keyword/:kw',(req,res)=> {
                .populate({path : 'service', populate: { path:'category'}}).then(prestations => {
                   prestations.forEach(p => {
                     let s = p.service;
-                    console.log("Service from prestation:"+p.label);
-                    console.log("Service from prestation:"+s.label);
                     result[s.category.label] ? result[s.category.label].push({label:s.label, id:s._id}) : result[s.category.label]=[{label:s.label, id:s._id}];
                   });
                   Prestation.find()
@@ -175,8 +172,6 @@ router.get('/keyword/:kw',(req,res)=> {
                        prestations.forEach(p => {
                          if ('job' in p && p['job']!=null) {
                            let s = p.service;
-                           console.log("Service from prestation's job:"+p.service.label);
-                           console.log("Service from prestation's job:"+p.job);
                            result[s.category.label] ? result[s.category.label].push({label:s.label, id:s._id}) : result[s.category.label]=[{label:s.label, id:s._id}];
                          }
                        });

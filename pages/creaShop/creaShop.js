@@ -17,7 +17,11 @@ import SettingShop from '../../components/CreaShop/SettingShop/SettingShop';
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
+import axios from 'axios';
 import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
+const {config} = require('../../config/config');
+const url = config.apiUrl;
+import { toast } from 'react-toastify';
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -27,12 +31,12 @@ class creaShop extends React.Component {
       shop:{
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
-        welcome_message: "Coucou",
-        cancel_mode: "",            // FLEXIBLE/MODERATE/STRICT
-        is_particular: false,        // true/false : particulier.pro
+        welcome_message: 'Merci pour votre réservation!',
+        cancel_mode: CANCEL_MODE.FLEXIBLE,            // FLEXIBLE/MODERATE/STRICT
+        is_particular: true,        // true/false : particulier.pro
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
         is_certified: false,
-        service: "5d66a0fb08b3d612bd0864f4",
+        service: null,
         prestations:{},
         equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
@@ -51,7 +55,7 @@ class creaShop extends React.Component {
     }
     };
 
-    this.serviceSelected = this.serviceSelected.bind(this)
+    this.onServiceChanged = this.onServiceChanged.bind(this)
     this.prestaSelected = this.prestaSelected.bind(this)
     this.settingsChanged = this.settingsChanged.bind(this)
     this.preferencesChanged = this.preferencesChanged.bind(this)
@@ -66,13 +70,11 @@ class creaShop extends React.Component {
 
   nextDisabled() {
     console.log(JSON.stringify(this.state.shop.availabilities, null, 2));
-    console.log("Page:"+this.state.activeStep)
     let shop=this.state.shop;
     let pageIndex = this.state.activeStep;
     if (pageIndex==0) { return false; }
     if (pageIndex==1) { return shop.service==null}
     if (pageIndex==2) {
-      console.log("Prestas:"+JSON.stringify(shop.prestations));
       if (Object.keys(shop.prestations).length==0) return "disabled";
       return Object.values(shop.prestations).every( v => {
         console.log(v.price==0);
@@ -98,7 +100,7 @@ class creaShop extends React.Component {
       }
     }
     if (pageIndex==9) {
-      if (shop.particular==null || shop.particular==undefined) { return true }
+      if (shop.is_particular==false) return true;
     }
     return false;
   }
@@ -110,7 +112,21 @@ class creaShop extends React.Component {
   }
 
   handleNext = () => {
-    this.setState({activeStep: this.state.activeStep + 1});
+    console.log("Handle next");
+    if (this.state.activeStep<9) {
+      this.setState({activeStep: this.state.activeStep + 1});
+    }
+    // last page => post
+    else {
+      axios.post(url+'myAlfred/api/shop/add', this.state.shop)
+        .then(res => {
+          toast.info("Boutique créée avec succès");
+      })
+      .catch(err => {
+        toast.error(err);
+      })
+
+    }
   }
 
   isRightPanelHidden() {
@@ -121,7 +137,7 @@ class creaShop extends React.Component {
     this.setState({activeStep: this.state.activeStep - 1});
   };
 
-  serviceSelected(service_id){
+  onServiceChanged(service_id){
     console.log("Service selected:"+service_id);
     let shop = this.state.shop;
     shop.service = service_id;
@@ -202,12 +218,12 @@ class creaShop extends React.Component {
   }
 
   renderSwitch(stepIndex) {
-    let shop=this.state.shop;
+    let shop=this.state.shop;	
     switch(stepIndex) {
       case 0:
         return <CreaShopPresentation/>;
       case 1:
-        return <SelectService onChange={this.serviceSelected}/>;
+        return <SelectService onChange={this.onServiceChanged} service={shop.service} />;
       case 2:
         return <SelectPrestation service={shop.service} onChange={this.prestaSelected} />;
       case 3:
@@ -215,7 +231,7 @@ class creaShop extends React.Component {
       case 4:
         return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
       case 5:
-        return <AssetsService onChange={this.assetsChanged} />;
+        return <AssetsService data={shop} onChange={this.assetsChanged} />;
       case 6:
         return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} />;
       case 7:
@@ -230,11 +246,10 @@ class creaShop extends React.Component {
 
 
   render() {
-    const {classes} = this.props;
 
+    const {classes} = this.props;
     let hideRightPanel = this.isRightPanelHidden();
 
-    console.log("Render:"+JSON.stringify(this.state.shop));
     return(
       <Grid>
         <Grid className={classes.mainHeader}>

@@ -9,14 +9,17 @@ import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
+const { inspect } = require('util');
+import useAutocomplete from '@material-ui/lab/useAutocomplete';
 
 class SelectService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      service: this.props.service,
       services: [],
     }
-    this.handleChange = this.handleChange.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
@@ -40,8 +43,9 @@ class SelectService extends React.Component {
    this.setServices('e');
   }
 
-  handleChange(value){
-    console.log("OnChange:"+JSON.stringify(value));
+  onChange(event, value){
+    console.log("OnChange value:"+inspect(value));
+    this.setState({service: value.id});
     if(value !== undefined && value !== null){
       this.props.onChange(value.id);
     }
@@ -52,10 +56,9 @@ class SelectService extends React.Component {
     this.setServices(event.target.value);
   }
 
-
   render() {
     const {classes} = this.props;
-
+    console.log("Service:"+this.state.service);
     return(
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -81,7 +84,7 @@ class SelectService extends React.Component {
                     <Autocomplete
                       id="grouped-demo"
                       className={classes.textFieldSelecteService}
-                      onChange={(event, value) =>{ this.handleChange(value) }}
+                      onChange={this.onChange}
                       onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       options={this.state.services}
                       groupBy={option => option.category}
