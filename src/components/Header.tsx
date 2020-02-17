@@ -7,8 +7,18 @@ import {
   Link,
   Stack,
   FormLabel,
-  Divider,
   DarkMode,
+  FormControl,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  LightMode,
+  PopoverFooter,
+  Tooltip,
 } from '@chakra-ui/core'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
@@ -24,25 +34,33 @@ const CodeSandboxButton = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   return (
-    <Button
-      onClick={async () => {
-        setIsLoading(true)
-        const code = await generateCode(components)
-        setIsLoading(false)
-        const parameters = buildParameters(code)
-
-        window.open(
-          `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`,
-          '_blank',
-        )
-      }}
-      isLoading={isLoading}
-      rightIcon="external-link"
-      variant="ghost"
-      size="xs"
+    <Tooltip
+      zIndex={100}
+      hasArrow
+      bg="yellow.100"
+      aria-label="Builder mode help"
+      label="Export in CodeSandbox"
     >
-      Open in CodeSandbox
-    </Button>
+      <Button
+        onClick={async () => {
+          setIsLoading(true)
+          const code = await generateCode(components)
+          setIsLoading(false)
+          const parameters = buildParameters(code)
+
+          window.open(
+            `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`,
+            '_blank',
+          )
+        }}
+        isLoading={isLoading}
+        rightIcon="external-link"
+        variant="ghost"
+        size="xs"
+      >
+        Export code
+      </Button>
+    </Tooltip>
   )
 }
 
@@ -53,40 +71,48 @@ const Header = () => {
 
   return (
     <DarkMode>
-      <Box bg="#1a202c" as="header" height="3rem">
-        <Flex size="100%" align="center" justify="space-between">
-          <Box
-            height="100%"
-            backgroundColor="#1a202c"
-            color="white"
-            pl="1rem"
-            width="14rem"
-            as="a"
-            fontSize="xl"
-            d="block"
-            display="flex"
-            alignItems="center"
-            aria-label="Chakra UI, Back to homepage"
-          >
-            <Box
-              fontSize="2xl"
-              as={AiFillThunderbolt}
-              mr={1}
-              color="teal.100"
-            />{' '}
-            <Box fontWeight="bold">open</Box>chakra
-          </Box>
+      <Flex
+        justifyContent="space-between"
+        bg="#1a202c"
+        as="header"
+        height="3rem"
+        px="1rem"
+      >
+        <Flex
+          width="14rem"
+          height="100%"
+          backgroundColor="#1a202c"
+          color="white"
+          as="a"
+          fontSize="xl"
+          flexDirection="row"
+          alignItems="center"
+          aria-label="Chakra UI, Back to homepage"
+        >
+          <Box fontSize="2xl" as={AiFillThunderbolt} mr={1} color="teal.100" />{' '}
+          <Box fontWeight="bold">open</Box>chakra
+        </Flex>
 
-          <Flex alignItems="center" pr="1rem" justifyContent="end">
-            <Flex justify="center" align="center" mr={4}>
-              <FormLabel
-                color="gray.200"
-                fontSize="xs"
-                htmlFor="preview"
-                pb={0}
+        <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
+          <Stack isInline spacing={4} justify="center" align="center">
+            <FormControl>
+              <Tooltip
+                zIndex={100}
+                hasArrow
+                bg="yellow.100"
+                aria-label="Builder mode help"
+                label="Builder mode adds extra padding/borders"
               >
-                Builder mode
-              </FormLabel>
+                <FormLabel
+                  cursor="help"
+                  color="gray.200"
+                  fontSize="xs"
+                  htmlFor="preview"
+                  pb={0}
+                >
+                  Builder mode
+                </FormLabel>
+              </Tooltip>
               <Switch
                 isChecked={showLayout}
                 color="teal"
@@ -94,9 +120,9 @@ const Header = () => {
                 onChange={() => dispatch.app.toggleBuilderMode()}
                 id="preview"
               />
-            </Flex>
+            </FormControl>
 
-            <Flex justify="center" align="center">
+            <FormControl>
               <FormLabel color="gray.200" fontSize="xs" htmlFor="code" pb={0}>
                 Code panel
               </FormLabel>
@@ -107,40 +133,78 @@ const Header = () => {
                 onChange={() => dispatch.app.toggleCodePanel()}
                 size="sm"
               />
-            </Flex>
-            <Divider orientation="vertical" />
-            <CodeSandboxButton />
-            <Divider orientation="vertical" />
-            {/**<ShareButton />**/}
-            <Divider orientation="vertical" />
-            <Button
-              rightIcon="small-close"
-              size="xs"
-              variant="ghost"
-              onClick={() => {
-                dispatch.components.reset()
-              }}
-            >
-              Reset
-            </Button>
+            </FormControl>
+          </Stack>
 
-            <Stack
-              justifyContent="flex-end"
-              width="13rem"
-              align="center"
-              isInline
-              spacing="3"
-            >
-              <Link
-                isExternal
-                href="https://github.com/premieroctet/openchakra"
-              >
-                <Box as={DiGithubBadge} size="8" color="gray.200" />
-              </Link>
-            </Stack>
-          </Flex>
+          <Stack isInline>
+            <CodeSandboxButton />
+
+            <Popover>
+              {({ onClose }) => (
+                <>
+                  <PopoverTrigger>
+                    <Button
+                      ml={4}
+                      rightIcon="small-close"
+                      size="xs"
+                      variant="ghost"
+                    >
+                      Clear
+                    </Button>
+                  </PopoverTrigger>
+                  <LightMode>
+                    <PopoverContent zIndex={100}>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverHeader>Are you sure?</PopoverHeader>
+                      <PopoverBody fontSize="sm">
+                        Do you really want to remove all components on the
+                        editor?
+                      </PopoverBody>
+                      <PopoverFooter display="flex" justifyContent="flex-end">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          variantColor="red"
+                          rightIcon="check"
+                          onClick={() => {
+                            dispatch.components.reset()
+                            if (onClose) {
+                              onClose()
+                            }
+                          }}
+                        >
+                          Yes, clear
+                        </Button>
+                      </PopoverFooter>
+                    </PopoverContent>
+                  </LightMode>
+                </>
+              )}
+            </Popover>
+          </Stack>
         </Flex>
-      </Box>
+
+        <Stack
+          justifyContent="flex-end"
+          width="13rem"
+          align="center"
+          isInline
+          spacing="3"
+        >
+          <Tooltip
+            zIndex={100}
+            hasArrow
+            bg="yellow.100"
+            aria-label="Builder mode help"
+            label="Show me the code!"
+          >
+            <Link isExternal href="https://github.com/premieroctet/openchakra">
+              <Box as={DiGithubBadge} size="8" color="gray.200" />
+            </Link>
+          </Tooltip>
+        </Stack>
+      </Flex>
     </DarkMode>
   )
 }
