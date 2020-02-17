@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, memo } from "react";
+import React, { ReactNode, useState, memo } from 'react'
 import {
   theme,
   Popover,
@@ -19,38 +19,37 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  Input
-} from "@chakra-ui/core";
-import FormControl from "./FormControl";
-import { useForm } from "../../../hooks/useForm";
-import omit from "lodash/omit";
-import ColorPicker from "coloreact";
-import "react-color-picker/index.css";
-import usePropsSelector from "../../../hooks/usePropsSelector";
+  Input,
+} from '@chakra-ui/core'
+import FormControl from './FormControl'
+import { useForm } from '../../../hooks/useForm'
+import omit from 'lodash/omit'
+import ColorPicker from 'coloreact'
+import 'react-color-picker/index.css'
+import usePropsSelector from '../../../hooks/usePropsSelector'
 
 type ColorControlPropsType = {
-  name: string;
-  label: string | ReactNode;
-  enableHues?: boolean;
-  withFullColor?: boolean;
-};
+  name: string
+  label: string | ReactNode
+  enableHues?: boolean
+  withFullColor?: boolean
+}
 
 const ColorsControl = (props: ColorControlPropsType) => {
-  const { setValue, setValueFromEvent } = useForm();
-  const [hue, setHue] = useState(500);
-  const value = usePropsSelector(props.name);
+  const { setValue, setValueFromEvent } = useForm()
+  const [hue, setHue] = useState(500)
+  const value = usePropsSelector(props.name)
 
   const themeColors: any = omit(theme.colors, [
-    "transparent",
-    "current",
-    "whiteAlpha",
-    "black",
-    "white"
-  ]);
+    'transparent',
+    'current',
+    'black',
+    'white',
+  ])
 
-  let propsIconButton: any = { bg: value };
+  let propsIconButton: any = { bg: value }
   if (value && themeColors[value]) {
-    propsIconButton = { variantColor: value };
+    propsIconButton = { variantColor: value }
   }
 
   const huesPicker = (
@@ -58,14 +57,15 @@ const ColorsControl = (props: ColorControlPropsType) => {
       <Grid mb={2} templateColumns="repeat(5, 1fr)" gap={0}>
         {Object.keys(themeColors).map(colorName => (
           <PseudoBox
+            border={colorName.includes('white') ? '1px solid lightgrey' : ''}
             key={colorName}
-            _hover={{ shadow: "lg" }}
+            _hover={{ shadow: 'lg' }}
             cursor="pointer"
             bg={`${colorName}.${props.enableHues ? hue : 500}`}
             onClick={() =>
               setValue(
                 props.name,
-                props.enableHues ? `${colorName}.${hue}` : colorName
+                props.enableHues ? `${colorName}.${hue}` : colorName,
               )
             }
             mt={2}
@@ -78,8 +78,11 @@ const ColorsControl = (props: ColorControlPropsType) => {
 
       {props.enableHues && (
         <Slider
-          onChange={value => setHue(value)}
-          min={100}
+          onChange={value => {
+            value = value === 0 ? 50 : value
+            setHue(value)
+          }}
+          min={0}
           max={900}
           step={100}
           value={hue}
@@ -94,7 +97,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
         </Slider>
       )}
     </>
-  );
+  )
 
   return (
     <FormControl label={props.label}>
@@ -103,7 +106,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
           <IconButton
             mr={2}
             shadow="md"
-            border={value ? "none" : "2px solid grey"}
+            border={value ? 'none' : '2px solid grey'}
             isRound
             aria-label="Color"
             size="xs"
@@ -113,7 +116,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
           </IconButton>
         </PopoverTrigger>
 
-        <PopoverContent width="200px" zIndex={1}>
+        <PopoverContent width="200px" zIndex={theme.zIndices.modal}>
           <PopoverArrow />
           <PopoverBody>
             {props.withFullColor ? (
@@ -130,7 +133,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
                       <ColorPicker
                         color={value}
                         onChange={(color: any) => {
-                          setValue(props.name, `#${color.hex}`);
+                          setValue(props.name, `#${color.hex}`)
                         }}
                       />
                       );
@@ -152,7 +155,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
         value={value}
       />
     </FormControl>
-  );
-};
+  )
+}
 
-export default memo(ColorsControl);
+export default memo(ColorsControl)
