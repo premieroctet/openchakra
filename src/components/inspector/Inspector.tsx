@@ -1,16 +1,50 @@
-import React from 'react'
+import React, { useState, memo } from 'react'
 import { Link, Box, Stack } from '@chakra-ui/core'
 
 import Panels from './panels/Panels'
-import { GoRepo } from 'react-icons/go'
+import { GoRepo, GoCode } from 'react-icons/go'
 import { FiTrash2 } from 'react-icons/fi'
 import { IoMdRefresh } from 'react-icons/io'
 import { useSelector } from 'react-redux'
 import useDispatch from '../../hooks/useDispatch'
 import QuickPropsPanel from './QuickPropsPanel'
 import StylesPanel from './panels/StylesPanel'
-import { getSelectedComponent } from '../../core/selectors/components'
+import {
+  getSelectedComponent,
+  getComponents,
+  getSelectedComponentId,
+} from '../../core/selectors/components'
 import ActionButton from './ActionButton'
+import { generateComponentCode } from '../../utils/code'
+import useClipboard from '../../hooks/useClipboard'
+
+const CodeActionButton = memo(() => {
+  const [isLoading, setIsLoading] = useState(false)
+  const { onCopy, hasCopied } = useClipboard()
+
+  const selectedId = useSelector(getSelectedComponentId)
+  const components = useSelector(getComponents)
+
+  const parentId = components[selectedId].parent
+  const parent = { ...components[parentId] }
+  // Do not copy sibling components from parent
+  parent.children = [selectedId]
+
+  return (
+    <ActionButton
+      isLoading={isLoading}
+      label="Copy code component"
+      variantColor={hasCopied ? 'green' : 'gray'}
+      onClick={async () => {
+        setIsLoading(true)
+        const code = await generateComponentCode(parent, components)
+        onCopy(code)
+        setIsLoading(false)
+      }}
+      icon={hasCopied ? 'check' : GoCode}
+    />
+  )
+})
 
 const Inspector = () => {
   const dispatch = useDispatch()
@@ -53,18 +87,19 @@ const Inspector = () => {
             flexWrap="wrap"
             justify="flex-end"
           >
+            <CodeActionButton />
             <ActionButton
               label="Duplicate"
               onClick={() => dispatch.components.duplicate()}
               icon="copy"
             />
             <ActionButton
-              label="Reset"
+              label="Reset props"
               icon={IoMdRefresh}
               onClick={() => dispatch.components.resetProps(component.id)}
             />
             <ActionButton
-              label="Doc"
+              label="Chakra UI Doc"
               as={Link}
               onClick={() => {
                 window.open(

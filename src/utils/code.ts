@@ -4,6 +4,24 @@ const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
+const formatCode = async (code: string) => {
+  let formattedCode = `// 🚨 Your props contains invalid code`
+
+  const prettier = await import('prettier/standalone')
+  const babylonParser = await import('prettier/parser-babylon')
+
+  try {
+    formattedCode = prettier.format(code, {
+      parser: 'babel',
+      plugins: [babylonParser],
+      semi: false,
+      singleQuote: true,
+    })
+  } catch (e) {}
+
+  return formattedCode
+}
+
 const buildBlock = (component: IComponent, components: IComponents) => {
   let content = ''
 
@@ -55,6 +73,20 @@ const buildBlock = (component: IComponent, components: IComponents) => {
   return content
 }
 
+export const generateComponentCode = async (
+  component: IComponent,
+  components: IComponents,
+) => {
+  let code = buildBlock(component, components)
+
+  code = `
+const My${component.type} = () => (
+  ${code}
+)`
+
+  return await formatCode(code)
+}
+
 export const generateCode = async (components: IComponents) => {
   let code = buildBlock(components.root, components)
 
@@ -83,19 +115,5 @@ const App = () => (
 
 export default App;`
 
-  let formattedCode = `// 🚨 Your props contains invalid code`
-
-  const prettier = await import('prettier/standalone')
-  const babylonParser = await import('prettier/parser-babylon')
-
-  try {
-    formattedCode = prettier.format(code, {
-      parser: 'babel',
-      plugins: [babylonParser],
-      semi: false,
-      singleQuote: true,
-    })
-  } catch (e) {}
-
-  return formattedCode
+  return await formatCode(code)
 }
