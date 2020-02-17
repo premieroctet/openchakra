@@ -12,21 +12,26 @@ class SettingShop extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      welcome_message: this.props.description,
+      welcome_message: this.props.welcome_message,
       cancel_mode: this.props.cancel_mode, 
     }
 
     this.cancel_buttons={}
     Object.values(CANCEL_MODE).forEach( v => this.cancel_buttons[v]=React.createRef());
     this.cancelModeChanged=this.cancelModeChanged.bind(this);
+    this.welcomeMessageChanged=this.welcomeMessageChanged.bind(this);
+
+  }
+
+  welcomeMessageChanged(event) {
+    let msg = event.target.value;
+    this.setState({welcome_message: msg}, () => this.props.onChange(msg, this.state.cancel_mode));
   }
 
   cancelModeChanged(mode_id, checked) {
-    if (!checked) return;
-    this.setState({cancel_mode: mode_id});
-    Object.values(CANCEL_MODE).forEach( v=> {console.log(v); this.cancel_buttons[v].current.setState({checked: CANCEL_MODE[mode_id]==v })}
-      ,this.props.onChange(this.state.welcome_message, this.state.cancel_mode )
-    );
+    console.log("canceModeChanged:"+mode_id, checked);
+    this.setState({cancel_mode: mode_id}, () => this.props.onChange(this.state.welcome_message, mode_id));
+    Object.values(CANCEL_MODE).forEach( v=> {console.log(v); this.cancel_buttons[v].current.setState({checked: mode_id==v })});
   }
 
   render() {
@@ -52,7 +57,6 @@ class SettingShop extends React.Component {
                     label="Message de bienvenue"
                     multiline
                     rows="4"
-                    defaultValue={"Merci pour votre réservation ! "}
                     className={classes.textField}
                     margin="normal"
                     variant="outlined"
@@ -60,6 +64,7 @@ class SettingShop extends React.Component {
                       shrink: true,
                     }}
                     value={this.state.welcome_message}
+                    onChange={this.welcomeMessageChanged}
                   />
                 </Grid>
               </Grid>

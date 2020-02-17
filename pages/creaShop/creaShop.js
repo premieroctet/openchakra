@@ -17,20 +17,21 @@ import SettingShop from '../../components/CreaShop/SettingShop/SettingShop';
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
-import {ALF_CONDS} from '../../utils/consts.js';
+import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
 
 class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 8, 
+      activeStep: 9,
       shop:{
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
-        welcome_message: "",
+        welcome_message: "Coucou",
         cancel_mode: "",            // FLEXIBLE/MODERATE/STRICT
-        is_particular: true,        // true/false : particulier.pro
+        is_particular: false,        // true/false : particulier.pro
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
+        is_certified: false,
         service: "5d66a0fb08b3d612bd0864f4",
         prestations:{},
         equipments: [], // Ids des équipements
@@ -57,7 +58,8 @@ class creaShop extends React.Component {
     this.assetsChanged = this.assetsChanged.bind(this)
     this.availabilityCreated = this.availabilityCreated.bind(this);
     this.conditionsChanged = this.conditionsChanged.bind(this);
-    this.settingsChanged = this.settingsChanged.bind(this);
+    this.shopSettingsChanged = this.shopSettingsChanged.bind(this);
+    this.introduceChanged = this.introduceChanged.bind(this);
 
     this.nextDisabled = this.nextDisabled.bind(this)
   }
@@ -67,30 +69,38 @@ class creaShop extends React.Component {
     console.log("Page:"+this.state.activeStep)
     let shop=this.state.shop;
     let pageIndex = this.state.activeStep;
-    if (pageIndex==0) { return ""; }
-    if (pageIndex==1) { return shop.service==null ? "disabled" : ""}
+    if (pageIndex==0) { return false; }
+    if (pageIndex==1) { return shop.service==null}
     if (pageIndex==2) {
       console.log("Prestas:"+JSON.stringify(shop.prestations));
       if (Object.keys(shop.prestations).length==0) return "disabled";
       return Object.values(shop.prestations).every( v => {
         console.log(v.price==0);
         if (v.price==0 || v.billing==null || v.billing==undefined || Object.keys(v.billing).length==0) {
-          console.log("disabled");
           return false;
         }
         return true;
-      })? "" : "disabled";
+      })? false : true;
     }
     if (pageIndex==3) {
-      if (shop.location==null)  return "disabled";
-      if (Object.values(shop.location).every( v => !v)) return "disabled";
+      if (shop.location==null)  return true;
+      if (Object.values(shop.location).every( v => !v)) return true;
     }
     if (pageIndex==5) {
-      if (shop.diplomaName=='' && shop.diplomaYear!='') return "disabled";
-      if (shop.diplomaName!='' && shop.diplomaYear=='') return "disabled";
-      if (shop.certificationName=='' && shop.certificationYear!='') return "disabled";
-      if (shop.certificationName!='' && shop.certificationYear=='') return "disabled";
+      if (shop.diplomaName=='' && shop.diplomaYear!='') return true;
+      if (shop.diplomaName!='' && shop.diplomaYear=='') return true;
+      if (shop.certificationName=='' && shop.certificationYear!='') return true;
+      if (shop.certificationName!='' && shop.certificationYear=='') return true;
     }
+    if (pageIndex==8) {
+      if (shop.cancel_mode=='' || shop.cancel_mode==null) {
+        return true;
+      }
+    }
+    if (pageIndex==9) {
+      if (shop.particular==null || shop.particular==undefined) { return true }
+    }
+    return false;
   }
 
   availabilityCreated(avail) {
@@ -168,35 +178,52 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  settingsChanged(welcome_message, cancel_mode) {
+  shopSettingsChanged(welcome_message, cancel_mode) {
+    console.log("shopSettingsChanged:"+welcome_message, cancel_mode);
     let shop=this.state.shop;
     shop.welcome_message=welcome_message;
     shop.cancel_mode=cancel_mode;
     this.setState({shop: shop});
   }
 
+  introduceChanged(is_particular, company, is_certified) {
+    console.log("introduceChanged:"+is_particular, company, is_certified);
+    let shop=this.state.shop;
+    shop.is_particular=is_particular;
+    shop.is_certified=is_certified;
+    if (is_particular) {
+      shop.company=null;
+    }
+    else {
+      shop.company=company; 
+    }
+    this.setState({shop: shop});
+    console.log("After introduceChanged:"+JSON.stringify(shop));
+  }
+
   renderSwitch(stepIndex) {
+    let shop=this.state.shop;
     switch(stepIndex) {
       case 0:
         return <CreaShopPresentation/>;
       case 1:
         return <SelectService onChange={this.serviceSelected}/>;
       case 2:
-        return <SelectPrestation service={this.state.shop.service} onChange={this.prestaSelected} />;
+        return <SelectPrestation service={shop.service} onChange={this.prestaSelected} />;
       case 3:
-        return <SettingService service={this.state.shop.service} onChange={this.settingsChanged} />;
+        return <SettingService service={shop.service} onChange={this.settingsChanged} />;
       case 4:
-        return <BookingPreference service={this.state.shop.service} onChange={this.preferencesChanged} />;
+        return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
       case 5:
         return <AssetsService onChange={this.assetsChanged} />;
       case 6:
-        return <Schedule availabilities={this.state.shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} />;
+        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} />;
       case 7:
-        return <BookingConditions conditions={this.state.shop.my_alfred_conditions} booking_request={this.state.shop.booking_request}  onChange={this.conditionsChanged} />;
+        return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}  onChange={this.conditionsChanged} />;
       case 8:
-        return <SettingShop/>;
+        return <SettingShop welcome_message={shop.welcome_message} cancel_mode={shop.cancel_mode} onChange={this.shopSettingsChanged}  />;
       case 9:
-        return <IntroduceYou/>;
+        return <IntroduceYou is_particular={shop.is_particular} company={shop.company} is_certified={shop.is_certified} onChange={this.introduceChanged} />;
     }
   }
 

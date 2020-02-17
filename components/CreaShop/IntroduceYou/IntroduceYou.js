@@ -16,10 +16,36 @@ class IntroduceYou extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      is_private: false,
-      is_professional: false,
-      isCertified: false
+      is_particular: this.props.is_particular,
+      company: this.props.company,
+      is_certified: this.props.is_certified
     }
+
+    this.onStatusChanged=this.onStatusChanged.bind(this);
+    this.onCertifiedChanged=this.onCertifiedChanged.bind(this);
+    this.onCompanyChanged=this.onCompanyChanged.bind(this);
+  }
+
+  onStatusChanged(event, checked) {
+   let id=event.target.id;
+    console.log("Status changed:"+id+checked);
+    console.log("State:"+JSON.stringify(this.state));
+    let req = (id=='particular' && checked) || (id=='professional' && !checked);
+    console.log("Is particular is "+req);
+    this.setState({is_particular: req},
+      () => this.props.onChange(req, this.state.company, this.state.is_certified));
+
+  }
+
+  onCertifiedChanged(event) {
+    console.log("Certified change:"+event.target.checked);
+    this.setState({is_certified: event.target.checked}, 
+      () => this.props.onChange(this.state.is_particular, this.state.company, this.state.is_certified));
+  }
+
+  onCompanyChanged(company) {
+    this.setState({company: company}, 
+      () => this.props.onChange(this.state.is_particular, this.state.company, this.state.is_certified));
   }
 
   render() {
@@ -46,13 +72,12 @@ class IntroduceYou extends React.Component {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              checked={this.state.is_private}
+                              id='particular'
+                              checked={this.state.is_particular}
                               name={"isParticular"}
                               color="primary"
-                              value={this.state.is_private}
-                              onChange={() => {
-                                this.state.is_private = !this.state.is_private;
-                              }}
+                              value={this.state.is_particular}
+                              onChange={this.onStatusChanged}
                               icon={<CircleUnchecked/>}
                               checkedIcon={<RadioButtonCheckedIcon />}
                             />
@@ -74,13 +99,12 @@ class IntroduceYou extends React.Component {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              checked={this.state.is_professional}
+                              id='professional'
+                              checked={!this.state.is_particular}
                               name={"isProfessional"}
                               color="primary"
-                              value={this.state.is_professional}
-                              onChange={() => {
-                                this.state.is_professional = !this.state.is_professional;
-                              }}
+                              value={this.state.is_particular}
+                              onChange={this.onStatusChanged}
                               icon={<CircleUnchecked/>}
                               checkedIcon={<RadioButtonCheckedIcon />}
                             />
@@ -96,21 +120,19 @@ class IntroduceYou extends React.Component {
                         <p className={classes.policySizeContent}>
                           Un statut professionnel est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière.
                         </p>
-                        {this.state.is_professional ?
-                          <div style={{}}>
-                            <Siret formikCtx={"test"}/>
+                        {!this.state.is_particular ?
+                          <div> 
+                            <Siret onChange={this.onCompanyChanged} company={this.state.company} />
                           </div> : null
                         }
                           <FormControlLabel
                             control={
                               <Checkbox
-                                checked={this.state.isCertified}
-                                onChange={() => {
-                                  this.state.isCertified = !this.state.isCertified;
-                                }}
+                                checked={this.state.is_certified}
+                                onChange={this.onCertifiedChanged}
                                 color="primary"
-                                name="isCertified"
-                                value={this.state.isCertified}
+                                name="is_certified"
+                                value={this.state.is_certified}
                               />
                             }
                             label={

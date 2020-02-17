@@ -32,7 +32,7 @@ class BookingConditions extends React.Component {
     let req = (id=='request' && checked) || (id=='auto' && !checked);
     console.log("Booking request is "+req);
     this.setState({booking_request: req},
-      this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));
+      () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));
     this.booking_request.current.setState({checked: req});
     this.booking_auto.current.setState({checked: !req});
 
@@ -41,9 +41,9 @@ class BookingConditions extends React.Component {
   onAlfredConditionsChanged(id, checked) {
     console.log(id+","+checked);
     let value=checked ? id : Math.max(id-1, 0);
-    this.setState({my_alfred_conditions: value })
-    Object.values(ALF_CONDS).forEach( v=> this.conditions[v].current.setState({checked: v<=value}),
-      this.props.onChange(this.state.booking_request, value));
+    this.setState({my_alfred_conditions: value },
+      this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));
+    Object.values(ALF_CONDS).forEach( v=> this.conditions[v].current.setState({checked: v<=value}));
   }
 
   render() {
