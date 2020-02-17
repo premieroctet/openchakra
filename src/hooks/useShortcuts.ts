@@ -29,19 +29,15 @@ const useShortcuts = () => {
   }
 
   const toggleBuilderMode = (event: KeyboardEvent | undefined) => {
-    if (event) {
+    if (event && hasNoSpecialKeyPressed(event)) {
       event.preventDefault()
-    }
-    if (hasNoSpecialKeyPressed(event)) {
       dispatch.app.toggleBuilderMode()
     }
   }
 
   const toggleCodePanel = (event: KeyboardEvent | undefined) => {
-    if (event) {
+    if (event && hasNoSpecialKeyPressed(event)) {
       event.preventDefault()
-    }
-    if (hasNoSpecialKeyPressed(event)) {
       dispatch.app.toggleCodePanel()
     }
   }
@@ -67,11 +63,8 @@ const useShortcuts = () => {
   }
 
   const onSelectParent = (event: KeyboardEvent | undefined) => {
-    if (event) {
+    if (event && hasNoSpecialKeyPressed(event)) {
       event.preventDefault()
-    }
-
-    if (hasNoSpecialKeyPressed(event)) {
       dispatch.components.selectParent()
     }
   }
