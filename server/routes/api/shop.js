@@ -110,6 +110,12 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
                  .then(su => {
                     console.log("Shop update "+shop._id);
                     Shop.findOne({alfred:req.user.id}).then(shop => { shop.services.push(su._id); shop.save()});
+                    req.body.availabilities.forEach(availability => {
+                      console.log("Dispo:"+JSON.stringify(availability));
+                      let a=Availability(availability);
+                      a.user=req.user.id;
+                      a.save();
+                    });
                     User.findOneAndUpdate({_id: req.user.id},{is_alfred: true}, {new: true})
                       .then(user => console.log("Updated alfred"))
                       .catch(err => console.log("Error:"+JSON.stringify(err)))
