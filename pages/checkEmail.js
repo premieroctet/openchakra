@@ -87,7 +87,7 @@ class checkEmail extends React.Component {
                                     </Link>
                                 </Grid>
                                 <Grid item className={classes.responsiveSecondaryButton}>
-                                    <Link href={'/becomeAlfredForm'}>
+                                    <Link href={'/creaShop/creaShop'}>
                                         <a style={{textDecoration:'none'}}>
                                             <Button variant={"contained"} color={"secondary"} style={{color:"white"}}>Créer ma boutique</Button>
                                         </a>

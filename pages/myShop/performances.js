@@ -128,7 +128,7 @@ class Performances extends React.Component {
                                 <p>
                                     {MYSHOP_MESSAGE}
                                 </p>
-                                <Button color={"primary"} style={{borderRadius:'30px'}} variant={"contained"}><a style={{textDecoration:'none',color:'white'}} href={this.state.alfred ? '/myShop/services' : '/becomeAlfredForm'}>
+                                <Button color={"primary"} style={{borderRadius:'30px'}} variant={"contained"}><a style={{textDecoration:'none',color:'white'}} href={this.state.alfred ? '/myShop/services' : '/creaShop/creaShop'}>
                                     {this.state.alfred ? 'Ma boutique' : 'Créer ma boutique'}
                                 </a></Button>
                             </Grid>

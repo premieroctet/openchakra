@@ -159,7 +159,7 @@ class becomeAlfred extends React.Component{
                       répertoriez vos services, indiquez vos disponibilités,
                       vos tarifs et profitez d’un complément de revenu !
                     </Typography>
-                    <Link href={this.state.logged && this.state.alfred ? `/shop?id_alfred=${this.state.userId}`  : this.state.logged && !this.state.alfred ? '/becomeAlfredForm' : '/signup'}>
+                    <Link href={this.state.logged && this.state.alfred ? `/shop?id_alfred=${this.state.userId}`  : this.state.logged && !this.state.alfred ? '/creaShop/creaShop' : '/signup'}>
                       <a style={{textDecoration:'none'}}>
                     <Button variant="contained" color={"primary"} className={classes.margin}>
                       Créer ma boutique
@@ -187,7 +187,7 @@ class becomeAlfred extends React.Component{
                         vos tarifs et profitez d’un complément de revenu !
                       </Typography>
                     </CardContent>
-                    <Link href={this.state.logged && this.state.alfred ?  `/shop?id_alfred=${this.state.userId}`  : this.state.logged && !this.state.alfred ? '/becomeAlfredForm' : '/signup'}>
+                    <Link href={this.state.logged && this.state.alfred ?  `/shop?id_alfred=${this.state.userId}`  : this.state.logged && !this.state.alfred ? '/creaShop/creaShop' : '/signup'}>
                       <a style={{textDecoration:'none'}}>
                         <Button variant="contained" color={"primary"} className={classes.margin}>
                           Créer ma boutique

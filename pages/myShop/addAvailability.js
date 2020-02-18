@@ -188,7 +188,7 @@ class addAvailability extends React.Component {
                 let user = res.data;
                 this.setState({userId: user._id});
                 if(user.is_alfred === false) {
-                    Router.push('/becomeAlfredForm');
+                    Router.push('/creaShop/creaShop');
                 } else {
                     this.setState({user:user});
                     axios

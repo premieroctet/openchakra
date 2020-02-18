@@ -256,7 +256,7 @@ class services extends React.Component {
             .then(res => {
                 let user = res.data;
                 if(user.is_alfred === false) {
-                    Router.push('/becomeAlfredForm');
+                    Router.push('/creaShop/creaShop');
                 } else {
                     this.setState({user:user});
 

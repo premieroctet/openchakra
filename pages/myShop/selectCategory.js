@@ -81,7 +81,7 @@ class selectCategory extends React.Component {
             .then(res => {
                 let user = res.data;
                 if(user.is_alfred === false) {
-                    Router.push('/becomeAlfredForm');
+                    Router.push('/creaShop/creaShop');
                 } else {
                     axios.get(url+'myAlfred/api/category/all')
                         .then(res => {
