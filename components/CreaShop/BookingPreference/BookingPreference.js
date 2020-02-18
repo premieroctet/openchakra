@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import axios from 'axios';
-import styles from '../../../static/assets/css/creaShopPage/componentStyle'
+import styles from './componentStyle'
 
 // FIX : réafficher la ville de référence
 
@@ -66,11 +66,9 @@ class BookingPreference extends React.Component {
                 <Grid className={classes.contentTextSize}>
                   <Grid item className={classes.contentAddandRemove}>
                     <Grid className={classes.subContentAddanRemove}>
-                      <Grid style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center",
-                                    lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }} className={classes.buttonRemove} onClick={ () => this.handleChange('deadline_value', Math.max(this.state.deadline_value-1, 0)) } >-</Grid>
+                      <Grid className={classes.buttonRemove} onClick={ () => this.handleChange('deadline_value', Math.max(this.state.deadline_value-1, 0)) } >-</Grid>
                       <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{this.state.deadline_value}</Grid>
-                      <Grid style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center",
-                                    lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }} className={classes.buttonAdd} onClick={() => this.handleChange('deadline_value', this.state.deadline_value+1) } >+</Grid>
+                      <Grid className={classes.buttonAdd} onClick={() => this.handleChange('deadline_value', this.state.deadline_value+1) } >+</Grid>
                     </Grid>
                     <TextField
                       value={this.state.deadline_unit}
@@ -147,9 +145,9 @@ class BookingPreference extends React.Component {
                   <Grid className={classes.contentTextSize}>
                     <Grid item className={classes.contentAddandRemoveKm}>
                       <Grid className={classes.subContentAddanRemoveKm}>
-                      <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }} onClick={() => this.handleChange('perimeter', Math.max(this.state.perimeter-1, 0))} >-</div>
+                      <Grid className={classes.buttonRemove} onClick={() => this.handleChange('perimeter', Math.max(this.state.perimeter-1, 0))} >-</Grid>
                         <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{this.state.perimeter}</Grid>
-                      <div style={{width: 30, height: 30, borderRadius: '50%', border: '1px solid #2FBCD3', textAlign: "center", lineHeight: 1.6, cursor: 'pointer', display: 'inline-block', marginRight: 25 }} onClick={() => this.handleChange('perimeter', this.state.perimeter+1)} >+</div>
+                      <Grid className={classes.buttonAdd} onClick={() => this.handleChange('perimeter', this.state.perimeter+1)} >+</Grid>
                       </Grid>
                       <Grid className={classes.contentKilometers}>
                         <p className={classes.policySizeContent}>kilomètre(s)</p>
