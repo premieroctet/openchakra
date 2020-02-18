@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Layout from '../../hoc/Layout/Layout';
 import Grid from '@material-ui/core/Grid';
 import styles from './creaShopStyle'
@@ -71,6 +71,12 @@ class creaShop extends React.Component {
   }
 
   componentDidMount() {
+        localStorage.setItem('path',Router.pathname);
+        const token = localStorage.getItem('token');
+        if (token === null) {
+            Router.push('/login');
+        }
+ 
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(url+'myAlfred/api/users/current')
       .then(res => {
