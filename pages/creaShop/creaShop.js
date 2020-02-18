@@ -125,7 +125,7 @@ class creaShop extends React.Component {
       if (shop.is_particular==true) return false;
       // Pro
       if (shop.company==null) return true;
-      if (Object.values(shop.company).some(v => v==null)) return true;
+      if (Object.values(shop.company).some(v => v==null || v=='')) return true;
       if (shop.is_certified==false) return true;
     }
     return false;

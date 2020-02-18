@@ -51,6 +51,7 @@ class siret extends React.Component {
             status: '',
         };
         this.onChange = this.onChange.bind(this);
+        this.setCompanyData = this.setCompanyData.bind(this);
     }
 
     onChange = e => {
@@ -58,7 +59,20 @@ class siret extends React.Component {
     };
 
 
-
+  setCompanyData(data) {
+    const date = data.date_creation;
+    const year = date.substring(0,4);
+    const month = date.substring(4,6);
+    const day = date.substring(6,8);
+    const result = day+'/'+month+'/'+year;
+    this.setState({
+      name: data.l1_normalisee,
+      nafape: data.activite_principale,
+      status: data.libelle_nature_juridique_entreprise,
+      creationDate: result
+    }, () => this.props.onChange(this.state)
+    );
+  }
 
     onSubmit = e => {
 
@@ -67,35 +81,24 @@ class siret extends React.Component {
 
         axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siret/${code}`)
             .then(res => {
-                const data = res.data;
-                const date = data.etablissement.date_creation;
-                const year = date.substring(0,4);
-                const month = date.substring(4,6);
-                const day = date.substring(6,8);
-                const result = day+'/'+month+'/'+year;
-                //const finalDate = moment(result).format('YYYY-MM-DD');
-                this.setState({
-                  name: data.etablissement.l1_normalisee, 
-                  nafape: data.etablissement.activite_principale, 
-                  status: data.etablissement.libelle_nature_juridique_entreprise,
-                  creationDate: result
-                  },
-                  () => this.props.onChange(this.state)
-                );
+              this.setCompanyData(res.data.etablissement);
             })
             .catch(err => {
-                toast.error("Siret inconnu");
-                this.setState({
-                  name:'', nafape: '', 
-                  status: '', 
-                  creationDate:'', 
-                  siret:'',
-                  nafape: '',
-                  }, () => this.props.onChange(this.state));
-                console.log(err);
-            })
-
-
+               axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siren/${code}`)
+                 .then(res => {
+                   this.setCompanyData(res.data.siege_social);
+                 })
+                 .catch(err => {
+                    toast.error("Siret/Siren inconnu");
+                    this.setState({
+                      name:'', nafape: '', 
+                      status: '', 
+                      creationDate:'', 
+                      nafape: '',
+                    }, () => this.props.onChange(this.state));
+                    console.log(err);
+                 })
+              })
     };
 
     render()  {
@@ -106,8 +109,8 @@ class siret extends React.Component {
                 <Grid item xs={12} md={6}>
                             <TextField
                                 id="filled-with-placeholder"
-                                label="Siret"
-                                placeholder="Siret"
+                                label="Siret/Siren"
+                                placeholder="Siret/Siren"
                                 margin="normal"
                                 variant="outlined"
                                 type="text"
@@ -123,7 +126,7 @@ class siret extends React.Component {
 
                 <Grid container>
                     <Grid item xs={12} sm={12} md={6}>
-                                <Typography>Siret : {this.state.siret}</Typography>
+                                <Typography>Siret/Siren : {this.state.siret}</Typography>
                     </Grid>
                 <Grid item xs={12} sm={12} md={6}>
                             <Typography>Date de création : {this.state.creationDate}</Typography>
