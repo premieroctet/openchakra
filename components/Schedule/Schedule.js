@@ -314,6 +314,8 @@ class Schedule extends React.Component {
     const { classes } = this.props;
 
     let events = availabilities2events(this.props.availabilities);
+    console.log("Events rendered:"+JSON.stringify(events[0]));
+
     return (
       <div style={{height:700}}>
         <Calendar
