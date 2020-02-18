@@ -27,7 +27,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
-import {availabilities2events, eventUI2availabilities} from '../../utils/converters';
+import {availabilities2events, eventUI2availability} from '../../utils/converters';
 import {ALL_SERVICES} from '../../utils/consts.js';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
@@ -231,16 +231,16 @@ class Schedule extends React.Component {
   };
 
   toggleEditModal = event => {
-    console.log("isAddModalOpen"+this.state.isAddModalOpen);
 
-    if (this.props.cbAvailabilityDelete) {
+    console.log("Deleting:"+JSON.stringify(event));
+    if (this.props.onDeleteAvailability) {
      confirmAlert({
       title: 'Suppression',
       message: 'Supprimer cette disponibilité et toutes ses occurrences pour '+event.title+"?",
       buttons: [
         {
           label: 'Oui',
-          onClick: () => this.props.cbAvailabilityDelete(event.id.split('-')[0])
+          onClick: () => this.props.onDeleteAvailability(event.ui_id)
         },
         {
           label: 'Non',
@@ -253,7 +253,6 @@ class Schedule extends React.Component {
     }
 
     if (!this.state.isAddModalOpen) {
-      console.log("Updating");
       this.setState({
         currentEvent: event,
         isEditModalOpen: !this.state.isEditModalOpen,
@@ -302,7 +301,7 @@ class Schedule extends React.Component {
   };
 
   onSubmit = e => {
-    let avail=eventUI2availabilities(this.state);
+    let avail=eventUI2availability(this.state);
     let res = this.props.onCreateAvailability(avail);
     this.closeModal();
   };
@@ -315,7 +314,6 @@ class Schedule extends React.Component {
     const { classes } = this.props;
 
     let events = availabilities2events(this.props.availabilities);
-    console.log("Scheduler.events:"+JSON.stringify(events));
     return (
       <div style={{height:700}}>
         <Calendar

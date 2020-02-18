@@ -3,8 +3,6 @@ const Email = require('email-templates');
 const {mailConfig} = require('../config/config.js')
 var xoauth2 = require('xoauth2')
 
-console.log("mailConfig:"+JSON.stringify(mailConfig, null, 2))
-
 const sendMail = (from, to, template, locals) => {
   console.log("Send mail from "+from+" to "+to+" with locals "+JSON.stringify(locals));
 
@@ -17,7 +15,6 @@ const sendMail = (from, to, template, locals) => {
       refreshToken: mailConfig.refreshToken
     }
 
-  console.log("GMail auth:"+JSON.stringify(auth))
   let transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: auth 

@@ -28,7 +28,7 @@ class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 0,
+      activeStep: 6,
       user_id: null,
       shop:{
         booking_request: true,     // true/false
@@ -63,6 +63,7 @@ class creaShop extends React.Component {
     this.preferencesChanged = this.preferencesChanged.bind(this)
     this.assetsChanged = this.assetsChanged.bind(this)
     this.availabilityCreated = this.availabilityCreated.bind(this);
+    this.availabilityDeleted = this.availabilityDeleted.bind(this);
     this.conditionsChanged = this.conditionsChanged.bind(this);
     this.shopSettingsChanged = this.shopSettingsChanged.bind(this);
     this.introduceChanged = this.introduceChanged.bind(this);
@@ -89,7 +90,6 @@ class creaShop extends React.Component {
   }
 
   nextDisabled() {
-    console.log(JSON.stringify(this.state.shop, null, 2));
     let shop=this.state.shop;
     let pageIndex = this.state.activeStep;
     if (pageIndex==0) { return false; }
@@ -97,7 +97,6 @@ class creaShop extends React.Component {
     if (pageIndex==2) {
       if (Object.keys(shop.prestations).length==0) return "disabled";
       return Object.values(shop.prestations).every( v => {
-        console.log(v.price==0);
         if (v.price==0 || v.billing==null || v.billing==undefined || Object.keys(v.billing).length==0) {
           return false;
         }
@@ -113,6 +112,9 @@ class creaShop extends React.Component {
       if (shop.diplomaName!='' && shop.diplomaYear=='') return true;
       if (shop.certificationName=='' && shop.certificationYear!='') return true;
       if (shop.certificationName!='' && shop.certificationYear=='') return true;
+    }
+    if (pageIndex==6) {
+      return shop.availabilities.length==0;
     }
     if (pageIndex==8) {
       if (shop.cancel_mode=='' || shop.cancel_mode==null) {
@@ -130,8 +132,16 @@ class creaShop extends React.Component {
   }
 
   availabilityCreated(avail) {
+    console.log("Availability created:"+JSON.stringify(avail, null, 2));
     let shop = this.state.shop;
     shop.availabilities.push(avail);
+    this.setState({shop: shop});
+  }
+
+  availabilityDeleted(avail_id) {
+    console.log("Availability id deleted:"+JSON.stringify(avail_id, null, 2));
+    let shop = this.state.shop;
+    shop.availabilities=shop.availabilities.filter(avail => avail.ui_id != avail_id);
     this.setState({shop: shop});
   }
 
@@ -143,7 +153,6 @@ class creaShop extends React.Component {
     // last page => post
     else {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      console.log("Storage:"+JSON.stringify(localStorage.getItem('token')));
       axios.post(url+'myAlfred/api/shop/add', this.state.shop)
         .then(res => {
           toast.info("Boutique créée avec succès");
@@ -165,7 +174,6 @@ class creaShop extends React.Component {
   };
 
   onServiceChanged(service_id){
-    console.log("Service selected:"+service_id);
     let shop = this.state.shop;
     shop.service = service_id;
     this.setState({shop: shop});
@@ -178,7 +186,6 @@ class creaShop extends React.Component {
   }
 
   settingsChanged(location, travel_tax, pick_tax, selectedStuff) {
-    console.log("settingsChanged");
     let shop=this.state.shop;
     shop.location=location;
     shop.travel_tax=travel_tax;
@@ -188,7 +195,6 @@ class creaShop extends React.Component {
   }
   
   preferencesChanged(state) {
-    console.log("Prefs changed:"+JSON.stringify(state));
     let shop=this.state.shop;
 
     shop.minimum_basket=state.minimum_basket;
@@ -200,7 +206,6 @@ class creaShop extends React.Component {
   }
 
   assetsChanged(state) {
-    console.log("Assets changed:"+JSON.stringify(state));
     let shop=this.state.shop;
 
     shop.description=state.description;
@@ -214,7 +219,6 @@ class creaShop extends React.Component {
   }
 
   conditionsChanged(book_request, conditions) {
-    console.log("Conditions:"+book_request+","+conditions);
     let shop=this.state.shop;
     shop.booking_request=book_request;
     shop.my_alfred_conditions=conditions;
@@ -222,7 +226,6 @@ class creaShop extends React.Component {
   }
 
   shopSettingsChanged(welcome_message, cancel_mode) {
-    console.log("shopSettingsChanged:"+welcome_message, cancel_mode);
     let shop=this.state.shop;
     shop.welcome_message=welcome_message;
     shop.cancel_mode=cancel_mode;
@@ -230,7 +233,6 @@ class creaShop extends React.Component {
   }
 
   introduceChanged(is_particular, company, is_certified) {
-    console.log("introduceChanged:"+is_particular, company, is_certified);
     let shop=this.state.shop;
     shop.is_particular=is_particular;
     shop.is_certified=is_certified;
@@ -241,7 +243,6 @@ class creaShop extends React.Component {
       shop.company=company; 
     }
     this.setState({shop: shop});
-    console.log("After introduceChanged:"+JSON.stringify(shop));
   }
 
   renderSwitch(stepIndex) {
@@ -260,7 +261,7 @@ class creaShop extends React.Component {
       case 5:
         return <AssetsService data={shop} onChange={this.assetsChanged} />;
       case 6:
-        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} />;
+        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} />;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}  onChange={this.conditionsChanged} />;
       case 8:

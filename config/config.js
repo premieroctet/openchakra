@@ -6,7 +6,6 @@ const serverPort = process.env.PORT || 3122;
 const apiUrl = "/";
 
 const source=require("./client_id.json")
-console.log("Source:"+JSON.stringify(source, null, 2))
 
 const completeConfig = {
 
