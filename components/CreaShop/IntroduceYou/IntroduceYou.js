@@ -120,11 +120,10 @@ class IntroduceYou extends React.Component {
                         <p className={classes.policySizeContent}>
                           Un statut professionnel est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière.
                         </p>
-                        {!this.state.is_particular ?
-                          <div> 
+                        {this.state.is_particular ? null:
+                          <React.Fragment><div> 
                             <Siret onChange={this.onCompanyChanged} company={this.state.company} />
-                          </div> : null
-                        }
+                          </div> 
                           <FormControlLabel
                             control={
                               <Checkbox
@@ -138,7 +137,8 @@ class IntroduceYou extends React.Component {
                             label={
                               <p className={classes.policySizeContent}>Je certifie sur l’honneur qu’il s’agit bien de mon entreprise.</p>
                             }
-                          />
+                          /></React.Fragment>
+                        }
                       </Grid>
                     </Grid>
                   </Grid>
