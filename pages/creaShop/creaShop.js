@@ -28,7 +28,7 @@ class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 6,
+      activeStep: 9,
       user_id: null,
       shop:{
         booking_request: true,     // true/false
@@ -122,11 +122,11 @@ class creaShop extends React.Component {
       }
     }
     if (pageIndex==9) {
-      if (shop.is_certified==false) return true;
       if (shop.is_particular==true) return false;
       // Pro
       if (shop.company==null) return true;
       if (Object.values(shop.company).some(v => v==null)) return true;
+      if (shop.is_certified==false) return true;
     }
     return false;
   }
