@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import { Typography } from '@material-ui/core';
 import axios from 'axios';
-import styles from '../../../static/assets/css/creaShopPage/componentStyle'
+import styles from '../componentStyle'
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;

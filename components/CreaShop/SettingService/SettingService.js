@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from '../../../static/assets/css/creaShopPage/componentStyle'
+import styles from '../componentStyle'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
