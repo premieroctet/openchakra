@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import Checkbox from '@material-ui/core/Checkbox';
-import styles from '../../static/assets/css/shopPage/componentStyle'
+import styles from '../shop/componentStyle'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 

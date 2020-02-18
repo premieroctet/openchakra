@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from '../static/assets/css/shopPage/shopPage'
+import styles from '../components/shop/shopPage'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AlfredBanner from '../components/shop/AlfredBanner/AlfredBanner';
