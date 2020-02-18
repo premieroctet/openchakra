@@ -13,11 +13,10 @@ class SettingService extends React.Component {
     super(props);
     this.state = {
       location: {},
-      service: [],
+      service: null,
       travel_tax: null,
       pick_tax: null,
-      equipments: [],
-      selectedStuff: []
+      selectedEquipments: []
     };
     this.stateButton = this.stateButton.bind(this);
     this.onLocationChange = this.onLocationChange.bind(this);
@@ -36,15 +35,15 @@ class SettingService extends React.Component {
     axios.get(`/myAlfred/api/service/${this.props.service}`)
       .then(response => {
         let service = response.data;
-        this.setState({
-          service: service,
-          equipments: service.equipments
-        });
+        console.log("Got service:"+JSON.stringify(service, null, 2));
         let location = {};
         Object.keys(service.location).forEach (k => {
           if (service.location[k]) location[k]=false;
         });
-        this.setState({location: location});
+        this.setState({
+          service: service,
+          location: location
+        });
       })
       .catch(error => {
         console.log(error);
@@ -62,24 +61,25 @@ class SettingService extends React.Component {
   }
 
   onEquipmentChecked(event){
-    if(this.state.selectedStuff.includes(event.target.name)){
-      let array = [...this.state.selectedStuff];
+    if(this.state.selectedEquipments.includes(event.target.name)){
+      let array = [...this.state.selectedEquipments];
       let index = array.indexOf(event.target.name);
       if (index !== -1) {
         array.splice(index, 1);
-        this.setState({selectedStuff: array}, () => this.fireOnChange());
+        this.setState({selectedEquipments: array}, () => this.fireOnChange());
       }
     }else{
-      this.setState({ selectedStuff: [...this.state.selectedStuff, event.target.name] }, () => this.fireOnChange())
+      this.setState({ selectedEquipments: [...this.state.selectedEquipments, event.target.name] }, () => this.fireOnChange())
     }
   }
 
   fireOnChange(){
-    this.props.onChange(this.state.location, this.state.travel_tax, this.state.pick_tax, this.state.selectedStuff)
+    this.props.onChange(this.state.location, this.state.travel_tax, this.state.pick_tax, this.state.selectedEquipments)
   }
 
   render() {
     const {classes} = this.props;
+    const {service} = this.state;
 
     return (
       <Grid className={classes.mainContainer}>
@@ -87,24 +87,26 @@ class SettingService extends React.Component {
           <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{this.state.service? this.state.service.label: ''} : paramétrage</Typography>
+                <Typography className={classes.policySizeTitle}>{service? service.label: ''} : paramétrage</Typography>
               </Grid>
+              { service && service.equipments.length>0 ? 
+              <React.Fragment>
               <Grid >
                 <h3 className={classes.policySizeSubtitle}>Quel(s) produit(s) / matériel(s) fournissez-vous dans le cadre de ce service ? </h3>
               </Grid>
               <Grid className={classes.bottomSpacer}>
                 <Grid container spacing={2}>
-                  {this.state.equipments.map((result) => {
+                  {service.equipments.map((result) => {
                     return (
                       <Grid item xl={3} xs={4}>
                         <label style={{cursor: 'pointer'}}>
                           {
-                            this.state.selectedStuff.includes(result._id) ?
+                            this.state.selectedEquipments.includes(result._id) ?
                             <img src={`../../static/equipments/${result.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${result.name_logo.slice(0, -4)}_Selected.svg`} />
                             :
                               <img src={`../../static/equipments/${result.logo}`} height={100} width={100} alt={result.name_logo} />}
 
-                          <Checkbox style={{display: 'none'}} color="primary" type="checkbox" name={result._id} checked={this.state.selectedStuff.includes(result._id)} onChange={this.onEquipmentChecked} />
+                          <Checkbox style={{display: 'none'}} color="primary" type="checkbox" name={result._id} checked={this.state.selectedEquipments.includes(result._id)} onChange={this.onEquipmentChecked} />
                         </label>
                       </Grid>
                     )
@@ -112,6 +114,8 @@ class SettingService extends React.Component {
                   }
                 </Grid>
               </Grid>
+              </React.Fragment>:null
+              }
               <Grid>
                 <Grid>
                   <h3 className={classes.policySizeSubtitle}>Où acceptez-vous de réaliser votre prestation ?</h3>
@@ -140,15 +144,21 @@ class SettingService extends React.Component {
                 </Grid>
               </Grid>
               <Grid style={{marginLeft : 15}} className={classes.options}>
-                <Grid>
-                  <h3 className={classes.policySizeSubtitle}>Options</h3>
-                </Grid>
-                <Grid>
-                  <ButtonSwitch id='travel_tax' label={"Appliquer un forfait déplacement de"} isOption={false} isPrice={true} onChange={this.onOptionChange} />
-                </Grid>
-                <Grid>
-                  <ButtonSwitch id='pick_tax' label={"Proposer un forfait retrait & livraison de"} isOption={false} isPrice={true} onChange={this.onOptionChange} />
-                </Grid>
+                { service && (service.travel_tax||service.pick_tax)  ?
+                  <Grid>
+                    <h3 className={classes.policySizeSubtitle}>Options</h3>
+                  </Grid> : null
+                }
+                { service && service.travel_tax ?
+                  <Grid>
+                    <ButtonSwitch id='travel_tax' label={"Appliquer un forfait déplacement de"} isOption={false} isPrice={true} onChange={this.onOptionChange} />
+                  </Grid>:null
+                }
+                { service && service.pick_tax ?
+                  <Grid>
+                    <ButtonSwitch id='pick_tax' label={"Proposer un forfait retrait & livraison de"} isOption={false} isPrice={true} onChange={this.onOptionChange} />
+                  </Grid>:null
+                }
               </Grid>
             </Grid>
           </Grid>
