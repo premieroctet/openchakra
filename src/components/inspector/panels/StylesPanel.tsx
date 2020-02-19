@@ -11,6 +11,7 @@ import ColorsControl from '../controls/ColorsControl'
 import EffectsPanel from './styles/EffectsPanel'
 import ChildrenInspector from '../ChildrenInspector'
 import ParentInspector from '../ParentInspector'
+import CustomPropsPanel from './CustomPropsPanel'
 
 interface Props {
   isRoot: boolean
@@ -24,6 +25,12 @@ const StylesPanel: React.FC<Props> = ({
   parentIsRoot,
 }) => (
   <Accordion defaultIndex={[0]} allowMultiple>
+    {!isRoot && (
+      <AccordionContainer title="Custom props">
+        <CustomPropsPanel />
+      </AccordionContainer>
+    )}
+
     {!isRoot && !parentIsRoot && (
       <AccordionContainer title="Parent">
         <ParentInspector />

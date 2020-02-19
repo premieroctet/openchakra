@@ -3,6 +3,7 @@ import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import templates, { TemplateType } from '../../templates'
 import { generateId } from '../../utils/generateId'
 import { duplicateComponent, deleteComponent } from '../../utils/recursive'
+import omit from 'lodash/omit'
 
 export type ComponentsState = {
   components: IComponents
@@ -75,6 +76,18 @@ const components = createModel({
               ...state.components[payload.id].props,
               [payload.name]: payload.value,
             },
+          },
+        },
+      }
+    },
+    deleteProps(state: ComponentsState, payload: { id: string; name: string }) {
+      return {
+        ...state,
+        components: {
+          ...state.components,
+          [payload.id]: {
+            ...state.components[payload.id],
+            props: omit(state.components[payload.id].props, payload.name),
           },
         },
       }

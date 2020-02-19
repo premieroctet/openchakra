@@ -1,13 +1,11 @@
-import React, { useState, memo } from 'react'
+import React, { useState, memo, useEffect } from 'react'
 import { Link, Box, Stack } from '@chakra-ui/core'
-
 import Panels from './panels/Panels'
 import { GoRepo, GoCode } from 'react-icons/go'
 import { FiTrash2 } from 'react-icons/fi'
 import { IoMdRefresh } from 'react-icons/io'
 import { useSelector } from 'react-redux'
 import useDispatch from '../../hooks/useDispatch'
-import QuickPropsPanel from './QuickPropsPanel'
 import StylesPanel from './panels/StylesPanel'
 import {
   getSelectedComponent,
@@ -17,6 +15,7 @@ import {
 import ActionButton from './ActionButton'
 import { generateComponentCode } from '../../utils/code'
 import useClipboard from '../../hooks/useClipboard'
+import { useInspectorContext } from '../../contexts/inspector-context'
 
 const CodeActionButton = memo(() => {
   const [isLoading, setIsLoading] = useState(false)
@@ -50,6 +49,8 @@ const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
 
+  let { activePropsRef } = useInspectorContext()
+
   const { type, rootParentType, id, children } = component
 
   const isRoot = id === 'root'
@@ -57,6 +58,10 @@ const Inspector = () => {
 
   const docType = rootParentType || type
   const componentHasChildren = children.length > 0
+
+  useEffect(() => {
+    activePropsRef.current = []
+  }, [activePropsRef])
 
   return (
     <>
@@ -120,7 +125,6 @@ const Inspector = () => {
       </Box>
 
       <Box pb={1} bg="white" px={3}>
-        {!isRoot && <QuickPropsPanel />}
         <Panels component={component} isRoot={isRoot} />
       </Box>
 
