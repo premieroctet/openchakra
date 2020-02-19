@@ -5,8 +5,10 @@ module.exports = function validatePrestationInput(data) {
     let errors = {};
 
 
+    console.log("Validating prestation:"+JSON.stringify(data));
+
     data.label = !isEmpty(data.label) ? data.label : '';
-    data.billing = !isEmpty(data.billing) ? data.billing : '';
+    data.billing = isEmpty(data.billing) || data.billing=='[]' ? '': data.billing;
     data.service = !isEmpty(data.service) ? data.service : '';
     data.filter_presentation = !isEmpty(data.filter_presentation) ? data.filter_presentation : '';
     data.search_filter = !isEmpty(data.search_filter) ? data.search_filter : '';
@@ -33,9 +35,11 @@ module.exports = function validatePrestationInput(data) {
         errors.filter_presentation = 'Veuillez sélectionner un filtre de présentation';
     }
 
+    /**
     if(Validator.isEmpty(data.search_filter)) {
         errors.search_filter = 'Veuillez sélectionner un moins 1 filtre de recherche';
     }
+    */
 
     if(Validator.isEmpty(data.category)) {
         errors.category = 'Veuillez sélectionner une catégorie';
@@ -49,13 +53,17 @@ module.exports = function validatePrestationInput(data) {
         errors.job = 'Veuillez sélectionner un métier';
     }
 
+    /**
     if(Validator.isEmpty(data.description)) {
         errors.description = 'Veuillez saisir une description';
     }
+    */
 
+    /**
     if(Validator.isEmpty(data.tags)) {
         errors.tags = 'Veuillez sélectionner un moins 1 tags';
     }
+    */
 
 
     return {
