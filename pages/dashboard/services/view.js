@@ -334,11 +334,8 @@ class view extends React.Component {
                                     />
                                 </Grid>
                                 <Grid item style={{width: '100%',marginTop: 20}}>
-                                    <Typography style={{ fontSize: 20 }}>{current_category.label}</Typography>
+                                    <Typography style={{ fontSize: 20 }}>Catégorie</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Catégorie
-                                        </InputLabel>
                                         <Select
                                             input={<Input name="category" id="genre-label-placeholder" />}
                                             displayEmpty
@@ -358,7 +355,6 @@ class view extends React.Component {
                                 <Grid item style={{width: '100%',marginTop: 20}}>
                                     <Typography style={{ fontSize: 20 }}>Tags</Typography>
                                         <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                            <InputLabel htmlFor="select-multiple-chip">Tags</InputLabel>
                                             <Select2
                                                 value={this.state.selectedTags}
                                                 onChange={this.handleChangeTags}
@@ -373,7 +369,6 @@ class view extends React.Component {
                                 <Grid item style={{width: '100%',marginTop: 20}}>
                                     <Typography style={{ fontSize: 20 }}>Equipements</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel htmlFor="select-multiple-chip">Equipements</InputLabel>
                                         <Select2
                                             value={this.state.selectedOption}
                                             onChange={this.handleChangeSelect}
