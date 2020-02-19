@@ -190,19 +190,17 @@ const Header = () => {
           width="13rem"
           align="center"
           isInline
-          spacing="3"
+          spacing="2"
         >
-          <Tooltip
-            zIndex={100}
-            hasArrow
-            bg="yellow.100"
-            aria-label="Builder mode help"
-            label="Show me the code!"
-          >
-            <Link isExternal href="https://github.com/premieroctet/openchakra">
-              <Box as={DiGithubBadge} size="8" color="gray.200" />
+          <Link isExternal href="https://github.com/premieroctet/openchakra">
+            <Box as={DiGithubBadge} size="8" color="gray.200" />
+          </Link>
+          <Box lineHeight="shorter" color="white" fontSize="xs">
+            by{' '}
+            <Link isExternal href="https://premieroctet.com" color="teal.100">
+              Premier Octet
             </Link>
-          </Tooltip>
+          </Box>
         </Stack>
       </Flex>
     </DarkMode>
