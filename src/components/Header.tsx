@@ -19,6 +19,11 @@ import {
   LightMode,
   PopoverFooter,
   Tooltip,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
 } from '@chakra-ui/core'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
@@ -28,6 +33,9 @@ import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
 import { getShowLayout, getShowCode } from '../core/selectors/app'
+import { FaRegSave, FaBomb } from 'react-icons/fa'
+import { GoRepo } from 'react-icons/go'
+import { FiUpload } from 'react-icons/fi'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -95,6 +103,41 @@ const Header = () => {
 
         <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
           <Stack isInline spacing={4} justify="center" align="center">
+            <Box>
+              <Menu>
+                <MenuButton>
+                  <Button
+                    rightIcon="chevron-down"
+                    size="xs"
+                    variant="ghost"
+                    variantColor="gray"
+                  >
+                    Editor
+                  </Button>
+                </MenuButton>
+                <LightMode>
+                  <MenuList zIndex={100}>
+                    <MenuItem>
+                      <Box mr={2} as={FaRegSave} />
+                      Save components
+                    </MenuItem>
+                    <MenuItem>
+                      <Box mr={2} as={FiUpload} />
+                      Import components
+                    </MenuItem>
+                    <MenuDivider />
+                    <MenuItem>
+                      <Box mr={2} as={GoRepo} />
+                      Chakra UI Docs
+                    </MenuItem>
+                    <MenuItem>
+                      <Box mr={2} as={FaBomb} />
+                      Report issue
+                    </MenuItem>
+                  </MenuList>
+                </LightMode>
+              </Menu>
+            </Box>
             <FormControl>
               <Tooltip
                 zIndex={100}
