@@ -15,7 +15,15 @@ const usePropsSelector = (propsName: string) => {
       state.components.present.components[state.components.present.selectedId]
     const propsValue = component.props[propsName]
 
-    return propsValue || getDefaultFormProps(component.type)[propsName] || ''
+    if (propsValue !== undefined) {
+      return propsValue
+    }
+
+    if (getDefaultFormProps(component.type)[propsName] !== undefined) {
+      return getDefaultFormProps(component.type)[propsName]
+    }
+
+    return ''
   })
 
   return value
