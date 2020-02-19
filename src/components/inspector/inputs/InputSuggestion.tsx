@@ -1,41 +1,46 @@
-import React, { useState, ReactNode } from "react";
+import React, { useState, ReactNode } from 'react'
 import {
   Combobox,
   ComboboxInput,
   ComboboxPopover,
-  ComboboxList
-} from "@reach/combobox";
-import "@reach/combobox/styles.css";
-import { Input } from "@chakra-ui/core";
-import { useForm } from "../../../hooks/useForm";
+  ComboboxList,
+} from '@reach/combobox'
+import '@reach/combobox/styles.css'
+import { Input } from '@chakra-ui/core'
+import { useForm } from '../../../hooks/useForm'
 
 type FormControlPropType = {
-  handleChange: any;
-  value: any;
-  name: string;
-  children: ReactNode;
-};
+  handleChange: any
+  value: any
+  name: string
+  children: ReactNode
+}
+
+const ltrim = (value: string) => {
+  if (!value) return value
+  return value.replace(/^\s+/g, '')
+}
 
 const InputSuggestion: React.FC<FormControlPropType> = ({
   handleChange,
   name,
   value,
-  children
+  children,
 }) => {
-  const { setValue } = useForm();
-  const [isFocus, setIsFocus] = useState(false);
+  const { setValue } = useForm()
+  const [isFocus, setIsFocus] = useState(false)
 
   return (
     <Combobox
       openOnFocus
       onSelect={item => {
-        setValue(name, item);
+        setValue(name, item)
       }}
     >
       <ComboboxInput
         onFocus={() => setIsFocus(true)}
         id={name}
-        value={value}
+        value={ltrim(value)}
         name={name}
         onChange={handleChange}
         as={Input}
@@ -47,7 +52,7 @@ const InputSuggestion: React.FC<FormControlPropType> = ({
       {isFocus && (
         <ComboboxPopover>
           <ComboboxList
-            style={{ maxHeight: 200, overflow: "scroll" }}
+            style={{ maxHeight: 200, overflow: 'scroll' }}
             aria-labelledby={name}
           >
             {children}
@@ -55,7 +60,7 @@ const InputSuggestion: React.FC<FormControlPropType> = ({
         </ComboboxPopover>
       )}
     </Combobox>
-  );
-};
+  )
+}
 
-export default InputSuggestion;
+export default InputSuggestion

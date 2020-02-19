@@ -1,20 +1,16 @@
 import React, { memo } from 'react'
-import { Select, Icon, useTheme } from '@chakra-ui/core'
+import { Select } from '@chakra-ui/core'
 import FormControl from '../../controls/FormControl'
 import { useForm } from '../../../../hooks/useForm'
 import usePropsSelector from '../../../../hooks/usePropsSelector'
 import SwitchControl from '../../controls/SwitchControl'
-import InputSuggestion from '../../inputs/InputSuggestion'
-import { ComboboxOption, ComboboxOptionText } from '@reach/combobox'
-import { Icons } from '@chakra-ui/core/dist/theme/icons'
 import TextControl from '../../controls/TextControl'
+import IconControl from '../../controls/IconControl'
 
 const SelectPanel = () => {
   const { setValueFromEvent } = useForm()
-  const theme = useTheme()
 
   const size = usePropsSelector('size')
-  const icon = usePropsSelector('icon')
   const variant = usePropsSelector('variant')
 
   return (
@@ -33,22 +29,7 @@ const SelectPanel = () => {
         </Select>
       </FormControl>
 
-      <FormControl label="Icon" htmlFor="icon">
-        <InputSuggestion
-          value={icon}
-          handleChange={setValueFromEvent}
-          name="icon"
-        >
-          {Object.keys(theme.icons)
-            .filter(item => item.includes(icon) || !icon)
-            .map((item, index) => (
-              <ComboboxOption key={index} value={item}>
-                <Icon name={item as Icons} /> <ComboboxOptionText />
-              </ComboboxOption>
-            ))}
-        </InputSuggestion>
-      </FormControl>
-
+      <IconControl label="Icon" name="icon" />
       <TextControl label="Icon size" name="iconSize" />
 
       <FormControl label="variant" htmlFor="variant">
