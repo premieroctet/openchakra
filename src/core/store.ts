@@ -14,7 +14,7 @@ export type RootState = {
   components: ComponentsStateWithUndo
 }
 
-const version = parseInt(process.env.REACT_APP_VERSION || '1', 10)
+const version = parseFloat(process.env.REACT_APP_STORE_VERSION || '1')
 
 const persistConfig = {
   key: `openchakra_v${version}`,

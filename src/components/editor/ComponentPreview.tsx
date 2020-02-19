@@ -13,7 +13,10 @@ import AccordionPreview, {
 } from './previews/AccordionPreview'
 import * as Chakra from '@chakra-ui/core'
 import WithChildrenPreviewContainer from './WithChildrenPreviewContainer'
-import { getComponentBy } from '../../core/selectors/components'
+import {
+  getComponentBy,
+  getUserComponentBy,
+} from '../../core/selectors/components'
 import PreviewContainer from './PreviewContainer'
 import { InputRightElementPreview } from './previews/InputRightElement'
 import { InputLeftElementPreview } from './previews/InputLeftElement'
@@ -21,10 +24,28 @@ import AspectRatioBoxPreview from './previews/AspectRatioBoxPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
-}> = ({ componentName, ...forwardedProps }) => {
+  masterComponentName?: string
+}> = ({ componentName, masterComponentName, ...forwardedProps }) => {
   const component = useSelector(getComponentBy(componentName))
+  const userComponent = useSelector(
+    getUserComponentBy(component.masterComponentName, component.originId),
+  )
   if (!component) {
     console.error(`ComponentPreview unavailable for component ${componentName}`)
+  }
+
+  if (userComponent) {
+    return (
+      <WithChildrenPreviewContainer
+        enableVisualHelper
+        component={userComponent}
+        // @ts-ignore
+        type={Chakra[component.type]}
+        masterComponentName={component.masterComponentName}
+        originalComponent={component}
+        {...forwardedProps}
+      />
+    )
   }
 
   const type = (component && component.type) || null

@@ -9,9 +9,10 @@ const DragItem: React.FC<ComponentItemProps> = ({
   isMeta,
   isChild,
   rootParentType,
+  isUserComponent,
 }) => {
   const [, drag] = useDrag({
-    item: { id: type, type, isMeta, rootParentType },
+    item: { id: type, type, isMeta, rootParentType, isUserComponent, label },
   })
 
   let boxProps: any = {
@@ -38,6 +39,10 @@ const DragItem: React.FC<ComponentItemProps> = ({
     boxProps = { ...boxProps, ml: 4 }
   }
 
+  if (isUserComponent) {
+    boxProps = { ...boxProps, color: 'yellow.100' }
+  }
+
   return (
     <PseudoBox
       boxSizing="border-box"
@@ -54,6 +59,20 @@ const DragItem: React.FC<ComponentItemProps> = ({
       <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
         {label}
       </Text>
+
+      {isUserComponent && (
+        <Box
+          ml={2}
+          borderWidth="1px"
+          color="yellow.100"
+          borderColor="yellow.100"
+          fontSize="xs"
+          rounded={4}
+          px={1}
+        >
+          custom
+        </Box>
+      )}
 
       {isMeta && (
         <Box

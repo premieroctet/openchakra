@@ -82,6 +82,8 @@ interface IComponent {
   id: string
   props: any
   rootParentType?: ComponentType
+  masterComponentName?: string
+  originId?: string
 }
 
 interface IComponents {
@@ -90,6 +92,15 @@ interface IComponents {
 
 interface IPreviewProps {
   component: IComponent
+}
+
+interface IUserComponent {
+  root: IComponent
+  components: IComponents
+}
+
+interface IUserComponents {
+  [name: string]: IUserComponent
 }
 
 interface ComponentItemProps {
@@ -101,4 +112,12 @@ interface ComponentItemProps {
   isMeta?: boolean
   soon?: boolean
   rootParentType?: ComponentType
+  isUserComponent?: boolean
+}
+
+declare namespace NodeJS {
+  interface ProcessEnv {
+    NODE_ENV: 'development' | 'production' | 'test'
+    REACT_APP_VERSION: string
+  }
 }

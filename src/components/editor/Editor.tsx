@@ -76,7 +76,11 @@ const Editor: React.FC = () => {
       )}
 
       {components.root.children.map((name: string) => (
-        <ComponentPreview key={name} componentName={name} />
+        <ComponentPreview
+          key={name}
+          componentName={name}
+          masterComponentName={components[name].masterComponentName}
+        />
       ))}
     </Box>
   )

@@ -27,6 +27,11 @@ export const useDropComponent = (
         })
       } else if (item.isMeta) {
         dispatch.components.addMetaComponent(builder[item.type](componentId))
+      } else if (item.isUserComponent) {
+        dispatch.components.addUserComponent({
+          parentName: componentId,
+          name: item.label,
+        })
       } else {
         dispatch.components.addComponent({
           parentName: componentId,

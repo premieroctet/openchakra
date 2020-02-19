@@ -4,6 +4,7 @@ import { generateId } from './generateId'
 export const duplicateComponent = (
   componentToClone: IComponent,
   components: IComponents,
+  additionalChildrenData: { [k in keyof IComponent]?: IComponent[k] } = {},
 ) => {
   const clonedComponents: IComponents = {}
 
@@ -15,9 +16,11 @@ export const duplicateComponent = (
 
     clonedComponents[newid] = {
       ...component,
+      ...additionalChildrenData,
       id: newid,
       props: { ...component.props },
       children,
+      originId: component.id,
     }
 
     children.forEach(child => {
@@ -55,4 +58,29 @@ export const deleteComponent = (
   deleteRecursive(component.children, component.id)
   updatedComponents = omit(updatedComponents, component.id)
   return updatedComponents
+}
+
+export const flattenComponent = (
+  component: IComponent,
+  components: IComponents,
+  withInitialComponent?: boolean,
+) => {
+  let flattenedComponents: IComponents = {}
+
+  if (withInitialComponent) {
+    flattenedComponents[component.id] = {
+      ...component,
+    }
+  }
+
+  const flatRecursive = (children: IComponent['children']) => {
+    children.forEach(child => {
+      flatRecursive(components[child].children)
+      flattenedComponents[child] = components[child]
+    })
+  }
+
+  flatRecursive(component.children)
+
+  return flattenedComponents
 }

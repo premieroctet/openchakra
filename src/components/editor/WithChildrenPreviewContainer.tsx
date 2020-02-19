@@ -9,15 +9,29 @@ const WithChildrenPreviewContainer: React.FC<{
   type: string | FunctionComponent<any> | ComponentClass<any, any>
   enableVisualHelper?: boolean
   isBoxWrapped?: boolean
+  masterComponentName?: string
+  originalComponent?: IComponent
 }> = ({
   component,
   type,
   enableVisualHelper = false,
   isBoxWrapped,
+  masterComponentName,
+  originalComponent,
   ...forwardedProps
 }) => {
   const { drop, isOver } = useDropComponent(component.id)
-  const { props, ref } = useInteractive(component, enableVisualHelper)
+  const { props, ref } = useInteractive(
+    {
+      ...component,
+      /*
+       * We need to provide the id from the components state
+       * but the props coming from the user component (if it's a user component)
+       */
+      id: !!masterComponentName ? originalComponent!.id : component.id,
+    },
+    enableVisualHelper,
+  )
   const propsElement = { ...props, ...forwardedProps, pos: 'relative' }
 
   if (!isBoxWrapped) {
@@ -32,7 +46,11 @@ const WithChildrenPreviewContainer: React.FC<{
     type,
     propsElement,
     component.children.map((key: string) => (
-      <ComponentPreview key={key} componentName={key} />
+      <ComponentPreview
+        key={key}
+        componentName={key}
+        masterComponentName={masterComponentName}
+      />
     )),
   )
 

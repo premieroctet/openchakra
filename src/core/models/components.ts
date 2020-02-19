@@ -1,13 +1,24 @@
 import { createModel } from '@rematch/core'
+import each from 'lodash/each'
+import reduce from 'lodash/reduce'
+import filter from 'lodash/filter'
+import map from 'lodash/map'
+import keyBy from 'lodash/keyBy'
 import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import templates, { TemplateType } from '../../templates'
 import { generateId } from '../../utils/generateId'
-import { duplicateComponent, deleteComponent } from '../../utils/recursive'
+import {
+  duplicateComponent,
+  deleteComponent,
+  flattenComponent,
+} from '../../utils/recursive'
+import { findUserComponentById } from '../../utils/matcher'
 
 export type ComponentsState = {
   components: IComponents
   selectedId: IComponent['id']
   hoveredId?: IComponent['id']
+  userComponents: IUserComponents
 }
 export type ComponentsStateWithUndo = {
   past: ComponentsState[]
@@ -31,6 +42,7 @@ const components = createModel({
   state: {
     components: INITIAL_COMPONENTS,
     selectedId: DEFAULT_ID,
+    userComponents: {},
   } as ComponentsState,
   reducers: {
     reset(state: ComponentsState, components?: IComponents): ComponentsState {
@@ -65,6 +77,49 @@ const components = createModel({
       state: ComponentsState,
       payload: { id: string; name: string; value: string },
     ) {
+      const component = state.components[payload.id]
+
+      if (component.masterComponentName) {
+        const { isRoot, component: userComponent } = findUserComponentById(
+          component.originId!,
+          state.userComponents[component.masterComponentName],
+        )
+
+        const updatedUserComponent: IComponent = {
+          ...userComponent,
+          props: {
+            ...userComponent.props,
+            [payload.name]: payload.value,
+          },
+        }
+
+        let updatedObj
+
+        if (isRoot) {
+          updatedObj = {
+            root: updatedUserComponent,
+          }
+        } else {
+          updatedObj = {
+            components: {
+              ...state.userComponents[component.masterComponentName].components,
+              [updatedUserComponent.id]: updatedUserComponent,
+            },
+          }
+        }
+
+        return {
+          ...state,
+          userComponents: {
+            ...state.userComponents,
+            [component.masterComponentName]: {
+              ...state.userComponents[component.masterComponentName],
+              ...updatedObj,
+            },
+          },
+        }
+      }
+
       return {
         ...state,
         components: {
@@ -76,6 +131,9 @@ const components = createModel({
               [payload.name]: payload.value,
             },
           },
+        },
+        userComponents: {
+          ...state.userComponents,
         },
       }
     },
@@ -179,6 +237,7 @@ const components = createModel({
         type: ComponentType
         rootParentType?: ComponentType
         testId?: string
+        masterComponentName?: string
       },
     ): ComponentsState {
       const id = payload.testId || generateId()
@@ -199,6 +258,7 @@ const components = createModel({
             type: payload.type,
             parent: payload.parentName,
             rootParentType: payload.rootParentType || payload.type,
+            masterComponentName: payload.masterComponentName,
           },
         },
       }
@@ -283,6 +343,110 @@ const components = createModel({
       return {
         ...state,
         hoveredId: undefined,
+      }
+    },
+
+    // Components save
+    saveComponent(
+      state: ComponentsState,
+      payload: { name: string; id: IComponent['id'] },
+    ): ComponentsState {
+      const flattenedComponents = flattenComponent(
+        state.components[payload.id],
+        state.components,
+      )
+
+      each(flattenedComponents, comp => {
+        comp.originId = comp.id
+      })
+
+      return {
+        ...state,
+        components: {
+          ...state.components,
+          [payload.id]: {
+            ...state.components[payload.id],
+            masterComponentName: payload.name,
+            originId: payload.id,
+          },
+          ...flattenedComponents,
+        },
+        userComponents: {
+          ...state.userComponents,
+          [payload.name]: {
+            root: {
+              ...state.components[payload.id],
+              originId: payload.id,
+            },
+            components: flattenedComponents,
+          },
+        },
+      }
+    },
+    addUserComponent(
+      state: ComponentsState,
+      payload: { name: string; parentName: string },
+    ): ComponentsState {
+      const componentToDuplicate = { ...state.userComponents[payload.name] }
+
+      const { newId, clonedComponents } = duplicateComponent(
+        componentToDuplicate.root,
+        componentToDuplicate.components,
+      )
+
+      each(clonedComponents, comp => {
+        comp.props = {}
+        comp.masterComponentName = payload.name
+      })
+
+      return {
+        ...state,
+        components: {
+          ...state.components,
+          ...clonedComponents,
+          [payload.parentName]: {
+            ...state.components[payload.parentName],
+            children: [...state.components[payload.parentName].children, newId],
+          },
+        },
+      }
+    },
+    detachUserComponent(
+      state: ComponentsState,
+      id: IComponent['id'],
+    ): ComponentsState {
+      const component = state.components[id]
+      const userComponent = state.userComponents[component.masterComponentName!]
+
+      let currentComponent = { ...component }
+      while (currentComponent.originId !== userComponent.root.id) {
+        currentComponent = state.components[currentComponent.parent]
+      }
+
+      const flattenedComponents = flattenComponent(
+        currentComponent,
+        state.components,
+        true,
+      )
+
+      each(flattenedComponents, comp => {
+        const { component } = findUserComponentById(
+          comp.originId!,
+          userComponent,
+        )
+        comp.masterComponentName = undefined
+        comp.originId = undefined
+        comp.props = {
+          ...component.props,
+        }
+      })
+
+      return {
+        ...state,
+        components: {
+          ...state.components,
+          ...flattenedComponents,
+        },
       }
     },
   },

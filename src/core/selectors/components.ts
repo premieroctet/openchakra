@@ -5,7 +5,23 @@ export const getComponents = (state: RootState) =>
 
 export const getComponentBy = (nameOrId: string | IComponent['id']) => (
   state: RootState,
-) => state.components.present.components[nameOrId]
+) => {
+  return state.components.present.components[nameOrId]
+}
+
+export const getUserComponentBy = (name?: string, id?: string) => (
+  state: RootState,
+) => {
+  if (name && id) {
+    const userComponent = state.components.present.userComponents[name]
+
+    if (userComponent.root.id === id) {
+      return userComponent.root
+    }
+
+    return userComponent.components[id]
+  }
+}
 
 export const getSelectedComponent = (state: RootState) =>
   state.components.present.components[state.components.present.selectedId]
@@ -38,3 +54,22 @@ export const getHoveredId = (state: RootState) =>
 
 export const getIsHovered = (id: IComponent['id']) => (state: RootState) =>
   getHoveredId(state) === id
+
+export const getUserComponents = (state: RootState) =>
+  state.components.present.userComponents
+
+export const getComponentProp = (name: string) => (state: RootState) => {
+  const component =
+    state.components.present.components[state.components.present.selectedId]
+
+  if (!component.masterComponentName) {
+    return component.props[name]
+  }
+
+  const userComponent = getUserComponentBy(
+    component.masterComponentName,
+    component.originId,
+  )(state)
+
+  return userComponent?.props[name]
+}
