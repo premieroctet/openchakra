@@ -35,7 +35,6 @@ const app = createModel({
         inputTextFocused: !state.inputTextFocused,
       }
     },
-
     setOverlay(state: AppState, overlay: Overlay | undefined): AppState {
       return {
         ...state,

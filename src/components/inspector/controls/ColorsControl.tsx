@@ -1,6 +1,5 @@
 import React, { ReactNode, useState, memo } from 'react'
 import {
-  theme,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -20,6 +19,7 @@ import {
   TabPanels,
   TabPanel,
   Input,
+  useTheme,
 } from '@chakra-ui/core'
 import FormControl from './FormControl'
 import { useForm } from '../../../hooks/useForm'
@@ -39,6 +39,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
   const { setValue, setValueFromEvent } = useForm()
   const [hue, setHue] = useState(500)
   const value = usePropsSelector(props.name)
+  const theme = useTheme()
 
   const themeColors: any = omit(theme.colors, [
     'transparent',
@@ -115,7 +116,6 @@ const ColorsControl = (props: ColorControlPropsType) => {
             {props.label}
           </IconButton>
         </PopoverTrigger>
-
         <PopoverContent width="200px" zIndex={theme.zIndices.modal}>
           <PopoverArrow />
           <PopoverBody>

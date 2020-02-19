@@ -1,6 +1,7 @@
 /// <reference types="react-scripts" />;
 declare module 'prettier/standalone'
 declare module 'coloreact'
+declare module 'browser-nativefs'
 
 type ComponentType =
   | 'AspectRatioBox'
