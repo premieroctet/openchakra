@@ -2,11 +2,10 @@ import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
 import { Share } from '@material-ui/icons';
 import axios from 'axios';
 import styles from './AlfredBannerStyle';
-import {generate_avatar} from '../../../utils/generateAvatar'
+import UserAvatar from '../../Avatar/UserAvatar';
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -39,7 +38,6 @@ class alfredBanner extends React.Component{
           alfred: shop.alfred,
           idAlfred: shop.alfred._id,
           shop:shop,
-          avatarLetters: generate_avatar(shop.alfred)
         });
         let idAlfred = shop.alfred._id;
         axios.put(`${url}myAlfred/api/users/alfredViews/${idAlfred}`)
@@ -71,6 +69,8 @@ class alfredBanner extends React.Component{
     const {alfred} = this.state;
     const {shop} = this.state;
 
+    console.log("Banner:alfred is :"+JSON.stringify(alfred));
+
     return (
         <Fragment>
           <Grid container className={classes.bannerContainer}
@@ -79,13 +79,7 @@ class alfredBanner extends React.Component{
             <Grid container className={classes.darkOverlay}>
                 <Grid container className={classes.container}>
                     <Grid item className={classes.itemAvatar}>
-                      {
-                        alfred.picture !== undefined  && alfred.picture != null ?
-                          <Avatar alt="photo de profil" src={`../../../../${alfred.picture}`} className={classes.avatarLetter} />
-                          :
-                          <Avatar alt="photo de profil" className={classes.avatarLetter}>{this.state.avatarLetters}</Avatar>
-                      }
-
+                      <UserAvatar user={alfred} className={classes.avatarLetter} />
                         <Typography style={{marginTop:20}} className={classes.textAvatar}>Boutique de {alfred.firstname}</Typography>
                     </Grid>
                 </Grid>
