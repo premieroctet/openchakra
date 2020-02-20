@@ -15,7 +15,7 @@ import {
 import ActionButton from './ActionButton'
 import { generateComponentCode } from '../../utils/code'
 import useClipboard from '../../hooks/useClipboard'
-import { useInspectorContext } from '../../contexts/inspector-context'
+import { useInspectorUpdate } from '../../contexts/inspector-context'
 
 const CodeActionButton = memo(() => {
   const [isLoading, setIsLoading] = useState(false)
@@ -49,7 +49,7 @@ const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
 
-  let { activePropsRef } = useInspectorContext()
+  const { clearActiveProps } = useInspectorUpdate()
 
   const { type, rootParentType, id, children } = component
 
@@ -60,8 +60,8 @@ const Inspector = () => {
   const componentHasChildren = children.length > 0
 
   useEffect(() => {
-    activePropsRef.current = []
-  }, [activePropsRef])
+    clearActiveProps()
+  }, [clearActiveProps])
 
   return (
     <>

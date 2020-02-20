@@ -1,32 +1,54 @@
-import React, { useContext, useRef, MutableRefObject } from 'react'
+import React, {
+  useContext,
+  createContext,
+  useState,
+  useCallback,
+  useMemo,
+} from 'react'
 
-interface InspectorContextInterface {
-  activePropsRef: MutableRefObject<string[] | null>
+type UpdateProps = {
+  addActiveProps: (propsName: string) => void
+  clearActiveProps: () => void
 }
 
-const InspectorContext = React.createContext<InspectorContextInterface>({
-  activePropsRef: React.createRef(),
+type InspectorProviderProps = { children: React.ReactNode }
+
+const InspectorStateContext = createContext<string[]>([])
+const InspectorUpdateContext = createContext<UpdateProps>({
+  addActiveProps: () => {},
+  clearActiveProps: () => {},
 })
 
-interface InspectorProviderProps {
-  children: React.ReactNode
-}
+function InspectorProvider({ children }: InspectorProviderProps) {
+  const [activeProps, setActiveProps] = useState<string[]>([])
 
-function InspectorProvider(props: InspectorProviderProps) {
-  const activePropsRef = useRef<string[] | null>(null)
+  const addActiveProps = useCallback((propsName: string) => {
+    setActiveProps(prevActiveProps => [...prevActiveProps, propsName])
+  }, [])
+
+  const clearActiveProps = useCallback(() => {
+    setActiveProps([])
+  }, [])
+
+  const values = useMemo(() => {
+    return { clearActiveProps, addActiveProps }
+  }, [addActiveProps, clearActiveProps])
 
   return (
-    <InspectorContext.Provider
-      value={{
-        activePropsRef,
-      }}
-      {...props}
-    />
+    <InspectorStateContext.Provider value={activeProps}>
+      <InspectorUpdateContext.Provider value={values}>
+        {children}
+      </InspectorUpdateContext.Provider>
+    </InspectorStateContext.Provider>
   )
 }
 
-function useInspectorContext() {
-  return useContext(InspectorContext)
+function useInspectorState() {
+  return useContext(InspectorStateContext)
 }
 
-export { InspectorProvider, useInspectorContext }
+function useInspectorUpdate() {
+  return useContext(InspectorUpdateContext)
+}
+
+export { InspectorProvider, useInspectorState, useInspectorUpdate }
