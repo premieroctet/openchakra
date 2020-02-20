@@ -1,4 +1,5 @@
 import { createModel } from '@rematch/core'
+import produce from 'immer'
 import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import templates, { TemplateType } from '../../templates'
 import { generateId } from '../../utils/generateId'
@@ -49,36 +50,20 @@ const components = createModel({
       }
     },
     resetProps(state: ComponentsState, componentId: string): ComponentsState {
-      const component = state.components[componentId]
+      return produce(state, (draftState: ComponentsState) => {
+        const component = draftState.components[componentId]
 
-      return {
-        ...state,
-        components: {
-          ...state.components,
-          [componentId]: {
-            ...component,
-            props: DEFAULT_PROPS[component.type] || {},
-          },
-        },
-      }
+        draftState.components[componentId].props =
+          DEFAULT_PROPS[component.type] || {}
+      })
     },
     updateProps(
       state: ComponentsState,
       payload: { id: string; name: string; value: string },
     ) {
-      return {
-        ...state,
-        components: {
-          ...state.components,
-          [payload.id]: {
-            ...state.components[payload.id],
-            props: {
-              ...state.components[payload.id].props,
-              [payload.name]: payload.value,
-            },
-          },
-        },
-      }
+      return produce(state, (draftState: ComponentsState) => {
+        draftState.components[payload.id].props[payload.name] = payload.value
+      })
     },
     deleteProps(state: ComponentsState, payload: { id: string; name: string }) {
       return {
@@ -97,28 +82,24 @@ const components = createModel({
         return state
       }
 
-      let updatedComponents = { ...state.components }
-      let component = updatedComponents[componentId]
+      return produce(state, (draftState: ComponentsState) => {
+        let component = draftState.components[componentId]
 
-      // Remove self
-      if (component && component.parent) {
-        const siblings = updatedComponents[component.parent].children.filter(
-          (el: string) => el !== componentId,
-        )
+        // Remove self
+        if (component && component.parent) {
+          const children = draftState.components[
+            component.parent
+          ].children.filter((id: string) => id !== componentId)
 
-        updatedComponents[component.parent] = {
-          ...updatedComponents[component.parent],
-          children: siblings,
+          draftState.components[component.parent].children = children
         }
-      }
 
-      updatedComponents = deleteComponent(component, updatedComponents)
-
-      return {
-        ...state,
-        components: updatedComponents,
-        selectedId: DEFAULT_ID,
-      }
+        draftState.selectedId = DEFAULT_ID
+        draftState.components = deleteComponent(
+          component,
+          draftState.components,
+        )
+      })
     },
     moveComponent(
       state: ComponentsState,
@@ -131,59 +112,39 @@ const components = createModel({
         return state
       }
 
-      const children = state.components[
-        state.components[payload.componentId].parent
-      ].children.filter(id => id !== payload.componentId)
+      return produce(state, (draftState: ComponentsState) => {
+        const previousParentId =
+          draftState.components[payload.componentId].parent
 
-      const newChildren = state.components[payload.parentId].children.concat(
-        payload.componentId,
-      )
+        const children = draftState.components[
+          previousParentId
+        ].children.filter(id => id !== payload.componentId)
 
-      return {
-        ...state,
-        components: {
-          ...state.components,
-          // Update parent id
-          [payload.componentId]: {
-            ...state.components[payload.componentId],
-            parent: payload.parentId,
-          },
-          // Remove id from legacy children
-          [state.components[payload.componentId].parent]: {
-            ...state.components[state.components[payload.componentId].parent],
-            children,
-          },
-          // Add in new parent children
-          [payload.parentId]: {
-            ...state.components[payload.parentId],
-            children: newChildren,
-          },
-        },
-      }
+        // Remove id from previous parent
+        draftState.components[previousParentId].children = children
+
+        // Update parent id
+        draftState.components[payload.componentId].parent = payload.parentId
+
+        // Add new child
+        draftState.components[payload.parentId].children.push(
+          payload.componentId,
+        )
+      })
     },
     moveSelectedComponentChildren(
       state: ComponentsState,
       payload: { fromIndex: number; toIndex: number },
     ): ComponentsState {
-      const selectedComponent = state.components[state.selectedId]
-      const children = [...selectedComponent.children]
+      return produce(state, (draftState: ComponentsState) => {
+        const selectedComponent = draftState.components[draftState.selectedId]
 
-      children.splice(
-        payload.toIndex,
-        0,
-        children.splice(payload.fromIndex, 1)[0],
-      )
-
-      return {
-        ...state,
-        components: {
-          ...state.components,
-          [selectedComponent.id]: {
-            ...state.components[selectedComponent.id],
-            children,
-          },
-        },
-      }
+        selectedComponent.children.splice(
+          payload.toIndex,
+          0,
+          selectedComponent.children.splice(payload.fromIndex, 1)[0],
+        )
+      })
     },
     addComponent(
       state: ComponentsState,
@@ -194,47 +155,33 @@ const components = createModel({
         testId?: string
       },
     ): ComponentsState {
-      const id = payload.testId || generateId()
-
-      return {
-        ...state,
-        selectedId: id,
-        components: {
-          ...state.components,
-          [payload.parentName]: {
-            ...state.components[payload.parentName],
-            children: [...state.components[payload.parentName].children, id],
-          },
-          [id]: {
-            id,
-            props: DEFAULT_PROPS[payload.type] || {},
-            children: [],
-            type: payload.type,
-            parent: payload.parentName,
-            rootParentType: payload.rootParentType || payload.type,
-          },
-        },
-      }
+      return produce(state, (draftState: ComponentsState) => {
+        const id = payload.testId || generateId()
+        draftState.selectedId = id
+        draftState.components[payload.parentName].children.push(id)
+        draftState.components[id] = {
+          id,
+          props: DEFAULT_PROPS[payload.type] || {},
+          children: [],
+          type: payload.type,
+          parent: payload.parentName,
+          rootParentType: payload.rootParentType || payload.type,
+        }
+      })
     },
     addMetaComponent(
       state: ComponentsState,
       payload: { components: IComponents; root: string; parent: string },
     ): ComponentsState {
-      return {
-        ...state,
-        selectedId: payload.root,
-        components: {
-          ...state.components,
-          [payload.parent]: {
-            ...state.components[payload.parent],
-            children: [
-              ...state.components[payload.parent].children,
-              payload.root,
-            ],
-          },
+      return produce(state, (draftState: ComponentsState) => {
+        draftState.selectedId = payload.root
+        draftState.components[payload.parent].children.push(payload.root)
+
+        draftState.components = {
+          ...draftState.components,
           ...payload.components,
-        },
-      }
+        }
+      })
     },
     select(
       state: ComponentsState,
@@ -260,28 +207,24 @@ const components = createModel({
       }
     },
     duplicate(state: ComponentsState): ComponentsState {
-      const selectedComponent = state.components[state.selectedId]
-      if (selectedComponent.id !== DEFAULT_ID) {
-        const parentElement = state.components[selectedComponent.parent]
+      return produce(state, (draftState: ComponentsState) => {
+        const selectedComponent = draftState.components[draftState.selectedId]
 
-        const { newId, clonedComponents } = duplicateComponent(
-          selectedComponent,
-          state.components,
-        )
+        if (selectedComponent.id !== DEFAULT_ID) {
+          const parentElement = draftState.components[selectedComponent.parent]
 
-        return {
-          ...state,
-          components: {
-            ...state.components,
+          const { newId, clonedComponents } = duplicateComponent(
+            selectedComponent,
+            draftState.components,
+          )
+
+          draftState.components = {
+            ...draftState.components,
             ...clonedComponents,
-            [parentElement.id]: {
-              ...parentElement,
-              children: [...parentElement.children, newId],
-            },
-          },
+          }
+          draftState.components[parentElement.id].children.push(newId)
         }
-      }
-      return state
+      })
     },
     hover(
       state: ComponentsState,
