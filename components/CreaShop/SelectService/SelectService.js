@@ -24,7 +24,9 @@ class SelectService extends React.Component {
   }
 
   setServices(pattern) {
+    pattern = pattern || '%20';
     var url = `https://localhost/myAlfred/api/service/keyword/${pattern}`;
+    console.log("Getting url:"+url);
     axios.get(url)
       .then((response) => {
         let data = response.data;
@@ -41,7 +43,7 @@ class SelectService extends React.Component {
   }
 
   componentDidMount() {
-   this.setServices('e');
+   this.setServices('');
   }
 
   onChange(event, value){
