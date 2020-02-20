@@ -139,7 +139,7 @@ class AlfredConditionsCancel extends React.Component{
                     </Grid>
                     <Grid>
                       <p>
-                        Flexible : en cas d’annulation jusqu’à 1 jour de la prestation, Maelîs procédera au
+                        Flexible : en cas d’annulation jusqu’à 1 jour de la prestation, {alfred.firstname} procédera au
                         remboursement intégral de la réservation.
                       </p>
                     </Grid>
@@ -164,7 +164,7 @@ class AlfredConditionsCancel extends React.Component{
                     </Grid>
                     <Grid>
                       <p>
-                        Modéré : en cas d’annulation jusqu’à 5 jour de la prestation, Maelîs procédera
+                        Modéré : en cas d’annulation jusqu’à 5 jour de la prestation, {alfred.firstname} procédera
                         au remboursement intégral de la réservation.
                       </p>
                     </Grid>

@@ -18,10 +18,12 @@ import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
+import { toast } from "react-toastify";
 import Chip from '@material-ui/core/Chip';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Select2 from 'react-select';
+
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -69,7 +71,7 @@ class add extends React.Component {
         super(props);
         this.state = {
             label: '',
-            picture: null,
+            picture: '',
 	    location: {alfred: false, client: false, visio: false},
             category: '',
             tags: [],
@@ -205,6 +207,7 @@ class add extends React.Component {
           formData.append('location.'+k, v);
         }
 
+        console.log("POSTing");
         axios
             .post(url+'myAlfred/api/admin/service/all', formData)
             .then(res => {
@@ -212,7 +215,7 @@ class add extends React.Component {
                 Router.push({pathname:'/dashboard/services/all'})
             })
             .catch(err => {
-                    console.log(err);
+                    toast.error(JSON.stringify(err.response.data, null, 2));
                     this.setState({errors: err.response.data});
                 if(err.response.status === 401 || err.response.status === 403 ) {
                     localStorage.removeItem('token');

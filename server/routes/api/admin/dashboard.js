@@ -1554,7 +1554,7 @@ router.post('/service/all', uploadService.single('picture'),passport.authenticat
                         category: mongoose.Types.ObjectId(req.body.category),
                         equipments: JSON.parse(req.body.equipments),
                         tags: JSON.parse(req.body.tags),
-                        picture: req.file.path,
+                        picture: req.body.picture.path,
                         description: req.body.description,
                         majoration: req.body.majoration,
                         location : {
@@ -1762,10 +1762,12 @@ router.post('/prestation/all',uploadPrestation.single('picture'),passport.authen
                         calculating: mongoose.Types.ObjectId(req.body.calculating),
                         job: mongoose.Types.ObjectId(req.body.job),
                         description: req.body.description,
-                        picture: req.file.path,
+                        picture: req.body.picture.path,
                         tags: JSON.parse(req.body.tags)
                     });
-                    newPrestation.save().then(prestation => res.json(prestation)).catch(err => console.log(err))
+                    newPrestation.save()
+                     .then(prestation => res.json(prestation))
+                     .catch(err => res.status(400).json(err))
 
 
                 }
