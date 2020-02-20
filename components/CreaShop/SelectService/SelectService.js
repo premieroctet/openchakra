@@ -33,6 +33,7 @@ class SelectService extends React.Component {
         let services = [];
         Object.keys(data).forEach( (k) => {
           data[k].forEach( (s) => {
+	    // FIX: passer les keyowrds autrement dans le back
             services.push({category: k, label: s.label+"/"+s.keywords.join(' '), id: s.id});
           });
         });
@@ -55,6 +56,7 @@ class SelectService extends React.Component {
   }
 
   handleKeyDown(event){
+    // FIX: manque ernier caractère dans target.value
     console.log("OnKeyDown:"+JSON.stringify(event.target.value));
     this.setServices(event.target.value);
   }
