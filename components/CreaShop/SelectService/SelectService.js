@@ -49,7 +49,7 @@ class SelectService extends React.Component {
 
   onChange(event, value){
     console.log("OnChange value:"+inspect(value));
-    this.setState({service: value.id});
+    this.setState({service: value ? value.id : null});
     if(value !== undefined && value !== null){
       this.props.onChange(value.id);
     }
