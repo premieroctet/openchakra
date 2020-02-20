@@ -249,10 +249,14 @@ const UserSchema = new Schema({
     resetToken: {
         type: Schema.Types.ObjectId,
         ref: 'resetToken'
-    }
+    },
 
-
-
+   avatar_letters: {
+     type: String,
+     default: function() {
+       return (this.firstname.charAt(0)+this.name.charAt(0)).toUpperCase();
+     }
+   }
 });
 
 module.exports = User = mongoose.model('users',UserSchema);

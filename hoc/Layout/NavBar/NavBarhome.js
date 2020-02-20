@@ -10,11 +10,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
-
+import UserAvatar from '../../../components/Avatar/UserAvatar';
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
 
@@ -151,14 +150,7 @@ class NavBar extends Component {
           .get(url+'myAlfred/api/users/current')
           .then(res => {
             let user = res.data;
-
             this.setState({user:user, alfred:user.is_alfred, userId:user._id});
-
-            if(typeof user.picture !="undefined") {
-              this.setState({picture: true})
-            } else {
-              this.setState({picture: false})
-            }
           })
           .catch(err => console.log(err))
     }
@@ -212,17 +204,24 @@ class NavBar extends Component {
   };
 
   render() {
+    console.log("NavBarHome");
     const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl } = this.state;
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isAvatarMenuOpen = Boolean(avatarMoreAnchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-    const test = this.state.logged;
+    const logged = this.state.logged;
     const user = this.state.user;
     const maboutique = <MenuItem onClick={this.handleMenuClose}><Typography><Link href={'/myShop/services'}><a className={classes.navbarLinkMobile}>Ma boutique</a></Link></Typography></MenuItem>;
     const becomealfred = <MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/creaShop/creaShop'}><a className={classes.navbarLinkMobile}>Devenir Alfred</a></Link></Typography></MenuItem>;
-    const picture = this.state.picture;
-    const mobileavatar = picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>;
+
+    const mobileavatar = 
+          <React.Fragment>
+            <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}>
+              <UserAvatar user={user} className={classes.bigAvatar} />
+            </IconButton>
+          </React.Fragment> 
+
     const alfred = this.state.alfred;
     const logout = <Button variant="outlined" color='primary' style={{ marginRight: '20px' }}
                            onClick={()=>this.logout2()}>Déconnexion</Button>;
@@ -285,8 +284,8 @@ class NavBar extends Component {
           </a>
 
       </Typography>
-    </MenuItem>]
-  ;
+    </MenuItem>
+  ];
 
     const renderMenu = (
       <Menu
@@ -310,7 +309,7 @@ class NavBar extends Component {
         open={isAvatarMenuOpen}
         onClose={this.handleMenuClose}
       >
-        {test ? logoutAvatar : <React.Fragment>
+        {logged ? logoutAvatar : <React.Fragment>
         <MenuItem onClick={this.handleAvatarMenuOpen}>
           <Typography>
             <Link href={'/login'}>
@@ -341,10 +340,8 @@ class NavBar extends Component {
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
-        { alfred ? maboutique :
-        becomealfred
-        }
-        {test ?<React.Fragment>
+        { alfred ? maboutique : becomealfred }
+        {logged ?<React.Fragment>
         <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
               <Link href={'/myShop/messages'}>
@@ -364,7 +361,7 @@ class NavBar extends Component {
           </Link>
         </Typography>
         </MenuItem>
-        {test ? logoutMobile : <React.Fragment>
+        {logged ? logoutMobile : <React.Fragment>
         <MenuItem onClick={this.handleMobileMenuOpen}>
           <Typography>
             <Link href={'/login'}>
@@ -394,9 +391,6 @@ class NavBar extends Component {
               <img src={this.state.isTop ? '../../../static/assets/img/logo.png' : '../../../static/blueLogo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
             </Link>
             <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                {/*<SearchIcon />*/}
-              </div>
               <InputBase
                 placeholder="Search…"
                 classes={{
@@ -423,7 +417,7 @@ class NavBar extends Component {
                 </Link>
               </Typography>}
 
-              {test ?<React.Fragment><Typography className={classes.navbarItem}>
+              {logged ?<React.Fragment><Typography className={classes.navbarItem}>
                 <Link href={'/myShop/messages'}>
                   <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Messages
@@ -437,7 +431,7 @@ class NavBar extends Component {
                   </a>
                 </Link>
               </Typography>
-              {test ? null : <React.Fragment><Link href={'/login'}>
+              {logged ? null : <React.Fragment><Link href={'/login'}>
                   <Button variant="outlined" color={'primary'} style={{marginRight: '20px', border:this.state.isTop ? '1px solid rgba(255, 255, 255, 1)' : '1px solid #4fbdd7'}}>
                       Connexion
                     </Button>
@@ -452,22 +446,22 @@ class NavBar extends Component {
                 </Button>
                 </Link>
                 </React.Fragment>}
-                {test ?<React.Fragment>
-
-                  {picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>}
-
-                </React.Fragment> : null  }
+                {logged ?<React.Fragment>
+			<IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
+				<UserAvatar user={user} className={classes.bigAvatar} />
+                        </IconButton>
+                     </React.Fragment> : null  }
             </div>
             <div className={classes.sectionMobile}>
 
-                {test ? mobileavatar : <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}><MoreIcon className={classes.bigIcon} /></IconButton></React.Fragment>}
+                {logged ? mobileavatar : <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}><MoreIcon className={classes.bigIcon} /></IconButton></React.Fragment>}
 
             </div>
           </Toolbar>
         </AppBar>
         {renderMenu}
         {renderMobileMenu}
-        {test ? renderAvatarMenu : null}
+        {logged ? renderAvatarMenu : null}
       </div>
     );
   }

@@ -6,7 +6,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
 import CardMedia from '@material-ui/core/CardMedia';
 import Fab from '@material-ui/core/Fab';
 // eslint-disable-next-line object-curly-newline

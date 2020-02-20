@@ -55,7 +55,7 @@ class SkillsAlfred extends React.Component{
               Object.keys(this.state.skills).map(result =>{
                 return(
                   <Grid className={classes.cardSkills}>
-                    <Avatar alt="careful_work" src={'../../static/assets/img/skillsAlfred/' + this.state.skills[result].picsLabel + '.svg'} className={classes.avatarSize}/>
+                    <Avatar alt="careful_work" src={'/static/assets/img/skillsAlfred/' + this.state.skills[result].picsLabel + '.svg'} className={classes.avatarSize}/>
                     <Chip label="0" className={classes.chipStyle} />
                     <Typography>{this.state.skills[result].label}</Typography>
                   </Grid>
