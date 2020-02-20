@@ -24,13 +24,16 @@ class SelectService extends React.Component {
   }
 
   setServices(pattern) {
-    axios.get(`${url}myAlfred/api/service/keyword/e`)
+    pattern = pattern || '%20';
+    var url = `https://localhost/myAlfred/api/service/keyword/${pattern}`;
+    console.log("Getting url:"+url);
+    axios.get(url)
       .then((response) => {
         let data = response.data;
-        let services = []
+        let services = [];
         Object.keys(data).forEach( (k) => {
           data[k].forEach( (s) => {
-            services.push({category: k, label: s.label, id: s.id});
+            services.push({category: k, label: s.label+"/"+s.keywords.join(' '), id: s.id});
           });
         });
         this.setState({services: services});
@@ -40,7 +43,7 @@ class SelectService extends React.Component {
   }
 
   componentDidMount() {
-   this.setServices('e');
+   this.setServices('');
   }
 
   onChange(event, value){
@@ -88,7 +91,7 @@ class SelectService extends React.Component {
                       onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       options={this.state.services}
                       groupBy={option => option.category}
-                      getOptionLabel={option => option.label}
+                      getOptionLabel={option => option.label.split('/')[0]}
                       renderInput={params => (
                         <TextField {...params} label="Tapez votre service" variant="outlined" fullWidth />
                       )}
