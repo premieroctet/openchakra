@@ -17,7 +17,7 @@ class AssetsService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dates: [],      
+      dates: [],
       description: this.props.data.description,
       diplomaYear: this.props.data.diplomaYear,
       diplomaName: this.props.data.diplomaName,
@@ -87,7 +87,7 @@ class AssetsService extends React.Component {
                     Après vérification par My-Alfred, vous aurez le statut d’Alfred expérimenté/certifié et/ou diplômé sur ce service.
                   </p>
                 </Grid>
-                <Grid style={{marginBottom: 100}}>
+                <Grid style={{marginBottom: 150}}>
                   <Grid item xs={12}>
                     <h3 className={classes.policySizeSubtitle}>Nombre d'années d'expérience</h3>
                   </Grid>
@@ -99,7 +99,7 @@ class AssetsService extends React.Component {
                       variant="outlined"
                       onChange={e => this.handleChange('level', e.target.value) }
                     >
-                      <MenuItem value=""></MenuItem>
+                      <MenuItem value=""/>
                       <MenuItem value="ZeroOrOne">Entre 0 et 1 an</MenuItem>
                       <MenuItem value="OneToFive">Entre 1 et 5 ans</MenuItem>
                       <MenuItem value="FiveToTen">Entre 5 et 10 ans</MenuItem>
@@ -169,7 +169,7 @@ class AssetsService extends React.Component {
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} >
                     <h3 className={classes.policySizeSubtitle}>Votre certification</h3>
                     { this.state.isCertification ?
                       <Grid style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>

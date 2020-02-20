@@ -54,22 +54,22 @@ class SelectPrestation extends React.Component {
     return(
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
-          <Grid>
+          <Grid style={{width: '100%'}}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
                 <Typography className={classes.policySizeTitle}>{this.state.service_name} : indiquez vos prestations</Typography>
               </Grid>
             </Grid>
-            <Grid style={{marginTop: 30}}>
+            <Grid style={{marginTop: 30, width: '100%'}}>
               <Grid className={classes.bottomSpacer}>
                 <p className={classes.policySizeContent}>Quelles prestations souhaitez-vous réaliser ? Indiquez vos tarifs et votre unité de facturation. </p>
               </Grid>
 
-              <Grid container style={{display: 'flex', marginTop: 30, marginBottom: 50}} spacing={2}>
+              <Grid container style={{display: 'flex', marginTop: 30, marginBottom: 100}} spacing={2}>
                 {Object.keys(this.state.grouped).map((fltr, i) =>{
                   let prestas = this.state.grouped[fltr];
                   return (
-                    <Grid item xl={6} xs={12} key={i}>
+                    <Grid item xl={6} lg={12} xs={12} key={i}>
                       <Grid item> {fltr=='Aucun' ? '' : fltr}</Grid>
                       {prestas.map((p, j) => {
                         return(
