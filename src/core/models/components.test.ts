@@ -21,6 +21,7 @@ const STATE: ComponentsState = {
     },
   },
   selectedId: 'button-testid',
+  userComponentIds: [],
 }
 
 describe('Components model', () => {
@@ -28,6 +29,7 @@ describe('Components model', () => {
     const state: ComponentsState = {
       components: INITIAL_COMPONENTS,
       selectedId: 'root',
+      userComponentIds: [],
     }
 
     const nextState = components.reducers.reset(state)
@@ -38,12 +40,14 @@ describe('Components model', () => {
     const state: ComponentsState = {
       components: INITIAL_COMPONENTS,
       selectedId: 'root',
+      userComponentIds: [],
     }
 
     const nextState = components.reducers.loadDemo(state, 'onboarding')
-    expect(nextState).toEqual({
+    expect(nextState).toEqual<ComponentsState>({
       components: onboarding,
       selectedId: 'comp-root',
+      userComponentIds: [],
     })
   })
 
@@ -82,6 +86,7 @@ describe('Components model', () => {
     const state: ComponentsState = {
       components: INITIAL_COMPONENTS,
       selectedId: 'root',
+      userComponentIds: [],
     }
 
     const nextState = components.reducers.addComponent(state, {
@@ -99,9 +104,10 @@ describe('Components model', () => {
       'button-testid',
     )
 
-    expect(nextState).toEqual({
+    expect(nextState).toEqual<ComponentsState>({
       components: INITIAL_COMPONENTS,
       selectedId: 'root',
+      userComponentIds: [],
     })
   })
 
