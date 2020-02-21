@@ -10,6 +10,7 @@ export type ComponentsState = {
   components: IComponents
   selectedId: IComponent['id']
   hoveredId?: IComponent['id']
+  userComponentIds: string[]
 }
 export type ComponentsStateWithUndo = {
   past: ComponentsState[]
@@ -33,6 +34,7 @@ const components = createModel({
   state: {
     components: INITIAL_COMPONENTS,
     selectedId: DEFAULT_ID,
+    userComponentIds: [],
   } as ComponentsState,
   reducers: {
     reset(state: ComponentsState, components?: IComponents): ComponentsState {
@@ -40,6 +42,7 @@ const components = createModel({
         ...state,
         components: components || INITIAL_COMPONENTS,
         selectedId: DEFAULT_ID,
+        userComponentIds: [],
       }
     },
     loadDemo(state: ComponentsState, type: TemplateType): ComponentsState {
@@ -55,6 +58,65 @@ const components = createModel({
 
         draftState.components[componentId].props =
           DEFAULT_PROPS[component.type] || {}
+      })
+    },
+    saveUserComponent(
+      state: ComponentsState,
+      componentId: string,
+    ): ComponentsState {
+      if (componentId === 'root') {
+        return state
+      }
+
+      return produce(state, (draftState: ComponentsState) => {
+        let component = draftState.components[componentId]
+        component.userComponentName = 'AirbnbCard'
+        draftState.userComponentIds.push(componentId)
+
+        if (component && component.parent) {
+          const children = draftState.components[
+            component.parent
+          ].children.filter((id: string) => id !== componentId)
+
+          const id = generateId('instance')
+          children.push(id)
+
+          draftState.components[component.parent].children = children
+
+          draftState.components[id] = {
+            id,
+            props: {},
+            children: [],
+            type: component.type,
+
+            parent: component.parent,
+            rootParentType: component.rootParentType,
+            instanceOf: component.id,
+          }
+        }
+      })
+    },
+    addUserComponent(
+      state: ComponentsState,
+      payload: {
+        type: ComponentType
+        parentName: string
+        instanceOf: string
+      },
+    ): ComponentsState {
+      return produce(state, (draftState: ComponentsState) => {
+        const id = generateId()
+
+        draftState.selectedId = id
+        draftState.components[payload.parentName].children.push(id)
+        draftState.components[id] = {
+          id,
+          props: {},
+          children: [],
+          type: payload.type,
+          parent: payload.parentName,
+          instanceOf: payload.instanceOf,
+        }
       })
     },
     updateProps(

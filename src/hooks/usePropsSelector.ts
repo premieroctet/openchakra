@@ -13,7 +13,14 @@ const usePropsSelector = (propsName: string) => {
   const value = useSelector((state: RootState) => {
     const component =
       state.components.present.components[state.components.present.selectedId]
-    const propsValue = component.props[propsName]
+    let propsValue = component.props[propsName]
+
+    if (component.instanceOf) {
+      propsValue =
+        state.components.present.components[component.instanceOf].props[
+          propsName
+        ]
+    }
 
     if (propsValue !== undefined) {
       return propsValue

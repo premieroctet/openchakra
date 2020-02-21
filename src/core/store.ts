@@ -30,6 +30,22 @@ const persistPlugin = {
   },
 }
 
+const customComponentMiddleware = (store: any) => (next: any) => (
+  action: any,
+) => {
+  const state = store.getState()
+  if (action.type === 'components/updateProps') {
+    const componentId = action.payload.id
+    const { instanceOf } = state.components.present.components[componentId]
+
+    if (instanceOf) {
+      action.payload.id = instanceOf
+    }
+  }
+
+  next(action)
+}
+
 export const storeConfig = {
   models,
   redux: {
@@ -46,6 +62,7 @@ export const storeConfig = {
         ),
       })
     },
+    middlewares: [customComponentMiddleware],
   },
   plugins: [persistPlugin],
 }
