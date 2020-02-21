@@ -22,10 +22,12 @@ export const getProxyComponent = (id: string | IComponent['id']) => (
   if (component.instanceOf) {
     const userComponent =
       state.components.present.components[component.instanceOf]
-    component.props = { ...userComponent.props }
-    component.children = userComponent.children
 
-    return { ...component }
+    return {
+      ...component,
+      props: { ...userComponent.props },
+      children: userComponent.children,
+    }
   }
 
   return component
@@ -58,3 +60,11 @@ export const getHoveredId = (state: RootState) =>
 
 export const getIsHovered = (id: IComponent['id']) => (state: RootState) =>
   getHoveredId(state) === id
+
+export const getIsUserComponent = (id: IComponent['id']) => (
+  state: RootState,
+) => {
+  const component = state.components.present.components[id]
+
+  return !!component.instanceOf || component.userComponentName
+}

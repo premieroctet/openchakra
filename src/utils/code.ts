@@ -22,14 +22,29 @@ const formatCode = async (code: string) => {
   return formattedCode
 }
 
-const buildBlock = (component: IComponent, components: IComponents) => {
+type BuildBlock = {
+  component: IComponent
+  components: IComponents
+  userComponents: IComponent[]
+  forceBuildBlock?: boolean
+}
+
+const buildBlock = ({
+  component,
+  components,
+  userComponents,
+  forceBuildBlock = false,
+}: BuildBlock) => {
   let content = ''
 
   component.children.forEach((key: string) => {
     let childComponent = components[key]
     if (!childComponent) {
       console.error(`invalid component ${key}`)
-    } else {
+    } else if (
+      forceBuildBlock ||
+      (!childComponent.instanceOf && !childComponent.userComponentName)
+    ) {
       const componentName = capitalize(childComponent.type)
       let propsContent = ''
 
@@ -62,10 +77,23 @@ const buildBlock = (component: IComponent, components: IComponents) => {
         content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
       } else if (childComponent.children.length) {
         content += `<${componentName} ${propsContent}>
-      ${buildBlock(childComponent, components)}
+      ${buildBlock({
+        component: childComponent,
+        components,
+        userComponents,
+        forceBuildBlock,
+      })}
       </${componentName}>`
       } else {
         content += `<${componentName} ${propsContent} />`
+      }
+    } else {
+      if (childComponent.instanceOf) {
+        content += `<${
+          components[childComponent.instanceOf].userComponentName
+        } />`
+      } else if (childComponent.userComponentName) {
+        content += `<${childComponent.userComponentName} />`
       }
     }
   })
@@ -73,22 +101,79 @@ const buildBlock = (component: IComponent, components: IComponents) => {
   return content
 }
 
-export const generateComponentCode = async (
-  component: IComponent,
+const buildComponents = async (
   components: IComponents,
+  userComponents: IComponent[],
 ) => {
-  let code = buildBlock(component, components)
+  const codes = await Promise.all(
+    userComponents.map(comp => {
+      return generateComponentCode({
+        component: {
+          ...components[comp.parent],
+          children: [comp.id],
+        },
+        components: {
+          ...components,
+          [comp.id]: {
+            ...components[comp.id],
+            userComponentName: undefined,
+          },
+        },
+        name: comp.userComponentName,
+        userComponents,
+      })
+    }),
+  )
+
+  return codes.reduce((acc, val) => {
+    return `
+      ${acc}
+
+      ${val}
+    `
+  }, '')
+}
+
+type GenerateComponentCode = {
+  component: IComponent
+  components: IComponents
+  name?: string
+  userComponents: IComponent[]
+  forceBuildBlock?: boolean
+}
+
+export const generateComponentCode = async ({
+  component,
+  components,
+  name = `My${component.type}`,
+  userComponents,
+  forceBuildBlock = false,
+}: GenerateComponentCode) => {
+  let code = buildBlock({
+    component,
+    components,
+    userComponents,
+    forceBuildBlock,
+  })
 
   code = `
-const My${component.type} = () => (
+const ${name} = () => (
   ${code}
 )`
 
   return await formatCode(code)
 }
 
-export const generateCode = async (components: IComponents) => {
-  let code = buildBlock(components.root, components)
+export const generateCode = async (
+  components: IComponents,
+  userComponents: IComponent[],
+) => {
+  let code = buildBlock({
+    component: components.root,
+    components,
+    userComponents,
+  })
+  let componentsCodes = await buildComponents(components, userComponents)
 
   const imports = [
     ...new Set(
@@ -105,6 +190,8 @@ import {
   theme,
   ${imports.join(',')}
 } from "@chakra-ui/core";
+
+${componentsCodes}
 
 const App = () => (
   <ThemeProvider theme={theme}>

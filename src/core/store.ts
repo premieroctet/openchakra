@@ -1,5 +1,5 @@
 import { init } from '@rematch/core'
-import { combineReducers } from 'redux'
+import { combineReducers, Store, Dispatch, AnyAction } from 'redux'
 import undoable from 'redux-undo'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -30,9 +30,9 @@ const persistPlugin = {
   },
 }
 
-const customComponentMiddleware = (store: any) => (next: any) => (
-  action: any,
-) => {
+const customComponentMiddleware = (store: Store<RootState>) => (
+  next: Dispatch,
+) => (action: AnyAction) => {
   const state = store.getState()
   if (action.type === 'components/updateProps') {
     const componentId = action.payload.id

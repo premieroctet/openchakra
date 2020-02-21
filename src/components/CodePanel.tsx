@@ -4,20 +4,21 @@ import { Box, Button, useClipboard } from '@chakra-ui/core'
 import { generateCode } from '../utils/code'
 import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
-import { getComponents } from '../core/selectors/components'
+import { getComponents, getUserComponents } from '../core/selectors/components'
 
 const CodePanel = () => {
   const components = useSelector(getComponents)
+  const userComponents = useSelector(getUserComponents)
   const [code, setCode] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const getCode = async () => {
-      const code = await generateCode(components)
+      const code = await generateCode(components, userComponents)
       setCode(code)
     }
 
     getCode()
-  }, [components])
+  }, [components, userComponents])
 
   const { onCopy, hasCopied } = useClipboard(code)
 

@@ -1,5 +1,22 @@
 import React, { useState, memo, useEffect } from 'react'
-import { Link, Box, Stack } from '@chakra-ui/core'
+import {
+  Link,
+  Box,
+  Stack,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  FormControl,
+  FormLabel,
+  Input,
+  FormHelperText,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from '@chakra-ui/core'
 import Panels from './panels/Panels'
 import { GoRepo, GoCode } from 'react-icons/go'
 import { FiTrash2 } from 'react-icons/fi'
@@ -11,6 +28,7 @@ import {
   getSelectedComponent,
   getComponents,
   getSelectedComponentId,
+  getUserComponents,
 } from '../../core/selectors/components'
 import ActionButton from './ActionButton'
 import { generateComponentCode } from '../../utils/code'
@@ -23,11 +41,18 @@ const CodeActionButton = memo(() => {
 
   const selectedId = useSelector(getSelectedComponentId)
   const components = useSelector(getComponents)
+  const userComponents = useSelector(getUserComponents)
 
   const parentId = components[selectedId].parent
   const parent = { ...components[parentId] }
   // Do not copy sibling components from parent
-  parent.children = [selectedId]
+  let name: string | undefined
+  if (components[selectedId].instanceOf) {
+    parent.children = [components[selectedId].instanceOf!]
+    name = components[components[selectedId].instanceOf!].userComponentName
+  } else {
+    parent.children = [selectedId]
+  }
 
   return (
     <ActionButton
@@ -36,7 +61,13 @@ const CodeActionButton = memo(() => {
       variantColor={hasCopied ? 'green' : 'gray'}
       onClick={async () => {
         setIsLoading(true)
-        const code = await generateComponentCode(parent, components)
+        const code = await generateComponentCode({
+          component: parent,
+          components,
+          name,
+          userComponents,
+          forceBuildBlock: true,
+        })
         onCopy(code)
         setIsLoading(false)
       }}
@@ -48,6 +79,18 @@ const CodeActionButton = memo(() => {
 const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const [componentName, onChangeComponentName] = useState('')
+  const initialRef = React.useRef<HTMLInputElement>(null)
+  const saveComponent = () => {
+    dispatch.components.saveUserComponent({
+      componentId: component.id,
+      name: componentName,
+    })
+    onClose()
+    onChangeComponentName('')
+  }
 
   const { clearActiveProps } = useInspectorUpdate()
 
@@ -97,13 +140,7 @@ const Inspector = () => {
               onClick={() => dispatch.components.duplicate()}
               icon="copy"
             />
-            <ActionButton
-              label="Component"
-              onClick={() =>
-                dispatch.components.saveUserComponent(component.id)
-              }
-              icon="download"
-            />
+            <ActionButton label="Component" onClick={onOpen} icon="download" />
             <ActionButton
               label="Reset props"
               icon={IoMdRefresh}
@@ -139,6 +176,49 @@ const Inspector = () => {
         showChildren={componentHasChildren}
         parentIsRoot={parentIsRoot}
       />
+
+      <Modal
+        onClose={onClose}
+        isOpen={isOpen}
+        isCentered
+        initialFocusRef={initialRef}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <form onSubmit={saveComponent}>
+            <ModalHeader>Save this component</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FormControl>
+                <FormLabel>Component name</FormLabel>
+                <Input
+                  size="md"
+                  as="input"
+                  variant="outline"
+                  isFullWidth
+                  focusBorderColor="blue.500"
+                  errorBorderColor="red.500"
+                  ref={initialRef}
+                  value={componentName}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    onChangeComponentName(e.target.value)
+                  }
+                />
+                <FormHelperText>
+                  This will save this component in the library and allow to
+                  reuse it later.
+                </FormHelperText>
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button variantColor="blue" mr={3} type="submit">
+                Save
+              </Button>
+              <Button onClick={onClose}>Cancel</Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
     </>
   )
 }
