@@ -1,5 +1,5 @@
-export const generateId = () => {
-  return `comp-${(
+export const generateId = (prefix = 'comp') => {
+  return `${prefix}-${(
     Date.now().toString(36) +
     Math.random()
       .toString(36)

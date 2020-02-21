@@ -83,6 +83,8 @@ interface IComponent {
   id: string
   props: any
   rootParentType?: ComponentType
+  instanceOf?: string
+  userComponentName?: string
 }
 
 interface IComponents {
@@ -102,4 +104,5 @@ interface ComponentItemProps {
   isMeta?: boolean
   soon?: boolean
   rootParentType?: ComponentType
+  userComponentId?: string
 }

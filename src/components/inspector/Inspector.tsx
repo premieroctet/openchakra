@@ -98,6 +98,13 @@ const Inspector = () => {
               icon="copy"
             />
             <ActionButton
+              label="Component"
+              onClick={() =>
+                dispatch.components.saveUserComponent(component.id)
+              }
+              icon="download"
+            />
+            <ActionButton
               label="Reset props"
               icon={IoMdRefresh}
               onClick={() => dispatch.components.resetProps(component.id)}
