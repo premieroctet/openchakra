@@ -215,7 +215,7 @@ class Homeheader extends React.Component {
                 <Grid item className={classes.pickerhomelocation}>
                 <TextField
                     id="outlined-select-currency"
-                    label="Réparation de bijoux"
+                    label="Ex:Réparation de bijoux"
                     value={this.state.service}
                     onChange={this.onChange}
                     margin="normal"
