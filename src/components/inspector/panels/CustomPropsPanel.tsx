@@ -1,5 +1,5 @@
 import React, { memo, useState, FormEvent, ChangeEvent, useRef } from 'react'
-import { useInspectorContext } from '../../../contexts/inspector-context'
+import { useInspectorState } from '../../../contexts/inspector-context'
 import { getSelectedComponent } from '../../../core/selectors/components'
 import { useSelector } from 'react-redux'
 import { IoIosFlash } from 'react-icons/io'
@@ -22,7 +22,7 @@ const CustomPropsPanel = () => {
   const dispatch = useDispatch()
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { activePropsRef } = useInspectorContext()
+  const activePropsRef = useInspectorState()
   const { props, id } = useSelector(getSelectedComponent)
   const { setValue } = useForm()
 
@@ -36,7 +36,7 @@ const CustomPropsPanel = () => {
     })
   }
 
-  const activeProps = activePropsRef.current || []
+  const activeProps = activePropsRef || []
   const customProps = Object.keys(props).filter(
     propsName => !activeProps.includes(propsName),
   )
@@ -76,6 +76,7 @@ const CustomPropsPanel = () => {
 
       {customProps.map((propsName, i) => (
         <Flex
+          key={propsName}
           alignItems="center"
           px={2}
           bg={i % 2 === 0 ? 'white' : 'gray.50'}

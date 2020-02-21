@@ -11,6 +11,7 @@ import { HotKeys } from 'react-hotkeys'
 import useShortcuts, { keyMap } from './hooks/useShortcuts'
 import EditorErrorBoundary from './components/errorBoundaries/EditorErrorBoundary'
 import useProducthunt from './hooks/useProducthunt'
+import { InspectorProvider } from './contexts/inspector-context'
 
 const App = () => {
   const { handlers } = useShortcuts()
@@ -46,7 +47,9 @@ const App = () => {
             overflowX="visible"
             borderLeft="1px solid #cad5de"
           >
-            <Inspector />
+            <InspectorProvider>
+              <Inspector />
+            </InspectorProvider>
           </Box>
         </Flex>
       </DndProvider>
