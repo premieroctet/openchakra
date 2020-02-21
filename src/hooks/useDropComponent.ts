@@ -2,6 +2,8 @@ import { useDrop, DropTargetMonitor } from 'react-dnd'
 import { rootComponents } from '../utils/editor'
 import useDispatch from './useDispatch'
 import builder from '../core/models/composer/builder'
+import { useSelector } from 'react-redux'
+import { getIsUserComponent } from '../core/selectors/components'
 
 export const useDropComponent = (
   componentId: string,
@@ -9,6 +11,7 @@ export const useDropComponent = (
   canDrop: boolean = true,
 ) => {
   const dispatch = useDispatch()
+  const isUserComponent = useSelector(getIsUserComponent(componentId))
 
   const [{ isOver }, drop] = useDrop({
     accept,
@@ -41,7 +44,13 @@ export const useDropComponent = (
         })
       }
     },
-    canDrop: () => canDrop,
+    canDrop: (item: ComponentItemProps) => {
+      if (isUserComponent) {
+        return canDrop && !item.userComponentId
+      }
+
+      return canDrop
+    },
   })
 
   return { drop, isOver }

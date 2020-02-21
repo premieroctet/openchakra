@@ -26,11 +26,12 @@ import { buildParameters } from '../utils/codesandbox'
 import { generateCode } from '../utils/code'
 import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
-import { getComponents } from '../core/selectors/components'
+import { getComponents, getUserComponents } from '../core/selectors/components'
 import { getShowLayout, getShowCode } from '../core/selectors/app'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
+  const userComponents = useSelector(getUserComponents)
   const [isLoading, setIsLoading] = useState(false)
 
   return (
@@ -44,7 +45,7 @@ const CodeSandboxButton = () => {
       <Button
         onClick={async () => {
           setIsLoading(true)
-          const code = await generateCode(components)
+          const code = await generateCode(components, userComponents)
           setIsLoading(false)
           const parameters = buildParameters(code)
 

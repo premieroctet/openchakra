@@ -5,6 +5,7 @@ import templates, { TemplateType } from '../../templates'
 import { generateId } from '../../utils/generateId'
 import { duplicateComponent, deleteComponent } from '../../utils/recursive'
 import omit from 'lodash/omit'
+import each from 'lodash/each'
 
 export type ComponentsState = {
   components: IComponents
@@ -12,6 +13,7 @@ export type ComponentsState = {
   hoveredId?: IComponent['id']
   userComponentIds: string[]
 }
+
 export type ComponentsStateWithUndo = {
   past: ComponentsState[]
   present: ComponentsState
@@ -62,15 +64,16 @@ const components = createModel({
     },
     saveUserComponent(
       state: ComponentsState,
-      componentId: string,
+      payload: { name: string; componentId: string },
     ): ComponentsState {
+      const { componentId, name } = payload
       if (componentId === 'root') {
         return state
       }
 
       return produce(state, (draftState: ComponentsState) => {
         let component = draftState.components[componentId]
-        component.userComponentName = 'AirbnbCard'
+        component.userComponentName = name
         draftState.userComponentIds.push(componentId)
 
         if (component && component.parent) {
@@ -147,13 +150,27 @@ const components = createModel({
       return produce(state, (draftState: ComponentsState) => {
         let component = draftState.components[componentId]
 
+        if (component.instanceOf) {
+          each(draftState.components, comp => {
+            if (comp.parent === component.id && component.instanceOf) {
+              comp.parent = component.instanceOf
+            }
+          })
+        }
+
         // Remove self
         if (component && component.parent) {
-          const children = draftState.components[
-            component.parent
-          ].children.filter((id: string) => id !== componentId)
+          let parent = draftState.components[component.parent]
 
-          draftState.components[component.parent].children = children
+          if (parent.instanceOf) {
+            parent = draftState.components[parent.instanceOf]
+          }
+
+          const children = parent.children.filter(
+            (id: string) => id !== componentId,
+          )
+
+          parent.children = children
         }
 
         draftState.selectedId = DEFAULT_ID
@@ -200,11 +217,15 @@ const components = createModel({
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const selectedComponent = draftState.components[draftState.selectedId]
+        let component = selectedComponent
+        if (selectedComponent.instanceOf) {
+          component = draftState.components[selectedComponent.instanceOf]
+        }
 
-        selectedComponent.children.splice(
+        component.children.splice(
           payload.toIndex,
           0,
-          selectedComponent.children.splice(payload.fromIndex, 1)[0],
+          component.children.splice(payload.fromIndex, 1)[0],
         )
       })
     },
@@ -218,9 +239,12 @@ const components = createModel({
       },
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
+        const parent = draftState.components[payload.parentName]
         const id = payload.testId || generateId()
         draftState.selectedId = id
-        draftState.components[payload.parentName].children.push(id)
+        draftState.components[
+          parent.instanceOf || payload.parentName
+        ].children.push(id)
         draftState.components[id] = {
           id,
           props: DEFAULT_PROPS[payload.type] || {},
