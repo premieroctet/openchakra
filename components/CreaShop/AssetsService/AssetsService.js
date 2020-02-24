@@ -113,7 +113,6 @@ class AssetsService extends React.Component {
                         <Grid style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}>
                           <Clear color="secondary"/>
                         </Grid>
-                        <p>"test"</p>
                       </Grid>
                       : null
                     }
@@ -156,7 +155,6 @@ class AssetsService extends React.Component {
                               Joindre mon diplôme
                               <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" className="form-control"/>
                             </label>
-                            <span>test</span>
                             <p>En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ces derniers</p>
                             <Button
                               variant="contained"
@@ -173,8 +171,9 @@ class AssetsService extends React.Component {
                     <h3 className={classes.policySizeSubtitle}>Votre certification</h3>
                     { this.state.isCertification ?
                       <Grid style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>
-                        <Grid style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}><Clear color="secondary"/></Grid>
-                        <p>test | test</p>
+                        <Grid style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}>
+                          <Clear color="secondary"/>
+                        </Grid>
                       </Grid>
                       : null
                     }
