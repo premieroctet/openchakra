@@ -65,10 +65,10 @@ class BookingConditions extends React.Component {
                 </Grid>
                 <Grid>
                   <Grid>
-                    <ButtonSwitch checked={this.state.booking_request} id='request' style={{width : '100%'}} isOption={false} isPrice={false} label={"Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H."} ref={this.booking_request} onChange={this.onBookingChanged} />
+                    <ButtonSwitch checked={this.state.booking_request} id='request' style={{width : '100%'}} label={"Tous les utilisateurs doivent envoyer une demande de réservation que vous devez valider dans les 24H."} ref={this.booking_request} onChange={this.onBookingChanged} />
                   </Grid>
                   <Grid>
-                    <ButtonSwitch checked={!this.state.booking_request} id='auto' isOption={false} isPrice={false} label={"Les utilisateurs peuvent réserver mes services directement sans demande de réservation."} ref={this.booking_auto} onChange={this.onBookingChanged} />
+                    <ButtonSwitch checked={!this.state.booking_request} id='auto' label={"Les utilisateurs peuvent réserver mes services directement sans demande de réservation."} ref={this.booking_auto} onChange={this.onBookingChanged} />
                   </Grid>
                 </Grid>
               </Grid>
@@ -78,16 +78,16 @@ class BookingConditions extends React.Component {
                 </Grid>
                 <Grid>
                   <Grid style={{marginBottom: 10}}>
-                    <ButtonSwitch  id={ALF_CONDS.BASIC} isOption={false} isPrice={false} label={"Respecter les conditions My-Alfred (profil vérifié)"} onChange={this.onAlfredConditionsChanged} checked={this.state.my_alfred_conditions>=ALF_CONDS.BASIC} ref={this.conditions[ALF_CONDS.BASIC]} />
+                    <ButtonSwitch  id={ALF_CONDS.BASIC} label={"Respecter les conditions My-Alfred (profil vérifié)"} onChange={this.onAlfredConditionsChanged} checked={this.state.my_alfred_conditions>=ALF_CONDS.BASIC} ref={this.conditions[ALF_CONDS.BASIC]} />
                   </Grid>
                   <Grid style={{marginBottom: 10}}>
-                    <ButtonSwitch id={ALF_CONDS.PICTURE} isOption={false} isPrice={false} label={"Avoir une photo de profil"} onChange={this.onAlfredConditionsChanged} checked={this.state.my_alfred_conditions>=ALF_CONDS.PICTURE} ref={this.conditions[ALF_CONDS.PICTURE]} />
+                    <ButtonSwitch id={ALF_CONDS.PICTURE} label={"Avoir une photo de profil"} onChange={this.onAlfredConditionsChanged} checked={this.state.my_alfred_conditions>=ALF_CONDS.PICTURE} ref={this.conditions[ALF_CONDS.PICTURE]} />
                   </Grid>
                   <Grid style={{marginBottom: 10}}>
-                    <ButtonSwitch id={ALF_CONDS.ID_CARD} isOption={false} isPrice={false} label={"Avoir déposé une pièce d’identité officielle"} onChange={this.onAlfredConditionsChanged} checked={this.state.my_alfred_conditions>=ALF_CONDS.ID_CARD} ref={this.conditions[ALF_CONDS.ID_CARD]}/>
+                    <ButtonSwitch id={ALF_CONDS.ID_CARD} label={"Avoir déposé une pièce d’identité officielle"} onChange={this.onAlfredConditionsChanged} checked={this.state.my_alfred_conditions>=ALF_CONDS.ID_CARD} ref={this.conditions[ALF_CONDS.ID_CARD]}/>
                   </Grid>
                   <Grid>
-                    <ButtonSwitch id={ALF_CONDS.RECOMMEND} isOption={false} isPrice={false} label={"Etre recommandé par d’autres Alfred"} onChange={this.onAlfredConditionsChanged} checked={this.state.my_alfred_conditions>=ALF_CONDS.RECOMMEND} ref={this.conditions[ALF_CONDS.RECOMMEND]} />
+                    <ButtonSwitch id={ALF_CONDS.RECOMMEND} label={"Etre recommandé par d’autres Alfred"} onChange={this.onAlfredConditionsChanged} checked={this.state.my_alfred_conditions>=ALF_CONDS.RECOMMEND} ref={this.conditions[ALF_CONDS.RECOMMEND]} />
                   </Grid>
                 </Grid>
               </Grid>

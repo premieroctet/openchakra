@@ -1,5 +1,5 @@
 import { RRule, RRuleSet, rrulestr } from 'rrule'
-import {ALL_SERVICES} from './consts.js';
+import {ALL_SERVICES, generate_id} from './consts.js';
 
 const EV_AVAIL_DAY_MAPPING='monday tuesday wednesday thursday friday saturday sunday'.split(' ');
 
@@ -70,7 +70,7 @@ const availabilities2events= avails => {
 
 
 const eventUI2availability = event => {
-  let avail = {ui_id: new Date().getTime() }
+  let avail = {ui_id: generate_id() }
 
   let startDate=new Date(event.selectedDateStart);
   let endDate=new Date(event.selectedDateEnd);

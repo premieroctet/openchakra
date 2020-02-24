@@ -28,7 +28,7 @@ class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 0,
+      activeStep: 2,
       user_id: null,
       shop:{
         booking_request: true,     // true/false
@@ -38,7 +38,7 @@ class creaShop extends React.Component {
         is_particular: true,        // true/false : particulier.pro
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
         is_certified: false,
-        service: null,
+        service: "5e1f4497e6d1ae24fa0d712d",
         prestations:{},
         equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
@@ -96,8 +96,9 @@ class creaShop extends React.Component {
     if (pageIndex==1) { return shop.service==null}
     if (pageIndex==2) {
       if (Object.keys(shop.prestations).length==0) return "disabled";
+      console.log("CreaShop.prestations:"+JSON.stringify(shop.prestations, null, 2));
       return Object.values(shop.prestations).every( v => {
-        if (v.price==0 || v.billing==null || v.billing==undefined || Object.keys(v.billing).length==0) {
+        if (v.price==0 || v.billing==null || v.billing==undefined || Object.keys(v.billing).length==0 || v.label=="" ) {
           return false;
         }
         return true;
@@ -152,8 +153,11 @@ class creaShop extends React.Component {
     }
     // last page => post
     else {
+      let copiedShop = _.cloneDeep(this.state.shop);
+      console.log("CreaShop:sending shop "+JSON.stringify(copiedShop, null, 2)); 
+      Object.keys(copiedShop.prestations).forEach(key => { if (key<0) copiedShop.prestations[key]._id = null });
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      axios.post(url+'myAlfred/api/shop/add', this.state.shop)
+      axios.post(url+'myAlfred/api/shop/add', copiedShop)
         .then(res => {
           toast.info("Boutique créée avec succès");
           Router.push(`/shop?id_alfred=${this.state.user_id}`);
@@ -179,10 +183,11 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  prestaSelected(presta) {
+  prestaSelected(prestations) {
     let shop=this.state.shop;
-    shop.prestations=presta;
+    shop.prestations=prestations;
     this.setState({shop: shop});
+    console.log("CreaShop:prestaSelected:"+JSON.stringify(prestations));
   }
 
   settingsChanged(location, travel_tax, pick_tax, selectedStuff) {

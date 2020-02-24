@@ -79,13 +79,13 @@ class SettingShop extends React.Component {
                 </Grid>
                 <Grid>
                   <Grid>
-                    <ButtonSwitch id={CANCEL_MODE.FLEXIBLE} checked={this.state.cancel_mode==CANCEL_MODE.FLEXIBLE} isOption={false} label={"Flexibles: Remboursement intégral jusqu'à 1 jour avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.FLEXIBLE]}/>
+                    <ButtonSwitch id={CANCEL_MODE.FLEXIBLE} checked={this.state.cancel_mode==CANCEL_MODE.FLEXIBLE} label={"Flexibles: Remboursement intégral jusqu'à 1 jour avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.FLEXIBLE]}/>
                   </Grid>
                   <Grid>
-                    <ButtonSwitch id={CANCEL_MODE.MODERATE} checked={this.state.cancel_mode==CANCEL_MODE.MODERATE} isOption={false} isPrice={false} label={"Modérées: Remboursement intégral jusqu'à 5 jours avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.MODERATE]}/>
+                    <ButtonSwitch id={CANCEL_MODE.MODERATE} checked={this.state.cancel_mode==CANCEL_MODE.MODERATE} label={"Modérées: Remboursement intégral jusqu'à 5 jours avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.MODERATE]}/>
                   </Grid>
                   <Grid>
-                    <ButtonSwitch id={CANCEL_MODE.STRICT} checked={this.state.cancel_mode==CANCEL_MODE.STRICT} isOption={false} isPrice={false}  label={"Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.STRICT]} />
+                    <ButtonSwitch id={CANCEL_MODE.STRICT} checked={this.state.cancel_mode==CANCEL_MODE.STRICT} label={"Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.STRICT]} />
                   </Grid>
                 </Grid>
               </Grid>

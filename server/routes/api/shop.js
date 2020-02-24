@@ -15,6 +15,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const Shop = require('../../models/Shop');
+const Prestation = require('../../models/Prestation');
 const ServiceUser = require('../../models/ServiceUser');
 const validateShopInput = require('../../validation/shop');
 router.get('/test',(req, res) => res.json({msg: 'Shop Works!'}) );
@@ -68,7 +69,7 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
               shop.is_particular = req.body.is_particular;
               shop.is_professional = !shop.is_particular;
 
-
+              // FIX: save company
               shop.company = {};
               if (req.body.name) shop.company.name = req.body.name;
               if (req.body.creation_date) shop.company.creation_date = req.body.creation_date;
@@ -86,16 +87,21 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
               su=new ServiceUser();
               su.user = req.user.id;
               su.service=req.body.service;
-              console.log(1);
               su.prestations=[]
               console.log("Prestas:"+JSON.stringify(req.body.prestations));
-              Object.keys(req.body.prestations).forEach( k=> {
-                p= {prestation:k, billing:req.body.prestations[k].billing.label, price:req.body.prestations[k].price};
+
+              // FIX : créer les prestations custom avant
+              let newPrestations = Object.values(req.body.prestations).filter( p => p._id==null);
+              console.log("newPrestations:"+JSON.stringify(newPrestations));
+              let newPrestaModels = newPrestations.map( p => Prestation({...p, service:req.body.service, billing: [p.billing]}));
+              console.log("newPrestationsModel:"+JSON.stringify(newPrestaModels));
+              Prestation.collection.insert(newPrestaModels).then( prestas => {
+              
+              Object.values(req.body.prestations).forEach( presta => {
+                p= {prestation:presta._id, billing:presta.billing.label, price:presta.price};
                 su.prestations.push(p);
               });
-              console.log(2);
               su.equipments=req.body.equipments;
-              console.log(3);
               su.location={alfred:false, client:false, visio:false}
               Object.assign(su.location, req.body.location);
               su.travel_tax=req.body.travel_tax||0;
@@ -122,8 +128,8 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
                  })
                  .catch( err => console.log("Error:"+err))
               res.json(shop);
-            }
-            )
+            })
+            })
             .catch(err => console.log(err));
 
         })
