@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from './AssetsServiceStyle'
+import styles from '../componentStyle'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -24,7 +24,7 @@ class AssetsService extends React.Component {
       certificationYear: this.props.data.certificationYear,
       certificationName: this.props.data.certificationName,
       level: this.props.data.level,
-    }
+    };
     this.handleChange = this.handleChange.bind(this);
   }
 

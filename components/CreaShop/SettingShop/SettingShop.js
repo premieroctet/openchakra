@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from './SettingShopStyle'
+import styles from '../componentStyle'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -13,10 +13,10 @@ class SettingShop extends React.Component {
     super(props);
     this.state = {
       welcome_message: this.props.welcome_message,
-      cancel_mode: this.props.cancel_mode, 
-    }
+      cancel_mode: this.props.cancel_mode,
+    };
 
-    this.cancel_buttons={}
+    this.cancel_buttons={};
     Object.values(CANCEL_MODE).forEach( v => this.cancel_buttons[v]=React.createRef());
     this.cancelModeChanged=this.cancelModeChanged.bind(this);
     this.welcomeMessageChanged=this.welcomeMessageChanged.bind(this);
@@ -31,7 +31,7 @@ class SettingShop extends React.Component {
   cancelModeChanged(mode_id, checked) {
     console.log("canceModeChanged:"+mode_id, checked);
     this.setState({cancel_mode: mode_id}, () => this.props.onChange(this.state.welcome_message, mode_id));
-    Object.values(CANCEL_MODE).forEach( v=> {console.log(v); this.cancel_buttons[v].current.setState({checked: mode_id==v })});
+    Object.values(CANCEL_MODE).forEach( v=> {console.log(v); this.cancel_buttons[v].current.setState({checked: mode_id===v })});
   }
 
   render() {

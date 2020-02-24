@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from './BookingConditionsStyle'
+import styles from '../componentStyle'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -22,14 +22,14 @@ class BookingConditions extends React.Component {
     this.booking_request=React.createRef();
     this.booking_auto=React.createRef();
 
-    this.conditions={}
+    this.conditions={};
     Object.values(ALF_CONDS).forEach(k => this.conditions[k]=React.createRef());
     console.log('condition buttons:'+JSON.stringify(this.conditions));
   }
 
   onBookingChanged(id, checked) {
     console.log("Booking changed:"+id+checked);
-    let req = (id=='request' && checked) || (id=='auto' && !checked);
+    let req = (id==='request' && checked) || (id==='auto' && !checked);
     console.log("Booking request is "+req);
     this.setState({booking_request: req},
       () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));

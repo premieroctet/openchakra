@@ -1,5 +1,4 @@
-import React, {useEffect} from 'react';
-import Layout from '../../hoc/Layout/Layout';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from './creaShopStyle'
 import PropTypes from 'prop-types';
@@ -28,7 +27,7 @@ class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 0,
+      activeStep: 9,
       user_id: null,
       shop:{
         booking_request: true,     // true/false
@@ -38,7 +37,7 @@ class creaShop extends React.Component {
         is_particular: true,        // true/false : particulier.pro
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
         is_certified: false,
-        service: null,
+        service: "5d66a0fb08b3d612bd0864e5",
         prestations:{},
         equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
@@ -56,18 +55,16 @@ class creaShop extends React.Component {
         availabilities: [],
       }
     };
-
-    this.onServiceChanged = this.onServiceChanged.bind(this)
-    this.prestaSelected = this.prestaSelected.bind(this)
-    this.settingsChanged = this.settingsChanged.bind(this)
-    this.preferencesChanged = this.preferencesChanged.bind(this)
-    this.assetsChanged = this.assetsChanged.bind(this)
+    this.onServiceChanged = this.onServiceChanged.bind(this);
+    this.prestaSelected = this.prestaSelected.bind(this);
+    this.settingsChanged = this.settingsChanged.bind(this);
+    this.preferencesChanged = this.preferencesChanged.bind(this);
+    this.assetsChanged = this.assetsChanged.bind(this);
     this.availabilityCreated = this.availabilityCreated.bind(this);
     this.availabilityDeleted = this.availabilityDeleted.bind(this);
     this.conditionsChanged = this.conditionsChanged.bind(this);
     this.shopSettingsChanged = this.shopSettingsChanged.bind(this);
     this.introduceChanged = this.introduceChanged.bind(this);
-
     this.nextDisabled = this.nextDisabled.bind(this)
   }
 
@@ -77,7 +74,7 @@ class creaShop extends React.Component {
         if (token === null) {
             Router.push('/login');
         }
- 
+
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(url+'myAlfred/api/users/current')
       .then(res => {
@@ -92,41 +89,40 @@ class creaShop extends React.Component {
   nextDisabled() {
     let shop=this.state.shop;
     let pageIndex = this.state.activeStep;
-    if (pageIndex==0) { return false; }
-    if (pageIndex==1) { return shop.service==null}
-    if (pageIndex==2) {
-      if (Object.keys(shop.prestations).length==0) return "disabled";
-      return Object.values(shop.prestations).every( v => {
-        if (v.price==0 || v.billing==null || v.billing==undefined || Object.keys(v.billing).length==0) {
-          return false;
-        }
-        return true;
-      })? false : true;
+    if (pageIndex===0) { return false; }
+    if (pageIndex===1) { return shop.service==null}
+    if (pageIndex===2) {
+      if (Object.keys(shop.prestations).length===0) return "disabled";
+      return !Object.values(shop.prestations)
+        .every(v => {
+          return !(v.price === 0 || v.billing == null || Object.keys(v.billing).length === 0);
+
+        });
     }
-    if (pageIndex==3) {
+    if (pageIndex===3) {
       if (shop.location==null)  return true;
       if (Object.values(shop.location).every( v => !v)) return true;
     }
-    if (pageIndex==5) {
-      if (shop.diplomaName=='' && shop.diplomaYear!='') return true;
-      if (shop.diplomaName!='' && shop.diplomaYear=='') return true;
-      if (shop.certificationName=='' && shop.certificationYear!='') return true;
-      if (shop.certificationName!='' && shop.certificationYear=='') return true;
+    if (pageIndex===5) {
+      if (shop.diplomaName==='' && shop.diplomaYear!=='') return true;
+      if (shop.diplomaName!=='' && shop.diplomaYear==='') return true;
+      if (shop.certificationName==='' && shop.certificationYear!=='') return true;
+      if (shop.certificationName!=='' && shop.certificationYear==='') return true;
     }
-    if (pageIndex==6) {
-      return shop.availabilities.length==0;
+    if (pageIndex===6) {
+      return shop.availabilities.length===0;
     }
-    if (pageIndex==8) {
-      if (shop.cancel_mode=='' || shop.cancel_mode==null) {
+    if (pageIndex===8) {
+      if (shop.cancel_mode==='' || shop.cancel_mode==null) {
         return true;
       }
     }
-    if (pageIndex==9) {
-      if (shop.is_particular==true) return false;
+    if (pageIndex===9) {
+      if (shop.is_particular===true) return false;
       // Pro
       if (shop.company==null) return true;
-      if (Object.values(shop.company).some(v => v==null || v=='')) return true;
-      if (shop.is_certified==false) return true;
+      if (Object.values(shop.company).some(v => v==null || v==='')) return true;
+      if (shop.is_certified===false) return true;
     }
     return false;
   }
@@ -141,7 +137,7 @@ class creaShop extends React.Component {
   availabilityDeleted(avail_id) {
     console.log("Availability id deleted:"+JSON.stringify(avail_id, null, 2));
     let shop = this.state.shop;
-    shop.availabilities=shop.availabilities.filter(avail => avail.ui_id != avail_id);
+    shop.availabilities=shop.availabilities.filter(avail => avail.ui_id !== avail_id);
     this.setState({shop: shop});
   }
 
@@ -163,10 +159,10 @@ class creaShop extends React.Component {
       })
 
     }
-  }
+  };
 
   isRightPanelHidden() {
-    return this.state.activeStep==2 || this.state.activeStep==6;
+    return this.state.activeStep===2 || this.state.activeStep===6;
   };
 
   handleBack = () => {
@@ -193,7 +189,7 @@ class creaShop extends React.Component {
     shop.equipments=selectedStuff;
     this.setState({shop: shop});
   }
-  
+
   preferencesChanged(state) {
     let shop=this.state.shop;
 
@@ -240,13 +236,13 @@ class creaShop extends React.Component {
       shop.company=null;
     }
     else {
-      shop.company=company; 
+      shop.company=company;
     }
     this.setState({shop: shop});
   }
 
   renderSwitch(stepIndex) {
-    let shop=this.state.shop;	
+    let shop=this.state.shop;
     switch(stepIndex) {
       case 0:
         return <CreaShopPresentation/>;
