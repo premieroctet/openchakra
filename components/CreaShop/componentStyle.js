@@ -68,7 +68,6 @@ export default theme => ({
   bottomSpacer:{
     width : 500,
     marginTop: 30,
-    marginBottom:100,
     [theme.breakpoints.down('md')]: {
       width: '100%'
     },

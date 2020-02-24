@@ -69,7 +69,7 @@ class SelectPrestation extends React.Component {
                 {Object.keys(this.state.grouped).map((fltr, i) =>{
                   let prestas = this.state.grouped[fltr];
                   return (
-                    <Grid item xl={6} lg={12} xs={12} key={i}>
+                    <Grid item xl={6} lg={6} xs={12} key={i}>
                       <Grid item> {fltr=='Aucun' ? '' : fltr}</Grid>
                       {prestas.map((p, j) => {
                         return(
