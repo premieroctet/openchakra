@@ -22,6 +22,7 @@ class SelectPrestation extends React.Component {
     };
     this.prestationSelected = this.prestationSelected.bind(this)
     this.addCustomPrestation = this.addCustomPrestation.bind(this)
+    this.removeCustomPrestation = this.removeCustomPrestation.bind(this)
   }
 
   componentDidMount() {
@@ -33,9 +34,11 @@ class SelectPrestation extends React.Component {
     axios.get(`${url}myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
         let data = res.data;
-        let grouped = _.mapValues(_.groupBy(data, 'filter_presentation.label'),
-          clist => clist.map(data => _.omit(data, 'filter_presentation.label')));
-        grouped[CUSTOM_PRESTATIONS_FLTR]=[];
+        let private_prestations = data.filter( p => p.private_alfred!=null);
+        let public_prestations = data.filter( p => p.private_alfred==null);
+        let grouped = _.mapValues(_.groupBy(public_prestations, 'filter_presentation.label'),
+          clist => clist.map(public_prestations => _.omit(public_prestations, 'filter_presentation.label')));
+        grouped={[CUSTOM_PRESTATIONS_FLTR]: private_prestations, ...grouped};
         this.setState({grouped : grouped});
       }).catch(error => {
       console.log(error);
@@ -53,6 +56,11 @@ class SelectPrestation extends React.Component {
     this.setState({grouped: grouped});
   }
 
+  removeCustomPrestation(presta_id) {
+    let grouped=this.state.grouped;
+    grouped[CUSTOM_PRESTATIONS_FLTR]=grouped[CUSTOM_PRESTATIONS_FLTR].filter(p => p._id != presta_id);
+    this.setState({grouped: grouped});
+  }
 
   prestationSelected(prestaId, checked, price, billing, label){
     console.log(prestaId+","+checked);
@@ -96,11 +104,13 @@ class SelectPrestation extends React.Component {
                         {isCustom ? <Grid className={classes.buttonAdd} onClick={() => this.addCustomPrestation() } >+</Grid>:null }
                       </Grid>
                       {prestas.map((p, j) => {
+                        console.log("Presta:"+JSON.stringify(p));
                         return(
                           <React.Fragment key={p._id}>
                             <ButtonSwitch isOption={true} isPrice={true} width={"100%"} label={p.label} id={p._id}
                                           billing={p.billing} onChange={this.prestationSelected} isEditable={isCustom}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+                            { isCustom ? <Grid className={classes.buttonRemove} onClick={() => this.removeCustomPrestation(p._id) } >-</Grid>:null }
                           </React.Fragment>
                       )
                       })}
