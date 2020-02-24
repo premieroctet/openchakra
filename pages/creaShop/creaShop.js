@@ -26,7 +26,7 @@ import {creaShopPresentation, selectService, selectPrestation, settingService, a
 
 class creaShop extends React.Component {
   constructor(props) {
-    super(props);
+        super(props);
     this.state={
       activeStep: 0,
       user_id: null,
@@ -259,7 +259,7 @@ class creaShop extends React.Component {
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>
-            <Stepper activeStep={this.state.activeStep}/>
+            <Stepper activeStep={this.state.activeStep} isType={"creaShop"}/>
           </Grid>
         </Grid>
         <Grid className={classes.marginContainer}>
