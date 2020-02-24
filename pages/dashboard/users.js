@@ -60,9 +60,11 @@ class home extends React.Component {
             alfred_count: 0,
         }
         setInterval(()=> this.getCounts(), 5000);
+        this.getCounts=this.getCounts.bind(this);
     }
 
     getCounts() {
+
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
         axios.get(url+"myAlfred/api/admin/users/all")
