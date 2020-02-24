@@ -39,6 +39,8 @@ const CANCEL_MODE= {
 // @Access private
 // FIX : inclure les disponibilites
 router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
+
+    // FIX: Ajouter date de création de boutique
     console.log('Creating shop');
     const {isValid, errors} = validateShopInput(req.body);
     if(!isValid) {
@@ -92,11 +94,22 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
 
               // FIX : créer les prestations custom avant
               let newPrestations = Object.values(req.body.prestations).filter( p => p._id==null);
-              console.log("newPrestations:"+JSON.stringify(newPrestations));
-              let newPrestaModels = newPrestations.map( p => Prestation({...p, service:req.body.service, billing: [p.billing]}));
-              console.log("newPrestationsModel:"+JSON.stringify(newPrestaModels));
-              Prestation.collection.insert(newPrestaModels).then( prestas => {
+              if (newPrestations.length>0) {
+                console.log("newPrestations:"+JSON.stringify(newPrestations));
+                let newPrestaModels = newPrestations.map( p => Prestation({...p, service:req.body.service, billing: [p.billing], filter_presentation:null, private_alfred:req.user.id}));
+                console.log("newPrestationsModel before save:"+JSON.stringify(newPrestaModels));
+                Prestation.collection.insert(newPrestaModels).then( result => {
               
+                  console.log("newPrestationsModel after save:"+JSON.stringify(result));
+                  var newIds = result.insertedIds;
+
+                  // Update news prestations ids
+                  newPrestations.forEach( (p, idx) => {
+                    p._id=newIds[idx];
+                  });
+                });
+              }
+
               Object.values(req.body.prestations).forEach( presta => {
                 p= {prestation:presta._id, billing:presta.billing.label, price:presta.price};
                 su.prestations.push(p);
@@ -132,7 +145,6 @@ router.post('/add', passport.authenticate('jwt',{session: false}),(req,res) => {
             })
             .catch(err => console.log(err));
 
-        })
 });
 
 

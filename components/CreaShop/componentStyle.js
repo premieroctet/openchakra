@@ -50,9 +50,9 @@ export default theme => ({
     color :'#484848',
   },
   policySizeContent:{
-    fontSize: 16,
+    fontSize: '0.875rem',
     fontWeight: 400,
-    lineHeight: '1.375em',
+    lineHeight: '1.43em',
     fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
     color: 'rgb(72, 72, 72)',
   },
@@ -181,5 +181,27 @@ export default theme => ({
     [theme.breakpoints.down('sm')]: {
       width : '100%'
     }
-  }
+  },
+  inputDiplomaCertifResp:{
+    width: '50%',
+    marginRight: '5%',
+    zIndex:0,
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    },
+  },
+  textField:{
+    width: '50%',
+    zIndex:0,
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    },
+  },
+  texfieldContentWelcomedMessage:{
+    width: '100%',
+    marginLeft: 10,
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 0,
+    },
+  },
 })

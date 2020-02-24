@@ -1,5 +1,4 @@
 import Grid from '@material-ui/core/Grid';
-import { ErrorMessage, Field } from 'formik';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
@@ -9,7 +8,7 @@ import React from 'react';
 import Siret from '../../WizardForm/Siret';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './IntroduceYouStyle';
+import styles from '../componentStyle';
 
 
 class IntroduceYou extends React.Component {
@@ -19,7 +18,7 @@ class IntroduceYou extends React.Component {
       is_particular: this.props.is_particular,
       company: this.props.company,
       is_certified: this.props.is_certified
-    }
+    };
 
     this.onStatusChanged=this.onStatusChanged.bind(this);
     this.onCertifiedChanged=this.onCertifiedChanged.bind(this);
@@ -30,7 +29,7 @@ class IntroduceYou extends React.Component {
    let id=event.target.id;
     console.log("Status changed:"+id+checked);
     console.log("State:"+JSON.stringify(this.state));
-    let req = (id=='particular' && checked) || (id=='professional' && !checked);
+    let req = (id==='particular' && checked) || (id==='professional' && !checked);
     console.log("Is particular is "+req);
     this.setState({is_particular: req},
       () => this.props.onChange(req, this.state.company, this.state.is_certified));
@@ -39,12 +38,12 @@ class IntroduceYou extends React.Component {
 
   onCertifiedChanged(event) {
     console.log("Certified change:"+event.target.checked);
-    this.setState({is_certified: event.target.checked}, 
+    this.setState({is_certified: event.target.checked},
       () => this.props.onChange(this.state.is_particular, this.state.company, this.state.is_certified));
   }
 
   onCompanyChanged(company) {
-    this.setState({company: company}, 
+    this.setState({company: company},
       () => this.props.onChange(this.state.is_particular, this.state.company, this.state.is_certified));
   }
 
@@ -121,9 +120,9 @@ class IntroduceYou extends React.Component {
                           Un statut professionnel est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière.
                         </p>
                         {this.state.is_particular ? null:
-                          <React.Fragment><div> 
+                          <React.Fragment><div>
                             <Siret onChange={this.onCompanyChanged} company={this.state.company} />
-                          </div> 
+                          </div>
                           <FormControlLabel
                             control={
                               <Checkbox

@@ -172,7 +172,7 @@ class security extends React.Component {
         return (
             <Fragment>
 		<Helmet>
-        <title>compte - Sécurité - My Alfred </title>
+        <title>Compte - Sécurité - My Alfred </title>
         <meta property="description" content="Modifiez votre mot de passe et gérer la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !" />
       </Helmet>
                 <Layout>

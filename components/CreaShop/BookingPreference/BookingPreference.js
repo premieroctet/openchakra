@@ -17,9 +17,9 @@ class BookingPreference extends React.Component {
     super(props);
     this.state = {
       deadline_unit: "jours",
-      deadline_value: 0,
-      minimum_basket: 0,
-      perimeter: 0,
+      deadline_value: 1,
+      minimum_basket: 1,
+      perimeter: 1,
       service: null,
     }
   }
@@ -43,7 +43,7 @@ class BookingPreference extends React.Component {
     const {classes} = this.props;
     const {service} = this.state;
 
-    console.log("Render:"+JSON.stringify(this.state)); 
+    console.log("Render:"+JSON.stringify(this.state));
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -72,7 +72,7 @@ class BookingPreference extends React.Component {
                     </Grid>
                     <TextField
                       value={this.state.deadline_unit}
-                      style={{width: '30%'}}
+                      style={{width: '45%'}}
                       className={classes.selectDelayInputRepsonsive}
                       select
                       margin="dense"
@@ -98,7 +98,7 @@ class BookingPreference extends React.Component {
                 </Grid>
                 <Grid>
                   <TextField
-                    className={classes.textField}
+                    style={{width: 200}}
                     type="number"
                     value={this.state.minimum_basket}
                     fullWidth
