@@ -24,6 +24,16 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Input,
+  useTheme,
+  ModalHeader,
 } from '@chakra-ui/core'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
@@ -32,8 +42,8 @@ import { generateCode } from '../utils/code'
 import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
-import { getShowLayout, getShowCode } from '../core/selectors/app'
-import { FaRegSave, FaBomb } from 'react-icons/fa'
+import { getShowLayout, getShowCode, getThemeData } from '../core/selectors/app'
+import { FaRegSave, FaBomb, FaEdit } from 'react-icons/fa'
 import { GoRepo } from 'react-icons/go'
 import { FiUpload } from 'react-icons/fi'
 
@@ -74,8 +84,27 @@ const CodeSandboxButton = () => {
 
 const Header = () => {
   const showLayout = useSelector(getShowLayout)
+  const themeData = useSelector(getThemeData)
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const theme = useTheme()
+
+  const handleChange = async (selectorFiles: any) => {
+    selectorFiles.preventDefault()
+    const reader = new FileReader()
+    reader.onload = async e => {
+      if (e.target!.result) {
+        const text = e.target!.result
+        console.log(text)
+        dispatch.app.getThemeData(text)
+        await console.log(themeData)
+      } else {
+        console.log("Can't read this file")
+      }
+    }
+    reader.readAsText(selectorFiles.target.files[0])
+  }
 
   return (
     <DarkMode>
@@ -124,6 +153,10 @@ const Header = () => {
                     <MenuItem>
                       <Box mr={2} as={FiUpload} />
                       Import components
+                    </MenuItem>
+                    <MenuItem onClick={onOpen}>
+                      <Box mr={2} as={FaEdit} />
+                      Edit theme
                     </MenuItem>
                     <MenuDivider />
                     <MenuItem>
@@ -226,6 +259,33 @@ const Header = () => {
               )}
             </Popover>
           </Stack>
+          <Modal isOpen={isOpen} onClose={onClose} size="lg">
+            <ModalOverlay />
+            <ModalContent color="white">
+              <ModalHeader fontSize="15px" textAlign="center">
+                Select your custom JSON Theme Object
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Input
+                  id="themeFile"
+                  type="file"
+                  accept="application/json"
+                  onChange={(selectorFiles: any) => handleChange(selectorFiles)}
+                  //value={themeData}
+                />
+              </ModalBody>
+
+              <ModalFooter>
+                <Button variantColor="green" mr={3} onClick={onClose} size="sm">
+                  Apply
+                </Button>
+                <Button variantColor="blue" mr={3} onClick={onClose} size="sm">
+                  Close
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </Flex>
 
         <Stack

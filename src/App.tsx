@@ -11,12 +11,23 @@ import { HotKeys } from 'react-hotkeys'
 import useShortcuts, { keyMap } from './hooks/useShortcuts'
 import EditorErrorBoundary from './components/errorBoundaries/EditorErrorBoundary'
 import useProducthunt from './hooks/useProducthunt'
+import { ThemeProvider, theme } from '@chakra-ui/core'
+import { useSelector } from 'react-redux'
+import { getThemeData } from './core/selectors/app'
 
 const App = () => {
   const { handlers } = useShortcuts()
+  const themeData = useSelector(getThemeData)
 
   // To remove soon :)
   useProducthunt()
+
+  const customTheme = {
+    ...theme,
+    themeData,
+  }
+
+  console.log(themeData)
 
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>
@@ -30,12 +41,13 @@ const App = () => {
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />
-
-          <EditorErrorBoundary>
-            <Box bg="white" flex={1} zIndex={10} position="relative">
-              <Editor />
-            </Box>
-          </EditorErrorBoundary>
+          <ThemeProvider theme={customTheme}>
+            <EditorErrorBoundary>
+              <Box bg="white" flex={1} zIndex={10} position="relative">
+                <Editor />
+              </Box>
+            </EditorErrorBoundary>
+          </ThemeProvider>
 
           <Box
             maxH="calc(100vh - 3rem)"
