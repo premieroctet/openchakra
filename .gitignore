@@ -190,6 +190,7 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/linux,macos,windows,webstorm+all,visualstudiocode
 static/
+!static/assets/police
 
 # Vi swap files
 **/*.swp
