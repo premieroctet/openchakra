@@ -181,13 +181,13 @@ class all extends React.Component {
                                                             {e.label}
                                                         </TableCell>
                                                         <TableCell component="th" scope="row">
-                                                            {e.category.label}
+                                                            {e.service.category.label}
                                                         </TableCell>
                                                         <TableCell component="th" scope="row">
                                                             {e.service.label}
                                                         </TableCell>
                                                         <TableCell component="th" scope="row">
-                                                            {e.filter_presentation.label}
+                                                            {(e.filter_presentation || {label: 'Aucun'}).label}
                                                         </TableCell>
                                                         <TableCell>
                                                             <Link href={`/dashboard/prestations/view?id=${e._id}`}><a>Modifier</a></Link>
