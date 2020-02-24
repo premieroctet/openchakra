@@ -27,7 +27,7 @@ class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 2,
+      activeStep: 0,
       user_id: null,
       shop:{
         booking_request: true,     // true/false
@@ -37,7 +37,7 @@ class creaShop extends React.Component {
         is_particular: true,        // true/false : particulier.pro
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
         is_certified: false,
-        service: "5d66a0fb08b3d612bd0864e5",
+        service: null,
         prestations:{},
         equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
