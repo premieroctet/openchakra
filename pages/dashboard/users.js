@@ -57,8 +57,33 @@ class home extends React.Component {
         super(props);
         this.state = {
             users_count: 0,
-            alfred_count: 0
+            alfred_count: 0,
         }
+        setInterval(()=> this.getCounts(), 5000);
+    }
+
+    getCounts() {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
+        axios.get(url+"myAlfred/api/admin/users/all")
+            .then((response) => { this.setState({user_count: response.data.length}) })
+            .catch((error) => { console.log(error);
+            if(error.response.status === 401 || error.response.status === 403) {
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            }
+        });
+
+        axios.get(url+"myAlfred/api/admin/users/alfred")
+            .then((response) => { this.setState({alfred_count: response.data.length}) })
+            .catch((error) => {
+             console.log(error);
+             if(error.response.status === 401 || error.response.status === 403) {
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            }
+          });
+
     }
 
     componentDidMount() {
@@ -71,33 +96,7 @@ class home extends React.Component {
             const decode = jwt.decode(token);
             this.setState({is_admin: decode.is_admin});
         }
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-
-        axios.get(url+"myAlfred/api/admin/users/all")
-            .then((response) => {
-                let user = response.data;
-                this.setState({user_count: user.length})
-            }).catch((error) => {
-            console.log(error);
-            if(error.response.status === 401 || error.response.status === 403) {
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
-            }
-        });
-
-        axios.get(url+"myAlfred/api/admin/users/alfred")
-            .then((response) => {
-                let alfred = response.data;
-                console.log("Alfred:"+JSON.stringify(alfred));
-                this.setState({alfred_count: alfred.length})
-
-            }).catch((error) => {
-            console.log(error);
-            if(error.response.status === 401 || error.response.status === 403) {
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
-            }
-          });
+        this.getCounts();
     }
 
 
