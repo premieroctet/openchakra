@@ -27,7 +27,7 @@ class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      activeStep: 0,
+      activeStep: 6,
       user_id: null,
       shop:{
         booking_request: true,     // true/false
@@ -37,7 +37,7 @@ class creaShop extends React.Component {
         is_particular: true,        // true/false : particulier.pro
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
         is_certified: false,
-        service: null,
+        service: "5d66a0fb08b3d612bd0864e5",
         prestations:{},
         equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
@@ -53,6 +53,10 @@ class creaShop extends React.Component {
         service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
         perimeter: 0,
         availabilities: [],
+      },
+      tutorialSchedule:{
+        title: "Précisez vos disponibilités si vous le souhaitez ! ",
+        content : "Si aucune disponibilité n’est précisée, vos services pourront être réservés à tout moment. Si vous précisez vos disponibilités, seules les plages horaires indiquées pourront être réservées. Vous pouvez appliquer une récurrence à vos disponibilités afin de gagner du temps ! Par exemple, si vous êtes disponible tous les lundis et mardis, vous pouvez cocher la case Récurrence, et cliquer sur Lu et Ma afin de répéter votre disponibilité sur une durée que vous pouvez définir."
       }
     };
     this.onServiceChanged = this.onServiceChanged.bind(this);
@@ -257,7 +261,7 @@ class creaShop extends React.Component {
       case 5:
         return <AssetsService data={shop} onChange={this.assetsChanged} />;
       case 6:
-        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} />;
+        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} isTuto={this.state.tutorialSchedule} />;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}  onChange={this.conditionsChanged} />;
       case 8:
