@@ -87,7 +87,7 @@ export const AccordionWhitelist: (
 export const TabsWhiteList: (
   | ComponentType
   | MetaComponentType
-)[] = COMPONENTS.filter(name => !TABS_COMPONENTS.includes(name))
+)[] = COMPONENTS.filter(name => !ALERT_COMPONENTS.includes(name))
 
 export const rootComponents = COMPONENTS
   // Remove specific components
