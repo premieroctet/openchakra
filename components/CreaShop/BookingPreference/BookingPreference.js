@@ -98,7 +98,7 @@ class BookingPreference extends React.Component {
                 </Grid>
                 <Grid>
                   <TextField
-                    style={{width: '20%'}}
+                    style={{width: 200}}
                     type="number"
                     value={this.state.minimum_basket}
                     fullWidth
