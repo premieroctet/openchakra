@@ -38,12 +38,12 @@ class SettingService extends React.Component {
         console.log("Got service:"+JSON.stringify(service, null, 2));
         let location = {};
         Object.keys(service.location).forEach (k => {
-          if (service.location[k]) location[k]=false;
+          if (service.location[k]) location[k]=true;
         });
         this.setState({
           service: service,
           location: location
-        });
+        }, ()=>this.fireOnChange());
       })
       .catch(error => {
         console.log(error);
@@ -79,7 +79,7 @@ class SettingService extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {service} = this.state;
+    const {service, location} = this.state;
 
     return (
       <Grid className={classes.mainContainer}>
@@ -123,22 +123,22 @@ class SettingService extends React.Component {
                 <Grid style={{marginLeft : 15}}>
                   { "client" in this.state.location ?
                     <Grid>
-                      <ButtonSwitch label={"A l'adresse de mon client"} id='client' onChange={this.onLocationChange} />
+                      <ButtonSwitch checked={location.client} label={"A l'adresse de mon client"} id='client' onChange={this.onLocationChange} />
                     </Grid>:null
                   }
-                  { "alfred" in this.state.location ?
+                  { "alfred" in location ?
                   <Grid>
-                    <ButtonSwitch label={"A mon adresse"} id='alfred' onChange={this.onLocationChange} />
+                    <ButtonSwitch checked={location.alfred} label={"A mon adresse"} id='alfred' onChange={this.onLocationChange} />
                   </Grid>:null
                   }
-                  { "visio" in this.state.location ?
+                  { "visio" in location ?
                   <Grid >
-                    <ButtonSwitch label={"En visioconférence"} id='visio' onChange={this.onLocationChange} />
+                    <ButtonSwitch checked={location.visio} label={"En visioconférence"} id='visio' onChange={this.onLocationChange} />
                   </Grid>:null
                   }
-                  { "ext" in this.state.location ?
+                  { "ext" in location ?
                   <Grid>
-                    <ButtonSwitch label={"En extérieur"} id='ext' onChange={this.onLocationChange} />
+                    <ButtonSwitch checked={location.ext} label={"En extérieur"} id='ext' onChange={this.onLocationChange} />
                   </Grid>:null
                   }
                 </Grid>
