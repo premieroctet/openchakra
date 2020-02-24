@@ -22,6 +22,7 @@ const {config} = require('../../config/config');
 const url = config.apiUrl;
 import { toast } from 'react-toastify';
 import Router from "next/router";
+import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps'
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -90,40 +91,15 @@ class creaShop extends React.Component {
   }
 
   nextDisabled() {
-    let shop=this.state.shop;
+    let shop = this.state.shop;
     let pageIndex = this.state.activeStep;
-    if (pageIndex===0) { return false; }
-    if (pageIndex===1) { return shop.service==null}
-    if (pageIndex===2) {
-      if (Object.keys(shop.prestations).length===0) return "disabled";
-      return !Object.values(shop.prestations)
-        .every(v => {
-          return !(v.price === 0 || v.billing == null || Object.keys(v.billing).length === 0);
-
-        });
-    }
-    if (pageIndex===3) {
-      if (shop.location==null)  return true;
-      if (Object.values(shop.location).every( v => !v)) return true;
-    }
-    if (pageIndex===5) {
-      if (shop.diplomaName==='' && shop.diplomaYear!=='') return true;
-      if (shop.diplomaName!=='' && shop.diplomaYear==='') return true;
-      if (shop.certificationName==='' && shop.certificationYear!=='') return true;
-      if (shop.certificationName!=='' && shop.certificationYear==='') return true;
-    }
-    if (pageIndex===8) {
-      if (shop.cancel_mode==='' || shop.cancel_mode==null) {
-        return true;
-      }
-    }
-    if (pageIndex===9) {
-      if (shop.is_particular===true) return false;
-      // Pro
-      if (shop.company==null) return true;
-      if (Object.values(shop.company).some(v => v==null || v==='')) return true;
-      if (shop.is_certified===false) return true;
-    }
+    if (pageIndex===0) { return creaShopPresentation() }
+    if (pageIndex===1) { return selectService(shop) }
+    if (pageIndex===2) { return selectPrestation(shop) }
+    if (pageIndex===3) { return settingService(shop) }
+    if (pageIndex===5) { return assetsService(shop) }
+    if (pageIndex===8) { return settingShop(shop) }
+    if (pageIndex===9) { return introduceYou(shop) }
     return false;
   }
 
