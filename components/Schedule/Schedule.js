@@ -236,21 +236,25 @@ class Schedule extends React.Component {
   };
 
   render() {
-    const { classes, isTuto } = this.props;
+    const { classes, title, subtitle } = this.props;
 
     let events = availabilities2events(this.props.availabilities);
     console.log("Events rendered:"+JSON.stringify(events[0]));
 
     return (
       <Grid style={{height:700}}>
-        { isTuto ?
+        { title || subtitle  ?
           <Grid style={{ marginBottom: 50 }}>
-            <Grid>
-              <Typography className={classes.policySizeTitle}>{isTuto.title}</Typography>
-            </Grid>
-            <Grid>
-              <p className={classes.policySizeContent}>{isTuto.content}</p>
-            </Grid>
+            { title ?
+              <Grid>
+                <Typography className={classes.policySizeTitle}>{title}</Typography>
+              </Grid> : null
+            }
+            { subtitle ?
+              <Grid>
+                <p className={classes.policySizeContent}>{subtitle}</p>
+              </Grid> : null
+            }
           </Grid>
           : null
         }
