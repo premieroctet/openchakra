@@ -105,13 +105,19 @@ class ButtonSwitch extends React.Component {
     return(
       <Grid className={classes.contentFiltre}>
         <Grid className={classes.responsiveIOSswitch} style={{width : this.props.width}}>
-          <IOSSwitch
-            color="primary"
-            type="checkbox"
-            checked={this.state.checked}
-            onChange={this.onToggle}
-          />
-        {label === undefined ? "label introuvable" : label}
+          <Grid>
+            <IOSSwitch
+              color="primary"
+              type="checkbox"
+              checked={this.state.checked}
+              onChange={this.onToggle}
+            />
+          </Grid>
+          <Grid>
+            <span>
+              {label === undefined ? "label introuvable" : label}
+            </span>
+          </Grid>
         </Grid>
         { isPrice ?
           <Grid className={classes.responsiveIOSswitchContent}>

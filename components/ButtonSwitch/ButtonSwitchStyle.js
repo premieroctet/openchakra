@@ -11,6 +11,8 @@ export default theme => ({
     }
   },
   responsiveIOSswitch:{
+    display: 'flex',
+    alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     }
