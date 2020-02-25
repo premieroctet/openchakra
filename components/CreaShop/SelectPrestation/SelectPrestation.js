@@ -26,9 +26,10 @@ class SelectPrestation extends React.Component {
   }
 
   componentDidMount() {
+    let billings=null;
     axios.get(`${url}myAlfred/api/billing/all`)
       .then(res => {
-        let billings=res.data;
+        billings=res.data;
         this.setState({all_billings: billings});
       });
     axios.get(`${url}myAlfred/api/prestation/${this.props.service}`)
@@ -38,7 +39,9 @@ class SelectPrestation extends React.Component {
         let public_prestations = data.filter( p => p.private_alfred==null);
         let grouped = _.mapValues(_.groupBy(public_prestations, 'filter_presentation.label'),
           clist => clist.map(public_prestations => _.omit(public_prestations, 'filter_presentation.label')));
-        grouped={[CUSTOM_PRESTATIONS_FLTR]: private_prestations, ...grouped};
+        let presta_templates = private_prestations.map( p => { return {...p, billing: billings}});
+        console.log("presta_templates:"+JSON.stringify(presta_templates));
+        grouped={[CUSTOM_PRESTATIONS_FLTR]: presta_templates, ...grouped};
         this.setState({grouped : grouped});
       }).catch(error => {
       console.log(error);
@@ -54,12 +57,15 @@ class SelectPrestation extends React.Component {
   }
 
   removeCustomPrestation(presta_id) {
+    this.prestationSelected(presta_id, false);
     let grouped=this.state.grouped;
     grouped[CUSTOM_PRESTATIONS_FLTR]=grouped[CUSTOM_PRESTATIONS_FLTR].filter(p => p._id != presta_id);
     this.setState({grouped: grouped});
+    let prestations = this.state.prestations;
   }
 
   prestationSelected(prestaId, checked, price, billing, label){
+    console.log("Prestation selected:"+prestaId);
     let sel=this.state.prestations
     if (checked) {
       sel[prestaId]={_id:prestaId, label:label, price:price, billing:billing}
