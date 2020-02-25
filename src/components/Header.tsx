@@ -34,6 +34,7 @@ import {
   Input,
   useTheme,
   ModalHeader,
+  Text,
 } from '@chakra-ui/core'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
@@ -88,7 +89,7 @@ const Header = () => {
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const theme = useTheme()
+  const [readFileStatus, setReadFileStatus] = useState(<p></p>)
 
   const handleChange = async (selectorFiles: any) => {
     selectorFiles.preventDefault()
@@ -96,11 +97,33 @@ const Header = () => {
     reader.onload = async e => {
       if (e.target!.result) {
         const text = e.target!.result
-        console.log(text)
-        dispatch.app.getThemeData(text)
-        await console.log(themeData)
+        // @ts-ignore
+        dispatch.app.getThemeData(JSON.parse(text))
+        setReadFileStatus(
+          <p style={{ textAlign: 'center', marginTop: '20px' }}>
+            Your theme has been successfully loaded{' '}
+            <span
+              style={{ verticalAlign: 'middle' }}
+              role="img"
+              aria-label="light"
+            >
+              ✅
+            </span>
+          </p>,
+        )
       } else {
-        console.log("Can't read this file")
+        setReadFileStatus(
+          <p>
+            Can't read this file / theme{' '}
+            <span
+              style={{ verticalAlign: 'middle' }}
+              role="img"
+              aria-label="light"
+            >
+              ❌
+            </span>
+          </p>,
+        )
       }
     }
     reader.readAsText(selectorFiles.target.files[0])
@@ -272,8 +295,8 @@ const Header = () => {
                   type="file"
                   accept="application/json"
                   onChange={(selectorFiles: any) => handleChange(selectorFiles)}
-                  //value={themeData}
                 />
+                {readFileStatus}
               </ModalBody>
 
               <ModalFooter>

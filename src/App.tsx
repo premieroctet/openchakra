@@ -24,10 +24,11 @@ const App = () => {
 
   const customTheme = {
     ...theme,
-    themeData,
+    ...(themeData as {}),
   }
 
   console.log(themeData)
+  console.log(customTheme)
 
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>

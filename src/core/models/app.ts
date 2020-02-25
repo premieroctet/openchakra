@@ -7,7 +7,7 @@ export type AppState = {
   showCode: boolean
   inputTextFocused: boolean
   overlay: undefined | Overlay
-  themeData: string
+  themeData: null | object
 }
 
 const app = createModel({
@@ -16,7 +16,7 @@ const app = createModel({
     showCode: false,
     inputTextFocused: false,
     overlay: undefined,
-    themeData: '',
+    themeData: null,
   } as AppState,
   reducers: {
     toggleBuilderMode(state: AppState): AppState {
