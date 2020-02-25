@@ -125,6 +125,7 @@ class all extends React.Component {
         axios.get(url+"myAlfred/api/admin/prestation/all")
             .then((response) => {
                 let prestation = response.data;
+                console.log(JSON.stringify(prestation.filter(p => p.private_alfred!=null), null, 2));
                 this.setState({prestation: prestation})
             }).catch((error) => {
             console.log(error);
@@ -170,6 +171,7 @@ class all extends React.Component {
                                                 <TableCell>Catégorie</TableCell>
                                                 <TableCell>Service</TableCell>
                                                 <TableCell>Filtre de présentation</TableCell>
+                                                <TableCell>Privée</TableCell>
                                                 <TableCell>Action</TableCell>
                                             </TableRow>
                                         </TableHead>
@@ -188,6 +190,9 @@ class all extends React.Component {
                                                         </TableCell>
                                                         <TableCell component="th" scope="row">
                                                             {(e.filter_presentation || {label: 'Aucun'}).label}
+                                                        </TableCell>
+                                                        <TableCell component="th" scope="row">
+                                                            { e.private_alfred ? "X" : ""}
                                                         </TableCell>
                                                         <TableCell>
                                                             <Link href={`/dashboard/prestations/view?id=${e._id}`}><a>Modifier</a></Link>
