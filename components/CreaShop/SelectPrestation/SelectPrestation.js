@@ -42,12 +42,7 @@ class SelectPrestation extends React.Component {
         this.setState({grouped : grouped});
       }).catch(error => {
       console.log(error);
-    })
-    axios.get(`${url}myAlfred/api/service/${this.props.service}`)
-      .then(res => {
-        let service=res.data;
-        this.setState({service: service});
-      });
+    });
   }
 
   addCustomPrestation() {
@@ -67,7 +62,7 @@ class SelectPrestation extends React.Component {
   prestationSelected(prestaId, checked, price, billing, label){
     let sel=this.state.prestations
     if (checked) {
-      sel[prestaId]={_id:prestaId, label:label, price:price, billing:billing, label: label}
+      sel[prestaId]={_id:prestaId, label:label, price:price, billing:billing}
     }
     else {
       delete sel[prestaId];
@@ -78,7 +73,8 @@ class SelectPrestation extends React.Component {
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes, service} = this.props;
+    console.log(service, "service ")
 
     return(
       <Grid className={classes.mainContainer}>
@@ -100,7 +96,7 @@ class SelectPrestation extends React.Component {
                   let isCustom = fltr==CUSTOM_PRESTATIONS_FLTR;
                   return (
                     <Grid item xl={6} lg={12} xs={12} key={i}>
-                      <Grid item> 
+                      <Grid item>
                         {fltr=='Aucun' ? '' : fltr}
                         {isCustom ? <Grid className={classes.buttonAdd} onClick={() => this.addCustomPrestation() } >+</Grid>:null }
                       </Grid>
