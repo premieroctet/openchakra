@@ -32,9 +32,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   Input,
-  useTheme,
   ModalHeader,
-  Text,
 } from '@chakra-ui/core'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
@@ -85,7 +83,7 @@ const CodeSandboxButton = () => {
 
 const Header = () => {
   const showLayout = useSelector(getShowLayout)
-  const themeData = useSelector(getThemeData)
+  useSelector(getThemeData)
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -300,9 +298,6 @@ const Header = () => {
               </ModalBody>
 
               <ModalFooter>
-                <Button variantColor="green" mr={3} onClick={onClose} size="sm">
-                  Apply
-                </Button>
                 <Button variantColor="blue" mr={3} onClick={onClose} size="sm">
                   Close
                 </Button>

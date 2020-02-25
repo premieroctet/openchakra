@@ -52,8 +52,6 @@ const ColorsControl = (props: ColorControlPropsType) => {
     } else if (themeData === null) {
       setThemeValue(theme)
     }
-    console.log(themeValue)
-    console.log(theme)
   }, [themeData, themeValue, theme])
 
   // @ts-ignore
