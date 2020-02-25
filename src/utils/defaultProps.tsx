@@ -284,7 +284,7 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
       </>
     ),
   },
-  Slider: { ...Slider.defaultProps },
+  Slider: { ...Slider.defaultProps, defaultValue: 30 },
   List: { ...List.defaultProps, styleType: 'none' },
   ListIcon: { ...ListIcon.defaultProps },
   ListItem: { ...ListItem.defaultProps, children: 'list' },
