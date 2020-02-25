@@ -85,22 +85,6 @@ class services extends React.Component {
           .catch(error => {
               console.log(error);
           });
-
-       /* const id = this.props.service_id;
-        if(id !== undefined){
-            axios
-              .get(url+`myAlfred/api/serviceUser/${id}`)
-              .then(res => {
-                  let serviceUser = res.data;
-                  console.log(serviceUser, "serviceUser");
-                  this.setState({shop: {...this.state.shop, service: serviceUser.service.category}});
-                  console.log(this.state.shop, "shop")
-              }).catch(error => {
-                console.log(error);
-            });
-        }else{
-            this.setState({...this.state.shop, service: null})
-        }*/
     }
 
     nextDisabled() {
@@ -221,7 +205,7 @@ class services extends React.Component {
         let shop = this.state.shop;
         switch(stepIndex) {
             case 0:
-                return <SelectPrestation service={shop.service} onChange={this.prestaSelected} />;
+                return <SelectPrestation service={this.props.service_id !== undefined ? this.props.service_id :  shop.service} onChange={this.prestaSelected} />;
             case 1:
                 return <SettingService service={shop.service} onChange={this.settingsChanged} />;
             case 2:
