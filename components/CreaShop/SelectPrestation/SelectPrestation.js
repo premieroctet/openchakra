@@ -16,13 +16,15 @@ class SelectPrestation extends React.Component {
     super(props);
     this.state = {
       grouped: [],
-      prestations:{},
+      prestations:this.props.prestations || {},
       service: null,
       all_billlings:[],
     };
     this.prestationSelected = this.prestationSelected.bind(this)
     this.addCustomPrestation = this.addCustomPrestation.bind(this)
     this.removeCustomPrestation = this.removeCustomPrestation.bind(this)
+
+    console.log("Prestations ctor:"+JSON.stringify(this.props.prestations));
   }
 
   componentDidMount() {
@@ -52,7 +54,9 @@ class SelectPrestation extends React.Component {
 
   addCustomPrestation() {
     let grouped=this.state.grouped;
-    grouped[CUSTOM_PRESTATIONS_FLTR].push({_id: -generate_id(), label:"", service: this.state.service, billing:this.state.all_billings, description:'', price:0});
+    let custom_presta = {_id: -generate_id(), label:"", service: this.state.service, billing:this.state.all_billings, description:'', price:0};
+    console.log("Adding prestation:"+JSON.stringify(custom_presta));
+    grouped[CUSTOM_PRESTATIONS_FLTR].push(custom_presta);
     this.setState({grouped: grouped});
   }
 
@@ -63,7 +67,6 @@ class SelectPrestation extends React.Component {
   }
 
   prestationSelected(prestaId, checked, price, billing, label){
-    console.log(prestaId+","+checked);
     let sel=this.state.prestations
     if (checked) {
       sel[prestaId]={_id:prestaId, label:label, price:price, billing:billing, label: label}
@@ -105,11 +108,11 @@ class SelectPrestation extends React.Component {
                       </Grid>
                       {prestas.map((p, j) => {
                         let isEditable=parseInt(p._id)<0;
-                        console.log("Presta:"+JSON.stringify(p));
+                        let presta=this.state.prestations[p._id];
                         return(
                           <React.Fragment key={p._id}>
-                            <ButtonSwitch isOption={true} isPrice={true} width={"100%"} label={p.label} id={p._id}
-                                          billing={p.billing} onChange={this.prestationSelected} isEditable={isEditable}/>
+                            <ButtonSwitch isOption={true} isPrice={true} width={"100%"} label={p.label} id={p._id} checked={presta!=null}
+                                          billings={p.billing} onChange={this.prestationSelected} isEditable={isEditable} price={presta?presta.price:0}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                             { isCustom ? <Grid className={classes.buttonRemove} onClick={() => this.removeCustomPrestation(p._id) } >-</Grid>:null }
                           </React.Fragment>

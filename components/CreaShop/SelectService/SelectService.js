@@ -16,7 +16,7 @@ class SelectService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      service: this.props.service,
+      service: null,
       services: [],
     }
     this.onChange = this.onChange.bind(this);
@@ -34,7 +34,12 @@ class SelectService extends React.Component {
         Object.keys(data).forEach( (k) => {
           data[k].forEach( (s) => {
 	    // FIX: passer les keyowrds autrement dans le back
-            services.push({category: k, label: s.label+"/"+s.keywords.join(' '), id: s.id});
+            let srv_opt={category: k, name: s.label+"/"+s.keywords.join(' '), id: s.id};
+            services.push(srv_opt);
+            if (this.state.service==null && s.id==this.props.service) {
+              console.log("Found");
+              this.setState({service: srv_opt}); 
+            }
           });
         });
         this.setState({services: services});
@@ -49,7 +54,7 @@ class SelectService extends React.Component {
 
   onChange(event, value){
     console.log("OnChange value:"+inspect(value));
-    this.setState({service: value ? value.id : null});
+    this.setState({service: value ? value : null});
     if(value !== undefined && value !== null){
       this.props.onChange(value.id);
     }
@@ -95,7 +100,8 @@ class SelectService extends React.Component {
                       onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       options={this.state.services}
                       groupBy={option => option.category}
-                      getOptionLabel={option => option.label.split('/')[0]}
+                      getOptionLabel={option => option.name.split('/')[0]}
+                      value={this.state.service}
                       renderInput={params => (
                         <TextField {...params} label="Tapez votre service" variant="outlined" fullWidth />
                       )}

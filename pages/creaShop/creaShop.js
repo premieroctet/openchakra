@@ -28,7 +28,7 @@ class creaShop extends React.Component {
   constructor(props) {
         super(props);
     this.state={
-      activeStep: 3,
+      activeStep: 2,
       user_id: null,
       shop:{
         booking_request: true,     // true/false
@@ -39,7 +39,7 @@ class creaShop extends React.Component {
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
         is_certified: false,
         service: "5e1f4497e6d1ae24fa0d712d",
-        prestations:{},
+        prestations:{"5e1f4497e6d1ae24fa0d7138":{"_id":"5e1f4497e6d1ae24fa0d7138","label":"Estimation de bien","price":15,"billing":{"_id":"5d66a0db08b3d612bd0864da","label":"à l'unité"}}},
         equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
         travel_tax: 0, // Frais de déplacement
@@ -60,7 +60,7 @@ class creaShop extends React.Component {
 
     };
     this.onServiceChanged = this.onServiceChanged.bind(this);
-    this.prestaSelected = this.prestaSelected.bind(this);
+    this.onPrestaChanged = this.onPrestaChanged.bind(this);
     this.settingsChanged = this.settingsChanged.bind(this);
     this.preferencesChanged = this.preferencesChanged.bind(this);
     this.assetsChanged = this.assetsChanged.bind(this);
@@ -151,14 +151,15 @@ class creaShop extends React.Component {
   onServiceChanged(service_id){
     let shop = this.state.shop;
     shop.service = service_id;
+    console.log("CreaShop setting service "+service_id);
     this.setState({shop: shop});
   }
 
-  prestaSelected(prestations) {
+  onPrestaChanged(prestations) {
     let shop=this.state.shop;
     shop.prestations=prestations;
     this.setState({shop: shop});
-    console.log("CreaShop:prestaSelected:"+JSON.stringify(prestations));
+    console.log("CreaShop:onPrestaChanged:"+JSON.stringify(prestations));
   }
 
   settingsChanged(location, travel_tax, pick_tax, selectedStuff) {
@@ -229,7 +230,7 @@ class creaShop extends React.Component {
       case 1:
         return <SelectService onChange={this.onServiceChanged} service={shop.service} />;
       case 2:
-        return <SelectPrestation service={shop.service} onChange={this.prestaSelected} />;
+        return <SelectPrestation service={shop.service} prestations={shop.prestations} onChange={this.onPrestaChanged} />;
       case 3:
         return <SettingService service={shop.service} onChange={this.settingsChanged} />;
       case 4:

@@ -77,12 +77,14 @@ const CssTextField = withStyles({
 class ButtonSwitch extends React.Component {
   constructor(props) {
     super(props);
+    console.log("Constuctor with props"+JSON.stringify(props.billings));
     this.state = {
       checked: this.props.checked || false,
-      billing: props.isOption ?this.props.billing[0] : null,
-      price:0,
+      billing: props.isOption ? this.props.billings[0] : null,
+      price:this.props.price||0,
       label: this.props.label,
     };
+    console.log("Set billing:"+JSON.stringify(this.state.billing));
     this.onToggle = this.onToggle.bind(this);
     this.onChangeBilling = this.onChangeBilling.bind(this);
     this.onChangePrice = this.onChangePrice.bind(this);
@@ -107,7 +109,7 @@ class ButtonSwitch extends React.Component {
   }
 
   render() {
-    const {classes, isEditable, isOption, isPrice, billing} = this.props;
+    const {classes, isEditable, isOption, isPrice, billings} = this.props;
     const {label} = this.state;
     
     return(
@@ -160,7 +162,7 @@ class ButtonSwitch extends React.Component {
                     value={this.state.billing.label}
                     key={this.state.billing._id}
                   >
-                    {billing.map(option => {
+                    {billings.map(option => {
                       return (
                         <MenuItem key={option._id} value={option.label}>{option.label}</MenuItem>
                       )
