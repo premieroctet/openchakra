@@ -4,7 +4,7 @@ export const getShowLayout = (state: RootState) => state.app.showLayout
 
 export const getShowCode = (state: RootState) => state.app.showCode
 
-export const getThemeData = (state: RootState) => state.app.themeData
+export const getCustomTheme = (state: RootState) => state.app.customTheme
 
 export const getFocusedComponent = (id: IComponent['id']) => (
   state: RootState,

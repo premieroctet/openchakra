@@ -13,18 +13,18 @@ import EditorErrorBoundary from './components/errorBoundaries/EditorErrorBoundar
 import useProducthunt from './hooks/useProducthunt'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { useSelector } from 'react-redux'
-import { getThemeData } from './core/selectors/app'
+import { getCustomTheme } from './core/selectors/app'
 
 const App = () => {
   const { handlers } = useShortcuts()
-  const themeData = useSelector(getThemeData)
+  const customTheme = useSelector(getCustomTheme)
 
   // To remove soon :)
   useProducthunt()
 
-  const customTheme = {
+  const customThemeContainer = {
     ...theme,
-    ...(themeData as {}),
+    ...(customTheme as {}),
   }
 
   return (
@@ -39,7 +39,7 @@ const App = () => {
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />
-          <ThemeProvider theme={customTheme}>
+          <ThemeProvider theme={customThemeContainer}>
             <EditorErrorBoundary>
               <Box bg="white" flex={1} zIndex={10} position="relative">
                 <Editor />

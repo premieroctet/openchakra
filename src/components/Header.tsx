@@ -41,7 +41,11 @@ import { generateCode } from '../utils/code'
 import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
-import { getShowLayout, getShowCode, getThemeData } from '../core/selectors/app'
+import {
+  getShowLayout,
+  getShowCode,
+  getCustomTheme,
+} from '../core/selectors/app'
 import { FaRegSave, FaBomb, FaEdit } from 'react-icons/fa'
 import { GoRepo } from 'react-icons/go'
 import { FiUpload } from 'react-icons/fi'
@@ -83,7 +87,7 @@ const CodeSandboxButton = () => {
 
 const Header = () => {
   const showLayout = useSelector(getShowLayout)
-  useSelector(getThemeData)
+  useSelector(getCustomTheme)
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -97,7 +101,7 @@ const Header = () => {
       if (e.target!.result) {
         const text = e.target!.result
         // @ts-ignore
-        dispatch.app.getThemeData(JSON.parse(text))
+        dispatch.app.getCustomTheme(JSON.parse(text))
         setFileLoaded(true)
       } else {
         setFileError(true)
