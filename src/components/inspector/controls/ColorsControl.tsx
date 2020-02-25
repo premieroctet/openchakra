@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, memo, useEffect } from 'react'
+import React, { ReactNode, useState, memo } from 'react'
 import {
   Popover,
   PopoverTrigger,
@@ -19,16 +19,14 @@ import {
   TabPanels,
   TabPanel,
   Input,
-  useTheme,
 } from '@chakra-ui/core'
 import FormControl from './FormControl'
 import { useForm } from '../../../hooks/useForm'
 import omit from 'lodash/omit'
 import ColorPicker from 'coloreact'
-import { useSelector } from 'react-redux'
 import 'react-color-picker/index.css'
 import usePropsSelector from '../../../hooks/usePropsSelector'
-import { getThemeData } from '../../../core/selectors/app'
+import useCustomTheme from '../../../hooks/useCustomTheme'
 
 type ColorControlPropsType = {
   name: string
@@ -38,24 +36,13 @@ type ColorControlPropsType = {
 }
 
 const ColorsControl = (props: ColorControlPropsType) => {
-  const theme = useTheme()
+  const theme = useCustomTheme()
   const { setValue, setValueFromEvent } = useForm()
   const [hue, setHue] = useState(500)
-  const [themeValue, setThemeValue] = useState({})
   const value = usePropsSelector(props.name)
-  const themeData = useSelector(getThemeData)
-
-  useEffect(() => {
-    if (themeData !== null) {
-      // @ts-ignore
-      setThemeValue(themeData)
-    } else if (themeData === null) {
-      setThemeValue(theme)
-    }
-  }, [themeData, themeValue, theme])
 
   // @ts-ignore
-  const themeColors: any = omit(themeValue.colors, [
+  const themeColors: any = omit(theme.colors, [
     'transparent',
     'current',
     'black',
@@ -130,8 +117,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
             {props.label}
           </IconButton>
         </PopoverTrigger>
-
-        <PopoverContent width="200px" zIndex={theme.zIndices.modal}>
+        <PopoverContent width="200px">
           <PopoverArrow />
           <PopoverBody>
             {props.withFullColor ? (

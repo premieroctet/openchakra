@@ -87,7 +87,8 @@ const Header = () => {
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [readFileStatus, setReadFileStatus] = useState(<p></p>)
+  const [fileLoaded, setFileLoaded] = useState(false)
+  const [fileError, setFileError] = useState(false)
 
   const handleChange = async (selectorFiles: any) => {
     selectorFiles.preventDefault()
@@ -97,31 +98,9 @@ const Header = () => {
         const text = e.target!.result
         // @ts-ignore
         dispatch.app.getThemeData(JSON.parse(text))
-        setReadFileStatus(
-          <p style={{ textAlign: 'center', marginTop: '20px' }}>
-            Your theme has been successfully loaded{' '}
-            <span
-              style={{ verticalAlign: 'middle' }}
-              role="img"
-              aria-label="light"
-            >
-              ✅
-            </span>
-          </p>,
-        )
+        setFileLoaded(true)
       } else {
-        setReadFileStatus(
-          <p>
-            Can't read this file / theme{' '}
-            <span
-              style={{ verticalAlign: 'middle' }}
-              role="img"
-              aria-label="light"
-            >
-              ❌
-            </span>
-          </p>,
-        )
+        setFileError(true)
       }
     }
     reader.readAsText(selectorFiles.target.files[0])
@@ -294,7 +273,34 @@ const Header = () => {
                   accept="application/json"
                   onChange={(selectorFiles: any) => handleChange(selectorFiles)}
                 />
-                {readFileStatus}
+
+                {fileLoaded && (
+                  <div>
+                    <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                      Your theme has been successfully loaded{' '}
+                      <span
+                        style={{ verticalAlign: 'middle' }}
+                        role="img"
+                        aria-label="light"
+                      >
+                        ✅
+                      </span>
+                    </p>
+                  </div>
+                )}
+
+                {fileError && (
+                  <p>
+                    Can't read this file / theme{' '}
+                    <span
+                      style={{ verticalAlign: 'middle' }}
+                      role="img"
+                      aria-label="light"
+                    >
+                      ❌
+                    </span>
+                  </p>
+                )}
               </ModalBody>
 
               <ModalFooter>
