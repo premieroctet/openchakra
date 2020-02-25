@@ -89,7 +89,6 @@ export const buildMenu = (parent: string): ComposedComponent => {
   const listId = composer.addNode({ type: 'MenuList', parent: nodeId })
   composer.addNode({ type: 'MenuItem', parent: listId })
   composer.addNode({ type: 'MenuItem', parent: listId })
-
   const components = composer.getComponents()
   return {
     components,

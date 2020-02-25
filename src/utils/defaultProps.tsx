@@ -217,6 +217,34 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Select: {
     icon: 'chevron-down',
   },
+  Menu: {
+    ...Menu.defaultProps,
+    isOpen: true,
+  },
+  MenuList: {
+    ...MenuList.defaultProps,
+  },
+  MenuButton: {
+    ...MenuButton.defaultProps,
+    children: 'Lorem Ipsum',
+  },
+  MenuItem: {
+    ...MenuItem.defaultProps,
+    children: 'Description',
+  },
+  MenuGroup: {
+    ...MenuGroup.defaultProps,
+  },
+  MenuDivider: {
+    ...MenuDivider.defaultProps,
+  },
+  MenuOptionGroup: {
+    ...MenuOptionGroup.defaultProps,
+  },
+  MenuItemOption: {
+    ...MenuItemOption.defaultProps,
+    children: 'Lorem Ipsum',
+  },
 }
 
 export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
@@ -295,34 +323,6 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
   BreadcrumbItem: { ...BreadcrumbItem.defaultProps },
   BreadcrumbLink: {
     ...BreadcrumbLink.defaultProps,
-  },
-  Menu: {
-    ...Menu.defaultProps,
-    isOpen: true,
-  },
-  MenuList: {
-    ...MenuList.defaultProps,
-  },
-  MenuButton: {
-    ...MenuButton.defaultProps,
-    children: 'Lorem Ipsum',
-  },
-  MenuItem: {
-    ...MenuItem.defaultProps,
-    children: 'Lorem Ipsum',
-  },
-  MenuGroup: {
-    ...MenuGroup.defaultProps,
-  },
-  MenuDivider: {
-    ...MenuDivider.defaultProps,
-  },
-  MenuOptionGroup: {
-    ...MenuOptionGroup.defaultProps,
-  },
-  MenuItemOption: {
-    ...MenuItemOption.defaultProps,
-    children: 'Lorem Ipsum',
   },
 }
 
