@@ -28,24 +28,12 @@ class services extends React.Component {
             activeStep: 0,
             user_id: null,
             shop:{
-                booking_request: true,     // true/false
-                my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
-                welcome_message: 'Merci pour votre réservation!',
-                cancel_mode: CANCEL_MODE.FLEXIBLE,            // FLEXIBLE/MODERATE/STRICT
-                is_particular: true,        // true/false : particulier.pro
-                company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
-                is_certified: false,
                 service: null,
-                prestations:{},
+                prestations:[],
                 equipments: [], // Ids des équipements
                 location: null, // Lieu(x) de prestation
                 travel_tax: 0, // Frais de déplacement
                 pick_tax: 0, // Frais de livraison/enlèvmeent
-                minimum_basket: 0,
-                deadline_value: 0, // Valeur de prévenance
-                deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
-                description:"", // Description de l'expertise
-                experience_years: 0,
                 diploma : [{name:"", year:"", picture:""}],
                 certification : [{name:"", year:"", picture:""}],
                 service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
@@ -81,6 +69,23 @@ class services extends React.Component {
           .then(res => {
               let user = res.data;
               this.setState({user_id: user._id});
+          })
+          .catch(error => {
+              console.log(error);
+          });
+
+        axios.get(url+`myAlfred/api/serviceUser/${this.props.service_id}`)
+          .then(res => {
+              let resultat = res.data;
+              this.setState({
+                  shop: {
+                      ...this.state.shop,
+                      service : resultat.service._id,
+                      prestations: resultat.prestations[0]._id,
+                      perimeter: resultat.perimeter
+                  }
+              });
+              console.log(resultat, "resultat")
           })
           .catch(error => {
               console.log(error);

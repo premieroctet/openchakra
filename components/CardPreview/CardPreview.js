@@ -66,7 +66,6 @@ class CardPreview extends React.Component{
 
   render(){
     const {classes, service, shop, services, userState, isOwner, alfred} = this.props;
-    console.log(service);
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -87,7 +86,7 @@ class CardPreview extends React.Component{
             {userState && isOwner ?
               <Grid>
                 <Grid className={classes.actionMediaEdit}>
-                  <Link href={'/myShop/services?id=' + services._id}>
+                  <Link href={'/myShop/services?id=' + service._id}>
                     <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
                       <EditIcon style={{color: '#4fbdd7'}}/>
                     </IconButton>
