@@ -66,14 +66,6 @@ type ComponentType =
   | 'Grid'
   | 'BreadcrumbItem'
   | 'BreadcrumbLink'
-
-type MetaComponentType =
-  | 'FormControlMeta'
-  | 'AccordionMeta'
-  | 'ListMeta'
-  | 'AlertMeta'
-  | 'InputGroupMeta'
-  | 'BreadcrumbMeta'
   | 'Menu'
   | 'MenuList'
   | 'MenuButton'
@@ -82,6 +74,14 @@ type MetaComponentType =
   | 'MenuDivider'
   | 'MenuOptionGroup'
   | 'MenuItemOption'
+
+type MetaComponentType =
+  | 'FormControlMeta'
+  | 'AccordionMeta'
+  | 'ListMeta'
+  | 'AlertMeta'
+  | 'InputGroupMeta'
+  | 'BreadcrumbMeta'
   | 'MenuMeta'
 
 interface IComponent {
