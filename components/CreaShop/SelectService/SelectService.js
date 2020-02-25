@@ -62,7 +62,7 @@ class SelectService extends React.Component {
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes, isId} = this.props;
     console.log("Service:"+this.state.service);
     return(
       <Grid className={classes.mainContainer}>
@@ -70,19 +70,21 @@ class SelectService extends React.Component {
           <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>Créez votre boutique de services</Typography>
+                <Typography className={classes.policySizeTitle}>{isId ? "Créez votre boutique de services" : "Ajouter un service"}</Typography>
               </Grid>
               <Grid>
                 <Grid>
                   <Grid>
                     <h3 className={classes.policySizeSubtitle}>Quel service souhaitez vous réaliser ?</h3>
                   </Grid>
-                  <Grid className={classes.bottomSpacer}>
-                    <p className={classes.policySizeContent}>Identifiez maintenant le premier service que vous souhaitez configurer dans
-                      votre boutique de services. Vous pourrez en ajouter autant que vous voulez dans
-                      votre boutique. Un service n’apparait pas ? Cliquez ici pour l’ajouter.
-                    </p>
-                  </Grid>
+                  { isId ?
+                    <Grid className={classes.bottomSpacer}>
+                      <p className={classes.policySizeContent}>Identifiez maintenant le premier service que vous souhaitez configurer dans
+                        votre boutique de services. Vous pourrez en ajouter autant que vous voulez dans
+                        votre boutique. Un service n’apparait pas ? Cliquez ici pour l’ajouter.
+                      </p>
+                    </Grid> : null
+                  }
                 </Grid>
                 <Grid >
                   <Grid>

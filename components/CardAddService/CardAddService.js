@@ -23,7 +23,7 @@ class CardAddService extends React.Component{
 
     return (
       <Grid>
-        <Link href={'/myShop/addService'}>
+        <Link href={'/myShop/services'}>
           <Card className={classes.card}>
             <CardActionArea>
               <Grid className={classes.cardMedia}>
