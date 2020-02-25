@@ -39,7 +39,6 @@ class UserAvatar extends React.Component{
   render(){
     const {user, className, service, shop, services, userState, isOwner, alfred} = this.props;
 
-    console.log("User:"+JSON.stringify(user));
     if (user) {
       const picture = user.picture==undefined || user.picture=='' ? null : user.picture;
       return picture?

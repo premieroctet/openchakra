@@ -81,27 +81,35 @@ class ButtonSwitch extends React.Component {
       checked: this.props.checked || false,
       billing: props.isOption ?this.props.billing[0] : null,
       price:0,
+      label: this.props.label,
     };
     this.onToggle = this.onToggle.bind(this);
     this.onChangeBilling = this.onChangeBilling.bind(this);
     this.onChangePrice = this.onChangePrice.bind(this);
+    this.onChangeLabel = this.onChangeLabel.bind(this);
   }
 
   onToggle(){
-    this.setState({checked: !this.state.checked}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing));
+    this.setState({checked: !this.state.checked}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing, this.state.label ));
   };
 
   onChangeBilling(event, index) {
     let billing={_id:index.key, label:event.target.value};
-    this.setState({billing: billing}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing));
+    this.setState({billing: billing}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing, this.state.label));
   }
 
   onChangePrice(event) {
-    this.setState({price: parseInt(event.target.value)}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing));
+    this.setState({price: parseInt(event.target.value)}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing, this.state.label));
+  }
+
+  onChangeLabel(event) {
+    this.setState({label: event.target.value}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing, this.state.label ));
   }
 
   render() {
-    const {classes, isOption, isPrice, label, billing} = this.props;
+    const {classes, isEditable, isOption, isPrice, billing} = this.props;
+    const {label} = this.state;
+    
     return(
       <Grid className={classes.contentFiltre}>
         <Grid className={classes.responsiveIOSswitch} style={{width : this.props.width}}>
@@ -115,7 +123,10 @@ class ButtonSwitch extends React.Component {
           </Grid>
           <Grid>
             <span>
-              {label === undefined ? "label introuvable" : label}
+        {isEditable ?
+           <CssTextField placeholder='Saisissez un intitulé' value={this.state.label} onChange={this.onChangeLabel} />
+           :
+           label === undefined ? "label introuvable" : label}
             </span>
           </Grid>
         </Grid>

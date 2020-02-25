@@ -14,4 +14,7 @@ const CANCEL_MODE= {
   STRICT:   "2"
 }
 
-export {ALL_SERVICES, ALF_CONDS, CANCEL_MODE};
+const CUSTOM_PRESTATIONS_FLTR="Prestations personnalisées";
+
+const generate_id= () => { return new Date().getTime() };
+export {ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR, generate_id};

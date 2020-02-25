@@ -6,6 +6,7 @@ import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import { Typography } from '@material-ui/core';
 import axios from 'axios';
 import styles from '../componentStyle'
+import {CUSTOM_PRESTATIONS_FLTR, generate_id} from '../../../utils/consts';
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -16,30 +17,56 @@ class SelectPrestation extends React.Component {
     this.state = {
       grouped: [],
       prestations:{},
-      service_name: '',
+      service: null,
+      all_billlings:[],
     };
     this.prestationSelected = this.prestationSelected.bind(this)
+    this.addCustomPrestation = this.addCustomPrestation.bind(this)
+    this.removeCustomPrestation = this.removeCustomPrestation.bind(this)
   }
 
   componentDidMount() {
+    axios.get(`${url}myAlfred/api/billing/all`)
+      .then(res => {
+        let billings=res.data;
+        this.setState({all_billings: billings});
+      });
     axios.get(`${url}myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
         let data = res.data;
-        console.log("Prestations:"+JSON.stringify(data[0].service.label));
-        this.setState({service_name: data[0].service.label});
-        let grouped = _.mapValues(_.groupBy(data, 'filter_presentation.label'),
-          clist => clist.map(data => _.omit(data, 'filter_presentation.label')));
+        let private_prestations = data.filter( p => p.private_alfred!=null);
+        let public_prestations = data.filter( p => p.private_alfred==null);
+        let grouped = _.mapValues(_.groupBy(public_prestations, 'filter_presentation.label'),
+          clist => clist.map(public_prestations => _.omit(public_prestations, 'filter_presentation.label')));
+        grouped={[CUSTOM_PRESTATIONS_FLTR]: private_prestations, ...grouped};
         this.setState({grouped : grouped});
       }).catch(error => {
       console.log(error);
     })
+    axios.get(`${url}myAlfred/api/service/${this.props.service}`)
+      .then(res => {
+        let service=res.data;
+        this.setState({service: service});
+      });
   }
 
-  prestationSelected(prestaId, checked, price, billing){
+  addCustomPrestation() {
+    let grouped=this.state.grouped;
+    grouped[CUSTOM_PRESTATIONS_FLTR].push({_id: -generate_id(), label:"", service: this.state.service, billing:this.state.all_billings, description:'', price:0});
+    this.setState({grouped: grouped});
+  }
+
+  removeCustomPrestation(presta_id) {
+    let grouped=this.state.grouped;
+    grouped[CUSTOM_PRESTATIONS_FLTR]=grouped[CUSTOM_PRESTATIONS_FLTR].filter(p => p._id != presta_id);
+    this.setState({grouped: grouped});
+  }
+
+  prestationSelected(prestaId, checked, price, billing, label){
     console.log(prestaId+","+checked);
     let sel=this.state.prestations
     if (checked) {
-      sel[prestaId]={price:price, billing:billing}
+      sel[prestaId]={_id:prestaId, label:label, price:price, billing:billing, label: label}
     }
     else {
       delete sel[prestaId];
@@ -50,15 +77,15 @@ class SelectPrestation extends React.Component {
   }
 
   render() {
-    const {classes, service} = this.props;
-    console.log(service , 'service recu');
+    const {classes} = this.props;
+
     return(
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
           <Grid style={{width: '100%'}}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{this.state.service_name} : indiquez vos prestations</Typography>
+                <Typography className={classes.policySizeTitle}>{(this.state.service||{}).label} : indiquez vos prestations</Typography>
               </Grid>
             </Grid>
             <Grid style={{marginTop: 30, width: '100%'}}>
@@ -69,15 +96,22 @@ class SelectPrestation extends React.Component {
               <Grid container style={{display: 'flex', marginTop: 30, marginBottom: 100}} spacing={2}>
                 {Object.keys(this.state.grouped).map((fltr, i) =>{
                   let prestas = this.state.grouped[fltr];
+                  let isCustom = fltr==CUSTOM_PRESTATIONS_FLTR;
                   return (
-                    <Grid item xl={6} lg={6} xs={12} key={i}>
-                      <Grid item> {fltr=='Aucun' ? '' : fltr}</Grid>
+                    <Grid item xl={6} lg={12} xs={12} key={i}>
+                      <Grid item> 
+                        {fltr=='Aucun' ? '' : fltr}
+                        {isCustom ? <Grid className={classes.buttonAdd} onClick={() => this.addCustomPrestation() } >+</Grid>:null }
+                      </Grid>
                       {prestas.map((p, j) => {
+                        let isEditable=parseInt(p._id)<0;
+                        console.log("Presta:"+JSON.stringify(p));
                         return(
                           <React.Fragment key={p._id}>
                             <ButtonSwitch isOption={true} isPrice={true} width={"100%"} label={p.label} id={p._id}
-                                          billing={p.billing} onChange={this.prestationSelected}/>
+                                          billing={p.billing} onChange={this.prestationSelected} isEditable={isEditable}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
+                            { isCustom ? <Grid className={classes.buttonRemove} onClick={() => this.removeCustomPrestation(p._id) } >-</Grid>:null }
                           </React.Fragment>
                       )
                       })}

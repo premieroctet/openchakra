@@ -46,7 +46,12 @@ const PrestationSchema = new Schema({
     tags: [{
         type: Schema.Types.ObjectId,
         ref: 'tag'
-    }]
+    }],
+    private_alfred: {
+        type: Schema.Types.ObjectId,
+        ref: 'filterPresentation',
+	default: null
+    }
 });
 
 module.exports = Prestation = mongoose.model('prestation',PrestationSchema);

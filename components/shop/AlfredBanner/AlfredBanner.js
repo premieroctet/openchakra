@@ -69,8 +69,6 @@ class alfredBanner extends React.Component{
     const {alfred} = this.state;
     const {shop} = this.state;
 
-    console.log("Banner:alfred is :"+JSON.stringify(alfred));
-
     return (
         <Fragment>
           <Grid container className={classes.bannerContainer}
