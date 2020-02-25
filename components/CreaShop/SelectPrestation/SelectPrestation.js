@@ -23,8 +23,6 @@ class SelectPrestation extends React.Component {
     this.prestationSelected = this.prestationSelected.bind(this)
     this.addCustomPrestation = this.addCustomPrestation.bind(this)
     this.removeCustomPrestation = this.removeCustomPrestation.bind(this)
-
-    console.log("Prestations ctor:"+JSON.stringify(this.props.prestations));
   }
 
   componentDidMount() {

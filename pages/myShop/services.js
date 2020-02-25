@@ -18,7 +18,8 @@ const {config} = require('../../config/config');
 const url = config.apiUrl;
 import { toast } from 'react-toastify';
 import Router from "next/router";
-import {selectService, selectPrestation, settingService, assetsService} from '../../utils/validationSteps/validationSteps'
+import {selectService, selectPrestation, settingService, assetsService} from '../../utils/validationSteps/validationSteps';
+
 
 class services extends React.Component {
     constructor(props) {
@@ -53,7 +54,6 @@ class services extends React.Component {
             },
             title: "Précisez vos disponibilités si vous le souhaitez ! ",
             subtitle : "Si aucune disponibilité n’est précisée, vos services pourront être réservés à tout moment. Si vous précisez vos disponibilités, seules les plages horaires indiquées pourront être réservées. Vous pouvez appliquer une récurrence à vos disponibilités afin de gagner du temps ! Par exemple, si vous êtes disponible tous les lundis et mardis, vous pouvez cocher la case Récurrence, et cliquer sur Lu et Ma afin de répéter votre disponibilité sur une durée que vous pouvez définir."
-
         };
         this.onServiceChanged = this.onServiceChanged.bind(this);
         this.prestaSelected = this.prestaSelected.bind(this);
@@ -67,12 +67,9 @@ class services extends React.Component {
 
     static getInitialProps ({ query: { id } }) {
         return { service_id: id }
-
     }
 
     componentDidMount() {
-        const id = this.props.service_id;
-        console.log(id , "ici id");
         localStorage.setItem('path',Router.pathname);
         const token = localStorage.getItem('token');
         if (token === null) {
@@ -87,7 +84,23 @@ class services extends React.Component {
           })
           .catch(error => {
               console.log(error);
-          })
+          });
+
+       /* const id = this.props.service_id;
+        if(id !== undefined){
+            axios
+              .get(url+`myAlfred/api/serviceUser/${id}`)
+              .then(res => {
+                  let serviceUser = res.data;
+                  console.log(serviceUser, "serviceUser");
+                  this.setState({shop: {...this.state.shop, service: serviceUser.service.category}});
+                  console.log(this.state.shop, "shop")
+              }).catch(error => {
+                console.log(error);
+            });
+        }else{
+            this.setState({...this.state.shop, service: null})
+        }*/
     }
 
     nextDisabled() {
@@ -204,6 +217,22 @@ class services extends React.Component {
         }
     }
 
+    renderSwitchUpdate(stepIndex){
+        let shop = this.state.shop;
+        switch(stepIndex) {
+            case 0:
+                return <SelectPrestation service={shop.service} onChange={this.prestaSelected} />;
+            case 1:
+                return <SettingService service={shop.service} onChange={this.settingsChanged} />;
+            case 2:
+                return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
+            case 3:
+                return <AssetsService data={shop} onChange={this.assetsChanged} />;
+            case 4:
+                return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
+        }
+    }
+
     render() {
 
         const {classes} = this.props;
@@ -218,13 +247,15 @@ class services extends React.Component {
                       </Link>
                   </Grid>
                   <Grid className={classes.contentStepper}>
-                      <Stepper activeStep={this.state.activeStep} isType={"addService"}/>
+                      <Stepper activeStep={this.state.activeStep} isType={ this.props.service_id ? "updateService" : "addService"}/>
                   </Grid>
               </Grid>
               <Grid className={classes.marginContainer}>
                   <Grid className={classes.mainContainer}>
                       <Grid className={hideRightPanel ? classes.mainContainerNoImg : classes.leftContentComponent }>
-                          {this.renderSwitch(this.state.activeStep)}
+                          { this.props.service_id ?
+                            this.renderSwitchUpdate(this.state.activeStep) : this.renderSwitch(this.state.activeStep)
+                          }
                       </Grid>
                       { hideRightPanel ?
                         null:

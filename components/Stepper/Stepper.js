@@ -12,7 +12,7 @@ class Stepper extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      steps: props.isType === "creaShop" ? this.getStepsCreaShop() : this.getStepsAddService()
+      steps: props.isType === "creaShop" ? this.getStepsCreaShop() : props.isType === "updateService" ? this.getStepsUpdateService(): this.getStepsAddService()
     }
   }
 
@@ -36,6 +36,16 @@ class Stepper extends React.Component {
     return [
       'Ajouter un services',
       'Indiquez vos prestations',
+      'Paramétrez votre service',
+      'Vos préférences de réservation',
+      'Vos atouts pour ce service !',
+      'Indiquez vos disponibilités',
+    ];
+  }
+
+  getStepsUpdateService() {
+    return [
+      'Modifiez vos prestations',
       'Paramétrez votre service',
       'Vos préférences de réservation',
       'Vos atouts pour ce service !',
