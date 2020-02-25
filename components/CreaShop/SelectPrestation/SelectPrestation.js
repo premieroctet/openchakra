@@ -50,7 +50,8 @@ class SelectPrestation extends React.Component {
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes, service} = this.props;
+    console.log(service , 'service recu');
     return(
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
