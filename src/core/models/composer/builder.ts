@@ -74,19 +74,15 @@ export const buildPopover = (parent: string): ComposedComponent => {
   const contentId = composer.addNode({ type: 'PopoverContent', parent: nodeId })
   composer.addNode({ type: 'PopoverArrow', parent: contentId })
   composer.addNode({ type: 'PopoverCloseButton', parent: contentId })
-  const headerPop = composer.addNode({
+  composer.addNode({
     type: 'PopoverHeader',
     parent: contentId,
   })
-  composer.addNode({ type: 'Text', parent: headerPop, rootParentType: 'Text' })
-  const bodyPop = composer.addNode({ type: 'PopoverBody', parent: contentId })
-  composer.addNode({ type: 'Text', parent: bodyPop, rootParentType: 'Text' })
-
-  const footerPop = composer.addNode({
+  composer.addNode({ type: 'PopoverBody', parent: contentId })
+  composer.addNode({
     type: 'PopoverFooter',
     parent: contentId,
   })
-  composer.addNode({ type: 'Text', parent: footerPop, rootParentType: 'Text' })
   const components = composer.getComponents()
   return {
     components,

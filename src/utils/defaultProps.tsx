@@ -218,6 +218,34 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Select: {
     icon: 'chevron-down',
   },
+  Popover: {
+    ...Popover.defaultProps,
+    isOpen: true,
+  },
+  PopoverTrigger: {
+    ...PopoverTrigger.defaultProps,
+  },
+  PopoverContent: {
+    ...PopoverContent.defaultProps,
+  },
+  PopoverHeader: {
+    ...PopoverHeader.defaultProps,
+    children: 'Popover Header',
+  },
+  PopoverBody: {
+    ...PopoverBody.defaultProps,
+    children: 'Popover Body',
+  },
+  PopoverArrow: {
+    ...PopoverArrow.defaultProps,
+  },
+  PopoverCloseButton: {
+    ...PopoverCloseButton.defaultProps,
+  },
+  PopoverFooter: {
+    ...PopoverFooter.defaultProps,
+    children: 'Popover Footer',
+  },
 }
 
 export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
@@ -297,31 +325,6 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
   BreadcrumbLink: {
     ...BreadcrumbLink.defaultProps,
     children: 'Lorem Ipsum',
-  },
-  Popover: {
-    ...Popover.defaultProps,
-    isOpen: true,
-  },
-  PopoverTrigger: {
-    ...PopoverTrigger.defaultProps,
-  },
-  PopoverContent: {
-    ...PopoverContent.defaultProps,
-  },
-  PopoverHeader: {
-    ...PopoverHeader.defaultProps,
-  },
-  PopoverBody: {
-    ...PopoverBody.defaultProps,
-  },
-  PopoverArrow: {
-    ...PopoverArrow.defaultProps,
-  },
-  PopoverCloseButton: {
-    ...PopoverCloseButton.defaultProps,
-  },
-  PopoverFooter: {
-    ...PopoverFooter.defaultProps,
   },
 }
 
