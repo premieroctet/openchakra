@@ -105,7 +105,7 @@ class shop extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const {classes, id} = this.props;
         return (
           <Fragment>
               <Layout>

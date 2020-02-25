@@ -40,10 +40,6 @@ class Stepper extends React.Component {
       'Vos préférences de réservation',
       'Vos atouts pour ce service !',
       'Indiquez vos disponibilités',
-      'Vos conditions de réservation',
-      'Paramétrez votre boutique',
-      'Présentez-vous !'
-
     ];
   }
 
