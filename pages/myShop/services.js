@@ -154,7 +154,11 @@ class services extends React.Component {
     };
 
     isRightPanelHidden() {
-        return this.state.activeStep===1 || this.state.activeStep===5;
+        if(!this.isNewService()){
+            return this.state.activeStep === 0 || this.state.activeStep === 4;
+        }else{
+            return this.state.activeStep === 1 || this.state.activeStep === 5;
+        }
     };
 
     handleBack = () => {
@@ -215,7 +219,7 @@ class services extends React.Component {
             case 0:
                 return <SelectService onChange={this.onServiceChanged} service={shop.service} isId={false}/>;
             case 1:
-                return <SelectPrestation service={shop.service} onChange={this.prestaSelected} />;
+                return <SelectPrestation service={shop.service} prestations={!this.isNewService() ? shop.prestations : null}  onChange={this.prestaSelected} />;
             case 2:
                 return <SettingService service={shop.service} onChange={this.settingsChanged} />;
             case 3:
