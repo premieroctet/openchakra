@@ -86,7 +86,7 @@ class CardPreview extends React.Component{
             {userState && isOwner ?
               <Grid>
                 <Grid className={classes.actionMediaEdit}>
-                  { false ?
+                  { false ? //FIX rétablir plus tard
                   <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
                     <EditIcon style={{color: '#4fbdd7'}}/>
                   </IconButton> : true
@@ -125,9 +125,11 @@ class CardPreview extends React.Component{
                   </Typography>
                   <RoomIcon className={classes.checkCircleIcon}/>
                 </Grid>
-                <Button variant="contained" color="primary" className={classes.button} disabled={true}>
-                  Visualiser
-                </Button>
+                { false ? // FIX rétablir plus tard
+                  <Button variant="contained" color="primary" className={classes.button}>
+                    Visualiser
+                  </Button> : true
+                }
               </Grid>
             </Grid>
             <Grid className={classes.responsiveListContainer}>
