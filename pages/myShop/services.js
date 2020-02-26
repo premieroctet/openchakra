@@ -149,7 +149,7 @@ class services extends React.Component {
                   Router.push(`/shop?id_alfred=${this.state.user_id}`);
               })
               .catch(err => {
-                  toast.error(JSON.stringify(err, null, 2));
+                  console.error(JSON.stringify(err, null, 2));
               })
 
         }
