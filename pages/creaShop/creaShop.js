@@ -28,7 +28,7 @@ class creaShop extends React.Component {
   constructor(props) {
         super(props);
     this.state={
-      activeStep: 0,
+      activeStep: 9,
       user_id: null,
       shop:{
         booking_request: true,     // true/false
@@ -125,7 +125,7 @@ class creaShop extends React.Component {
     // last page => post
     else {
       let copiedShop = _.cloneDeep(this.state.shop);
-      console.log("CreaShop:sending shop "+JSON.stringify(copiedShop, null, 2)); 
+      console.log("CreaShop:sending shop "+JSON.stringify(copiedShop, null, 2));
       Object.keys(copiedShop.prestations).forEach(key => { if (key<0) copiedShop.prestations[key]._id = null });
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.post(url+'myAlfred/api/shop/add', copiedShop)
