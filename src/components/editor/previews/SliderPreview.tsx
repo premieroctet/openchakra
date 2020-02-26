@@ -79,16 +79,12 @@ export const SliderThumbPreview = ({ component }: IPreviewProps) => {
     props.bg = 'teal.50'
   }
 
-  let boxProps: any = {}
-
   return (
-    <Box ref={drop(ref)} {...boxProps}>
-      <SliderThumb {...props}>
-        {component.children.map((key: string) => (
-          <ComponentPreview key={key} componentName={key} />
-        ))}
-      </SliderThumb>
-    </Box>
+    <SliderThumb ref={drop(ref)} {...props}>
+      {component.children.map((key: string) => (
+        <ComponentPreview key={key} componentName={key} />
+      ))}
+    </SliderThumb>
   )
 }
 
