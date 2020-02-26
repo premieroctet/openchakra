@@ -2,7 +2,6 @@ import React from 'react'
 import { useInteractive } from '../../../hooks/useInteractive'
 import { useDropComponent } from '../../../hooks/useDropComponent'
 import {
-  Box,
   Slider,
   SliderTrack,
   SliderFilledTrack,
@@ -20,20 +19,16 @@ const SliderPreview: React.FC<IPreviewProps> = ({ component }) => {
   const { props, ref } = useInteractive(component, true)
   const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
 
-  let boxProps: any = {}
-
   if (isOver) {
     props.bg = 'teal.50'
   }
 
   return (
-    <Box ref={drop(ref)} {...boxProps}>
-      <Slider {...props}>
-        {component.children.map((key: string) => (
-          <ComponentPreview key={key} componentName={key} />
-        ))}
-      </Slider>
-    </Box>
+    <Slider ref={drop(ref)} style={{ paddingLeft: 0 }} {...props}>
+      {component.children.map((key: string) => (
+        <ComponentPreview key={key} componentName={key} />
+      ))}
+    </Slider>
   )
 }
 

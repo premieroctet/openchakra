@@ -222,7 +222,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   Slider: { ...Slider.defaultProps, min: 1, max: 100, step: 1 },
   SliderFilledTrack: { ...SliderFilledTrack.defaultProps },
-  SliderThumb: { ...SliderThumb.defaultProps },
+  SliderThumb: { ...SliderThumb.defaultProps, size: 6 },
   SliderTrack: { ...SliderTrack.defaultProps },
 }
 

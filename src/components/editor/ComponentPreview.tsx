@@ -18,6 +18,11 @@ import PreviewContainer from './PreviewContainer'
 import { InputRightElementPreview } from './previews/InputRightElement'
 import { InputLeftElementPreview } from './previews/InputLeftElement'
 import AspectRatioBoxPreview from './previews/AspectRatioBoxPreview'
+import SliderPreview, {
+  SliderTrackPreview,
+  SliderFilledTrackPreview,
+  SliderThumbPreview,
+} from './previews/SliderPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -53,9 +58,6 @@ const ComponentPreview: React.FC<{
     case 'ListItem':
     case 'BreadcrumbLink':
     case 'Select':
-    case 'SliderTrack':
-    case 'SliderFilledTrack':
-    case 'SliderThumb':
     case 'NumberInput':
       return (
         <PreviewContainer
@@ -109,7 +111,6 @@ const ComponentPreview: React.FC<{
     case 'Breadcrumb':
     case 'InputGroup':
     case 'BreadcrumbItem':
-    case 'Slider':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -142,6 +143,15 @@ const ComponentPreview: React.FC<{
       return <AccordionPanelPreview component={component} />
     case 'AspectRatioBox':
       return <AspectRatioBoxPreview component={component} />
+    case 'Slider':
+      return <SliderPreview component={component} />
+    case 'SliderTrack':
+      return <SliderTrackPreview component={component} />
+    case 'SliderFilledTrack':
+      return <SliderFilledTrackPreview component={component} />
+    case 'SliderThumb':
+      return <SliderThumbPreview component={component} />
+
     default:
       return null
   }
