@@ -97,6 +97,7 @@ const menuItems: MenuItems = {
   },
   Menu: {
     children: {
+      Menu: {},
       MenuList: {},
       MenuButton: {},
       MenuItem: {},
