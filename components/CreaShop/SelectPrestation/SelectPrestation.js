@@ -18,6 +18,7 @@ class SelectPrestation extends React.Component {
       grouped: [],
       prestations:this.props.prestations || {},
       service: null,
+      service_name: '',
       all_billlings:[],
     };
     this.prestationSelected = this.prestationSelected.bind(this)
@@ -32,6 +33,12 @@ class SelectPrestation extends React.Component {
         billings=res.data;
         this.setState({all_billings: billings});
       });
+    axios.get(`${url}myAlfred/api/service/${this.props.service}`)
+      .then( res => {
+         let service=res.data;
+         this.setState({service_name: service.label});
+      })
+      .catch(error => console.log(error));
     axios.get(`${url}myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
         let data = res.data;
@@ -88,7 +95,7 @@ class SelectPrestation extends React.Component {
           <Grid style={{width: '100%'}}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{(this.state.service||{}).label} : indiquez vos prestations</Typography>
+                <Typography className={classes.policySizeTitle}>{this.state.service_name} : indiquez vos prestations</Typography>
               </Grid>
             </Grid>
             <Grid style={{marginTop: 30, width: '100%'}}>

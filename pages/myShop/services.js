@@ -39,6 +39,8 @@ class services extends React.Component {
                 service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
                 perimeter: 0,
                 availabilities: [],
+                deadline_value: '1',
+                deadline_unit: 'j',
             },
             title: "Précisez vos disponibilités si vous le souhaitez ! ",
             subtitle : "Si aucune disponibilité n’est précisée, vos services pourront être réservés à tout moment. Si vous précisez vos disponibilités, seules les plages horaires indiquées pourront être réservées. Vous pouvez appliquer une récurrence à vos disponibilités afin de gagner du temps ! Par exemple, si vous êtes disponible tous les lundis et mardis, vous pouvez cocher la case Récurrence, et cliquer sur Lu et Ma afin de répéter votre disponibilité sur une durée que vous pouvez définir."
@@ -54,7 +56,7 @@ class services extends React.Component {
     }
 
     static getInitialProps ({ query: { id } }) {
-        return { service_id: id }
+        return { service_user_id: id }
     }
 
     componentDidMount() {
@@ -74,15 +76,21 @@ class services extends React.Component {
               console.log(error);
           });
 
-        axios.get(url+`myAlfred/api/serviceUser/${this.props.service_id}`)
+        if (this.props.service_user_id) {
+        axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
           .then(res => {
               let resultat = res.data;
               this.setState({
                   shop: {
                       ...this.state.shop,
                       service : resultat.service._id,
-                      prestations: resultat.prestations[0]._id,
-                      perimeter: resultat.perimeter
+                      prestations: resultat.prestations,
+                      perimeter: resultat.perimeter,
+                      equipments: resultat.equipments,
+                      diplomaName: resultat.diplomaName,
+                      diplomaYear: resultat.diplomaYear,
+                      certificationName: resultat.certificationName,
+                      certificationYear: resultat.certificationYear,
                   }
               });
               console.log(resultat, "resultat")
@@ -90,6 +98,7 @@ class services extends React.Component {
           .catch(error => {
               console.log(error);
           });
+        }
     }
 
     nextDisabled() {
@@ -122,14 +131,21 @@ class services extends React.Component {
         }
         // last page => post
         else {
+            let cloned_shop = _.cloneDeep(this.state.shop);
+            cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
+            cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
+
+            let new_serviceuser = this.state.service_user_id==null;
+            let full_url = new_serviceuser ? '/myAlfred/api/serviceUser/myShop/add' : `/myAlfred/api/serviceUser/edit/${this.props.service_user_id}`;
+            console.log(full_url);
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-            axios.post(url+'myAlfred/api/shop/add', this.state.shop)
+            (new_serviceuser ? axios.post : axios.put)(full_url, cloned_shop)
               .then(res => {
                   toast.info("Service créée avec succès");
                   Router.push(`/shop?id_alfred=${this.state.user_id}`);
               })
               .catch(err => {
-                  toast.error(err);
+                  toast.error(JSON.stringify(err, null, 2));
               })
 
         }
@@ -210,7 +226,7 @@ class services extends React.Component {
         let shop = this.state.shop;
         switch(stepIndex) {
             case 0:
-                return <SelectPrestation service={this.props.service_id !== undefined ? this.props.service_id :  shop.service} onChange={this.prestaSelected} />;
+                return <SelectPrestation service={shop.service} prestations={shop.prestations} onChange={this.prestaSelected} />;
             case 1:
                 return <SettingService service={shop.service} onChange={this.settingsChanged} />;
             case 2:
@@ -242,7 +258,7 @@ class services extends React.Component {
               <Grid className={classes.marginContainer}>
                   <Grid className={classes.mainContainer}>
                       <Grid className={hideRightPanel ? classes.mainContainerNoImg : classes.leftContentComponent }>
-                          { this.props.service_id ?
+                          { this.props.service_user_id ?
                             this.renderSwitchUpdate(this.state.activeStep) : this.renderSwitch(this.state.activeStep)
                           }
                       </Grid>

@@ -16,9 +16,13 @@ const ServiceUserSchema = new Schema({
             ref: 'prestation'
         },
         billing: {
-            type: String
+            type: String,
+            required: true, 
         },
-        price: Number
+        price: {
+            type: Number,
+            required: true,
+        }
     }],
     equipments: [{
 

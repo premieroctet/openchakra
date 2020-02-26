@@ -150,6 +150,7 @@ class AssetsService extends React.Component {
                               })}
                             </TextField>
                           </Grid>
+                          { false ? // FIX : joindre diplôme
                           <Grid item xs={12}>
                             <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                               Joindre mon diplôme
@@ -162,7 +163,7 @@ class AssetsService extends React.Component {
                               style={{color: 'white'}}
                               disabled={false}
                             >Valider</Button>
-                          </Grid>
+                          </Grid>:null }
                         </Grid>
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
@@ -210,6 +211,7 @@ class AssetsService extends React.Component {
                               })}
                             </TextField>
                           </Grid>
+                          { false ? // FIX : joindre certification
                           <Grid item xs={12}>
                             <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
                               Joindre ma certification
@@ -223,7 +225,7 @@ class AssetsService extends React.Component {
                               style={{color: 'white'}}
                               disabled={false}
                             >Valider</Button>
-                          </Grid>
+                          </Grid>:null }
                         </Grid>
                       </ExpansionPanelDetails>
                     </ExpansionPanel>

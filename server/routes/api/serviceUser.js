@@ -116,47 +116,52 @@ router.post('/add',upload.fields([{name: 'diploma',maxCount: 1}, {name:'certific
 });
 
 // @Route POST /myAlfred/api/serviceUser/myShop/add
-// Add service in the shop
+// SAU : Add serviceUser in the shop
 // @Access private
 router.post('/myShop/add',upload.fields([{name: 'file_diploma',maxCount: 1}, {name:'file_certification',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req,res)=>{
+
+    console.log("myShop/add received:"+JSON.stringify(req.body));
     ServiceUser.findOne({user: req.user.id, service: req.body.service})
         .then(service => {
 
             if(service) {
                 return res.status(400).json({msg: "Ce service existe déjà"});
             }
+            const data=req.body;
             const fields = {};
             fields.user= req.user.id;
             fields.service = req.body.service;
             fields.perimeter = req.body.perimeter;
             fields.minimum_basket = req.body.minimum_basket;
-            fields.deadline_before_booking = req.body.deadline_before_booking;
-            fields.prestations = JSON.parse(req.body.prestations);
+            fields.deadline_before_booking = req.body.deadline_value+" "+req.body.deadline_unit;
+            fields.prestations = Object.values(JSON.parse(req.body.prestations));
             fields.level = req.body.level;
 
+            fields.pick_tax = req.body.pick_tax;
+            fields.travel_tax = req.body.travel_tax;
+
+            fields.location=req.body.location;
             fields.diploma = {};
             fields.certification = {};
             const diploma = 'file_diploma';
             const certification = 'file_certification';
-            if(req.files !== undefined) {
-                if (diploma in req.files) {
-                    fields.diploma.name = req.body.name_diploma;
-                    fields.diploma.year = req.body.year_diploma;
-                    fields.diploma.file = req.files['file_diploma'][0].path;
-                    fields.graduated = true;
-                } else {
-                    console.log('No file uploaded');
-                }
 
-                if (certification in req.files) {
-                    fields.certification.name = req.body.name_certification;
-                    fields.certification.year = req.body.year_certification;
-                    fields.certification.file = req.files['file_certification'][0].path;
-                    fields.is_certified = true;
-                } else {
-                    console.log('No file uploaded');
-                }
-            }
+            // FIX : reinsert diploma & certification files
+            if ('diplomaName' in data && 'diplomaYear' in data) {
+                fields.diploma.name = data.diplomaName;
+                fields.diploma.year = data.diplomaYear;
+                fields.graduated = true;
+             } else {
+                console.log('No file uploaded');
+             }
+
+             if ('certificationName' in data && 'certificationYear' in data) {
+               fields.certification.name = data.certificationName;
+               fields.certification.year = data.certificationYear;
+               fields.is_certified = true;
+             } else {
+               console.log('No file uploaded');
+             }
 
             fields.description = req.body.description;
             fields.equipments = JSON.parse(req.body.equipments);
@@ -174,7 +179,7 @@ router.post('/myShop/add',upload.fields([{name: 'file_diploma',maxCount: 1}, {na
             fields.service_address.gps.lat = req.body.lat;
             fields.service_address.gps.lng = req.body.lng;
 
-            fields.option = JSON.parse(req.body.options);
+            //fields.option = JSON.parse(req.body.options);
             const newService = new ServiceUser(fields);
             newService.save().then((service) =>{
                 Shop.findOne({alfred:req.user.id})
