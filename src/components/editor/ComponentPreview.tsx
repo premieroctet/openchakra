@@ -55,6 +55,9 @@ const ComponentPreview: React.FC<{
     case 'NumberInput':
     case 'BreadcrumbLink':
     case 'Select':
+    case 'PopoverBody':
+    case 'PopoverFooter':
+    case 'PopoverHeader':
     case 'PopoverArrow':
     case 'PopoverCloseButton':
       return (
@@ -96,11 +99,6 @@ const ComponentPreview: React.FC<{
     case 'TabList':
     case 'TabPanels':
     case 'Grid':
-    case 'Popover':
-    case 'PopoverBody':
-    case 'PopoverContent':
-    case 'PopoverFooter':
-    case 'PopoverHeader':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -114,6 +112,8 @@ const ComponentPreview: React.FC<{
     case 'Breadcrumb':
     case 'InputGroup':
     case 'BreadcrumbItem':
+    case 'Popover':
+    case 'PopoverContent':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper

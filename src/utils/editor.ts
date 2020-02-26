@@ -96,11 +96,5 @@ export const rootComponents = COMPONENTS
         'AccordionHeader',
         'AccordionPanel',
         'AccordionIcon',
-        'Popover',
-        'PopoverTrigger',
-        'PopoverContent',
-        'PopoverHeader',
-        'PopoverBody',
-        'PopoverFooter',
       ].includes(name),
   )

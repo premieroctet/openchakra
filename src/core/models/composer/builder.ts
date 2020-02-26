@@ -72,17 +72,12 @@ export const buildPopover = (parent: string): ComposedComponent => {
   const tiggerId = composer.addNode({ type: 'PopoverTrigger', parent: nodeId })
   composer.addNode({ type: 'Button', parent: tiggerId })
   const contentId = composer.addNode({ type: 'PopoverContent', parent: nodeId })
-  composer.addNode({ type: 'PopoverArrow', parent: contentId })
   composer.addNode({ type: 'PopoverCloseButton', parent: contentId })
   composer.addNode({
     type: 'PopoverHeader',
     parent: contentId,
   })
   composer.addNode({ type: 'PopoverBody', parent: contentId })
-  composer.addNode({
-    type: 'PopoverFooter',
-    parent: contentId,
-  })
   const components = composer.getComponents()
   return {
     components,

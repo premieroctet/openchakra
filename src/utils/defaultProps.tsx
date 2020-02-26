@@ -227,6 +227,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   PopoverContent: {
     ...PopoverContent.defaultProps,
+    zIndex: 4,
   },
   PopoverHeader: {
     ...PopoverHeader.defaultProps,
