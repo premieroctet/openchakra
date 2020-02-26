@@ -6,6 +6,7 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
+  Box,
 } from '@chakra-ui/core'
 import ComponentPreview from '../ComponentPreview'
 
@@ -23,12 +24,16 @@ const SliderPreview: React.FC<IPreviewProps> = ({ component }) => {
     props.bg = 'teal.50'
   }
 
+  let boxProps: any = {}
+
   return (
-    <Slider ref={drop(ref)} style={{ paddingLeft: 0 }} {...props}>
-      {component.children.map((key: string) => (
-        <ComponentPreview key={key} componentName={key} />
-      ))}
-    </Slider>
+    <Box ref={drop(ref)} {...boxProps}>
+      <Slider style={{ paddingLeft: 0 }} {...props}>
+        {component.children.map((key: string) => (
+          <ComponentPreview key={key} componentName={key} />
+        ))}
+      </Slider>
+    </Box>
   )
 }
 
@@ -74,12 +79,16 @@ export const SliderThumbPreview = ({ component }: IPreviewProps) => {
     props.bg = 'teal.50'
   }
 
+  let boxProps: any = {}
+
   return (
-    <SliderThumb ref={drop(ref)} {...props}>
-      {component.children.map((key: string) => (
-        <ComponentPreview key={key} componentName={key} />
-      ))}
-    </SliderThumb>
+    <Box ref={drop(ref)} {...boxProps}>
+      <SliderThumb {...props}>
+        {component.children.map((key: string) => (
+          <ComponentPreview key={key} componentName={key} />
+        ))}
+      </SliderThumb>
+    </Box>
   )
 }
 

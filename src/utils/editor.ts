@@ -5,6 +5,13 @@ const ALERT_COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AlertTitle',
 ]
 
+const SLIDER_COMPONENTS: (ComponentType | MetaComponentType)[] = [
+  'Slider',
+  'SliderTrack',
+  'SliderFilledTrack',
+  'SliderThumb',
+]
+
 export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   ...ALERT_COMPONENTS,
   'Avatar',
@@ -61,10 +68,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AccordionIcon',
   'InputRightElement',
   'InputLeftElement',
-  'Slider',
-  'SliderTrack',
-  'SliderFilledTrack',
-  'SliderThumb',
+  ...SLIDER_COMPONENTS,
   // Allow meta components
   'AlertMeta',
   'FormControlMeta',
@@ -92,6 +96,9 @@ export const rootComponents = COMPONENTS
         'AccordionHeader',
         'AccordionPanel',
         'AccordionIcon',
+        'SliderTrack',
+        'SliderFilledTrack',
+        'SliderThumb',
       ].includes(name),
   )
   // Allow meta components

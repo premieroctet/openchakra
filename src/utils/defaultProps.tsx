@@ -220,9 +220,9 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Select: {
     icon: 'chevron-down',
   },
-  Slider: { ...Slider.defaultProps, min: 1, max: 100, step: 1 },
+  Slider: { ...Slider.defaultProps, min: 1, max: 100, step: 1, size: 'sm' },
   SliderFilledTrack: { ...SliderFilledTrack.defaultProps },
-  SliderThumb: { ...SliderThumb.defaultProps, size: 6 },
+  SliderThumb: { ...SliderThumb.defaultProps },
   SliderTrack: { ...SliderTrack.defaultProps },
 }
 
