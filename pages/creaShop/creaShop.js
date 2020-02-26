@@ -28,7 +28,7 @@ class creaShop extends React.Component {
   constructor(props) {
         super(props);
     this.state={
-      activeStep: 2,
+      activeStep: 0,
       user_id: null,
       shop:{
         booking_request: true,     // true/false
@@ -38,14 +38,14 @@ class creaShop extends React.Component {
         is_particular: true,        // true/false : particulier.pro
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
         is_certified: false,
-        service: "5e1f4497e6d1ae24fa0d712d",
-        prestations:{"5e1f4497e6d1ae24fa0d7138":{"_id":"5e1f4497e6d1ae24fa0d7138","label":"Estimation de bien","price":15,"billing":{"_id":"5d66a0db08b3d612bd0864da","label":"à l'unité"}}},
+        service: null,
+        prestations:{},
         equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
         travel_tax: 0, // Frais de déplacement
         pick_tax: 0, // Frais de livraison/enlèvmeent
         minimum_basket: 0,
-        deadline_value: 0, // Valeur de prévenance
+        deadline_value: 1, // Valeur de prévenance
         deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
         description:"", // Description de l'expertise
         experience_years: 0,

@@ -106,6 +106,9 @@ class shop extends React.Component {
 
     render() {
         const {classes} = this.props;
+        console.log("State:"+JSON.stringify(this.state, null, 2));
+        let isOwner= this.state.idAlfred==this.state.userId;
+
         return (
           <Fragment>
               <Layout>
@@ -114,7 +117,7 @@ class shop extends React.Component {
                       <meta property="description" content="Paramétrez les services que vous souhaitez proposer ! Vous pouvez en ajouter autant que vous le souhaitez : bricolage, jardinage, déménagement, décoration, évènementiel, quel sera votre prochain service ?" />
                   </Helmet>
                   <AlfredBanner shop={this.state.id}/>
-                  {this.state.isOwner ?
+                  {isOwner ?
                     <NavBarShop userId={this.state.userId}/>
                     : null
                   }
@@ -138,7 +141,7 @@ class shop extends React.Component {
                                   return (
                                     <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                                         <CardPreview
-                                          isOwner={this.state.isOwner}
+                                          isOwner={isOwner}
                                           userState={this.state.userState}
                                           alfred={this.state.alfred}
                                           shop={this.state.shop}
@@ -149,7 +152,7 @@ class shop extends React.Component {
                                   )
                               })
                               }
-                              {this.state.userState && this.state.isOwner  ?
+                              {this.state.userState && isOwner  ?
                                 <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                                     <CardAddService/>
                                 </Grid>
@@ -160,7 +163,7 @@ class shop extends React.Component {
                       </Grid>
                       <Grid>
                           <AlfredConditions
-                            isOwner={this.state.isOwner}
+                            isOwner={isOwner}
                             userState={this.state.userState}
                             alfred={this.state.alfred}
                             shop={this.state.shop}
@@ -168,7 +171,7 @@ class shop extends React.Component {
                           />
                           <hr className={classes.hrShop}/>
                           <AlfredConditionsBooking
-                            isOwner={this.state.isOwner}
+                            isOwner={isOwner}
                             userState={this.state.userState}
                             alfred={this.state.alfred}
                             shop={this.state.shop}
@@ -176,7 +179,7 @@ class shop extends React.Component {
                             needRefresh={this.needRefresh}
                             stateButton={this.getStatusEditButton}
                           />
-                          { this.state.isOwner ?
+                          { isOwner ?
                             <AlfredWelcomedMessage
                               shop={this.state.shop}
                               stateButton={this.state.stateEditButtonFromAlfredCondtion}
@@ -185,7 +188,7 @@ class shop extends React.Component {
                           }
                           <hr className={classes.hrShop}/>
                           <AlfredConditionsCancel
-                            isOwner={this.state.isOwner}
+                            isOwner={isOwner}
                             userState={this.state.userState}
                             alfred={this.state.alfred}
                             shop={this.state.shop}
