@@ -29,7 +29,7 @@ class services extends React.Component {
             user_id: null,
             shop:{
                 service: null,
-                prestations:[],
+                prestations:{},
                 equipments: [], // Ids des équipements
                 location: null, // Lieu(x) de prestation
                 travel_tax: 0, // Frais de déplacement
@@ -53,6 +53,7 @@ class services extends React.Component {
         this.availabilityCreated = this.availabilityCreated.bind(this);
         this.availabilityDeleted = this.availabilityDeleted.bind(this);
         this.nextDisabled = this.nextDisabled.bind(this)
+    
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -80,20 +81,17 @@ class services extends React.Component {
         axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
           .then(res => {
               let resultat = res.data;
-              this.setState({
-                  shop: {
-                      ...this.state.shop,
-                      service : resultat.service._id,
-                      prestations: resultat.prestations,
-                      perimeter: resultat.perimeter,
-                      equipments: resultat.equipments,
-                      diplomaName: resultat.diplomaName,
-                      diplomaYear: resultat.diplomaYear,
-                      certificationName: resultat.certificationName,
-                      certificationYear: resultat.certificationYear,
-                  }
-              });
-              console.log(resultat, "resultat")
+              let shop=this.state.shop;
+              shop.service = resultat.service._id;
+              shop.prestations = new Map(resultat.prestations.map(p => [p._id, p]));
+              shop.perimeter = resultat.perimeter;
+              shop.equipments = resultat.equipments;
+              shop.diplomaName = resultat.diplomaName;
+              shop.diplomaYear = resultat.diplomaYear;
+              shop.certificationName = resultat.certificationName;
+              shop.certificationYear = resultat.certificationYear;
+
+              this.setState({ shop: shop});
           })
           .catch(error => {
               console.log(error);
@@ -228,6 +226,7 @@ class services extends React.Component {
 
     renderSwitchUpdate(stepIndex){
         let shop = this.state.shop;
+       console.log("RenderSwitchUpdate:service:"+shop.service);
         switch(stepIndex) {
             case 0:
                 return <SelectPrestation service={shop.service} prestations={shop.prestations} onChange={this.prestaSelected} />;

@@ -41,8 +41,9 @@ class UserAvatar extends React.Component{
 
     if (user) {
       const picture = user.picture==undefined || user.picture=='' ? null : user.picture;
+      console.log("Avatar:"+picture); 
       return picture?
-           <Avatar alt="photo de profil" src={user.picture} className={className} />
+           <Avatar alt="photo de profil" src={"/"+user.picture} className={className} />
            :
            <Avatar alt="photo de profil" className={className}>{user.avatar_letters}</Avatar>
     }
