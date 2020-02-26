@@ -12,6 +12,9 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
+
 
 class AssetsService extends React.Component {
   constructor(props) {
@@ -21,6 +24,7 @@ class AssetsService extends React.Component {
       description: this.props.data.description,
       diplomaYear: this.props.data.diplomaYear,
       diplomaName: this.props.data.diplomaName,
+      diplomaFile:{},
       certificationYear: this.props.data.certificationYear,
       certificationName: this.props.data.certificationName,
       level: this.props.data.level,
@@ -40,6 +44,10 @@ class AssetsService extends React.Component {
   handleChange(key, value) {
     this.setState({[key]: value}, () => this.props.onChange(this.state));
   }
+
+  handleChangeDiploma = e => {
+    this.setState({diplomaFile:e.target.files[0]});
+  };
 
   render() {
     const {classes} = this.props;
@@ -150,20 +158,22 @@ class AssetsService extends React.Component {
                               })}
                             </TextField>
                           </Grid>
-                          { false ? // FIX : joindre diplôme
                           <Grid item xs={12}>
-                            <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
-                              Joindre mon diplôme
-                              <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" className="form-control"/>
-                            </label>
+                            <Grid style={{display: 'flex', alignItems: 'baseline'}}>
+                              <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                Joindre mon diplôme
+                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" className="form-control" onChange={this.handleChangeDiploma}/>
+                              </label>
+                              {this.state.diplomaFile.name ?
+                                <Grid style={{display : 'flex'}}>
+                                  <p>{this.state.diplomaFile.name}</p>
+                                  <CheckCircleIcon/>
+                                </Grid>
+                                : null
+                              }
+                            </Grid>
                             <p>En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ces derniers</p>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              style={{color: 'white'}}
-                              disabled={false}
-                            >Valider</Button>
-                          </Grid>:null }
+                          </Grid>
                         </Grid>
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
