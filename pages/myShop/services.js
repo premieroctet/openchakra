@@ -13,7 +13,6 @@ import Schedule from '../../components/Schedule/Schedule';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
 const {config} = require('../../config/config');
 const url = config.apiUrl;
 import { toast } from 'react-toastify';
@@ -93,7 +92,6 @@ class services extends React.Component {
                       certificationYear: resultat.certificationYear,
                   }
               });
-              console.log(resultat, "resultat")
           })
           .catch(error => {
               console.log(error);
@@ -102,7 +100,7 @@ class services extends React.Component {
     }
 
     isNewService() {
-      return this.props.service_user_id==null;
+        return this.props.service_user_id == null;
     }
 
     nextDisabled() {
@@ -209,6 +207,9 @@ class services extends React.Component {
     }
 
     renderSwitch(stepIndex) {
+        if (!this.isNewService()){
+            stepIndex = stepIndex + 1;
+        }
         let shop=this.state.shop;
         switch(stepIndex) {
             case 0:
@@ -222,22 +223,6 @@ class services extends React.Component {
             case 4:
                 return <AssetsService data={shop} onChange={this.assetsChanged} />;
             case 5:
-                return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
-        }
-    }
-
-    renderSwitchUpdate(stepIndex){
-        let shop = this.state.shop;
-        switch(stepIndex) {
-            case 0:
-                return <SelectPrestation service={shop.service} prestations={shop.prestations} onChange={this.prestaSelected} />;
-            case 1:
-                return <SettingService service={shop.service} onChange={this.settingsChanged} />;
-            case 2:
-                return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
-            case 3:
-                return <AssetsService data={shop} onChange={this.assetsChanged} />;
-            case 4:
                 return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
         }
     }
@@ -256,15 +241,13 @@ class services extends React.Component {
                       </Link>
                   </Grid>
                   <Grid className={classes.contentStepper}>
-                      <Stepper activeStep={this.state.activeStep} isType={ this.props.service_id ? "updateService" : "addService"}/>
+                      <Stepper activeStep={this.state.activeStep} isType={ this.props.service_user_id ? "updateService" : "addService"}/>
                   </Grid>
               </Grid>
               <Grid className={classes.marginContainer}>
                   <Grid className={classes.mainContainer}>
                       <Grid className={hideRightPanel ? classes.mainContainerNoImg : classes.leftContentComponent }>
-                          { this.props.service_user_id ?
-                            this.renderSwitchUpdate(this.state.activeStep) : this.renderSwitch(this.state.activeStep)
-                          }
+                          {this.renderSwitch(this.state.activeStep)}
                       </Grid>
                       { hideRightPanel ?
                         null:
