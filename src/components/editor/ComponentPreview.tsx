@@ -96,7 +96,6 @@ const ComponentPreview: React.FC<{
     case 'TabList':
     case 'TabPanels':
     case 'Grid':
-    case 'Slider':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -110,6 +109,7 @@ const ComponentPreview: React.FC<{
     case 'Breadcrumb':
     case 'InputGroup':
     case 'BreadcrumbItem':
+    case 'Slider':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper

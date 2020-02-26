@@ -41,10 +41,6 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'SimpleGrid',
   'Spinner',
   'Select',
-  'Slider',
-  'SliderTrack',
-  'SliderFilledTrack',
-  'SliderThumb',
   'Stack',
   'Switch',
   'Tag',
@@ -65,6 +61,10 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AccordionIcon',
   'InputRightElement',
   'InputLeftElement',
+  'Slider',
+  'SliderTrack',
+  'SliderFilledTrack',
+  'SliderThumb',
   // Allow meta components
   'AlertMeta',
   'FormControlMeta',
@@ -72,6 +72,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'ListMeta',
   'InputGroupMeta',
   'BreadcrumbMeta',
+  'SliderMeta',
 ]
 
 export const AccordionWhitelist: (

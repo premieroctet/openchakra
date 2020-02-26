@@ -54,6 +54,9 @@ import {
   InputRightAddon,
   Stack,
   Flex,
+  SliderThumb,
+  SliderTrack,
+  SliderFilledTrack,
 } from '@chakra-ui/core'
 import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -217,6 +220,10 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Select: {
     icon: 'chevron-down',
   },
+  Slider: { ...Slider.defaultProps, min: 1, max: 100, step: 1 },
+  SliderFilledTrack: { ...SliderFilledTrack.defaultProps },
+  SliderThumb: { ...SliderThumb.defaultProps },
+  SliderTrack: { ...SliderTrack.defaultProps },
 }
 
 export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
@@ -284,7 +291,6 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
       </>
     ),
   },
-  Slider: { ...Slider.defaultProps, defaultValue: 30 },
   List: { ...List.defaultProps, styleType: 'none' },
   ListIcon: { ...ListIcon.defaultProps },
   ListItem: { ...ListItem.defaultProps, children: 'list' },
