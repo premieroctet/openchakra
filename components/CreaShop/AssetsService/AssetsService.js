@@ -165,9 +165,9 @@ class AssetsService extends React.Component {
                                 <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" className="form-control" onChange={this.handleChangeDiploma}/>
                               </label>
                               {this.state.diplomaFile.name ?
-                                <Grid style={{display : 'flex'}}>
+                                <Grid style={{display : 'flex', alignItems: 'center'}}>
                                   <p>{this.state.diplomaFile.name}</p>
-                                  <CheckCircleIcon/>
+                                  <CheckCircleIcon color={'primary'} style={{marginLeft: 10}}/>
                                 </Grid>
                                 : null
                               }
