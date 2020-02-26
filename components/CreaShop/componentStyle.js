@@ -73,7 +73,7 @@ export default theme => ({
     },
   },
   options:{
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('lg')]: {
       marginBottom: 100
     },
   },

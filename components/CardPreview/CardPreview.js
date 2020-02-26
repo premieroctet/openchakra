@@ -87,11 +87,11 @@ class CardPreview extends React.Component{
             {userState && isOwner ?
               <Grid>
                 <Grid className={classes.actionMediaEdit}>
-                  {/* <Link href={'/myShop/services?id=' + services._id}>*/}
+                  { false ?
                   <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
                     <EditIcon style={{color: '#4fbdd7'}}/>
-                  </IconButton>
-                  {/*</Link>*/}
+                  </IconButton> : true
+                  }
                 </Grid>
                 <Grid className={classes.actionMediaRemove}>
                   <IconButton aria-label="remove" className={classes.iconButtonStyle}>
@@ -126,7 +126,7 @@ class CardPreview extends React.Component{
                   </Typography>
                   <RoomIcon className={classes.checkCircleIcon}/>
                 </Grid>
-                <Button variant="contained" color="primary" className={classes.button}>
+                <Button variant="contained" color="primary" className={classes.button} disabled={true}>
                   Visualiser
                 </Button>
               </Grid>

@@ -89,7 +89,7 @@ class SettingService extends React.Component {
               <Grid className={classes.contentTitle}>
                 <Typography className={classes.policySizeTitle}>{service? service.label: ''} : paramétrage</Typography>
               </Grid>
-              { service && service.equipments.length>0 ? 
+              { service && service.equipments.length>0 ?
               <React.Fragment>
               <Grid >
                 <h3 className={classes.policySizeSubtitle}>Quel(s) produit(s) / matériel(s) fournissez-vous dans le cadre de ce service ? </h3>
@@ -98,7 +98,7 @@ class SettingService extends React.Component {
                 <Grid container spacing={2}>
                   {service.equipments.map((result) => {
                     return (
-                      <Grid item xl={3} xs={4}>
+                      <Grid item xl={3} lg={3} md={3} sm={3} xs={4}>
                         <label style={{cursor: 'pointer'}}>
                           {
                             this.state.selectedEquipments.includes(result._id) ?

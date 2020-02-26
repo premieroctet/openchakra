@@ -53,7 +53,7 @@ class services extends React.Component {
         this.availabilityCreated = this.availabilityCreated.bind(this);
         this.availabilityDeleted = this.availabilityDeleted.bind(this);
         this.nextDisabled = this.nextDisabled.bind(this)
-    
+
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -154,7 +154,11 @@ class services extends React.Component {
     };
 
     isRightPanelHidden() {
-        return this.state.activeStep===1 || this.state.activeStep===5;
+        if(!this.isNewService()){
+            return this.state.activeStep === 0 || this.state.activeStep === 4;
+        }else{
+            return this.state.activeStep === 1 || this.state.activeStep === 5;
+        }
     };
 
     handleBack = () => {
@@ -208,11 +212,14 @@ class services extends React.Component {
 
     renderSwitch(stepIndex) {
         let shop=this.state.shop;
+        if(!this.isNewService()){
+            stepIndex = stepIndex + 1
+        }
         switch(stepIndex) {
             case 0:
                 return <SelectService onChange={this.onServiceChanged} service={shop.service} isId={false}/>;
             case 1:
-                return <SelectPrestation service={shop.service} onChange={this.prestaSelected} />;
+                return <SelectPrestation service={shop.service} prestations={!this.isNewService() ? shop.prestations : null} onChange={this.prestaSelected} />;
             case 2:
                 return <SettingService service={shop.service} onChange={this.settingsChanged} />;
             case 3:
@@ -220,23 +227,6 @@ class services extends React.Component {
             case 4:
                 return <AssetsService data={shop} onChange={this.assetsChanged} />;
             case 5:
-                return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
-        }
-    }
-
-    renderSwitchUpdate(stepIndex){
-        let shop = this.state.shop;
-       console.log("RenderSwitchUpdate:service:"+shop.service);
-        switch(stepIndex) {
-            case 0:
-                return <SelectPrestation service={shop.service} prestations={shop.prestations} onChange={this.prestaSelected} />;
-            case 1:
-                return <SettingService service={shop.service} onChange={this.settingsChanged} />;
-            case 2:
-                return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
-            case 3:
-                return <AssetsService data={shop} onChange={this.assetsChanged} />;
-            case 4:
                 return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
         }
     }
@@ -255,15 +245,13 @@ class services extends React.Component {
                       </Link>
                   </Grid>
                   <Grid className={classes.contentStepper}>
-                      <Stepper activeStep={this.state.activeStep} isType={ this.props.service_id ? "updateService" : "addService"}/>
+                      <Stepper activeStep={this.state.activeStep} isType={ this.props.service_user_id ? "updateService" : "addService"}/>
                   </Grid>
               </Grid>
               <Grid className={classes.marginContainer}>
                   <Grid className={classes.mainContainer}>
                       <Grid className={hideRightPanel ? classes.mainContainerNoImg : classes.leftContentComponent }>
-                          { this.props.service_user_id ?
-                            this.renderSwitchUpdate(this.state.activeStep) : this.renderSwitch(this.state.activeStep)
-                          }
+                          { this.renderSwitch(this.state.activeStep) }
                       </Grid>
                       { hideRightPanel ?
                         null:
@@ -286,7 +274,7 @@ class services extends React.Component {
                                 disabled={this.state.activeStep === 0}
                                 onClick={this.handleBack}>
                                   Retour
-                              </Button> :null 
+                              </Button> :null
                               }
                           </Grid>
                           <Grid>
