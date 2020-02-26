@@ -226,7 +226,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   MenuButton: {
     ...MenuButton.defaultProps,
-    children: 'Lorem Ipsum',
   },
   MenuItem: {
     ...MenuItem.defaultProps,
