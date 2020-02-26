@@ -134,8 +134,10 @@ class services extends React.Component {
         // last page => post
         else {
             let cloned_shop = _.cloneDeep(this.state.shop);
+            Object.keys(cloned_shop.prestations).forEach(key => { if (key<0) cloned_shop.prestations[key]._id = null });
             cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
             cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
+
 
             let new_serviceuser = this.state.service_user_id==null;
             let full_url = new_serviceuser ? '/myAlfred/api/serviceUser/myShop/add' : `/myAlfred/api/serviceUser/edit/${this.props.service_user_id}`;
