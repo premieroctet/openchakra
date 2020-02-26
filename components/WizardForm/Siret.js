@@ -60,7 +60,7 @@ class siret extends React.Component {
         value = value.replace(/ /g, '');
       }
       this.setState({ [name]: value });
-      
+
     };
 
 
@@ -96,9 +96,9 @@ class siret extends React.Component {
                  .catch(err => {
                     toast.error("Siret/Siren inconnu");
                     this.setState({
-                      name:'', nafape: '', 
-                      status: '', 
-                      creationDate:'', 
+                      name:'',
+                      status: '',
+                      creationDate:'',
                       nafape: '',
                     }, () => this.props.onChange(this.state));
                     console.log(err);
