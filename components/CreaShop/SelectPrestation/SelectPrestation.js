@@ -21,12 +21,13 @@ class SelectPrestation extends React.Component {
       service_name: '',
       all_billlings:[],
     };
-    this.prestationSelected = this.prestationSelected.bind(this)
-    this.addCustomPrestation = this.addCustomPrestation.bind(this)
+    this.prestationSelected = this.prestationSelected.bind(this);
+    this.addCustomPrestation = this.addCustomPrestation.bind(this);
     this.removeCustomPrestation = this.removeCustomPrestation.bind(this)
   }
 
   componentDidMount() {
+    console.log("est ce que je suis là");
     let billings=null;
     axios.get(`${url}myAlfred/api/billing/all`)
       .then(res => {
@@ -66,14 +67,14 @@ class SelectPrestation extends React.Component {
   removeCustomPrestation(presta_id) {
     this.prestationSelected(presta_id, false);
     let grouped=this.state.grouped;
-    grouped[CUSTOM_PRESTATIONS_FLTR]=grouped[CUSTOM_PRESTATIONS_FLTR].filter(p => p._id != presta_id);
+    grouped[CUSTOM_PRESTATIONS_FLTR]=grouped[CUSTOM_PRESTATIONS_FLTR].filter(p => p._id !== presta_id);
     this.setState({grouped: grouped});
     let prestations = this.state.prestations;
   }
 
   prestationSelected(prestaId, checked, price, billing, label){
     console.log("Prestation selected:"+prestaId);
-    let sel=this.state.prestations
+    let sel=this.state.prestations;
     if (checked) {
       sel[prestaId]={_id:prestaId, label:label, price:price, billing:billing}
     }
@@ -86,8 +87,8 @@ class SelectPrestation extends React.Component {
   }
 
   render() {
-    const {classes, service} = this.props;
-    console.log(service, "service ")
+    const {classes, prestations} = this.props;
+    console.log(prestations, "prestation ");
 
     return(
       <Grid className={classes.mainContainer}>
@@ -110,7 +111,7 @@ class SelectPrestation extends React.Component {
                   return (
                     <Grid item xl={6} lg={12} xs={12} key={i}>
                       <Grid item>
-                        {fltr=='Aucun' ? '' : fltr}
+                        {fltr==='Aucun' ? '' : fltr}
                         {isCustom ? <Grid className={classes.buttonAdd} onClick={() => this.addCustomPrestation() } >+</Grid>:null }
                       </Grid>
                       {prestas.map((p, j) => {

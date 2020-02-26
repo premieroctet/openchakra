@@ -134,7 +134,7 @@ class CardPreview extends React.Component{
               <List dense={this.state.dense} className={classes.flexPosition}>
                 <ListItem className={classes.noPadding}>
                   <ListItemIcon className={classes.minWidth}>
-                    <img src={services.graduated ? '../../static/assets/img/iconCardAlfred/graduated.svg' : '../../static/assets/img/iconCardAlfred/no_graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
+                    <img src={services.graduated && services.graduated !== "" && services.graduated !== null && services.graduated !== undefined ? '../../static/assets/img/iconCardAlfred/graduated.svg' : '../../static/assets/img/iconCardAlfred/no_graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
                   </ListItemIcon>
                   <ListItemText
                     classes={{primary:classes.sizeText}}
@@ -143,7 +143,7 @@ class CardPreview extends React.Component{
                 </ListItem>
                 <ListItem className={classes.noPadding}>
                   <ListItemIcon  className={classes.minWidth}>
-                    <img src={services.is_certified ? '../../static/assets/img/iconCardAlfred/certificate.svg' : '../../static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
+                    <img src={services.is_certified && services.is_certified !== "" && services.is_certified !== null && services.is_certified !== undefined ? '../../static/assets/img/iconCardAlfred/certificate.svg' : '../../static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
                   </ListItemIcon>
                   <ListItemText
                     classes={{primary:classes.sizeText}}
@@ -152,7 +152,7 @@ class CardPreview extends React.Component{
                 </ListItem>
                 <ListItem className={classes.noPadding}>
                   <ListItemIcon className={classes.minWidth}>
-                    <img src={'../../static/assets/img/iconCardAlfred/experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
+                    <img src={services.level && services.level !== "" && services.level !== null && services.level !== undefined ? '../../static/assets/img/iconCardAlfred/experience.svg' : '../../static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
                   </ListItemIcon>
                   <ListItemText
                     classes={{primary:classes.sizeText}}

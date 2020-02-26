@@ -15,7 +15,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Footer2 from '../../hoc/Layout/Footer/Footer2';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import {Helmet} from 'react-helmet';
 import {generate_avatar} from '../../utils/generateAvatar';
 
@@ -296,9 +296,9 @@ class editPicture extends React.Component {
                                     <DeleteIcon onClick={()=>this.handleClickOpen()} className={classes.deleteicon} style={{marginLeft: '90%',padding: '2%', marginBottom: '-10%', color: '#616060',  cursor: 'pointer' }}/>
                                     <Thumb file={this.state.haveapicture} />
                                     {
-                                       this.state.haveapicture ? 
-                                         null : 
-                                           user.picture ? 
+                                       this.state.haveapicture ?
+                                         null :
+                                           user.picture ?
                                              <img width={150} height={150} style={{borderRadius: '50%',objectFit:'cover'}} src={`../${user.picture}`} alt={'picture'}/>:
                                              <Avatar alt="photo de profil" className={classes.avatarLetter}>{generate_avatar(user)}</Avatar>
                                     }
@@ -333,7 +333,7 @@ class editPicture extends React.Component {
                     </Grid>
                 </Layout>
                 <Grid style={{position: 'absolute', bottom: 0, width: '100%'}}>
-                    <Footer2/>
+                    <Footer/>
                 </Grid>
                 <Dialog
                     open={this.state.open}

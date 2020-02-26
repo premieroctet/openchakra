@@ -10,7 +10,6 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import { toast } from 'react-toastify';
 import Footer from '../../hoc/Layout/Footer/Footer';
-import Footer2 from '../../hoc/Layout/Footer/Footer2';
 import {Helmet} from 'react-helmet';
 
 
@@ -160,15 +159,13 @@ class paymentPreference extends React.Component {
             const {clickAdd} = this.state;
             const {clickEdit} = this.state;
             const {haveAccount} = this.state;
-            const editfooter = clickEdit ? <Footer/> :<Footer2/>;
-            const addfooter = clickAdd ? <Footer/> :<Footer2/>;
 
             return (
                 <Fragment>
-			<Helmet>
-        <title>compte - Préférences de versement - My Alfred </title>
-        <meta property="description" content="My Alfred, des services entre particuliers et auto-entrepreneurs rémunérés ! Choisissez vos méthodes de versement de vos rémunérations pour chacun des services réalisés. Versement 72h après la prestation." />
-      </Helmet>
+                  <Helmet>
+                    <title>compte - Préférences de versement - My Alfred </title>
+                    <meta property="description" content="My Alfred, des services entre particuliers et auto-entrepreneurs rémunérés ! Choisissez vos méthodes de versement de vos rémunérations pour chacun des services réalisés. Versement 72h après la prestation." />
+                  </Helmet>
                     <Layout>
                         <Grid container className={classes.bigContainer}>
                         <Grid className={classes.toggle}  item xs={3}>
@@ -421,7 +418,7 @@ class paymentPreference extends React.Component {
                         </Grid>
                     </Layout>
                   <Grid style={{position: 'absolute', bottom: 0, width: '100%'}}>
-                    {haveAccount ? editfooter : addfooter}
+                    <Footer/>
                   </Grid>
                 </Fragment>
             );

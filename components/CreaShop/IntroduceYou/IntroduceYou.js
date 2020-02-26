@@ -93,7 +93,7 @@ class IntroduceYou extends React.Component {
                         </p>
                       </Grid>
                     </Grid>
-                    <Grid container style={{ marginTop: 10 }}>
+                    <Grid container style={{ marginTop: 10, marginBottom: 100 }}>
                       <Grid item xs={12}>
                         <FormControlLabel
                           control={
