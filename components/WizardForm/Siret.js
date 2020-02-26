@@ -55,7 +55,12 @@ class siret extends React.Component {
     }
 
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+      let {name, value} = e.target;
+      if (name=='siret') {
+        value = value.replace(/ /g, '');
+      }
+      this.setState({ [name]: value });
+
     };
 
 
@@ -91,9 +96,9 @@ class siret extends React.Component {
                  .catch(err => {
                     toast.error("Siret/Siren inconnu");
                     this.setState({
-                      name:'', nafape: '', 
-                      status: '', 
-                      creationDate:'', 
+                      name:'',
+                      status: '',
+                      creationDate:'',
                       nafape: '',
                     }, () => this.props.onChange(this.state));
                     console.log(err);
@@ -137,7 +142,7 @@ class siret extends React.Component {
                 <Grid item xs={12} sm={12} md={6}>
                             <Typography>Code NAF/APE : {this.state.nafape}</Typography>
                 </Grid>
-                <Grid item xs={12} sm={12} md={6}>
+                <Grid item xs={24} sm={24} md={12}>
                             <Typography>Statut juridique : {this.state.status}</Typography>
                 </Grid>
                 </Grid>

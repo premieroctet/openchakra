@@ -287,13 +287,15 @@ class creaShop extends React.Component {
             </Grid>
             <Grid className={classes.navButtonContent}>
               <Grid>
+              { false ? // FIX : corriger pb retour sur panel précédent
                 <Button
                   color="primary"
                   disabled={this.state.activeStep === 0}
                   onClick={this.handleBack}
                 >
                   Retour
-                </Button>
+                </Button>:null
+              }
               </Grid>
               <Grid>
                 <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext} disabled={this.nextDisabled()}>

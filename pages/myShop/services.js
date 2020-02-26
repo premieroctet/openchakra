@@ -13,6 +13,7 @@ import Schedule from '../../components/Schedule/Schedule';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
+import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
 const {config} = require('../../config/config');
 const url = config.apiUrl;
 import { toast } from 'react-toastify';
@@ -28,7 +29,7 @@ class services extends React.Component {
             user_id: null,
             shop:{
                 service: null,
-                prestations:[],
+                prestations:{},
                 equipments: [], // Ids des équipements
                 location: null, // Lieu(x) de prestation
                 travel_tax: 0, // Frais de déplacement
@@ -52,6 +53,7 @@ class services extends React.Component {
         this.availabilityCreated = this.availabilityCreated.bind(this);
         this.availabilityDeleted = this.availabilityDeleted.bind(this);
         this.nextDisabled = this.nextDisabled.bind(this)
+    
     }
 
     static getInitialProps ({ query: { id } }) {
@@ -79,19 +81,17 @@ class services extends React.Component {
         axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
           .then(res => {
               let resultat = res.data;
-              this.setState({
-                  shop: {
-                      ...this.state.shop,
-                      service : resultat.service._id,
-                      prestations: resultat.prestations,
-                      perimeter: resultat.perimeter,
-                      equipments: resultat.equipments,
-                      diplomaName: resultat.diplomaName,
-                      diplomaYear: resultat.diplomaYear,
-                      certificationName: resultat.certificationName,
-                      certificationYear: resultat.certificationYear,
-                  }
-              });
+              let shop=this.state.shop;
+              shop.service = resultat.service._id;
+              shop.prestations = new Map(resultat.prestations.map(p => [p._id, p]));
+              shop.perimeter = resultat.perimeter;
+              shop.equipments = resultat.equipments;
+              shop.diplomaName = resultat.diplomaName;
+              shop.diplomaYear = resultat.diplomaYear;
+              shop.certificationName = resultat.certificationName;
+              shop.certificationYear = resultat.certificationYear;
+
+              this.setState({ shop: shop});
           })
           .catch(error => {
               console.log(error);
@@ -100,7 +100,7 @@ class services extends React.Component {
     }
 
     isNewService() {
-        return this.props.service_user_id == null;
+      return this.props.service_user_id==null;
     }
 
     nextDisabled() {
@@ -154,11 +154,7 @@ class services extends React.Component {
     };
 
     isRightPanelHidden() {
-        if(!this.isNewService()){
-            return this.state.activeStep === 0 || this.state.activeStep === 4;
-        }else{
-            return this.state.activeStep === 1 || this.state.activeStep === 5;
-        }
+        return this.state.activeStep===1 || this.state.activeStep===5;
     };
 
     handleBack = () => {
@@ -211,15 +207,12 @@ class services extends React.Component {
     }
 
     renderSwitch(stepIndex) {
-        if (!this.isNewService()){
-            stepIndex = stepIndex + 1;
-        }
         let shop=this.state.shop;
         switch(stepIndex) {
             case 0:
                 return <SelectService onChange={this.onServiceChanged} service={shop.service} isId={false}/>;
             case 1:
-                return <SelectPrestation service={shop.service} prestations={!this.isNewService() ? shop.prestations : null}  onChange={this.prestaSelected} />;
+                return <SelectPrestation service={shop.service} onChange={this.prestaSelected} />;
             case 2:
                 return <SettingService service={shop.service} onChange={this.settingsChanged} />;
             case 3:
@@ -227,6 +220,23 @@ class services extends React.Component {
             case 4:
                 return <AssetsService data={shop} onChange={this.assetsChanged} />;
             case 5:
+                return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
+        }
+    }
+
+    renderSwitchUpdate(stepIndex){
+        let shop = this.state.shop;
+       console.log("RenderSwitchUpdate:service:"+shop.service);
+        switch(stepIndex) {
+            case 0:
+                return <SelectPrestation service={shop.service} prestations={shop.prestations} onChange={this.prestaSelected} />;
+            case 1:
+                return <SettingService service={shop.service} onChange={this.settingsChanged} />;
+            case 2:
+                return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
+            case 3:
+                return <AssetsService data={shop} onChange={this.assetsChanged} />;
+            case 4:
                 return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
         }
     }
@@ -245,13 +255,15 @@ class services extends React.Component {
                       </Link>
                   </Grid>
                   <Grid className={classes.contentStepper}>
-                      <Stepper activeStep={this.state.activeStep} isType={ this.props.service_user_id ? "updateService" : "addService"}/>
+                      <Stepper activeStep={this.state.activeStep} isType={ this.props.service_id ? "updateService" : "addService"}/>
                   </Grid>
               </Grid>
               <Grid className={classes.marginContainer}>
                   <Grid className={classes.mainContainer}>
                       <Grid className={hideRightPanel ? classes.mainContainerNoImg : classes.leftContentComponent }>
-                          {this.renderSwitch(this.state.activeStep)}
+                          { this.props.service_user_id ?
+                            this.renderSwitchUpdate(this.state.activeStep) : this.renderSwitch(this.state.activeStep)
+                          }
                       </Grid>
                       { hideRightPanel ?
                         null:
@@ -268,13 +280,14 @@ class services extends React.Component {
                       </Grid>
                       <Grid className={classes.navButtonContent}>
                           <Grid>
+                              { false ? // FIX : régler pb retour arrière sur les panels
                               <Button
                                 color="primary"
                                 disabled={this.state.activeStep === 0}
-                                onClick={this.handleBack}
-                              >
+                                onClick={this.handleBack}>
                                   Retour
-                              </Button>
+                              </Button> :null 
+                              }
                           </Grid>
                           <Grid>
                               <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext} disabled={this.nextDisabled()}>
