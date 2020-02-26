@@ -104,7 +104,6 @@ const styles = theme => ({
   bigAvatar: {
     width: 40,
     height: 40,
-    marginTop: -10,
   },
   theavatarbutton: {
     width: 45,
@@ -189,7 +188,7 @@ class NavBar extends Component {
     const user = this.state.user;
     const maboutique = <MenuItem onClick={this.handleMenuClose}><Typography><Link href={'/myShop/services'}><a className={classes.navbarLinkMobile}>Ma boutique</a></Link></Typography></MenuItem>;
     const becomealfred = <MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/creaShop/creaShop'}><a className={classes.navbarLinkMobile}>Devenir Alfred</a></Link></Typography></MenuItem>;
-    const mobileavatar = 
+    const mobileavatar =
 	<React.Fragment>
 	  <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}>
 	    <UserAvatar user={user} className={classes.bigAvatar} />
