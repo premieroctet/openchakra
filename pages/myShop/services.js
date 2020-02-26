@@ -37,7 +37,9 @@ class services extends React.Component {
                 diploma : [{name:"", year:"", picture:""}],
                 certification : [{name:"", year:"", picture:""}],
                 service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
-                perimeter: 0,
+                level: '',
+                perimeter: 1,
+                minimum_basket: 1,
                 availabilities: [],
                 deadline_value: '1',
                 deadline_unit: 'j',
