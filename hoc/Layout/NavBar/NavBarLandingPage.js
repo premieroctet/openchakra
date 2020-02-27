@@ -104,6 +104,9 @@ const styles = theme => ({
   bigAvatar: {
     width: 40,
     height: 40,
+    [theme.breakpoints.down('xs')]: {
+      marginTop : -10
+    },
   },
   theavatarbutton: {
     width: 45,
