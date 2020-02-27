@@ -225,7 +225,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     min: 1,
     max: 100,
     step: 1,
-    size: 'sm',
+    size: 'md',
     value: 50,
   },
   SliderFilledTrack: { ...SliderFilledTrack.defaultProps },
