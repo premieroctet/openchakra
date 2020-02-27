@@ -33,6 +33,7 @@ import {
   useDisclosure,
   Input,
   ModalHeader,
+  useTheme,
 } from '@chakra-ui/core'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
@@ -49,6 +50,28 @@ import {
 import { FaRegSave, FaBomb, FaEdit } from 'react-icons/fa'
 import { GoRepo } from 'react-icons/go'
 import { FiUpload } from 'react-icons/fi'
+import JSONTree from 'react-json-tree'
+
+export const jsonTheme = {
+  scheme: 'google',
+  author: 'seth wright (http://sethawright.com)',
+  base00: '#000',
+  base01: '#282a2e',
+  base02: '#373b41',
+  base03: '#969896',
+  base04: '#b4b7b4',
+  base05: '#c5c8c6',
+  base06: '#e0e0e0',
+  base07: '#ffffff',
+  base08: '#CC342B',
+  base09: '#F96A38',
+  base0A: '#FBA922',
+  base0B: '#198844',
+  base0C: '#3971ED',
+  base0D: '#3971ED',
+  base0E: '#A36AC7',
+  base0F: '#3971ED',
+}
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -93,6 +116,7 @@ const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [fileLoaded, setFileLoaded] = useState(false)
   const [fileError, setFileError] = useState(false)
+  const theme = useTheme()
 
   const handleChange = async (selectorFiles: any) => {
     selectorFiles.preventDefault()
@@ -263,57 +287,64 @@ const Header = () => {
               )}
             </Popover>
           </Stack>
-          <Modal isOpen={isOpen} onClose={onClose} size="lg">
-            <ModalOverlay />
-            <ModalContent color="white">
-              <ModalHeader fontSize="15px" textAlign="center">
-                Select your custom JSON Theme Object
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Input
-                  id="themeFile"
-                  type="file"
-                  accept="application/json"
-                  onChange={(selectorFiles: any) => handleChange(selectorFiles)}
-                />
+          <LightMode>
+            <Modal isOpen={isOpen} onClose={onClose} size="lg">
+              <ModalOverlay />
+              <ModalContent rounded={10}>
+                <ModalHeader fontSize="15px" textAlign="center">
+                  Add your custom JSON Theme Object
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Input
+                    id="themeFile"
+                    type="file"
+                    accept="application/json"
+                    onChange={(selectorFiles: any) =>
+                      handleChange(selectorFiles)
+                    }
+                  />
 
-                {fileLoaded && (
-                  <div>
-                    <p style={{ textAlign: 'center', marginTop: '20px' }}>
-                      Your theme has been successfully loaded{' '}
+                  {fileLoaded && (
+                    <div>
+                      <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                        Your theme has been successfully loaded{' '}
+                        <span
+                          style={{ verticalAlign: 'middle' }}
+                          role="img"
+                          aria-label="light"
+                        >
+                          ✅
+                        </span>
+                      </p>
+                    </div>
+                  )}
+
+                  {fileError && (
+                    <p>
+                      Can't read this file / theme{' '}
                       <span
                         style={{ verticalAlign: 'middle' }}
                         role="img"
                         aria-label="light"
                       >
-                        ✅
+                        ❌
                       </span>
                     </p>
-                  </div>
-                )}
+                  )}
+                  <Box rounded={5}>
+                    <JSONTree data={theme} theme={jsonTheme} />
+                  </Box>
+                </ModalBody>
 
-                {fileError && (
-                  <p>
-                    Can't read this file / theme{' '}
-                    <span
-                      style={{ verticalAlign: 'middle' }}
-                      role="img"
-                      aria-label="light"
-                    >
-                      ❌
-                    </span>
-                  </p>
-                )}
-              </ModalBody>
-
-              <ModalFooter>
-                <Button variantColor="blue" mr={3} onClick={onClose} size="sm">
-                  Close
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+                <ModalFooter>
+                  <Button mr={3} onClick={onClose} size="sm">
+                    Close
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+          </LightMode>
         </Flex>
 
         <Stack
