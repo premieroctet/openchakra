@@ -33,7 +33,7 @@ const SliderPreview: React.FC<IPreviewProps> = ({ component }) => {
 }
 
 export const SliderTrackPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true)
+  const { props, ref } = useInteractive(component)
   const { drop, isOver } = useDropComponent(component.id)
 
   if (isOver) {
@@ -50,7 +50,7 @@ export const SliderTrackPreview = ({ component }: IPreviewProps) => {
 }
 
 export const SliderFilledTrackPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true)
+  const { props, ref } = useInteractive(component)
   const { drop, isOver } = useDropComponent(component.id)
 
   if (isOver) {
@@ -67,7 +67,7 @@ export const SliderFilledTrackPreview = ({ component }: IPreviewProps) => {
 }
 
 export const SliderThumbPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true)
+  const { props, ref } = useInteractive(component)
   const { drop, isOver } = useDropComponent(component.id)
 
   if (isOver) {
