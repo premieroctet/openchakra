@@ -27,6 +27,7 @@ class services extends React.Component {
         this.state={
             activeStep: 0,
             user_id: null,
+            exclude_services: [], // Services that must not be added because already exist in the shop ; only in add mode (i.e. props.service_user_id undefined)
             shop:{
                 service: null,
                 description: null,
@@ -72,7 +73,6 @@ class services extends React.Component {
             Router.push('/login');
         }
 
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/users/current')
           .then(res => {
               let user = res.data;
@@ -82,11 +82,22 @@ class services extends React.Component {
               console.log(error);
           });
 
-        if (this.props.service_user_id) {
+
+        if (this.isNewService()) {
+          // Get shop to update exclusion services list
+          axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
+            .then( response  =>  {
+              let serviceUsers = response.data;
+              var services = serviceUsers.map(su => su.service._id);
+              console.log("Exclude services:"+JSON.stringify(services));
+              this.setState({exclude_services: services});
+            });
+        }
+
+        if (!this.isNewService()) {
         axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
           .then(res => {
               let resultat = res.data;
-              console.log("service got ServiceUser:"+JSON.stringify(resultat, null, 2));
               let shop=this.state.shop;
               shop.service = resultat.service._id;
               shop.prestations = Object.fromEntries(new Map(resultat.prestations.map(p => [p._id, p])));
@@ -103,6 +114,7 @@ class services extends React.Component {
               shop.deadline_unit = resultat.deadline_before_booking ? resultat.deadline_before_booking.split(' ')[1] : '';
               shop.deadline_value = resultat.deadline_before_booking ? resultat.deadline_before_booking.split(' ')[0] : '';
               shop.description = resultat.description;
+              shop.level = resultat.level;
 
               this.setState({ shop: shop});
           })
@@ -222,12 +234,9 @@ class services extends React.Component {
         let shop=this.state.shop;
         let newService=this.isNewService();
 
-        console.log("service.render:activeStep"+this.state.activeStep);
-        console.log("service.render:"+JSON.stringify(shop, null, 2));
-
         switch(stepIndex) {
             case 0:
-                return <SelectService onChange={this.onServiceChanged} service={shop.service} isId={false}/>;
+                return <SelectService onChange={this.onServiceChanged} service={shop.service} exclude={this.state.exclude_services} isId={false}/>;
             case 1:
                 return <SelectPrestation service={shop.service} prestations={newService ? {} : shop.prestations} onChange={this.prestaSelected} />;
             case 2:

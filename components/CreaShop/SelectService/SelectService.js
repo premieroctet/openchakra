@@ -34,12 +34,14 @@ class SelectService extends React.Component {
         Object.keys(data).forEach( (k) => {
           data[k].forEach( (s) => {
 	    // FIX: passer les keyowrds autrement dans le back
-            let srv_opt={category: k, name: s.label+"/"+s.keywords.join(' '), id: s.id};
-            services.push(srv_opt);
-            if (this.state.service==null && s.id==this.props.service) {
-              console.log("Found");
-              this.setState({service: srv_opt}); 
-            }
+            // Dont show services to exclude (i.e. already in the shop)
+            if (!this.props.exclude.includes(s.id)) {
+              let srv_opt={category: k, name: s.label+"/"+s.keywords.join(' '), id: s.id};
+              services.push(srv_opt);
+              if (this.state.service==null && s.id==this.props.service) {
+                console.log("Found");
+                this.setState({service: srv_opt}); 
+              }}
           });
         });
         this.setState({services: services});
