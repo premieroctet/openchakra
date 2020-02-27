@@ -7,12 +7,14 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import Clear from '@material-ui/icons/Clear';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import IconButton from '@material-ui/core/IconButton';
+
 
 
 
@@ -24,9 +26,10 @@ class AssetsService extends React.Component {
       description: this.props.data.description,
       diplomaYear: this.props.data.diplomaYear,
       diplomaName: this.props.data.diplomaName,
-      diplomaFile:{},
+      diplomaPicture: null,
       certificationYear: this.props.data.certificationYear,
       certificationName: this.props.data.certificationName,
+      certificationPicture: null,
       level: this.props.data.level,
     };
     this.handleChange = this.handleChange.bind(this);
@@ -44,11 +47,7 @@ class AssetsService extends React.Component {
   handleChange(key, value) {
     this.setState({[key]: value}, () => this.props.onChange(this.state));
   }
-
-  handleChangeDiploma = e => {
-    this.setState({diplomaFile:e.target.files[0]});
-  };
-
+  
   render() {
     const {classes} = this.props;
     const {dates} = this.state;
@@ -116,14 +115,6 @@ class AssetsService extends React.Component {
                   </Grid>
                   <Grid item xs={12}>
                     <h3 className={classes.policySizeSubtitle}>Votre diplôme</h3>
-                    {this.state.isDiplome ?
-                      <Grid style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>
-                        <Grid style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}>
-                          <Clear color="secondary"/>
-                        </Grid>
-                      </Grid>
-                      : null
-                    }
                     <ExpansionPanel>
                       <ExpansionPanelSummary
                         expandIcon={<ExpandMoreIcon />}
@@ -160,14 +151,22 @@ class AssetsService extends React.Component {
                           </Grid>
                           <Grid item xs={12}>
                             <Grid style={{display: 'flex', alignItems: 'baseline'}}>
-                              <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                              <label style={{display: 'inline-block', marginTop: 10}} className="forminputs">
                                 Joindre mon diplôme
-                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" className="form-control" onChange={this.handleChangeDiploma}/>
+                                <input id="file"
+                                       style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}}
+                                       name="diploma" type="file"
+                                       className="form-control"
+                                       onChange={e => this.handleChange('diplomaPicture', e.target.files[0])}
+                                />
                               </label>
-                              {this.state.diplomaFile.name ?
+                              {this.state.diplomaPicture !== null ?
                                 <Grid style={{display : 'flex', alignItems: 'center'}}>
-                                  <p>{this.state.diplomaFile.name}</p>
+                                  <p>{this.state.diplomaPicture.name}</p>
                                   <CheckCircleIcon color={'primary'} style={{marginLeft: 10}}/>
+                                  <IconButton  style={{marginLeft: 10}}>
+                                    <DeleteForeverIcon color={'secondary'} />
+                                  </IconButton>
                                 </Grid>
                                 : null
                               }
@@ -180,14 +179,6 @@ class AssetsService extends React.Component {
                   </Grid>
                   <Grid item xs={12} >
                     <h3 className={classes.policySizeSubtitle}>Votre certification</h3>
-                    { this.state.isCertification ?
-                      <Grid style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>
-                        <Grid style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}>
-                          <Clear color="secondary"/>
-                        </Grid>
-                      </Grid>
-                      : null
-                    }
                     <ExpansionPanel>
                       <ExpansionPanelSummary
                         expandIcon={<ExpandMoreIcon />}
@@ -221,21 +212,37 @@ class AssetsService extends React.Component {
                               })}
                             </TextField>
                           </Grid>
-                          { false ? // FIX : joindre certification
                           <Grid item xs={12}>
-                            <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
-                              Joindre ma certification
-                              <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certification" type="file" className="form-control"/>
-                            </label>
-                            <span>test</span>
+                            <Grid style={{display: 'flex', alignItems: 'baseline'}}>
+                              <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                Joindre ma certification
+                                <input id="file"
+                                       style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}}
+                                       name="certifaction" type="file"
+                                       className="form-control"
+                                       onChange={e => this.handleChange('certificationPicture', e.target.files[0])}
+                                />
+                              </label>
+                              {this.state.certificationPicture !== null ?
+                                <Grid style={{display : 'flex', alignItems: 'center'}}>
+                                  <p>{this.state.certificationPicture.name}</p>
+                                  <CheckCircleIcon color={'primary'} style={{marginLeft: 10}}/>
+                                  <IconButton  style={{marginLeft: 10}}>
+                                    <DeleteForeverIcon color={'secondary'} />
+                                  </IconButton>
+                                </Grid>
+                                : null
+                              }
+                            </Grid>
                             <p>En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ces derniers</p>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              style={{color: 'white'}}
-                              disabled={false}
-                            >Valider</Button>
-                          </Grid>:null }
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                style={{color: 'white'}}
+                                disabled={false}
+                              >Valider
+                              </Button>
+                          </Grid>
                         </Grid>
                       </ExpansionPanelDetails>
                     </ExpansionPanel>

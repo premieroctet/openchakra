@@ -49,8 +49,8 @@ class creaShop extends React.Component {
         deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
         description:"", // Description de l'expertise
         experience_years: 0,
-        diploma : [{name:"", year:"", picture:""}],
-        certification : [{name:"", year:"", picture:""}],
+        diploma : [{name:"", year:"", picture:{}}],
+        certification : [{name:"", year:"", picture:{}}],
         service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
         perimeter: 0,
         availabilities: [],
@@ -69,7 +69,7 @@ class creaShop extends React.Component {
     this.conditionsChanged = this.conditionsChanged.bind(this);
     this.shopSettingsChanged = this.shopSettingsChanged.bind(this);
     this.introduceChanged = this.introduceChanged.bind(this);
-    this.nextDisabled = this.nextDisabled.bind(this)
+    this.nextDisabled = this.nextDisabled.bind(this);
   }
 
   componentDidMount() {
@@ -182,17 +182,27 @@ class creaShop extends React.Component {
     this.setState({ shop: shop });
   }
 
-  assetsChanged(state) {
-    let shop=this.state.shop;
-
-    shop.description=state.description;
-    shop.level=state.level;
-    shop.diplomaName = state.diplomaName;
-    shop.diplomaYear = state.diplomaYear;
-    shop.certificationName = state.certificationName;
-    shop.certificationYear = state.certificationYear;
-
-    this.setState({shop: shop});
+  assetsChanged(state, index) {
+    console.log(state, "shop");
+    this.setState({
+      shop:{
+        ...this.state.shop,
+        description: state.description,
+        experience_years: state.level,
+        diploma:{
+          ...this.state.shop.diploma[index],
+          name: state.diplomaName,
+          year: state.diplomaYear,
+          picture: state.diplomaPicture,
+        },
+        certification:{
+          ...this.state.shop.certification[index],
+          name: state.certificationName,
+          year: state.certificationYear,
+          picture: state.certificationPicture
+        }
+      }
+    });
   }
 
   conditionsChanged(book_request, conditions) {
@@ -236,7 +246,7 @@ class creaShop extends React.Component {
       case 4:
         return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
       case 5:
-        return <AssetsService data={shop} onChange={this.assetsChanged} />;
+        return <AssetsService data={shop} onChange={this.assetsChanged}/>;
       case 6:
         return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
       case 7:
