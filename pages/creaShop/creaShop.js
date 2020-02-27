@@ -49,8 +49,8 @@ class creaShop extends React.Component {
         deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
         description:"", // Description de l'expertise
         experience_years: 0,
-        diploma : [{name:"", year:"", picture:{}}],
-        certification : [{name:"", year:"", picture:{}}],
+        diploma : [{name: "", year: null, picture: null }],
+        certification : [{name: "", year: null , picture: null }],
         service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
         perimeter: 0,
         availabilities: [],
@@ -183,7 +183,6 @@ class creaShop extends React.Component {
   }
 
   assetsChanged(state, index) {
-    console.log(state, "shop");
     this.setState({
       shop:{
         ...this.state.shop,
@@ -246,7 +245,7 @@ class creaShop extends React.Component {
       case 4:
         return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
       case 5:
-        return <AssetsService data={shop} onChange={this.assetsChanged}/>;
+        return <AssetsService data={shop} onChange={this.assetsChanged} type={"creaShop"}/>;
       case 6:
         return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
       case 7:

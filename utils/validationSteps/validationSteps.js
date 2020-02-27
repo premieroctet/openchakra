@@ -20,10 +20,15 @@ const settingService = (shop) =>{
 };
 
 const assetsService = (shop) => {
-  if (shop.diplomaName ==='' && shop.diplomaYear !== '') return true;
-  if (shop.diplomaName!=='' && shop.diplomaYear==='') return true;
-  if (shop.certificationName==='' && shop.certificationYear!=='') return true;
-  if (shop.certificationName!=='' && shop.certificationYear==='') return true;
+  if(shop.diploma.name === "" && shop.diploma.year === null && shop.diploma.picture === null){
+    return false;
+  }
+  if(shop.diploma.name !== "" || shop.diploma.year !== null || shop.diploma.picture !== null) {
+    if (shop.diploma.name !== "" && shop.diploma.year !== null && shop.diploma.picture !== null){
+      return false
+    }
+    return true;
+  }
 };
 
 const settingShop = (shop) =>{

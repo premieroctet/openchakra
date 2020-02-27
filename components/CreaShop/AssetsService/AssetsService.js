@@ -15,20 +15,17 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import IconButton from '@material-ui/core/IconButton';
 
-
-
-
 class AssetsService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       dates: [],
       description: this.props.data.description,
-      diplomaYear: this.props.data.diplomaYear,
-      diplomaName: this.props.data.diplomaName,
+      diplomaYear: props.type === "creaShop" ? null : this.props.data.diplomaYear,
+      diplomaName: props.type === "creaShop" ? null : this.props.data.diplomaName,
       diplomaPicture: null,
-      certificationYear: this.props.data.certificationYear,
-      certificationName: this.props.data.certificationName,
+      certificationYear: props.type === "creaShop" ? null : this.props.data.certificationYear,
+      certificationName: props.type === "creaShop" ? null : this.props.data.certificationName,
       certificationPicture: null,
       level: this.props.data.level,
     };
@@ -47,7 +44,7 @@ class AssetsService extends React.Component {
   handleChange(key, value) {
     this.setState({[key]: value}, () => this.props.onChange(this.state));
   }
-  
+
   render() {
     const {classes} = this.props;
     const {dates} = this.state;
