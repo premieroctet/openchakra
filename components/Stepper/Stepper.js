@@ -45,6 +45,7 @@ class Stepper extends React.Component {
 
   getStepsUpdateService() {
     return [
+      'Configurez ce service',
       'Modifiez vos prestations',
       'Paramétrez votre service',
       'Vos préférences de réservation',

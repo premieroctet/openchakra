@@ -8,6 +8,7 @@ const Shop = require('../../models/Shop');
 const User = require('../../models/User');
 const multer = require("multer");
 const crypto = require('crypto');
+const isEmpty = require('../../validation/is-empty');
 
 
 const storage = multer.diskStorage({
@@ -202,17 +203,27 @@ router.post('/myShop/add',upload.fields([{name: 'file_diploma',maxCount: 1}, {na
 // Update a serviceUser
 // @Access private
 router.put('/edit/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
+ 
+    console.log("Update ServiceUser, received:"+JSON.stringify(req.body, null, 2));
     ServiceUser.findById(req.params.id)
         .then(serviceUser => {
+            let data = req.body;
 
-            serviceUser.prestations = req.body.prestations;
-            serviceUser.option = req.body.options;
-            serviceUser.perimeter= req.body.perimeter;
-            serviceUser.minimum_basket= req.body.minimum_basket;
-            serviceUser.deadline_before_booking= req.body.deadline_before_booking;
-            serviceUser.description = req.body.description;
-            serviceUser.level = req.body.level;
-            serviceUser.equipments= req.body.equipments;
+            serviceUser.prestations = Object.values(JSON.parse(data.prestations));
+            serviceUser.option = data.options;
+            serviceUser.perimeter= data.perimeter;
+            serviceUser.minimum_basket= data.minimum_basket;
+            serviceUser.deadline_before_booking= isEmpty(data.deadline_unit) || isEmpty(data.deadline_value) ? '' : data.deadline_value+' '+data.deadline_unit;
+            serviceUser.description = data.description;
+            serviceUser.level = data.level;
+            serviceUser.equipments= JSON.parse(data.equipments);
+            serviceUser.travel_tax= data.travel_tax;
+            serviceUser.pick_tax= data.pick_tax;
+            serviceUser.graduated = data.diplomaName!='' && data.diplomaYear>0;
+            serviceUser.diploma = serviceUser.graduated ? {name: data.diplomaName, year: data.diplomaYear} : null;
+            serviceUser.is_certified = data.certificationName!='' && data.vertificationYear>0;
+            serviceUser.certification = serviceUser.graduated ? {name: data.certificationName, year: data.certificationYear} : null;
+            serviceUser.location = data.location;
 
 
             serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));

@@ -68,7 +68,7 @@ class SelectService extends React.Component {
 
   render() {
     const {classes, isId} = this.props;
-    console.log("Service:"+this.state.service);
+
     return(
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -102,6 +102,7 @@ class SelectService extends React.Component {
                       groupBy={option => option.category}
                       getOptionLabel={option => option.name.split('/')[0]}
                       value={this.state.service}
+                      disabled={this.props.service!=null}
                       renderInput={params => (
                         <TextField {...params} label="Tapez votre service" variant="outlined" fullWidth />
                       )}

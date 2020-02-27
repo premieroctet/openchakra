@@ -16,10 +16,10 @@ class BookingPreference extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      deadline_unit: "jours",
-      deadline_value: 1,
-      minimum_basket: 1,
-      perimeter: 1,
+      deadline_unit: props.deadline_unit,
+      deadline_value: props.deadline_value ? props.deadline_value : 1,
+      minimum_basket: props.minimum_basket,
+      perimeter: props.perimeter,
       service: null,
     }
   }
@@ -66,9 +66,9 @@ class BookingPreference extends React.Component {
                 <Grid className={classes.contentTextSize}>
                   <Grid item className={classes.contentAddandRemove}>
                     <Grid className={classes.subContentAddanRemove}>
-                      <Grid className={classes.buttonRemove} onClick={ () => this.handleChange('deadline_value', Math.max(this.state.deadline_value-1, 0)) } >-</Grid>
+                      <Grid className={classes.buttonRemove} onClick={ () => this.handleChange('deadline_value', Math.max(parseInt(this.state.deadline_value)-1, 0)) } >-</Grid>
                       <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{this.state.deadline_value}</Grid>
-                      <Grid className={classes.buttonAdd} onClick={() => this.handleChange('deadline_value', this.state.deadline_value+1) } >+</Grid>
+                      <Grid className={classes.buttonAdd} onClick={() => this.handleChange('deadline_value', parseInt(this.state.deadline_value)+1) } >+</Grid>
                     </Grid>
                     <TextField
                       value={this.state.deadline_unit}

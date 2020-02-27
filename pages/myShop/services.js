@@ -29,13 +29,16 @@ class services extends React.Component {
             user_id: null,
             shop:{
                 service: null,
+                description: null,
                 prestations:{},
                 equipments: [], // Ids des équipements
-                location: null, // Lieu(x) de prestation
+                location:null , // Lieu(x) de prestation
                 travel_tax: 0, // Frais de déplacement
                 pick_tax: 0, // Frais de livraison/enlèvmeent
-                diploma : [{name:"", year:"", picture:""}],
-                certification : [{name:"", year:"", picture:""}],
+                diplomaName: null,
+                diplomaYear: null,
+                certificationName: null,
+                certificationYear: null,
                 service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
                 level: '',
                 perimeter: 1,
@@ -49,11 +52,11 @@ class services extends React.Component {
         };
         this.onServiceChanged = this.onServiceChanged.bind(this);
         this.prestaSelected = this.prestaSelected.bind(this);
-        this.settingsChanged = this.settingsChanged.bind(this);
+        this.onSettingsChanged = this.onSettingsChanged.bind(this);
         this.preferencesChanged = this.preferencesChanged.bind(this);
-        this.assetsChanged = this.assetsChanged.bind(this);
-        this.availabilityCreated = this.availabilityCreated.bind(this);
-        this.availabilityDeleted = this.availabilityDeleted.bind(this);
+        this.onAssetsChanged = this.onAssetsChanged.bind(this);
+        this.onAvailabilityCreated = this.onAvailabilityCreated.bind(this);
+        this.onAvailabilityDeleted = this.onAvailabilityDeleted.bind(this);
         this.nextDisabled = this.nextDisabled.bind(this)
 
     }
@@ -83,15 +86,23 @@ class services extends React.Component {
         axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
           .then(res => {
               let resultat = res.data;
+              console.log("service got ServiceUser:"+JSON.stringify(resultat, null, 2));
               let shop=this.state.shop;
               shop.service = resultat.service._id;
-              shop.prestations = new Map(resultat.prestations.map(p => [p._id, p]));
+              shop.prestations = Object.fromEntries(new Map(resultat.prestations.map(p => [p._id, p])));
               shop.perimeter = resultat.perimeter;
-              shop.equipments = resultat.equipments;
-              shop.diplomaName = resultat.diplomaName;
-              shop.diplomaYear = resultat.diplomaYear;
-              shop.certificationName = resultat.certificationName;
-              shop.certificationYear = resultat.certificationYear;
+              shop.equipments = resultat.equipments.map( e => e._id);
+              shop.diplomaName = resultat.graduated ? resultat.diploma.name : '';
+              shop.diplomaYear = resultat.graduated ? resultat.diploma.year : '';
+              shop.certificationName = resultat.is_certified ? resultat.certification.name : '';
+              shop.certificationYear = resultat.is_certified ? resultat.certification.year : '';
+              shop.location = resultat.location;
+              shop.pick_tax = resultat.pick_tax;
+              shop.travel_tax = resultat.travel_tax;
+              shop.minimum_basket = resultat.minimum_basket;
+              shop.deadline_unit = resultat.deadline_before_booking ? resultat.deadline_before_booking.split(' ')[1] : '';
+              shop.deadline_value = resultat.deadline_before_booking ? resultat.deadline_before_booking.split(' ')[0] : '';
+              shop.description = resultat.description;
 
               this.setState({ shop: shop});
           })
@@ -115,15 +126,13 @@ class services extends React.Component {
         return false;
     }
 
-    availabilityCreated(avail) {
-        console.log("Availability created:"+JSON.stringify(avail, null, 2));
+    onAvailabilityCreated(avail) {
         let shop = this.state.shop;
         shop.availabilities.push(avail);
         this.setState({shop: shop});
     }
 
-    availabilityDeleted(avail_id) {
-        console.log("Availability id deleted:"+JSON.stringify(avail_id, null, 2));
+    onAvailabilityDeleted(avail_id) {
         let shop = this.state.shop;
         shop.availabilities=shop.availabilities.filter(avail => avail.ui_id !== avail_id);
         this.setState({shop: shop});
@@ -141,13 +150,11 @@ class services extends React.Component {
             cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
 
 
-            let new_serviceuser = this.state.service_user_id==null;
-            let full_url = new_serviceuser ? '/myAlfred/api/serviceUser/myShop/add' : `/myAlfred/api/serviceUser/edit/${this.props.service_user_id}`;
-            console.log(full_url);
+            let full_url = this.isNewService() ? '/myAlfred/api/serviceUser/myShop/add' : `/myAlfred/api/serviceUser/edit/${this.props.service_user_id}`;
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-            (new_serviceuser ? axios.post : axios.put)(full_url, cloned_shop)
+            (this.isNewService() ? axios.post : axios.put)(full_url, cloned_shop)
               .then(res => {
-                  toast.info("Service créée avec succès");
+                  toast.info("Service créé avec succès");
                   Router.push(`/shop?id_alfred=${this.state.user_id}`);
               })
               .catch(err => {
@@ -158,11 +165,7 @@ class services extends React.Component {
     };
 
     isRightPanelHidden() {
-        if(!this.isNewService()){
-            return this.state.activeStep === 0 || this.state.activeStep === 4;
-        }else{
-            return this.state.activeStep === 1 || this.state.activeStep === 5;
-        }
+      return this.state.activeStep === 0 || this.state.activeStep === 5;
     };
 
     handleBack = () => {
@@ -181,7 +184,8 @@ class services extends React.Component {
         this.setState({shop: shop});
     }
 
-    settingsChanged(location, travel_tax, pick_tax, selectedStuff) {
+    onSettingsChanged(location, travel_tax, pick_tax, selectedStuff) {
+        console.log("Services:onSettingsChanged:"+JSON.stringify(location), travel_tax, pick_tax, selectedStuff);
         let shop=this.state.shop;
         shop.location=location;
         shop.travel_tax=travel_tax;
@@ -201,7 +205,7 @@ class services extends React.Component {
         this.setState({ shop: shop });
     }
 
-    assetsChanged(state) {
+    onAssetsChanged(state) {
         let shop=this.state.shop;
 
         shop.description=state.description;
@@ -216,22 +220,24 @@ class services extends React.Component {
 
     renderSwitch(stepIndex) {
         let shop=this.state.shop;
-        if(!this.isNewService()){
-            stepIndex = stepIndex + 1
-        }
+        let newService=this.isNewService();
+
+        console.log("service.render:activeStep"+this.state.activeStep);
+        console.log("service.render:"+JSON.stringify(shop, null, 2));
+
         switch(stepIndex) {
             case 0:
                 return <SelectService onChange={this.onServiceChanged} service={shop.service} isId={false}/>;
             case 1:
-                return <SelectPrestation service={shop.service} prestations={!this.isNewService() ? shop.prestations : null} onChange={this.prestaSelected} />;
+                return <SelectPrestation service={shop.service} prestations={newService ? {} : shop.prestations} onChange={this.prestaSelected} />;
             case 2:
-                return <SettingService service={shop.service} onChange={this.settingsChanged} />;
+                return <SettingService service={shop.service} equipments={shop.equipments} location={shop.location} travel_tax={shop.travel_tax} pick_tax={shop.pick_tax} onChange={this.onSettingsChanged} />;
             case 3:
-                return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
+                return <BookingPreference service={shop.service} onChange={this.preferencesChanged} perimeter={shop.perimeter} deadline_unit={shop.deadline_unit} deadline_value={shop.deadline_value} minimum_basket={shop.minimum_basket}/>;
             case 4:
-                return <AssetsService data={shop} onChange={this.assetsChanged} />;
+                return <AssetsService data={shop} onChange={this.onAssetsChanged} />;
             case 5:
-                return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
+                return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.onAvailabilityCreated} onDeleteAvailability={this.onAvailabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
         }
     }
 
@@ -260,7 +266,7 @@ class services extends React.Component {
                       { hideRightPanel ?
                         null:
                         <Grid className={classes.rightContentComponent}>
-                            <Grid className={classes.contentRight} style={{backgroundImage: `url(../../../static/assets/img/creaShop/bgImage/etape${this.state.activeStep + 1}.svg)`}}/>
+                            <Grid className={classes.contentRight} style={{backgroundImage: `url(/static/assets/img/creaShop/bgImage/etape${this.state.activeStep}.svg)`}}/>
                         </Grid>
                       }
                   </Grid>

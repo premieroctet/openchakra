@@ -12,18 +12,19 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import isEmpty from '../../../server/validation/is-empty';
 
 class AssetsService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       dates: [],
-      description: this.props.data.description,
-      diplomaYear: this.props.data.diplomaYear,
-      diplomaName: this.props.data.diplomaName,
-      certificationYear: this.props.data.certificationYear,
-      certificationName: this.props.data.certificationName,
-      level: this.props.data.level,
+      description: props.data.description,
+      diplomaYear: props.data.diplomaYear,
+      diplomaName: props.data.diplomaName,
+      certificationYear: props.data.certificationYear,
+      certificationName: props.data.certificationName,
+      level: props.data.level,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -38,13 +39,17 @@ class AssetsService extends React.Component {
   }
 
   handleChange(key, value) {
-    this.setState({[key]: value}, () => this.props.onChange(this.state));
+    var stat={[key]: value};
+    if (key=='diplomaName' && isEmpty(value)) stat['diplomaYear']=null;
+    if (key=='certificationName' && isEmpty(value)) stat['certificationYear']=null;
+    this.setState(stat, () => this.props.onChange(this.state));
   }
 
   render() {
     const {classes} = this.props;
     const {dates} = this.state;
 
+    console.log("AssetsService:render:"+JSON.stringify(this.state));
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -108,18 +113,8 @@ class AssetsService extends React.Component {
                   </Grid>
                   <Grid item xs={12}>
                     <h3 className={classes.policySizeSubtitle}>Votre diplôme</h3>
-                    {this.state.isDiplome ?
-                      <Grid style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>
-                        <Grid style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}>
-                          <Clear color="secondary"/>
-                        </Grid>
-                      </Grid>
-                      : null
-                    }
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                      >
+                    <ExpansionPanel defaultExpanded={true}>
+                      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
                         <Typography>Ajouter / modifier votre diplôme</Typography>
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails>
@@ -170,18 +165,8 @@ class AssetsService extends React.Component {
                   </Grid>
                   <Grid item xs={12} >
                     <h3 className={classes.policySizeSubtitle}>Votre certification</h3>
-                    { this.state.isCertification ?
-                      <Grid style={{border: '1px solid lightgrey', width: '50%', textAlign: 'center', marginBottom: '1.5rem', position: 'relative'}}>
-                        <Grid style={{position: 'absolute', top: 2, right: 2, cursor: 'pointer'}}>
-                          <Clear color="secondary"/>
-                        </Grid>
-                      </Grid>
-                      : null
-                    }
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                      >
+                    <ExpansionPanel defaultExpanded={true}>
+                      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
                         <Typography>Ajouter / modifier votre certification</Typography>
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails>
