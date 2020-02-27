@@ -10,20 +10,16 @@ import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'
 import useShortcuts, { keyMap } from './hooks/useShortcuts'
 import EditorErrorBoundary from './components/errorBoundaries/EditorErrorBoundary'
-import useProducthunt from './hooks/useProducthunt'
 import { InspectorProvider } from './contexts/inspector-context'
 
 const App = () => {
   const { handlers } = useShortcuts()
 
-  // To remove soon :)
-  useProducthunt()
-
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>
       <Global
         styles={() => ({
-          html: { minWidth: '860px' },
+          html: { minWidth: '860px', backgroundColor: '#1a202c' },
         })}
       />
 
@@ -41,7 +37,6 @@ const App = () => {
           <Box
             maxH="calc(100vh - 3rem)"
             flex="0 0 15rem"
-            roundedRight={10}
             bg="#f7fafc"
             overflowY="auto"
             overflowX="visible"

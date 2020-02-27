@@ -70,7 +70,6 @@ const Inspector = () => {
           fontWeight="semibold"
           fontSize="md"
           color="yellow.900"
-          rounded="md"
           py={2}
           px={2}
           shadow="sm"
