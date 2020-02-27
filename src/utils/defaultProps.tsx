@@ -41,22 +41,7 @@ import {
   RadioGroupProps,
   InputGroupProps,
   GridProps,
-  List,
-  ListIcon,
-  ListItem,
-  NumberInput,
-  AspectRatioBox,
-  Slider,
   SliderProps,
-  Accordion,
-  AccordionItem,
-  InputLeftAddon,
-  InputRightAddon,
-  Stack,
-  Flex,
-  SliderThumb,
-  SliderTrack,
-  SliderFilledTrack,
 } from '@chakra-ui/core'
 import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -128,14 +113,6 @@ type PreviewDefaultProps = {
   SliderTrack?: any
   SliderFilledTrack?: any
   SliderThumb?: Omit<any, 'children'>
-  // meta components
-  AlertMeta?: any
-  InputGroupMeta?: any
-  FormControlMeta?: any
-  AccordionMeta?: any
-  ListMeta?: any
-  BreadcrumbMeta?: any
-  SliderMeta?: any
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -221,16 +198,15 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     icon: 'chevron-down',
   },
   Slider: {
-    ...Slider.defaultProps,
     min: 1,
     max: 100,
     step: 1,
     size: 'md',
     value: 50,
   },
-  SliderFilledTrack: { ...SliderFilledTrack.defaultProps },
-  SliderThumb: { ...SliderThumb.defaultProps },
-  SliderTrack: { ...SliderTrack.defaultProps },
+  SliderFilledTrack: {},
+  SliderThumb: {},
+  SliderTrack: {},
 }
 
 export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
@@ -298,29 +274,21 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
       </>
     ),
   },
-  List: { ...List.defaultProps, styleType: 'none' },
-  ListIcon: { ...ListIcon.defaultProps },
-  ListItem: { ...ListItem.defaultProps, children: 'list' },
-  Accordion: {
-    ...Accordion.defaultProps,
-  },
+  List: { styleType: 'none' },
+  ListIcon: {},
+  ListItem: { children: 'list' },
+  Accordion: {},
   AccordionItem: {
-    ...AccordionItem.defaultProps,
     defaultIsOpen: true,
   },
-  InputLeftAddon: { ...InputLeftAddon.defaultProps, children: 'left' },
+  InputLeftAddon: { children: 'left' },
   InputRightAddon: {
-    ...InputRightAddon.defaultProps,
     children: 'right',
   },
-  Stack: { ...Stack.defaultProps, display: 'flex', spacing: 2 },
-  Flex: { ...Flex.defaultProps, display: 'flex' },
-  NumberInput: {
-    ...NumberInput.defaultProps,
-  },
-  AspectRatioBox: {
-    ...AspectRatioBox.defaultProps,
-  },
+  Stack: { display: 'flex', spacing: 2 },
+  Flex: { display: 'flex' },
+  NumberInput: {},
+  AspectRatioBox: {},
   Breadcrumb: {
     separator: '/',
     addSeparator: true,
