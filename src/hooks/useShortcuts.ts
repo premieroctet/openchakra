@@ -12,6 +12,10 @@ export const keyMap = {
   UNSELECT: ['Escape'],
   PARENT: 'p',
   DUPLICATE: ['ctrl+d', 'cmd+d'],
+  KONAMI_CODE: [
+    'up up down down left right left right b a',
+    'up up down down left right left right B A',
+  ],
 }
 
 const hasNoSpecialKeyPressed = (event: KeyboardEvent | undefined) =>
@@ -77,6 +81,10 @@ const useShortcuts = () => {
     dispatch.components.duplicate()
   }
 
+  const onKonamiCode = () => {
+    dispatch.components.loadDemo('secretchakra')
+  }
+
   const handlers = {
     DELETE_NODE: deleteNode,
     TOGGLE_BUILDER_MODE: toggleBuilderMode,
@@ -86,6 +94,7 @@ const useShortcuts = () => {
     UNSELECT: onUnselect,
     PARENT: onSelectParent,
     DUPLICATE: onDuplicate,
+    KONAMI_CODE: onKonamiCode,
   }
 
   return { handlers }
