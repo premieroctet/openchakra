@@ -30,23 +30,25 @@ class services extends React.Component {
             exclude_services: [], // Services that must not be added because already exist in the shop ; only in add mode (i.e. props.service_user_id undefined)
             shop:{
                 service: null,
-                description: null,
+                description:"", // Description de l'expertise
                 prestations:{},
                 equipments: [], // Ids des équipements
                 location:null , // Lieu(x) de prestation
                 travel_tax: 0, // Frais de déplacement
                 pick_tax: 0, // Frais de livraison/enlèvmeent
+		minimum_basket: 0,
                 diplomaName: null,
                 diplomaYear: null,
+		diplomaPicture: null,
                 certificationName: null,
                 certificationYear: null,
-                service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
+                certificationPicture: null,
+                deadline_value: 1, // Valeur de prévenance
+		deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
                 level: '',
+                service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
                 perimeter: 1,
-                minimum_basket: 1,
                 availabilities: [],
-                deadline_value: '1',
-                deadline_unit: 'j',
             },
             title: "Précisez vos disponibilités si vous le souhaitez ! ",
             subtitle : "Si aucune disponibilité n’est précisée, vos services pourront être réservés à tout moment. Si vous précisez vos disponibilités, seules les plages horaires indiquées pourront être réservées. Vous pouvez appliquer une récurrence à vos disponibilités afin de gagner du temps ! Par exemple, si vous êtes disponible tous les lundis et mardis, vous pouvez cocher la case Récurrence, et cliquer sur Lu et Ma afin de répéter votre disponibilité sur une durée que vous pouvez définir."
@@ -224,8 +226,10 @@ class services extends React.Component {
         shop.level=state.level;
         shop.diplomaName = state.diplomaName;
         shop.diplomaYear = state.diplomaYear;
+        shop.diplomaPicture = state.diplomaPicture;
         shop.certificationName = state.certificationName;
         shop.certificationYear = state.certificationYear;
+        shop.certificationPicture = state.certificationPicture;
 
         this.setState({shop: shop});
     }

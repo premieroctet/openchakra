@@ -7,12 +7,14 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import Clear from '@material-ui/icons/Clear';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import isEmpty from '../../../server/validation/is-empty';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import IconButton from '@material-ui/core/IconButton';
 
 class AssetsService extends React.Component {
   constructor(props) {
@@ -22,9 +24,11 @@ class AssetsService extends React.Component {
       description: props.data.description,
       diplomaYear: props.data.diplomaYear,
       diplomaName: props.data.diplomaName,
+      diplomaPicture: null,
       certificationYear: props.data.certificationYear,
       certificationName: props.data.certificationName,
       level: props.data.level,
+      certificationPicture: null,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -39,9 +43,11 @@ class AssetsService extends React.Component {
   }
 
   handleChange(key, value) {
+    console.log("onChange:"+key, value);
     var stat={[key]: value};
     if (key=='diplomaName' && isEmpty(value)) stat['diplomaYear']=null;
     if (key=='certificationName' && isEmpty(value)) stat['certificationYear']=null;
+    console.log("after onChange:stat:"+JSON.stringify(stat));
     this.setState(stat, () => this.props.onChange(this.state));
   }
 
@@ -145,20 +151,32 @@ class AssetsService extends React.Component {
                               })}
                             </TextField>
                           </Grid>
-                          { false ? // FIX : joindre diplôme
                           <Grid item xs={12}>
-                            <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
-                              Joindre mon diplôme
-                              <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="diploma" type="file" className="form-control"/>
-                            </label>
+                            <Grid style={{display: 'flex', alignItems: 'baseline'}}>
+                              <label style={{display: 'inline-block', marginTop: 10}} className="forminputs">
+                                Joindre mon diplôme
+                                <input id="file"
+                                       style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}}
+                                       name="diploma" type="file"
+                                       className="form-control"
+                                       onChange={e => this.handleChange('diplomaPicture', e.target.files[0])}
+                                />
+                              </label>
+                              {this.state.diplomaPicture !== null ?
+                                <Grid style={{display : 'flex', alignItems: 'center'}}>
+                                  <p>{this.state.diplomaPicture.name}</p>
+                                  <CheckCircleIcon color={'primary'} style={{marginLeft: 10}}/>
+                                  { false ?
+                                  <IconButton  style={{marginLeft: 10}}>
+                                    <DeleteForeverIcon color={'secondary'} />
+                                  </IconButton>:null
+                                  }
+                                </Grid>
+                                : null
+                              }
+                            </Grid>
                             <p>En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié auprès des utilisateurs mais il ne sera jamais visible par ces derniers</p>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              style={{color: 'white'}}
-                              disabled={false}
-                            >Valider</Button>
-                          </Grid>:null }
+                          </Grid>
                         </Grid>
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
@@ -196,21 +214,32 @@ class AssetsService extends React.Component {
                               })}
                             </TextField>
                           </Grid>
-                          { false ? // FIX : joindre certification
                           <Grid item xs={12}>
-                            <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
-                              Joindre ma certification
-                              <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certification" type="file" className="form-control"/>
-                            </label>
-                            <span>test</span>
+                            <Grid style={{display: 'flex', alignItems: 'baseline'}}>
+                              <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
+                                Joindre ma certification
+                                <input id="file"
+                                       style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}}
+                                       name="certifaction" type="file"
+                                       className="form-control"
+                                       onChange={e => this.handleChange('certificationPicture', e.target.files[0])}
+                                />
+                              </label>
+                              {this.state.certificationPicture !== null ?
+                                <Grid style={{display : 'flex', alignItems: 'center'}}>
+                                  <p>{this.state.certificationPicture.name}</p>
+                                  <CheckCircleIcon color={'primary'} style={{marginLeft: 10}}/>
+                                  { false ?
+                                  <IconButton  style={{marginLeft: 10}}>
+                                    <DeleteForeverIcon color={'secondary'} />
+                                  </IconButton>:null
+                                  }
+                                </Grid>
+                                : null
+                              }
+                            </Grid>
                             <p>En téléchargeant votre certification, votre certification aura le statut de certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ces derniers</p>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              style={{color: 'white'}}
-                              disabled={false}
-                            >Valider</Button>
-                          </Grid>:null }
+                          </Grid>
                         </Grid>
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
