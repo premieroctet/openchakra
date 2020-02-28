@@ -11,14 +11,12 @@ const MenuPreview: React.FC<IPreviewProps> = ({ component }) => {
   const { props, ref } = useInteractive(component, true)
   const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
 
-  let boxProps: any = {}
-
   if (isOver) {
     props.bg = 'teal.50'
   }
 
   return (
-    <Box ref={drop(ref)} {...boxProps}>
+    <Box ref={drop(ref)} {...props}>
       <Menu {...props}>
         {component.children.map((key: string) => (
           <ComponentPreview key={key} componentName={key} />
