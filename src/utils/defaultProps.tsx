@@ -229,7 +229,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   MenuItem: {
     ...MenuItem.defaultProps,
-    children: 'Description',
   },
   MenuGroup: {
     ...MenuGroup.defaultProps,
