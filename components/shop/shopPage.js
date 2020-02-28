@@ -81,6 +81,6 @@ export default theme =>({
     display: 'flex',
     alignItems: 'center',
     padding: 10
-  }
+  },
 
 })
