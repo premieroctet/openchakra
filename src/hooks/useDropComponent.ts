@@ -3,7 +3,10 @@ import { rootComponents } from '../utils/editor'
 import useDispatch from './useDispatch'
 import builder from '../core/models/composer/builder'
 import { useSelector } from 'react-redux'
-import { getIsUserComponent } from '../core/selectors/components'
+import {
+  getIsUserComponent,
+  getIsPartOfUserComponent,
+} from '../core/selectors/components'
 
 export const useDropComponent = (
   componentId: string,
@@ -12,6 +15,9 @@ export const useDropComponent = (
 ) => {
   const dispatch = useDispatch()
   const isUserComponent = useSelector(getIsUserComponent(componentId))
+  const isPartOfUserComponent = useSelector(
+    getIsPartOfUserComponent(componentId),
+  )
 
   const [{ isOver }, drop] = useDrop({
     accept,
@@ -45,6 +51,9 @@ export const useDropComponent = (
       }
     },
     canDrop: (item: ComponentItemProps) => {
+      if (isPartOfUserComponent) {
+        return canDrop && !isPartOfUserComponent
+      }
       if (isUserComponent) {
         return canDrop && !item.userComponentId
       }

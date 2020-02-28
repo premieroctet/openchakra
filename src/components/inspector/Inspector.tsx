@@ -20,7 +20,7 @@ import {
 import Panels from './panels/Panels'
 import { GoRepo, GoCode } from 'react-icons/go'
 import { FiTrash2 } from 'react-icons/fi'
-import { IoMdRefresh } from 'react-icons/io'
+import { IoMdRefresh, IoMdSave } from 'react-icons/io'
 import { useSelector } from 'react-redux'
 import useDispatch from '../../hooks/useDispatch'
 import StylesPanel from './panels/StylesPanel'
@@ -140,7 +140,7 @@ const Inspector = () => {
               onClick={() => dispatch.components.duplicate()}
               icon="copy"
             />
-            <ActionButton label="Component" onClick={onOpen} icon="download" />
+            <ActionButton label="Component" onClick={onOpen} icon={IoMdSave} />
             <ActionButton
               label="Reset props"
               icon={IoMdRefresh}

@@ -1,4 +1,5 @@
 import { RootState } from '../store'
+import { getComponentParents } from '../../utils/recursive'
 
 // Components list selectors
 
@@ -67,4 +68,21 @@ export const getIsUserComponent = (id: IComponent['id']) => (
   const component = state.components.present.components[id]
 
   return !!component.instanceOf || component.userComponentName
+}
+
+export const getIsPartOfUserComponent = (id: IComponent['id']) => (
+  state: RootState,
+) => {
+  const component = state.components.present.components[id]
+  const userComponentIds = state.components.present.userComponentIds
+  const parents = getComponentParents(
+    component,
+    state.components.present.components,
+  )
+
+  console.log('parents', parents, component.type)
+
+  return userComponentIds.some(userComponentId =>
+    parents.includes(userComponentId),
+  )
 }

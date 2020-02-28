@@ -56,3 +56,19 @@ export const deleteComponent = (
   updatedComponents = omit(updatedComponents, component.id)
   return updatedComponents
 }
+
+export const getComponentParents = (
+  component: IComponent,
+  components: IComponents,
+) => {
+  let currentComponentId = component.id
+  const parents: string[] = []
+
+  while (currentComponentId !== 'root') {
+    const parent = components[currentComponentId].parent
+    parents.push(parent)
+    currentComponentId = parent
+  }
+
+  return parents
+}
