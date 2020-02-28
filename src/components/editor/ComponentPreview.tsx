@@ -13,12 +13,15 @@ import AccordionPreview, {
 } from '../../components/editor/previews/AccordionPreview'
 import * as Chakra from '@chakra-ui/core'
 import WithChildrenPreviewContainer from './WithChildrenPreviewContainer'
-import PopoverTriggerPreview from './previews/PopoverTriggerPreview'
+import PopoverTriggerPreview, {
+  PopoverContentPreview,
+} from './previews/PopoverTriggerPreview'
 import { getComponentBy } from '../../core/selectors/components'
 import PreviewContainer from './PreviewContainer'
 import { InputRightElementPreview } from './previews/InputRightElement'
 import { InputLeftElementPreview } from './previews/InputLeftElement'
 import AspectRatioBoxPreview from './previews/AspectRatioBoxPreview'
+import PopoverPreview from './previews/PopoverTriggerPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -112,8 +115,6 @@ const ComponentPreview: React.FC<{
     case 'Breadcrumb':
     case 'InputGroup':
     case 'BreadcrumbItem':
-    case 'Popover':
-    case 'PopoverContent':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -148,6 +149,10 @@ const ComponentPreview: React.FC<{
       return <AspectRatioBoxPreview component={component} />
     case 'PopoverTrigger':
       return <PopoverTriggerPreview component={component} />
+    case 'Popover':
+      return <PopoverPreview component={component} />
+    case 'PopoverContent':
+      return <PopoverContentPreview component={component} />
     default:
       return null
   }

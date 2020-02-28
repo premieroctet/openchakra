@@ -5,6 +5,17 @@ const ALERT_COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AlertTitle',
 ]
 
+const POPOVER_COMPONENTS: (ComponentType | MetaComponentType)[] = [
+  'Popover',
+  'PopoverTrigger',
+  'PopoverContent',
+  'PopoverHeader',
+  'PopoverBody',
+  'PopoverArrow',
+  'PopoverCloseButton',
+  'PopoverFooter',
+]
+
 export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   ...ALERT_COMPONENTS,
   'Avatar',
@@ -61,14 +72,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AccordionIcon',
   'InputRightElement',
   'InputLeftElement',
-  'Popover',
-  'PopoverTrigger',
-  'PopoverContent',
-  'PopoverHeader',
-  'PopoverBody',
-  'PopoverArrow',
-  'PopoverCloseButton',
-  'PopoverFooter',
+  ...POPOVER_COMPONENTS,
   // Allow meta components
   'AlertMeta',
   'FormControlMeta',
@@ -96,5 +100,12 @@ export const rootComponents = COMPONENTS
         'AccordionHeader',
         'AccordionPanel',
         'AccordionIcon',
+        'PopoverTrigger',
+        'PopoverContent',
+        'PopoverHeader',
+        'PopoverBody',
+        'PopoverArrow',
+        'PopoverCloseButton',
+        'PopoverFooter',
       ].includes(name),
   )
