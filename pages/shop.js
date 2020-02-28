@@ -38,9 +38,6 @@ class shop extends React.Component {
             serviceUser:[],
             stateEditButtonFromAlfredCondtion: false,
             newWelcomedMessage: "",
-            have_picture: false,
-            avaterLetters: "",
-            open: false,
             banner:[]
 
         };

@@ -65,7 +65,7 @@ class alfredBanner extends React.Component{
             <Grid container className={classes.darkOverlay}>
                 <Grid container className={classes.container}>
                     <Grid item className={classes.itemAvatar}>
-                      <UserAvatar user={alfred} className={classes.avatarLetter} />
+                      <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter} />
                         <Typography style={{marginTop:20}} className={classes.textAvatar}>Boutique de {alfred.firstname}</Typography>
                     </Grid>
                 </Grid>

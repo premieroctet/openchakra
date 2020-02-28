@@ -14,7 +14,7 @@ class NavBarShop extends React.Component{
     return (
       <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3}}>
 
-        <Grid item xs={2} style={{textAlign:"center",borderBottom: '2px solid white'}}>
+        <Grid item xs={2} style={{textAlign:"center"}}>
           <Link href={`/shop?id_alfred=${userId}`}><a style={{textDecoration:'none'}}>
             <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p></a>
           </Link>
@@ -30,7 +30,7 @@ class NavBarShop extends React.Component{
           </Link>
         </Grid>
         <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
-          <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
+          <Link href={`/myShop/myAvailabilities?id_alfred=${userId}`}><a style={{textDecoration:'none'}}>
             <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p></a>
           </Link>
         </Grid>
