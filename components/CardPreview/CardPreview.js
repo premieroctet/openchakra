@@ -143,7 +143,7 @@ class CardPreview extends React.Component{
                     primary={"Diplômé(e)"}
                   />
                 </ListItem>
-                <ListItem className={classes.noPadding}>
+                <ListItem className={classes.noPadding} style={{marginLeft : 10}}>
                   <ListItemIcon  className={classes.minWidth}>
                     <img src={services.is_certified && services.is_certified !== "" && services.is_certified !== null && services.is_certified !== undefined ? '../../static/assets/img/iconCardAlfred/certificate.svg' : '../../static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
                   </ListItemIcon>
@@ -152,7 +152,7 @@ class CardPreview extends React.Component{
                     primary="Certifié(e)"
                   />
                 </ListItem>
-                <ListItem className={classes.noPadding}>
+                <ListItem className={classes.noPadding} style={{marginLeft : 10}}>
                   <ListItemIcon className={classes.minWidth}>
                     <img src={services.level && services.level !== "" && services.level !== null && services.level !== undefined ? '../../static/assets/img/iconCardAlfred/experience.svg' : '../../static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
                   </ListItemIcon>
