@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Layout from '../../hoc/Layout/Layout';
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from '@material-ui/core/styles';
@@ -65,7 +65,8 @@ class Privacypolicy extends React.Component {
             <p> 02 35 76 47 52</p>
           </Grid>
         </Grid>
-        <Footer/>
+        {/* <Footer/>*/}
+
       </Layout>
     );
   };

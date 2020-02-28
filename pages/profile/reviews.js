@@ -263,7 +263,8 @@ class reviews extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
+
             </Fragment>
         );
     };

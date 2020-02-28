@@ -1042,7 +1042,7 @@ class editService extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <p>
-                                    Votre périmètre d’intervention est la zone dans laquelle vous souhaitez réaliser vos services. Par défaut, nous utilisons la ville 
+                                    Votre périmètre d’intervention est la zone dans laquelle vous souhaitez réaliser vos services. Par défaut, nous utilisons la ville
                                     de votre profil comme référence. Cette adresse ne vous convient pas ? Vous pouvez changer votre ville de référence à tout moment !
                                 </p>
                             </Grid>
@@ -1611,7 +1611,7 @@ class editService extends React.Component {
                          </Grid>
 
                      </Grid>
-            <Footer/>
+                {/* <Footer/>*/}
             </Layout>
         );
     };

@@ -273,7 +273,7 @@ class paymentMethod extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
             </Fragment>
         );
     };

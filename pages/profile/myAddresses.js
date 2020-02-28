@@ -703,10 +703,9 @@ class myAddresses extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-              <Grid style={{position: 'absolute', bottom: 0, width: '100%'}}>
-                <Footer/>
-              </Grid>
-                <Dialog
+              {/* <Footer/>*/}
+
+              <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
                     aria-labelledby="alert-dialog-title"

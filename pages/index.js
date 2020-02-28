@@ -85,7 +85,7 @@ class Home extends React.Component {
                 <Section21 />
                 <Section22/>
                 <Assureback/>
-                <Footer />
+                <Footer  />
             </Fragment>
         )
     }

@@ -160,7 +160,8 @@ class Messages extends React.Component {
                         </a></Link>
                     </Grid>
                 </Grid>
-                <Footer/>
+                {/* <Footer/>*/}
+
             </Fragment>
         );
     };

@@ -2172,7 +2172,8 @@ class addAvailability extends React.Component {
                     </Grid>
 
                 </Grid>
-                <Footer/>
+                {/* <Footer/>*/}
+
 
             </Fragment>
         );

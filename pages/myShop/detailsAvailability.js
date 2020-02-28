@@ -1940,7 +1940,8 @@ class detailsAvailability extends React.Component {
                     </Grid>
 
                 </Grid>
-                <Footer/>
+                {/* <Footer/>*/}
+
 
                 <Dialog
                     open={this.state.open}
