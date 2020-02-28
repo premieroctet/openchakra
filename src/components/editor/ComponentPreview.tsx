@@ -75,6 +75,8 @@ const ComponentPreview: React.FC<{
     case 'InputRightAddon':
     case 'InputLeftAddon':
     case 'Tag':
+    case 'MenuDivider':
+    case 'MenuItemOption':
       return (
         <PreviewContainer
           component={component}
@@ -106,6 +108,9 @@ const ComponentPreview: React.FC<{
     case 'Breadcrumb':
     case 'InputGroup':
     case 'BreadcrumbItem':
+    case 'MenuItem':
+    case 'MenuGroup':
+    case 'MenuOptionGroup':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -144,16 +149,6 @@ const ComponentPreview: React.FC<{
       return <MenuListPreview component={component} />
     case 'MenuButton':
       return <MenuButtonPreview component={component} />
-    case 'MenuItem':
-      return <MenuItemPreview component={component} />
-    case 'MenuGroup':
-      return <MenuGroupPreview component={component} />
-    case 'MenuDivider':
-      return <MenuDividerPreview component={component} />
-    case 'MenuOptionGroup':
-      return <MenuOptionGroupPreview component={component} />
-    case 'MenuItemOption':
-      return <MenuItemOptionPreview component={component} />
     default:
       return null
   }

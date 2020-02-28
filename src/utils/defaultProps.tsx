@@ -42,14 +42,6 @@ import {
   InputGroupProps,
   GridProps,
   BreadcrumbLink,
-  Menu,
-  MenuList,
-  MenuButton,
-  MenuItem,
-  MenuGroup,
-  MenuDivider,
-  MenuOptionGroup,
-  MenuItemOption,
 } from '@chakra-ui/core'
 import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -218,31 +210,15 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     icon: 'chevron-down',
   },
   Menu: {
-    ...Menu.defaultProps,
     isOpen: true,
   },
-  MenuList: {
-    ...MenuList.defaultProps,
-  },
-  MenuButton: {
-    ...MenuButton.defaultProps,
-  },
-  MenuItem: {
-    ...MenuItem.defaultProps,
-  },
-  MenuGroup: {
-    ...MenuGroup.defaultProps,
-  },
-  MenuDivider: {
-    ...MenuDivider.defaultProps,
-  },
-  MenuOptionGroup: {
-    ...MenuOptionGroup.defaultProps,
-  },
-  MenuItemOption: {
-    ...MenuItemOption.defaultProps,
-    children: 'Lorem Ipsum',
-  },
+  MenuList: {},
+  MenuButton: {},
+  MenuItem: {},
+  MenuGroup: {},
+  MenuDivider: {},
+  MenuOptionGroup: {},
+  MenuItemOption: {},
 }
 
 export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
