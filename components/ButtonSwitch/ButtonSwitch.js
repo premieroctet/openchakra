@@ -86,7 +86,7 @@ class ButtonSwitch extends React.Component {
       }, {})
     this.state = {
       checked: this.props.checked,
-      billing: props.isOption ? this.props.billings[0] : null,
+      billing: props.billing ? props.billing : props.isOption ? this.props.billings[0]._id : null,
       price:this.props.price,
       label: this.props.label,
     };
@@ -111,8 +111,9 @@ class ButtonSwitch extends React.Component {
   };
 
   onChangeBilling(event, index) {
-    let billing={_id:index.key, label:event.target.value};
-    this.setState({billing: billing}, () => this.fireChange());
+    console.log("Received index:"+inspect(index)+", billings are"+JSON.stringify(this.props.billings));
+    console.log("Received value:"+inspect(event.target.value)+", billings are"+JSON.stringify(this.props.billings));
+    this.setState({billing: event.target.value}, () => this.fireChange());
   }
 
   onChangePrice(event) {
@@ -126,7 +127,10 @@ class ButtonSwitch extends React.Component {
   render() {
     const {classes, isEditable, isOption, isPrice, billings} = this.props;
     const {label, checked} = this.state;
-   
+  
+    if (checked) {
+      console.log("Render checked:"+JSON.stringify(this.state, null, 2));
+    } 
 
     return(
       <Grid className={classes.contentFiltre}>
@@ -175,12 +179,12 @@ class ButtonSwitch extends React.Component {
                     disabled={!checked}
                     margin="none"
                     onChange={this.onChangeBilling}
-                    value={this.state.billing.label}
-                    key={this.state.billing._id}
+                    value={this.state.billing}
                   >
                     {billings.map(option => {
+                      console.log( checked ? JSON.stringify(option): '');
                       return (
-                        <MenuItem key={option._id} value={option.label}>{option.label}</MenuItem>
+                        <MenuItem value={option._id}>{option.label}</MenuItem>
                       )
                     }
                     )

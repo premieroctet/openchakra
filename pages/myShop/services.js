@@ -75,6 +75,7 @@ class services extends React.Component {
             Router.push('/login');
         }
 
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+'myAlfred/api/users/current')
           .then(res => {
               let user = res.data;
@@ -100,9 +101,14 @@ class services extends React.Component {
         axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
           .then(res => {
               let resultat = res.data;
+              console.log("Got resultat:"+JSON.stringify(resultat, null, 2));
               let shop=this.state.shop;
               shop.service = resultat.service._id;
-              shop.prestations = Object.fromEntries(new Map(resultat.prestations.map(p => [p._id, p])));
+              shop.prestations={}
+              resultat.prestations.forEach( p => {
+                const presta={_id: p.prestation._id, label: p.prestation.label, price:p.price, billing: p.billing};
+                shop.prestations[p.prestation._id]=presta;
+              })
               shop.perimeter = resultat.perimeter;
               shop.equipments = resultat.equipments.map( e => e._id);
               shop.diplomaName = resultat.graduated ? resultat.diploma.name : '';
@@ -163,7 +169,7 @@ class services extends React.Component {
             cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
             cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
 
-
+            console.log("Sending prestations:"+JSON.stringify(cloned_shop.prestations));
             let full_url = this.isNewService() ? '/myAlfred/api/serviceUser/myShop/add' : `/myAlfred/api/serviceUser/edit/${this.props.service_user_id}`;
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
             (this.isNewService() ? axios.post : axios.put)(full_url, cloned_shop)
@@ -258,7 +264,7 @@ class services extends React.Component {
 
         const {classes} = this.props;
         let hideRightPanel = this.isRightPanelHidden();
-
+        console.log("State:"+JSON.stringify(this.state.shop, null, 2));
         return(
           <Grid>
               <Grid className={classes.mainHeader}>

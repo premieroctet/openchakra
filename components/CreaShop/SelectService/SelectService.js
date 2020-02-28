@@ -26,7 +26,7 @@ class SelectService extends React.Component {
   setServices(pattern) {
     pattern = pattern || '%20';
     var kw_url = `${url}myAlfred/api/service/keyword/${pattern}`;
-    console.log("Getting url:"+kw_url);
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(kw_url)
       .then((response) => {
         let data = response.data;
@@ -71,18 +71,20 @@ class SelectService extends React.Component {
   render() {
     const {classes, isId} = this.props;
 
+    console.log("Service:"+this.props.service);
+
     return(
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
           <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{isId ? "Créez votre boutique de services" : "Ajouter un service"}</Typography>
+                <Typography className={classes.policySizeTitle}>{isId ? "Créez votre boutique de services" : this.props.service ? "Modifier un service" : "Ajouter un service"}</Typography>
               </Grid>
               <Grid>
                 <Grid>
                   <Grid>
-                    <h3 className={classes.policySizeSubtitle}>Quel service souhaitez-vous réaliser ?</h3>
+                    <h3 className={classes.policySizeSubtitle}>Quel service souhaitez-vous {this.props.service? "modifier" : "réaliser"} ?</h3>
                   </Grid>
                   { isId ?
                     <Grid className={classes.bottomSpacer}>

@@ -9,6 +9,7 @@ const selectService = (shop) =>{
 };
 
 const selectPrestation = (shop) =>{
+  console.log("Check prestations:"+JSON.stringify(shop, null, 2));
   if (Object.keys(shop.prestations).length===0) return "disabled";
   return !Object.values(shop.prestations)
     .every(v => {

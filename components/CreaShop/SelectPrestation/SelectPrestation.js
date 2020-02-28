@@ -83,7 +83,9 @@ class SelectPrestation extends React.Component {
   }
 
   render() {
+    // FIX : le billing par défaut n'ets pas sélectionné
     const {classes, prestations} = this.props;
+    console.log("Prestations:"+JSON.stringify(this.props.prestations, null, 2));
 
     return(
       <Grid className={classes.mainContainer}>
@@ -115,7 +117,7 @@ class SelectPrestation extends React.Component {
                         return(
                           <React.Fragment key={p._id}>
                             <ButtonSwitch isOption={true} isPrice={true} width={"100%"} label={p.label} id={p._id} checked={presta!=null}
-                                          billings={p.billing} onChange={this.prestationSelected} isEditable={isEditable} price={presta?presta.price:0}/>
+                                          billings={p.billing} onChange={this.prestationSelected} isEditable={isEditable} price={presta?presta.price:0} billing={presta?presta.billing:null}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                             { isCustom ? <Grid className={classes.buttonRemove} onClick={() => this.removeCustomPrestation(p._id) } >-</Grid>:null }
                           </React.Fragment>
