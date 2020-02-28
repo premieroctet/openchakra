@@ -18,6 +18,15 @@ import PreviewContainer from './PreviewContainer'
 import { InputRightElementPreview } from './previews/InputRightElement'
 import { InputLeftElementPreview } from './previews/InputLeftElement'
 import AspectRatioBoxPreview from './previews/AspectRatioBoxPreview'
+import MenuPreview, {
+  MenuListPreview,
+  MenuButtonPreview,
+  MenuItemPreview,
+  MenuGroupPreview,
+  MenuDividerPreview,
+  MenuOptionGroupPreview,
+  MenuItemOptionPreview,
+} from './previews/MenuPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -54,9 +63,6 @@ const ComponentPreview: React.FC<{
     case 'NumberInput':
     case 'BreadcrumbLink':
     case 'Select':
-    case 'MenuItem':
-    case 'MenuDivider':
-    case 'MenuItemOption':
       return (
         <PreviewContainer
           component={component}
@@ -109,11 +115,6 @@ const ComponentPreview: React.FC<{
     case 'Breadcrumb':
     case 'InputGroup':
     case 'BreadcrumbItem':
-    case 'Menu':
-    case 'MenuButton':
-    case 'MenuList':
-    case 'MenuGroup':
-    case 'MenuOptionGroup':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -146,6 +147,22 @@ const ComponentPreview: React.FC<{
       return <AccordionPanelPreview component={component} />
     case 'AspectRatioBox':
       return <AspectRatioBoxPreview component={component} />
+    case 'Menu':
+      return <MenuPreview component={component} />
+    case 'MenuList':
+      return <MenuListPreview component={component} />
+    case 'MenuButton':
+      return <MenuButtonPreview component={component} />
+    case 'MenuItem':
+      return <MenuItemPreview component={component} />
+    case 'MenuGroup':
+      return <MenuGroupPreview component={component} />
+    case 'MenuDivider':
+      return <MenuDividerPreview component={component} />
+    case 'MenuOptionGroup':
+      return <MenuOptionGroupPreview component={component} />
+    case 'MenuItemOption':
+      return <MenuItemOptionPreview component={component} />
     default:
       return null
   }
