@@ -83,6 +83,7 @@ router.post('/add', passport.authenticate('jwt', {
             shop.verified_phone = req.body.verified_phone;
             shop.is_particular = req.body.is_particular;
             shop.is_professional = !shop.is_particular;
+            shop.level=req.body.level;
 
             // FIX: save company
             shop.company = {};

@@ -36,15 +36,15 @@ class services extends React.Component {
                 location:null , // Lieu(x) de prestation
                 travel_tax: 0, // Frais de déplacement
                 pick_tax: 0, // Frais de livraison/enlèvmeent
-		minimum_basket: 0,
+                minimum_basket: 0,
                 diplomaName: null,
                 diplomaYear: null,
-		diplomaPicture: null,
+                diplomaPicture: null,
                 certificationName: null,
                 certificationYear: null,
                 certificationPicture: null,
                 deadline_value: 1, // Valeur de prévenance
-		deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
+                deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
                 level: '',
                 service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
                 perimeter: 1,
@@ -88,6 +88,7 @@ class services extends React.Component {
 
         if (this.isNewService()) {
           // Get shop to update exclusion services list
+          axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
           axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
             .then( response  =>  {
               let serviceUsers = response.data;
@@ -98,6 +99,7 @@ class services extends React.Component {
         }
 
         if (!this.isNewService()) {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
           .then(res => {
               let resultat = res.data;
@@ -171,6 +173,7 @@ class services extends React.Component {
 
             console.log("Sending prestations:"+JSON.stringify(cloned_shop.prestations));
             let full_url = this.isNewService() ? '/myAlfred/api/serviceUser/myShop/add' : `/myAlfred/api/serviceUser/edit/${this.props.service_user_id}`;
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
             (this.isNewService() ? axios.post : axios.put)(full_url, cloned_shop)
               .then(res => {

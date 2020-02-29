@@ -84,7 +84,7 @@ class SelectService extends React.Component {
               <Grid>
                 <Grid>
                   <Grid>
-                    <h3 className={classes.policySizeSubtitle}>Quel service souhaitez-vous {this.props.service? "modifier" : "réaliser"} ?</h3>
+                    <h3 className={classes.policySizeSubtitle}>{this.props.service? "Ce service va être modifié" : "Quel service souhaitez-vous réaliser ?"} </h3>
                   </Grid>
                   { isId ?
                     <Grid className={classes.bottomSpacer}>
@@ -108,7 +108,7 @@ class SelectService extends React.Component {
                       value={this.state.service}
                       disabled={this.props.service!=null}
                       renderInput={params => (
-                        <TextField {...params} label="Tapez votre service" variant="outlined" fullWidth />
+                        <TextField {...params} label={this.props.service ? "" : "Tapez votre service"} variant="outlined" fullWidth />
                       )}
                     />
                   </Grid>
