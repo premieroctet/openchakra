@@ -39,17 +39,18 @@ class Stepper extends React.Component {
       'Paramétrez votre service',
       'Vos préférences de réservation',
       'Vos atouts pour ce service !',
-      'Indiquez vos disponibilités',
+      //TODO a remettre quand les dispos seront affichés dans le schedule /'Indiquez vos disponibilités',
     ];
   }
 
   getStepsUpdateService() {
     return [
+      'Configurez ce service',
       'Modifiez vos prestations',
       'Paramétrez votre service',
       'Vos préférences de réservation',
       'Vos atouts pour ce service !',
-      'Indiquez vos disponibilités',
+      //TODO a remettre quand les dispos seront affichés dans le schedule /'Indiquez vos disponibilités',
     ];
   }
 

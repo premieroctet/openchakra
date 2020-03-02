@@ -39,20 +39,24 @@ class creaShop extends React.Component {
         company: {name:null, creation_date:null, siret:null, naf_ape:null, status:null}, //
         is_certified: false,
         service: null,
+        description:"", // Description de l'expertise
         prestations:{},
         equipments: [], // Ids des équipements
         location: null, // Lieu(x) de prestation
         travel_tax: 0, // Frais de déplacement
         pick_tax: 0, // Frais de livraison/enlèvmeent
         minimum_basket: 0,
+        diplomaName: null,
+        diplomaYear: null,
+	diplomaPicture: null,
+        certificationName: null,
+        certificationYear: null,
+        certificationPicture: null,
         deadline_value: 1, // Valeur de prévenance
-        deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
-        description:"", // Description de l'expertise
-        experience_years: 0,
-        diploma : [{name:"", year:"", picture:""}],
-        certification : [{name:"", year:"", picture:""}],
+        deadline_unit: "jours", // Unité de prévenance (h:heures, j:jours, s:semaines)
+	level: '',
         service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
-        perimeter: 0,
+        perimeter: 1,
         availabilities: [],
       },
       title: "Précisez vos disponibilités si vous le souhaitez ! ",
@@ -69,7 +73,7 @@ class creaShop extends React.Component {
     this.conditionsChanged = this.conditionsChanged.bind(this);
     this.shopSettingsChanged = this.shopSettingsChanged.bind(this);
     this.introduceChanged = this.introduceChanged.bind(this);
-    this.nextDisabled = this.nextDisabled.bind(this)
+    this.nextDisabled = this.nextDisabled.bind(this);
   }
 
   componentDidMount() {
@@ -124,12 +128,41 @@ class creaShop extends React.Component {
     }
     // last page => post
     else {
-      let copiedShop = _.cloneDeep(this.state.shop);
-      console.log("CreaShop:sending shop "+JSON.stringify(copiedShop, null, 2));
-      Object.keys(copiedShop.prestations).forEach(key => { if (key<0) copiedShop.prestations[key]._id = null });
+      let cloned_shop = _.cloneDeep(this.state.shop);
+      console.log("CreaShop:sending shop "+JSON.stringify(cloned_shop, null, 2));
+      Object.keys(cloned_shop.prestations).forEach(key => { if (key<0) cloned_shop.prestations[key]._id = null });
+      cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
+      cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
+
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      axios.post(url+'myAlfred/api/shop/add', copiedShop)
+      axios.post(url+'myAlfred/api/shop/add', cloned_shop)
         .then(res => {
+          
+          var su_id = res.data.services[0]._id; 
+          if(cloned_shop.diplomaPicture !== null) {
+            var dpChanged = typeof(cloned_shop.diplomaPicture)=='object';
+            const formData = new FormData();
+            formData.append('name',cloned_shop.diplomaName);
+            formData.append('year',cloned_shop.diplomaYear);
+            formData.append('file_diploma', dpChanged ? cloned_shop.diplomaPicture : null);
+
+            axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+su_id,formData)
+              .then(() => { console.log("Diplôme ajouté"); })
+              .catch(err => console.log(err))
+          }
+
+          if(cloned_shop.certificationPicture !== null) {
+            var cpChanged = typeof(cloned_shop.certificationPicture)=='object';
+            const formData = new FormData();
+            formData.append('name',cloned_shop.certificationName);
+            formData.append('year',cloned_shop.certificationYear);
+            formData.append('file_certification', cpChanged ? cloned_shop.certificationPicture : null);
+
+            axios.post(url+'myAlfred/api/serviceUser/addCertification/'+su_id,formData)
+              .then(() => { console.log("Certification ajoutée"); })
+              .catch(err => console.log(err))
+          }
+
           toast.info("Boutique créée avec succès");
           Router.push(`/shop?id_alfred=${this.state.user_id}`);
       })
@@ -182,17 +215,20 @@ class creaShop extends React.Component {
     this.setState({ shop: shop });
   }
 
-  assetsChanged(state) {
-    let shop=this.state.shop;
-
-    shop.description=state.description;
-    shop.level=state.level;
-    shop.diplomaName = state.diplomaName;
-    shop.diplomaYear = state.diplomaYear;
-    shop.certificationName = state.certificationName;
-    shop.certificationYear = state.certificationYear;
-
-    this.setState({shop: shop});
+  assetsChanged(state, index) {
+    this.setState({
+      shop:{
+        ...this.state.shop,
+        description: state.description,
+        level: state.level,
+        diplomaName: state.diplomaName,
+	diplomaYear: state.diplomaYear,
+	diplomaPicture: state.diplomaPicture,
+        certificationName: state.certificationName,
+        certificationYear: state.certificationYear,
+        certificationPicture: state.certificationPicture
+      }
+    });
   }
 
   conditionsChanged(book_request, conditions) {
@@ -234,9 +270,9 @@ class creaShop extends React.Component {
       case 3:
         return <SettingService service={shop.service} onChange={this.settingsChanged} />;
       case 4:
-        return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
+        return <BookingPreference service={shop.service} onChange={this.preferencesChanged} perimeter={shop.perimeter} deadline_unit={shop.deadline_unit} deadline_value={shop.deadline_value} minimum_basket={shop.minimum_basket}/>;
       case 5:
-        return <AssetsService data={shop} onChange={this.assetsChanged} />;
+        return <AssetsService data={shop} onChange={this.assetsChanged} type={"creaShop"}/>;
       case 6:
         return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
       case 7:

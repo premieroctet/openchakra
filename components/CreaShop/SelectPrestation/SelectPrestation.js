@@ -16,6 +16,7 @@ const url = config.apiUrl;
 class SelectPrestation extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       grouped: [],
       prestations:this.props.prestations || {},
@@ -40,7 +41,7 @@ class SelectPrestation extends React.Component {
          let service=res.data;
          this.setState({service_name: service.label});
       })
-      .catch(error => console.log(error));
+      .catch(error => console.log(error.response));
     axios.get(`${url}myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
         let data = res.data;
@@ -49,18 +50,16 @@ class SelectPrestation extends React.Component {
         let grouped = _.mapValues(_.groupBy(public_prestations, 'filter_presentation.label'),
           clist => clist.map(public_prestations => _.omit(public_prestations, 'filter_presentation.label')));
         let presta_templates = private_prestations.map( p => { return {...p, billing: billings}});
-        console.log("presta_templates:"+JSON.stringify(presta_templates));
         grouped={[CUSTOM_PRESTATIONS_FLTR]: presta_templates, ...grouped};
         this.setState({grouped : grouped});
       }).catch(error => {
-      console.log(error);
+      console.log(error.response);
     });
   }
 
   addCustomPrestation() {
     let grouped=this.state.grouped;
     let custom_presta = {_id: -generate_id(), label:"", service: this.state.service, billing:this.state.all_billings, description:'', price:0};
-    console.log("Adding prestation:"+JSON.stringify(custom_presta));
     grouped[CUSTOM_PRESTATIONS_FLTR].push(custom_presta);
     this.setState({grouped: grouped});
   }
@@ -73,7 +72,6 @@ class SelectPrestation extends React.Component {
   }
 
   prestationSelected(prestaId, checked, price, billing, label){
-    console.log("Prestation selected:"+prestaId);
     let sel=this.state.prestations;
     if (checked) {
       sel[prestaId]={_id:prestaId, label:label, price:price, billing:billing}
@@ -86,7 +84,9 @@ class SelectPrestation extends React.Component {
   }
 
   render() {
-    const {classes} = this.props;
+    // FIX : le billing par défaut n'ets pas sélectionné
+    const {classes, prestations} = this.props;
+    console.log("Prestations:"+JSON.stringify(this.props.prestations, null, 2));
 
     return(
       <Grid className={classes.mainContainer}>
@@ -125,7 +125,7 @@ class SelectPrestation extends React.Component {
                         return(
                           <Grid key={p._id} item xl={4} lg={4} md={6} sm={12} xs={12}>
                             <ButtonSwitch isOption={true} isPrice={true} width={"100%"} label={p.label} id={p._id} checked={presta!=null}
-                                          billings={p.billing} onChange={this.prestationSelected} isEditable={isEditable} price={presta?presta.price:0}/>
+                                          billings={p.billing} onChange={this.prestationSelected} isEditable={isEditable} price={presta?presta.price:0} billing={presta?presta.billing:null}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                           </Grid>
                          )

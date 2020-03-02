@@ -26,7 +26,7 @@ class SelectService extends React.Component {
   setServices(pattern) {
     pattern = pattern || '%20';
     var kw_url = `${url}myAlfred/api/service/keyword/${pattern}`;
-    console.log("Getting url:"+kw_url);
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(kw_url)
       .then((response) => {
         let data = response.data;
@@ -34,12 +34,14 @@ class SelectService extends React.Component {
         Object.keys(data).forEach( (k) => {
           data[k].forEach( (s) => {
 	    // FIX: passer les keyowrds autrement dans le back
-            let srv_opt={category: k, name: s.label+"/"+s.keywords.join(' '), id: s.id};
-            services.push(srv_opt);
-            if (this.state.service==null && s.id==this.props.service) {
-              console.log("Found");
-              this.setState({service: srv_opt});
-            }
+            // Dont show services to exclude (i.e. already in the shop)
+            if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
+              let srv_opt={category: k, name: s.label+"/"+s.keywords.join(' '), id: s.id};
+              services.push(srv_opt);
+              if (this.state.service==null && s.id==this.props.service) {
+                console.log("Found");
+                this.setState({service: srv_opt}); 
+              }}
           });
         });
         this.setState({services: services});
@@ -68,19 +70,21 @@ class SelectService extends React.Component {
 
   render() {
     const {classes, isId} = this.props;
-    console.log("Service:"+this.state.service);
+
+    console.log("Service:"+this.props.service);
+
     return(
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
           <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{isId ? "Créez votre boutique de services" : "Ajouter un service"}</Typography>
+                <Typography className={classes.policySizeTitle}>{isId ? "Créez votre boutique de services" : this.props.service ? "Configurer un service" : "Ajouter un service"}</Typography>
               </Grid>
               <Grid>
                 <Grid>
                   <Grid>
-                    <h3 className={classes.policySizeSubtitle}>Quel service souhaitez vous réaliser ?</h3>
+                    <h3 className={classes.policySizeSubtitle}>{this.props.service? "Ce service va être configuré" : "Quel service souhaitez-vous réaliser ?"} </h3>
                   </Grid>
                   { isId ?
                     <Grid className={classes.bottomSpacer}>
@@ -102,8 +106,9 @@ class SelectService extends React.Component {
                       groupBy={option => option.category}
                       getOptionLabel={option => option.name.split('/')[0]}
                       value={this.state.service}
+                      disabled={this.props.service!=null}
                       renderInput={params => (
-                        <TextField {...params} style={{zIndex: 0}} label="Tapez votre service" variant="outlined" fullWidth />
+                        <TextField {...params} label={this.props.service ? "" : "Tapez votre service"} variant="outlined" fullWidth />
                       )}
                     />
                   </Grid>
