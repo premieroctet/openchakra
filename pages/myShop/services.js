@@ -44,7 +44,7 @@ class services extends React.Component {
                 certificationYear: null,
                 certificationPicture: null,
                 deadline_value: 1, // Valeur de prévenance
-                deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
+                deadline_unit: "jours", // Unité de prévenance (h:heures, j:jours, s:semaines)
                 level: '',
                 service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
                 perimeter: 1,

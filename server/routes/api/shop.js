@@ -4,6 +4,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const emptyPromise = require('../../../utils/promise.js');
+const {data2ServiceUser} = require('../../../utils/mapping');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -43,16 +44,15 @@ const CANCEL_MODE = {
 // Create a shop
 // @Access private
 // FIX : inclure les disponibilites
-router.post('/add', passport.authenticate('jwt', {
-    session: false
-}), async(req, res) => {
+router.post('/add', passport.authenticate('jwt', { session: false }), async(req, res) => {
 
+
+    console.log("equipments before:"+JSON.stringify(req.body.equipments, null, 2));
+    req.body.equipments = JSON.parse(req.body.equipments);
+    console.log("equipments after:"+JSON.stringify(req.body.equipments, null, 2));
     // FIX: Ajouter date de création de boutique
     console.log('Creating shop');
-    const {
-        isValid,
-        errors
-    } = validateShopInput(req.body);
+    const { isValid, errors } = validateShopInput(req.body);
 
     if (!isValid) {
         console.log("Errors:" + JSON.stringify(errors));
@@ -98,27 +98,11 @@ router.post('/add', passport.authenticate('jwt', {
             console.log("Saving shop:" + JSON.stringify(shop));
             shop.save()
                 .then(shop => {
-                    su = new ServiceUser();
+                    var su = data2ServiceUser(req.body, new ServiceUser());
                     su.user = req.user.id;
-                    su.service = req.body.service;
-                    su.prestations = []
-                    su.equipments = req.body.equipments;
-                    su.location = {
-                        alfred: false,
-                        client: false,
-                        visio: false
-                    }
-                    Object.assign(su.location, req.body.location);
-                    su.travel_tax = req.body.travel_tax || 0;
-                    su.pick_tax = req.body.pick_tax || 0;
-                    su.minimum_basket = req.body.minimum_basket || 0;
-                    su.deadline_before_booking = req.body.deadline_value + " " + req.body.deadline_unit;
-                    su.description = req.body.description;
-                    su.perimeter = req.body.perimeter || 0;
-                    su.service_address = req.body.service_address;
-                    console.log("Prestas:" + JSON.stringify(req.body.prestations));
 
                     // FIX : créer les prestations custom avant
+                    req.body.prestations=JSON.parse(req.body.prestations);
                     let newPrestations = Object.values(req.body.prestations).filter(p => p._id == null);
                     console.log("newPrestations:" + JSON.stringify(newPrestations));
                     let newPrestaModels = newPrestations.map(p => Prestation({ ...p, service: req.body.service, billing: [p.billing], filter_presentation: null, private_alfred: req.user.id }));

@@ -7,6 +7,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import axios from 'axios';
+import isEmpty from '../../../server/validation/is-empty';
 
 class SettingService extends React.Component {
   constructor(props) {
@@ -32,20 +33,21 @@ class SettingService extends React.Component {
   }
 
   componentDidMount() {
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(`/myAlfred/api/service/${this.props.service}`)
       .then(response => {
         let service = response.data;
         let location = this.state.location;
         console.log("Location:"+JSON.stringify(location));
-        if (Object.keys(location).length==0) {
+        if (isEmpty(location)) {
           Object.keys(service.location).forEach (k => {
             if (service.location[k]) location[k]=false;
           })
         }
         this.setState({
           service: service,
-          location: location
-        }, () => this.fireOnChange());
+          location: location,
+        });
       })
       .catch(error => {
         console.log(error);
@@ -85,6 +87,7 @@ class SettingService extends React.Component {
     const {classes} = this.props;
     const {service, location, pick_tax, travel_tax} = this.state;
 
+    console.log("Render SettingsService, location is "+JSON.stringify(location, null, 2));
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>

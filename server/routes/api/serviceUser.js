@@ -10,7 +10,7 @@ const multer = require("multer");
 const crypto = require('crypto');
 const isEmpty = require('../../validation/is-empty');
 const emptyPromise = require('../../../utils/promise.js');
-
+const {data2ServiceUser} = require('../../../utils/mapping');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -139,36 +139,23 @@ router.post('/add', upload.fields([{
 // @Route POST /myAlfred/api/serviceUser/myShop/add
 // SAU : Add serviceUser in the shop
 // @Access private
-router.post('/myShop/add', upload.fields([{
-    name: 'file_diploma',
-    maxCount: 1
-}, {
-    name: 'file_certification',
-    maxCount: 1
-}]), passport.authenticate('jwt', {
-    session: false
-}), (req, res) => {
+router.post('/myShop/add', upload.fields([{ name: 'file_diploma', maxCount: 1 }, { name: 'file_certification', maxCount: 1 }]), passport.authenticate('jwt', { session: false }), (req, res) => {
 
     console.log("myShop/add received:" + JSON.stringify(req.body));
-    ServiceUser.findOne({
-            user: req.user.id,
-            service: req.body.service
-        })
-        .then(service => {
 
-            if (service) {
+    req.body.prestations=JSON.parse(req.body.prestations);
+    req.body.equipments=JSON.parse(req.body.equipments);
+    ServiceUser.findOne({ user: req.user.id, service: req.body.service })
+        .then(su => {
+
+            if (su) {
                 return res.status(400).json({
                     msg: "Ce service existe déjà"
                 });
             }
             const data = req.body;
-            const fields = {};
-            fields.user = req.user.id;
-            fields.service = req.body.service;
-            fields.perimeter = req.body.perimeter;
-            fields.minimum_basket = req.body.minimum_basket;
-            fields.deadline_before_booking = req.body.deadline_value + " " + req.body.deadline_unit;
-            fields.prestations = Object.values(JSON.parse(req.body.prestations));
+            var su = data2ServiceUser(data, new ServiceUser()); 
+            su.user = req.user.id;
 
             // FIX : créer les prestations custom avant
             let newPrestations = Object.values(req.body.prestations).filter(p => p._id == null);
@@ -193,59 +180,10 @@ router.post('/myShop/add', upload.fields([{
                 });
             }
 
-            fields.level = req.body.level;
-
-            fields.pick_tax = req.body.pick_tax;
-            fields.travel_tax = req.body.travel_tax;
-
-            fields.location = req.body.location;
-            fields.diploma = {};
-            fields.certification = {};
-            const diploma = 'file_diploma';
-            const certification = 'file_certification';
-
-            // FIX : reinsert diploma & certification files
-            if ('diplomaName' in data && 'diplomaYear' in data) {
-                fields.diploma.name = data.diplomaName;
-                fields.diploma.year = data.diplomaYear;
-                fields.graduated = true;
-            }
-            else {
-                console.log('No file uploaded');
-            }
-
-            if ('certificationName' in data && 'certificationYear' in data) {
-                fields.certification.name = data.certificationName;
-                fields.certification.year = data.certificationYear;
-                fields.is_certified = true;
-            }
-            else {
-                console.log('No file uploaded');
-            }
-
-            fields.description = req.body.description;
-            fields.equipments = JSON.parse(req.body.equipments);
-
-
-            fields.service_address = {};
-            fields.service_address.address = req.body.address;
-            fields.service_address.zip_code = req.body.zip_code;
-            fields.service_address.city = req.body.city;
-            fields.service_address.country = req.body.country;
-
-
-            fields.service_address.gps = {};
-            fields.service_address.gps.lat = req.body.lat;
-            fields.service_address.gps.lng = req.body.lng;
-
-            //fields.option = JSON.parse(req.body.options);
-            const newService = new ServiceUser(fields);
-            newService.save().then((service) => {
-                    Shop.findOne({
-                            alfred: req.user.id
-                        })
+            su.save().then((su) => {
+                    Shop.findOne({ alfred: req.user.id })
                         .then(shop => {
-                            shop.services.unshift(service._id);
+                            shop.services.unshift(su._id);
                             shop.save().then(newShop => res.json(newShop)).catch(err => console.log(err));
                         })
                         .catch(error => console.log(error))
@@ -266,25 +204,14 @@ router.post('/myShop/add', upload.fields([{
 router.put('/edit/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
 
     console.log("Update ServiceUser, received:" + JSON.stringify(req.body, null, 2));
+    req.body.prestations=JSON.parse(req.body.prestations);
+    req.body.equipments=JSON.parse(req.body.equipments);
+
     ServiceUser.findById(req.params.id)
         .then(serviceUser => {
             let data = req.body;
 
-            req.body.prestations = JSON.parse(req.body.prestations);
-            serviceUser.option = data.options;
-            serviceUser.perimeter = data.perimeter;
-            serviceUser.minimum_basket = data.minimum_basket;
-            serviceUser.deadline_before_booking = isEmpty(data.deadline_unit) || isEmpty(data.deadline_value) ? '' : data.deadline_value + ' ' + data.deadline_unit;
-            serviceUser.description = data.description;
-            serviceUser.level = data.level;
-            serviceUser.equipments = JSON.parse(data.equipments);
-            serviceUser.travel_tax = data.travel_tax;
-            serviceUser.pick_tax = data.pick_tax;
-            serviceUser.graduated = data.diplomaName != '' && data.diplomaYear > 0;
-            serviceUser.diploma = serviceUser.graduated ? { name: data.diplomaName, year: data.diplomaYear } : null;
-            serviceUser.is_certified = data.certificationName != '' && data.vertificationYear > 0;
-            serviceUser.certification = serviceUser.graduated ? { name: data.certificationName, year: data.certificationYear } : null;
-            serviceUser.location = data.location;
+            serviceUser = data2ServiceUser(data, serviceUser);
             serviceUser.prestations = [];
 
             // FIX : créer les prestations custom avant

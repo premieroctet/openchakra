@@ -128,11 +128,14 @@ class creaShop extends React.Component {
     }
     // last page => post
     else {
-      let copiedShop = _.cloneDeep(this.state.shop);
-      console.log("CreaShop:sending shop "+JSON.stringify(copiedShop, null, 2));
-      Object.keys(copiedShop.prestations).forEach(key => { if (key<0) copiedShop.prestations[key]._id = null });
+      let cloned_shop = _.cloneDeep(this.state.shop);
+      console.log("CreaShop:sending shop "+JSON.stringify(cloned_shop, null, 2));
+      Object.keys(cloned_shop.prestations).forEach(key => { if (key<0) cloned_shop.prestations[key]._id = null });
+      cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
+      cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
+
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      axios.post(url+'myAlfred/api/shop/add', copiedShop)
+      axios.post(url+'myAlfred/api/shop/add', cloned_shop)
         .then(res => {
           toast.info("Boutique créée avec succès");
           Router.push(`/shop?id_alfred=${this.state.user_id}`);

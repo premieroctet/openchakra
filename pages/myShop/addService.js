@@ -40,7 +40,7 @@ class addService extends React.Component {
         pick_tax: 0, // Frais de livraison/enlèvmeent
         minimum_basket: 0,
         deadline_value: 0, // Valeur de prévenance
-        deadline_unit: "j", // Unité de prévenance (h:heures, j:jours, s:semaines)
+        deadline_unit: "jours", // Unité de prévenance (h:heures, j:jours, s:semaines)
         description:"", // Description de l'expertise
         experience_years: 0,
         diploma : [{name:"", year:"", picture:""}],

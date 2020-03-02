@@ -19,6 +19,7 @@ const selectPrestation = (shop) =>{
 
 const settingService = (shop) =>{
   console.log("Check step settingService");
+  console.log("Location is"+JSON.stringify(shop.location));
   if (shop.location==null)  return true;
   if (Object.values(shop.location).every( v => !v)) return true;
 };
