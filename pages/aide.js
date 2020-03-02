@@ -8,7 +8,8 @@ const Aide = () => (
   <Fragment>
     <Layout>
       <div style={{backgroundImage:'url(../static/background/pagesina.svg)',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover', width: '100%', height: '100vh'}}></div>
-      <Footer/>  
+      {/* <Footer/>*/}
+
     </Layout>
   </Fragment>
 );

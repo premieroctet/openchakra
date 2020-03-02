@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -487,7 +487,8 @@ class signup extends React.Component {
                 </Card>
                 </div>
               </Grid>
-              <Footer/>
+              {/* <Footer/>*/}
+
             </Layout>
         );
       };

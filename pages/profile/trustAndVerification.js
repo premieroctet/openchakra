@@ -801,7 +801,8 @@ class trustAndVerification extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
+
                 <Dialog
                     open={this.state.open}
                     onClose={()=>this.handleClose()}

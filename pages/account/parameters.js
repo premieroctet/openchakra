@@ -401,7 +401,8 @@ class parameters extends React.Component {
                     </DialogActions>
                 </Dialog>
               <Grid style={{position: 'absolute', bottom: 0, width: '100%'}}>
-                <Footer/>
+                {/* <Footer/>*/}
+
               </Grid>
             </Fragment>
 

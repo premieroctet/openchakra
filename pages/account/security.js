@@ -349,7 +349,8 @@ class security extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
+
             </Fragment>
         );
     };

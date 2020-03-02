@@ -204,4 +204,29 @@ export default theme => ({
       marginLeft: 0,
     },
   },
+  extendedIcon: {
+    marginRight: theme.spacing(1),
+    color: 'white'
+  },
+  margin: {
+    margin: theme.spacing(1),
+    color: 'white'
+  },
+  maxWidth:{
+    width : '100%'
+  },
+  buttonAddPrestas:{
+    display: 'flex',
+    marginTop: 30,
+    marginBottom: 100
+  },
+  marginThirty:{
+    marginBottom: 30,
+    marginTop: 30
+  },
+  containerPrestas:{
+    marginTop: 30,
+    width: '100%'
+  }
+
 })

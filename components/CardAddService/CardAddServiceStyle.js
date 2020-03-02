@@ -1,7 +1,19 @@
 export default theme => ({
   card: {
     width: '100%',
-    height: 'auto',
+    height: 450,
+    [theme.breakpoints.down('lg')]: {
+      height: 400
+    },
+    [theme.breakpoints.down('md')]: {
+      height: 400
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: 500
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: 'auto'
+    }
   },
   cardMedia: {
     paddingTop: '56.25%', // 16:9
@@ -23,7 +35,7 @@ export default theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 100,
+    height: 150,
   },
   textStyle:{
     color: '#4fbdd7',

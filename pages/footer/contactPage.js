@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Layout from '../../hoc/Layout/Layout';
 import Grid from "@material-ui/core/Grid";
@@ -99,7 +99,8 @@ class contactPage extends React.Component {
             <img src={'../static/background/contactez_nous.svg'} style={{height:'100vh', width:'90%'}} alt={'test'}/>
           </Grid>
         </Grid>
-        <Footer/>
+        {/* <Footer/>*/}
+
       </Layout>
 
     )

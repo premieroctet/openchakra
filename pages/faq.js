@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
 import Grid from "@material-ui/core/Grid";
@@ -2288,7 +2288,8 @@ class faq extends React.Component {
                         <Grid className={classes.hideed} container style={{position: 'sticky',height:'90vh', backgroundImage:'url(../static/illustration-FAQ.svg)',backgroundRepeat:'no-repeat',top:100,backgroundSize: 'cover', backgroundPosition:'center'}}></Grid>
                     </Grid>
                 </Grid>
-                <Footer/>
+                {/* <Footer/>*/}
+
             </Layout>
         );
     };

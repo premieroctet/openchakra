@@ -27,7 +27,7 @@ const MapComponent = dynamic(() => import('../../components/map'), {
 const styles = theme => ({
     bigContainer: {
         flexGrow: 1,
-       
+
     },
     grosHR: {
       height: '7px',
@@ -64,7 +64,7 @@ const styles = theme => ({
      minHeight:'100px',
      width:'200px',
      textAlign:'center',
-    
+
      boxShadow: '4px 4px 41px -37px rgba(0,0,0,0.0)',
      border:'solid 1px #ccc',
      borderRadius:'10px',
@@ -84,12 +84,12 @@ const styles = theme => ({
       prestationlist:{
 
         padding:'1%',
-        
+
         marginBottom:10,
         border:'solid 1px #ccc',
         borderRadius:'5px',
-   
-   
+
+
          },
          prestationside:{
 
@@ -99,8 +99,8 @@ const styles = theme => ({
             marginRight:'10px',
             marginLeft:'10px',
             height:'30px',
-       
-       
+
+
              },
 
       dispoheader:{
@@ -109,15 +109,15 @@ const styles = theme => ({
         color:'white',
         width:'100%',
         padding:'1%',
-       
+
         fontSize:'15px',
         textAlign:'center',
 
         borderRadius:'0px',
         backgroundColor:'#F8727F',
         marginBottom:'20px'
-   
-   
+
+
          }
 });
 
@@ -209,7 +209,7 @@ class services extends React.Component {
             .then(res => {
                 let availability = res.data;
                 this.setState({availability: availability});
-                
+
                 availability.forEach(d => {
                     this.setState({monday: d.monday});
                     this.setState({tuesday: d.tuesday});
@@ -219,18 +219,18 @@ class services extends React.Component {
                     this.setState({saturday: d.saturday});
                     this.setState({sunday: d.sunday});
                 });
-                
+
                 /*Lundi*/
                 this.state.monday.event.forEach(i  => {
                         i.services.forEach(d =>{
                             if(d.value === id){
-                                this.setState({monday_event: [...this.state.monday_event, i]})  
+                                this.setState({monday_event: [...this.state.monday_event, i]})
                             }
                         })
                 });
                 this.state.monday.event.forEach(e => {
                     if(e.all_services === true){
-                       this.setState({monday_event: [...this.state.monday_event, e]}) 
+                       this.setState({monday_event: [...this.state.monday_event, e]})
                     }
                 });
 
@@ -238,13 +238,13 @@ class services extends React.Component {
                 this.state.tuesday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({tuesday_event: [...this.state.tuesday_event, i]})  
+                            this.setState({tuesday_event: [...this.state.tuesday_event, i]})
                         }
                     })
                 })
                 this.state.tuesday.event.forEach(e => {
                     if(e.all_services === true){
-                    this.setState({tuesday_event: [...this.state.tuesday_event, e]}) 
+                    this.setState({tuesday_event: [...this.state.tuesday_event, e]})
                     }
                 })
 
@@ -252,13 +252,13 @@ class services extends React.Component {
                 this.state.wednesday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({wednesday_event: [...this.state.wednesday_event, i]})  
+                            this.setState({wednesday_event: [...this.state.wednesday_event, i]})
                         }
                     })
                 })
                 this.state.wednesday.event.forEach(e => {
                     if(e.all_services === true){
-                    this.setState({wednesday_event: [...this.state.wednesday_event, e]}) 
+                    this.setState({wednesday_event: [...this.state.wednesday_event, e]})
                     }
                 })
 
@@ -266,13 +266,13 @@ class services extends React.Component {
                 this.state.thursday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({thursday_event: [...this.state.thursday_event, i]})  
+                            this.setState({thursday_event: [...this.state.thursday_event, i]})
                         }
                     })
                 })
                 this.state.thursday.event.forEach(e => {
                     if(e.all_services === true){
-                    this.setState({thursday_event: [...this.state.thursday_event, e]}) 
+                    this.setState({thursday_event: [...this.state.thursday_event, e]})
                     }
                 })
 
@@ -280,13 +280,13 @@ class services extends React.Component {
                 this.state.friday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({friday_event: [...this.state.friday_event, i]})  
+                            this.setState({friday_event: [...this.state.friday_event, i]})
                         }
                     })
                 })
                 this.state.friday.event.forEach(e => {
                     if(e.all_services === true){
-                    this.setState({friday_event: [...this.state.friday_event, e]}) 
+                    this.setState({friday_event: [...this.state.friday_event, e]})
                     }
                 })
 
@@ -294,7 +294,7 @@ class services extends React.Component {
                 this.state.saturday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({saturday_event: [...this.state.saturday_event, i]})  
+                            this.setState({saturday_event: [...this.state.saturday_event, i]})
                         }
                     })
                 })
@@ -308,13 +308,13 @@ class services extends React.Component {
                 this.state.sunday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({sunday_event: [...this.state.sunday_event, i]})  
+                            this.setState({sunday_event: [...this.state.sunday_event, i]})
                         }
                     })
                 })
                 this.state.sunday.event.forEach(e => {
                     if(e.all_services === true){
-                    this.setState({sunday_event: [...this.state.sunday_event, e]}) 
+                    this.setState({sunday_event: [...this.state.sunday_event, e]})
                     }
                 })
 
@@ -414,7 +414,7 @@ class services extends React.Component {
 
                         {/*Le Contenu */}
                         <Grid container>
-                        
+
                         {/*Contenu à Gauche*/}
 
                             {/*Petite Description*/}
@@ -469,12 +469,12 @@ class services extends React.Component {
                                          <Typography>
                                              <div className={classes.dispoheader}>Lundi  </div>
                                               <br/>
-                                              <div className={classes.dispocardin} > 
+                                              <div className={classes.dispocardin} >
                                         {monday_event.map((e)=>(
                                             <React.Fragment>
-                                                
+
                                                  {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
+
                                             </React.Fragment>
                                         ))}</div>
                                         </Typography>
@@ -484,17 +484,17 @@ class services extends React.Component {
                                          <Typography>
                                          <div className={classes.dispoheader}> Mardi   </div>
                                          <br/>
-                                         <div className={classes.dispocardin} > 
+                                         <div className={classes.dispocardin} >
                                         {tuesday_event.map((e)=>(
                                             <React.Fragment>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
+
                                             </React.Fragment>
                                         ))}</div>
                                         </Typography>
                                         </Grid>
-                                        
+
                                         <Grid item xs={2} style={{ marginLeft: '3.5%', marginBottom: '3.5%'}} className={classes.dispocard}>
                                          <Typography>
                                          <div className={classes.dispoheader}> Mercredi </div>
@@ -503,7 +503,7 @@ class services extends React.Component {
                                             <React.Fragment>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
+
                                             </React.Fragment>
                                         ))} </div>
                                         </Typography>
@@ -517,7 +517,7 @@ class services extends React.Component {
                                             <React.Fragment>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
+
                                             </React.Fragment>
                                         ))}</div>
                                         </Typography>
@@ -531,7 +531,7 @@ class services extends React.Component {
                                             <React.Fragment>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
+
                                             </React.Fragment>
                                         ))}</div>
                                         </Typography>
@@ -545,7 +545,7 @@ class services extends React.Component {
                                             <React.Fragment>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
+
                                             </React.Fragment>
                                         ))}</div>
                                         </Typography>
@@ -559,7 +559,7 @@ class services extends React.Component {
                                             <React.Fragment>
 
                                                 {moment(e.begin).format('LT')} - {moment(e.end).format('LT')}<br/>
-                                                
+
                                             </React.Fragment>
                                         ))}</div>
                                         </Typography>
@@ -616,7 +616,7 @@ class services extends React.Component {
                                                 </Grid>
                                             </Grid>
                                         </Grid>
-                                        
+
                                     </Grid>
                                 </div>
 
@@ -645,36 +645,36 @@ class services extends React.Component {
                                     </Grid>
                                 </div>
 
-                               
-                                        
-                                            
 
-                                   
+
+
+
+
                             </Grid>
 
                             {/*Contenu à droite*/}
                             <Grid item xs={12} md={5} style={{marginTop: '2%', marginBottom: '5%'}}>
                                 <Grid container style={{border: 'thin solid #dedede',maxWidth: '80%',marginLeft:'14%', padding:'2%', position: 'sticky', top: 100,}}>
                                     <Grid item xs={12}><Typography style={{marginTop: '4%' ,marginBottom: '2%',marginLeft: '4%' ,color: 'black', fontSize:'1.2rem'}}>Type de prestation</Typography></Grid>
-                                    
+
                                     {uniqFilter.map(z =>{
                                     return (
                                     <React.Fragment>
                                     <Grid item xs={12} style={{marginBottom: '2%', marginTop: '2%'}}>
                                         <Typography style={{marginLeft: '3%' , fontSize:'1.1rem', fontWeight: '5e00', color:'white', minHeight:'40px', padding:'10px', backgroundColor:'gray', borderRadius:5,}}>
                                         {this.state[z.label] ?
-                                        <React.Fragment> 
+                                        <React.Fragment>
                                             <span onClick={()=>{this.handleclick1(z.label)}} style={{cursor:'pointer'}}>
                                                 <img style={{marginRight: '2%'}} width="13px" src="../../static/stars/arrowDown.png"/>
                                                 {z.label}
                                             </span>
-                                        </React.Fragment> : 
-                                        <React.Fragment> 
+                                        </React.Fragment> :
+                                        <React.Fragment>
                                             <span onClick={()=>{this.handleclick2(z.label)}} style={{cursor:'pointer'}}>
                                                 <img style={{marginRight: '2%',transform: 'rotate(-90deg)'}} width="13px" src="../../static/stars/arrowDown.png"/>
                                                 {z.label}
                                             </span>
-                                        </React.Fragment>}                                         
+                                        </React.Fragment>}
                                         </Typography>
                                     </Grid>
 
@@ -685,21 +685,21 @@ class services extends React.Component {
                                     else{
                                         return(
 
-                                        
+
                                     <React.Fragment>
                                     <Grid item xs={12} style={{marginTop: '2%', marginBottom: '2%', paddingLeft:'4%',}}>
                                         <Grid container>
-                                            
+
                                             <Grid item xs={12} >
                                                 <Typography>
-                                                
+
                                                     <Grid container className={classes.prestationlist} style={{backgroundColor:'white',padding:'0px', paddingBottom:'15px',  paddingTop:'15px', minHeight:'50px', minWidth:'120px',}}>
                                                     <Grid item xs={1} className={classes.prestationside} >
-                                                   
-                                                   </Grid> 
-                                                    
+
+                                                   </Grid>
+
                                             <Grid item xs={5} className={classes.prestationheader} style={{backgroundColor:'white', color:'black', borderBottom:'1px solid white'}}>
-                                                <Typography style={{fontSize:"1rem", fontWeight:'bold', color:'black', marginTop:3}}>{d.prestation.label}</Typography>     
+                                                <Typography style={{fontSize:"1rem", fontWeight:'bold', color:'black', marginTop:3}}>{d.prestation.label}</Typography>
                                             </Grid>
                                                         <Grid item xs={2}  className={classes.prestationin} style={{fontSize:"1rem", fontWeight:'bold', marginTop:'3px',  padding:'0px',  textAlign:'right'}}>
                                                         {d.price}€
@@ -710,31 +710,31 @@ class services extends React.Component {
                                                     </Grid>
                                                 </Typography>
                                             </Grid>
-                                           
-                                            
+
+
                                         </Grid>
                                     </Grid>
                                     </React.Fragment>)}})}
-                      
+
                                     <Grid item xs={2}></Grid><Grid item xs={8}></Grid><Grid item xs={2}></Grid></React.Fragment> : null} </React.Fragment>)})}
 
 
                                     <Grid item xs={12} style={{marginBottom: '2%'}}>
                                         <Typography style={{marginLeft: '3%' , fontSize:'1.1rem', fontWeight: '5e00', color:'white', minHeight:'40px', padding:'10px', backgroundColor:'gray', borderRadius:5,}}>
                                         {dropoption ?
-                                        <React.Fragment> 
+                                        <React.Fragment>
                                             <span onClick={this.handleclickoption1} style={{cursor:'pointer'}}>
                                                 <img width="13px" style={{marginRight: '2%'}} src="../../static/stars/arrowDown.png"/>
                                                 Option/Supplément
                                             </span>
-                                        </React.Fragment> : 
+                                        </React.Fragment> :
                                         <React.Fragment>
                                             <span onClick={this.handleclickoption2} style={{cursor:'pointer'}}>
                                                 <img style={{marginRight: '2%',transform: 'rotate(-90deg)'}} width="13px" src="../../static/stars/arrowDown.png"/>
                                                 Option/Supplément
                                             </span>
-                                        </React.Fragment>}                                         
-                                            
+                                        </React.Fragment>}
+
                                         </Typography>
                                     </Grid>
 
@@ -743,7 +743,7 @@ class services extends React.Component {
                                     <Grid item xs={1}></Grid>
                                     <Grid item xs={4} style={{marginTop: '6%'}}>
                                         <Grid container>
-                                            
+
                                             <Grid item xs={2} style={{borderBottom: 'solid #dedede'}}>
                                                 <Typography>
                                                     <Grid container>
@@ -757,9 +757,9 @@ class services extends React.Component {
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={10}>
-                                                <Typography>{options.label}</Typography>     
+                                                <Typography>{options.label}</Typography>
                                             </Grid>
-                                            
+
                                         </Grid>
                                     </Grid>
                                     </React.Fragment>
@@ -791,7 +791,8 @@ class services extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+              {/* <Footer/>*/}
+
 
             </Fragment>
         );

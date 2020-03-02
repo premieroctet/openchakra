@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
@@ -188,7 +188,8 @@ class login extends React.Component {
             <img src={'../static/background/Illustration Inscription-connexion_Plan de travail 1 copie-01.svg'} style={{height:'100vh', width:'90%'}} alt={'test'}/>
           </Grid>
         </Grid>
-        <Footer/>
+        {/* <Footer/>*/}
+
       </Layout>
     );
   };

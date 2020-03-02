@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Layout from '../../hoc/Layout/Layout';
 import Grid from "@material-ui/core/Grid";
@@ -110,7 +110,7 @@ class cguPage extends React.Component {
                                 <br/>-	le prix total du Service proposé, y compris le cas échéant, tous les frais supplémentaires exigibles, sur la base du prix proposé pour les Services dans sa Boutique ;
                                 <br/>-	la possibilité pour le Membre Utilisateur de se rétracter ou non ;
                                 <br/>-	les dispositions du code civil relatives au droit des obligations et de la responsabilité civile applicables à la relation contractuelle, par l'affichage d'un lien hypertexte.
-                            </div> 
+                            </div>
                         </p>
                         <p>5.4 My-Alfred n’est en aucun cas responsable des contenus, de leur véracité, leur légalité ou encore de la qualité des Boutiques (et de leurs contenus) proposées par les Membres Alfred. My-Alfred décline toute responsabilité au regard de l’exactitude de la description des Services, des Membres, des notations, des commentaires ou, plus largement, au regard de tout contenu publié par les Membres. My-Alfred n’approuve aucun membre, la mention “Membre vérifé” indiquant que My-Alfred a procédé à une simple vérification des documents déposés par le Membre et ne constituant en aucun cas une garantie de l’identité des Membres ou de leur capacité à contracter.</p>
                         <p>5.5 My-Alfred n’est aucunement responsable des pannes (internet, télécommunication) dont il n’a pas le contrôle, conduisant à une accessibilité nulle ou limitée à la Place de marché My-Alfred. Dans le cadre de la maintenance de ses serveurs ou en cas de capacité limitée de ses serveurs, My-Alfred se réserve le droit de restreindre l’accessibilité à la Plateforme de façon temporaire afin de garantir la sécurité et la continuité de ses serveurs ou d’améliorer le fonctionnement de la Place de marché.</p>
@@ -201,7 +201,7 @@ class cguPage extends React.Component {
                     </Grid>
                     <Grid item xs={12}>
                         <h3 style={{color: '#2FBCD3'}}>10 – Notations et commentaires</h3>
-                        <p>10.1 Chaque Service réalisé par un Membre Alfred au profit d’un Membre Utilisateur pourra donner lieu à une notation réciproque publique et un commentaire public. Les Membres sont libres d’effectuer une notation ou non. La notation (à l’aide d’étoiles) reflète l’opinion des Membres Utilisateurs par rapport au Service réalisé par le Membre Alfred, son comportement, la qualité de son travail et le rapport qualité/prix, de même qu’elle reflète l’opinion des Membres Alfred sur le comportement et l’accueil du Membre Utilisateur. En aucun cas, les notations ne proviendront de My-Alfred et ne reflètent en rien l’opinion de My-Alfred au sujet de ses Membres.  
+                        <p>10.1 Chaque Service réalisé par un Membre Alfred au profit d’un Membre Utilisateur pourra donner lieu à une notation réciproque publique et un commentaire public. Les Membres sont libres d’effectuer une notation ou non. La notation (à l’aide d’étoiles) reflète l’opinion des Membres Utilisateurs par rapport au Service réalisé par le Membre Alfred, son comportement, la qualité de son travail et le rapport qualité/prix, de même qu’elle reflète l’opinion des Membres Alfred sur le comportement et l’accueil du Membre Utilisateur. En aucun cas, les notations ne proviendront de My-Alfred et ne reflètent en rien l’opinion de My-Alfred au sujet de ses Membres. 
                         Les Membres s’engagent à rédiger des commentaires fondés et justes, reflétant la réalité. En aucun cas, les commentaires laissés ne peuvent être injurieux, discriminants ou diffamatoires. 
                         Les commentaires n’étant pas soumis à une vérification, ces derniers peuvent s’avérer infondés, injustes ou faux. Les Membres peuvent faire une demande de modération auprès de l’équipe My-Alfred s’ils ont la preuve du caractère infondé de la notation ou du commentaire. La responsabilité de My-Alfred ne peut être recherchée que dans l’hypothèse où nous avons connaissance du caractère illicite d’un commentaire et n’avons pas promptement réagi.</p>
                         <p>10.2 Les commentaires et notations sont publics sur la Place de marché My-Alfred. Ces commentaires et notations permettent aux Membres Utilisateurs et aux Membres Alfred d'accroître la confiance dans l’accord qu’ils concrétisent par une réservation.</p>
@@ -241,11 +241,11 @@ class cguPage extends React.Component {
                         My-Alfred s’engage à mettre en œuvre tous les moyens nécessaires afin d’assurer au mieux l’accès aux Services My-Alfred et plus particulièrement à la Place de marché.
                             <br/>De manière générale, le Membre accepte et reconnaît que son utilisation de la Place de Marché, y compris les informations qu’il diffuse, est faite sous son unique et entière responsabilité.
                             <br/>En utilisant la Place de marché, le Membre s’engage à ne pas agir de manière dommageable ou ayant pour effet de causer un préjudice à l’image, aux intérêts ou aux droits de My-Alfred, d’endommager ou de rendre inopérante la Place de marché.
-                            <br/>My-Alfred ne saurait être tenue pour responsable et ne saurait être tenue d’indemniser un Membre du préjudice direct ou indirect qui résulterait de l’indisponibilité de la Place de marché. My-Alfred ne saurait à cet égard être tenue pour responsable de tout dommage résultant de la perte, de l’altération ou de toute utilisation frauduleuse de données, de la transmission accidentelle de virus ou autres éléments nuisibles, de l’attitude ou comportement d’un tiers. Elle n’encourt aucune responsabilité du fait (i) de l’impossibilité d’accéder à la Place de marché, (ii) d’un mauvais usage de la Place de marché (iii) de la saturation du réseau internet, (iv) d’éventuels dysfonctionnements sur les terminaux mobiles utilisés par les Membres, (v) en cas de force majeure ou de fait indépendant de sa volonté. 
+                            <br/>My-Alfred ne saurait être tenue pour responsable et ne saurait être tenue d’indemniser un Membre du préjudice direct ou indirect qui résulterait de l’indisponibilité de la Place de marché. My-Alfred ne saurait à cet égard être tenue pour responsable de tout dommage résultant de la perte, de l’altération ou de toute utilisation frauduleuse de données, de la transmission accidentelle de virus ou autres éléments nuisibles, de l’attitude ou comportement d’un tiers. Elle n’encourt aucune responsabilité du fait (i) de l’impossibilité d’accéder à la Place de marché, (ii) d’un mauvais usage de la Place de marché (iii) de la saturation du réseau internet, (iv) d’éventuels dysfonctionnements sur les terminaux mobiles utilisés par les Membres, (v) en cas de force majeure ou de fait indépendant de sa volonté.
                             <br/>My-Alfred est responsable de la fourniture des Services My-Alfred, laquelle constitue une obligation de moyens. La responsabilité de My-Alfred se limite en ce sens aux seuls dommages directs subis par le Membre à raison de l’utilisation des Services My-Alfred, à l’exclusion de tout autre. My-Alfred ne peut en aucun cas être tenue responsable des dommages indirects causés à un Membre et notamment de toute perte de clientèle, perte de profit, manque à gagner, atteinte à l’image.
                             <br/>La charge de la preuve du dommage revient au Membre et toute demande de dommage-intérêts du Membre doit être initiée auprès de My-Alfred dans un délai de douze (12) mois à compter du fait générateur à l’origine du dommage, sous réserve des dispositions d’ordre public édictées par le Code de la consommation.
                             <br/>Le Membre est informé qu’en cas de panne, de maintenance, ou de mise à jour des systèmes, l’accès à son compte personnel pourra être suspendu temporairement. My-Alfred s’efforce de prévenir les Membres et fait ses meilleurs efforts en vue de rétablir l’accès aux Services My-Alfred dès que possible.
-                            <br/>La responsabilisé de My-Alfred n’est pas engagée lorsque l’impossibilité de fournir correctement les Services My-Alfred est due à un cas de force majeure (telle que définie par l’article 1218 du Code civil). My-Alfred décline toute responsabilité dans le cas où les Services My-Alfred ne répondraient pas aux exigences et besoins spécifiques des Membres. 
+                            <br/>La responsabilisé de My-Alfred n’est pas engagée lorsque l’impossibilité de fournir correctement les Services My-Alfred est due à un cas de force majeure (telle que définie par l’article 1218 du Code civil). My-Alfred décline toute responsabilité dans le cas où les Services My-Alfred ne répondraient pas aux exigences et besoins spécifiques des Membres.
                             <br/>Ni My-Alfred, ni, le cas échéant, ses hébergeurs et fournisseurs de technologies, ne pourront être tenus responsables en cas de dommage subi par le Membre et résultant de :
                             <div style={{paddingLeft: '15px'}}>
                                 – une faute du Membre ;
@@ -310,10 +310,11 @@ class cguPage extends React.Component {
                         <p>20.5 L’ensemble des notifications et communications autorisées ou requises dans les présentes CGUS à destination des Membres de la Place de marché My-Alfred, seront effectuées électroniquement au travers d’emails, de notifications ou de services de messagerie. </p>
                     </Grid>
                 </Grid>
-                <Footer/>
+                {/* <Footer/>*/}
+
             </Layout>
         );
-        
+
     };
 }
 
