@@ -130,7 +130,7 @@ class services extends React.Component {
     }
 
     handleNext = () => {
-        if (this.state.activeStep<5) {
+        if (this.state.activeStep<4) {
             this.setState({activeStep: this.state.activeStep + 1});
         }
         // last page => post
@@ -230,8 +230,10 @@ class services extends React.Component {
                 return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
             case 4:
                 return <AssetsService data={shop} onChange={this.assetsChanged} />;
-            case 5:
+            { //TODO DISPLAY allavailabilities
+                /*case 5:
                 return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
+                */}
         }
     }
 
@@ -283,7 +285,7 @@ class services extends React.Component {
                           </Grid>
                           <Grid>
                               <Button variant="contained" color="secondary" className={classes.nextButton} onClick={this.handleNext} disabled={this.nextDisabled()}>
-                                  {this.state.activeStep === 5 ? 'Envoyer' : 'Suivant'}
+                                  {this.state.activeStep === 4 ? 'Envoyer' : 'Suivant'}
                               </Button>
                           </Grid>
                       </Grid>
