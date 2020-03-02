@@ -11,6 +11,7 @@ import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import styles from './ButtonSwitchStyle'
 import utils from 'util';
+const { inspect } = require('util')
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -77,41 +78,60 @@ const CssTextField = withStyles({
 class ButtonSwitch extends React.Component {
   constructor(props) {
     super(props);
-    console.log("Constuctor with props"+JSON.stringify(props.billings));
+    const newProps = Object.keys(props).reduce((object, key) => {
+      if (key !== 'theme' && key !== 'classes') {
+        object[key] = props[key]
+      }
+      return object
+      }, {})
     this.state = {
-      checked: this.props.checked || false,
-      billing: props.isOption ? this.props.billings[0] : null,
-      price:this.props.price||0,
+      checked: this.props.checked,
+      billing: props.billing ? props.billing : props.isOption ? this.props.billings[0]._id : null,
+      price:this.props.price,
       label: this.props.label,
     };
-    console.log("Set billing:"+JSON.stringify(this.state.billing));
+    
     this.onToggle = this.onToggle.bind(this);
     this.onChangeBilling = this.onChangeBilling.bind(this);
     this.onChangePrice = this.onChangePrice.bind(this);
     this.onChangeLabel = this.onChangeLabel.bind(this);
+  
+    this.fireChange = this.fireChange.bind(this);
   }
 
-  onToggle(){
-    this.setState({checked: !this.state.checked}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing, this.state.label ));
+  fireChange(id, checked, price, billing, label) {
+    if (this.props.onChange) {
+      this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing, this.state.label);
+    }
+  }
+
+  onToggle(value){
+    console.log("Toggled:"+value.target.name+value.target.value);
+    this.setState({checked: !this.state.checked}, () => this.fireChange());
   };
 
   onChangeBilling(event, index) {
-    let billing={_id:index.key, label:event.target.value};
-    this.setState({billing: billing}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing, this.state.label));
+    console.log("Received index:"+inspect(index)+", billings are"+JSON.stringify(this.props.billings));
+    console.log("Received value:"+inspect(event.target.value)+", billings are"+JSON.stringify(this.props.billings));
+    this.setState({billing: event.target.value}, () => this.fireChange());
   }
 
   onChangePrice(event) {
-    this.setState({price: parseInt(event.target.value)}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing, this.state.label));
+    this.setState({price: parseInt(event.target.value)}, () => this.fireChange());
   }
 
   onChangeLabel(event) {
-    this.setState({label: event.target.value}, () => this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing, this.state.label ));
+    this.setState({label: event.target.value}, () => this.fireChange());
   }
 
   render() {
     const {classes, isEditable, isOption, isPrice, billings} = this.props;
-    const {label} = this.state;
-    
+    const {label, checked} = this.state;
+  
+    if (checked) {
+      console.log("Render checked:"+JSON.stringify(this.state, null, 2));
+    } 
+
     return(
       <Grid className={classes.contentFiltre}>
         <Grid className={classes.responsiveIOSswitch} style={{width : this.props.width}}>
@@ -119,7 +139,7 @@ class ButtonSwitch extends React.Component {
             <IOSSwitch
               color="primary"
               type="checkbox"
-              checked={this.state.checked}
+              checked={checked}
               onChange={this.onToggle}
             />
           </Grid>
@@ -134,14 +154,14 @@ class ButtonSwitch extends React.Component {
         </Grid>
         { isPrice ?
           <Grid className={classes.responsiveIOSswitchContent}>
-            {this.state.checked === true ?
+            {checked === true ?
               <Grid style={{display:'flex'}}>
                 <CssTextField
                   value={this.state.price}
                   label={`Prix`}
                   type="number"
                   className={classes.textField}
-                  disabled={!this.state.checked}
+                  disabled={!checked}
                   onChange={this.onChangePrice}
                   InputProps={{
                     inputProps: {
@@ -156,15 +176,15 @@ class ButtonSwitch extends React.Component {
                       width: '100px',
                       fontSize: '0.8rem'
                     }}
-                    disabled={!this.state.checked}
+                    disabled={!checked}
                     margin="none"
                     onChange={this.onChangeBilling}
-                    value={this.state.billing.label}
-                    key={this.state.billing._id}
+                    value={this.state.billing}
                   >
                     {billings.map(option => {
+                      console.log( checked ? JSON.stringify(option): '');
                       return (
-                        <MenuItem key={option._id} value={option.label}>{option.label}</MenuItem>
+                        <MenuItem value={option._id}>{option.label}</MenuItem>
                       )
                     }
                     )

@@ -86,11 +86,11 @@ class CardPreview extends React.Component{
             {userState && isOwner ?
               <Grid>
                 <Grid className={classes.actionMediaEdit}>
-                  { false ? //FIX rétablir plus tard
-                  <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
-                    <EditIcon style={{color: '#4fbdd7'}}/>
-                  </IconButton> : true
-                  }
+                  <Link href={'/myShop/services?id=' + services._id}>
+                    <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
+                      <EditIcon style={{color: '#4fbdd7'}}/>
+                    </IconButton>
+                  </Link>
                 </Grid>
                 <Grid className={classes.actionMediaRemove}>
                   <IconButton aria-label="remove" className={classes.iconButtonStyle}>

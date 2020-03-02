@@ -27,33 +27,39 @@ class services extends React.Component {
         this.state={
             activeStep: 0,
             user_id: null,
+            exclude_services: [], // Services that must not be added because already exist in the shop ; only in add mode (i.e. props.service_user_id undefined)
             shop:{
                 service: null,
+                description:"", // Description de l'expertise
                 prestations:{},
                 equipments: [], // Ids des équipements
-                location: null, // Lieu(x) de prestation
+                location:null , // Lieu(x) de prestation
                 travel_tax: 0, // Frais de déplacement
                 pick_tax: 0, // Frais de livraison/enlèvmeent
-                diploma : [{name:"", year:"", picture:""}],
-                certification : [{name:"", year:"", picture:""}],
-                service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
+                minimum_basket: 0,
+                diplomaName: null,
+                diplomaYear: null,
+                diplomaPicture: null,
+                certificationName: null,
+                certificationYear: null,
+                certificationPicture: null,
+                deadline_value: 1, // Valeur de prévenance
+                deadline_unit: "jours", // Unité de prévenance (h:heures, j:jours, s:semaines)
                 level: '',
+                service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
                 perimeter: 1,
-                minimum_basket: 1,
                 availabilities: [],
-                deadline_value: '1',
-                deadline_unit: 'j',
             },
             title: "Précisez vos disponibilités si vous le souhaitez ! ",
             subtitle : "Si aucune disponibilité n’est précisée, vos services pourront être réservés à tout moment. Si vous précisez vos disponibilités, seules les plages horaires indiquées pourront être réservées. Vous pouvez appliquer une récurrence à vos disponibilités afin de gagner du temps ! Par exemple, si vous êtes disponible tous les lundis et mardis, vous pouvez cocher la case Récurrence, et cliquer sur Lu et Ma afin de répéter votre disponibilité sur une durée que vous pouvez définir."
         };
         this.onServiceChanged = this.onServiceChanged.bind(this);
         this.prestaSelected = this.prestaSelected.bind(this);
-        this.settingsChanged = this.settingsChanged.bind(this);
+        this.onSettingsChanged = this.onSettingsChanged.bind(this);
         this.preferencesChanged = this.preferencesChanged.bind(this);
-        this.assetsChanged = this.assetsChanged.bind(this);
-        this.availabilityCreated = this.availabilityCreated.bind(this);
-        this.availabilityDeleted = this.availabilityDeleted.bind(this);
+        this.onAssetsChanged = this.onAssetsChanged.bind(this);
+        this.onAvailabilityCreated = this.onAvailabilityCreated.bind(this);
+        this.onAvailabilityDeleted = this.onAvailabilityDeleted.bind(this);
         this.nextDisabled = this.nextDisabled.bind(this)
 
     }
@@ -79,19 +85,48 @@ class services extends React.Component {
               console.log(error);
           });
 
-        if (this.props.service_user_id) {
+
+        if (this.isNewService()) {
+          // Get shop to update exclusion services list
+          axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+          axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
+            .then( response  =>  {
+              let serviceUsers = response.data;
+              var services = serviceUsers.map(su => su.service._id);
+              console.log("Exclude services:"+JSON.stringify(services));
+              this.setState({exclude_services: services});
+            });
+        }
+
+        if (!this.isNewService()) {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
           .then(res => {
               let resultat = res.data;
+              console.log("Got resultat:"+JSON.stringify(resultat, null, 2));
               let shop=this.state.shop;
               shop.service = resultat.service._id;
-              shop.prestations = new Map(resultat.prestations.map(p => [p._id, p]));
+              shop.prestations={}
+              resultat.prestations.forEach( p => {
+                const presta={_id: p.prestation._id, label: p.prestation.label, price:p.price, billing: p.billing};
+                shop.prestations[p.prestation._id]=presta;
+              })
               shop.perimeter = resultat.perimeter;
-              shop.equipments = resultat.equipments;
-              shop.diplomaName = resultat.diplomaName;
-              shop.diplomaYear = resultat.diplomaYear;
-              shop.certificationName = resultat.certificationName;
-              shop.certificationYear = resultat.certificationYear;
+              shop.equipments = resultat.equipments.map( e => e._id);
+              shop.diplomaName = resultat.graduated ? resultat.diploma.name : '';
+              shop.diplomaYear = resultat.graduated ? resultat.diploma.year : '';
+              shop.diplomaPicture = resultat.graduated ? resultat.diploma.file|| null : '';
+              shop.certificationName = resultat.is_certified ? resultat.certification.name : '';
+              shop.certificationYear = resultat.is_certified ? resultat.certification.year : '';
+              shop.certificationPicture = resultat.is_certified ? resultat.certification.file||null : '';
+              shop.location = resultat.location;
+              shop.pick_tax = resultat.pick_tax;
+              shop.travel_tax = resultat.travel_tax;
+              shop.minimum_basket = resultat.minimum_basket;
+              shop.deadline_unit = resultat.deadline_before_booking ? resultat.deadline_before_booking.split(' ')[1] : '';
+              shop.deadline_value = resultat.deadline_before_booking ? resultat.deadline_before_booking.split(' ')[0] : '';
+              shop.description = resultat.description;
+              shop.level = resultat.level;
 
               this.setState({ shop: shop});
           })
@@ -115,15 +150,13 @@ class services extends React.Component {
         return false;
     }
 
-    availabilityCreated(avail) {
-        console.log("Availability created:"+JSON.stringify(avail, null, 2));
+    onAvailabilityCreated(avail) {
         let shop = this.state.shop;
         shop.availabilities.push(avail);
         this.setState({shop: shop});
     }
 
-    availabilityDeleted(avail_id) {
-        console.log("Availability id deleted:"+JSON.stringify(avail_id, null, 2));
+    onAvailabilityDeleted(avail_id) {
         let shop = this.state.shop;
         shop.availabilities=shop.availabilities.filter(avail => avail.ui_id !== avail_id);
         this.setState({shop: shop});
@@ -140,29 +173,48 @@ class services extends React.Component {
             cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
             cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
 
-
-            let new_serviceuser = this.state.service_user_id==null;
-            let full_url = new_serviceuser ? '/myAlfred/api/serviceUser/myShop/add' : `/myAlfred/api/serviceUser/edit/${this.props.service_user_id}`;
-            console.log(full_url);
+            console.log("Sending prestations:"+JSON.stringify(cloned_shop.prestations));
+            let full_url = this.isNewService() ? '/myAlfred/api/serviceUser/myShop/add' : `/myAlfred/api/serviceUser/edit/${this.props.service_user_id}`;
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-            (new_serviceuser ? axios.post : axios.put)(full_url, cloned_shop)
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+            (this.isNewService() ? axios.post : axios.put)(full_url, cloned_shop)
               .then(res => {
-                  toast.info("Service créée avec succès");
-                  Router.push(`/shop?id_alfred=${this.state.user_id}`);
+                console.log("After post:"+JSON.stringify(res.data, null, 2));
+
+                if(this.state.shop.diplomaPicture !== null) {
+                  var dpChanged = typeof(this.state.shop.diplomaPicture)=='object';
+                  const formData = new FormData();
+                  formData.append('name',this.state.shop.diplomaName);
+                  formData.append('year',this.state.shop.diplomaYear);
+                  formData.append('file_diploma', dpChanged ? this.state.shop.diplomaPicture : null);
+
+                  axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+res.data._id,formData)
+                    .then(() => { console.log("Diplôme ajouté"); })
+                    .catch(err => console.log(err))
+                }
+
+                if(this.state.shop.certificationPicture !== null) {
+                  var cpChanged = typeof(this.state.shop.certificationPicture)=='object';
+                  const formData = new FormData();
+                  formData.append('name',this.state.shop.certificationName);
+                  formData.append('year',this.state.shop.certificationYear);
+                  formData.append('file_certification', cpChanged ? this.state.shop.certificationPicture : null);
+
+                  axios.post(url+'myAlfred/api/serviceUser/addCertification/'+res.data._id,formData)
+                    .then(() => { console.log("Certification ajoutée"); })
+                    .catch(err => console.log(err))
+                }
+
+                toast.info("Service "+(this.isNewService() ? "créé" : "modifié")+" avec succès");
+                Router.push(`/shop?id_alfred=${this.state.user_id}`);
               })
-              .catch(err => {
-                  console.error(JSON.stringify(err, null, 2));
-              })
+              .catch(err => { console.error(JSON.stringify(err, null, 2)); })
 
         }
     };
 
     isRightPanelHidden() {
-        if(!this.isNewService()){
-            return this.state.activeStep === 0 || this.state.activeStep === 4;
-        }else{
-            return this.state.activeStep === 1 || this.state.activeStep === 5;
-        }
+      return this.state.activeStep === 0 || this.state.activeStep === 5;
     };
 
     handleBack = () => {
@@ -181,7 +233,8 @@ class services extends React.Component {
         this.setState({shop: shop});
     }
 
-    settingsChanged(location, travel_tax, pick_tax, selectedStuff) {
+    onSettingsChanged(location, travel_tax, pick_tax, selectedStuff) {
+        console.log("Services:onSettingsChanged:"+JSON.stringify(location), travel_tax, pick_tax, selectedStuff);
         let shop=this.state.shop;
         shop.location=location;
         shop.travel_tax=travel_tax;
@@ -201,38 +254,39 @@ class services extends React.Component {
         this.setState({ shop: shop });
     }
 
-    assetsChanged(state) {
+    onAssetsChanged(state) {
         let shop=this.state.shop;
 
         shop.description=state.description;
         shop.level=state.level;
         shop.diplomaName = state.diplomaName;
         shop.diplomaYear = state.diplomaYear;
+        shop.diplomaPicture = state.diplomaPicture;
         shop.certificationName = state.certificationName;
         shop.certificationYear = state.certificationYear;
+        shop.certificationPicture = state.certificationPicture;
 
         this.setState({shop: shop});
     }
 
     renderSwitch(stepIndex) {
         let shop=this.state.shop;
-        if(!this.isNewService()){
-            stepIndex = stepIndex + 1
-        }
+        let newService=this.isNewService();
+
         switch(stepIndex) {
             case 0:
-                return <SelectService onChange={this.onServiceChanged} service={shop.service} isId={false}/>;
+                return <SelectService onChange={this.onServiceChanged} service={shop.service} exclude={this.state.exclude_services} isId={false}/>;
             case 1:
-                return <SelectPrestation service={shop.service} prestations={!this.isNewService() ? shop.prestations : null} onChange={this.prestaSelected} />;
+                return <SelectPrestation service={shop.service} prestations={newService ? {} : shop.prestations} onChange={this.prestaSelected} />;
             case 2:
-                return <SettingService service={shop.service} onChange={this.settingsChanged} />;
+                return <SettingService service={shop.service} equipments={shop.equipments} location={shop.location} travel_tax={shop.travel_tax} pick_tax={shop.pick_tax} onChange={this.onSettingsChanged} />;
             case 3:
-                return <BookingPreference service={shop.service} onChange={this.preferencesChanged} />;
+                return <BookingPreference service={shop.service} onChange={this.preferencesChanged} perimeter={shop.perimeter} deadline_unit={shop.deadline_unit} deadline_value={shop.deadline_value} minimum_basket={shop.minimum_basket}/>;
             case 4:
-                return <AssetsService data={shop} onChange={this.assetsChanged} />;
+                return <AssetsService data={shop} onChange={this.onAssetsChanged} />;
             { //TODO DISPLAY allavailabilities
                 /*case 5:
-                return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
+                return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.onAvailabilityCreated} onDeleteAvailability={this.onAvailabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
                 */}
         }
     }
@@ -241,7 +295,7 @@ class services extends React.Component {
 
         const {classes} = this.props;
         let hideRightPanel = this.isRightPanelHidden();
-
+        console.log("State:"+JSON.stringify(this.state.shop, null, 2));
         return(
           <Grid>
               <Grid className={classes.mainHeader}>
@@ -262,7 +316,7 @@ class services extends React.Component {
                       { hideRightPanel ?
                         null:
                         <Grid className={classes.rightContentComponent}>
-                            <Grid className={classes.contentRight} style={{backgroundImage: `url(../../../static/assets/img/creaShop/bgImage/etape${this.state.activeStep + 1}.svg)`}}/>
+                            <Grid className={classes.contentRight} style={{backgroundImage: `url(/static/assets/img/creaShop/bgImage/etape${this.state.activeStep}.svg)`}}/>
                         </Grid>
                       }
                   </Grid>

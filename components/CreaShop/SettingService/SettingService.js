@@ -7,20 +7,22 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import axios from 'axios';
+import isEmpty from '../../../server/validation/is-empty';
 
 class SettingService extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      location: {},
+      location: props.location || {},
       service: null,
-      travel_tax: null,
-      pick_tax: null,
-      selectedEquipments: []
+      travel_tax: props.travel_tax || null,
+      pick_tax: props.pick_tax || null,
+      selectedEquipments: props.equipments || [] 
     };
     this.stateButton = this.stateButton.bind(this);
     this.onLocationChange = this.onLocationChange.bind(this);
-    this.onOptionChange = this.onOptionChange.bind(this);
+    this.onOptionChanged = this.onOptionChanged.bind(this);
     this.onEquipmentChecked = this.onEquipmentChecked.bind(this);
   }
 
@@ -31,19 +33,21 @@ class SettingService extends React.Component {
   }
 
   componentDidMount() {
-    console.log("Mounted:"+this.props.service);
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(`/myAlfred/api/service/${this.props.service}`)
       .then(response => {
         let service = response.data;
-        console.log("Got service:"+JSON.stringify(service, null, 2));
-        let location = {};
-        Object.keys(service.location).forEach (k => {
-          if (service.location[k]) location[k]=true;
-        });
+        let location = this.state.location;
+        console.log("Location:"+JSON.stringify(location));
+        if (isEmpty(location)) {
+          Object.keys(service.location).forEach (k => {
+            if (service.location[k]) location[k]=true;
+          })
+        }
         this.setState({
           service: service,
-          location: location
-        }, ()=>this.fireOnChange());
+          location: location,
+        }, () => this.fireOnChange());
       })
       .catch(error => {
         console.log(error);
@@ -51,12 +55,14 @@ class SettingService extends React.Component {
   }
 
   onLocationChange(loc_id, checked) {
+    console.log("onLocationChanged"+loc_id+","+checked);
     let loc = this.state.location;
     loc[loc_id]=checked;
     this.setState({location: loc}, () => this.fireOnChange());
   }
 
-  onOptionChange(opt_id, checked, price) {
+  onOptionChanged(opt_id, checked, price) {
+    console.log("onOptionChanged"+opt_id+","+checked+','+price);
     this.setState({[opt_id]: checked ? price : null}, () => this.fireOnChange());
   }
 
@@ -79,8 +85,9 @@ class SettingService extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {service, location} = this.state;
+    const {service, location, pick_tax, travel_tax} = this.state;
 
+    console.log("Render SettingsService, location is "+JSON.stringify(location, null, 2));
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -123,22 +130,22 @@ class SettingService extends React.Component {
                 <Grid style={{marginLeft : 15}}>
                   { "client" in this.state.location ?
                     <Grid>
-                      <ButtonSwitch checked={location.client} label={"A l'adresse de mon client"} id='client' onChange={this.onLocationChange} />
+                      <ButtonSwitch checked={location.client===true} label={"A l'adresse de mon client"} id='client' onChange={this.onLocationChange} />
                     </Grid>:null
                   }
                   { "alfred" in location ?
                   <Grid>
-                    <ButtonSwitch checked={location.alfred} label={"A mon adresse"} id='alfred' onChange={this.onLocationChange} />
+                    <ButtonSwitch checked={location.alfred===true} label={"A mon adresse"} id='alfred' onChange={this.onLocationChange} />
                   </Grid>:null
                   }
                   { "visio" in location ?
                   <Grid >
-                    <ButtonSwitch checked={location.visio} label={"En visioconférence"} id='visio' onChange={this.onLocationChange} />
+                    <ButtonSwitch checked={location.visio===true} label={"En visioconférence"} id='visio' onChange={this.onLocationChange} />
                   </Grid>:null
                   }
                   { "ext" in location ?
                   <Grid>
-                    <ButtonSwitch checked={location.ext} label={"En extérieur"} id='ext' onChange={this.onLocationChange} />
+                    <ButtonSwitch checked={location.ext===true} label={"En extérieur"} id='ext' onChange={this.onLocationChange} />
                   </Grid>:null
                   }
                 </Grid>
@@ -149,14 +156,14 @@ class SettingService extends React.Component {
                     <h3 className={classes.policySizeSubtitle}>Options</h3>
                   </Grid> : null
                 }
-                { service && service.travel_tax ?
+                { service && service.travel_tax ? // FIX : voir pourquoi le ButtonSwitch ne se checke pas
                   <Grid>
-                    <ButtonSwitch id='travel_tax' label={"Appliquer un forfait déplacement de"} isPrice={true} onChange={this.onOptionChange} />
+                    <ButtonSwitch ckecked={travel_tax!=0} price={travel_tax} id='travel_tax' label={"Appliquer un forfait déplacement de"} isPrice={true} onChange={this.onOptionChanged} />
                   </Grid>:null
                 }
                 { service && service.pick_tax ?
                   <Grid>
-                    <ButtonSwitch id='pick_tax' label={"Proposer un forfait retrait & livraison de"} isPrice={true} onChange={this.onOptionChange} />
+                    <ButtonSwitch checked={pick_tax!=0} price={pick_tax} id='pick_tax' label={"Proposer un forfait retrait & livraison de"} isPrice={true} onChange={this.onOptionChanged} />
                   </Grid>:null
                 }
               </Grid>
