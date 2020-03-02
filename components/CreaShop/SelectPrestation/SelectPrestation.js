@@ -123,7 +123,7 @@ class SelectPrestation extends React.Component {
                         let isEditable=parseInt(p._id)<0;
                         let presta=this.state.prestations[p._id];
                         return(
-                          <Grid key={p._id} item xl={4} lg={4} md={6} sm={12} xs={12}>
+                          <Grid key={p._id} item xl={6} lg={6} md={6} sm={12} xs={12}>
                             <ButtonSwitch isOption={true} isPrice={true} width={"100%"} label={p.label} id={p._id} checked={presta!=null}
                                           billings={p.billing} onChange={this.prestationSelected} isEditable={isEditable} price={presta?presta.price:0} billing={presta?presta.billing:null}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
