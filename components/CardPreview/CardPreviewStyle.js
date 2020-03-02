@@ -1,19 +1,7 @@
 export default theme => ({
   card: {
     width: '100%',
-    height: 450,
-    [theme.breakpoints.down('lg')]: {
-      height: 400
-    },
-    [theme.breakpoints.down('md')]: {
-      height: 400
-    },
-    [theme.breakpoints.down('sm')]: {
-      height: 500
-    },
-    [theme.breakpoints.down('xs')]: {
-     height: 350
-    }
+    height: 'auto',
 },
   expand: {
     transform: 'rotate(0deg)',
@@ -107,7 +95,7 @@ export default theme => ({
   cardContent:{
     display:'flex',
     flexDirection:'row',
-    height: 100
+    height: 85
   },
   cardContentPosition:{
     width: '50%',
@@ -133,6 +121,7 @@ export default theme => ({
   },
   noPadding:{
     padding:0
+
   },
   imageStyle: {
     width: 25,
@@ -143,9 +132,7 @@ export default theme => ({
     }
   },
   sizeText: {
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 'small'
-    }
+    fontSize: 'small'
   },
   responsiveListContainer:{
     marginTop: 10,

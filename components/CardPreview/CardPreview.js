@@ -134,33 +134,41 @@ class CardPreview extends React.Component{
             </Grid>
             <Grid className={classes.responsiveListContainer}>
               <List dense={this.state.dense} className={classes.flexPosition}>
-                <ListItem className={classes.noPadding}>
-                  <ListItemIcon className={classes.minWidth}>
-                    <img src={services.graduated && services.graduated !== "" && services.graduated !== null && services.graduated !== undefined ? '../../static/assets/img/iconCardAlfred/graduated.svg' : '../../static/assets/img/iconCardAlfred/no_graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
-                  </ListItemIcon>
-                  <ListItemText
-                    classes={{primary:classes.sizeText}}
-                    primary={"Diplômé(e)"}
-                  />
-                </ListItem>
-                <ListItem className={classes.noPadding} style={{marginLeft : 10}}>
-                  <ListItemIcon  className={classes.minWidth}>
-                    <img src={services.is_certified && services.is_certified !== "" && services.is_certified !== null && services.is_certified !== undefined ? '../../static/assets/img/iconCardAlfred/certificate.svg' : '../../static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
-                  </ListItemIcon>
-                  <ListItemText
-                    classes={{primary:classes.sizeText}}
-                    primary="Certifié(e)"
-                  />
-                </ListItem>
-                <ListItem className={classes.noPadding} style={{marginLeft : 10}}>
-                  <ListItemIcon className={classes.minWidth}>
-                    <img src={services.level && services.level !== "" && services.level !== null && services.level !== undefined ? '../../static/assets/img/iconCardAlfred/experience.svg' : '../../static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
-                  </ListItemIcon>
-                  <ListItemText
-                    classes={{primary:classes.sizeText}}
-                    primary="Expérimenté(e)"
-                  />
-                </ListItem>
+                <Grid style={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+                  <Grid>
+                    <ListItem className={classes.noPadding}>
+                      <ListItemIcon className={classes.minWidth}>
+                        <img src={services.graduated && services.graduated !== "" && services.graduated !== null && services.graduated !== undefined ? '../../static/assets/img/iconCardAlfred/graduated.svg' : '../../static/assets/img/iconCardAlfred/no_graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
+                      </ListItemIcon>
+                      <ListItemText
+                        classes={{primary:classes.sizeText}}
+                        primary={"Diplômé(e)"}
+                      />
+                    </ListItem>
+                  </Grid>
+                  <Grid>
+                    <ListItem className={classes.noPadding} style={{marginLeft : 5}}>
+                      <ListItemIcon  className={classes.minWidth}>
+                        <img src={services.is_certified && services.is_certified !== "" && services.is_certified !== null && services.is_certified !== undefined ? '../../static/assets/img/iconCardAlfred/certificate.svg' : '../../static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
+                      </ListItemIcon>
+                      <ListItemText
+                        classes={{primary:classes.sizeText}}
+                        primary="Certifié(e)"
+                      />
+                    </ListItem>
+                  </Grid>
+                  <Grid>
+                    <ListItem className={classes.noPadding} style={{marginLeft : 5}}>
+                      <ListItemIcon className={classes.minWidth}>
+                        <img src={services.level && services.level !== "" && services.level !== null && services.level !== undefined ? '../../static/assets/img/iconCardAlfred/experience.svg' : '../../static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
+                      </ListItemIcon>
+                      <ListItemText
+                        classes={{primary:classes.sizeText}}
+                        primary="Expérimenté(e)"
+                      />
+                    </ListItem>
+                  </Grid>
+                </Grid>
               </List>
             </Grid>
           </CardContent>
