@@ -86,7 +86,7 @@ class BookingPreference extends React.Component {
                     </TextField>
                   </Grid>
               </Grid>
-              <Grid>
+              <Grid style={{marginBottom: 10}}>
                 <Grid>
                   <h3 className={classes.policySizeSubtitle}>Quel est votre montant minimum de réservation ?</h3>
                 </Grid>
@@ -116,41 +116,43 @@ class BookingPreference extends React.Component {
                   />
                 </Grid>
                 </Grid>
-                <Grid>
+                <Grid style={{marginBottom: 100}}>
                   <Grid>
                     <Grid>
-                      <h3 className={classes.policySizeSubtitle}>Quel est votre périmètre d’intervention ?</h3>
-                    </Grid>
-                    <Grid>
-                      {false ?<Grid item xs={12}>
-                        <h3 style={{color: '#757575'}}>Ma ville de référence </h3>
-                      </Grid>:null}
-                      {false ?<Grid container className={classes.contentCityReferency}>
-                        <Grid item xs={8}>
-                          <p style={{paddingLeft:20}}>address (code postal)</p>
-                        </Grid>
-                        <Grid item xs={4} className={classes.buttonContent}>
-                          <Button onClick={()=>this.setState({clickAddress: true})} color={"secondary"} variant={"contained"} className={classes.styleButton}>Modifier</Button>
-                        </Grid>
-                      </Grid>:null }
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid className={classes.contentIntervention}>
-                  <Grid>
-                    <p className={classes.policySizeContent}>
-                      Définissez à présent le périmètre que vous souhaitez couvrir :
-                    </p>
-                  </Grid>
-                  <Grid className={classes.contentTextSize}>
-                    <Grid item className={classes.contentAddandRemoveKm}>
-                      <Grid className={classes.subContentAddanRemoveKm}>
-                      <Grid className={classes.buttonRemove} onClick={() => this.handleChange('perimeter', Math.max(this.state.perimeter-1, 0))} >-</Grid>
-                        <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{this.state.perimeter}</Grid>
-                      <Grid className={classes.buttonAdd} onClick={() => this.handleChange('perimeter', this.state.perimeter+1)} >+</Grid>
+                      <Grid>
+                        <h3 className={classes.policySizeSubtitle}>Quel est votre périmètre d’intervention ?</h3>
                       </Grid>
-                      <Grid className={classes.contentKilometers}>
-                        <p className={classes.policySizeContent}>kilomètre(s)</p>
+                      <Grid>
+                        {false ?<Grid item xs={12}>
+                          <h3 style={{color: '#757575'}}>Ma ville de référence </h3>
+                        </Grid>:null}
+                        {false ?<Grid container className={classes.contentCityReferency}>
+                          <Grid item xs={8}>
+                            <p style={{paddingLeft:20}}>address (code postal)</p>
+                          </Grid>
+                          <Grid item xs={4} className={classes.buttonContent}>
+                            <Button onClick={()=>this.setState({clickAddress: true})} color={"secondary"} variant={"contained"} className={classes.styleButton}>Modifier</Button>
+                          </Grid>
+                        </Grid>:null }
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid className={classes.contentIntervention}>
+                    <Grid>
+                      <p className={classes.policySizeContent}>
+                        Définissez à présent le périmètre que vous souhaitez couvrir :
+                      </p>
+                    </Grid>
+                    <Grid className={classes.contentTextSize}>
+                      <Grid item className={classes.contentAddandRemoveKm}>
+                        <Grid className={classes.subContentAddanRemoveKm}>
+                          <Grid className={classes.buttonRemove} onClick={() => this.handleChange('perimeter', Math.max(this.state.perimeter-1, 0))} >-</Grid>
+                          <Grid style={{display: 'inline-block', fontSize: 20, lineHeight: 2.8}}>{this.state.perimeter}</Grid>
+                          <Grid className={classes.buttonAdd} onClick={() => this.handleChange('perimeter', this.state.perimeter+1)} >+</Grid>
+                        </Grid>
+                        <Grid className={classes.contentKilometers}>
+                          <p className={classes.policySizeContent}>kilomètre(s)</p>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>

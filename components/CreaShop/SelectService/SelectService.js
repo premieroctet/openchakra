@@ -38,7 +38,7 @@ class SelectService extends React.Component {
             services.push(srv_opt);
             if (this.state.service==null && s.id==this.props.service) {
               console.log("Found");
-              this.setState({service: srv_opt}); 
+              this.setState({service: srv_opt});
             }
           });
         });
@@ -103,7 +103,7 @@ class SelectService extends React.Component {
                       getOptionLabel={option => option.name.split('/')[0]}
                       value={this.state.service}
                       renderInput={params => (
-                        <TextField {...params} label="Tapez votre service" variant="outlined" fullWidth />
+                        <TextField {...params} style={{zIndex: 0}} label="Tapez votre service" variant="outlined" fullWidth />
                       )}
                     />
                   </Grid>
