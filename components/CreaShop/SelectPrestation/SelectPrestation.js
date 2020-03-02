@@ -105,25 +105,31 @@ class SelectPrestation extends React.Component {
               </Grid>
 
               <Grid container style={{display: 'flex', marginTop: 30, marginBottom: 100}} spacing={2}>
+
                 {Object.keys(this.state.grouped).map((fltr, i) =>{
                   let prestas = this.state.grouped[fltr];
                   let isCustom = fltr==CUSTOM_PRESTATIONS_FLTR;
                   return (
-                    <Grid item xl={6} lg={12} xs={12} key={i}>
-                      <Grid item>
-                        {fltr==='Aucun' ? '' : fltr}
-                        {isCustom ? <Grid className={classes.buttonAdd} onClick={() => this.addCustomPrestation() } >+</Grid>:null }
+                    <Grid item key={i}>
+                      <Grid style={{width: '100%', backgroundColor: 'blue', height: 100}}>
+                        {isCustom ?
+                          <Grid className={classes.buttonAdd} onClick={() => this.addCustomPrestation() } >+</Grid>
+                          :null
+                        }
+                        <Grid item style={{backgroundColor: 'red'}}>
+                          {fltr==='Aucun' ? '' : fltr}
+                        </Grid>
                       </Grid>
                       {prestas.map((p, j) => {
                         let isEditable=parseInt(p._id)<0;
                         let presta=this.state.prestations[p._id];
                         return(
-                          <React.Fragment key={p._id}>
+                          <Grid item key={p._id} style={{backgroundColor: 'green'}}>
                             <ButtonSwitch isOption={true} isPrice={true} width={"100%"} label={p.label} id={p._id} checked={presta!=null}
                                           billings={p.billing} onChange={this.prestationSelected} isEditable={isEditable} price={presta?presta.price:0}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                             { isCustom ? <Grid className={classes.buttonRemove} onClick={() => this.removeCustomPrestation(p._id) } >-</Grid>:null }
-                          </React.Fragment>
+                          </Grid>
                       )
                       })}
                     </Grid>
