@@ -77,9 +77,11 @@ const ShopSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    picture: String
-
-
+    picture: String,
+    creation_date: {
+        type: Date,
+        default: Date.now
+    },
 });
 
 module.exports = Shop = mongoose.model('shop',ShopSchema);
