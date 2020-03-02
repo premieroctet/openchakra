@@ -19,6 +19,7 @@ import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWel
 import Footer from '../hoc/Layout/Footer/Footer';
 import {Helmet} from 'react-helmet';
 
+
 const { config } = require('../config/config');
 const url = config.apiUrl;
 
@@ -27,7 +28,7 @@ class shop extends React.Component {
         super(props);
         this.state = {
             alfred:[],
-            id: '',
+            id: props.aboutId,
             shop:[],
             languages:[],
             services: [],
@@ -36,7 +37,12 @@ class shop extends React.Component {
             isOwner:false,
             serviceUser:[],
             stateEditButtonFromAlfredCondtion: false,
-            newWelcomedMessage: ""
+            newWelcomedMessage: "",
+            have_picture: false,
+            avaterLetters: "",
+            open: false,
+            banner:[]
+
         };
         this.needRefresh = this.needRefresh.bind(this);
         this.getStatusEditButton = this.getStatusEditButton.bind(this);
@@ -47,17 +53,11 @@ class shop extends React.Component {
         return { aboutId: id_alfred }
     }
 
-    componentWillMount() {
-        this.setState({id: this.props.aboutId});
-    }
-
     componentDidMount() {
-        let self = this;
-
         axios.get(url+'myAlfred/api/users/current').then(res => {
             let user = res.data;
             if(user) {
-                self.setState({
+                this.setState({
                     userState: true,
                     userId: user._id,
                 })
@@ -69,18 +69,28 @@ class shop extends React.Component {
         axios.get(`${url}myAlfred/api/shop/alfred/${this.state.id}`)
           .then( response  =>  {
               let shop = response.data;
-              self.setState({
+              this.setState({
                   alfred: shop.alfred,
                   idAlfred: shop.alfred._id,
                   languages: shop.alfred.languages,
                   services: shop.services,
                   shop:shop,
-              });
-              self.checkIfOwner();
+              }, () => this.checkIfOwner());
+
           })
           .catch(function (error) {
               console.log(error);
           });
+
+        axios.get(url+'myAlfred/api/shopBanner/all')
+          .then(response => {
+              let banner = response.data;
+              this.setState({banner: banner})
+          })
+          .catch(function(error){
+              console.log(error);
+          });
+
     }
 
     checkIfOwner() {
@@ -99,15 +109,13 @@ class shop extends React.Component {
         this.setState({newWelcomedMessage: newMessage});
     };
 
-
     needRefresh(){
-        this.componentDidMount();
-    }
+        this.componentDidMount()
+    };
 
     render() {
         const {classes} = this.props;
-        console.log("State:"+JSON.stringify(this.state, null, 2));
-        let isOwner= this.state.idAlfred==this.state.userId;
+        let isOwner= this.state.idAlfred === this.state.userId;
 
         return (
           <Fragment>
@@ -116,7 +124,7 @@ class shop extends React.Component {
                       <title> Ma boutique de services sur My Alfred </title>
                       <meta property="description" content="Paramétrez les services que vous souhaitez proposer ! Vous pouvez en ajouter autant que vous le souhaitez : bricolage, jardinage, déménagement, décoration, évènementiel, quel sera votre prochain service ?" />
                   </Helmet>
-                  <AlfredBanner shop={this.state.id}/>
+                  <AlfredBanner alfred={this.state.alfred} shop={this.state.shop} banner={this.state.banner} isOwner={isOwner}  needRefresh={this.needRefresh}/>
                   {isOwner ?
                     <NavBarShop userId={this.state.userId}/>
                     : null
