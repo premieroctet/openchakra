@@ -79,12 +79,12 @@ class SelectService extends React.Component {
           <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{isId ? "Créez votre boutique de services" : this.props.service ? "Modifier un service" : "Ajouter un service"}</Typography>
+                <Typography className={classes.policySizeTitle}>{isId ? "Créez votre boutique de services" : this.props.service ? "Configurer un service" : "Ajouter un service"}</Typography>
               </Grid>
               <Grid>
                 <Grid>
                   <Grid>
-                    <h3 className={classes.policySizeSubtitle}>{this.props.service? "Ce service va être modifié" : "Quel service souhaitez-vous réaliser ?"} </h3>
+                    <h3 className={classes.policySizeSubtitle}>{this.props.service? "Ce service va être configuré" : "Quel service souhaitez-vous réaliser ?"} </h3>
                   </Grid>
                   { isId ?
                     <Grid className={classes.bottomSpacer}>

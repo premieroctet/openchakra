@@ -41,7 +41,7 @@ class SettingService extends React.Component {
         console.log("Location:"+JSON.stringify(location));
         if (isEmpty(location)) {
           Object.keys(service.location).forEach (k => {
-            if (service.location[k]) location[k]=false;
+            if (service.location[k]) location[k]=true;
           })
         }
         this.setState({
