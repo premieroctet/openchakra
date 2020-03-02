@@ -136,6 +136,7 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
                                         .then(shop => {
                                             shop.services.push(su._id);
                                             shop.save()
+                                            res.json(shop);
                                         });
                                     req.body.availabilities.forEach(availability => {
                                         console.log("Dispo:" + JSON.stringify(availability));
@@ -148,7 +149,6 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
                                         .catch(err => console.log("Error:" + JSON.stringify(err)))
                                 })
                                 .catch(err => console.log("Error:" + err))
-                            res.json(shop);
                         })
                 })
         })

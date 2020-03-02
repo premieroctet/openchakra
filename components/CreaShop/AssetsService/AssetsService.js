@@ -24,11 +24,11 @@ class AssetsService extends React.Component {
       description: props.data.description,
       diplomaYear: props.data.diplomaYear,
       diplomaName: props.data.diplomaName,
-      diplomaPicture: null,
+      diplomaPicture: props.data.diplomaPicture,
       certificationYear: props.data.certificationYear,
       certificationName: props.data.certificationName,
+      certificationPicture: props.data.certificationPicture,
       level: props.data.level,
-      certificationPicture: null,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -55,7 +55,7 @@ class AssetsService extends React.Component {
     const {classes} = this.props;
     const {dates} = this.state;
 
-    console.log("AssetsService:render:"+JSON.stringify(this.state));
+    console.log("AssetsService:render:state is :"+JSON.stringify(this.state, null, 2));
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -154,7 +154,7 @@ class AssetsService extends React.Component {
                           <Grid item xs={12}>
                             <Grid style={{display: 'flex', alignItems: 'baseline'}}>
                               <label style={{display: 'inline-block', marginTop: 10}} className="forminputs">
-                                Joindre mon diplôme
+                                Joindre un diplôme
                                 <input id="file"
                                        style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}}
                                        name="diploma" type="file"
@@ -164,7 +164,7 @@ class AssetsService extends React.Component {
                               </label>
                               {this.state.diplomaPicture !== null ?
                                 <Grid style={{display : 'flex', alignItems: 'center'}}>
-                                  <p>{this.state.diplomaPicture.name}</p>
+                                  <p>{typeof(this.state.diplomaPicture)=='string' ? 'Diplôme déjà joint' : this.state.diplomaPicture.name}</p>
                                   <CheckCircleIcon color={'primary'} style={{marginLeft: 10}}/>
                                   { false ?
                                   <IconButton  style={{marginLeft: 10}}>
@@ -190,44 +190,25 @@ class AssetsService extends React.Component {
                       <ExpansionPanelDetails>
                         <Grid container>
                           <Grid item xs={12}>
-                            <TextField
-                              value={this.state.certificationName}
-                              className={classes.inputDiplomaCertifResp}
-                              label="Nom du certificat"
-                              margin="dense"
-                              variant="outlined"
-                              onChange={ e => this.handleChange('certificationName', e.target.value) }
+                            <TextField value={this.state.certificationName} className={classes.inputDiplomaCertifResp} label="Nom du certificat" margin="dense" variant="outlined" onChange={ e => this.handleChange('certificationName', e.target.value) }
                             />
                           </Grid>
                           <Grid item xs={12}>
-                            <TextField
-                              value={this.state.certificationYear}
-                              className={classes.inputDiplomaCertifResp}
-                              label="Année d'obtention"
-                              margin="dense"
-                              variant="outlined"
-                              select
-                              onChange={e => this.handleChange('certificationYear', e.target.value) }
+                            <TextField value={this.state.certificationYear} className={classes.inputDiplomaCertifResp} label="Année d'obtention" margin="dense" variant="outlined" select onChange={e => this.handleChange('certificationYear', e.target.value) }
                             >
-                              {dates.map(date => {
-                                return <MenuItem key={date} value={date}>{date}</MenuItem>
-                              })}
+                              {dates.map(date => { return <MenuItem key={date} value={date}>{date}</MenuItem> })}
                             </TextField>
                           </Grid>
                           <Grid item xs={12}>
                             <Grid style={{display: 'flex', alignItems: 'baseline'}}>
                               <label style={{display: 'inline-block', marginTop: 15}} className="forminputs">
-                                Joindre ma certification
-                                <input id="file"
-                                       style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}}
-                                       name="certifaction" type="file"
-                                       className="form-control"
-                                       onChange={e => this.handleChange('certificationPicture', e.target.files[0])}
+                                Joindre une certification
+                                <input id="file" style={{width: '0.1px', height: '0.1px', opacity: 0, overflow: 'hidden'}} name="certifaction" type="file" className="form-control" onChange={e => this.handleChange('certificationPicture', e.target.files[0])}
                                 />
                               </label>
                               {this.state.certificationPicture !== null ?
                                 <Grid style={{display : 'flex', alignItems: 'center'}}>
-                                  <p>{this.state.certificationPicture.name}</p>
+                                  <p>{typeof(this.state.certificationPicture)=='string' ? 'Certification déjà jointe' : this.state.certificationPicture.name}</p>
                                   <CheckCircleIcon color={'primary'} style={{marginLeft: 10}}/>
                                   { false ?
                                   <IconButton  style={{marginLeft: 10}}>

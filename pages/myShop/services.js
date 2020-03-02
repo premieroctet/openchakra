@@ -115,8 +115,10 @@ class services extends React.Component {
               shop.equipments = resultat.equipments.map( e => e._id);
               shop.diplomaName = resultat.graduated ? resultat.diploma.name : '';
               shop.diplomaYear = resultat.graduated ? resultat.diploma.year : '';
+              shop.diplomaPicture = resultat.graduated ? resultat.diploma.file|| null : '';
               shop.certificationName = resultat.is_certified ? resultat.certification.name : '';
               shop.certificationYear = resultat.is_certified ? resultat.certification.year : '';
+              shop.certificationPicture = resultat.is_certified ? resultat.certification.file||null : '';
               shop.location = resultat.location;
               shop.pick_tax = resultat.pick_tax;
               shop.travel_tax = resultat.travel_tax;
@@ -179,19 +181,31 @@ class services extends React.Component {
               .then(res => {
                 console.log("After post:"+JSON.stringify(res.data, null, 2));
 
-                console.log("Diploma picture is null?"+(this.state.diplomaPicture==null));
-                if(true || this.state.diplomaPicture !== null) {
+                if(this.state.shop.diplomaPicture !== null) {
+                  var dpChanged = typeof(this.state.shop.diplomaPicture)=='object';
                   const formData = new FormData();
-                  formData.append('name',this.state.diplomaName);
-                  formData.append('year',this.state.diplomaYear);
-                  formData.append('file_diploma', this.state.diplomaPicture);
+                  formData.append('name',this.state.shop.diplomaName);
+                  formData.append('year',this.state.shop.diplomaYear);
+                  formData.append('file_diploma', dpChanged ? this.state.shop.diplomaPicture : null);
 
                   axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+res.data._id,formData)
                     .then(() => { console.log("Diplôme ajouté"); })
                     .catch(err => console.log(err))
                 }
 
-                toast.info("Service créé avec succès");
+                if(this.state.shop.certificationPicture !== null) {
+                  var cpChanged = typeof(this.state.shop.certificationPicture)=='object';
+                  const formData = new FormData();
+                  formData.append('name',this.state.shop.certificationName);
+                  formData.append('year',this.state.shop.certificationYear);
+                  formData.append('file_certification', cpChanged ? this.state.shop.certificationPicture : null);
+
+                  axios.post(url+'myAlfred/api/serviceUser/addCertification/'+res.data._id,formData)
+                    .then(() => { console.log("Certification ajoutée"); })
+                    .catch(err => console.log(err))
+                }
+
+                toast.info("Service "+(this.isNewService() ? "créé" : "modifié")+" avec succès");
                 Router.push(`/shop?id_alfred=${this.state.user_id}`);
               })
               .catch(err => { console.error(JSON.stringify(err, null, 2)); })

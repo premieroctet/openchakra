@@ -137,6 +137,32 @@ class creaShop extends React.Component {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.post(url+'myAlfred/api/shop/add', cloned_shop)
         .then(res => {
+          
+          var su_id = res.data.services[0]._id; 
+          if(cloned_shop.diplomaPicture !== null) {
+            var dpChanged = typeof(cloned_shop.diplomaPicture)=='object';
+            const formData = new FormData();
+            formData.append('name',cloned_shop.diplomaName);
+            formData.append('year',cloned_shop.diplomaYear);
+            formData.append('file_diploma', dpChanged ? cloned_shop.diplomaPicture : null);
+
+            axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+su_id,formData)
+              .then(() => { console.log("Diplôme ajouté"); })
+              .catch(err => console.log(err))
+          }
+
+          if(cloned_shop.certificationPicture !== null) {
+            var cpChanged = typeof(cloned_shop.certificationPicture)=='object';
+            const formData = new FormData();
+            formData.append('name',cloned_shop.certificationName);
+            formData.append('year',cloned_shop.certificationYear);
+            formData.append('file_certification', cpChanged ? cloned_shop.certificationPicture : null);
+
+            axios.post(url+'myAlfred/api/serviceUser/addCertification/'+su_id,formData)
+              .then(() => { console.log("Certification ajoutée"); })
+              .catch(err => console.log(err))
+          }
+
           toast.info("Boutique créée avec succès");
           Router.push(`/shop?id_alfred=${this.state.user_id}`);
       })

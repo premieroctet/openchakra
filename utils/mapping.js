@@ -16,11 +16,11 @@ const data2ServiceUser = (data, su) => {
   su.level = data.level;
   su.location = data.location;
 
-  su.diploma = {};
   su.graduated = false;
-  const diploma = 'file_diploma';
   // FIX : reinsert diploma & certification files
+  console.log("Diploma before:"+JSON.stringify(su.diploma));
   if ('diplomaName' in data && 'diplomaYear' in data) {
+    if (su.diploma==null) {su.diploma={}};
     su.diploma.name = data.diplomaName;
     su.diploma.year = data.diplomaYear;
     su.graduated = true;
@@ -28,12 +28,11 @@ const data2ServiceUser = (data, su) => {
   else {
     console.log('No file uploaded');
   }
+  console.log("Diploma after:"+JSON.stringify(su.diploma));
 
-  su.certification = {};
   su.is_certified = false;
-  const certification = 'file_certification';
-
   if ('certificationName' in data && 'certificationYear' in data) {
+    if (su.certification==null) {su.certification= {}};
     su.certification.name = data.certificationName;
     su.certification.year = data.certificationYear;
     su.is_certified = true;

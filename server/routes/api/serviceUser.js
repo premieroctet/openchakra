@@ -303,15 +303,14 @@ router.put('/editPrestation/:id', passport.authenticate('jwt', {
 // @Route POST /myAlfred/api/serviceUser/addDiploma/:id
 // Add a diploma for a service
 // @Access private
-router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', {
-    session: false
-}), (req, res) => {
+router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authenticate('jwt', { session: false }), (req, res) => {
     ServiceUser.findById(req.params.id)
         .then(serviceUser => {
             serviceUser.diploma.name = req.body.name;
             serviceUser.diploma.year = req.body.year;
             const diploma = 'file_diploma';
-            if (req.file !== undefined) {
+            console.log("Diploma req.file:"+JSON.stringify(req.file));
+            if (req.file !== undefined && req.file !== null) {
                 serviceUser.diploma.file = req.file.path;
             }
             serviceUser.graduated = true;
