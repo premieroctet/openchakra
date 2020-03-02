@@ -214,7 +214,7 @@ class services extends React.Component {
     };
 
     isRightPanelHidden() {
-      return this.state.activeStep === 0 || this.state.activeStep === 5;
+      return this.state.activeStep === 0 || this.state.activeStep === 1 ||this.state.activeStep === 5;
     };
 
     handleBack = () => {
