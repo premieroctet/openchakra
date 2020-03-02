@@ -36,15 +36,7 @@ const upload = multer({
 // @Route POST /myAlfred/api/serviceUser/add
 // Connect an alfred to a service
 // @Access private
-router.post('/add', upload.fields([{
-    name: 'diploma',
-    maxCount: 1
-}, {
-    name: 'certification',
-    maxCount: 1
-}]), passport.authenticate('jwt', {
-    session: false
-}), (req, res) => {
+router.post('/add', upload.fields([{ name: 'diploma', maxCount: 1 }, { name: 'certification', maxCount: 1 }]), passport.authenticate('jwt', { session: false }), (req, res) => {
 
     console.log("API received ServiceUser:" + JSON.stringify(req.body))
 
@@ -176,7 +168,7 @@ router.post('/myShop/add', upload.fields([{ name: 'file_diploma', maxCount: 1 },
                  Shop.findOne({ alfred: req.user.id })
                    .then(shop => {
                      shop.services.unshift(su._id);
-                     shop.save().then(newShop => res.json(newShop)).catch(err => console.log(err));
+                     shop.save().then(newShop => res.json(su)).catch(err => console.log(err));
                    })
                    .catch(error => console.log(error))
                 })

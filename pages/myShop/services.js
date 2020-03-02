@@ -177,12 +177,24 @@ class services extends React.Component {
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
             (this.isNewService() ? axios.post : axios.put)(full_url, cloned_shop)
               .then(res => {
-                  toast.info("Service créé avec succès");
-                  Router.push(`/shop?id_alfred=${this.state.user_id}`);
+                console.log("After post:"+JSON.stringify(res.data, null, 2));
+
+                console.log("Diploma picture is null?"+(this.state.diplomaPicture==null));
+                if(true || this.state.diplomaPicture !== null) {
+                  const formData = new FormData();
+                  formData.append('name',this.state.diplomaName);
+                  formData.append('year',this.state.diplomaYear);
+                  formData.append('file_diploma', this.state.diplomaPicture);
+
+                  axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+res.data._id,formData)
+                    .then(() => { console.log("Diplôme ajouté"); })
+                    .catch(err => console.log(err))
+                }
+
+                toast.info("Service créé avec succès");
+                Router.push(`/shop?id_alfred=${this.state.user_id}`);
               })
-              .catch(err => {
-                  console.error(JSON.stringify(err, null, 2));
-              })
+              .catch(err => { console.error(JSON.stringify(err, null, 2)); })
 
         }
     };
