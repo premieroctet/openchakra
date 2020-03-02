@@ -7,6 +7,8 @@ import { Typography } from '@material-ui/core';
 import axios from 'axios';
 import styles from '../componentStyle'
 import {CUSTOM_PRESTATIONS_FLTR, generate_id} from '../../../utils/consts';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -27,7 +29,6 @@ class SelectPrestation extends React.Component {
   }
 
   componentDidMount() {
-    console.log("est ce que je suis là");
     let billings=null;
     axios.get(`${url}myAlfred/api/billing/all`)
       .then(res => {
@@ -69,7 +70,6 @@ class SelectPrestation extends React.Component {
     let grouped=this.state.grouped;
     grouped[CUSTOM_PRESTATIONS_FLTR]=grouped[CUSTOM_PRESTATIONS_FLTR].filter(p => p._id !== presta_id);
     this.setState({grouped: grouped});
-    let prestations = this.state.prestations;
   }
 
   prestationSelected(prestaId, checked, price, billing, label){
@@ -82,60 +82,60 @@ class SelectPrestation extends React.Component {
       delete sel[prestaId];
     }
     this.setState({ prestations: sel});
-    console.log("Selection:"+JSON.stringify(sel));
     this.props.onChange(sel);
   }
 
   render() {
-    const {classes, prestations} = this.props;
-    console.log(prestations, "prestation ");
+    const {classes} = this.props;
 
     return(
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
-          <Grid style={{width: '100%'}}>
+          <Grid className={classes.maxWidth}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
                 <Typography className={classes.policySizeTitle}>{this.state.service_name} : indiquez vos prestations</Typography>
               </Grid>
             </Grid>
-            <Grid style={{marginTop: 30, width: '100%'}}>
+            <Grid className={classes.containerPrestas}>
               <Grid className={classes.bottomSpacer}>
                 <p className={classes.policySizeContent}>Quelles prestations souhaitez-vous réaliser ? Indiquez vos tarifs et votre unité de facturation. </p>
               </Grid>
-
-              <Grid container style={{display: 'flex', marginTop: 30, marginBottom: 100}} spacing={2}>
-
+              <Grid className={classes.buttonAddPrestas}>
+                <Grid item  className={classes.maxWidth}>
+                  <Grid style={{marginBottom: 10}}>
+                    <Fab variant="extended" color="primary" aria-label="add" onClick={() => this.addCustomPrestation() } className={classes.margin}>
+                      <AddIcon  className={classes.extendedIcon}/>
+                      Ajouter une prestation personnalisée
+                    </Fab>
+                  </Grid>
                 {Object.keys(this.state.grouped).map((fltr, i) =>{
                   let prestas = this.state.grouped[fltr];
-                  let isCustom = fltr==CUSTOM_PRESTATIONS_FLTR;
                   return (
-                    <Grid item key={i}>
-                      <Grid style={{width: '100%', backgroundColor: 'blue', height: 100}}>
-                        {isCustom ?
-                          <Grid className={classes.buttonAdd} onClick={() => this.addCustomPrestation() } >+</Grid>
-                          :null
-                        }
-                        <Grid item style={{backgroundColor: 'red'}}>
-                          {fltr==='Aucun' ? '' : fltr}
+                    <Grid className={classes.maxWidth}>
+                      <Grid className={classes.marginThirty}>
+                        <Grid item>
+                          {fltr === 'Aucun' ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}
                         </Grid>
                       </Grid>
+                      <Grid container spacing={2}>
                       {prestas.map((p, j) => {
                         let isEditable=parseInt(p._id)<0;
                         let presta=this.state.prestations[p._id];
                         return(
-                          <Grid item key={p._id} style={{backgroundColor: 'green'}}>
+                          <Grid key={p._id} item xl={4} lg={4} md={6} sm={12} xs={12}>
                             <ButtonSwitch isOption={true} isPrice={true} width={"100%"} label={p.label} id={p._id} checked={presta!=null}
                                           billings={p.billing} onChange={this.prestationSelected} isEditable={isEditable} price={presta?presta.price:0}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
-                            { isCustom ? <Grid className={classes.buttonRemove} onClick={() => this.removeCustomPrestation(p._id) } >-</Grid>:null }
                           </Grid>
-                      )
+                         )
                       })}
+                      </Grid>
                     </Grid>
                   )
                 })
                 }
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
