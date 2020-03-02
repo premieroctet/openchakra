@@ -47,7 +47,7 @@ class SettingService extends React.Component {
         this.setState({
           service: service,
           location: location,
-        });
+        }, () => this.fireOnChange());
       })
       .catch(error => {
         console.log(error);
