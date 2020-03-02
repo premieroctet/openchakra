@@ -159,36 +159,30 @@ router.post('/myShop/add', upload.fields([{ name: 'file_diploma', maxCount: 1 },
 
             // FIX : créer les prestations custom avant
             let newPrestations = Object.values(req.body.prestations).filter(p => p._id == null);
-            if (newPrestations.length > 0) {
-                console.log("newPrestations:" + JSON.stringify(newPrestations));
-                let newPrestaModels = newPrestations.map(p => Prestation({ ...p,
-                    service: req.body.service,
-                    billing: [p.billing],
-                    filter_presentation: null,
-                    private_alfred: req.user.id
-                }));
-                console.log("newPrestationsModel before save:" + JSON.stringify(newPrestaModels));
-                Prestation.collection.insert(newPrestaModels).then(result => {
+            let newPrestaModels = newPrestations.map(p => Prestation({ ...p, service: req.body.service, billing: [p.billing], filter_presentation: null, private_alfred: req.user.id }));
 
-                    console.log("newPrestationsModel after save:" + JSON.stringify(result));
-                    var newIds = result.insertedIds;
-
-                    // Update news prestations ids
-                    newPrestations.forEach((p, idx) => {
-                        p._id = newIds[idx];
-                    });
-                });
-            }
-
-            su.save().then((su) => {
-                    Shop.findOne({ alfred: req.user.id })
-                        .then(shop => {
-                            shop.services.unshift(su._id);
-                            shop.save().then(newShop => res.json(newShop)).catch(err => console.log(err));
-                        })
-                        .catch(error => console.log(error))
+            const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({ insertedIds: [] });
+            r.catch(error => console.log("Error insert many" + JSON.stringify(error, null, 2)))
+             .then(result => {
+               var newIds = result.insertedIds;
+               // Update news prestations ids
+               newPrestations.forEach((p, idx) => { p._id = newIds[idx]; console.log("Presta sauvegardée : " + JSON.stringify(p)); });
+               Object.values(req.body.prestations).forEach(presta => {
+                 const newp = { prestation: presta._id, billing: presta.billing, price: presta.price };
+                 su.prestations.push(newp);
+               });
+               
+               su.save().then((su) => {
+                 Shop.findOne({ alfred: req.user.id })
+                   .then(shop => {
+                     shop.services.unshift(su._id);
+                     shop.save().then(newShop => res.json(newShop)).catch(err => console.log(err));
+                   })
+                   .catch(error => console.log(error))
                 })
                 .catch(err => console.log(err));
+             })
+
 
         })
         .catch(error => {
@@ -211,38 +205,27 @@ router.put('/edit/:id', passport.authenticate('jwt', { session: false }), (req, 
         .then(serviceUser => {
             let data = req.body;
 
-            serviceUser = data2ServiceUser(data, serviceUser);
-            serviceUser.prestations = [];
+            su = data2ServiceUser(data, serviceUser);
+            su.prestations = [];
 
             // FIX : créer les prestations custom avant
             let newPrestations = Object.values(req.body.prestations).filter(p => p._id == null);
-            console.log("newPrestations:" + JSON.stringify(newPrestations));
             let newPrestaModels = newPrestations.map(p => Prestation({ ...p, service: req.body.service, billing: [p.billing], filter_presentation: null, private_alfred: req.user.id }));
-            console.log("newPrestationsModel before save:" + JSON.stringify(newPrestaModels));
 
-                    const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({ insertedIds: [] });
-                    r
-                        .catch(error => console.log("Error insert many" + JSON.stringify(error, null, 2)))
-                        .then(result => {
-
-                            console.log("newPrestationsModel after save:" + JSON.stringify(result));
-                            var newIds = result.insertedIds;
-
-                            // Update news prestations ids
-                            newPrestations.forEach((p, idx) => {
-                                p._id = newIds[idx];
-                                console.log("Presta sauvegardée : " + JSON.stringify(p));
-                            });
-
-                            Object.values(req.body.prestations).forEach(presta => {
-                                console.log("Ajout de presta: " + JSON.stringify(presta));
-                                const newp = { prestation: presta._id, billing: presta.billing, price: presta.price };
-                                serviceUser.prestations.push(newp);
-                                console.log("Presta ajoutée : " + JSON.stringify(newp));
-                            });
-
-                            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
-                         })
+            const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({ insertedIds: [] });
+            r.catch(error => console.log("Error insert many" + JSON.stringify(error, null, 2)))
+             .then(result => {
+               var newIds = result.insertedIds;
+               // Update news prestations ids
+               newPrestations.forEach((p, idx) => { p._id = newIds[idx]; console.log("Presta sauvegardée : " + JSON.stringify(p)); });
+               Object.values(req.body.prestations).forEach(presta => {
+                 const newp = { prestation: presta._id, billing: presta.billing, price: presta.price };
+                 su.prestations.push(newp);
+               });     
+               su.save().then((su) => {
+                  res.json(su); 
+                })
+             })
 
         })
         .catch(err => console.log(err))

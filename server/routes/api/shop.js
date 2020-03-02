@@ -108,9 +108,7 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
                     let newPrestaModels = newPrestations.map(p => Prestation({ ...p, service: req.body.service, billing: [p.billing], filter_presentation: null, private_alfred: req.user.id }));
                     console.log("newPrestationsModel before save:" + JSON.stringify(newPrestaModels));
 
-                    const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({
-                        insertedIds: []
-                    });
+                    const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({ insertedIds: [] });
                     r
                         .catch(error => console.log("Error insert many" + JSON.stringify(error, null, 2)))
                         .then(result => {
@@ -134,9 +132,7 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
                             su.save()
                                 .then(su => {
                                     console.log("Shop update " + shop._id);
-                                    Shop.findOne({
-                                            alfred: req.user.id
-                                        })
+                                    Shop.findOne({ alfred: req.user.id })
                                         .then(shop => {
                                             shop.services.push(su._id);
                                             shop.save()
@@ -147,13 +143,7 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
                                         a.user = req.user.id;
                                         a.save();
                                     });
-                                    User.findOneAndUpdate({
-                                            _id: req.user.id
-                                        }, {
-                                            is_alfred: true
-                                        }, {
-                                            new: true
-                                        })
+                                    User.findOneAndUpdate({ _id: req.user.id }, { is_alfred: true }, { new: true })
                                         .then(user => console.log("Updated alfred"))
                                         .catch(err => console.log("Error:" + JSON.stringify(err)))
                                 })
