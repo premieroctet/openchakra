@@ -332,9 +332,8 @@ class editPicture extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Grid style={{position: 'absolute', bottom: 0, width: '100%'}}>
-                    <Footer/>
-                </Grid>
+                {/* <Footer/>*/}
+
                 <Dialog
                     open={this.state.open}
                     onClose={()=>this.handleClose()}

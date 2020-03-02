@@ -10,7 +10,8 @@ const Search = () => (
       <div style={{backgroundImage:'url(../static/background/pagesina.svg)',backgroundPosition: 'center',backgroundRepeat: 'no-repeat',backgroundSize: 'cover', width: '100%', height: '100vh'}}></div>
       {/*<SubBar />
       <BodySearch />*/}
-      <Footer />
+      {/* <Footer/>*/}
+
     </Layout>
   </Fragment>
 );

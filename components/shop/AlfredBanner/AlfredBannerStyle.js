@@ -1,7 +1,9 @@
 export default theme => ({
   bannerContainer: {
     height: '55vh',
-    //backgroundImage: 'url("../../../static/photo-1538342014732-212dc8f76863-min.jpeg")',
+    backgroundPosition: "center",
+    backgroundSize:"cover",
+    backgroundRepeat:"no-repeat",
     marginTop: 56,
   },
   darkOverlay: {
@@ -62,5 +64,14 @@ export default theme => ({
   },
   textDispo: {
     color: 'white',
+  },
+  paper: {
+    position: 'absolute',
+    width: '80%',
+    backgroundColor: 'white',
+    border: '2px solid #000',
+    top: `50%`,
+    left: `50%`,
+    transform: `translate(-50%, -50%)`,
   },
 })

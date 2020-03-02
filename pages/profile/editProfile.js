@@ -495,7 +495,8 @@ class editProfile extends React.Component {
                     </Grid>
 
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
+
 
             </Fragment>
         );
