@@ -268,7 +268,7 @@ class editProfile extends React.Component {
                             </Grid>
                         </Grid>
                         <Grid item xs={9} style={{paddingLeft: 20}}>
-                            <h1 style={{color: 'dimgray',fontWeight: '100'}}>Modifier votre profil {user?user.avatar_letters:""}</h1>
+                            <h1 style={{color: 'dimgray',fontWeight: '100'}}>Modifier votre profil</h1>
                             <form>
 
                             <Grid container className={classes.responsiveContainer}>
