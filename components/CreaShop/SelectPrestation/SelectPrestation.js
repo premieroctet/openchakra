@@ -9,6 +9,7 @@ import styles from '../componentStyle'
 import {CUSTOM_PRESTATIONS_FLTR, generate_id} from '../../../utils/consts';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+const jwt = require('jsonwebtoken');
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -30,6 +31,13 @@ class SelectPrestation extends React.Component {
   }
 
   componentDidMount() {
+
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    // Get current alfred id
+    const token2 = localStorage.getItem('token').split(' ')[1];
+    const decode = jwt.decode(token2);
+    const alfred_id = decode.id;
+
     let billings=null;
     axios.get(`${url}myAlfred/api/billing/all`)
       .then(res => {
@@ -44,9 +52,11 @@ class SelectPrestation extends React.Component {
       .catch(error => console.log(error.response));
     axios.get(`${url}myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
-        let data = res.data;
-        let private_prestations = data.filter( p => p.private_alfred!=null);
-        let public_prestations = data.filter( p => p.private_alfred==null);
+        var prestations = res.data;
+        // Remove private belonging to other Alfreds
+        prestations = prestations.filter( p => p.private_alfred==null || p.private_alfred==alfred_id );
+        let private_prestations = prestations.filter( p => p.private_alfred!=null);
+        let public_prestations = prestations.filter( p => p.private_alfred==null);
         let grouped = _.mapValues(_.groupBy(public_prestations, 'filter_presentation.label'),
           clist => clist.map(public_prestations => _.omit(public_prestations, 'filter_presentation.label')));
         let presta_templates = private_prestations.map( p => { return {...p, billing: billings}});
@@ -86,7 +96,6 @@ class SelectPrestation extends React.Component {
   render() {
     // FIX : le billing par défaut n'ets pas sélectionné
     const {classes, prestations} = this.props;
-    console.log("Prestations:"+JSON.stringify(this.props.prestations, null, 2));
 
     return(
       <Grid className={classes.mainContainer}>
