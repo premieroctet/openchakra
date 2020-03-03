@@ -18,6 +18,7 @@ class SelectService extends React.Component {
     this.state = {
       service: null,
       services: [],
+      creation: this.props.creation,
     }
     this.onChange = this.onChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -68,10 +69,12 @@ class SelectService extends React.Component {
     this.setServices(event.target.value);
   }
 
-  render() {
-    const {classes, isId} = this.props;
+  isCreation() {
+    return this.state.creation;
+  }
 
-    console.log("Service:"+this.props.service);
+  render() {
+    const {classes, creationBoutique} = this.props;
 
     return(
       <Grid className={classes.mainContainer}>
@@ -79,14 +82,14 @@ class SelectService extends React.Component {
           <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{isId ? "Créez votre boutique de services" : this.props.service ? "Configurer un service" : "Ajouter un service"}</Typography>
+                <Typography className={classes.policySizeTitle}>{creationBoutique ? "Créez votre boutique de services" : this.isCreation() ? "Ajouter un service" : "Configurer un service"}</Typography>
               </Grid>
               <Grid>
                 <Grid>
                   <Grid>
-                    <h3 className={classes.policySizeSubtitle}>{this.props.service? "Ce service va être configuré" : "Quel service souhaitez-vous réaliser ?"} </h3>
+                    <h3 className={classes.policySizeSubtitle}>{this.isCreation() ? "Quel service souhaitez-vous réaliser ?" : "Ce service va être configuré"} </h3>
                   </Grid>
-                  { isId ?
+                  { creationBoutique ?
                     <Grid className={classes.bottomSpacer}>
                       <p className={classes.policySizeContent}>Identifiez maintenant le premier service que vous souhaitez configurer dans
                         votre boutique de services. Vous pourrez en ajouter autant que vous voulez dans
@@ -106,9 +109,9 @@ class SelectService extends React.Component {
                       groupBy={option => option.category}
                       getOptionLabel={option => option.name.split('/')[0]}
                       value={this.state.service}
-                      disabled={this.props.service!=null}
+                      disabled={!this.isCreation()}
                       renderInput={params => (
-                        <TextField {...params} label={this.props.service ? "" : "Tapez votre service"} variant="outlined" fullWidth />
+                        <TextField {...params} label={this.isCreation() ? "Tapez votre service" : ""} variant="outlined" fullWidth />
                       )}
                     />
                   </Grid>

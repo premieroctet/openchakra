@@ -27,6 +27,7 @@ class services extends React.Component {
         this.state={
             activeStep: 0,
             user_id: null,
+            creation: this.props.service_user_id==null,
             exclude_services: [], // Services that must not be added because already exist in the shop ; only in add mode (i.e. props.service_user_id undefined)
             shop:{
                 service: null,
@@ -275,7 +276,7 @@ class services extends React.Component {
 
         switch(stepIndex) {
             case 0:
-                return <SelectService onChange={this.onServiceChanged} service={shop.service} exclude={this.state.exclude_services} isId={false}/>;
+                return <SelectService onChange={this.onServiceChanged} creation={this.state.creation} service={shop.service} exclude={this.state.exclude_services} creationBoutique={false} />;
             case 1:
                 return <SelectPrestation service={shop.service} prestations={newService ? {} : shop.prestations} onChange={this.prestaSelected} />;
             case 2:

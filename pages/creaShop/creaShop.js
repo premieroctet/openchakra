@@ -264,7 +264,7 @@ class creaShop extends React.Component {
       case 0:
         return <CreaShopPresentation/>;
       case 1:
-        return <SelectService onChange={this.onServiceChanged} service={shop.service} />;
+        return <SelectService creation={true} onChange={this.onServiceChanged} service={shop.service} creationBoutique={true} />;
       case 2:
         return <SelectPrestation service={shop.service} prestations={shop.prestations} onChange={this.onPrestaChanged} />;
       case 3:
