@@ -6,11 +6,7 @@ export default theme=>({
       [theme.breakpoints.down('xs')]: {
         flexDirection: 'column',
         alignItems: 'center',
-        width: '100%'
     },
-      [theme.breakpoints.up('sm')]: {
-        width: '90%'
-      },
   },
   cardSkills:{
     display: 'flex',
