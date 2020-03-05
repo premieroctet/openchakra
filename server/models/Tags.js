@@ -11,8 +11,7 @@ const TagSchema = new Schema({
         required: true
     },
     description: {
-        type: String,
-
+        type: String
     }
 });
 

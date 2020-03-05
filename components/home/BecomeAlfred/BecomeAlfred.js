@@ -9,7 +9,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Button from '@material-ui/core/Button';
 import Link from 'next/link';
+import axios from 'axios';
+const jwt = require('jsonwebtoken');
 
+const {config} = require('../../../config/config');
+const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
@@ -105,11 +109,30 @@ class becomeAlfred extends React.Component{
 
   constructor(props) {
     super(props);
-
+    this.state = {
+      logged:false,
+      alfred: false,
+      userId: ""
+    }
   }
 
   componentDidMount() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.setState({logged:true});
+      const token2 = localStorage.getItem('token').split(' ')[1];
+      const decode = jwt.decode(token2);
+      this.setState({alfred: decode.is_alfred});
 
+      axios.defaults.headers.common['Authorization'] = token;
+      axios
+        .get(url+'myAlfred/api/users/current')
+        .then(res => {
+          let user = res.data;
+          this.setState({user:user, alfred:user.is_alfred, userId: user._id});
+        })
+        .catch(err => console.log(err))
+    }
   }
 
   render() {
@@ -136,7 +159,7 @@ class becomeAlfred extends React.Component{
                       répertoriez vos services, indiquez vos disponibilités,
                       vos tarifs et profitez d’un complément de revenu !
                     </Typography>
-                    <Link href={'/login'}>
+                    <Link href={this.state.logged && this.state.alfred ? `/shop?id_alfred=${this.state.userId}`  : this.state.logged && !this.state.alfred ? '/creaShop/creaShop' : '/signup'}>
                       <a style={{textDecoration:'none'}}>
                     <Button variant="contained" color={"primary"} className={classes.margin}>
                       Créer ma boutique
@@ -164,7 +187,7 @@ class becomeAlfred extends React.Component{
                         vos tarifs et profitez d’un complément de revenu !
                       </Typography>
                     </CardContent>
-                    <Link href={'/becomeAlfredForm'}>
+                    <Link href={this.state.logged && this.state.alfred ?  `/shop?id_alfred=${this.state.userId}`  : this.state.logged && !this.state.alfred ? '/creaShop/creaShop' : '/signup'}>
                       <a style={{textDecoration:'none'}}>
                         <Button variant="contained" color={"primary"} className={classes.margin}>
                           Créer ma boutique

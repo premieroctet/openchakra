@@ -128,11 +128,12 @@ class searchLogin extends React.Component {
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
-                this.setState({user:user});
-                this.setState({address: user.billing_address});
-                this.setState({addressSelected: user.billing_address});
-                this.setState({otherAddress: user.service_address});
-
+                this.setState({
+                  user:user,
+                  address: user.billing_address,
+                  addressSelected: user.billing_address,
+                  otherAddress: user.service_address,
+                });
             })
             .catch(err => {
                     console.log(err);
@@ -142,7 +143,6 @@ class searchLogin extends React.Component {
                     }
                 }
             );
-        setTimeout(()=>this.search(),1000)
     }
 
     onChange = e => {
@@ -153,8 +153,8 @@ class searchLogin extends React.Component {
         this.setState({[event.target.name]: event.target.checked} );
     };
 
-     async search() {
-         await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+     search() {
+         this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
              checkedParticulier:false,idAlfred:[]});
         const address = this.state.addressSelected;
         if(address.gps !== undefined){
@@ -241,12 +241,12 @@ class searchLogin extends React.Component {
         this.setState({click: true, click2:false});
     }
 
-   async searchWithWord(){
+   searchWithWord(){
          if(this.state.research !== ""){
-             await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],resultCategory:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+             this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],resultCategory:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
                  checkedParticulier:false,idAlfred:[],prestationOk:false,serviceOk:false,categoryOk:false});
              const obj = {label:this.state.research.trim()};
-             await axios.post(url+'myAlfred/api/prestation/all/search',obj)
+             axios.post(url+'myAlfred/api/prestation/all/search',obj)
                  .then(res => {
 
                      let prestations = res.data;
@@ -267,7 +267,7 @@ class searchLogin extends React.Component {
                      console.log(err)
                  });
 
-             await axios.post(url+'myAlfred/api/service/all/search',obj)
+             axios.post(url+'myAlfred/api/service/all/search',obj)
                  .then(res => {
                      let services = res.data;
                      this.setState({services: services});
@@ -284,7 +284,7 @@ class searchLogin extends React.Component {
                      console.log(err);
                  });
 
-             await axios.post(url + 'myAlfred/api/category/all/search', obj)
+             axios.post(url + 'myAlfred/api/category/all/search', obj)
                  .then(responseCategory => {
                      let category = responseCategory.data;
                      this.setState({resultCategory:category});
@@ -524,12 +524,11 @@ class searchLogin extends React.Component {
 
     }
 
-      async filter(){
+      filter(){
         if((this.state.serviceUser.length && this.state.finalServiceUser.length) || this.state.finalServiceUserCopy.length){
-          const serviceUser = await this.state.finalServiceUser;
+          const serviceUser = this.state.finalServiceUser;
 
             if(this.state.checkedB){
-                setTimeout(()=>{
                     const serviceFilter = [];
                     serviceUser.forEach(s => {
                         if(s.status === 'Pro'){
@@ -549,19 +548,16 @@ class searchLogin extends React.Component {
                             }
                         })
                     })
-                    },2000)
             } else {
-                setTimeout(()=>{if(this.state.filterDate){
+                if(this.state.filterDate){
                     this.filterDate()
                 } else {
                     this.searchWithWord()
-                }},2000)
+                }
             }
         } else {
-            const serviceUser =  await this.state.serviceUser;
+            const serviceUser =  this.state.serviceUser;
             if(this.state.checkedB){
-                setTimeout(()=>{
-
                     const serviceFilter = [];
                     serviceUser.forEach(s => {
                         if(s.status === 'Pro'){
@@ -582,26 +578,21 @@ class searchLogin extends React.Component {
                             }
                         })
                     })
-                },2000)
             } else {
-                setTimeout(() => {
                         if(this.state.filterDate){
                             this.filterDate()
                         } else {
                             this.search()
                         }
-                    },
-                    2000);
             }
         }
      }
 
-    async filterParticulier(){
+    filterParticulier(){
         if(this.state.serviceUser.length && this.state.finalServiceUser.length){
-            const serviceUser =  await this.state.finalServiceUser;
+            const serviceUser =  this.state.finalServiceUser;
             if(this.state.checkedParticulier){
                 this.setState({idAlfred:[]});
-                setTimeout(() => {
                     const serviceFilter = [];
                     serviceUser.forEach(s => {
                         if(s.status === 'Particulier'){
@@ -622,19 +613,17 @@ class searchLogin extends React.Component {
                             }
                         })
                     })
-                }, 2000)
             } else {
-                setTimeout(() => {if(this.state.filterDate){
+                if(this.state.filterDate){
                     this.filterDate()
                 } else {
                     this.searchWithWord()
-                }},2000);
+                }
 
             }
         } else {
-            const serviceUser =  await this.state.serviceUser;
+            const serviceUser =  this.state.serviceUser;
             if(this.state.checkedParticulier){
-                setTimeout(() => {
                     const serviceFilter = [];
                     serviceUser.forEach(s => {
                         if(s.status === 'Particulier'){
@@ -655,16 +644,12 @@ class searchLogin extends React.Component {
                             }
                         })
                     })
-                }, 2000)
             } else {
-                setTimeout(() => {
                     if(this.state.filterDate){
                         this.filterDate()
                     } else {
                         this.search()
                     }
-                },
-                    2000);
 
             }
         }
@@ -672,9 +657,9 @@ class searchLogin extends React.Component {
     }
 
 
-   async filterDate(){
+   filterDate(){
         if((this.state.serviceUser.length && this.state.finalServiceUser.length) || this.state.finalServiceUserCopy.length){
-            await this.setState({finalServiceUser:this.state.finalServiceUserCopy});
+            this.setState({finalServiceUser:this.state.finalServiceUserCopy});
             const serviceUser = this.state.finalServiceUser;
             const begin = this.state.startDate;
             const end = this.state.endDate;
@@ -715,7 +700,7 @@ class searchLogin extends React.Component {
                 })
                 .catch(err => console.log(err));
         } else {
-            await this.setState({serviceUser:this.state.serviceUserCopy});
+            this.setState({serviceUser:this.state.serviceUserCopy});
             const serviceUser = this.state.serviceUser;
             const begin = this.state.startDate;
             const end = this.state.endDate;

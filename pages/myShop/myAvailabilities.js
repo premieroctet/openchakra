@@ -9,6 +9,10 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Schedule from '../../components/Schedule/Schedule';
 import { toast } from 'react-toastify';
+import {Helmet} from 'react-helmet';
+import AlfredBanner from '../../components/shop/AlfredBanner/AlfredBanner';
+import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+
 
 moment.locale('fr');
 
@@ -110,12 +114,64 @@ class myAvailabilities extends React.Component {
         super(props);
         this.state = {
             user: {},
-            shop: {},
             availabilities: [],
+            alfred:[],
+            id: props.aboutId,
+            shop:[],
             services: [],
+            userState: false,
+            userId: '',
+            isOwner:false,
+            have_picture: false,
+            banner:[],
         };
         this.availabilityCreated = this.availabilityCreated.bind(this);
         this.availabilityDelete = this.availabilityDelete.bind(this);
+        this.needRefresh = this.needRefresh.bind(this);
+    }
+
+    static getInitialProps ({ query: { id_alfred } }) {
+      return { aboutId: id_alfred }
+    }
+
+    componentDidMount() {
+
+      axios.get(url+'myAlfred/api/users/current').then(res => {
+        let user = res.data;
+        if(user) {
+          this.setState({
+            userState: true,
+            userId: user._id,
+          })
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
+
+      axios.get(`${url}myAlfred/api/shop/alfred/${this.state.id}`)
+        .then( response  =>  {
+          let shop = response.data;
+          this.setState({
+            alfred: shop.alfred,
+            shop:shop,
+            services: shop.services,
+            idAlfred: shop.alfred._id,
+          }, () => this.checkIfOwner());
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      axios.get(url+'myAlfred/api/shopBanner/all')
+        .then(response => {
+          let banner = response.data;
+          this.setState({banner: banner})
+        })
+        .catch(function(error){
+          console.log(error);
+        });
+
     }
 
     availabilityCreated(avail) {
@@ -153,141 +209,45 @@ class myAvailabilities extends React.Component {
           })
     }
 
-
-    componentDidMount() {
-
-        localStorage.setItem('path',Router.pathname);
-
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-
-        axios
-          .get(url+'myAlfred/api/users/current')
-          .then(res => {
-              let user = res.data;
-              if(user.is_alfred === false) {
-                  Router.push('/becomeAlfredForm');
-              } else {
-                  this.setState({user:user});
-                  axios
-                    .get(url+'myAlfred/api/shop/currentAlfred')
-                    .then(res => {
-                        let shop = res.data;
-                        this.setState({shop:shop,booking_request: shop.booking_request, no_booking_request:shop.no_booking_request,my_alfred_conditions: shop.my_alfred_conditions,
-                            profile_picture: shop.profile_picture, identity_card: shop.identity_card, recommandations: shop.recommandations,
-                            flexible_cancel: shop.flexible_cancel, moderate_cancel: shop.moderate_cancel, strict_cancel: shop.strict_cancel,
-                            welcome_message: shop.welcome_message});
-                    })
-                    .catch(err =>
-                      console.log(err)
-                    );
-
-                  axios.get(url+'myAlfred/api/availability/currentAlfred')
-                    .then(res => {
-                        let availabilities = res.data;
-                        this.setState({availabilities: availabilities});
-
-                    })
-                    .catch(err => console.log(err));
-
-                   axios
-                        .get(url+'myAlfred/api/serviceUser/currentAlfred')
-                        .then(res => {
-                            //let services = [...new Set(res.data.map(d => [d['service']['label'],d['service'][_id']]))];
-                            let mapServices = new Map();
-                            res.data.forEach( d => mapServices.set(d['service']['label'], d['service']['_id']));
-                            let services = [...mapServices.entries()];
-                            this.setState({services:services});
-                            //this.setState({serviceUser: serviceUser});
-                        })
-                        .catch(err =>
-                            console.log(err)
-                        );
-
-
-              }
-          })
-          .catch(err => {
-                console.log(err);
-                if(err.response.status === 401 || err.response.status === 403) {
-                    localStorage.removeItem('token');
-                    Router.push({pathname: '/login'})
-                }
-            }
-          );
+    checkIfOwner() {
+      console.log(this.state.services, this.state.userId)
+      Object.keys(this.state.services).map( result =>{
+        if(this.state.services[result].user === this.state.userId){
+          this.setState({isOwner: true});
+        }
+      });
     }
 
-    handleChange = name => event => {
-        this.setState({ [name]: event.target.checked });
-    };
-
-    handleChange2 = e => {
-        this.setState({ [e.target.name]: e.target.value });
+    needRefresh(){
+      this.componentDidMount()
     };
 
     render() {
         const {classes} = this.props;
-        const {user} = this.state;
+        let isOwner= this.state.idAlfred === this.state.userId;
 
-        return (
+
+      return (
           <Fragment>
+          <Helmet>
+              <title> Mes disponibilités - My Alfred </title>
+              <meta property="description" content="Indiquez vos dispoinibilités pour proposer vos services entre particuliers ! Des services à proximité, rémunérés et assurés ! Vos disponibilités permettront à vos futurs clients de vous réserver directement, au créneau souhaité !" />
+            </Helmet>
               <Layout>
-                  <Grid container className={classes.bigContainer}>
-                      <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
-                          <Grid item xs={1} className={classes.shopbar}/>
-                          <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                              <Link href={'/myShop/services'}>
-                                  <a style={{textDecoration:'none'}}>
-                                      <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
-                                  </a>
-                              </Link>
-                          </Grid>
-                          <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                              <Link href={'/reservations/messages'}>
-                                  <a style={{textDecoration:'none'}}>
-                                      <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
-                                  </a>
-                              </Link>
-                          </Grid>
-                          <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                              <Link href={'/reservations/allReservations'}>
-                                  <a style={{textDecoration:'none'}}>
-                                      <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
-                                  </a>
-                              </Link>
-                          </Grid>
-                          <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
-                              <Link href={'/myShop/myAvailabilities'}>
-                                  <a style={{textDecoration:'none'}}>
-                                      <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
-                                  </a>
-                              </Link>
-                          </Grid>
-                          <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                              <Link href={'/performances/revenus'}>
-                                  <a style={{textDecoration:'none'}}>
-                                      <p style={{color: "white",cursor: 'pointer'}}>Performance</p>
-                                  </a>
-                              </Link>
-                          </Grid>
-                      </Grid>
-                      <Grid className={classes.respbg} container style={{backgroundImage: `url('../../${this.state.shop.picture}')`,backgroundPosition: "center", height:'42vh',
-                          backgroundSize:"cover", backgroundRepeat:"no-repeat",justifyContent:"center",alignItems:"center"}}>
-                      </Grid>
-                      <Grid className={classes.respbg} item style={{backgroundColor: 'rgba(0,0,0,0.25)',position:"absolute" ,width:'100%',zIndex:500,height:'42vh',top:117}}>
-                      </Grid>
-                      <Grid item>
-                          <img src={'../'+user.picture} className={classes.resppic} style={{borderRadius:'50%',position:'absolute',top:'27%',left:'0%',right:'0%',margin: 'auto',zIndex:501, minWidth: '137px', maxWidth: '137px', maxHeight: '137px', minHeight: '137px'}} alt={'picture'}/>
-                      </Grid>
-                  </Grid>
+                <AlfredBanner alfred={this.state.alfred} shop={this.state.shop} banner={this.state.banner} isOwner={isOwner}  needRefresh={this.needRefresh}/>
+                {isOwner ?
+                  <NavBarShop userId={this.state.userId}/>
+                  : null
+                }
                   <Grid container style={{padding:'2%'}} className={classes.containercalendar}>
                       <Grid style={{width:'90%'}}>
-                          <Schedule availabilities={this.state.availabilities} services={this.state.services} cbAvailabilityCreated={this.availabilityCreated} cbAvailabilityDelete={this.availabilityDelete} />
+                          <Schedule availabilities={this.state.availabilities} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} />
                       </Grid>
                   </Grid>
               </Layout>
               <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
                   <Grid item xs={2} style={{textAlign:"center"}}>
-                      <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
+                      <Link href={`/shop?id_alfred=${this.state.userId}`}><a style={{textDecoration:'none'}}>
                           <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}/></p></a>
                       </Link>
                   </Grid>
@@ -312,7 +272,8 @@ class myAvailabilities extends React.Component {
                       </a></Link>
                   </Grid>
               </Grid>
-              <Footer/>
+            {/* <Footer/>*/}
+
           </Fragment>
         );
     };

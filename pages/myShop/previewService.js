@@ -211,7 +211,7 @@ class services extends React.Component {
             .then(res => {
                 let availability = res.data;
                 this.setState({availability: availability});
-                
+
                 availability.forEach(d => {
                     this.setState({monday: d.monday});
                     this.setState({tuesday: d.tuesday});
@@ -221,18 +221,18 @@ class services extends React.Component {
                     this.setState({saturday: d.saturday});
                     this.setState({sunday: d.sunday});
                 });
-                
+
                 /*Lundi*/
                 this.state.monday.event.forEach(i  => {
                         i.services.forEach(d =>{
                             if(d.value === id){
-                                this.setState({monday_event: [...this.state.monday_event, i]})  
+                                this.setState({monday_event: [...this.state.monday_event, i]})
                             }
                         })
                 });
                 this.state.monday.event.forEach(e => {
                     if(e.all_services === true){
-                       this.setState({monday_event: [...this.state.monday_event, e]}) 
+                       this.setState({monday_event: [...this.state.monday_event, e]})
                     }
                 });
 
@@ -240,13 +240,13 @@ class services extends React.Component {
                 this.state.tuesday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({tuesday_event: [...this.state.tuesday_event, i]})  
+                            this.setState({tuesday_event: [...this.state.tuesday_event, i]})
                         }
                     })
                 })
                 this.state.tuesday.event.forEach(e => {
                     if(e.all_services === true){
-                    this.setState({tuesday_event: [...this.state.tuesday_event, e]}) 
+                    this.setState({tuesday_event: [...this.state.tuesday_event, e]})
                     }
                 })
 
@@ -254,13 +254,13 @@ class services extends React.Component {
                 this.state.wednesday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({wednesday_event: [...this.state.wednesday_event, i]})  
+                            this.setState({wednesday_event: [...this.state.wednesday_event, i]})
                         }
                     })
                 })
                 this.state.wednesday.event.forEach(e => {
                     if(e.all_services === true){
-                    this.setState({wednesday_event: [...this.state.wednesday_event, e]}) 
+                    this.setState({wednesday_event: [...this.state.wednesday_event, e]})
                     }
                 })
 
@@ -268,13 +268,13 @@ class services extends React.Component {
                 this.state.thursday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({thursday_event: [...this.state.thursday_event, i]})  
+                            this.setState({thursday_event: [...this.state.thursday_event, i]})
                         }
                     })
                 })
                 this.state.thursday.event.forEach(e => {
                     if(e.all_services === true){
-                    this.setState({thursday_event: [...this.state.thursday_event, e]}) 
+                    this.setState({thursday_event: [...this.state.thursday_event, e]})
                     }
                 })
 
@@ -282,13 +282,13 @@ class services extends React.Component {
                 this.state.friday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({friday_event: [...this.state.friday_event, i]})  
+                            this.setState({friday_event: [...this.state.friday_event, i]})
                         }
                     })
                 })
                 this.state.friday.event.forEach(e => {
                     if(e.all_services === true){
-                    this.setState({friday_event: [...this.state.friday_event, e]}) 
+                    this.setState({friday_event: [...this.state.friday_event, e]})
                     }
                 })
 
@@ -296,7 +296,7 @@ class services extends React.Component {
                 this.state.saturday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({saturday_event: [...this.state.saturday_event, i]})  
+                            this.setState({saturday_event: [...this.state.saturday_event, i]})
                         }
                     })
                 })
@@ -310,13 +310,13 @@ class services extends React.Component {
                 this.state.sunday.event.forEach(i  => {
                     i.services.forEach(d =>{
                         if(d.value === id){
-                            this.setState({sunday_event: [...this.state.sunday_event, i]})  
+                            this.setState({sunday_event: [...this.state.sunday_event, i]})
                         }
                     })
                 })
                 this.state.sunday.event.forEach(e => {
                     if(e.all_services === true){
-                    this.setState({sunday_event: [...this.state.sunday_event, e]}) 
+                    this.setState({sunday_event: [...this.state.sunday_event, e]})
                     }
                 })
 
@@ -416,7 +416,7 @@ class services extends React.Component {
 
                         {/*Le Contenu */}
                         <Grid container>
-                        
+
                         {/*Contenu à Gauche*/}
 
                             {/*Petite Description*/}
@@ -508,7 +508,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Lundi  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.monday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -552,7 +552,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Mardi  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.tuesday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -596,7 +596,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Mercredi  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.wednesday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -640,7 +640,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Jeudi  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.thursday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -684,7 +684,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Vendredi  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.friday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -728,7 +728,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Samedi  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.saturday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -844,7 +844,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Lundi  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.monday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -880,7 +880,7 @@ class services extends React.Component {
                                                                         </Typography>
                                                                     </Grid>
                                                                     :
-                                                                   <div></div> 
+                                                                   <div></div>
                                                                 }
                                                                 {e.tuesday.event.length !== 0 ?
 
@@ -888,7 +888,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Mardi  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.tuesday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -932,7 +932,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Mercredi  </div>
-                                                                        
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.wednesday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -976,7 +976,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Jeudi  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.thursday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -1020,7 +1020,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Vendredi  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.friday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -1064,7 +1064,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Samedi  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.saturday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -1108,7 +1108,7 @@ class services extends React.Component {
 
                                                                         <Typography>
                                                                             <div className={classes.dispoheader}>Dimanche  </div>
-                                                                            
+
                                                                             <div className={classes.dispocardin} >
                                                                                 {e.sunday.event.map(f=> {
                                                                                     if (f.all_services === true) {
@@ -1210,7 +1210,7 @@ class services extends React.Component {
                                                 </Grid>
                                             </Grid>
                                         </Grid>
-                                        
+
                                     </Grid>
                                 </div>
 
@@ -1239,36 +1239,36 @@ class services extends React.Component {
                                     </Grid>
                                 </div>
 
-                               
-                                        
-                                            
 
-                                   
+
+
+
+
                             </Grid>
 
                             {/*Contenu à droite*/}
                             <Grid item xs={12} md={5} style={{marginTop: '2%', marginBottom: '5%'}}>
                                 <Grid container style={{border: 'thin solid #dedede',maxWidth: '90%',margin:'auto', padding:'2%', position: 'sticky', top: 100,}}>
                                     <Grid item xs={12}><Typography style={{marginTop: '4%' ,marginBottom: '2%',marginLeft: '4%' ,color: 'black', fontSize:'1.2rem'}}>Type de prestation</Typography></Grid>
-                                    
+
                                     {uniqFilter.map(z =>{
                                     return (
                                     <React.Fragment>
                                     <Grid item xs={12} style={{marginBottom: '2%', marginTop: '2%'}}>
                                         <Typography style={{marginLeft: '3%' , fontSize:'1.1rem', fontWeight: '5e00', color:'white', minHeight:'40px', padding:'10px', backgroundColor:'gray', borderRadius:5,}}>
                                         {this.state[z.label] ?
-                                        <React.Fragment> 
+                                        <React.Fragment>
                                             <span onClick={()=>{this.handleclick1(z.label)}} style={{cursor:'pointer'}}>
                                                 <img style={{marginRight: '2%'}} width="13px" src="../../static/stars/arrowDown.png"/>
                                                 {z.label}
                                             </span>
-                                        </React.Fragment> : 
-                                        <React.Fragment> 
+                                        </React.Fragment> :
+                                        <React.Fragment>
                                             <span onClick={()=>{this.handleclick2(z.label)}} style={{cursor:'pointer'}}>
                                                 <img style={{marginRight: '2%',transform: 'rotate(-90deg)'}} width="13px" src="../../static/stars/arrowDown.png"/>
                                                 {z.label}
                                             </span>
-                                        </React.Fragment>}                                         
+                                        </React.Fragment>}
                                         </Typography>
                                     </Grid>
 
@@ -1279,11 +1279,11 @@ class services extends React.Component {
                                     else{
                                         return(
 
-                                        
+
                                     <React.Fragment>
                                     <Grid item xs={12} style={{marginTop: '2%', marginBottom: '2%', paddingLeft:'4%',}}>
                                         <Grid container>
-                                            
+
                                             <Grid item xs={12} >
                                                 <Typography>
 
@@ -1305,7 +1305,7 @@ class services extends React.Component {
                                                 </Typography>
                                             </Grid>
 
-                                            
+
                                         </Grid>
                                     </Grid>
                                     </React.Fragment>)}})}
@@ -1316,19 +1316,19 @@ class services extends React.Component {
                                     <Grid item xs={12} style={{marginBottom: '2%'}}>
                                         <Typography style={{marginLeft: '3%' , fontSize:'1.1rem', fontWeight: '5e00', color:'white', minHeight:'40px', padding:'10px', backgroundColor:'gray', borderRadius:5,}}>
                                         {dropoption ?
-                                        <React.Fragment> 
+                                        <React.Fragment>
                                             <span onClick={this.handleclickoption1} style={{cursor:'pointer'}}>
                                                 <img width="13px" style={{marginRight: '2%'}} src="../../static/stars/arrowDown.png"/>
                                                 Option/Supplément
                                             </span>
-                                        </React.Fragment> : 
+                                        </React.Fragment> :
                                         <React.Fragment>
                                             <span onClick={this.handleclickoption2} style={{cursor:'pointer'}}>
                                                 <img style={{marginRight: '2%',transform: 'rotate(-90deg)'}} width="13px" src="../../static/stars/arrowDown.png"/>
                                                 Option/Supplément
                                             </span>
-                                        </React.Fragment>}                                         
-                                            
+                                        </React.Fragment>}
+
                                         </Typography>
                                     </Grid> : null}
 
@@ -1351,12 +1351,12 @@ class services extends React.Component {
                                                             {options.price}€
                                                         </Grid>
                                                         <Grid item xs={3} style={{fontSize:"1rem", textAlign:'left', paddingLeft:'10px', marginTop:'3px'}}>
-                                                            {options.unity} <Tooltip title={options.option_extra}><span style={{color: '#07bce5', cursor: 'pointer'}}>?</span></Tooltip>   
+                                                            {options.unity} <Tooltip title={options.option_extra}><span style={{color: '#07bce5', cursor: 'pointer'}}>?</span></Tooltip>
                                                         </Grid>
                                                     </Grid>
                                                 </Typography>
                                             </Grid>
-                                            
+
                                         </Grid>
                                     </Grid>
                                     </React.Fragment>
@@ -1388,7 +1388,8 @@ class services extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+              {/* <Footer/>*/}
+
 
             </Fragment>
         );

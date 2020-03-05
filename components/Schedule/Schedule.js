@@ -26,10 +26,13 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
-import {availabilities2events, eventUI2availabilities} from '../../utils/converters';
+import {availabilities2events, eventUI2availability} from '../../utils/converters';
 import {ALL_SERVICES} from '../../utils/consts.js';
 import { confirmAlert } from 'react-confirm-alert'; // Import
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { Typography } from '@material-ui/core'; // Import css
+import styles from './ScheduleStyle'
+import PropTypes from 'prop-types';
 
 
 const propTypes = {};
@@ -70,84 +73,6 @@ const MenuProps = {
     },
   },
 };
-
-const styles = theme => ({
-  modalContainer:{
-    position: 'absolute',
-    width: 700,
-    backgroundColor: 'white',
-    border: '2px solid #4fbdd7',
-    padding: '2%',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    },
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200,
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      marginLeft:0,
-      marginRight: 0,
-      marginBottom: '5%',
-      marginTop:'5%'
-    },
-  },
-  contentTimeSlot:{
-    justifyContent: 'space-around',
-    alignItems: 'baseline',
-    marginTop: 20,
-    marginBottom: 20
-  },
-  textFieldButton: {
-    color : 'white',
-    margin: theme.spacing(1),
-  },
-  textFieldChips: {
-    color: 'white'
-
-  },
-  textFieldDefaultChips: {
-    color : 'black'
-  },
-  formSchedule:{
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      marginBottom: '5%'
-    },
-  },
-  panelForm:{
-    alignItems: 'end',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column'
-    },
-},
-  panelFormDays:{
-    width : '250px',
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    },
-  },
-  panelFormRecu:{
-    width : '250px',
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      marginTop: '10%'
-
-    },
-  },
-  containerRecurrence:{
-    width:'100%',
-    [theme.breakpoints.down('xs')]: {
-      display:'inherit',
-    },
-  }
-});
 
 const DAYS='Lu Ma Me Je Ve Sa Di'.split(' ');
 
@@ -213,7 +138,7 @@ class Schedule extends React.Component {
     }
     else {
       this.setState({servicesSelected: e.target.value });
-    } 
+    }
   };
 
   toggleAddModal =  ({ start, end })  => {
@@ -230,16 +155,16 @@ class Schedule extends React.Component {
   };
 
   toggleEditModal = event => {
-    console.log("isAddModalOpen"+this.state.isAddModalOpen);
 
-    if (this.props.cbAvailabilityDelete) {
+    console.log("Deleting:"+JSON.stringify(event));
+    if (this.props.onDeleteAvailability) {
      confirmAlert({
       title: 'Suppression',
       message: 'Supprimer cette disponibilité et toutes ses occurrences pour '+event.title+"?",
       buttons: [
         {
           label: 'Oui',
-          onClick: () => this.props.cbAvailabilityDelete(event.id.split('-')[0])
+          onClick: () => this.props.onDeleteAvailability(event.ui_id)
         },
         {
           label: 'Non',
@@ -252,7 +177,6 @@ class Schedule extends React.Component {
     }
 
     if (!this.state.isAddModalOpen) {
-      console.log("Updating");
       this.setState({
         currentEvent: event,
         isEditModalOpen: !this.state.isEditModalOpen,
@@ -301,8 +225,8 @@ class Schedule extends React.Component {
   };
 
   onSubmit = e => {
-    let avail=eventUI2availabilities(this.state);
-    let res = this.props.cbAvailabilityCreated(avail);
+    let avail=eventUI2availability(this.state);
+    let res = this.props.onCreateAvailability(avail);
     this.closeModal();
   };
 
@@ -311,13 +235,30 @@ class Schedule extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, title, subtitle } = this.props;
 
     let events = availabilities2events(this.props.availabilities);
-    console.log("Scheduler.events:"+JSON.stringify(events));
+    console.log("Events rendered:"+JSON.stringify(events[0]));
+
     return (
-      <div style={{height:700}}>
+      <Grid style={{height:700}}>
+        { title || subtitle  ?
+          <Grid style={{ marginBottom: 50 }}>
+            { title ?
+              <Grid>
+                <Typography className={classes.policySizeTitle}>{title}</Typography>
+              </Grid> : null
+            }
+            { subtitle ?
+              <Grid>
+                <p className={classes.policySizeContent}>{subtitle}</p>
+              </Grid> : null
+            }
+          </Grid>
+          : null
+        }
         <Calendar
+          scrollToTime={new Date(1970, 1, 1, 7)}
           selectable
           popup={false}
           culture='fr-FR'
@@ -492,19 +433,22 @@ class Schedule extends React.Component {
                     </ExpansionPanel>
                   </Grid>
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
-                    <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>Ajouter </Button>
                     <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler </Button>
+                    <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>Ajouter </Button>
                   </Grid>
                 </form>
               </Grid>
             </Grid>
         </Fade>
       </Modal>
-      </div>
+      </Grid>
     )
   }
 }
 
-Schedule.propTypes = propTypes;
+Schedule.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
 
-export default withStyles(styles)(Schedule)
+export default  withStyles(styles, { withTheme: true }) (Schedule);

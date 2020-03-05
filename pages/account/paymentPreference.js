@@ -10,12 +10,12 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import { toast } from 'react-toastify';
 import Footer from '../../hoc/Layout/Footer/Footer';
-import Footer2 from '../../hoc/Layout/Footer/Footer2';
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
+import {Helmet} from 'react-helmet';
 
 
 moment.locale('fr');
@@ -194,12 +194,16 @@ class paymentPreference extends React.Component {
             const {clickAdd} = this.state;
             const {clickDelete} = this.state;
             const {haveAccount} = this.state;
-            const editfooter = clickDelete ? <Footer/> :<Footer2/>;
-            const addfooter = clickAdd ? <Footer/> :<Footer2/>;
+            const editfooter = <Footer/>
+            const addfooter = <Footer/>
 
 
             return (
                 <Fragment>
+                  <Helmet>
+                    <title>compte - Préférences de versement - My Alfred </title>
+                    <meta property="description" content="My Alfred, des services entre particuliers et auto-entrepreneurs rémunérés ! Choisissez vos méthodes de versement de vos rémunérations pour chacun des services réalisés. Versement 72h après la prestation." />
+                  </Helmet>
                     <Layout>
                         <Grid container className={classes.bigContainer} style={{minHeight:530}}>
 
@@ -425,7 +429,8 @@ class paymentPreference extends React.Component {
                             </Grid>
                         </Grid>
                     </Layout>
-                    {haveAccount ? editfooter : addfooter}
+                  {/* <Footer/>*/}
+
                 </Fragment>
             );
         }

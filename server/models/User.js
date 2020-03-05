@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const year = new Date().getFullYear()-16;
+
 const UserSchema = new Schema({
     name: {
         type: String,
         required: true
     },
     gender: {
-        type: String,
-
+        type: String
     },
     firstname: {
         type: String,
@@ -137,7 +137,7 @@ const UserSchema = new Schema({
       sms: {
           type: Boolean,
           default: true
-      },
+      }
     },
     notifications_rappel: {
         email: {
@@ -151,7 +151,7 @@ const UserSchema = new Schema({
         sms: {
             type: Boolean,
             default: true
-        },
+        }
     },
     notifications_promotions: {
         email: {
@@ -169,7 +169,7 @@ const UserSchema = new Schema({
         sms: {
             type: Boolean,
             default: true
-        },
+        }
     },
     notifications_community: {
         email: {
@@ -183,7 +183,7 @@ const UserSchema = new Schema({
         sms: {
             type: Boolean,
             default: true
-        },
+        }
     },
     notifications_assistance: {
         email: {
@@ -197,7 +197,7 @@ const UserSchema = new Schema({
         sms: {
             type: Boolean,
             default: true
-        },
+        }
     },
     score: {
         type: Number,
@@ -236,7 +236,7 @@ const UserSchema = new Schema({
       default: false
     },
     last_login: [{
-        type: Date,
+        type: Date
     }],
     is_alfred: {
         type: Boolean,
@@ -264,10 +264,13 @@ const UserSchema = new Schema({
     },
     id_mangopay: {
         type: String
+    },
+    avatar_letters: {
+      type: String,
+      default: function() {
+        return (this.firstname.charAt(0)+this.name.charAt(0)).toUpperCase();
+      }
     }
-
-
-
 });
 
 module.exports = User = mongoose.model('users',UserSchema);

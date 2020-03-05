@@ -1042,7 +1042,7 @@ class editService extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <p>
-                                    Votre périmètre d’intervention est la zone dans laquelle vous souhaitez réaliser vos services. Par défaut, nous utilisons la ville 
+                                    Votre périmètre d’intervention est la zone dans laquelle vous souhaitez réaliser vos services. Par défaut, nous utilisons la ville
                                     de votre profil comme référence. Cette adresse ne vous convient pas ? Vous pouvez changer votre ville de référence à tout moment !
                                 </p>
                             </Grid>
@@ -1221,11 +1221,11 @@ class editService extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <p>
-
-                                        Mettez en évidence vos compétences et votre expertise dans ce service. Les utilisateurs auront accès à
-                                    ces informations, n’hésitez pas à valoriser votre expérience, vos réalisations et vos atouts pour ce service !
-
-
+                                    Décrivez votre expertise et précisez votre service !
+                                    Mettez en évidence vos compétences et votre expertise dans ce service.
+                                    Vous pouvez également préciser la façon dont les utilisateurs doivent indiquer les quantités pour réserver.
+                                    Par exemple, si vous proposez un service de confection de tapis, vous pouvez indiquer les heures nécessaires pour différentes dimension de tapis.
+                                    Précisez tout ce qui peut aider votre client à réserver correctement votre service !
                                 </p>
                             </Grid>
                             <Grid item xs={11}>
@@ -1614,7 +1614,7 @@ class editService extends React.Component {
                          </Grid>
 
                      </Grid>
-            <Footer/>
+                {/* <Footer/>*/}
             </Layout>
         );
     };

@@ -16,6 +16,7 @@ import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 
+
 moment.locale('fr');
 
 const { config } = require('../../config/config');
@@ -262,7 +263,8 @@ class recommandations extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
+
 
             </Fragment>
         );

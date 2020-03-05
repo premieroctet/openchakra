@@ -2,8 +2,10 @@ const Validator = require('validator');
 const isEmpty = require('./is-empty');
 
 module.exports = function validateServiceInput(data) {
+
     let errors = {};
 
+    console.log("Validation service:"+JSON.stringify(data));
 
     data.label = !isEmpty(data.label) ? data.label : '';
     data.category = !isEmpty(data.category) ? data.category : '';
@@ -28,10 +30,15 @@ module.exports = function validateServiceInput(data) {
         errors.equipments = 'Veuillez sélectionner au moins 1 équipement';
     }
 
+    /**
     if(Validator.isEmpty(data.description)) {
         errors.description = 'Une description est requise';
     }
+    */
 
+    if (data['location.alfred']=="false" && data['location.home']=="false" && data['location.visio']=="false") {
+        errors.location = 'Sélectionnez au moins un lieu de réalisation';
+    }
 
     return {
         errors,

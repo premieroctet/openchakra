@@ -23,6 +23,7 @@ import {
     formatFormData,
   } from '../../components/utils';
 import '../../static/creditcards.css';
+import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
@@ -249,6 +250,10 @@ class paymentMethod extends React.Component {
 
         return (
             <Fragment>
+		<Helmet>
+        <title>compte - Mode de paiement - My Alfred </title>
+        <meta property="description" content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !" />
+      </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 
@@ -491,8 +496,7 @@ class paymentMethod extends React.Component {
                         </Dialog>
                     : null}
                 </Layout>
-                <Footer/>
-
+                {/* <Footer/>*/}
             </Fragment>
         );
     };

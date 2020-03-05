@@ -5,7 +5,7 @@ import axios from "axios";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
-import Footer2 from '../../hoc/Layout/Footer/Footer2';
+import Footer from '../../hoc/Layout/Footer/Footer';
 import { withStyles } from '@material-ui/core/styles';
 import Switch from "@material-ui/core/Switch";
 import { toast } from 'react-toastify';
@@ -14,6 +14,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {Helmet} from 'react-helmet';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -36,14 +37,14 @@ const styles = theme => ({
             display:'none',
         }
     },
-    trigger:{ 
+    trigger:{
     [theme.breakpoints.down('sm')]: {
     marginTop: -10,
-    width: '100%', 
+    width: '100%',
     marginLeft:'0px',
-    height:'30px', 
+    height:'30px',
     backgroundColor:'#2FBCD3',
-    
+
     display:'block',
     transition: 'display 0.7s',
     borderRadius:'5px',
@@ -63,7 +64,7 @@ const styles = theme => ({
             transition: 'margin-left 0.7s',
             boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
              }
-      }  
+      }
     }
 });
 
@@ -197,6 +198,10 @@ class parameters extends React.Component {
 
         return (
             <Fragment>
+              <Helmet>
+                  <title>compte - Paramètres - My Alfred </title>
+                  <meta property="description" content="Configurez votre compte My Alfred, votre boutique et l'ensemble des paramètres de votre compte." />
+                </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                     <Grid className={classes.toggle}  item xs={3}>
@@ -217,7 +222,7 @@ class parameters extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a  style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -300,7 +305,7 @@ class parameters extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
@@ -321,7 +326,7 @@ class parameters extends React.Component {
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/two-settings-cogwheels-2.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
@@ -445,7 +450,10 @@ class parameters extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-              <Footer2/>
+              <Grid style={{position: 'absolute', bottom: 0, width: '100%'}}>
+                {/* <Footer/>*/}
+
+              </Grid>
             </Fragment>
 
 

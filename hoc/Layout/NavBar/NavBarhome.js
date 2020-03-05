@@ -10,12 +10,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
-import Router from "next/router";
-
+import UserAvatar from '../../../components/Avatar/UserAvatar';
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
 
@@ -69,9 +67,9 @@ const styles = theme => ({
     width: '100%',
   },
   inputInput: {
-    paddingTop: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing,
+    paddingRight: theme.spacing,
+    paddingBottom: theme.spacing,
     paddingLeft:theme.spacing(10),
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -90,9 +88,6 @@ const styles = theme => ({
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
-  },
-  inscription: {
-    color: 'primary',
   },
   navbarItem: {
     alignSelf: 'center',
@@ -116,11 +111,6 @@ const styles = theme => ({
   bigAvatar: {
     width: 40,
     height: 40,
-    marginTop: -10,
-  },
-  theavatarbutton: {
-    width: 45,
-    height: 45,
   },
   lemenuavatar: {
     marginTop: '2.5%!important',
@@ -136,6 +126,7 @@ class NavBar extends Component {
     logged: false,
     alfred: false,
     isTop: true,
+    userId:""
   };
 
   componentDidMount() {
@@ -151,13 +142,7 @@ class NavBar extends Component {
           .get(url+'myAlfred/api/users/current')
           .then(res => {
             let user = res.data;
-            this.setState({user:user, alfred:user.is_alfred});
-
-            if(typeof user.picture !="undefined") {
-              this.setState({picture: true})
-            } else {
-              this.setState({picture: false})
-            }
+            this.setState({user:user, alfred:user.is_alfred, userId:user._id});
           })
           .catch(err => console.log(err))
     }
@@ -211,81 +196,86 @@ class NavBar extends Component {
   };
 
   render() {
+    console.log("NavBarHome");
     const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl } = this.state;
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isAvatarMenuOpen = Boolean(avatarMoreAnchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-    const test = this.state.logged;
+    const logged = this.state.logged;
     const user = this.state.user;
     const maboutique = <MenuItem onClick={this.handleMenuClose}><Typography><Link href={'/myShop/services'}><a className={classes.navbarLinkMobile}>Ma boutique</a></Link></Typography></MenuItem>;
-    const becomealfred = <MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/becomeAlfredForm'}><a className={classes.navbarLinkMobile}>Devenir Alfred</a></Link></Typography></MenuItem>;
-    const picture = this.state.picture;
-    const mobileavatar = picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>;
+    const becomealfred = <MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/creaShop/creaShop'}><a className={classes.navbarLinkMobile}>Devenir Alfred</a></Link></Typography></MenuItem>;
+
+    const mobileavatar =
+          <React.Fragment>
+            <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}>
+              <UserAvatar user={user} className={classes.bigAvatar} />
+            </IconButton>
+          </React.Fragment>
+
     const alfred = this.state.alfred;
     const logout = <Button variant="outlined" color='primary' style={{ marginRight: '20px' }}
                            onClick={()=>this.logout2()}>Déconnexion</Button>;
 
-    const logoutMobile = [
-    <MenuItem key={1} onClick={this.handleMenuClose}>
-      <Typography>
-        <Link href={'/profile/editProfile'}>
-          <a className={classes.navbarLinkMobile}>
-            Profil
-          </a>
-        </Link>
-      </Typography>
-    </MenuItem>,
-    <MenuItem key={1} onClick={this.handleMenuClose}>
-      <Typography>
-        <Link href={'/account/notifications'}>
-          <a className={classes.navbarLinkMobile}>
-            Mon compte
-          </a>
-        </Link>
-      </Typography>
-    </MenuItem>,
-    <MenuItem key={1} onClick={()=>this.logout2()}>
-      <Typography>
-
+    const logoutMobile = <React.Fragment>
+      <Link href={'/profile/editProfile'}>
+        <MenuItem onClick={this.handleMenuClose}>
+          <Typography>
+            <a className={classes.navbarLinkMobile}>
+              Profil
+            </a>
+          </Typography>
+        </MenuItem>
+      </Link>
+      <Link href={'/account/notifications'}>
+        <MenuItem onClick={this.handleMenuClose}>
+          <Typography>
+            <a className={classes.navbarLinkMobile}>
+              Mon compte
+            </a>
+          </Typography>
+        </MenuItem>
+      </Link>
+      <MenuItem onClick={()=>this.logout2()}>
+        <Typography>
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
               Déconnexion
           </a>
-
-      </Typography>
+        </Typography>
     </MenuItem>
-  ];
+  </React.Fragment>;
 
     const logoutAvatar =
     [
-    <MenuItem key={1} onClick={this.handleMenuClose}>
-      <Typography>
-        <Link href={'/profile/editProfile'}>
-          <a className={classes.navbarLinkMobile}>
-            Profil
-          </a>
-        </Link>
-      </Typography>
-    </MenuItem>,
-    <MenuItem key={2} onClick={this.handleMenuClose}>
-      <Typography>
-        <Link href={'/account/notifications'}>
-          <a className={classes.navbarLinkMobile}>
-            Mon compte
-          </a>
-        </Link>
-      </Typography>
-    </MenuItem>,
-    <MenuItem key={3} onClick={()=>this.logout2()}>
-      <Typography>
-
+      <Link href={'/profile/editProfile'}>
+        <MenuItem key={1} onClick={this.handleMenuClose}>
+          <Typography>
+            <a className={classes.navbarLinkMobile}>
+              Profil
+            </a>
+          </Typography>
+        </MenuItem>
+      </Link>
+      ,
+      <Link href={'/account/notifications'}>
+        <MenuItem key={2} onClick={this.handleMenuClose}>
+          <Typography>
+            <a className={classes.navbarLinkMobile}>
+              Mon compte
+            </a>
+          </Typography>
+        </MenuItem>
+      </Link>
+      ,
+      <MenuItem key={3} onClick={()=>this.logout2()}>
+        <Typography>
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
               Déconnexion
           </a>
-
-      </Typography>
-    </MenuItem>]
-  ;
+        </Typography>
+      </MenuItem>
+  ];
 
     const renderMenu = (
       <Menu
@@ -299,24 +289,6 @@ class NavBar extends Component {
         <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
       </Menu>
     );
-const menuitemdouble1= [<MenuItem key={1} onClick={this.handleAvatarMenuOpen}>
-  <Typography>
-    <Link href={'/login'}>
-      <a className={classes.navbarLinkAvatar}>
-        Connexion
-      </a>
-    </Link>
-  </Typography>
-</MenuItem>,
-<MenuItem key={2} onClick={this.handleAvatarMenuOpen}>
-  <Typography>
-    <Link href={'/signup'}>
-      <a className={classes.navbarLinkAvatar}>
-        Inscription
-      </a>
-    </Link>
-  </Typography>
-</MenuItem>];
 
     const renderAvatarMenu = (
       <Menu
@@ -327,32 +299,29 @@ const menuitemdouble1= [<MenuItem key={1} onClick={this.handleAvatarMenuOpen}>
         open={isAvatarMenuOpen}
         onClose={this.handleMenuClose}
       >
-        {test ? logoutAvatar : 
-        menuitemdouble1
-        }
+        {logged ? logoutAvatar : <React.Fragment>
+          <Link href={'/login'}>
+            <MenuItem onClick={this.handleAvatarMenuOpen}>
+              <Typography>
+                <a className={classes.navbarLinkAvatar}>
+                  Connexion
+                </a>
+              </Typography>
+          </MenuItem>
+          </Link>
+          <Link href={'/signup'}>
+            <MenuItem onClick={this.handleAvatarMenuOpen}>
+              <Typography>
+                <a className={classes.navbarLinkAvatar}>
+                  Inscription
+                </a>
+              </Typography>
+            </MenuItem>
+          </Link>
+        </React.Fragment>}
       </Menu>
     );
 
-    const menuitemdouble2=[
-<MenuItem key={1} onClick={this.handleMobileMenuOpen}>
-          <Typography>
-            <Link href={'/login'}>
-              <a className={classes.navbarLinkMobile}>
-                Connexion
-              </a>
-            </Link>
-          </Typography>
-        </MenuItem>,
-        <MenuItem key={2} onClick={this.handleMobileMenuOpen}>
-          <Typography>
-            <Link href={'/signup'}>
-              <a className={classes.navbarLinkMobile}>
-                Inscription
-              </a>
-            </Link>
-          </Typography>
-        </MenuItem>
-    ];
     const renderMobileMenu = (
       <Menu
         anchorEl={mobileMoreAnchorEl}
@@ -361,48 +330,47 @@ const menuitemdouble1= [<MenuItem key={1} onClick={this.handleAvatarMenuOpen}>
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
-      <MenuItem onClick={this.handleMobileMenuOpen}>
-        <Typography>
-          <Link href={'/search'}>
-            <a className={classes.navbarLinkMobile}>
-              <img src={'../../static/search-solid.svg'} style={{height: '15px', margintop: '5px'}} alt="search"/>
-            </a>
-          </Link>
-        </Typography>
-      </MenuItem>
-      {test ?
-      <MenuItem onClick={this.handleMobileMenuOpen}>
-        <Typography>
-          <Link href={'/reservations/allReservations'}>
-            <a className={classes.navbarLinkMobile}>
-              Mes réservations
-            </a>
-          </Link>
-        </Typography>
-      </MenuItem>: null}
-        { alfred ? maboutique :
-        becomealfred
-        }
-        {test ?
-        <MenuItem onClick={this.handleMobileMenuOpen}>
-          <Typography>
-              <Link href={'/myShop/messages'}>
+        { alfred ? maboutique : becomealfred }
+        {logged ?<React.Fragment>
+          <Link href={'/myShop/messages'}>
+            <MenuItem onClick={this.handleMobileMenuOpen}>
+              <Typography>
                 <a className={classes.navbarLinkMobile}>
                   Messages
                 </a>
-              </Link>
-          </Typography>
-        </MenuItem> : null }
-        <MenuItem onClick={this.handleMobileMenuOpen}>
-        <Typography>
-          <Link href={'/faq'}>
-            <a className={classes.navbarLinkMobile}>
-              Aide
-            </a>
+              </Typography>
+            </MenuItem>
           </Link>
-        </Typography>
-        </MenuItem>
-        {test ? logoutMobile : menuitemdouble2}
+        </React.Fragment> : null }
+        <Link href={'/faq'}>
+          <MenuItem onClick={this.handleMobileMenuOpen}>
+            <Typography>
+              <a className={classes.navbarLinkMobile}>
+                Aide
+              </a>
+            </Typography>
+          </MenuItem>
+        </Link>
+        {logged ? logoutMobile : <React.Fragment>
+          <Link href={'/login'}>
+            <MenuItem onClick={this.handleMobileMenuOpen}>
+              <Typography>
+                <a className={classes.navbarLinkMobile}>
+                  Connexion
+                </a>
+              </Typography>
+           </MenuItem>
+          </Link>
+          <Link href={'/signup'}>
+            <MenuItem onClick={this.handleMobileMenuOpen}>
+              <Typography>
+                <a className={classes.navbarLinkMobile}>
+                  Inscription
+                </a>
+              </Typography>
+            </MenuItem>
+          </Link>
+        </React.Fragment>}
       </Menu>
     );
 
@@ -410,13 +378,10 @@ const menuitemdouble1= [<MenuItem key={1} onClick={this.handleAvatarMenuOpen}>
       <div className={classes.root}>
         <AppBar  style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(255, 255, 255)', boxShadow:'inherit'}} position="fixed">
           <Toolbar>
-            <Link href={'/'}>
+            <Link href={`/`}>
               <img src={this.state.isTop ? '../../../static/assets/img/logo.png' : '../../../static/blueLogo.png'} style={{width: 110, cursor: "pointer"}} alt={'Logo Blanc'}/>
             </Link>
             <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                {/*<SearchIcon />*/}
-              </div>
               <InputBase
                 placeholder="Search…"
                 classes={{
@@ -427,41 +392,25 @@ const menuitemdouble1= [<MenuItem key={1} onClick={this.handleAvatarMenuOpen}>
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-            <Typography className={classes.navbarItem}>
-                <Link href={'/search'}>
-                  <a className={classes.navbarLink}>
-                    <img src={'../../static/search-solid1.svg'} style={{height: '15px', margintop: '5px'}} alt="search"/>
-                  </a>
-                </Link>
-              </Typography>
-              {test?
-              <Typography className={classes.navbarItem}>
-                <Link href={'/reservations/allReservations'}>
-                  <a className={classes.navbarLink}>
-                    Mes réservations
-                  </a>
-                </Link>
-              </Typography>
-              :null}
               {alfred ?
               <Typography className={classes.navbarItem}>
-                <Link href={'/myShop/services'}>
+                <Link href={`/shop?id_alfred=${this.state.userId}`} >
                   <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Ma boutique
                   </a>
                 </Link>
               </Typography> :
               <Typography className={classes.navbarItem}>
-                <Link href={'/becomeAlfredForm'}>
+                <Link href={'/creaShop/creaShop'}>
                   <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Créer ma boutique
                   </a>
                 </Link>
               </Typography>}
 
-              {test ?<React.Fragment><Typography className={classes.navbarItem}>
-                <Link href={'/reservations/messages'}>
-                  <a className={classes.navbarLink}>
+              {logged ?<React.Fragment><Typography className={classes.navbarItem}>
+                <Link href={'/myShop/messages'}>
+                  <a className={classes.navbarLink} style={{color:this.state.isTop ? '' : '#505050' }}>
                     Messages
                   </a>
                 </Link>
@@ -473,7 +422,7 @@ const menuitemdouble1= [<MenuItem key={1} onClick={this.handleAvatarMenuOpen}>
                   </a>
                 </Link>
               </Typography>
-              {test ? null : <React.Fragment><Link href={'/login'}>
+              {logged ? null : <React.Fragment><Link href={'/login'}>
                   <Button variant="outlined" color={'primary'} style={{marginRight: '20px', border:this.state.isTop ? '1px solid rgba(255, 255, 255, 1)' : '1px solid #4fbdd7'}}>
                       Connexion
                     </Button>
@@ -488,22 +437,22 @@ const menuitemdouble1= [<MenuItem key={1} onClick={this.handleAvatarMenuOpen}>
                 </Button>
                 </Link>
                 </React.Fragment>}
-                {test ?<React.Fragment>
-
-                  {picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>}
-
-                </React.Fragment> : null  }
+                {logged ?<React.Fragment>
+			<IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
+				<UserAvatar user={user} className={classes.bigAvatar} />
+                        </IconButton>
+                     </React.Fragment> : null  }
             </div>
             <div className={classes.sectionMobile}>
 
-                {test ? mobileavatar : <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}><MoreIcon className={classes.bigIcon} /></IconButton></React.Fragment>}
+                {logged ? mobileavatar : <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}><MoreIcon className={classes.bigIcon} /></IconButton></React.Fragment>}
 
             </div>
           </Toolbar>
         </AppBar>
         {renderMenu}
         {renderMobileMenu}
-        {test ? renderAvatarMenu : null}
+        {logged ? renderAvatarMenu : null}
       </div>
     );
   }

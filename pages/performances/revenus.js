@@ -8,14 +8,17 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { Typography } from '@material-ui/core';
-import dynamic from 'next/dynamic'
+//import dynamic from 'next/dynamic'
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import '../../static/charts.css';
+/**
 const Chart = dynamic(import('react-apexcharts'), {
     ssr: false,
 })
-
+*/
+import loadable from 'loadable-components';
+const Chart = loadable(() => import('react-apexcharts'));
 
 moment.locale('fr');
 

@@ -186,8 +186,9 @@ class addAvailability extends React.Component {
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
+                this.setState({userId: user._id});
                 if(user.is_alfred === false) {
-                    Router.push('/becomeAlfredForm');
+                    Router.push('/creaShop/creaShop');
                 } else {
                     this.setState({user:user});
                     axios
@@ -2167,7 +2168,8 @@ class addAvailability extends React.Component {
                     </Grid>
 
                 </Grid>
-                <Footer/>
+                {/* <Footer/>*/}
+
 
             </Fragment>
         );

@@ -119,7 +119,7 @@ class Passions extends React.Component{
                                     <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
                                                 className={classes.padding2}>
                                         My-Alfred vous permet d'obtenir un complément de revenus en partageant vos passions et vos compétences.
-                                        Les utilisateurs peuvent identifier vos services, les réserver et ainsi vous permettre de profiter d'une nouvelle source de revenus !
+                                        Les utilisateurs peuvent identifier vos services, les réserver et vous permettre ainsi de profiter d'une nouvelle source de revenus !
                                     </Typography>
                                 </CardContent>
                             </Grid>

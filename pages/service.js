@@ -3,6 +3,8 @@ import Layout from '../hoc/Layout/Layout';
 import SubBar from '../components/service-by-category/SubBar/SubBar';
 import BodySearch from '../components/service-by-category/BodySearch/BodySearch';
 
+import {Helmet} from 'react-helmet';
+
 class Service extends React.Component {
 
     constructor(props) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
 import Grid from "@material-ui/core/Grid";
@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Link from 'next/link';
 import Footer from '../hoc/Layout/Footer/Footer';
+
 
 
 
@@ -662,12 +663,11 @@ class faq extends React.Component {
                                             </p>
                                             <p>
                                                 Conditions My-Alfred<br/>
-                                                Numéro de téléphone confirmé, adresse e-mail confirmée, informations de paiement et acceptation du règlement intérieur.
-
+                                                Adresse email et numéro de téléphone confirmés
                                             </p>
                                             <p>
                                                 Photo de profil<br/>
-                                                Si vous activez cette condition, vous ne pourrez voir les photos de profil des utilisateurs qu'une fois la réservation confirmée.
+                                                Ces utilisateurs ont fourni une photo de profile.
 
                                             </p>
                                             <p>
@@ -2288,7 +2288,8 @@ class faq extends React.Component {
                         <Grid className={classes.hideed} container style={{position: 'sticky',height:'90vh', backgroundImage:'url(../static/illustration-FAQ.svg)',backgroundRepeat:'no-repeat',top:100,backgroundSize: 'cover', backgroundPosition:'center'}}></Grid>
                     </Grid>
                 </Grid>
-                <Footer/>
+                {/* <Footer/>*/}
+
             </Layout>
         );
     };

@@ -120,7 +120,6 @@ class searchNotLogin extends React.Component {
     }
 
     componentDidMount() {
-        this.search();
     }
     
 
@@ -134,8 +133,8 @@ class searchNotLogin extends React.Component {
 
     
 
-    async search() {
-        await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+    search() {
+        this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
             checkedParticulier:false,idAlfred:[]});
         if(this.state.searchCity.length === 0 || !this.state.searchCity.trim()){
             axios.get(url+'myAlfred/api/serviceUser/all')
@@ -206,12 +205,12 @@ class searchNotLogin extends React.Component {
 
     
 
-    async searchWithWord(){
+    searchWithWord(){
         if(this.state.searchCity.length === 0 || !this.state.searchCity.trim()){
-                await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],resultCategory:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+                this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],resultCategory:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
                     checkedParticulier:false,idAlfred:[],prestationOk:false,serviceOk:false,categoryOk:false});
                 const obj = {label:this.state.research.trim()};
-                await axios.post(url+'myAlfred/api/prestation/all/search',obj)
+                axios.post(url+'myAlfred/api/prestation/all/search',obj)
                     .then(res => {
                         let prestations = res.data;
                         this.setState({prestations:prestations});
@@ -230,7 +229,7 @@ class searchNotLogin extends React.Component {
                         console.log(err)
                     });
 
-                await axios.post(url+'myAlfred/api/service/all/search',obj)
+                axios.post(url+'myAlfred/api/service/all/search',obj)
                     .then(res => {
                         let services = res.data;
                         this.setState({services: services});
@@ -248,7 +247,7 @@ class searchNotLogin extends React.Component {
                     });
 
 
-                await axios.post(url + 'myAlfred/api/category/all/search', obj)
+                axios.post(url + 'myAlfred/api/category/all/search', obj)
                     .then(responseCategory => {
                         let category = responseCategory.data;
                         this.setState({resultCategory:category});
@@ -382,10 +381,10 @@ class searchNotLogin extends React.Component {
                 this.setState({click: false, click2: true});
             } else {
 
-                    await this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],resultCategory:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
+                    this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],resultCategory:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
                         checkedParticulier:false,idAlfred:[],prestationOk:false,serviceOk:false,categoryOk:false});
                     const obj = {label:this.state.research.trim()};
-                    await axios.post(url+'myAlfred/api/prestation/all/search',obj)
+                    axios.post(url+'myAlfred/api/prestation/all/search',obj)
                         .then(res => {
 
                             let prestations = res.data;
@@ -406,7 +405,7 @@ class searchNotLogin extends React.Component {
                             console.log(err)
                         });
 
-                    await axios.post(url+'myAlfred/api/service/all/search',obj)
+                    axios.post(url+'myAlfred/api/service/all/search',obj)
                         .then(res => {
                             let services = res.data;
                             this.setState({services: services});
@@ -423,7 +422,7 @@ class searchNotLogin extends React.Component {
                             console.log(err);
                         });
 
-                    await axios.post(url + 'myAlfred/api/category/all/search', obj)
+                    axios.post(url + 'myAlfred/api/category/all/search', obj)
                         .then(responseCategory => {
                         let category = responseCategory.data;
                         this.setState({resultCategory:category});
@@ -524,13 +523,12 @@ class searchNotLogin extends React.Component {
 
 
 
-    async filter(){
+    filter(){
 
         if((this.state.serviceUser.length && this.state.finalServiceUser.length) || this.state.finalServiceUserCopy.length){
-            const serviceUser = await this.state.finalServiceUser;
+            const serviceUser = this.state.finalServiceUser;
 
             if(this.state.checkedB){
-                setTimeout(()=>{
                     const serviceFilter = [];
                     serviceUser.forEach(s => {
                         if(s.status === 'Pro'){
@@ -551,21 +549,18 @@ class searchNotLogin extends React.Component {
                             }
                         })
                     })
-
-                },2000)
             } else {
-                setTimeout(()=>{if(this.state.filterDate){
+                if(this.state.filterDate){
                     this.filterDate()
                 } else {
                     this.searchWithWord()
-                }},2000)
+                }
             }
         } else {
-            const serviceUser =  await this.state.serviceUser;
+            const serviceUser =  this.state.serviceUser;
 
             if(this.state.checkedB){
 
-                setTimeout(()=>{
                     const serviceFilter = [];
                     serviceUser.forEach(s => {
                         if(s.status === 'Pro'){
@@ -586,25 +581,20 @@ class searchNotLogin extends React.Component {
                             }
                         })
                     })
-                },2000)
             } else {
-                setTimeout(() => {
                         if(this.state.filterDate){
                             this.filterDate()
                         } else {
                             this.search()
                         }
-                    },
-                    2000);
             }
         }
     }
 
-    async filterParticulier(){
+    filterParticulier(){
         if(this.state.serviceUser.length && this.state.finalServiceUser.length){
-            const serviceUser =  await this.state.finalServiceUser;
+            const serviceUser =  this.state.finalServiceUser;
             if(this.state.checkedParticulier){
-                setTimeout(() => {
                     const serviceFilter = [];
                     serviceUser.forEach(s => {
                         if(s.status === 'Particulier'){
@@ -624,19 +614,17 @@ class searchNotLogin extends React.Component {
                             }
                         })
                     })
-                }, 2000)
             } else {
-                setTimeout(() => {if(this.state.filterDate){
+                if(this.state.filterDate){
                     this.filterDate()
                 } else {
                     this.searchWithWord()
-                }},2000);
+                }
 
             }
         } else {
-            const serviceUser = await this.state.serviceUser;
+            const serviceUser = this.state.serviceUser;
             if(this.state.checkedParticulier){
-                setTimeout(() => {
                     const serviceFilter = [];
                     serviceUser.forEach(s => {
                         if(s.status === 'Particulier'){
@@ -656,24 +644,20 @@ class searchNotLogin extends React.Component {
                             }
                         })
                     })
-                }, 2000)
             } else {
-                setTimeout(() => {
                         if(this.state.filterDate){
                             this.filterDate()
                         } else {
                             this.search()
                         }
-                    },
-                    2000);
             }
         }
     }
 
 
-    async filterDate(){
+    filterDate(){
         if((this.state.serviceUser.length && this.state.finalServiceUser.length) || this.state.finalServiceUserCopy.length){
-            await this.setState({finalServiceUser:this.state.finalServiceUserCopy});
+            this.setState({finalServiceUser:this.state.finalServiceUserCopy});
             const serviceUser = this.state.finalServiceUser;
             const begin = this.state.startDate;
             const end = this.state.endDate;
@@ -714,7 +698,7 @@ class searchNotLogin extends React.Component {
                 })
                 .catch(err => console.log(err));
         } else {
-            await this.setState({serviceUser:this.state.serviceUserCopy});
+            this.setState({serviceUser:this.state.serviceUserCopy});
             const serviceUser = this.state.serviceUser;
             const begin = this.state.startDate;
             const end = this.state.endDate;

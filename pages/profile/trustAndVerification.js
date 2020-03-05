@@ -26,6 +26,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {Helmet} from 'react-helmet';
+
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -403,6 +405,10 @@ class trustAndVerification extends React.Component {
 
         return (
             <Fragment>
+		<Helmet>
+        <title> Profil - Confiance et vérification - My Alfred </title>
+        <meta property="description" content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. " />
+      </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid className={classes.toggle}  item xs={3} style={{}}>
@@ -825,7 +831,8 @@ class trustAndVerification extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
+
                 <Dialog
                     open={this.state.open}
                     onClose={()=>this.handleClose()}

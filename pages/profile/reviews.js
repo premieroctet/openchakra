@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import Typography from "@material-ui/core/Typography";
 import StarRatings from 'react-star-ratings';
-
+import {Helmet} from 'react-helmet';
 moment.locale('fr');
 
 const { config } = require('../../config/config');
@@ -177,6 +177,10 @@ class reviews extends React.Component {
 
         return (
             <Fragment>
+		<Helmet>
+        <title>Commentaires - My Alfred </title>
+        <meta property="description" content="Parcourez vos commentaires et notations pour les services rémunérés proposés ou trouvés sur My-Alfred. Chaque service donne lieu à une notation, des commentaires et des compliments. L'inscription est 100% gratuite et vous permet de proposer et trouver des services rémunérés entre particuliers ou freelance. " />
+      </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 
@@ -560,7 +564,8 @@ class reviews extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
+
             </Fragment>
         );
     };

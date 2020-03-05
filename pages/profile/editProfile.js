@@ -14,6 +14,7 @@ import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
+import {Helmet} from 'react-helmet';
 registerLocale('fr', fr);
 moment.locale('fr');
 
@@ -175,6 +176,10 @@ class editProfile extends React.Component {
 
         return (
             <Fragment>
+		<Helmet>
+        <title>Profil - Modifier mon profil - My Alfred </title>
+        <meta property="description" content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !" />
+      </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer} style={{overflowX:"hidden"}}>
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
@@ -513,7 +518,8 @@ class editProfile extends React.Component {
                     </Grid>
 
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
+
 
             </Fragment>
         );

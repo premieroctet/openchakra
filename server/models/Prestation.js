@@ -7,7 +7,7 @@ const PrestationSchema = new Schema({
         required: true
     },
     price: {
-        type: String,
+        type: String
     },
     service: {
         type: Schema.Types.ObjectId,
@@ -46,7 +46,12 @@ const PrestationSchema = new Schema({
     tags: [{
         type: Schema.Types.ObjectId,
         ref: 'tag'
-    }]
+    }],
+    private_alfred: {
+        type: Schema.Types.ObjectId,
+        ref: 'filterPresentation',
+	default: null
+    }
 });
 
 PrestationSchema.index({label:'text'});

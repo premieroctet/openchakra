@@ -152,7 +152,7 @@ class serenityNeed extends React.Component {
     ));
     return (
         <Fragment>
-          <div className={classes.container1}>
+          <div className={classes.container1} id={'register_done'}>
           <Grid container className={classes.container}>
             <Grid item xs={2}/>
             <Grid item xs={8}>

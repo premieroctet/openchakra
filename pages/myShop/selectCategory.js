@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
@@ -81,7 +81,7 @@ class selectCategory extends React.Component {
             .then(res => {
                 let user = res.data;
                 if(user.is_alfred === false) {
-                    Router.push('/becomeAlfredForm');
+                    Router.push('/creaShop/creaShop');
                 } else {
                     axios.get(url+'myAlfred/api/category/all')
                         .then(res => {
@@ -322,7 +322,7 @@ class selectCategory extends React.Component {
 
                 </Grid>
                 <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
-                         
+
                          <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
                              <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
                                 <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
@@ -354,9 +354,10 @@ class selectCategory extends React.Component {
                          </Grid>
 
                      </Grid>
-            <Footer/>
+              {/* <Footer/>*/}
+
             </Layout>
-            
+
 
         );
     };
