@@ -55,7 +55,7 @@ class creaShop extends React.Component {
         deadline_value: 1, // Valeur de prévenance
         deadline_unit: "jours", // Unité de prévenance (h:heures, j:jours, s:semaines)
 	level: '',
-        service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
+        service_address: null,
         perimeter: 1,
         availabilities: [],
       },
@@ -87,7 +87,12 @@ class creaShop extends React.Component {
     axios.get(url+'myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
-        this.setState({user_id: user._id});
+        let shop = this.state.shop;
+        shop.service_address = user.billing_address;
+        this.setState({
+          user_id: user._id,
+          shop: shop
+        });
       })
       .catch(error => {
         console.log(error);
@@ -290,6 +295,8 @@ class creaShop extends React.Component {
 
     const {classes} = this.props;
     let hideRightPanel = this.isRightPanelHidden();
+
+    console.log("service address:"+JSON.stringify(this.state.service_address));
 
     return(
       <Grid>

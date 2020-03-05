@@ -32,6 +32,7 @@ const ServiceUserSchema = new Schema({
 
     }],
     service_address: {
+        type: {
         address: {
             type: String
         },
@@ -48,6 +49,8 @@ const ServiceUserSchema = new Schema({
             lat: Number,
             lng: Number
         }
+        },
+       required: true
     },
     perimeter: {
         type: Number

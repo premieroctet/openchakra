@@ -47,7 +47,7 @@ class services extends React.Component {
                 deadline_value: 1, // Valeur de prévenance
                 deadline_unit: "jours", // Unité de prévenance (h:heures, j:jours, s:semaines)
                 level: '',
-                service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
+                service_address: null,
                 perimeter: 1,
                 availabilities: [],
             },
@@ -81,6 +81,12 @@ class services extends React.Component {
           .then(res => {
               let user = res.data;
               this.setState({user_id: user._id});
+              if (this.isNewService()) {
+                console.log("New service, setting service_address to "+JSON.stringify(user.billing_address));
+                var shop = this.state.shop;
+                shop.service_address = user.billing_address;
+                this.setState({shop: shop});
+              }
           })
           .catch(error => {
               console.log(error);
@@ -100,9 +106,9 @@ class services extends React.Component {
         }
 
         if (!this.isNewService()) {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
-          .then(res => {
+          axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+          axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
+            .then(res => {
               let resultat = res.data;
               console.log("Got resultat:"+JSON.stringify(resultat, null, 2));
               let shop=this.state.shop;
@@ -128,17 +134,20 @@ class services extends React.Component {
               shop.deadline_value = resultat.deadline_before_booking ? resultat.deadline_before_booking.split(' ')[0] : '';
               shop.description = resultat.description;
               shop.level = resultat.level;
+              shop.service_address = resultat.service_address;
 
               this.setState({ shop: shop});
-          })
-          .catch(error => {
+            })
+            .catch(error => {
               console.log(error);
-          });
+            });
         }
     }
 
     isNewService() {
-      return this.props.service_user_id==null;
+      var isNew = this.props.service_user_id==null;
+      console.log("isNewService:"+JSON.stringify(isNew));
+      return isNew;
     }
 
     nextDisabled() {
