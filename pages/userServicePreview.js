@@ -19,9 +19,8 @@ import fr from "date-fns/locale/fr";
 import '../static/style2.css'
 import Tooltip from "@material-ui/core/Tooltip";
 import { toast, ToastContainer } from "react-toastify";
-import getDistance from "geolib/es/getDistance";
-import convertDistance from "geolib/es/convertDistance";
 import NumberFormat from "react-number-format";
+import {computeDistanceKm} from '../utils/functions';
 registerLocale("fr", fr);
 
 moment.locale("fr");
@@ -1116,13 +1115,10 @@ class userServices extends React.Component {
                                 fontSize: "1.1rem"
                               }}
                           >
-                            par {serviceUser.user.firstname} ({convertDistance(
-                              getDistance(
-                                  {latitude:this.state.address.gps.lat,longitude:this.state.address.gps.lng},
-                                  {latitude:serviceUser.service_address.gps.lat, longitude: serviceUser.service_address.gps.lng}
-                              ),
-                              'km'
-                          ).toFixed(2)}{" "}
+                            par {serviceUser.user.firstname} (
+                            { 
+                              computeDistanceKm(this.state.address.gps, serviceUser.service_address)
+                            }{" "}
                             km)
                           </p>
                           : null}
@@ -3128,13 +3124,7 @@ class userServices extends React.Component {
                             <Grid container style={{textAlign: 'center', marginTop: '20px'}}>
                               <Grid item xs={6}>
                                 <Button
-                                    disabled={this.state.user._id === serviceUser.user._id || convertDistance(
-                                        getDistance(
-                                            {latitude:this.state.address.gps.lat,longitude:this.state.address.gps.lng},
-                                            {latitude:serviceUser.service_address.gps.lat, longitude: serviceUser.service_address.gps.lng}
-                                        ),
-                                        'km'
-                                    ).toFixed(2) > serviceUser.perimeter}
+                                    disabled={this.state.user._id === serviceUser.user._id || computeDistanceKm(this.state.address.gps, serviceUser.service_address.gps) > serviceUser.perimeter}
                                     color={'primary'}
                                     onClick={() => this.moreInfos()}
                                 >
@@ -3142,13 +3132,8 @@ class userServices extends React.Component {
                                 </Button>
                               </Grid>
                               <Grid item xs={6}>
-                                <Button disabled={this.state.user._id === serviceUser.user._id || convertDistance(
-                                    getDistance(
-                                        {latitude:this.state.address.gps.lat,longitude:this.state.address.gps.lng},
-                                        {latitude:serviceUser.service_address.gps.lat, longitude: serviceUser.service_address.gps.lng}
-                                    ),
-                                    'km'
-                                ).toFixed(2) > serviceUser.perimeter} variant={"contained"} color={"secondary"} style={{color:'white', cursor: 'pointer'}} onClick={() => this.reservationPage()}>
+                                <Button disabled={this.state.user._id === serviceUser.user._id || computeDistanceKm(this.state.address.gps, serviceUser.service_address.gps) > serviceUser.perimeter} 
+                                  variant={"contained"} color={"secondary"} style={{color:'white', cursor: 'pointer'}} onClick={() => this.reservationPage()}>
                                   Réserver
                                 </Button>
                               </Grid>

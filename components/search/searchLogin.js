@@ -241,12 +241,12 @@ class searchLogin extends React.Component {
         this.setState({click: true, click2:false});
     }
 
-   searchWithWord(){
+   async searchWithWord(){
          if(this.state.research !== ""){
              this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],resultCategory:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
                  checkedParticulier:false,idAlfred:[],prestationOk:false,serviceOk:false,categoryOk:false});
              const obj = {label:this.state.research.trim()};
-             axios.post(url+'myAlfred/api/prestation/all/search',obj)
+             await axios.post(url+'myAlfred/api/prestation/all/search',obj)
                  .then(res => {
 
                      let prestations = res.data;
@@ -267,7 +267,7 @@ class searchLogin extends React.Component {
                      console.log(err)
                  });
 
-             axios.post(url+'myAlfred/api/service/all/search',obj)
+             await axios.post(url+'myAlfred/api/service/all/search',obj)
                  .then(res => {
                      let services = res.data;
                      this.setState({services: services});
@@ -284,7 +284,7 @@ class searchLogin extends React.Component {
                      console.log(err);
                  });
 
-             axios.post(url + 'myAlfred/api/category/all/search', obj)
+             await axios.post(url + 'myAlfred/api/category/all/search', obj)
                  .then(responseCategory => {
                      let category = responseCategory.data;
                      this.setState({resultCategory:category});
