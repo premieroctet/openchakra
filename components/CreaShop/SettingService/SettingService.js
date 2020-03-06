@@ -18,7 +18,7 @@ class SettingService extends React.Component {
       service: null,
       travel_tax: props.travel_tax || null,
       pick_tax: props.pick_tax || null,
-      selectedEquipments: props.equipments || [] 
+      selectedEquipments: props.equipments || []
     };
     this.stateButton = this.stateButton.bind(this);
     this.onLocationChange = this.onLocationChange.bind(this);
@@ -28,7 +28,6 @@ class SettingService extends React.Component {
 
   stateButton(e){
     let name = e.target.name;
-    console.log(name);
     this.setState({[e.target.name]: !this.state[name]});
   }
 
@@ -38,7 +37,6 @@ class SettingService extends React.Component {
       .then(response => {
         let service = response.data;
         let location = this.state.location;
-        console.log("Location:"+JSON.stringify(location));
         if (isEmpty(location)) {
           Object.keys(service.location).forEach (k => {
             if (service.location[k]) location[k]=true;
@@ -55,14 +53,12 @@ class SettingService extends React.Component {
   }
 
   onLocationChange(loc_id, checked) {
-    console.log("onLocationChanged"+loc_id+","+checked);
     let loc = this.state.location;
     loc[loc_id]=checked;
     this.setState({location: loc}, () => this.fireOnChange());
   }
 
   onOptionChanged(opt_id, checked, price) {
-    console.log("onOptionChanged"+opt_id+","+checked+','+price);
     this.setState({[opt_id]: checked ? price : null}, () => this.fireOnChange());
   }
 
@@ -87,7 +83,6 @@ class SettingService extends React.Component {
     const {classes} = this.props;
     const {service, location, pick_tax, travel_tax} = this.state;
 
-    console.log("Render SettingsService, location is "+JSON.stringify(location, null, 2));
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>

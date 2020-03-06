@@ -50,7 +50,7 @@ class SkillsAlfred extends React.Component{
           <Typography variant="h6">
             Les compliments reçus par {alfred.firstname}
           </Typography>
-          <Grid className={classes.mainContainer}>
+          <Grid container className={classes.mainContainer}>
             {
               Object.keys(this.state.skills).map(result =>{
                 return(

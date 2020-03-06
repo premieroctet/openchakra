@@ -90,12 +90,12 @@ class ButtonSwitch extends React.Component {
       price:this.props.price,
       label: this.props.label,
     };
-    
+
     this.onToggle = this.onToggle.bind(this);
     this.onChangeBilling = this.onChangeBilling.bind(this);
     this.onChangePrice = this.onChangePrice.bind(this);
     this.onChangeLabel = this.onChangeLabel.bind(this);
-  
+
     this.fireChange = this.fireChange.bind(this);
   }
 
@@ -127,10 +127,7 @@ class ButtonSwitch extends React.Component {
   render() {
     const {classes, isEditable, isOption, isPrice, billings} = this.props;
     const {label, checked} = this.state;
-  
-    if (checked) {
-      console.log("Render checked:"+JSON.stringify(this.state, null, 2));
-    } 
+    console.log(label, 'label')
 
     return(
       <Grid className={classes.contentFiltre}>

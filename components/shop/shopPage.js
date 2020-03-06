@@ -37,7 +37,7 @@ export default theme =>({
     flexDirection: 'column',
     marginTop: '3%',
     [theme.breakpoints.down('md')]: {
-      width: '100%',
+      width: '90%',
       marginTop: 0,
     },
   },
