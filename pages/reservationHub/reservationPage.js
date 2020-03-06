@@ -400,11 +400,11 @@ class reservationPage extends React.Component {
               </Grid>
               <Grid style={{width: '50%', display: 'flex', flexDirection: 'column'}}>
                 <Grid style={{border: '2px solid #d2d2d2', borderRadius: 30, marginRight: 100, marginLeft: 100, padding: '3%'}}>
-                  <Grid>
+                  <Grid style={{marginBottom: 30}}>
                     <Grid>
                       <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & Heure</Typography>
                     </Grid>
-                    <Grid style={{display: 'flex'}}>
+                    <Grid style={{display: 'flex', marginLeft: 10, marginTop: 20}}>
                       <Grid>
                         <TextField
                           id="date"
@@ -416,7 +416,7 @@ class reservationPage extends React.Component {
                           }}
                         />
                       </Grid>
-                      <Grid>
+                      <Grid style={{marginLeft: 50}}>
                         <TextField
                           id="time"
                           label="Heure"
@@ -429,11 +429,11 @@ class reservationPage extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid>
+                  <Grid style={{marginBottom: 30}}>
                     <Grid>
                       <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Mes prestations</Typography>
                     </Grid>
-                    <Grid>
+                    <Grid style={{marginTop: 20}}>
                       <ExpansionPanel>
                         <ExpansionPanelSummary
                           expandIcon={<ExpandMoreIcon />}
@@ -538,7 +538,7 @@ class reservationPage extends React.Component {
                       </ExpansionPanel>
                     </Grid>
                   </Grid>
-                  <Grid>
+                  <Grid style={{marginBottom: 30}}>
                     <Grid>
                       <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Lieu de la prestation</Typography>
                     </Grid>
@@ -555,7 +555,7 @@ class reservationPage extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid>
+                  <Grid style={{marginBottom: 30}}>
                     <Grid>
                       <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
                     </Grid>
@@ -563,16 +563,16 @@ class reservationPage extends React.Component {
                       <ButtonSwitch label={'Retrait & livraison (5€)'} isEditable={false} isPrice={false} isOption={false}/>
                     </Grid>
                   </Grid>
-                  <Grid>
+                  <Grid style={{marginBottom: 30}}>
                     <Grid>
                       <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Détails de la prestation</Typography>
                     </Grid>
-                    <Grid>
-                      <Grid style={{display: 'flex', alignItems : 'center'}}>
+                    <Grid style={{marginTop: 20, marginLeft: 10}}>
+                      <Grid style={{display: 'flex', alignItems : 'center', marginBottom: 20}}>
                         <Grid>
                           <RoomIcon color={'primary'}/>
                         </Grid>
-                        <Grid>
+                        <Grid style={{marginLeft: 10}}>
                           <label>A mon adresse principale</label>
                         </Grid>
                       </Grid>
@@ -580,48 +580,50 @@ class reservationPage extends React.Component {
                         <Grid>
                           <CalendarTodayIcon color={'primary'}/>
                         </Grid>
-                        <Grid>
+                        <Grid style={{marginLeft: 10}}>
                           <label>Le 23/03/2020 à 12h30</label>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid>
+                  <Grid style={{display: 'flex', flexDirection:'column', marginLeft:15, marginRight:15, marginBottom:30}}>
                     <Grid>
-                      <Grid>
-                        <p>Presta A</p>
+                      <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Grid>
+                          <p>Presta A</p>
+                        </Grid>
+                        <Grid>
+                          <p>Prix</p>
+                        </Grid>
                       </Grid>
-                      <Grid>
-                        <p>Prix</p>
+                      <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Grid>
+                          <p>Presta B</p>
+                        </Grid>
+                        <Grid>
+                          <p>Prix</p>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid>
-                      <Grid>
-                        <p>Presta B</p>
+                      <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Grid>
+                          <p>Presta C</p>
+                        </Grid>
+                        <Grid>
+                          <p>Prix</p>
+                        </Grid>
                       </Grid>
-                      <Grid>
-                        <p>Prix</p>
-                      </Grid>
-                    </Grid>
-                    <Grid>
-                      <Grid>
-                        <p>Presta C</p>
-                      </Grid>
-                      <Grid>
-                        <p>Prix</p>
-                      </Grid>
-                    </Grid>
-                    <Grid>
-                      <Grid>
-                        <p>Total (EUR)</p>
-                      </Grid>
-                      <Grid>
-                        <p>Prix</p>
+                      <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Grid>
+                          <p>Total (EUR)</p>
+                        </Grid>
+                        <Grid>
+                          <p>Prix</p>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                   <Grid>
-                    <Grid style={{display: 'flex' }}>
+                    <Grid style={{display: 'flex', justifyContent: 'space-around' }}>
                       <Grid>
                         <Button
                           variant="outlined"
