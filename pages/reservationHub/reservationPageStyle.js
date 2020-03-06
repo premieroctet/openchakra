@@ -8,8 +8,7 @@ export default theme => ({
   },
   badgeStyle:{
     color: "white",
-    '& span:nth-child(+n+6)':{
-    }
+
   },
   boxRating:{
     margin: 0,
@@ -22,6 +21,7 @@ export default theme => ({
   },
   responsiveListContainer:{
     marginTop: 10,
+    width: '80%',
     [theme.breakpoints.down('xs')]: {
       margin: 0,
       height:'auto'
@@ -51,7 +51,7 @@ export default theme => ({
   },
   textAvatar: {
     textAlign: 'center',
-    color: 'white',
+    color: 'black',
     margin: 'auto',
     fontSize: 20,
   },

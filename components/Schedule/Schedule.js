@@ -235,13 +235,13 @@ class Schedule extends React.Component {
   };
 
   render() {
-    const { classes, title, subtitle } = this.props;
+    const { classes, title, subtitle, selectable, height } = this.props;
 
     let events = availabilities2events(this.props.availabilities);
     console.log("Events rendered:"+JSON.stringify(events[0]));
 
     return (
-      <Grid style={{height:700}}>
+      <Grid style={{height: height}}>
         { title || subtitle  ?
           <Grid style={{ marginBottom: 50 }}>
             { title ?
@@ -259,7 +259,7 @@ class Schedule extends React.Component {
         }
         <Calendar
           scrollToTime={new Date(1970, 1, 1, 7)}
-          selectable
+          selectable={selectable}
           popup={false}
           culture='fr-FR'
           localizer={localizer}
@@ -284,6 +284,7 @@ class Schedule extends React.Component {
             'noEventsInRange': 'Aucun évènement dans cette période',
           }}
           formats={formats}
+          className={classes.sizeSchedulle}
         />
         <Modal
           closeAfterTransition
