@@ -158,7 +158,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-static/
-!static/assets/police
+!static
+static/*
+!static/assets
 # Vi swap files
 **/*.swp
