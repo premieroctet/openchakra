@@ -87,8 +87,6 @@ class searchLogin extends React.Component {
             address: {},
             otherAddress: [],
             addressSelected: {},
-            click: false,
-            click2: false,
             categories: [],
             serviceUser: [],
             serviceUserCopy: [],
@@ -238,15 +236,14 @@ class searchLogin extends React.Component {
                 .catch(err => console.log(err));
         }
 
-        this.setState({click: true, click2:false});
     }
 
-   async searchWithWord(){
+   searchWithWord(){
          if(this.state.research !== ""){
              this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],resultCategory:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
                  checkedParticulier:false,idAlfred:[],prestationOk:false,serviceOk:false,categoryOk:false});
              const obj = {label:this.state.research.trim()};
-             await axios.post(url+'myAlfred/api/prestation/all/search',obj)
+             axios.post(url+'myAlfred/api/prestation/all/search',obj)
                  .then(res => {
 
                      let prestations = res.data;
@@ -267,7 +264,7 @@ class searchLogin extends React.Component {
                      console.log(err)
                  });
 
-             await axios.post(url+'myAlfred/api/service/all/search',obj)
+             axios.post(url+'myAlfred/api/service/all/search',obj)
                  .then(res => {
                      let services = res.data;
                      this.setState({services: services});
@@ -284,7 +281,7 @@ class searchLogin extends React.Component {
                      console.log(err);
                  });
 
-             await axios.post(url + 'myAlfred/api/category/all/search', obj)
+             axios.post(url + 'myAlfred/api/category/all/search', obj)
                  .then(responseCategory => {
                      let category = responseCategory.data;
                      this.setState({resultCategory:category});
@@ -518,7 +515,6 @@ class searchLogin extends React.Component {
                          .catch(err => console.log(err));
                  }
              }
-             this.setState({click: false, click2: true});
          }
 
 
@@ -803,9 +799,13 @@ class searchLogin extends React.Component {
         const {address} = this.state;
         const {user} = this.state;
         const {otherAddress} = this.state;
-        const {click} = this.state;
+        var {research} = this.state;
         const categories = this.state.categories;
         const serviceUser = this.state.serviceUser;
+
+        research = research.trim();  
+        console.log("search:"+research);
+
         return (
             <Fragment>
                 <Layout>
@@ -826,7 +826,7 @@ class searchLogin extends React.Component {
                                     variant={"outlined"}
                                     value={this.state.research}
                                     style={{width: '100%', margin: 'auto'}}
-                                    onChange={(event)=>{this.setState({research: event.target.value,click2:false});}}
+                                    onChange={(event)=>{this.setState({research: event.target.value});}}
                                     onKeyDown={(e)=>this.keyPress(e)}
                                 />
                             </Grid>
@@ -992,7 +992,7 @@ class searchLogin extends React.Component {
 
                             
                         </Grid>
-                        {click ?
+                        {research=='' ?
                             <>
                                 <Grid container>
                                     <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous {user.firstname} ?</h3>
