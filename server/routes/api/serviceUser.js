@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
@@ -9,14 +8,16 @@ const Shop = require('../../models/Shop');
 const User = require('../../models/User');
 const Availability = require('../../models/Availability');
 const axios = require('axios');
+const https = require('https');
 const multer = require("multer");
 const crypto = require('crypto');
 const geolib = require('geolib');
 const _ = require('lodash');
 const moment = require('moment');
 const isEmpty = require('../../validation/is-empty');
-const emptyPromise = require('../../../utils/promise.js');
 const {data2ServiceUser} = require('../../../utils/mapping');
+const emptyPromise = require('../../../utils/promise');
+
 moment.locale('fr');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -468,8 +469,6 @@ router.get('/near', passport.authenticate('jwt', { session: false }), (req, res)
                             service.splice(removeIndex, 1);
                           }*/
                           var distance = geolib.convertDistance( geolib.getDistance( {latitude:latUser,longitude:lngUser}, {latitude:latAlfred, longitude: lngAlfred}), 'km').toFixed(2);
-                          console.log("Distance:"+distance);
-                          console.log("Perimeter:"+e.perimeter);
                           if(distance < e.perimeter) {
                             allService.push(e)
                           }
@@ -528,6 +527,16 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
 // @Route POST /myAlfred/api/serviceUser/nearGps
 // View all serviceUser by gps coordinates
 router.post('/nearGps',(req,res)=> {
+
+    const instance = axios.create({
+      httpsAgent: new https.Agent({  
+        rejectUnauthorized: false
+      })
+    });
+
+    var promise = 'keyword' in req.body ?  instance.get("https://localhost/myAlfred/api/service/keyword/garde") : emptyPromise({data: null});
+    promise.then(result => console.log("Result axios:"+result.data));
+
     const gps = req.body.gps;
     ServiceUser.find()
       .populate('user','-id_card')
@@ -539,7 +548,6 @@ router.post('/nearGps',(req,res)=> {
         service.forEach(e => {
           //console.log("Service:"+e.perimeter,JSON.stringify(service));
           const gpsAlfred = e.service_address.gps;
-          console.log("GPS service:"+JSON.stringify(gpsAlfred));
           if (!gpsAlfred) {
             console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred));
           }
@@ -557,8 +565,10 @@ router.post('/nearGps',(req,res)=> {
               service.splice(removeIndex, 1);
             }*/
             var distance = geolib.convertDistance( geolib.getDistance( {latitude:latUser,longitude:lngUser}, {latitude:latAlfred, longitude: lngAlfred}), 'km').toFixed(2);
+            /**
             console.log("Distance:"+distance);
             console.log("Perimeter:"+e.perimeter);
+            */
             if(distance < e.perimeter) {
               allService.push(e)
             }
