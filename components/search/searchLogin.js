@@ -144,6 +144,8 @@ class searchLogin extends React.Component {
     }
 
     onChange = e => {
+        var {name, value} = e.target;
+        console.log("onChange:"+name, value);
         this.setState({ [e.target.name]: e.target.value });
     };
 
@@ -152,90 +154,43 @@ class searchLogin extends React.Component {
     };
 
      search() {
-         this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[],
-             checkedParticulier:false,idAlfred:[]});
+         this.setState({serviceUser:[],categoryFinal: [],finalServiceUser:[],prestations:[],services:[],uniqCategory:[],uniqCategoryService:[], checkedParticulier:false,idAlfred:[]});
         const address = this.state.addressSelected;
+        var res=null
         if(address.gps !== undefined){
             this.setState({lat:address.gps.lat, lng: address.gps.lng});
-            axios.get(url+'myAlfred/api/serviceUser/near')
-                .then(res => {
-                    let serviceUser = res.data;
-                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
-                        ['desc','desc','desc','desc','desc']);
-                    this.setState({serviceUser:sorted,serviceUserCopy: sorted});
-                    axios.get(url+'myAlfred/api/category/all/sort')
-                        .then(res => {
-                            let categories = res.data;
-                            this.setState({categories:categories});
-                            categories.forEach(e => {
-                                this.setState({[e.label]:0});
-                                this.state.serviceUser.forEach(a => {
-                                    if(a.service.category === e._id){
-                                        this.setState(prevState => {
-                                            return {[e.label]: prevState[e.label] + 1}
-                                        })
-                                    }
-                                })
-                            })
-                        })
-                        .catch(err => console.log(err));
-                })
-                .catch(err => console.log(err));
+            res = axios.post(url+'myAlfred/api/serviceUser/nearGps', {gps: address.gps});
         } else if(address==='all') {
             this.setState({lat:this.state.address.gps.lat, lng: this.state.address.gps.lng});
-            axios.get(url+'myAlfred/api/serviceUser/all')
-                .then(res => {
-                    let serviceUser = res.data;
-                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
-                        ['desc','desc','desc','desc','desc']);
-                    this.setState({serviceUser:sorted,serviceUserCopy: sorted});
-                    axios.get(url+'myAlfred/api/category/all/sort')
-                        .then(res => {
-                            let categories = res.data;
-                            this.setState({categories:categories});
-                            categories.forEach(e => {
-                                this.setState({[e.label]:0});
-                                this.state.serviceUser.forEach(a => {
-                                    if(a.service.category === e._id){
-                                        this.setState(prevState => {
-                                            return {[e.label]: prevState[e.label] + 1}
-                                        })
-                                    }
-                                })
-                            })
-                        })
-                        .catch(err => console.log(err));
-                })
-                .catch(err => console.log(err));
+            res = axios.get(url+'myAlfred/api/serviceUser/all');
         } else {
             this.setState({lat:address.lat,lng: address.lng});
-            const id = address._id;
-            axios.get(url+'myAlfred/api/serviceUser/nearOther/'+id)
-                .then(res => {
-                    let serviceUser = res.data;
-                    const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
-                        ['desc','desc','desc','desc','desc']);
-                    this.setState({serviceUser:sorted,serviceUserCopy: sorted});
-                    axios.get(url+'myAlfred/api/category/all/sort')
-                        .then(res => {
-                            let categories = res.data;
-                            this.setState({categories:categories});
-                            categories.forEach(e => {
-                                this.setState({[e.label]:0});
-                                this.state.serviceUser.forEach(a => {
-                                    if(a.service.category === e._id){
-                                        this.setState(prevState => {
-                                            return {[e.label]: prevState[e.label] + 1}
-                                        })
-                                    }
-                                })
-                            })
-                        })
-                        .catch(err => console.log(err));
-                })
-                .catch(err => console.log(err));
-        }
-
+            res = axios.post(url+'myAlfred/api/serviceUser/nearGps', {gps: address});
+       }
+       res
+         .then(res => {
+           let serviceUser = res.data;
+           console.log("Got services count:"+serviceUser.length);
+           const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+              ['desc','desc','desc','desc','desc']);
+           this.setState({serviceUser:sorted,serviceUserCopy: sorted});
+           axios.get(url+'myAlfred/api/category/all/sort')
+             .then(res => {
+               let categories = res.data;
+               var catCount={}
+               categories.forEach(e => {
+                 catCount[e.label]=0;
+                 sorted.forEach(a => {
+                   if(a.service.category === e._id){
+                     catCount[e.label]=catCount[e.label]+1;
+                   }
+                 })
+               })
+               this.setState({...catCount, categories:categories});
+             })
+             .catch(err => console.log(err));
+           })
+           .catch(err => console.log(err));
     }
 
    searchWithWord(){
@@ -705,7 +660,7 @@ class searchLogin extends React.Component {
             const diff = end.diff(begin,'days')+1;
             const obj = {begin,end,beginDay,endDay};
 
-            axios.post(url+'myAlfred/api/availability/filterDate',obj)
+            axios.get(url+'myAlfred/api/availability/filterDate',obj)
                 .then(response => {
                     let availability = response.data;
                     const idAlfred = [];
@@ -804,7 +759,7 @@ class searchLogin extends React.Component {
         const serviceUser = this.state.serviceUser;
 
         research = research.trim();  
-        console.log("search:"+research);
+        console.log("state:"+JSON.stringify(this.state, null, 2));
 
         return (
             <Fragment>
@@ -1028,23 +983,14 @@ class searchLogin extends React.Component {
 
                                         categories.map(e => (
                                             <Grid container>
-                                                {this.state[e.label] !==0 ?
-                                                    <Grid item xs={12}>
-                                                        <h3 style={{marginLeft:15}}>{e.label}</h3>
-                                                    </Grid>
-                                                    : null}
+                                                {this.state[e.label] !==0 ?  <Grid item xs={12}> <h3 style={{marginLeft:15}}>{e.label}</h3> </Grid> : null}
 
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
                                                             <Grid item xs={12} sm={6} md={3}>
                                                                 <Card className={classes.card} style={{height: '420px'}}>
-                                                                            <CardMedia
-                                                                                className={classes.media}
-                                                                                style={{height:150}}
-                                                                                image={a.service.picture}
-                                                                                title={a.service.label}
-                                                                            >
+                                                                            <CardMedia className={classes.media} style={{height:150}} image={a.service.picture} title={a.service.label} >
                                                                                 <img style={{position: 'absolute', width: '130px', height: '130px', borderRadius: '50%', objectFit: 'cover', top: '60px', left: 0, right: 0, margin: 'auto'}} src={"../"+a.user.picture}/>
                                                                                 {a.service_address.city != undefined ? 
                                                                                 <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'white', textShadow:'0px 0px 3px black',fontWeight:600,bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
@@ -1058,7 +1004,8 @@ class searchLogin extends React.Component {
                                                                                     <Grid item xs={7}>
                                                                                         <Typography style={{fontSize: '0.9rem', color: '#A3A3A3'}}>{e.label}</Typography>
                                                                                         <Typography style={{fontSize: '1rem'}}>
-                                                                                            {a.service.label} par {a.user.firstname}  <img src="../static/checkboxes/roundBlue2Checked.png" style={{width: '13px', height: '13px'}}/>
+                                                                                            {a.service.label} par {a.user.firstname}  
+                                                                                            <img src="../static/checkboxes/roundBlue2Checked.png" style={{width: '13px', height: '13px'}}/>
                                                                                         </Typography>
                                                                                             <StarRatings rating={a.user.score} starRatedColor={"#2FBCD3"} numberOfStars={5} name='rating' starDimension={'20px'} starHoverColor={'#2FBCD3'} starSpacing={'3px'} />
                                                                                             <span style={{marginBottom: '15px', fontSize: '0.6rem'}}>({a.user.number_of_reviews})</span>
@@ -1075,19 +1022,9 @@ class searchLogin extends React.Component {
                                                                                 </Grid>
                                                                                 {a.graduated == true || a.is_certified == true || a.level != 0 ?
                                                                                 <Grid container style={{marginTop: '20px', marginBottom: '-15px'}}>
-                                                                                    {a.graduated == true ?
-                                                                                    <Grid item xs={3} style={{margin: 'auto', textAlign:'center'}}>
-                                                                                        <Tooltip title="Diplomé">
-                                                                                            <img src='/static/assets/img/diplome.svg' />
-                                                                                        </Tooltip>
-                                                                                    </Grid>
-                                                                                    : null}
+                                                                                    {a.graduated == true ?  <Grid item xs={3} style={{margin: 'auto', textAlign:'center'}}> <Tooltip title="Diplomé"> <img src='/static/assets/img/diplome.svg' /> </Tooltip> </Grid> : null}
                                                                                     {a.is_certified == true ?
-                                                                                    <Grid item xs={3} style={{margin: 'auto', textAlign:'center'}}>
-                                                                                        <Tooltip title="Certifié">
-                                                                                            <img src='/static/assets/img/certificat.svg' />
-                                                                                        </Tooltip>
-                                                                                    </Grid>
+                                                                                    <Grid item xs={3} style={{margin: 'auto', textAlign:'center'}}> <Tooltip title="Certifié"> <img src='/static/assets/img/certificat.svg' /> </Tooltip> </Grid>
                                                                                     : null}
                                                                                     {a.level != 0 ?
                                                                                     <Grid item xs={3} style={{margin: 'auto', textAlign:'center'}}>
@@ -1246,17 +1183,8 @@ class searchLogin extends React.Component {
                                     }
                                 </Grid>
                             </>
-
-
-
-
-                            : null}
-
-                            <>
-                            
-                            {this.state.research.length === 0 || !this.state.research.trim() ?
-                            null
-                            :<Grid container>
+                            : 
+                            <Grid container>
                                 <Typography style={{fontSize: '1.1rem', color: '#A3A3A3', marginLeft: '15px',}}>Résultat pour la recherche : <i style={{fontWeight: 'bold'}}>{this.state.research}</i></Typography>
                             </Grid>}
                                 {!this.state.finalServiceUser.length && !this.state.serviceUser.length ? <p>Aucun résultat</p> : null}
@@ -1476,15 +1404,9 @@ class searchLogin extends React.Component {
                                                 {this.state[e.label+'Final'] !== 0 ?
                                                     <hr style={{width: '10%', margin: 'auto', border:'none', backgroundColor: '#2FBCD3', height: '10px', marginBottom: '80px', marginTop: '55px'}} />
                                                     : null}
-
-
                                         </Grid>
                                     ))
-
                                 }
-
-
-                            </>
                     </Grid>
                     <Footer/>
                 </Layout>

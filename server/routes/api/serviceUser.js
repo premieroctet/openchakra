@@ -438,9 +438,7 @@ router.get('/category/:id', (req, res) => {
 // @Route GET /myAlfred/api/serviceUser/near
 // View all service by city
 // @Access private
-router.get('/near', passport.authenticate('jwt', {
-    session: false
-}), (req, res) => {
+router.get('/near', passport.authenticate('jwt', { session: false }), (req, res) => {
 
     User.findById(req.user.id)
         .then(user => {
@@ -453,33 +451,36 @@ router.get('/near', passport.authenticate('jwt', {
                     const lngUser = gps.lng;
                     const allService = [];
                     service.forEach(e => {
+                        //console.log("Service:"+e.perimeter,JSON.stringify(service));
                         const gpsAlfred = e.service_address.gps;
+                        console.log("GPS service:"+JSON.stringify(gpsAlfred));
                         const latAlfred = gpsAlfred.lat;
                         const lngAlfred = gpsAlfred.lng;
+                        if (latAlfred==null || lngAlfred==null) {
+                          console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred));
+                        }
+                        else {
 
-                        /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+                          /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
 
-                        if(!isNear) {
+                          if(!isNear) {
                             const removeIndex = service.findIndex(i => i._id == e._id);
                             service.splice(removeIndex, 1);
-                        }*/
-                        if(geolib.convertDistance(
-                            geolib.getDistance(
-                                {latitude:latUser,longitude:lngUser},
-                                {latitude:latAlfred, longitude: lngAlfred}
-                            ),
-                            'km'
-                        ).toFixed(2) < e.perimeter) {
+                          }*/
+                          var distance = geolib.convertDistance( geolib.getDistance( {latitude:latUser,longitude:lngUser}, {latitude:latAlfred, longitude: lngAlfred}), 'km').toFixed(2);
+                          console.log("Distance:"+distance);
+                          console.log("Perimeter:"+e.perimeter);
+                          if(distance < e.perimeter) {
                             allService.push(e)
+                          }
                         }
 
-
                     });
-
+                    console.log("Got services:"+allService.length);
                     res.json(allService);
 
                 })
-                .catch(err => res.status(404).json({ service: 'No service found' }));
+                .catch(err => { console.log(err); res.status(404).json({ service: 'No service found' })});
         });
 
 });
@@ -524,6 +525,52 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
 
 });
 
+// @Route POST /myAlfred/api/serviceUser/nearGps
+// View all serviceUser by gps coordinates
+router.post('/nearGps',(req,res)=> {
+    const gps = req.body.gps;
+    ServiceUser.find()
+      .populate('user','-id_card')
+      .populate('service')
+      .then(service => {
+        const latUser = gps.lat;
+        const lngUser = gps.lng;
+        const allService = [];
+        service.forEach(e => {
+          //console.log("Service:"+e.perimeter,JSON.stringify(service));
+          const gpsAlfred = e.service_address.gps;
+          console.log("GPS service:"+JSON.stringify(gpsAlfred));
+          if (!gpsAlfred) {
+            console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred));
+          }
+          else {
+            const latAlfred = gpsAlfred.lat;
+            const lngAlfred = gpsAlfred.lng;
+            if (latAlfred==null || lngAlfred==null) {
+              console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred));
+            }
+            else {
+            /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+
+            if(!isNear) {
+              const removeIndex = service.findIndex(i => i._id == e._id);
+              service.splice(removeIndex, 1);
+            }*/
+            var distance = geolib.convertDistance( geolib.getDistance( {latitude:latUser,longitude:lngUser}, {latitude:latAlfred, longitude: lngAlfred}), 'km').toFixed(2);
+            console.log("Distance:"+distance);
+            console.log("Perimeter:"+e.perimeter);
+            if(distance < e.perimeter) {
+              allService.push(e)
+            }
+            }
+          }
+        });
+        console.log("Services count:"+allService.length);
+        res.json(allService);
+      })
+      .catch(err => { console.error(err); res.status(404).json({ service: 'No service found' })});
+});
+
 // @Route GET /myAlfred/api/serviceUser/near/:city
 // View all serviceUser by city
 router.post('/nearCity',(req,res)=> {
@@ -533,9 +580,7 @@ router.post('/nearCity',(req,res)=> {
                 .populate('user','-id_card')
                 .populate('service')
                 .then(service => {
-
                     res.json(service);
-
                 })
                 .catch(err => res.status(404).json({ service: 'No service found' }));
 
@@ -578,13 +623,8 @@ router.get('/nearOther/:id',passport.authenticate('jwt',{session:false}),(req,re
                         ).toFixed(2) < e.perimeter) {
                             allService.push(e)
                         }
-
-
-
                     });
-
-                    setTimeout(()=>res.json(allService),500);
-
+                    res.json(allService);
                 })
                 .catch(err => res.status(404).json({ service: 'No service found' }));
         });
@@ -618,12 +658,8 @@ router.get('/all/nearOther/:id/:service',passport.authenticate('jwt',{session:fa
                             const removeIndex = service.findIndex(i => i._id === e._id);
                             service.splice(removeIndex, 1);
                         }
-
-
                     });
-
                     res.json(service);
-
                 })
                 .catch(err => res.status(404).json({
                     service: 'No service found'
@@ -761,7 +797,7 @@ router.post('/home/search',(req,res)=> {
                     })
                     .catch(errors => console.log(errors))
             });
-            setTimeout(()=>res.json(allServices),2000);
+            res.json(allServices);
 
         })
         .catch(err => res.status(404).json({ service: 'No service found' }));
