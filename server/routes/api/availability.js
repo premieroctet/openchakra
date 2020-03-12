@@ -77,6 +77,7 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
 // Return availability between 2 dates
 router.post('/filterDate',(req,res)=>{
     const allAvailability = [];
+    console.log("Filter date received "+JSON.stringify(req.body));
     const dateBegin = req.body.begin;
     const dateEnd = req.body.end;
     const beginDay = req.body.beginDay;

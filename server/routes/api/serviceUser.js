@@ -17,6 +17,9 @@ const moment = require('moment');
 const isEmpty = require('../../validation/is-empty');
 const {data2ServiceUser} = require('../../../utils/mapping');
 const emptyPromise = require('../../../utils/promise');
+const { config } = require('../../../config/config');
+const { filterServicesGPS} = require('../../../utils/filters');
+
 
 moment.locale('fr');
 const storage = multer.diskStorage({
@@ -454,11 +457,11 @@ router.get('/near', passport.authenticate('jwt', { session: false }), (req, res)
                     service.forEach(e => {
                         //console.log("Service:"+e.perimeter,JSON.stringify(service));
                         const gpsAlfred = e.service_address.gps;
-                        console.log("GPS service:"+JSON.stringify(gpsAlfred));
+                        //console.log("GPS service:"+JSON.stringify(gpsAlfred));
                         const latAlfred = gpsAlfred.lat;
                         const lngAlfred = gpsAlfred.lng;
                         if (latAlfred==null || lngAlfred==null) {
-                          console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred));
+                          //console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred));
                         }
                         else {
 
@@ -524,61 +527,52 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
 
 });
 
-// @Route POST /myAlfred/api/serviceUser/nearGps
-// View all serviceUser by gps coordinates
-router.post('/nearGps',(req,res)=> {
+// @Route POST /myAlfred/api/serviceUser/search
+// Search serviceUser according to optional coordinates, dates, etc...
+router.post('/search',(req,res)=> {
 
+    url = "https://"+req.headers.host;
+    console.log("ServiceUSer search with filter:"+JSON.stringify(req.body));
     const instance = axios.create({
       httpsAgent: new https.Agent({  
         rejectUnauthorized: false
       })
     });
 
-    var promise = 'keyword' in req.body ?  instance.get("https://localhost/myAlfred/api/service/keyword/garde") : emptyPromise({data: null});
-    promise.then(result => console.log("Result axios:"+result.data));
+    var kwUrl = `${url}/myAlfred/api/service/keyword/${req.body.keyword}`;
+    console.log("Keyword url:"+kwUrl);
+    var keywordPromise = 'keyword' in req.body ?  instance.get(kwUrl) : emptyPromise({data: null});
 
-    const gps = req.body.gps;
-    ServiceUser.find()
-      .populate('user','-id_card')
-      .populate('service')
-      .then(service => {
-        const latUser = gps.lat;
-        const lngUser = gps.lng;
-        const allService = [];
-        service.forEach(e => {
-          //console.log("Service:"+e.perimeter,JSON.stringify(service));
-          const gpsAlfred = e.service_address.gps;
-          if (!gpsAlfred) {
-            console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred));
-          }
-          else {
-            const latAlfred = gpsAlfred.lat;
-            const lngAlfred = gpsAlfred.lng;
-            if (latAlfred==null || lngAlfred==null) {
-              console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred));
-            }
-            else {
-            /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+    var datesPromise = emptyPromise({data: null});
+    if ('startDate' in req.body || 'endDate' in req.body) {
+      const begin = req.body.startDate || null;
+      const end = req.body.endDate || null;
+      const beginDay =  begin ? moment(begin).format('dddd') : null;
+      const endDay =  end ? moment(end).format('dddd') : null;
 
-            if(!isNear) {
-              const removeIndex = service.findIndex(i => i._id == e._id);
-              service.splice(removeIndex, 1);
-            }*/
-            var distance = geolib.convertDistance( geolib.getDistance( {latitude:latUser,longitude:lngUser}, {latitude:latAlfred, longitude: lngAlfred}), 'km').toFixed(2);
-            /**
-            console.log("Distance:"+distance);
-            console.log("Perimeter:"+e.perimeter);
-            */
-            if(distance < e.perimeter) {
-              allService.push(e)
-            }
-            }
+      const obj = {begin,end,beginDay,endDay};
+
+      datesPromise=axios.post(url+'/myAlfred/api/availability/filterDate',obj) 
+    }
+
+    keywordPromise.then( result => {
+      var allowedServices=result.data;
+      // Result is object category => [arr of services]
+      if (allowedServices) {
+        allowedServices=
+      }
+      ServiceUser.find()
+        .populate('user','-id_card').populate('service')
+        .then(services => {
+          console.log("Services[0]:"+JSON.stringify(services[0]));
+          if ('gps' in req.body) {
+            services = filterServicesGPS(services, req.body.gps);
           }
-        });
-        console.log("Services count:"+allService.length);
-        res.json(allService);
-      })
-      .catch(err => { console.error(err); res.status(404).json({ service: 'No service found' })});
+          console.log("Services count:"+services.length);
+          res.json(services);
+        })
+        .catch(err => { console.error(err); res.status(404).json({ service: 'No service found' })});
+    });
 });
 
 // @Route GET /myAlfred/api/serviceUser/near/:city

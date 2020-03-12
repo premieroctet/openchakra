@@ -171,6 +171,7 @@ router.get('/all/tags/:tags',(req,res)=> {
 router.get('/keyword/:kw',(req,res)=> {
 
     var kw = req.params.kw;
+    console.log("Search service keyword:"+kw);
     var regexp = new RegExp(kw,'i');
     var result={}
     var keywords = {}
@@ -224,7 +225,7 @@ router.get('/keyword/:kw',(req,res)=> {
            })
            }
       )
-      //.catch((err) => res.json("Error:"+JSON.stringify(err)));
+      .catch((err) => res.json("Error:"+JSON.stringify(err)));
 });
 
 module.exports = router;
