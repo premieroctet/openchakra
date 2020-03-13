@@ -534,9 +534,7 @@ router.post('/search',(req,res)=> {
     url = "https://"+req.headers.host;
     console.log("ServiceUSer search with filter:"+JSON.stringify(req.body));
     const instance = axios.create({
-      httpsAgent: new https.Agent({  
-        rejectUnauthorized: false
-      })
+      httpsAgent: new https.Agent({rejectUnauthorized: false})
     });
 
     var kwUrl = `${url}/myAlfred/api/service/keyword/${req.body.keyword}`;
@@ -559,14 +557,22 @@ router.post('/search',(req,res)=> {
       var allowedServices=result.data;
       // Result is object category => [arr of services]
       if (allowedServices) {
-        allowedServices=
+        allowedServices= Object.values(allowedServices);
+        console.log("AllowedService:"+JSON.stringify(allowedServices));
+        allowedServices=allowedServices.reduce( (acc, arr) => acc.concat(arr));
+        console.log("AllowedService:"+JSON.stringify(allowedServices));
+        allowedServices=allowedServices.map( service => service.id.toString());
+        console.log("AllowedService:"+JSON.stringify(allowedServices));
       }
       ServiceUser.find()
         .populate('user','-id_card').populate('service')
         .then(services => {
-          console.log("Services[0]:"+JSON.stringify(services[0]));
+          console.log("Services[0]:"+JSON.stringify(services[0], null, 2));
           if ('gps' in req.body) {
             services = filterServicesGPS(services, req.body.gps);
+          }
+          if (allowedServices) {
+            services = services.filter( su => { console.log(su.service._id.toString(), allowedServices) || allowedServices.includes(su.service._id.toString())} );
           }
           console.log("Services count:"+services.length);
           res.json(services);
