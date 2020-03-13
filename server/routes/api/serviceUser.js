@@ -556,7 +556,7 @@ router.post('/search',(req,res)=> {
     keywordPromise.then( result => {
       var allowedServices=result.data;
       // Result is object category => [arr of services]
-      if (allowedServices) {
+      if (allowedServices && Object.keys(allowedServices).length>0) {
         allowedServices= Object.values(allowedServices);
         console.log("AllowedService:"+JSON.stringify(allowedServices));
         allowedServices=allowedServices.reduce( (acc, arr) => acc.concat(arr));
@@ -572,7 +572,8 @@ router.post('/search',(req,res)=> {
             services = filterServicesGPS(services, req.body.gps);
           }
           if (allowedServices) {
-            services = services.filter( su => { console.log(su.service._id.toString(), allowedServices) || allowedServices.includes(su.service._id.toString())} );
+            console.log("Svcs:"+JSON.stringify(allowedServices));
+            services = services.filter( su => allowedServices.includes(su.service._id.toString()) );
           }
           console.log("Services count:"+services.length);
           res.json(services);
