@@ -555,14 +555,13 @@ router.post('/search',(req,res)=> {
 
     keywordPromise.then( result => {
       var allowedServices=result.data;
-      // Result is object category => [arr of services]
-      if (allowedServices && Object.keys(allowedServices).length>0) {
+      // Result is object category => [arr of services] or null
+      if (allowedServices!=null) {
         allowedServices= Object.values(allowedServices);
-        console.log("AllowedService:"+JSON.stringify(allowedServices));
-        allowedServices=allowedServices.reduce( (acc, arr) => acc.concat(arr));
-        console.log("AllowedService:"+JSON.stringify(allowedServices));
-        allowedServices=allowedServices.map( service => service.id.toString());
-        console.log("AllowedService:"+JSON.stringify(allowedServices));
+        if (allowedServices.length>0) {
+          allowedServices=allowedServices.reduce( (acc, arr) => acc.concat(arr));
+          allowedServices=allowedServices.map( service => service.id.toString());
+        }
       }
       ServiceUser.find()
         .populate('user','-id_card').populate('service')
@@ -571,7 +570,7 @@ router.post('/search',(req,res)=> {
           if ('gps' in req.body) {
             services = filterServicesGPS(services, req.body.gps);
           }
-          if (allowedServices) {
+          if (allowedServices!=null) {
             console.log("Svcs:"+JSON.stringify(allowedServices));
             services = services.filter( su => allowedServices.includes(su.service._id.toString()) );
           }

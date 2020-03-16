@@ -24,6 +24,7 @@ import moment from "moment";
 import StarRatings from 'react-star-ratings';
 import 'react-dates/lib/css/_datepicker.css';
 import Tooltip from '@material-ui/core/Tooltip';
+import CardPreview from '../CardPreview/CardPreview';
 
 const geolib = require('geolib');
 const _ = require('lodash');
@@ -176,10 +177,10 @@ class searchLogin extends React.Component {
 
        // Status : pro or individual
        if (this.state.individualSelect) {
-         filters['individual']=true;
+         filters['individual']=this.state.individualSelected;
        }
        if (this.state.proSelected) {
-         filters['professional']=true;
+         filters['professional']=this.state.proSelected;
        }
 
        axios.post('/myAlfred/api/serviceUser/search', filters)
@@ -202,7 +203,8 @@ class searchLogin extends React.Component {
                  })
                })
                this.setState({...catCount, categories:categories});
-             })
+             }
+             )
              .catch(err => console.log(err));
            })
            .catch(err => console.log(err));
@@ -457,24 +459,16 @@ class searchLogin extends React.Component {
                                         {/* Adresse spécifique  */
                                          categories.map(e => (
                                             <Grid container>
-                                                {this.state[e.label] !== 0 ?
-                                                    <Grid item xs={12}>
-                                                        <h3 style={{marginLeft:15}}>{e.label}</h3>
-                                                    </Grid>
-                                                    : null}
+                                                {this.state[e.label] !== 0 ? <Grid item xs={12}> <h3 style={{marginLeft:15}}>{e.label}</h3> </Grid> : null}
 
                                                 <Grid container style={{paddingLeft: '25px'}}>
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
                                                             <Grid item xs={12} sm={6} md={3}>
+                                                               <Fragment><CardPreview service={a.service} ></CardPreview>
                                                                 <Card className={classes.card} style={{height: '420px'}}>
-                                                                            <CardMedia
-                                                                                className={classes.media}
-                                                                                style={{height:150}}
-                                                                                image={a.service.picture}
-                                                                                title={a.service.label}
-                                                                            >
+                                                                            <CardMedia className={classes.media} style={{height:150}} image={a.service.picture} title={a.service.label} >
                                                                                 <img style={{position: 'absolute', width: '130px', height: '130px', borderRadius: '50%', objectFit: 'cover', top: '60px', left: 0, right: 0, margin: 'auto'}} src={"../"+a.user.picture}/>
                                                                                 {a.service_address.city != undefined ? 
                                                                                 <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'white',textShadow:'0px 0px 3px black',fontWeight:600, bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
@@ -553,7 +547,7 @@ class searchLogin extends React.Component {
                                                                                     : null}
                                                                                 </Grid> : null}
                                                                             </CardContent>
-                                                                    </Card>
+                                                                    </Card></Fragment>
                                                             </Grid>
                                                         )
                                                     } else {
