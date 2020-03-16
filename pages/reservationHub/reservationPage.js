@@ -266,7 +266,7 @@ class reservationPage extends React.Component {
                     <Grid>
                       <ShoppingCartIcon fontSize="large"  color={'primary'}/>
                     </Grid>
-                    <Grid style={{fontSize: 'x-large'}}>
+                    <Grid style={{fontSize: 'x-large', marginLeft: 15}}>
                       {serviceUser.minimum_basket} €
                     </Grid>
                   </Grid>
