@@ -42,7 +42,7 @@ class SkillsAlfred extends React.Component{
     }
   }
   render(){
-    const {classes, alfred} = this.props;
+    const {classes, alfred, widthHr} = this.props;
 
     return (
       <Grid container>
@@ -50,6 +50,9 @@ class SkillsAlfred extends React.Component{
           <Typography variant="h6">
             Les compliments reçus par {alfred.firstname}
           </Typography>
+          <Grid style={{width: widthHr}}>
+            <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+          </Grid>
           <Grid container className={classes.mainContainer}>
             {
               Object.keys(this.state.skills).map(result =>{
