@@ -133,7 +133,7 @@ class reservationPage extends React.Component {
           <Grid style={{width: '100%'}}>
             <BannerReservation serviceUser={service} shop={shop} user={user}/>
             <Grid className={classes.mainContainer}>
-              <Grid style={{width: '50%'}}>
+              <Grid className={classes.leftContainer}>
                 <Grid style={{display: ' flex'}}>
                   <Grid style={{width: '80%'}}>
                     <Grid style={{marginBottom: 30}}>
@@ -163,7 +163,7 @@ class reservationPage extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid style={{width : '20%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                  <Grid className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
                       <UserAvatar classes={'avatarLetter'} user={user} className={classes.avatarLetter} />
                       <Typography style={{marginTop:20}} className={classes.textAvatar}>{user.firstname}</Typography>
@@ -285,7 +285,7 @@ class reservationPage extends React.Component {
                     <Grid>
                       <CalendarTodayIcon fontSize="large"  color={'primary'}/>
                     </Grid>
-                    <Grid style={{fontSize: 'large'}}>
+                    <Grid style={{fontSize: 'large',  marginLeft: 15}}>
                       {serviceUser.deadline_before_booking} de délai de prévenance
                     </Grid>
                   </Grid>
@@ -396,19 +396,19 @@ class reservationPage extends React.Component {
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
-                    <Grid style={{display: 'flex', alignItems:'center'}}>
+                    <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
                       <label>Accueil</label>
                       <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
                         <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
                       </Box>
                     </Grid>
-                    <Grid style={{display: 'flex', alignItems:'center'}}>
+                    <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
                       <label>Qualité-prix</label>
-                      <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
+                      <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating} >
                         <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
                       </Box>
                     </Grid>
-                    <Grid style={{display: 'flex', alignItems:'center'}}>
+                    <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
                       <label>Communication</label>
                       <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
                         <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
@@ -422,7 +422,7 @@ class reservationPage extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid style={{width: '50%', display: 'flex', flexDirection: 'column'}}>
+              <Grid className={classes.contentRight}>
                 <Grid style={{border: '2px solid #d2d2d2', borderRadius: 30, marginRight: 100, marginLeft: 100, padding: '3%'}}>
                   <Grid style={{marginBottom: 30}}>
                     <Grid>
