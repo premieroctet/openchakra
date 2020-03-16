@@ -187,9 +187,9 @@ class searchLogin extends React.Component {
          .then(res => {
            let serviceUser = res.data;
            console.log("Got services count:"+serviceUser.length);
-           const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+           const sortedUserServices = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
               ['desc','desc','desc','desc','desc']);
-           this.setState({serviceUser:sorted});
+           this.setState({serviceUser:sortedUserServices});
            axios.get(url+'myAlfred/api/category/all/sort')
              .then(res => {
                let categories = res.data;
