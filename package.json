@@ -30,7 +30,6 @@
     "fast-csv": "^3.0.1",
     "file-system": "^2.2.2",
     "formik": "^1.5.7",
-    "geolib": "^3.0.4",
     "glob": "^7.1.4",
     "jsonwebtoken": "^8.5.1",
     "jss": "^9.8.7",
@@ -99,6 +98,7 @@
     "eslint-plugin-import": "^2.17.2",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.13.0",
+    "geolib": "^3.2.1",
     "jest": "^24.8.0",
     "nodemon": "^1.19.0",
     "systemjs-plugin-json": "^0.3.0"
