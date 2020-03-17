@@ -17,8 +17,7 @@ export default theme => ({
     }
   },
   badgeStyle:{
-    color: "white",
-
+    color: "blue",
   },
   boxRating:{
     margin: 0,
@@ -111,5 +110,16 @@ export default theme => ({
       marginRight: 50,
       marginLeft: 50,
     }
-  }
+  },
+  hrStyle:{
+    width: 500,
+  },
+  imageStyle: {
+    width: 25,
+    height: 25,
+    [theme.breakpoints.down('xs')]: {
+      height: 20,
+      width: 20,
+    }
+  },
 })
