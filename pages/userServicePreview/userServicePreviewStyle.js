@@ -6,9 +6,14 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'row',
     [theme.breakpoints.down('lg')]: {
-      flexDirection: 'column',
       justifyContent: 'center',
-      margin: 15
+      marginLeft: 100,
+      marginRight: 100,
+    },
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'center',
+      marginLeft: 100,
+      marginRight: 100,
     }
   },
   badgeStyle:{
@@ -68,7 +73,7 @@ export default theme => ({
   },
   leftContainer:{
     width: '50%',
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('md')]: {
       width: '100%'
     }
   },
@@ -76,7 +81,7 @@ export default theme => ({
     width: '50%',
     display: 'flex',
     flexDirection: 'column',
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'none'
     }
   },
@@ -86,9 +91,25 @@ export default theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('md')]: {
       width: '100%',
       display: 'flex'
+    }
+  },
+  borderContentRight:{
+    border: '2px solid #d2d2d2',
+    borderRadius: 30,
+    marginRight: 100,
+    marginLeft: 100,
+    padding: '3%',
+    [theme.breakpoints.down('lg')]: {
+      justifyContent: 'center',
+      marginLeft: 50,
+      marginRight: 50,
+    },
+    [theme.breakpoints.down('md')]: {
+      marginRight: 50,
+      marginLeft: 50,
     }
   }
 })

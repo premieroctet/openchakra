@@ -423,7 +423,7 @@ class reservationPage extends React.Component {
                 </Grid>
               </Grid>
               <Grid className={classes.contentRight}>
-                <Grid style={{border: '2px solid #d2d2d2', borderRadius: 30, marginRight: 100, marginLeft: 100, padding: '3%'}}>
+                <Grid className={classes.borderContentRight}>
                   <Grid style={{marginBottom: 30}}>
                     <Grid>
                       <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & Heure</Typography>
