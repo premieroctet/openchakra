@@ -4,7 +4,12 @@ export default theme => ({
     marginLeft: 200,
     marginRight: 200,
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    [theme.breakpoints.down('lg')]: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      margin: 15
+    }
   },
   badgeStyle:{
     color: "white",
@@ -12,6 +17,7 @@ export default theme => ({
   },
   boxRating:{
     margin: 0,
+    marginLeft: 15
   },
   rating:{
     marginLeft: -15,
@@ -59,5 +65,30 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
+  },
+  leftContainer:{
+    width: '50%',
+    [theme.breakpoints.down('lg')]: {
+      width: '100%'
+    }
+  },
+  contentRight:{
+    width: '50%',
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.down('lg')]: {
+      display: 'none'
+    }
+  },
+  avatarContainer: {
+    width : '20%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    [theme.breakpoints.down('lg')]: {
+      width: '100%',
+      display: 'flex'
+    }
   }
 })
