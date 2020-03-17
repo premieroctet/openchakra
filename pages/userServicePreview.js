@@ -33,7 +33,7 @@ import ButtonSwitch from '../components/ButtonSwitch/ButtonSwitch';
 import RoomIcon from '@material-ui/icons/Room';
 import Button from '@material-ui/core/Button';
 
-const { config } = require('../../config/config');
+const { config } = require('../config/config');
 const url = config.apiUrl;
 
 class userServices extends React.Component {

@@ -185,18 +185,18 @@ class searchLogin extends React.Component {
 
        axios.post('/myAlfred/api/serviceUser/search', filters)
          .then(res => {
-           let serviceUser = res.data;
-           console.log("Got services count:"+serviceUser.length);
-           const sortedUserServices = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
+           let serviceUsers = res.data;
+           console.log("Got service:"+JSON.stringify(serviceUsers[0], null, 2));
+           serviceUsers = _.orderBy(serviceUsers,['level','number_of_views','graduated','is_certified','user.creation_date'],
               ['desc','desc','desc','desc','desc']);
-           this.setState({serviceUser:sortedUserServices});
+           this.setState({serviceUser:serviceUsers});
            axios.get(url+'myAlfred/api/category/all/sort')
              .then(res => {
                let categories = res.data;
                var catCount={}
                categories.forEach(e => {
                  catCount[e.label]=0;
-                 sorted.forEach(a => {
+                 serviceUsers.forEach(a => {
                    if(a.service.category === e._id){
                      catCount[e.label]=catCount[e.label]+1;
                    }
@@ -466,7 +466,7 @@ class searchLogin extends React.Component {
                                                     if (a.service.category === e._id) {
                                                         return (
                                                             <Grid item xs={12} sm={6} md={3}>
-                                                               <Fragment><CardPreview service={a.service} ></CardPreview>
+                                                               <Fragment>{ false ?<CardPreview service={a.service} shop={a.shop}></CardPreview> : null}
                                                                 <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia className={classes.media} style={{height:150}} image={a.service.picture} title={a.service.label} >
                                                                                 <img style={{position: 'absolute', width: '130px', height: '130px', borderRadius: '50%', objectFit: 'cover', top: '60px', left: 0, right: 0, margin: 'auto'}} src={"../"+a.user.picture}/>

@@ -529,6 +529,8 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
 
 // @Route POST /myAlfred/api/serviceUser/search
 // Search serviceUser according to optional coordinates, dates, etc...
+// TODO : filter availabilities
+// TODO : include services if visio or @alfred
 router.post('/search',(req,res)=> {
 
     url = "https://"+req.headers.host;
@@ -575,7 +577,14 @@ router.post('/search',(req,res)=> {
             services = services.filter( su => allowedServices.includes(su.service._id.toString()) );
           }
           console.log("Services count:"+services.length);
-          res.json(services);
+          Shop.find()
+            .then( shops => {
+              services.forEach((su, idx) => {
+                su['shop']=shops.filter( s => s.services.map(ser => ser._id).includes(su._id))[0];
+              });
+              console.log(Object.keys(services[0]));
+              res.json(services);
+            }) 
         })
         .catch(err => { console.error(err); res.status(404).json({ service: 'No service found' })});
     });
