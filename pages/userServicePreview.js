@@ -32,6 +32,20 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ButtonSwitch from '../components/ButtonSwitch/ButtonSwitch';
 import RoomIcon from '@material-ui/icons/Room';
 import Button from '@material-ui/core/Button';
+import AppBar from '@material-ui/core/AppBar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import MenuIcon from '@material-ui/icons/Menu';
+import Toolbar from '@material-ui/core/Toolbar';
+import CloseIcon from '@material-ui/icons/Close';
+import EditIcon from '@material-ui/icons/Edit';
+
+
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
@@ -55,6 +69,9 @@ class userServices extends React.Component {
       test:{},
       allEquipments: [],
       availabilities: [],
+      mobileOpen: false,
+      setMobileOpen: false,
+      bottom: false
     }
   }
 
@@ -107,18 +124,285 @@ class userServices extends React.Component {
     });
   }
 
+  toggleDrawer = (side, open) => event => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    this.setState({ ...this.state, [side]: open });
+  };
+
   render() {
     const {classes} = this.props;
-    const {user, serviceUser, shop, service, equipments, userName, alfred} = this.state;
-    console.log(shop, 'shop');
-    console.log(serviceUser, 'serviceUser');
-    console.log(user, 'user');
+    const {user, serviceUser, shop, service, equipments, userName, alfred, container} = this.state;
 
     const StyledRating = withStyles({
       iconFilled: {
         color: '#4fbdd7',
       },
     })(Rating);
+
+    const drawer = side => (
+      <Grid className={classes.borderContentRight}>
+        <Grid style={{marginBottom: 30}}>
+          <Grid style={{display: 'flex', justifyContent: 'space-between' }}>
+            <Grid>
+              <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & Heure</Typography>
+            </Grid>
+            <Hidden lgUp>
+              <Grid>
+                <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
+                  <CloseIcon color={'secondary'} onClick={this.toggleDrawer(side, false)} />
+                </IconButton>
+              </Grid>
+            </Hidden>
+          </Grid>
+          <Grid style={{display: 'flex', marginLeft: 10, marginTop: 20}}>
+            <Grid>
+              <TextField
+                id="date"
+                label="Date"
+                type="date"
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid style={{marginLeft: 50}}>
+              <TextField
+                id="time"
+                label="Heure"
+                type="time"
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid style={{marginBottom: 30}}>
+          <Grid>
+            <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Mes prestations</Typography>
+          </Grid>
+          <Grid style={{marginTop: 20}}>
+            <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography className={classes.heading}>Homme</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
+                <Grid>
+                  <TextField
+                    id="outlined-number"
+                    label="Quantité"
+                    type="number"
+                    className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin="normal"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid style={{display:'flex', justifyContent: 'space-evenly', width: '100%'}}>
+                  <Grid>
+                    <label>Label presta</label>
+                  </Grid>
+                  <Grid>
+                    <label>Prix de la presta</label>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+            <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2a-content"
+              id="panel2a-header"
+            >
+              <Typography className={classes.heading}>Femme</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
+                <Grid>
+                  <TextField
+                    id="outlined-number"
+                    label="Quantité"
+                    type="number"
+                    className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin="normal"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid style={{display:'flex', justifyContent: 'space-evenly', width: '100%'}}>
+                  <Grid>
+                    <label>Label presta</label>
+                  </Grid>
+                  <Grid>
+                    <label>Prix de la presta</label>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+            <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel3a-content"
+              id="panel3a-header"
+            >
+              <Typography className={classes.heading}>Enfant</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
+                <Grid>
+                  <TextField
+                    id="outlined-number"
+                    label="Quantité"
+                    type="number"
+                    className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin="normal"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid style={{display:'flex', justifyContent: 'space-evenly', width: '100%'}}>
+                  <Grid>
+                    <label>Label presta</label>
+                  </Grid>
+                  <Grid>
+                    <label>Prix de la presta</label>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          </Grid>
+        </Grid>
+        <Grid style={{marginBottom: 30}}>
+        <Grid>
+          <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Lieu de la prestation</Typography>
+        </Grid>
+        <Grid>
+          <Grid>
+            <ButtonSwitch label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false}/>
+          </Grid>
+          <Grid>
+            {
+              alfred.firstname !== undefined ?
+                <ButtonSwitch label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false}/>
+                : null
+            }
+          </Grid>
+        </Grid>
+      </Grid>
+        <Grid style={{marginBottom: 30}}>
+        <Grid>
+          <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
+        </Grid>
+        <Grid>
+          <ButtonSwitch label={'Retrait & livraison (5€)'} isEditable={false} isPrice={false} isOption={false}/>
+        </Grid>
+      </Grid>
+        <Grid style={{marginBottom: 30}}>
+        <Grid>
+          <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Détails de la prestation</Typography>
+        </Grid>
+        <Grid style={{marginTop: 20, marginLeft: 10}}>
+          <Grid style={{display: 'flex', alignItems : 'center', marginBottom: 20}}>
+            <Grid>
+              <RoomIcon color={'primary'}/>
+            </Grid>
+            <Grid style={{marginLeft: 10}}>
+              <label>A mon adresse principale</label>
+            </Grid>
+          </Grid>
+          <Grid style={{display: 'flex', alignItems : 'center'}}>
+            <Grid>
+              <CalendarTodayIcon color={'primary'}/>
+            </Grid>
+            <Grid style={{marginLeft: 10}}>
+              <label>Le 23/03/2020 à 12h30</label>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+        <Grid style={{display: 'flex', flexDirection:'column', marginLeft:15, marginRight:15, marginBottom:30}}>
+        <Grid>
+          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+            <Grid>
+              <p>Presta A</p>
+            </Grid>
+            <Grid>
+              <p>Prix</p>
+            </Grid>
+          </Grid>
+          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+            <Grid>
+              <p>Presta B</p>
+            </Grid>
+            <Grid>
+              <p>Prix</p>
+            </Grid>
+          </Grid>
+          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+            <Grid>
+              <p>Presta C</p>
+            </Grid>
+            <Grid>
+              <p>Prix</p>
+            </Grid>
+          </Grid>
+          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+            <Grid>
+              <p>Total (EUR)</p>
+            </Grid>
+            <Grid>
+              <p>Prix</p>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+        <Grid>
+        <Grid style={{display: 'flex', justifyContent: 'space-around' }}>
+          <Grid>
+            <Button
+              variant="outlined"
+              size="medium"
+              color="primary"
+              aria-label="add"
+              className={classes.margin}
+            >
+              Demande d’informations
+            </Button>
+          </Grid>
+          <Grid>
+            <Button
+              style={{color:'white'}}
+              variant="contained"
+              size="medium"
+              color="secondary"
+              aria-label="add"
+              className={classes.margin}
+            >
+              Réserver
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+   );
 
     return (
       <Grid>
@@ -127,9 +411,9 @@ class userServices extends React.Component {
             <BannerReservation serviceUser={service} shop={shop} user={alfred}/>
             <Grid className={classes.mainContainer}>
               <Grid className={classes.leftContainer}>
-                <Grid style={{display: ' flex'}}>
-                  <Grid style={{width: '80%'}}>
-                    <Grid style={{marginBottom: 30}}>
+                <Grid className={classes.avatarAnDescription}>
+                  <Grid className={classes.flexContentAvatarAndDescription}>
+                    <Grid className={classes.marginAvatarAndDescriptionContent}>
                       <Grid>
                         <Typography variant="h6">{service.label} par {alfred.firstname}</Typography>
                       </Grid>
@@ -169,7 +453,7 @@ class userServices extends React.Component {
                 </Grid>
                 <Grid className={classes.responsiveListContainer}>
                   <List dense={this.state.dense} className={classes.flexPosition}>
-                    <Grid style={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+                    <Grid className={classes.itemListContainer}>
                       <Grid>
                         <ListItem className={classes.noPadding}>
                           <ListItemIcon className={classes.minWidth}>
@@ -426,260 +710,33 @@ class userServices extends React.Component {
                       </Grid> : null
                   }
                 </Grid>
+                <Hidden mdUp implementation="css">
+                  <Grid className={classes.showReservation}>
+                    <Button
+                      style={{color:'white'}}
+                      variant="contained"
+                      size="medium"
+                      color="secondary"
+                      aria-label="add"
+                      className={classes.buttonReservation}
+                      onClick={this.toggleDrawer('bottom', true)}
+                    >
+                      Réserver
+                    </Button>
+                  </Grid>
+                  <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)} >
+                    <Grid className={classes.drawerContent}>
+                      {drawer('bottom')}
+                    </Grid>
+                  </Drawer>
+                </Hidden>
               </Grid>
-              <Grid className={classes.contentRight}>
-                <Grid className={classes.borderContentRight}>
-                  <Grid style={{marginBottom: 30}}>
-                    <Grid>
-                      <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & Heure</Typography>
-                    </Grid>
-                    <Grid style={{display: 'flex', marginLeft: 10, marginTop: 20}}>
-                      <Grid>
-                        <TextField
-                          id="date"
-                          label="Date"
-                          type="date"
-                          className={classes.textField}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                        />
-                      </Grid>
-                      <Grid style={{marginLeft: 50}}>
-                        <TextField
-                          id="time"
-                          label="Heure"
-                          type="time"
-                          className={classes.textField}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid style={{marginBottom: 30}}>
-                    <Grid>
-                      <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Mes prestations</Typography>
-                    </Grid>
-                    <Grid style={{marginTop: 20}}>
-                      <ExpansionPanel>
-                        <ExpansionPanelSummary
-                          expandIcon={<ExpandMoreIcon />}
-                          aria-controls="panel1a-content"
-                          id="panel1a-header"
-                        >
-                          <Typography className={classes.heading}>Homme</Typography>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                          <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
-                            <Grid>
-                              <TextField
-                                id="outlined-number"
-                                label="Quantité"
-                                type="number"
-                                className={classes.textField}
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                margin="normal"
-                                variant="outlined"
-                              />
-                            </Grid>
-                            <Grid style={{display:'flex', justifyContent: 'space-evenly', width: '100%'}}>
-                              <Grid>
-                                <label>Label presta</label>
-                              </Grid>
-                              <Grid>
-                                <label>Prix de la presta</label>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </ExpansionPanelDetails>
-                      </ExpansionPanel>
-                      <ExpansionPanel>
-                        <ExpansionPanelSummary
-                          expandIcon={<ExpandMoreIcon />}
-                          aria-controls="panel2a-content"
-                          id="panel2a-header"
-                        >
-                          <Typography className={classes.heading}>Femme</Typography>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                          <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
-                            <Grid>
-                              <TextField
-                                id="outlined-number"
-                                label="Quantité"
-                                type="number"
-                                className={classes.textField}
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                margin="normal"
-                                variant="outlined"
-                              />
-                            </Grid>
-                            <Grid style={{display:'flex', justifyContent: 'space-evenly', width: '100%'}}>
-                              <Grid>
-                                <label>Label presta</label>
-                              </Grid>
-                              <Grid>
-                                <label>Prix de la presta</label>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </ExpansionPanelDetails>
-                      </ExpansionPanel>
-                      <ExpansionPanel>
-                        <ExpansionPanelSummary
-                          expandIcon={<ExpandMoreIcon />}
-                          aria-controls="panel3a-content"
-                          id="panel3a-header"
-                        >
-                          <Typography className={classes.heading}>Enfant</Typography>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                          <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
-                            <Grid>
-                              <TextField
-                                id="outlined-number"
-                                label="Quantité"
-                                type="number"
-                                className={classes.textField}
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                margin="normal"
-                                variant="outlined"
-                              />
-                            </Grid>
-                            <Grid style={{display:'flex', justifyContent: 'space-evenly', width: '100%'}}>
-                              <Grid>
-                                <label>Label presta</label>
-                              </Grid>
-                              <Grid>
-                                <label>Prix de la presta</label>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </ExpansionPanelDetails>
-                      </ExpansionPanel>
-                    </Grid>
-                  </Grid>
-                  <Grid style={{marginBottom: 30}}>
-                    <Grid>
-                      <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Lieu de la prestation</Typography>
-                    </Grid>
-                    <Grid>
-                      <Grid>
-                        <ButtonSwitch label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false}/>
-                      </Grid>
-                      <Grid>
-                        {
-                          alfred.firstname !== undefined ?
-                            <ButtonSwitch label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false}/>
-                            : null
-                        }
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid style={{marginBottom: 30}}>
-                    <Grid>
-                      <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
-                    </Grid>
-                    <Grid>
-                      <ButtonSwitch label={'Retrait & livraison (5€)'} isEditable={false} isPrice={false} isOption={false}/>
-                    </Grid>
-                  </Grid>
-                  <Grid style={{marginBottom: 30}}>
-                    <Grid>
-                      <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Détails de la prestation</Typography>
-                    </Grid>
-                    <Grid style={{marginTop: 20, marginLeft: 10}}>
-                      <Grid style={{display: 'flex', alignItems : 'center', marginBottom: 20}}>
-                        <Grid>
-                          <RoomIcon color={'primary'}/>
-                        </Grid>
-                        <Grid style={{marginLeft: 10}}>
-                          <label>A mon adresse principale</label>
-                        </Grid>
-                      </Grid>
-                      <Grid style={{display: 'flex', alignItems : 'center'}}>
-                        <Grid>
-                          <CalendarTodayIcon color={'primary'}/>
-                        </Grid>
-                        <Grid style={{marginLeft: 10}}>
-                          <label>Le 23/03/2020 à 12h30</label>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid style={{display: 'flex', flexDirection:'column', marginLeft:15, marginRight:15, marginBottom:30}}>
-                    <Grid>
-                      <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <Grid>
-                          <p>Presta A</p>
-                        </Grid>
-                        <Grid>
-                          <p>Prix</p>
-                        </Grid>
-                      </Grid>
-                      <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <Grid>
-                          <p>Presta B</p>
-                        </Grid>
-                        <Grid>
-                          <p>Prix</p>
-                        </Grid>
-                      </Grid>
-                      <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <Grid>
-                          <p>Presta C</p>
-                        </Grid>
-                        <Grid>
-                          <p>Prix</p>
-                        </Grid>
-                      </Grid>
-                      <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <Grid>
-                          <p>Total (EUR)</p>
-                        </Grid>
-                        <Grid>
-                          <p>Prix</p>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid>
-                    <Grid style={{display: 'flex', justifyContent: 'space-around' }}>
-                      <Grid>
-                        <Button
-                          variant="outlined"
-                          size="medium"
-                          color="primary"
-                          aria-label="add"
-                          className={classes.margin}
-                        >
-                          Demande d’informations
-                        </Button>
-                      </Grid>
-                      <Grid>
-                        <Button
-                          style={{color:'white'}}
-                          variant="contained"
-                          size="medium"
-                          color="secondary"
-                          aria-label="add"
-                          className={classes.margin}
-                        >
-                          Réserver
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Grid>
+              {/* ------------------------------------------------------- ici content right ---------------------------------------------------*/}
+              <Hidden mdDown implementation="css">
+                <Grid className={classes.contentRight}>
+                  {drawer()}
                 </Grid>
-              </Grid>
+              </Hidden>
             </Grid>
           </Grid>
         </Layout>
@@ -692,6 +749,7 @@ class userServices extends React.Component {
 userServices.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
 };
 
 export default  withStyles(styles, { withTheme: true })(userServices);

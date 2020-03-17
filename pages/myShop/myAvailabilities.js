@@ -240,7 +240,7 @@ class myAvailabilities extends React.Component {
                 }
                   <Grid container style={{padding:'2%'}} className={classes.containercalendar}>
                       <Grid style={{width:'90%'}}>
-                          <Schedule availabilities={this.state.availabilities} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} selectable={true}/>
+                          <Schedule height={400} availabilities={this.state.availabilities} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} selectable={true}/>
                       </Grid>
                   </Grid>
               </Layout>
