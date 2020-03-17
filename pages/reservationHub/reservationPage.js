@@ -133,10 +133,10 @@ class reservationPage extends React.Component {
           <Grid style={{width: '100%'}}>
             <BannerReservation serviceUser={service} shop={shop} user={user}/>
             <Grid className={classes.mainContainer}>
-              <Grid style={{width: '50%'}}>
+              <Grid className={classes.leftContainer}>
                 <Grid style={{display: ' flex'}}>
                   <Grid style={{width: '80%'}}>
-                    <Grid>
+                    <Grid style={{marginBottom: 30}}>
                       <Grid>
                         <Typography variant="h6">{service.label} par {user.firstname}</Typography>
                       </Grid>
@@ -153,6 +153,9 @@ class reservationPage extends React.Component {
                         <a href={"#"}>Voir plus de commentaires</a>
                       </Grid>
                     </Grid>
+                    <Grid style={{width: 500}}>
+                      <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+                    </Grid>
                     <Grid>
                       <Grid>
                         <p>Coiffeuse depuis plus de 10 ans, je vous propose mes services de Coiffure à domicile pour partager ma passion pour la coiffure .
@@ -160,7 +163,7 @@ class reservationPage extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid style={{width : '20%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                  <Grid className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
                       <UserAvatar classes={'avatarLetter'} user={user} className={classes.avatarLetter} />
                       <Typography style={{marginTop:20}} className={classes.textAvatar}>{user.firstname}</Typography>
@@ -206,18 +209,21 @@ class reservationPage extends React.Component {
                     </Grid>
                   </List>
                 </Grid>
-                <Grid>
+                <Grid style={{marginTop: 30}}>
                   <Grid>
                     <Grid>
                       <Grid className={classes.skillsContentContainer}>
-                        <SkillsAlfred alfred={user}/>
+                        <SkillsAlfred alfred={user} widthHr={500}/>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid>
+                <Grid style={{marginTop: 30}}>
                   <Grid>
                     <Typography variant="h6">{user.firstname} fournit :</Typography>
+                  </Grid>
+                  <Grid style={{width: 500}}>
+                    <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
                     <p>Dans le cadre de son service, votre Alfred peut fournir du matériel et des produits en fonction des prestations. Ces produits & matériels sont fournis sans surcoût. </p>
@@ -235,17 +241,23 @@ class reservationPage extends React.Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid>
+                <Grid style={{marginTop: 30}}>
                   <Grid>
                     <Typography variant="h6">Les disponibilités de {user.firstname}</Typography>
+                  </Grid>
+                  <Grid style={{width: 500}}>
+                    <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
                     <Schedule  availabilities={[]} services={[]} selectable={false} height={400}/>
                   </Grid>
                 </Grid>
-                <Grid>
+                <Grid style={{marginTop: 30}}>
                   <Grid>
                     <Typography variant="h6">Panier minimum de réservation</Typography>
+                  </Grid>
+                  <Grid style={{width: 500}}>
+                    <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
                     <p>Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service. Si votre Alfred indique un montant de 10€, vous ne pourrez pas réserver ce service si la somme des prestations n’atteint pas ce montant.</p>
@@ -254,14 +266,17 @@ class reservationPage extends React.Component {
                     <Grid>
                       <ShoppingCartIcon fontSize="large"  color={'primary'}/>
                     </Grid>
-                    <Grid style={{fontSize: 'x-large'}}>
+                    <Grid style={{fontSize: 'x-large', marginLeft: 15}}>
                       {serviceUser.minimum_basket} €
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid>
+                <Grid style={{marginTop: 30}}>
                   <Grid>
                     <Typography variant="h6">Délai de prévenance de votre Alfred</Typography>
+                  </Grid>
+                  <Grid style={{width: 500}}>
+                    <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
                     <p>Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du service. Par exemple, si votre Alfred impose un délai de 24 heures, vous pourrez réserver votre service au minimum 24 heures avant son intervention. </p>
@@ -270,14 +285,17 @@ class reservationPage extends React.Component {
                     <Grid>
                       <CalendarTodayIcon fontSize="large"  color={'primary'}/>
                     </Grid>
-                    <Grid style={{fontSize: 'large'}}>
+                    <Grid style={{fontSize: 'large',  marginLeft: 15}}>
                       {serviceUser.deadline_before_booking} de délai de prévenance
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid>
+                <Grid style={{marginTop: 30}}>
                   <Grid>
                     <Typography variant="h6">Le périmètre d’intervention de votre Alfred</Typography>
+                  </Grid>
+                  <Grid style={{width: 500}}>
+                    <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
                     <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
@@ -286,9 +304,12 @@ class reservationPage extends React.Component {
                     <img src={'../../static/assets/img/map.png'} alt={'map'} title={'map'} style={{height : 300, width: '90%'}}/>
                   </Grid>
                 </Grid>
-                <Grid>
+                <Grid style={{marginTop: 30}}>
                   <Grid>
                     <Typography variant="h6">Les conditions d’annulation de votre Alfred</Typography>
+                  </Grid>
+                  <Grid style={{width: 500}}>
+                    <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid style={{display: 'flex', flexDirection : 'column'}}>
                     <Grid style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
@@ -356,7 +377,7 @@ class reservationPage extends React.Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid>
+                <Grid style={{marginTop: 30}}>
                   <Grid style={{display: 'flex', alignItems: 'center'}}>
                     <Grid>
                       <Typography variant="h6">{user.number_of_reviews} Commentaires</Typography>
@@ -371,20 +392,23 @@ class reservationPage extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
+                  <Grid style={{width: 500}}>
+                    <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+                  </Grid>
                   <Grid>
-                    <Grid style={{display: 'flex', alignItems:'center'}}>
+                    <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
                       <label>Accueil</label>
                       <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
                         <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
                       </Box>
                     </Grid>
-                    <Grid style={{display: 'flex', alignItems:'center'}}>
+                    <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
                       <label>Qualité-prix</label>
-                      <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
+                      <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating} >
                         <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
                       </Box>
                     </Grid>
-                    <Grid style={{display: 'flex', alignItems:'center'}}>
+                    <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
                       <label>Communication</label>
                       <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
                         <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
@@ -398,7 +422,7 @@ class reservationPage extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid style={{width: '50%', display: 'flex', flexDirection: 'column'}}>
+              <Grid className={classes.contentRight}>
                 <Grid style={{border: '2px solid #d2d2d2', borderRadius: 30, marginRight: 100, marginLeft: 100, padding: '3%'}}>
                   <Grid style={{marginBottom: 30}}>
                     <Grid>

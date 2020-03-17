@@ -132,7 +132,7 @@ class shop extends React.Component {
                               <About alfred={this.state.alfred} languages={this.state.languages} shop={this.state.shop}/>
                           </Grid>
                           <Grid className={classes.skillsContentContainer}>
-                              <SkillsAlfred alfred={this.state.alfred}/>
+                              <SkillsAlfred alfred={this.state.alfred} widthHr={'100%'}/>
                           </Grid>
                       </Grid>
                       <Grid className={classes.servicesContainer}>
