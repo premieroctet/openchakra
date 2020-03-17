@@ -125,11 +125,21 @@ class CardPreview extends React.Component{
                   </Typography>
                   <RoomIcon className={classes.checkCircleIcon}/>
                 </Grid>
-                { false ? // FIX rétablir plus tard
-                  <Button variant="contained" color="primary" className={classes.button}>
-                    Visualiser
-                  </Button> : true
-                }
+                <Grid>
+                  {
+                    userState && isOwner ?
+                      <Grid>
+
+                      </Grid>
+                      :
+                      <Link href={'userServicePreview?id=' + services._id}>
+                        <Button variant="contained" color="primary" className={classes.button}>
+                          Réserver
+                        </Button>
+                      </Link>
+
+                  }
+                </Grid>
               </Grid>
             </Grid>
             <Grid className={classes.responsiveListContainer}>

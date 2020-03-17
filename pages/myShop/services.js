@@ -287,7 +287,7 @@ class services extends React.Component {
                 return <AssetsService data={shop} onChange={this.onAssetsChanged} />;
             { //TODO DISPLAY allavailabilities
                 /*case 5:
-                return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.onAvailabilityCreated} onDeleteAvailability={this.onAvailabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} />;
+                return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.onAvailabilityCreated} onDeleteAvailability={this.onAvailabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} selectable={true}/>;
                 */}
         }
     }

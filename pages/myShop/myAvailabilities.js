@@ -210,7 +210,6 @@ class myAvailabilities extends React.Component {
     }
 
     checkIfOwner() {
-      console.log(this.state.services, this.state.userId)
       Object.keys(this.state.services).map( result =>{
         if(this.state.services[result].user === this.state.userId){
           this.setState({isOwner: true});
@@ -241,7 +240,7 @@ class myAvailabilities extends React.Component {
                 }
                   <Grid container style={{padding:'2%'}} className={classes.containercalendar}>
                       <Grid style={{width:'90%'}}>
-                          <Schedule availabilities={this.state.availabilities} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} />
+                          <Schedule availabilities={this.state.availabilities} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} selectable={true}/>
                       </Grid>
                   </Grid>
               </Layout>

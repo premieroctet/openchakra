@@ -6,6 +6,7 @@ import styles from './BannerReservationStyle'
 import PropTypes from 'prop-types';
 import Fab from '@material-ui/core/Fab';
 import Chip from '@material-ui/core/Chip';
+import Link from 'next/link';
 
 class BannerReservation extends React.Component{
 
@@ -33,15 +34,17 @@ class BannerReservation extends React.Component{
                 <Typography className={classes.textAvatar}>{serviceUser.label}</Typography>
               </Grid>
               <Grid>
-                <Fab
-                  variant="extended"
-                  size="medium"
-                  color="primary"
-                  aria-label="add"
-                  className={classes.margin}
-                >
-                  <p style={{color: 'white'}}>Boutique de {user.firstname}</p>
-                </Fab>
+                <Link href={`/shop?id_alfred=${user._id}`} >
+                  <Fab
+                    variant="extended"
+                    size="medium"
+                    color="primary"
+                    aria-label="add"
+                    className={classes.margin}
+                  >
+                    <p style={{color: 'white'}}>Boutique de {user.firstname}</p>
+                  </Fab>
+                </Link>
               </Grid>
             </Grid>
           </Grid>

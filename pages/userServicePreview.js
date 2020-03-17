@@ -43,6 +43,7 @@ class userServices extends React.Component {
       user: {},
       shop: {},
       serviceUser: {},
+      alfred:{},
       service: {},
       equipments: [],
       prestations: [],
@@ -51,7 +52,6 @@ class userServices extends React.Component {
       strict: false,
       haveOptions: false,
       languages:[],
-      alfred:[],
       test:{},
       allEquipments: [],
       availabilities: [],
@@ -90,8 +90,9 @@ class userServices extends React.Component {
         equipments: serviceUser.equipments,
         prestations: serviceUser.prestations,
         allEquipments : serviceUser.service.equipments,
+        alfred: serviceUser.user
       });
-      axios.get(url + "myAlfred/api/shop/alfred/" + this.state.serviceUser.user._id).then(res => {
+      axios.get(url + "myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
         let shop = res.data;
         this.setState({
           shop: shop,
@@ -108,7 +109,7 @@ class userServices extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {user, serviceUser, shop, service, equipments, userName} = this.state;
+    const {user, serviceUser, shop, service, equipments, userName, alfred} = this.state;
     console.log(shop, 'shop');
     console.log(serviceUser, 'serviceUser');
     console.log(user, 'user');
@@ -123,26 +124,26 @@ class userServices extends React.Component {
       <Grid>
         <Layout>
           <Grid style={{width: '100%'}}>
-            <BannerReservation serviceUser={service} shop={shop} user={user}/>
+            <BannerReservation serviceUser={service} shop={shop} user={alfred}/>
             <Grid className={classes.mainContainer}>
               <Grid className={classes.leftContainer}>
                 <Grid style={{display: ' flex'}}>
                   <Grid style={{width: '80%'}}>
                     <Grid style={{marginBottom: 30}}>
                       <Grid>
-                        <Typography variant="h6">{service.label} par {user.firstname}</Typography>
+                        <Typography variant="h6">{service.label} par {alfred.firstname}</Typography>
                       </Grid>
                     </Grid>
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
                       <Grid>
                         <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                          <Badge badgeContent={user.score} color={'primary'} className={classes.badgeStyle}>
-                            <StyledRating name="read-only" value={user.score} readOnly className={classes.rating} />
+                          <Badge badgeContent={alfred.score} color={'primary'} className={classes.badgeStyle}>
+                            <StyledRating name="read-only" value={alfred.score} readOnly className={classes.rating} />
                           </Badge>
                         </Box>
                       </Grid>
                         {
-                          user.score < 0 ?
+                          alfred.score < 0 ?
                           <Grid>
                             <a href={"#"}>Voir plus de commentaires</a>
                           </Grid> : null
@@ -161,8 +162,8 @@ class userServices extends React.Component {
                   </Grid>
                   <Grid className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
-                      <UserAvatar classes={'avatarLetter'} user={user} className={classes.avatarLetter} />
-                      <Typography style={{marginTop:20}} className={classes.textAvatar}>{user.firstname}</Typography>
+                      <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter} />
+                      <Typography style={{marginTop:20}} className={classes.textAvatar}>{alfred.firstname}</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -209,7 +210,7 @@ class userServices extends React.Component {
                   <Grid>
                     <Grid>
                       <Grid className={classes.skillsContentContainer}>
-                        <SkillsAlfred alfred={user} widthHr={500}/>
+                        <SkillsAlfred alfred={alfred} widthHr={500}/>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -217,7 +218,7 @@ class userServices extends React.Component {
                 {equipments.length !== 0 ?
                   <Grid style={{marginTop: 30}}>
                     <Grid>
-                      <Typography variant="h6">{user.firstname} fournit :</Typography>
+                      <Typography variant="h6">{alfred.firstname} fournit :</Typography>
                     </Grid>
                     <Grid className={classes.hrStyle}>
                       <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
@@ -241,7 +242,7 @@ class userServices extends React.Component {
                 }
                 <Grid style={{marginTop: 30}}>
                   <Grid>
-                    <Typography variant="h6">Les disponibilités de {user.firstname}</Typography>
+                    <Typography variant="h6">Les disponibilités de {alfred.firstname}</Typography>
                   </Grid>
                   <Grid className={classes.hrStyle}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
@@ -378,7 +379,7 @@ class userServices extends React.Component {
                 <Grid style={{marginTop: 30}}>
                   <Grid style={{display: 'flex', alignItems: 'center'}}>
                     <Grid>
-                      <Typography variant="h6">{user.number_of_reviews} Commentaires</Typography>
+                      <Typography variant="h6">{alfred.number_of_reviews} Commentaires</Typography>
                     </Grid>
                     <Grid>
                       <Grid>
@@ -390,11 +391,11 @@ class userServices extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid className={classes.hrStyle} style={{marginBottom : user.number_of_reviews_client === 0 ? 50 : 30}}>
+                  <Grid className={classes.hrStyle} style={{marginBottom : alfred.number_of_reviews_client === 0 ? 50 : 30}}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   {
-                    user.number_of_reviews_client < 0 ?
+                    alfred.number_of_reviews_client < 0 ?
                       <Grid>
                         <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
                           <label>Accueil</label>
@@ -417,7 +418,7 @@ class userServices extends React.Component {
                       </Grid> : null
                   }
                   {
-                    user.number_of_reviews_client < 0 ?
+                    alfred.number_of_reviews_client < 0 ?
                       <Grid>
                         <Grid>
                           <CardCommentary/>
@@ -576,8 +577,8 @@ class userServices extends React.Component {
                       </Grid>
                       <Grid>
                         {
-                          user.firstname !== undefined ?
-                            <ButtonSwitch label={'Chez ' + user.firstname} isEditable={false} isPrice={false} isOption={false}/>
+                          alfred.firstname !== undefined ?
+                            <ButtonSwitch label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false}/>
                             : null
                         }
                       </Grid>
