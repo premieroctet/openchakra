@@ -94,6 +94,7 @@ export default theme => ({
   },
   sizeSchedulle:{
     '& .rbc-toolbar':{
+      flexDirection: 'column'
     }
   }
 })
