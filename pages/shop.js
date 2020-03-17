@@ -149,8 +149,6 @@ class shop extends React.Component {
                                           isOwner={isOwner}
                                           userState={this.state.userState}
                                           alfred={this.state.alfred}
-                                          shop={this.state.shop}
-                                          service={this.state.services[result].service}
                                           services={this.state.services[result]}
                                           needRefresh={this.needRefresh}/>
                                     </Grid>

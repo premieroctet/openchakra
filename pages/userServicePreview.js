@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
-import styles from './reservationHub/reservationPageStyle'
+import styles from './userServicePreview/userServicePreviewStyle'
 import Grid from '@material-ui/core/Grid';
 import Router from "next/router";
 import axios from 'axios';
@@ -109,13 +109,9 @@ class userServices extends React.Component {
   render() {
     const {classes} = this.props;
     const {user, serviceUser, shop, service, equipments, userName} = this.state;
-    let prenom = user.firstname;
     console.log(shop, 'shop');
     console.log(serviceUser, 'serviceUser');
     console.log(user, 'user');
-    console.log(service, 'service');
-    console.log(equipments, 'equipments');
-    console.log(prenom, 'prenom')
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -140,22 +136,26 @@ class userServices extends React.Component {
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
                       <Grid>
                         <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                          <Badge badgeContent={0} color={'primary'} className={classes.badgeStyle}>
-                            <StyledRating name="read-only" value={3} readOnly className={classes.rating} />
+                          <Badge badgeContent={user.score} color={'primary'} className={classes.badgeStyle}>
+                            <StyledRating name="read-only" value={user.score} readOnly className={classes.rating} />
                           </Badge>
                         </Box>
                       </Grid>
-                      <Grid>
-                        <a href={"#"}>Voir plus de commentaires</a>
-                      </Grid>
+                        {
+                          user.score < 0 ?
+                          <Grid>
+                            <a href={"#"}>Voir plus de commentaires</a>
+                          </Grid> : null
+                        }
                     </Grid>
-                    <Grid style={{width: 500}}>
+                    <Grid style={{width : 400}}>
                       <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                     </Grid>
                     <Grid>
                       <Grid>
-                        <p>Coiffeuse depuis plus de 10 ans, je vous propose mes services de Coiffure à domicile pour partager ma passion pour la coiffure .
-                          J’ai également suivi une formation de visagiste, me permettant de vous conseiller au mieux ! </p>
+                        {
+                          serviceUser.description !== "" ? <p>{serviceUser.description}</p> : <p>Cet utilisateur n'a pas encore de description.</p>
+                        }
                       </Grid>
                     </Grid>
                   </Grid>
@@ -172,7 +172,7 @@ class userServices extends React.Component {
                       <Grid>
                         <ListItem className={classes.noPadding}>
                           <ListItemIcon className={classes.minWidth}>
-                            <img src={'../../static/assets/img/iconCardAlfred/graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
+                            <img src={serviceUser.graduated && serviceUser.graduated !== "" && serviceUser.graduated !== null && serviceUser.graduated !== undefined ? '../../static/assets/img/iconCardAlfred/graduated.svg' : '../../static/assets/img/iconCardAlfred/no_graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
                           </ListItemIcon>
                           <ListItemText
                             classes={{primary:classes.sizeText}}
@@ -183,7 +183,7 @@ class userServices extends React.Component {
                       <Grid>
                         <ListItem className={classes.noPadding} style={{marginLeft : 5}}>
                           <ListItemIcon  className={classes.minWidth}>
-                            <img src={'../../static/assets/img/iconCardAlfred/certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
+                            <img src={serviceUser.is_certified && serviceUser.is_certified !== "" && serviceUser.is_certified !== null && serviceUser.is_certified !== undefined ? '../../static/assets/img/iconCardAlfred/certificate.svg' : '../../static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
                           </ListItemIcon>
                           <ListItemText
                             classes={{primary:classes.sizeText}}
@@ -194,7 +194,7 @@ class userServices extends React.Component {
                       <Grid>
                         <ListItem className={classes.noPadding} style={{marginLeft : 5}}>
                           <ListItemIcon className={classes.minWidth}>
-                            <img src={'../../static/assets/img/iconCardAlfred/experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
+                            <img src={serviceUser.level && serviceUser.level !== "" && serviceUser.level !== null && serviceUser.level !== undefined ? '../../static/assets/img/iconCardAlfred/experience.svg' : '../../static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
                           </ListItemIcon>
                           <ListItemText
                             classes={{primary:classes.sizeText}}
@@ -214,34 +214,36 @@ class userServices extends React.Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid style={{marginTop: 30}}>
-                  <Grid>
-                    <Typography variant="h6">{user.firstname} fournit :</Typography>
-                  </Grid>
-                  <Grid style={{width: 500}}>
-                    <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
-                  </Grid>
-                  <Grid>
-                    <p>Dans le cadre de son service, votre Alfred peut fournir du matériel et des produits en fonction des prestations. Ces produits & matériels sont fournis sans surcoût. </p>
-                  </Grid>
-                  <Grid>
-                    <Grid container spacing={1}>
-                      {equipments.map((result) => {
-                        return (
-                          <Grid key={result.id} item xl={2} lg={4} md={4} sm={4} xs={4}>
-                            <img src={`../../static/equipments/${result.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${result.name_logo.slice(0, -4)}_Selected.svg`} />
-                          </Grid>
-                        )
-                      })
-                      }
+                {equipments.length !== 0 ?
+                  <Grid style={{marginTop: 30}}>
+                    <Grid>
+                      <Typography variant="h6">{user.firstname} fournit :</Typography>
                     </Grid>
-                  </Grid>
-                </Grid>
+                    <Grid className={classes.hrStyle}>
+                      <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+                    </Grid>
+                    <Grid>
+                      <p>Dans le cadre de son service, votre Alfred peut fournir du matériel et des produits en fonction des prestations. Ces produits & matériels sont fournis sans surcoût. </p>
+                    </Grid>
+                    <Grid>
+                      <Grid container spacing={1}>
+                        {equipments.map((result) => {
+                          return (
+                            <Grid key={result.id} item xl={2} lg={4} md={4} sm={4} xs={4}>
+                              <img src={`../../static/equipments/${result.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${result.name_logo.slice(0, -4)}_Selected.svg`} />
+                            </Grid>
+                          )
+                        })
+                        }
+                      </Grid>
+                    </Grid>
+                  </Grid> : null
+                }
                 <Grid style={{marginTop: 30}}>
                   <Grid>
                     <Typography variant="h6">Les disponibilités de {user.firstname}</Typography>
                   </Grid>
-                  <Grid style={{width: 500}}>
+                  <Grid className={classes.hrStyle}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
@@ -252,7 +254,7 @@ class userServices extends React.Component {
                   <Grid>
                     <Typography variant="h6">Panier minimum de réservation</Typography>
                   </Grid>
-                  <Grid style={{width: 500}}>
+                  <Grid className={classes.hrStyle}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
@@ -271,7 +273,7 @@ class userServices extends React.Component {
                   <Grid>
                     <Typography variant="h6">Délai de prévenance de votre Alfred</Typography>
                   </Grid>
-                  <Grid style={{width: 500}}>
+                  <Grid className={classes.hrStyle}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
@@ -290,21 +292,21 @@ class userServices extends React.Component {
                   <Grid>
                     <Typography variant="h6">Le périmètre d’intervention de votre Alfred</Typography>
                   </Grid>
-                  <Grid style={{width: 500}}>
+                  <Grid className={classes.hrStyle}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
                     <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
                   </Grid>
                   <Grid>
-                    <img src={'../../static/assets/img/map.png'} alt={'map'} title={'map'} style={{height : 300, width: '90%'}}/>
+                    {/* -------------------------------------   ICI LEAFLET ------------------------------------------------------ */}
                   </Grid>
                 </Grid>
                 <Grid style={{marginTop: 30}}>
                   <Grid>
                     <Typography variant="h6">Les conditions d’annulation de votre Alfred</Typography>
                   </Grid>
-                  <Grid style={{width: 500}}>
+                  <Grid className={classes.hrStyle}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid style={{display: 'flex', flexDirection : 'column'}}>
@@ -388,38 +390,44 @@ class userServices extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid style={{width: 500}}>
+                  <Grid className={classes.hrStyle} style={{marginBottom : user.number_of_reviews_client === 0 ? 50 : 30}}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
-                  <Grid>
-                    <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
-                      <label>Accueil</label>
-                      <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                        <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
-                      </Box>
-                    </Grid>
-                    <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
-                      <label>Qualité-prix</label>
-                      <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating} >
-                        <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
-                      </Box>
-                    </Grid>
-                    <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
-                      <label>Communication</label>
-                      <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                        <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
-                      </Box>
-                    </Grid>
-                  </Grid>
-                  <Grid>
-                    <Grid>
-                      <CardCommentary/>
-                    </Grid>
-                  </Grid>
+                  {
+                    user.number_of_reviews_client < 0 ?
+                      <Grid>
+                        <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
+                          <label>Accueil</label>
+                          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
+                            <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
+                          </Box>
+                        </Grid>
+                        <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
+                          <label>Qualité-prix</label>
+                          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating} >
+                            <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
+                          </Box>
+                        </Grid>
+                        <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
+                          <label>Communication</label>
+                          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
+                            <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
+                          </Box>
+                        </Grid>
+                      </Grid> : null
+                  }
+                  {
+                    user.number_of_reviews_client < 0 ?
+                      <Grid>
+                        <Grid>
+                          <CardCommentary/>
+                        </Grid>
+                      </Grid> : null
+                  }
                 </Grid>
               </Grid>
               <Grid className={classes.contentRight}>
-                <Grid style={{border: '2px solid #d2d2d2', borderRadius: 30, marginRight: 100, marginLeft: 100, padding: '3%'}}>
+                <Grid className={classes.borderContentRight}>
                   <Grid style={{marginBottom: 30}}>
                     <Grid>
                       <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & Heure</Typography>
