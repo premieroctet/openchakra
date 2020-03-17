@@ -94,7 +94,6 @@ export default theme => ({
   },
   sizeSchedulle:{
     '& .rbc-toolbar':{
-      flexWrap : 'inherit'
     }
   }
 })
