@@ -297,7 +297,7 @@ class userServices extends React.Component {
                     <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
                   </Grid>
                   <Grid>
-                    <img src={'../../static/assets/img/map.png'} alt={'map'} title={'map'} style={{height : 300, width: '90%'}}/>
+                    {/* -------------------------------------   ICI LEAFLET ------------------------------------------------------ */}
                   </Grid>
                 </Grid>
                 <Grid style={{marginTop: 30}}>
@@ -419,7 +419,7 @@ class userServices extends React.Component {
                 </Grid>
               </Grid>
               <Grid className={classes.contentRight}>
-                <Grid style={{border: '2px solid #d2d2d2', borderRadius: 30, marginRight: 100, marginLeft: 100, padding: '3%'}}>
+                <Grid className={classes.borderContentRight}>
                   <Grid style={{marginBottom: 30}}>
                     <Grid>
                       <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & Heure</Typography>
