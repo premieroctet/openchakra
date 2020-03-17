@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
-import styles from './reservationHub/reservationPageStyle'
+import styles from './userServicePreview/userServicePreviewStyle'
 import Grid from '@material-ui/core/Grid';
 import Router from "next/router";
 import axios from 'axios';
@@ -33,7 +33,7 @@ import ButtonSwitch from '../components/ButtonSwitch/ButtonSwitch';
 import RoomIcon from '@material-ui/icons/Room';
 import Button from '@material-ui/core/Button';
 
-const { config } = require('../../config/config');
+const { config } = require('../config/config');
 const url = config.apiUrl;
 
 class userServices extends React.Component {
