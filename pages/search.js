@@ -120,7 +120,7 @@ class SearchLogin extends React.Component {
 
     componentDidMount() {
         var st={
-          research:'service' in this.props ? this.props.service : '', 
+          research:'service' in this.props ? this.props.service : '',
           gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
           city:this.props.city || '',
         };
@@ -475,12 +475,16 @@ class SearchLogin extends React.Component {
                                         {/* Adresse spécifique  */
                                          categories.map(e => (
                                             <Grid container>
-                                                {this.state[e.label] !== 0 ? <Grid item xs={12}> <h3 style={{marginLeft:15}}>{e.label}</h3> </Grid> : null}
-                                                <Grid container style={{paddingLeft: '25px'}}>
+                                                {this.state[e.label] !== 0 ?
+                                                  <Grid item xs={12}>
+                                                    <h3 style={{marginLeft:15}}>{e.label}</h3>
+                                                  </Grid> : null
+                                                }
+                                                <Grid container spacing={2} style={{marginLeft: 15, marginRight : 15}}>
                                                 {serviceUsers.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
-                                                            <Grid item xs={12} sm={6} md={3}>
+                                                            <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
                                                                 <CardPreview services={a} alfred={user} gps={gps} needAvatar={true}/>
                                                             </Grid>
                                                         )

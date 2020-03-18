@@ -133,7 +133,7 @@ export default theme => ({
     }
   },
   sizeText: {
-    fontSize: 'small'
+    fontSize: 'small',
   },
   responsiveListContainer:{
     marginTop: 10,
@@ -145,9 +145,8 @@ export default theme => ({
   avatar:{
     position: 'absolute',
     left: '50%',
-    marginLeft: -50,
     top: '50%',
-    marginTop: -50
+    transform: 'translate(-50%, -50%)',
   },
   avatarLetter:{
     height: 100,
@@ -155,5 +154,15 @@ export default theme => ({
     margin: 'auto',
     fontSize: 'xx-large',
   },
+  contentDistanceUnderAvatar:{
+    display: 'flex',
+    textAlign: 'center',
+    alignItems: 'center'
+  },
+  sizeTextUnderAvatar:{
+    fontWeight: 'bold',
+    color: 'white',
+    textShadow: 'black 0px 0px 3px'
+  }
 });
 

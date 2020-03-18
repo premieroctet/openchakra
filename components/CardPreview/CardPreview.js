@@ -108,8 +108,22 @@ class CardPreview extends React.Component{
             }
             { needAvatar ?
               <Grid className={classes.avatar}>
-                <UserAvatar classes={'avatarLetter'} user={services.user} className={classes.avatarLetter} />
-              </Grid> :
+                <Grid>
+                  <UserAvatar classes={'avatarLetter'} user={services.user} className={classes.avatarLetter} />
+                </Grid>
+                <Grid style={{marginTop: 20}}>
+                  <Grid className={classes.contentDistanceUnderAvatar}>
+                    <Typography component="p" className={classes.sizeTextUnderAvatar}>
+                      {services.service_address ?
+                        services.service_address.city === undefined || services.service_address.city === "" ? "Non renseigné" : services.service_address.city : "Non renseigné"
+                      }
+                      { distance ? `(à ${distance} km)` : null }
+                    </Typography>
+                    <RoomIcon className={classes.checkCircleIcon}/>
+                  </Grid>
+                </Grid>
+              </Grid>
+               :
               null
             }
           </Grid>
@@ -132,15 +146,17 @@ class CardPreview extends React.Component{
                 </Box>
               </Grid>
               <Grid className={classes.cardContentRight}>
-                <Grid className={classes.flexPosition}>
-                  <Typography variant="body2" color="textSecondary" component="p" className={classes.sizeText}>
-                    {services.service_address ?
-                      services.service_address.city === undefined || services.service_address.city === "" ? "Non renseigné" : services.service_address.city : "Non renseigné"
-                    }
-                    { distance ? `(à ${distance} km)` : null }
-                  </Typography>
-                  <RoomIcon className={classes.checkCircleIcon}/>
-                </Grid>
+                {
+                  needAvatar === false ?
+                    <Grid className={classes.flexPosition}>
+                      <Typography variant="body2" color="textSecondary" component="p" className={classes.sizeText}>
+                        {services.service_address ?
+                          services.service_address.city === undefined || services.service_address.city === "" ? "Non renseigné" : services.service_address.city : "Non renseigné"
+                        }
+                      </Typography>
+                      <RoomIcon className={classes.checkCircleIcon}/>
+                    </Grid> : null
+                }
                 <Grid>
                   {
                     userState && isOwner ?
