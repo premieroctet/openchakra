@@ -6,6 +6,5 @@ export default theme => ({
       display: 'none'
     }},
   bottomNavigationAction:{
-    backgroundColor: 'green'
   }
 })
